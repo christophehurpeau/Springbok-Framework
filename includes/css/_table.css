@@ -1,0 +1,27 @@
+table{
+	width:100%; padding:0;
+	border-spacing:0;
+}
+.legend table{width:auto}
+table th{
+	padding:1px 3px;
+}
+table td{
+	padding:1px 2px;
+	border-collapse:collapse;
+}
+table tr.alternate{
+	background:rgba(0,0,0,0.07);
+}
+
+table td.same{ background:COLOR_COMPARE_SAME; }
+table td.different{ background:COLOR_COMPARE_DIFF; }
+
+table.table{
+	clear:both;
+}
+
+table.table td{
+	border-right:1px solid #DDD;
+	border-right:1px solid rgba(0,0,0,0.15);
+}

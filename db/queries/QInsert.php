@@ -1,0 +1,99 @@
+<?php
+/**
+ * INSERT [LOW_PRIORITY | DELAYED] [IGNORE]
+    [INTO] tbl_name [(col_name,...)]
+    VALUES ({expr | DEFAULT},...),(...),...
+    [ ON DUPLICATE KEY UPDATE col_name=expr, ... ]
+ */
+include_once __DIR__.DS.'AQuery.php';
+class QInsert extends AQuery{
+	private $cols=false,$values,$ignore=false,$onDuplicateKeyUpdate,$createdField;
+	protected $keyword='INSERT';
+
+	public function __construct($modelName,$createdField=null){
+		parent::__construct($modelName);
+		$this->createdField=$createdField;
+	}
+	
+	public function &set($data){
+		$this->data($data);
+		return $this;
+	}
+	public function &data(&$data){
+		$this->cols=array_keys($data);
+		$this->values=array($data);
+		return $this;
+	}
+	public function &datas(&$datas){
+		reset($datas);
+		$this->cols=array_keys(current($datas));
+		$this->values=$datas;
+		return $this;
+	}
+	
+	public function &values($values){
+		$this->values=array($values);
+		return $this;
+	}
+	
+	public function &ignore(){
+		$this->ignore=true;
+		return $this;
+	}
+	
+	public function &orUpdate($onDuplicateKeyUpdate){
+		$this->onDuplicateKeyUpdate=&$onDuplicateKeyUpdate;
+		return $this;
+	}
+	
+	public function &_toSQL(){
+		$modelName=$this->modelName;
+		$sql=$this->keyword.' '; $hasCreatedField=$this->createdField!==null && $this->cols!==false && !in_array($this->createdField,$this->cols);
+		if($this->ignore!==false) $sql.='IGNORE ';
+		$sql.='INTO '.$modelName::_fullTableName();
+		if($this->cols !==false){
+			$sql.=' (';
+			if(!empty($this->cols)){
+				$sql.=implode(',',array_map(array($this->_db,'formatField'),$this->cols));
+				if($hasCreatedField) $sql.=',';
+			}
+			if($hasCreatedField) $sql.=$this->_db->formatField($this->createdField);
+			$sql.=')';
+		}
+		$sql.= ' VALUES ';
+		foreach($this->values as $values){
+			if(empty($values)){
+				if($hasCreatedField) $sql.='(NOW()),';
+				else $sql.='(),';
+			}else{
+				$sql.='(';
+				foreach($values as $key=>$value){
+					if($value===NULL) $sql.='NULL';
+					elseif(is_int($value) || is_float($value)) $sql.=$value;
+					elseif(is_bool($value)) $sql.=($value===true?'""':'NULL');
+					else $sql.=$this->_db->escape($value);
+					
+					$sql.=',';
+				}
+				if($hasCreatedField) $sql.='NOW(),';
+				$sql=substr($sql,0,-1).'),';
+			}
+		}
+		$sql=substr($sql,0,-1);
+		if($this->onDuplicateKeyUpdate !==null) $sql.=' ON DUPLICATE KEY UPDATE '.$this->onDuplicateKeyUpdate;
+		return $sql;
+	}
+
+	public function &execute(){
+		if(empty($this->values)) return false;
+		$modelName=$this->modelName;
+		$res=$this->_db->doUpdate($this->_toSQL());
+		if($res){
+			if($modelName::$__modelInfos['isAI'])
+				$res=(int)$this->_db->lastInsertID();
+			/*if($modelName::$__cacheable)
+				CCache::get('models')->delete($modelName);*/
+		}
+		return $res;
+	}
+}

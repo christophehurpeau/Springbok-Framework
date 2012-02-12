@@ -1,0 +1,40 @@
+.icon_wrap div{height:30px;padding-left:28px}
+.icon{width:16px;height:16px;margin:2px 3px 2px 0;text-indent: -99999px;}/* pourquoi pas en display inline-block ? */
+li .icon{margin:0 2px 0 0}
+
+.icon.page_add{background:url('COREIMG/silk_icon_set/page_white_add.png');}
+.icon.page_delete{background:url('COREIMG/silk_icon_set/page_white_delete.png');}
+.icon.page_edit{background:url('COREIMG/silk_icon_set/page_white_edit.png');}
+.icon.add{background:url('COREIMG/silk_icon_set/add.png');}
+.icon.edit{background:url('COREIMG/silk_icon_set/page_white_edit.png');}
+.icon.delete{background:url('COREIMG/silk_icon_set/delete.png');}
+.icon.refresh{background:url('COREIMG/silk_icon_set/arrow_refresh.png');}
+.icon.reload{background:url('COREIMG/silk_icon_set/arrow_rotate_clockwise.png');}
+.icon.select{background:url('COREIMG/silk_icon_set/page_go.png');}
+.icon.view{background:url('COREIMG/silk_icon_set/page_white_go.png');}
+.icon.merge{background:url('COREIMG/silk_icon_set/arrow_merge.png');}
+.icon.back{background:url('COREIMG/silk_icon_set/arrow_left.png');}
+
+.icon.rename{background:url('COREIMG/silk_icon_set/textfield_rename.png');}
+
+/* messages */
+.icon.info{background:url('COREIMG/silk_icon_set/information.png')}
+.icon.help{background:url('COREIMG/silk_icon_set/help.png')}
+.icon.warning{background:url('COREIMG/silk_icon_set/error.png')}
+.icon.error{background:url('COREIMG/silk_icon_set/exclamation.png')}
+
+/* booleans */
+.icon.enabled{background:url('COREIMG/silk_icon_set/bullet_green.png');}
+.icon.disabled{background:url('COREIMG/silk_icon_set/bullet_red.png');}
+.icon.tick{background:url('COREIMG/silk_icon_set/tick.png');}
+.icon.cross{background:url('COREIMG/silk_icon_set/cross.png');}
+
+
+/* toggle */
+.icon.toggle_plus{background:url('COREIMG/silk_icon_set/bullet_toggle_plus.png');}
+.icon.toggle_minus{background:url('COREIMG/silk_icon_set/bullet_toggle_minus.png');}
+
+/* folders */
+.icon.folder_add{background:url('COREIMG/silk_icon_set/folder_add.png');}
+.icon.folder_edit{background:url('COREIMG/silk_icon_set/folder_edit.png');}
+.icon.folder_delete{background:url('COREIMG/silk_icon_set/folder_delete.png');}

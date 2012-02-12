@@ -1,0 +1,42 @@
+input.submit,button,.button{
+	bg-gradient-tb(BUTTON_BACKGROUND_TB);
+	border-radius(3px);
+	box-shadow(2px,BUTTON_BOXSHADOW);
+	border:BUTTON_BORDER;
+	color:BUTTON_COLOR;
+	text-shadow:BUTTON_TEXTSHADOW 0 0 1px;
+	padding:2px 8px;
+	cursor:pointer;
+}
+input.submit:hover,button:hover,.button:hover{
+	bg-gradient-tb(BUTTON_HOVER_BACKGROUND_TB);
+	border:BUTTON_HOVER_BORDER;
+	color:BUTTON_HOVER_COLOR;
+}
+body input.submit:focus,body button:focus,body .button:focus{
+	bg-gradient-tb(BUTTON_FOCUS_BACKGROUND_TB);
+	color:BUTTON_FOCUS_COLOR;outline:0;
+	text-shadow:BUTTON_TEXTSHADOW 0 0 1px;
+}
+a.button,a.button:hover{text-decoration:none;display:inline-block;}
+button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
+
+
+FOR(I=1;I<5;I+1)
+IF(BACKGROUND_TB_COLOR$I)
+	input.type1.submit,button.type1,.button.type1{
+		bg-gradient-tb(BACKGROUND_TB_COLOR$I);
+		IF(BUTTON_COLOR$I_COLOR) color:BUTTON_COLOR$I_COLOR; ENDIF
+		IF(BUTTON_COLOR$I_BORDER) border:BUTTON_COLOR$I_BORDER; ENDIF
+		IF(BUTTON_COLOR$I_TEXTSHADOW) text-shadow:BUTTON_COLOR$I_TEXTSHADOW 0 0 1px; ENDIF
+	}
+	input.type1.submit:hover,button.type1:hover,.button.type1:hover{
+		bg-gradient-tb(BUTTON_COLOR$I_HOVER_BACKGROUND_TB);
+		IF(BUTTON_COLOR$I_HOVER_BORDER) border:BUTTON_COLOR$I_HOVER_BORDER; ENDIF
+		IF(BUTTON_COLOR$I_HOVER_COLOR) color:BUTTON_COLOR$I_HOVER_COLOR; ENDIF
+	}
+	body input.type1.submit:focus,body button.type1:focus,body .button.type1:focus{
+		bg-gradient-tb(BUTTON_COLOR$I_FOCUS_BACKGROUND_TB);
+	}
+ENDIF
+ENDFOR

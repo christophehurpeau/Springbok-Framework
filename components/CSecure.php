@@ -1,0 +1,245 @@
+<?php
+class CSecure{
+	const BACK_URL='SECURE_BACK_URL',
+		CONNECTION_FORM=0,CONNECTION_BASIC=1,CONNECTION_COOKIE=2;
+	private static $_config,$_user=NULL,$_cookie;
+	
+	public static function init(){
+		self::$_config=self::loadConfig();
+	}
+	
+	protected static function &loadConfig($configName='secure'){
+		$config=App::configArray($configName)
+			+array('className'=>'User','login'=>'login','password'=>'pwd','auth'=>'','authConditions'=>array(),
+				'trim'=>". \t\n\r\0\x0B",'logConnections'=>false);
+		if(!isset($config['cookiename'])) $config['cookiename']=$config['className'];
+		if(!isset($config['id'])) $config['id']=$config['login'];
+		return $config;
+	}
+	
+	protected static function loadUser(){
+		//if(static::config('loadUser') && ($user=self::connected()) && !CHttpRequest::isAjax()){
+		if(($user=static::connected()) !== NULL){
+			$className=static::config('className');
+			$query=$className::QOne()->where(array(static::config('id')=>$user));
+			if(static::issetConfig('fields')) $query->setFields(static::config('fields'));
+			if(static::issetConfig('with')) $query->setAllWith(static::config('with'));
+			return $query->execute();
+		}
+		return false;
+	}
+	
+	protected static function loadCookie(){
+		if(($cookiename=static::config('cookiename')) && (!isset(self::$_cookie) || self::$_cookie->getName()!==$cookiename))
+			self::$_cookie=CCookie::get(static::config('cookiename'));
+	}
+	
+	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
+	protected static function &config($name){ return self::$_config[$name]; }
+	
+	public static function isConnected(){
+		return CSession::exists('user_'.static::config('id'));
+	}
+	
+	public static function isConnected_Safe(){
+		if(class_exists('CSession',false) || !headers_sent()) return self::isConnected();
+		else return false;
+	}
+	
+	public static function connected(){
+		return CSession::getOr('user_'.static::config('id'));
+	}
+	public static function connectedId(){
+		return (int)self::connected();
+	}
+	
+	public static function &user(){
+		if(self::$_user===NULL) self::$_user=self::loadUser();
+		return self::$_user;
+	}
+	
+    public static function isAdmin(){ return static::user()->isAdmin(); }
+    
+	public static function checkAccess($params=null){
+		if(!static::connect(false)){
+			if(($auth=static::config('auth'))===''){
+				CSession::set(self::BACK_URL,CHttpRequest::isGET() ? CRoute::getAll() : '/');
+				Controller::redirect(static::config('url_login'));
+			}else call_user_func(array('self','authenticate_'.$auth));
+			// foreach(explode(',',$check) as $profile) static::check($profile)
+		}
+		if($params!==null){
+			$user=static::user();
+			if(!$user->isAllowed($params[0])){
+				if(empty($params[1])) forbidden();
+				Controller::redirect($params[1]);
+			}
+		}
+	}
+	
+	public static function connect($redirect=true){
+		if($redirect) static::redirectIfConnected();
+		elseif(static::isConnected()) return true;
+		// look cookie
+		self::loadCookie();
+		if(!empty(self::$_cookie->user) && !empty($_SERVER['HTTP_USER_AGENT'])){
+			$className=static::config('className'); $login=static::config('login'); $id=static::config('id');
+			
+			if(sha1($_SERVER['HTTP_USER_AGENT'].CSecure::getSalt())===self::$_cookie->agent){
+				$where=static::config('authConditions');
+				$where[$login]=self::$_cookie->user;
+			
+				$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
+				if($res=$query->where($where)->execute()){
+					self::$_cookie->write();
+					self::setConnected(self::CONNECTION_COOKIE,($id===$login ? self::$_cookie->user : $res),self::$_cookie->user);
+					if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')));
+					return true;
+				}
+			}
+			if(static::config('logConnections')) self::logConnection(self::CONNECTION_COOKIE,false,self::$_cookie->user);
+			self::$_cookie->destroy();
+		}
+		return false;
+	}
+	public static function redirectIfConnected(){
+		if(static::isConnected()) Controller::redirect(CSession::getAndRemoveOr(self::BACK_URL,static::config('url_redirect'))); 
+	}
+
+	public static function setConnected($type,$connected,$login){
+		CSession::set('user_'.static::config('id'),$connected);
+		if(static::config('logConnections'))
+			self::logConnection($type,true,$login,$connected);
+		static::onAuthenticated($type);
+	}
+	
+	public static function createCookie($user){
+		if(empty($_SERVER['HTTP_USER_AGENT'])) return false;
+		$login=static::config('login');
+		self::loadCookie();
+		self::$_cookie->user=$user->$login;
+		self::$_cookie->agent=sha1($_SERVER['HTTP_USER_AGENT'].CSecure::getSalt());
+		self::$_cookie->write();
+	}
+	
+	public static function authenticate($user,$remember=false){
+		//$by='by'.ucfirst($_config['login']).'And'.ucfirst($_config['password']);
+		$className=static::config('className'); $login=static::config('login'); $password=static::config('password'); $id=static::config('id'); $logConnections=static::config('logConnections');
+		$connected=$redirect=$type=false;
+		if($className){
+			$where=static::config('authConditions');
+			$where[$login]=$user->$login;
+			$where[$password]=self::hashWithSalt(trim($user->$password,static::config('trim')));
+			
+			$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
+			
+			if($res=$query->where($where)->execute()){
+				$connected=$id===$login ? $user->$login : $res;
+				if($remember) self::createCookie($user);
+				$redirect=true;
+			}
+			$type=self::CONNECTION_FORM;
+		}elseif(($users=static::config('users'))){
+			if(isset($users[$user['login']]) && $users[$user['login']]===$user['pwd']) $connected=$user['login'];
+			if($logConnections) $type=self::CONNECTION_BASIC;
+		}elseif($logConnections) $type=self::CONNECTION_BASIC;
+		if($connected){
+			if($logConnections) self::logConnection($type,true,$user->$login,$connected);
+			self::authSuccess($id,$connected,$redirect);
+			static::onAuthenticated($type);
+			return true;
+		}
+		if($logConnections) self::logConnection($type,false,$user->$login);
+		
+		return false;
+	}
+
+	protected static function authSuccess(&$id,&$connected,&$redirect){
+		CSession::set('user_'.$id,$connected);
+		if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')),true,false);
+	}
+	
+	protected static function authFailed(){
+		CSession::setFlash(_tC('Sorry, your login or your password is incorrect...'));
+		sleep(3);
+	}
+
+	/**
+		Basic HTTP authentication
+			@return boolean
+			@param $auth mixed
+			@param $realm string
+			@public
+	**/
+	public static function authenticate_basic($realm=NULL) {
+		if(isset($_SERVER['PHP_AUTH_USER']))
+			if(self::authenticate(array('login'=>$_SERVER['PHP_AUTH_USER'],'pwd'=>$_SERVER['PHP_AUTH_PW']),static::config('remember'))) return true;
+		if($realm === NULL) $realm=Config::$projectName.' Auth';//$_SERVER['REQUEST_URI'];
+		header('WWW-Authenticate: Basic realm="'.utf8_decode($realm).'"',true,401);
+		exit;
+	}
+	
+	public static function logout(){
+		self::loadCookie();
+		if(isset(self::$_cookie)) self::$_cookie->destroy();
+		else CCookie::delete(static::config('cookiename'));
+		CSession::destroy();
+		static::onDisconnected();
+	}
+
+	public static function onDisconnected(){}
+	public static function onAuthenticated($type){}
+
+
+	private static function logConnection($type,$succeed,$login,$connected=NULL){
+		switch(static::config('logConnections')){
+			case 'sql':
+				$c=new UserConnection;
+				$c->type=$type;
+				$c->succeed=$succeed;
+				$c->login=$login;
+				if($connected!==NULL) $c->connected=$connected;
+				$c->ip=CHttpRequest::getClientIP();
+				$c->insert();
+				break;
+			case 'file':
+				CLogger::get('connections')->log($type.': '.($succeed?'SUCCEED':'FAILED').' - '.$login.($connected!==NULL?(' => '.$connected):''));
+				break;
+		}
+	}
+
+	/* */
+
+	public static function hashWithSalt($string){
+		return sha1(self::$_config['salt'].$string);
+	}
+	
+	public static function getSalt(){
+		return self::$_config['salt'];
+	}
+	
+	public static function decryptAES($val,$ky=NULL){
+		if($ky===NULL) $ky=self::$_config['crypt_key'];
+		$val=base64_decode($val);
+		//return mcrypt_decrypt(MCRYPT_RIJNDAEL_256,$key,$value,MCRYPT_MODE_CBC);
+		$key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+		for($a=0;$a<strlen($ky);$a++)
+			$key[$a%16]=chr(ord($key[$a%16]) ^ ord($ky[$a]));
+		$mode = MCRYPT_MODE_ECB;
+		$enc = MCRYPT_RIJNDAEL_128;
+		$dec=mcrypt_decrypt($enc,$key,$val,$mode,mcrypt_create_iv(mcrypt_get_iv_size($enc,$mode),MCRYPT_DEV_URANDOM));
+		return rtrim($dec,(( ord(substr($dec,strlen($dec)-1,1))>=0 and ord(substr($dec, strlen($dec)-1,1))<=16)? chr(ord( substr($dec,strlen($dec)-1,1))):null)); 
+	}
+	
+	public static function encryptAES($val,$ky=NULL){
+		if($ky===NULL) $ky=self::$_config['crypt_key'];
+		$key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+		for($a=0;$a<strlen($ky);$a++)
+			$key[$a%16]=chr(ord($key[$a%16]) ^ ord($ky[$a]));
+		$mode=MCRYPT_MODE_ECB;
+		$enc=MCRYPT_RIJNDAEL_128;
+		$val=str_pad($val, (16*(floor(strlen($val) / 16)+(strlen($val) % 16==0?2:1))), chr(16-(strlen($val) % 16)));
+		return base64_encode(mcrypt_encrypt($enc, $key, $val, $mode, mcrypt_create_iv( mcrypt_get_iv_size($enc, $mode), MCRYPT_DEV_URANDOM))); 
+	}
+}
+CSecure::init();

@@ -1,0 +1,111 @@
+menu{
+	list-style:none;
+	margin:2px 0; padding:0;
+}
+menu li{margin:1px; padding:0}
+menu li a{text-decoration: none;text-shadow:none;}
+menu li a:focus{outline: none}
+menu li a:hover{text-decoration: underline;text-shadow:none;}
+
+menu.top{float:left}
+menu.top li{float:left;display:block;display:inline-block;}
+menu.top li a,menu.top li.separator{margin:0;padding:3px 6px;display:block;display:inline-block;}
+/*menu.right li a, menu.left li a{padding:5px;}*/
+menu.right li,menu.left li{margin:2px 0}
+menu.right.nomarg li,menu.left.nomarg li{margin:0}
+
+menu.left ul{
+	list-style: none;
+	margin-left:8px;padding-left:0;
+	border-left:1px dotted #BBB;
+}
+
+IF(HEADER_MENU_SHADOW || HEADER_MENU_BORDER_RADIUS || HEADER_MENU_BORDER || HEADER_MENU_BACKGROUND || HEADER_MENU_BACKGROUND_TB || HEADER_MENU_COLOR)
+header menu,div.header menu,ul.pager a{
+	IF(HEADER_MENU_SHADOW) box-shadow(5px,HEADER_MENU_SHADOW); ENDIF
+	IF(HEADER_MENU_BORDER_RADIUS) border-radius-bottom(5px); ENDIF
+	IF(HEADER_MENU_BORDER) border:1px solid HEADER_MENU_BORDER; ENDIF
+	IF(HEADER_MENU_BACKGROUND) background:HEADER_MENU_BACKGROUND; ENDIF
+	IF(HEADER_MENU_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_BACKGROUND_TB); ENDIF
+	IF(HEADER_MENU_COLOR) color:HEADER_MENU_COLOR; ENDIF
+}
+ENDIF
+
+header menu li a,div.header menu li a,ul.pager a{
+	/*background-color: rgba(0,0,0,0.3);*/
+	IF(HEADER_MENU_A_BORDER) border:1px solid HEADER_MENU_A_BORDER; ENDIF
+	IF(HEADER_MENU_A_BORDER_BOTTOM) border-bottom:HEADER_MENU_A_BORDER_BOTTOM; ENDIF
+	IF(HEADER_MENU_A_BACKGROUND) background:HEADER_MENU_A_BACKGROUND; ENDIF
+	IF(HEADER_MENU_A_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_BACKGROUND_TB); ENDIF
+	IF(HEADER_MENU_A_COLOR) color:HEADER_MENU_A_COLOR; ENDIF
+	IF(HEADER_MENU_A_BORDER_RADIUS) border-radius(HEADER_MENU_A_BORDER_RADIUS); ENDIF
+	margin:1px 2px;
+	/*text-shadow:0 0 1px #EFEFEF;*/
+	IF(HEADER_MENU_A_SHADOW)text-shadow: -1px 0 1px HEADER_MENU_A_SHADOW,0 1px 1px HEADER_MENU_A_SHADOW,1px 0 1px HEADER_MENU_A_SHADOW,0 -1px 1px HEADER_MENU_A_SHADOW;ENDIF
+	IF(HEADER_MENU_A_TEXT_SHADOW) text-shadow:HEADER_MENU_A_TEXT_SHADOW; ENDIF
+	font-weight: bold;
+}
+header menu.top li.separator{
+	/* padding:3px 6px 4px + margin:1px 2px; + border */
+	IF(HEADER_MENU_A_BORDER) padding:5px 8px 6px ENDIF
+	IFNOT(HEADER_MENU_A_BORDER) padding:4px 6px 5px ENDIF
+}
+
+IF(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND || HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB || HEADER_MENU_A_CURRENT_HOVER_SHADOW || HEADER_MENU_A_CURRENT_HOVER_COLOR)
+header menu li a.current,header menu li a:hover,
+div.header menu li a.current,div.header menu li a:hover,
+ul.pager .selected a,ul.pager .page a:hover{
+	IF(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND) background:HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; ENDIF
+	IF(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB); ENDIF
+	IF(HEADER_MENU_A_CURRENT_HOVER_SHADOW) text-shadow: -1px 0 1px HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px HEADER_MENU_A_CURRENT_HOVER_SHADOW; ENDIF
+	IF(HEADER_MENU_A_CURRENT_HOVER_COLOR) color:HEADER_MENU_A_CURRENT_HOVER_COLOR; ENDIF
+}
+ENDIF
+IF(HEADER_MENU_A_CURRENT_BACKGROUND || HEADER_MENU_A_CURRENT_BACKGROUND_TB || HEADER_MENU_A_CURRENT_COLOR || HEADER_MENU_A_CURRENT_BORDER_BOTTOM)
+header menu li a.current,
+div.header menu li a.current,
+ul.pager .selected a{
+	IF(HEADER_MENU_A_CURRENT_BACKGROUND) background:HEADER_MENU_A_CURRENT_BACKGROUND; ENDIF
+	IF(HEADER_MENU_A_CURRENT_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_CURRENT_BACKGROUND_TB); ENDIF
+	IF(HEADER_MENU_A_CURRENT_COLOR) color:HEADER_MENU_A_CURRENT_COLOR; ENDIF
+	IF(HEADER_MENU_A_CURRENT_BORDER_BOTTOM) border-bottom:HEADER_MENU_A_CURRENT_BORDER_BOTTOM; ENDIF
+}
+ENDIF
+
+header menu li a:hover,
+div.header menu li a:hover,
+ul.pager a:hover{
+	text-decoration: none;
+	IF(HEADER_MENU_A_HOVER_BACKGROUND) background:HEADER_MENU_A_HOVER_BACKGROUND; ENDIF
+	IF(HEADER_MENU_A_HOVER_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_HOVER_BACKGROUND_TB); ENDIF
+	IF(HEADER_MENU_A_HOVER_COLOR) color:HEADER_MENU_A_HOVER_COLOR; ENDIF
+	IF(HEADER_MENU_A_HOVER_SHADOW) text-shadow: -1px 0 1px HEADER_MENU_A_HOVER_SHADOW,0 1px 1px HEADER_MENU_A_HOVER_SHADOW,1px 0 1px HEADER_MENU_A_HOVER_SHADOW,0 -1px 1px HEADER_MENU_A_HOVER_SHADOW; ENDIF
+	IF(HEADER_MENU_A_HOVER_BORDER_BOTTOM) border-bottom:HEADER_MENU_A_HOVER_BORDER_BOTTOM; ENDIF
+}
+
+IF(HEADER_MENU_A_CURRENTHOVER_COLOR || HEADER_MENU_A_CURRENTHOVER_BACKGROUND || HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB)
+header menu li a.current:hover,
+div.header menu li a.current:hover{
+	IF(HEADER_MENU_A_CURRENTHOVER_COLOR) color:HEADER_MENU_A_CURRENTHOVER_COLOR; ENDIF
+	IF(HEADER_MENU_A_CURRENTHOVER_BACKGROUND) background:HEADER_MENU_A_CURRENTHOVER_BACKGROUND; ENDIF
+	IF(HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB); ENDIF
+}
+ENDIF
+
+#page menu.top{padding-left:5px;}
+#page menu.top{margin-bottom:0}
+#page menu.top li{margin-bottom:0; IF(VARIABLE_MENU_COLOR) color:VARIABLE_MENU_COLOR; ENDIF}
+IF(VARIABLE_MENU_COLOR)#page menu.top li a:hover{color:VARIABLE_MENU_COLOR}ENDIF
+#page menu.top li a{
+	padding:2px 6px 3px;
+	border-radius-bottomRight(10px 25px);
+	border-radius-topLeft(10px 25px);
+	background:#CCC;
+}
+#page menu.top li a.current{
+	position: relative; z-index: 2; /* couvre l'ombre, si existe, du div suivant */
+	background:VARIABLE_MENU_CURRENT_BACKGROUND;
+	color:VARIABLE_MENU_CURRENT_COLOR;
+}
+
+#page .fixed menu{padding:5px 10px;}

@@ -1,0 +1,17 @@
+div.startloading{
+	position:absolute;
+	width:500px; height:50px; padding:150px 5px; line-height:25px;
+	top:50%; left:50%;
+	overflow:visible;
+	z-index:11;
+	margin-top:-200px;
+	margin-left:-250px;
+	IF(HEADER_MENU_A_BORDER) border:1px solid HEADER_MENU_A_BORDER; ENDIF
+	IF(HEADER_MENU_A_BACKGROUND) background:HEADER_MENU_A_BACKGROUND; ENDIF
+	IF(HEADER_MENU_A_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_BACKGROUND_TB); ENDIF
+	IF(FIXED_VARIABLE_SHADOW) box-shadow(8px,FIXED_VARIABLE_SHADOW); ENDIF
+	border-radius(16px);
+	color:HEADER_MENU_A_COLOR;
+	text-align:center;
+	font-size:14pt;
+}

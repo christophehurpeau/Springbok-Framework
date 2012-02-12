@@ -1,0 +1,13 @@
+@CONST PAGE_FIXED='TRUE';
+@includeCore '_colors_darkblue.css';
+
+@includeCore '_global.css';
+@includeCore '_form.css';
+@includeCore '_table.css';
+@includeCore '_page.css';
+@includeCore '_menu.css';
+@includeCore '_pager.css';
+@includeCore '_springbok.css';
+@includeCore '_actions.css';
+@includeCore '_icons.css';
+@includeCore '_ui.css';

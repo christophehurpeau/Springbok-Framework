@@ -1,0 +1,56 @@
+<?php
+class CPayments{
+	private static $instances,$paymentsConfig;
+	public static function init(){
+		self::$paymentsConfig=&App::configArray('payments');
+	}
+	
+	public static function exist($name){return isset(self::$paymentsConfig[$name]);}
+	public static function &get($name){
+		if(isset(self::$instances[$name])) return self::$instances[$name];
+		$instance=CorePayment::get($name,self::$paymentsConfig[$name]);
+		return self::$instances[$name]=&$instance;
+		//return $instance;
+	}
+}
+CPayments::init();
+
+abstract class Payment{
+	protected $name;
+	
+	protected function beforeRender(){return true;}
+
+	protected function _render($file){
+		if($this->beforeRender()){
+			/* DEV */
+			if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
+			/* /DEV */
+			return render($file,self::$viewVars,true);
+		}
+	}
+}
+abstract class CorePayment extends Payment{
+	protected function render($fileName){
+		return $this->_render(CORE.'payments/'.$this->name.DS.$fileName.'.php');
+	}
+	public static function &get(&$name,&$config){
+		include CORE.'payments/'.$name.DS.$name.'.php';
+		$instance=new $name;
+		$instance->name=&$name;
+		foreach($config as $key=>&$value) $instance->$key=$value;
+		return $instance;
+	}
+}
+
+abstract class AppPayment extends Payment{
+	protected function render($fileName){
+		return $this->_render(APP.'payments/'.$this->name.DS.$fileName.'.php');
+	}
+	public static function &get(&$name,&$config){
+		include APP.'payments/'.$name.DS.$name.'.php';
+		$instance=new $name;
+		$instance->name=&$name;
+		foreach($config as $key=>&$value) $instance->$key=$value;
+		return $instance;
+	}
+}

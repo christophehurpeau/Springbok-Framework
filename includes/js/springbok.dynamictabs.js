@@ -1,0 +1,82 @@
+/* http://www.jankoatwarpspeed.com/post/2010/01/26/dynamic-tabs-jquery.aspx */
+
+(function($){
+	var oldFunctionInit=$$.ajax.init,oldFunctionSetTitle=$$.setTitle,ajaxFunctionUpdateVariable=$$.ajax.updateVariable,
+		dynamictabsMenu,dynamictabsContent,dynamictabsId=0;
+	$$.ajax.init=function(){
+		$$.dynamictabs.init();
+		$(document).bind('click',function(e){
+			if(e.which==2){
+				var target=$(e.target);
+				if(target.is('menu.dynamictabs a')){
+					$$.dynamictabs.delTab(target);
+				}else if(target.is('a:not(header a)')){
+					var a=target,menu=false;
+					$$.dynamictabs.addTab();
+					if(a.is('menu a')) menu=a.closest('menu');
+					
+					if(menu){
+						menu.find('a.current').removeClass('current');
+						a.addClass('current');
+					}
+					$$.ajax.load(a.attr('href'));
+				}else return true;
+				e.preventDefault();
+				return false;
+			}
+			return true;
+		});
+		oldFunctionInit();
+	};
+	$$.setTitle=function(title){ oldFunctionSetTitle(title); $('menu.dynamictabs a.current').text(title); };
+	$$.ajax.updateVariable=function(divPage){ ajaxFunctionUpdateVariable(divPage); $$.dynamictabs.prepare(); };
+	$$.dynamictabs={
+		init:function(){
+			this.prepare();
+			$('menu.dynamictabs > li > a').die('click').live('click', function(){
+				var a=$(this);
+				// hide
+				dynamictabsContent.find('> div').hide();
+				dynamictabsMenu.find('a.current').removeClass('current');
+				//show
+				ajaxFunctionUpdateVariable($('#'+a.attr('rel')).show());
+				a.addClass('current');
+				return false;
+			});
+		},
+		prepare:function(){
+			dynamictabsMenu=$('menu.dynamictabs');
+			dynamictabsContent=$(dynamictabsMenu.attr('rel')?dynamictabsMenu.attr('rel'):'#dynamictabsContent');
+			if(dynamictabsMenu.length!==1){ dynamictabsMenu=false;return; }
+			
+			var li=dynamictabsMenu.find('li');
+			if(li.length===0){
+				var newContent=$('<div/>').attr('id','dynamictab'+(++dynamictabsId));
+				dynamictabsContent.html(newContent.html(dynamictabsContent.html()));
+				ajaxFunctionUpdateVariable(newContent);
+				dynamictabsMenu.html($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
+			}else ajaxFunctionUpdateVariable(dynamictabsContent.find('> div:not(:hidden)'));
+		},
+		addTab:function(){
+			dynamictabsContent.find('> div').hide();
+			var current=dynamictabsMenu.find('.current').removeClass('current');
+			
+			var newContent=$('<div/>').attr('id','dynamictab'+(++dynamictabsId));
+			dynamictabsContent.append(newContent.html($('#'+current.attr('rel')).html()));
+			dynamictabsMenu.append($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
+			
+			ajaxFunctionUpdateVariable(newContent);
+		},
+		delTab:function(a){
+			$('#'+a.attr('rel')).remove();
+					
+			if(a.hasClass('current')){
+				// find the first tab
+				var firsttab=dynamictabsMenu.find('li:first a');
+				firsttab.addClass("current");
+				$$.ajax.updateVariable($('#'+firsttab.attr('rel')).show());
+			}
+			a.parent().remove();
+		}
+	};
+})(jQuery);

@@ -1,0 +1,2 @@
+<?php
+ACSitemap::generate();

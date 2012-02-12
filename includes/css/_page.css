@@ -1,0 +1,350 @@
+@includeCore '_html5.css';
+
+html,body{height:100%;}
+body{
+	font: normal 9.5pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	background:$BODY_BACKGROUND; color:$BODY_COLOR;
+	margin:0;padding:0;
+	webkit-antialiased();
+}
+input,textarea{
+	font: normal 9pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+}
+IF(FIXED_VARIABLE_BACKGROUND)
+body.mceContentBody{background:FIXED_VARIABLE_BACKGROUND;}
+ENDIF
+
+a{
+	color:INTERACTION_DEFAULT_COLOR;
+	IF(INTERACTION_DEFAULT_TEXT_SHADOW) text-shadow:INTERACTION_DEFAULT_TEXT_SHADOW; ENDIF
+}
+IF(INTERACTION_CURRENT_COLOR == INTERACTION_HOVER_COLOR)
+a:hover,a.current{color:INTERACTION_CURRENT_COLOR}
+ENDIF
+IF(INTERACTION_CURRENT_COLOR != INTERACTION_HOVER_COLOR)
+a.current{color:INTERACTION_CURRENT_COLOR}
+a:hover{color:INTERACTION_HOVER_COLOR}
+ENDIF
+
+
+#container pre{
+	font:normal 9.5pt 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;
+}
+
+body #container{
+	/*width:100%; */min-width:1000px;
+	position:relative;height:auto; min-height:100%;
+	/*position:absolute;top:0;left:0;right:0;bottom:0;*/
+	/*overflow-x:hidden;*/
+}
+IFNOT(PAGE_FIXED)
+html > body #container{height:auto;}
+ENDIF
+
+header,div.header{
+	IF(HEADER_SHADOW) box-shadow(5px,HEADER_SHADOW); ENDIF
+	IF(HEADER_BORDER_RADIUS) border-radius-bottom(5px); ENDIF
+	display:block;
+	/*width:98%;
+	margin:0 auto; padding:1px 0;*/
+	
+	width:100%;
+	z-index:11;
+	
+	IF(PAGE_FIXED)
+	position:fixed;top:0;left:0;right:0;
+	ENDIF
+}
+IF(HEADER_BACKGROUND || HEADER_COLOR)
+header,div.header,table th,.flashMessage{
+	IF(HEADER_BACKGROUND) bg-gradient-tb(HEADER_BACKGROUND); ENDIF
+	IF(HEADER_COLOR) color:HEADER_COLOR; ENDIF
+}
+ENDIF
+
+IF(HEADER_COLOR)header a,div.header a,header a:hover,div.header a:hover{color:HEADER_COLOR;}ENDIF
+
+header div{font-size:9pt}
+header div.right{
+	float:right;text-align:right;
+	padding:2px 3px;
+	
+}
+header div.right a{font-size:8.5pt}
+
+footer,div.footer{
+	color:FOOTER_COLOR;
+	font-size:7pt;
+	padding-bottom:5px;
+	text-align:center;
+	width:100%;
+	clear:both;
+	a{text-decoration:none}
+}
+footer{
+	position:absolute;
+	bottom:0;
+}
+
+#breadcrumbs{
+	IF(BREADCRUMBS_BACKGROUND) margin:3px 3px 5px;padding:2px 3px 3px; background:BREADCRUMBS_BACKGROUND; ENDIF
+	IFNOT(BREADCRUMBS_IN_VARIABLE)
+		IF(FIXED_VARIABLE_SHADOW) box-shadow(3px,FIXED_VARIABLE_SHADOW); ENDIF
+		IF(FIXED_VARIABLE_BORDER_RADIUS) border-radius(FIXED_VARIABLE_BORDER_RADIUS); ENDIF
+		IFNOT(BREADCRUMBS_BACKGROUND)
+			IF(FIXED_VARIABLE_BACKGROUND) margin:3px 3px 5px;padding:2px 3px 3px; background:FIXED_VARIABLE_BACKGROUND; ENDIF
+			IFNOT(FIXED_VARIABLE_BACKGROUND) margin:0 0 5px; ENDIF
+		ENDIF
+	ENDIF
+	IF(BREADCRUMBS_FONTSIZE) font-size:BREADCRUMBS_FONTSIZE; ENDIF
+}
+
+
+#page{
+	/*float:left;*/
+	/*overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
+	/*overflow-x: hidden;*/
+	padding-bottom:20px;
+	IFNOT(PAGE_FIXED)
+	position:relative;
+	margin-top:8px;
+	ENDIF
+	IF(PAGE_FIXED)
+	margin:0 3px;padding-top:38px;
+	position:relative;
+	/*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
+	ENDIF
+	
+	div.fixed,div.variable{
+		IFNOT(PAGE_FIXED)
+		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+		overflow-x: hidden;
+		position:relative;
+		IF(FIXED_VARIABLE_MARGIN)margin:0 10px;ENDIF
+		ENDIF
+		IF(PAGE_FIXED)
+		position:relative;
+		IF(FIXED_VARIABLE_MARGIN)margin:3px;ENDIF
+		/*position:absolute;right:0;top:0;left:0;bottom:0;*/
+		ENDIF
+		IF(FIXED_VARIABLE_SHADOW) box-shadow(3px,FIXED_VARIABLE_SHADOW); ENDIF
+		IF(FIXED_VARIABLE_BORDER_RADIUS) border-radius(FIXED_VARIABLE_BORDER_RADIUS); ENDIF
+		IF(FIXED_VARIABLE_BACKGROUND) background:FIXED_VARIABLE_BACKGROUND; ENDIF
+		IF(FIXED_VARIABLE_BORDER) border:FIXED_VARIABLE_BORDER; ENDIF
+	}
+	
+	IF(PAGE_FIXED || FIXED_BACKGROUND || FIXED_BORDER)
+	div.fixed{overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+		overflow-x: hidden;
+		IF(FIXED_BACKGROUND) background:FIXED_BACKGROUND; ENDIF
+		IF(FIXED_BORDER) border:1px solid FIXED_BORDER; ENDIF
+		IF(PAGE_FIXED)
+		position:absolute;position:fixed; z-index:6;
+		top:40px;left:0;right:0;bottom:20px;
+		ENDIF
+	}
+	ENDIF
+	
+	IFNOT(PAGE_FIXED)
+	div.fixed.right{float:right;}
+	div.fixed.left{float:left;}
+	ENDIF
+	IF(PAGE_FIXED)
+	div.fixed.right{left:auto}
+	div.fixed.left{right:auto}
+	ENDIF
+	
+	div.fixed h2{ text-align:center;}
+	
+	IF(VARIABLE_BACKGROUND || VARIABLE_BORDER || VARIABLE_SHADOW)
+	div.variable{
+		IF(VARIABLE_BACKGROUND) background:VARIABLE_BACKGROUND; ENDIF
+		IF(VARIABLE_BORDER) border:1px solid VARIABLE_BORDER; ENDIF
+		IF(VARIABLE_SHADOW) box-shadow(VARIABLE_SHADOW); ENDIF
+	}
+	ENDIF
+	
+	div.variablep{margin:0;padding:0;float:left; }
+	
+	.content{padding:5px 10px;}
+	div.variable.padding{padding:8px 10px}
+	div.variable.padding > div.content{padding:5px 0;}
+	
+	div.variable h1{
+		margin:0; 
+		IF(VARIABLE_H1_COLOR)color:VARIABLE_H1_COLOR;ENDIF 
+		IF(VARIABLE_H1_BACKGROUND) padding:8px 5px; background:VARIABLE_H1_BACKGROUND; ENDIF
+		IFNOT(VARIABLE_H1_BACKGROUND) padding:0 0 4px; ENDIF
+		IF(VARIABLE_H1_TEXT_SHADOW) text-shadow:VARIABLE_H1_TEXT_SHADOW; ENDIF
+	}
+	div.variable.content .content,div.variable .content .content{clear:both;position:relative;IF(VARIABLE_CONTENT_BACKGROUND)background:VARIABLE_CONTENT_BACKGROUND; ENDIF}
+	div.variable.content .content.float_left,div.variable .content .content.float_left{clear:none}
+	div.variable div.content.float_left.noclear{clear:none}
+	div.variable div.content h2{ margin:2px 0; }
+	
+	div.overflow{margin:0;padding:0;width:100%;overflow:auto;clear:both}
+	
+	#dynamictabsContent{
+		position:relative;
+	}
+}
+
+#page.absolute{
+	position:absolute;top:0;bottom:0;left:5px;right:5px;
+	
+	div.variable{
+		position:absolute;right:0;top:38px;left:0;bottom:20px;
+		overflow:auto;
+	}
+}
+
+IFNOT(PAGE_FIXED)
+/* IE <= 6 */
+* html body #page div.variable{
+	float:left;
+	width: 700px;
+}
+ENDIF
+
+
+div.shadowed-box{
+	padding:4px 6px; margin:0 5px 10px;
+	border-radius(4px);
+	box-shadow(4px,PAGE_SHADOWED_BOX_SHADOW_COLOR);
+	background:PAGE_SHADOWED_BOX_BACKGROUND;
+	IF(PAGE_SHADOWED_BOX_BORDER) border:PAGE_SHADOWED_BOX_BORDER; ENDIF
+	
+	h2{font-size:12pt; margin-top:2px;}
+}
+
+/* Width & Height */
+
+.w160{width:160px}
+.w200{width:200px}
+.w280{width:280px}
+.w300{width:300px}
+.w350{width:350px}
+.w380{width:380px}
+.w400{width:400px}
+.w420{width:420px}
+.w600{width:600px}
+
+.wp10{width:20%}
+.wp20{width:20%}
+.wp30{width:30%}
+.wp33{width:33%}
+.wp40{width:40%}
+.wp50{width:50%}
+.wp60{width:60%}
+.wp70{width:70%}
+.wp80{width:80%}
+.wp90{width:90%}
+.wp100{width:100%}
+
+.h600{height:600px}
+.h400{height:400px}
+.h200{height:200px}
+.h300{height:300px}
+
+IF(PAGE_FIXED)
+#page div.variable.l160{left:170px}
+#page div.variable.l200{left:210px}
+#page div.variable.l280{left:290px}
+#page div.variable.l300{left:320px}
+#page div.variable.l350{left:360px}
+#page div.variable.l380{left:390px}
+#page div.variable.l400{left:410px}
+#page div.variable.l420{left:430px}
+
+#page div.variable.r160{right:170px}
+#page div.variable.r200{right:210px}
+#page div.variable.r300{right:310px}
+#page div.variable.r350{right:360px}
+#page div.variable.r380{right:390px}
+#page div.variable.r400{right:410px}
+#page div.variable.r420{right:430px}
+ENDIF
+
+#page.ml160{margin-left:170px}
+#page.ml200,.ml200{margin-left:210px}
+#page.ml280{margin-left:290px}
+#page.ml300{margin-left:320px}
+#page.ml350{margin-left:360px}
+#page.ml380{margin-left:390px}
+#page.ml400{margin-left:410px}
+#page.ml420{margin-left:430px}
+
+#page.mr160{margin-right:170px}
+#page.mr200,.mr200{margin-right:210px}
+#page.mr300{margin-right:310px}
+#page.mr350{margin-right:360px}
+#page.mr380{margin-right:390px}
+#page.mr400{margin-right:410px}
+#page.mr420{margin-right:430px}
+
+html body .mr10{margin-right:10px}/* DO NOT put this in #page */
+.mr20{margin-right:20px}
+
+html body .ml10{margin-left:10px}
+.ml20{margin-left:20px}
+
+html body .mt10{margin-top:10px}
+.mt20,div.separated.mt20{margin-top:20px}
+
+html body .mb10{margin-bottom:10px}
+.mb20{margin-bottom:20px}
+
+
+
+/* flashMessage & Frame */
+.flashMessage,.frame,.frameCentered{
+	border:1px solid #AAA;
+	padding:10px;
+	margin-bottom: 10px;
+}
+.frame h5,.frameCentered h5{text-align:center;}
+
+.flashMessage,.frameCentered{
+	width:420px;
+	margin:0 auto 10px auto;
+	text-align:center;
+}
+
+.flashMessage{
+	IF(PAGE_FIXED)
+	position:absolute;
+	top:40px;z-index:1;
+	left:50%; margin-left:-210px;
+	ENDIF
+	box-shadow:0 0 15px 2px #999;
+	-moz-box-shadow:0 0 15px 2px #999;
+	-webkit-box-shadow:0 0 15px 2px #999;
+}
+
+.message{
+	padding:10px;
+	margin:5px 0;
+}
+.smallinfo .message,.message.smallinfo{
+	margin:0;
+	padding:2px 4px;
+}
+.message.error{
+	border:1px solid #B80000;	
+	background:#F5CCCC;
+}
+
+.message.success{
+	border: 1px solid #2EB82E;
+	background:#D6F5D6;
+}
+
+.message.warning{
+	border: 1px solid #E07308;
+	background: #FFDDAA;
+}
+
+.message.info{
+	border: 1px solid #428aab;
+	background:#d9e8ee;
+}

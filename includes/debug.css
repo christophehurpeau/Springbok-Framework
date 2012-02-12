@@ -1,0 +1,43 @@
+table.debug{
+	background:#f4f4f4; color:#111;
+	width:100%;
+	border-spacing:0;
+	clear: both;
+	position:relative;z-index:9999;
+}
+table.debug a{
+	text-decoration:none;
+}
+table.debug tr.info{
+	background:#040404;
+	color:#DDD;
+}
+table.debug tr.alternate_item{
+	background: #e4e4e4;
+}
+table.debug td{
+	padding: 4px 8px;
+	text-align:left;
+}
+table.debug td.iteration{
+	width:30px;
+	text-align:center;
+}
+table.debug td.time{
+	white-space:nowrap;
+	text-align:right;
+}
+table.debug div.query a{color:#444}
+table.debug div.result{display:none;}
+table.debug pre{
+	text-align: left;
+	background:#CCC; color:#333;
+	overflow:auto;
+	font-size:8pt;
+
+	white-space:pre-wrap;       /* css-3 */
+	white-space:-moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space:-pre-wrap;      /* Opera 4-6 */
+	white-space:-o-pre-wrap;    /* Opera 7 */
+	word-wrap:break-word;       /* Internet Explorer 5.5+ */
+}

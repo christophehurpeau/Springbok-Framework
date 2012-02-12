@@ -1,0 +1,12 @@
+a.action,span.action{
+	display: block;display:inline-block;
+	height:16px;width:16px;
+	margin:0;padding:0;
+	vertical-align:bottom;
+}
+a.action.delete,span.action.delete{background:url('COREIMG/silk_icon_set/delete.png');}
+a.action.edit,span.action.edit{background:url('COREIMG/silk_icon_set/page_white_edit.png');}
+a.action.select,span.action.select{background:url('COREIMG/silk_icon_set/page_go.png');}
+a.action.view,span.action.view{background:url('COREIMG/silk_icon_set/page_white_go.png');}
+a.action.details,span.action.details{background:url('COREIMG/silk_icon_set/page_white_go.png');}
+a.action.merge,span.action.merge{background:url('COREIMG/silk_icon_set/arrow_merge.png');}
