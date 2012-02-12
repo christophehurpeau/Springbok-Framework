@@ -10,7 +10,7 @@ define('BASE_URL',''); define('WEB_FOLDER','');
 include CORE.'springbok.php';
 
 //data
-include CORE.'mvc'.DS.'models'.DS.'Model.php';
+include CORE.'mvc/models/Model.php';
 
 class App{
 	public static function configArray($name,$withSuffix=false){
