@@ -48,6 +48,7 @@ form input,form textarea{
 	background:#EDEDED;color:#4C4C4C;
 	border:1px solid #ccc;
 	box-shadow:0 0 10px #eee inset; -moz-box-shadow:0 0 10px #eee inset; -webkit-box-shadow:0 0 10px #eee inset;
+	transition(all,.3s);
 }
 form input:hover, form textarea:hover{background:#FAFAFA}
 form input:focus, form textarea:focus{background:#FFF}

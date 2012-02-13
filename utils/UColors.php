@@ -90,7 +90,7 @@ class UColors{
 		// Make sure inputs are valid
 		/* DEV */
 		if (!is_numeric($percent) || $percent < 0 || $percent > 1)
-			throw new Exception("mask=$percent is not valid");
+			throw new Exception("percent=$percent is not valid");
 	
 		if (!is_int($mask) || $mask < 0 || $mask > 255)
 			throw new Exception("mask=$mask is not valid");
