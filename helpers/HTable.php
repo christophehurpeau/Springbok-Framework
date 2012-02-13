@@ -104,10 +104,10 @@ class HTable{
 	}
 
 	protected static function displayResults(&$component,&$results){
-		$i=0;
+		$iRow=0;
 		foreach($results as $key=>&$model){
 			if(isset($component->rowActions) || $component->defaultAction) $pkValue=$model->_getPkValue();
-			$class=$i++%2 ? 'alternate' : '';
+			$class=$iRow++%2 ? 'alternate' : '';
 			echo '<tr';
 			if($component->defaultAction !==null){
 				if(is_array($component->defaultAction)){
