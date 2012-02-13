@@ -1,20 +1,20 @@
 <?php
 class HHtml{
 	public static function linkRSS($title,$url){
-		echo '<link rel="alternate" type="application/rss+xml" href="'.self::url($url).'" title="'.$title.'" />';
+		echo '<link rel="alternate" type="application/rss+xml" href="'.self::url($url).'" title="'.$title.'"/>';
 	}
 	public static function linkAtom($title,$url){
-		echo '<link rel="alternate" type="application/atom+xml" href="'.self::url($url).'" title="'.$title.'" />';
+		echo '<link rel="alternate" type="application/atom+xml" href="'.self::url($url).'" title="'.$title.'"/>';
 	}
 	public static function linkIcon($url=false){
 		echo '<link rel="shorcut icon" type="image/x-icon" href="'.($url?self::staticUrl($url,'img'):STATIC_URL.'img/favicon.ico').'" />';
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
-		echo '<meta charset="'.$encoding.'"><meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'" />';
+		return '<meta charset="'.$encoding.'"><meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>';
 	}
 	public static function metaRobots($content){
-		echo '<meta name="robots" content="'.$content.'" />';
+		echo '<meta name="robots" content="'.$content.'"/>';
 	}
 	public static function metaLanguage($lang=null){
 		if($lang===null) $lang=CLang::get();
