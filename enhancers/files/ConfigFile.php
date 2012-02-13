@@ -58,9 +58,14 @@ class ConfigFile extends PhpFile{
 				$route=array('en'=>$url); if($langs !== NULL) $route=$route+$langs;
 				foreach($route as $lang=>&$routeLang){
 					$paramsNames=array();
-					$routeLangPreg= ($specialEnd=(substr($routeLang,-2)=='/*')) ? substr($routeLang,0,-2) : $routeLang;
+					if($specialEnd=(substr($routeLang,-2)==='/*'))
+						$routeLangPreg=substr($routeLang,0,-2);
+					elseif($specialEnd2=(substr($routeLang,-4))==='/*)?')
+						$routeLangPreg=substr($routeLang,0,-4).substr($routeLang,-2);
+					else $routeLangPreg=$routeLang;
 					$routeLangPreg=str_replace(array('/','-','*','('),array('\/','\-','(.*)','(?:'),$routeLangPreg);
 					if($specialEnd) $routeLangPreg.='(?:\/(.*))?';
+					elseif($specialEnd2) $routeLangPreg=substr($routeLangPreg,0,-2).'(?:\/(.*))?'.substr($routeLangPreg,-2);
 					
 					$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_]+)/',
 						function($m) use(&$paramsDef,&$paramsNames){

@@ -114,12 +114,15 @@ class CRoute{
 		$route=explode('/',trim($params,'/'),3);
 		$controller=$route[0];
 		$action=isset($route[1])?$route[1]:self::DEFAULT_ACTION;
-		$params=isset($route[2])?$route[2]:NULL;
-		if($action==self::DEFAULT_ACTION) $route=self::$_routes['/:controller'];
-		else $route=self::$_routes['/:controller/:action/*'];
-		$lang=CLang::get();
-		$froute=/* DEV */self::$_prefix./* /DEV */sprintf($route['en'][1],CRoute::translate($controller,$lang),CRoute::translate($action,$lang),$params===NULL?'':'/'.$params);
-		return $froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
+		$params=isset($route[2])?$route[2]:null;
+		$lang=CLang::get(); $route=self::$_routes['/:controller(/:action/*)?'];
+		
+		if($action==self::DEFAULT_ACTION)
+			$froute='/'.self::translate($controller,$lang);
+		else
+			$froute=sprintf($route['en'][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
+		
+		return /* DEV */self::$_prefix./* /DEV */$froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
 	}
 
 	public static function translate($string,$lang){
