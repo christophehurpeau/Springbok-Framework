@@ -161,7 +161,7 @@ form input.ht5ifv-show-valid, form textarea.ht5ifv-show-valid,
 form div.input input.ht5ifv-show-valid, form div.input textarea.ht5ifv-show-valid{
 	border: 1px solid #2EB82E
 }
-.ht5ifv-show-required{background-color: #FFCCCC}
+.ht5ifv-show-required{background-color: #f1cccc}
 .ht5ifv-show-min{background-color: #FF9999}
 .ht5ifv-show-max{background-color: #FF99CC}
 .ht5ifv-show-pattern{background-color: #FFCCFF}

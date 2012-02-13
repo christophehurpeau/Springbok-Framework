@@ -67,6 +67,9 @@ class HDev{
 		echo '<div>Action = "'.CRoute::getAction().'"</div>';
 		echo '<div>Ext = '.short_debug_var(CRoute::getExt()).'</div>';
 		echo '<div>Params = '.print_r(CRoute::getParams(),true).'</div>';
+		echo '<div>Tested routes = <pre>'."\n\t"
+			.implode("\t\n",CRoute::$TESTED_ROUTES)
+			.'</pre></div>';
 	}
 
 	public static function error(&$e_message,&$e_file,&$e_line,&$e_context){

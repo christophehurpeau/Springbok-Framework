@@ -3,7 +3,7 @@ class CRoute{
 	const DEFAULT_CONTROLLER='Site';
 	const DEFAULT_ACTION='index';
 	
-	/* DEV */public static $_prefix;/* /DEV */
+	/* DEV */public static $_prefix,$TESTED_ROUTES=array();/* /DEV */
 	private static $_routes,$_langs,
 		$all,$controller,$action,$params,$ext;
 
@@ -42,7 +42,7 @@ class CRoute{
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
 		foreach(self::$_routes as $route){
-			if(preg_match('/^'.(isset($route[$lang])?$route[$lang][0]:$route['en'][0]).($route['ext']===NULL?'':'.'.$route['ext']).'$/Ui',$all,$matches)){
+			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['en'][0]).($route['ext']===NULL?'':'.'.$route['ext']).'$/Ui',$all,$matches)){
 				/*$ext=isset($matches['ext'])?array_pop($matches):NULL;
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
