@@ -42,7 +42,7 @@ class CRoute{
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
 		foreach(self::$_routes as $route){
-			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['en'][0]).($route['ext']===NULL?'':'.'.$route['ext']).'$/Ui',$all,$matches)){
+			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['en'][0]).'$/Ui',$all,$matches)){
 				/*$ext=isset($matches['ext'])?array_pop($matches):NULL;
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
