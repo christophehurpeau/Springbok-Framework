@@ -68,7 +68,7 @@ class HDev{
 		echo '<div>Ext = '.short_debug_var(CRoute::getExt()).'</div>';
 		echo '<div>Params = '.print_r(CRoute::getParams(),true).'</div>';
 		echo '<div>Tested routes = <pre>'."\n\t"
-			.implode("\t\n",CRoute::$TESTED_ROUTES)
+			.implode("\n\t",CRoute::$TESTED_ROUTES)
 			.'</pre></div>';
 	}
 
