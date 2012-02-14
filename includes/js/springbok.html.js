@@ -8,18 +8,27 @@ $$.html={
 		}else title=url=this.url(title,options.fullUrl);
 		delete options.fullUrl;
 		
-		var a=$('<a/>');
+		var a=$('<a/>'),current=false;
 		options.escape ? a.text(title) : a.html(title);
 		delete options.escape;
 		
+		if(options.current !== undefined){
+			if(options.current===1) current=true;
+			else if(options.current && url!==false && url !==this.baseurl) current=url.startsWith(window.location.pathname);
+			else current=url===window.location.pathname;
+			
+			delete options.current;
+		}
+		
 		if(options) a.attr(options);
+		if(current) a.addClass('current');
 		
 		return a.attr('href',url);
 	},
 	
 	tag:function(tag,attrs,content,escape){
 		tag=$('<'+tag+'/>');
-		if(attrs) tag.attrs(attrs);
+		if(attrs) tag.attr(attrs);
 		if(content) escape ? tag.text(content) : tag.html(content);
 		return tag;
 	},

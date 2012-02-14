@@ -50,7 +50,7 @@ class HMenu{
 			else{
 				if(isset($value['startsWith'])) $startsWith=$value['startsWith'];
 				$url=$value['url'];
-				unset($value['url'],$value['startsWith'],$value['current']);
+				unset($value['url'],$value['startsWith']);
 				/* DEV */
 				if(isset($value['options'])) throw new Exception('Deprecated');
 				/* /DEV */
