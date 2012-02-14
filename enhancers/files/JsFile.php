@@ -6,11 +6,11 @@ class JsFile extends EnhancerFile{
 		if($this->fileName()==='jsapp.js'){
 			$layout=file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/layout.php');
 			preg_match('#<header>\s*(.*)\s*</header>.*<footer>\s*(.*)</footer>\s*#Us',$layout,$matchesLayout);
-			$srcContent="includeCore('springbok.jsapp');"
+			$srcContent="includeCore('springbok.jsapp');\nincludeCore('springbok.router');"
 				.'$$.app.jsapp('.json_encode(EnhancerFile::$APP_CONFIG['projectName']).','.time().');' // force également à toujours refaire le fichier
 				.(empty($matchesLayout[1])?'':'$$.app.header='.JsAppFile::viewToJavascript($matchesLayout[1]).';')
 				.(empty($matchesLayout[2])?'':'$$.app.footer='.JsAppFile::viewToJavascript($matchesLayout[2]).';')
-				.('$$.app.routes='.file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/routes.json').';')
+				.('$$.router.init('.file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/routes.js').');')
 				.$srcContent;
 			//debugCode($srcContent);
 		}
@@ -31,16 +31,19 @@ class JsFile extends EnhancerFile{
 	
 	public function getMd5Content(){
 		$md5=$this->_srcContent;
-		if(preg_match('/includeRoutesLangs\(([^)]+)?\)/',$md5,$m))
-			$md5.=EnhancerFile::$APP_DIR.'src/config/routes-langs'.(empty($m[1])?'':'_'.substr($m[1],1,-1)).'.php';
+		if(preg_match('/initSpringbokRoutes\(([^)]+)?\)/',$md5,$m)){
+			$suffix=(empty($m[1])?'':'_'.substr($m[1],1,-1));
+			$md5.=EnhancerFile::$APP_DIR.'src/config/routes'.$suffix.'.php'.EnhancerFile::$APP_DIR.'src/config/routes-langs'.$suffix.'.php';
+		}
 		return md5($md5);
 	}
 	
 	public function enhanceContent(){
 		$c=$this->_srcContent;
 		
-		$c=preg_replace_callback('/includeRoutesLangs\(([^)]+)?\)/',function(&$m){
-			return 'var routesLangs='.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes-langs'.(empty($m[1])?'':'_'.substr($m[1],1,-1)).'.php');
+		$c=preg_replace_callback('/initSpringbokRoutes\(([^)]+)?\)/',function(&$m){
+			$suffix=(empty($m[1])?'':'_'.substr($m[1],1,-1));
+			return '$$.router.init('.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes'.$suffix.'.php').','.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes-langs'.$suffix.'.php').');';
 		},$c);
 		
 		$this->_srcContent=$c;

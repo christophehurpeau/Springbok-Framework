@@ -1,4 +1,5 @@
 $$.html={
+	baseurl:basedir.substr(0,basedir.length-1),
 	link:function(title,url,options){
 		options=$.extend({},{escape:true},options);
 		var a=$('<a/>');
@@ -28,6 +29,25 @@ $$.html={
 		options=options||{};
 		options['class']='action icon '+icon;
 		return this.link('',url,options);
+	},
+	
+	/* Exemples :
+	* $$.html.url(['/:id-:slug',post.id,post.slug])
+	* $$.html.url('/site/login')
+	* $$.html.url(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
+	*/
+	url:function(url,full){
+		if($$.isString(url)){
+			url=url.sbTrim();
+			if(!url || url==='/') return (full || '') + this.baseurl + '/';
+			else{
+				if(url.sbContains('://')) return url;
+				if(url.sbStartsWith('\\/')) return url.substr(1);
+				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + $$.router.getStringLink(url.substr(1));
+			}
+		}else{
+			return (full || '') + this.baseurl + $$.router.getArrayLink(url);
+		}
 	}
 };
 

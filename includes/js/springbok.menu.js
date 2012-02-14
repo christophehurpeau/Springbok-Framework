@@ -19,6 +19,6 @@ $$.menu={
 		options=$.extend({},{menuAttributes:{'class':type},lioptions:{},
 			linkoptions:{},startsWith:false},options);
 		var res=$('<'+this.tagName+'/>').attr(options.menuAttributes);
-		return $('<div/>').html(res).html();
+		return $('<div/>').html(res).html(); //TODO à revoir
 	}
 };

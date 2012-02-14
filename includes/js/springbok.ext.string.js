@@ -1,14 +1,16 @@
-String.prototype.lcFirst=function(){return this.charAt(0).toLowerCase()+this.substr(1);};
-String.prototype.ucFirst=function(){return this.charAt(0).toUpperCase()+this.substr(1);};
-String.prototype.startsWith=function(str){return this.indexOf(str)===0;};
-String.prototype.endsWith=function(str){return this.match(str+"$")==str;};
-String.prototype.trim=function(pattern){return this.ltrim(pattern).rtrim(pattern);};
-String.prototype.ltrim=function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp('^'+pattern,'g'),'');};
-String.prototype.rtrim=function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp(pattern+'$','g'),'');};
-String.prototype.repeat=function(m){return new Array(m + 1).join(this)};
-String.prototype.removeSpecialChars=function(){
+String.prototype.sbLcFirst=function(){return this.charAt(0).toLowerCase()+this.substr(1);};
+String.prototype.sbUcFirst=function(){return this.charAt(0).toUpperCase()+this.substr(1);};
+String.prototype.sbStartsWith=function(str){return this.indexOf(str)===0;};
+String.prototype.sbEndsWith=function(str){return this.match(RegExp.sbEscape(str)+"$")==str;};
+String.prototype.sbContains=function(str){return this.indexOf(str)!==-1};
+String.prototype.sbTrim=function(pattern){return this.sbLtrim(pattern).sbRtrim(pattern);};
+String.prototype.sbLtrim=function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp('^'+pattern,'g'),'');};
+String.prototype.sbRtrim=function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp(pattern+'$','g'),'');};
+String.prototype.sbRepeat=function(m){return new Array(m + 1).join(this)};
+String.prototype.sbIsEmpty=function(){return /^\s*$/.test(this)};
+String.prototype.sbRemoveSpecialChars=function(){
 	var t=this;
-	$.each([
+	[
 		[/æ|ǽ/g,'ae'],[/œ/g,'oe'],[/Ä|À|Á|Â|Ã|Ä|Å|Ǻ|Ā|Ă|Ą|Ǎ/g,'A'],[/ä|à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª/g,'a'],
 		[/Ç|Ć|Ĉ|Ċ|Č/g,'C'],[/ç|ć|ĉ|ċ|č/g,'c'],
 		[/Ð|Ď|Đ/g,'D'],[/ð|ď|đ/g,'d'],
@@ -28,25 +30,24 @@ String.prototype.removeSpecialChars=function(){
 		[/Ŵ/g,'W'],[/ŵ/g,'w'],
 		[/Ź|Ż|Ž/g,'Z'],[/ź|ż|ž/g,'z'],
 		[/Æ|Ǽ/g,'AE'],[/ß/g,'ss'],[/Ĳ/g,'IJ'],[/ĳ/g,'ij'],[/Œ/g,'OE'],[/ƒ/g,'f'],[/&/g,'et']
-	],
-	function(i,pattern){
+	].sbEach(function(i,pattern){
 		t=t.replace(pattern[0],pattern[1]);
 	});
 	return t;
 };
-String.prototype.slug=function(replacement){
+String.prototype.sbSlug=function(replacement){
 	if(replacement===undefined) replacement='-';
 	var returnval=this;
-	return returnval.trim().removeSpecialChars()
+	return returnval.sbTrim().sbRemoveSpecialChars()
 		.replace(/([^\d\.])\.+([^\d\.]|$)/g,'$1 $2')
 		.replace(/[^\w\d\.]/g,' ')
-		.trim()
+		.sbTrim()
 		.replace(/\s+/g,replacement)
-		.replace(new RegExp('^'+RegExp.escape(replacement)+'+|'+RegExp.escape(replacement)+'+$'),'');
+		.replace(new RegExp('^'+RegExp.sbEscape(replacement)+'+|'+RegExp.sbEscape(replacement)+'+$'),'');
 };
 
 /* http://phpjs.org/functions/strip_tags:535 */
-String.prototype.stripTags=function(allowed){
+String.prototype.sbStripTags=function(allowed){
 	var input=this;
 	allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
 	var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
@@ -56,7 +57,7 @@ String.prototype.stripTags=function(allowed){
 	});
 };
 
-String.prototype.wordsCount=function(){
+String.prototype.sbWordsCount=function(){
 	var t=this.replace(/\.\.\./g, ' ') // convert ellipses to spaces
 		.replace(/[0-9.(),;:!?%#$?\'\"_+=\\\/-]*/g,'') // remove numbers and punctuation
 		;
@@ -64,7 +65,15 @@ String.prototype.wordsCount=function(){
 	if(wordArray) return wordArray.length;
 	return 0;
 };
-String.prototype.htmlWordsCount=function(){
+String.prototype.sbHtmlWordsCount=function(){
 	return this.replace(/<.[^<>]*?>/g, ' ').replace(/&nbsp;|&#160;/gi, ' ') // remove html tags and space chars
-		.replace(/(\w+)(&.+?;)+(\w+)/, "$1$3").replace(/&.+?;/g, ' ').wordsCount();
+		.replace(/(\w+)(&.+?;)+(\w+)/, "$1$3").replace(/&.+?;/g, ' ').sbWordsCount();
+};
+
+String.prototype.sbFormat=function(){
+	return this.sbVFormat(arguments);
+};
+String.prototype.sbVFormat=function(args){
+	var number=0;
+	return this.replace(/%s/g,function(match){ return args[number++] || ''; });
 };

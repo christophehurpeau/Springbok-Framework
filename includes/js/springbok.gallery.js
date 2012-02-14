@@ -34,7 +34,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 							albumsLength=albums.length;
 						albums.push(album);
 						t.sort();
-						var idxOf=albums.inArray(album);
+						var idxOf=albums.sbInArray(album);
 						t.addAlbum(album,true,idxOf===albumsLength?false:idxOf);
 					});
 				});
@@ -81,10 +81,10 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 					imagesLength=images.length;
 				images.push(image);
 				t.sort();
-				var idxOf=images.inArray(image);
+				var idxOf=images.sbInArray(image);
 				t.addImage(image,true,idxOf===imagesLength?false:idxOf);
 				if(t.selectedAlbum!==0)
-					t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children.findBy('id',t.selectedAlbum).images++;
+					t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children.sbFindBy('id',t.selectedAlbum).images++;
 			}
 		}
 	});
@@ -104,7 +104,7 @@ Gallery.prototype.close=function(){
 };
 
 Gallery.prototype.selectAlbum=function(idAlbum){
-	if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].inArray(idAlbum)!==-1) return false;
+	if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].sbInArray(idAlbum)!==-1) return false;
 	if(this.albumsMap[idAlbum]===undefined)
 		this.albumsMap[idAlbum]=$$.syncJson(this.albumLink,{id:idAlbum});
 	this.selectedAlbum=idAlbum;
@@ -112,11 +112,11 @@ Gallery.prototype.selectAlbum=function(idAlbum){
 };
 Gallery.prototype.sort=function(create){
 	var idAlbum=this.selectedAlbum;
-	this.albumsMap[idAlbum].images.sortBy(this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
+	this.albumsMap[idAlbum].images.sbSortBy(this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
 	if(create) this.createListAlbums(this.albumsMap[idAlbum].children,this.albumsMap[idAlbum].images);
 };
 Gallery.prototype.selectImage=function(idImage){
-	return this.onSelectImage(idImage,this.albumsMap[this.selectedAlbum].images.findBy('id',idImage));
+	return this.onSelectImage(idImage,this.albumsMap[this.selectedAlbum].images.sbFindBy('id',idImage));
 };
 
 Gallery.prototype.createListAlbums=function(albums,images){

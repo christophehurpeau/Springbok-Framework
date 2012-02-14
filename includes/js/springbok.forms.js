@@ -97,7 +97,7 @@ function HForm(modelName,formAttributes,tagContainer,options){
 	formAttributes=$.extend({},{action:'',method:'post'},formAttributes);
 	this.$=$('<form/>').attr(formAttributes);
 	this.modelName=modelName||false;
-	this.name=modelName?modelName.lcFirst():false;
+	this.name=modelName?modelName.sbLcFirst():false;
 	this.tagContainer=tagContainer!==undefined?tagContainer:'div';
 }
 HForm.prototype.end=function(submit){
@@ -119,7 +119,7 @@ HForm.prototype._container=function(res,defaultClass,attributes,labelFor,label,a
 
 HForm.prototype._input=function(name,type,label,inputAttributes,containerAttributes){
 	inputAttributes=$.extend({},{
-		id:(this.modelName ? this.modelName : 'Input')+name.ucFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+		id:(this.modelName ? this.modelName : 'Input')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 		name:(this.name ? this.name+'['+name+']' : name)
 	},inputAttributes);
 	delete inputAttributes.idSuffix;
@@ -178,7 +178,7 @@ HForm.prototype.appendInputEmail=function(name,label,inputAttributes,containerAt
 HForm.prototype.select=function(name,list,options,inputAttributes,containerAttributes){
 	options=$.extend({},{empty:undefined},options);
 	inputAttributes=$.extend({},{
-		id:(this.modelName ? this.modelName : 'Select')+name.ucFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+		id:(this.modelName ? this.modelName : 'Select')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 		name:(this.name ? this.name+'['+name+']' : name)
 	},inputAttributes);
 	delete inputAttributes.idSuffix;
@@ -230,7 +230,7 @@ HForm.prototype.appendSelectHourAfternoon=function(name,options,inputAttributes,
 
 HForm.prototype.textarea=function(name,label,inputAttributes,containerAttributes){
 	inputAttributes=$.extend({},{
-		id:(this.modelName ? this.modelName : 'Textarea')+name.ucFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+		id:(this.modelName ? this.modelName : 'Textarea')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 		name:(this.name ? this.name+'['+name+']' : name)
 	},inputAttributes);
 	delete inputAttributes.idSuffix;
@@ -253,7 +253,7 @@ HForm.prototype.appendTextarea=function(name,options,inputAttributes,containerAt
 HForm.prototype.checkbox=function(name,label,attributes,containerAttributes){
 	attributes=$.extend({},{
 		type:'checkbox',
-		id:(this.modelName ? this.modelName : 'Checkbox')+name.ucFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
+		id:(this.modelName ? this.modelName : 'Checkbox')+name.sbUcFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
 		name:(this.name ? this.name+'['+name+']' : name)
 	},attributes);
 	delete attributes.idSuffix;

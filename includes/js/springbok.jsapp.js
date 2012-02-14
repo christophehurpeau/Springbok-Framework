@@ -29,7 +29,7 @@ includeCore('springbok.ajax');
 $$.history.loadUrl=function(fragmentOverride){
 	var fragment = $$.history.getFragment(fragmentOverride);
 	if(fragment){
-		if(fragment.startsWith(basedir)) fragment = fragment.substr(basedir.length);
+		if(fragment.sbStartsWith(basedir)) fragment = fragment.substr(basedir.length);
 		try{
 			var route=$$.router.find(fragment);
 		}catch(err){

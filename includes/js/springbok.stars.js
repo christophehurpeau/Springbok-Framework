@@ -52,6 +52,6 @@ $$.stars={
 	spans:function(val,max){
 		max=!max ? 5 : Number(max);
 		val=!val ? 0 : Number(val);
-		return '<span class="stars">'+'<span class="rating"></span>'.repeat(val)+'<span></span>'.repeat(max-val)+'</span>';
+		return '<span class="stars">'+'<span class="rating"></span>'.sbRepeat(val)+'<span></span>'.sbRepeat(max-val)+'</span>';
 	}
 };

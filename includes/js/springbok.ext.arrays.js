@@ -1,17 +1,17 @@
-Array.prototype.inArray=function(val){
+Array.prototype.sbInArray=function(val){
 	return $.inArray(val,this);
 };
-Array.prototype.each=function(callback){
+Array.prototype.sbEach=function(callback){
 	return $.each(this,callback);
 };
-Array.prototype.findBy=function(propName,val){
-	var k=this.findKeyBy(propName,val);
+Array.prototype.sbFindBy=function(propName,val){
+	var k=this.sbFindKeyBy(propName,val);
 	if(k===false) return k;
 	return this[k];
 };
-Array.prototype.findKeyBy=function(propName,val){
+Array.prototype.sbFindKeyBy=function(propName,val){
 	var res=false;
-	this.each(function(k,v){
+	this.sbEach(function(k,v){
 		if(v[propName] == val){
 			res=k;
 			return false;
@@ -20,7 +20,7 @@ Array.prototype.findKeyBy=function(propName,val){
 	return res;
 };
 
-Array.prototype.sortBy=function(propName,asc,sortFunc){
+Array.prototype.sbSortBy=function(propName,asc,sortFunc){
 	if(!$.isFunction(sortFunc)) sortFunc=$$.arraysort[sortFunc===undefined?'':sortFunc];
 	return this.sort(function(a,b){
 		if(asc) return sortFunc(a[propName],b[propName]);
@@ -28,7 +28,7 @@ Array.prototype.sortBy=function(propName,asc,sortFunc){
 	});
 };
 
-Array.prototype.equalsTo=function(array){
+Array.prototype.sbEqualsTo=function(array){
 	if(typeof array !== 'array' || this.length != array.length) return false;
 	for (var i = 0; i < array.length; i++) {
         /*if (this[i].compare) { 
@@ -38,3 +38,5 @@ Array.prototype.equalsTo=function(array){
     }
     return true;
 };
+
+Array.prototype.sbLast=function(){return this[this.length-1]};

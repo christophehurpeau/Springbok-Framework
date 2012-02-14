@@ -93,7 +93,7 @@ var $$={
 includeCore('springbok.ext.string');
 includeCore('springbok.ext.arrays');
 
-RegExp.escape=function(value){
+RegExp.sbEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
