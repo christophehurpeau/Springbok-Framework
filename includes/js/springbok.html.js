@@ -4,7 +4,7 @@ $$.html={
 		options=$.extend({},{escape:true},options);
 		
 		if(url){
-			if(url!=='#' && url[0]!=='?' && ($$.isArray($url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
+			if(url!=='#' && url[0]!=='?' && ($$.isArray(url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
 		}else title=url=this.url(title,options.fullUrl);
 		delete options.fullUrl;
 		
@@ -39,8 +39,8 @@ $$.html={
 	* $$.html.url(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
 	*/
 	url:function(url,full){
-		if($$.isString(url)){
-			url=url.sbTrim();
+		if($$.isString(url) || !url){
+			if(url) url=url.sbTrim();
 			if(!url || url==='/') return (full || '') + this.baseurl + '/';
 			else{
 				if(url.sbContains('://')) return url;
