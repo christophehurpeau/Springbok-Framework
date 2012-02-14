@@ -228,7 +228,7 @@ var s=document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(ga
 			else{
 				if(strpos($url,'://')>0) return $url;
 				if(substr($url,0,2)==='\/') $url=substr($url,1);
-				elseif(substr($url,0,1)==='/'){$url=substr($url,1); $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getStringLink($url);}
+				elseif($url[0]==='/'){$url=substr($url,1); $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getStringLink($url);}
 			}
 		}
 		return $escape?h($url,false):$url;
