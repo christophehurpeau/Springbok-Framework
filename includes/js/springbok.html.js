@@ -2,15 +2,17 @@ $$.html={
 	baseurl:basedir.substr(0,basedir.length-1),
 	link:function(title,url,options){
 		options=$.extend({},{escape:true},options);
+		
+		if(url){
+			if(url!=='#' && url[0]!=='?' && ($$.isArray($url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
+		}else title=url=this.url(title,options.fullUrl);
+		delete options.fullUrl;
+		
 		var a=$('<a/>');
-		options && options.escape ? a.text(title) : a.html(title);
+		options.escape ? a.text(title) : a.html(title);
 		delete options.escape;
 		
 		if(options) a.attr(options);
-		
-		if(url === false) url='javascript:;';
-		else if(url[0]==='/') url=basedir+url.substr(1);
-		else if(url.substr(0,2)=='\/') url=url.substr(1);
 		
 		return a.attr('href',url);
 	},
@@ -43,10 +45,10 @@ $$.html={
 			else{
 				if(url.sbContains('://')) return url;
 				if(url.sbStartsWith('\\/')) return url.substr(1);
-				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + $$.router.getStringLink(url.substr(1));
+				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + ($$.router ? $$.router.getStringLink(url.substr(1)) : url);
 			}
 		}else{
-			return (full || '') + this.baseurl + $$.router.getArrayLink(url);
+			return (full || '') + this.baseurl + ($$.router ? $$.router.getArrayLink(url) : url);
 		}
 	}
 };
