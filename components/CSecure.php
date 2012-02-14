@@ -1,7 +1,7 @@
 <?php
 class CSecure{
 	const BACK_URL='SECURE_BACK_URL',
-		CONNECTION_FORM=0,CONNECTION_BASIC=1,CONNECTION_COOKIE=2;
+		CONNECTION_FORM=0,CONNECTION_BASIC=1,CONNECTION_COOKIE=2,CONNECTION_AFTER_REGISTRATION=3;
 	private static $_config,$_user=NULL,$_cookie;
 	
 	public static function init(){
@@ -122,10 +122,10 @@ class CSecure{
 		self::$_cookie->write();
 	}
 	
-	public static function authenticate($user,$remember=false){
+	public static function authenticate($user,$remember=false,$redirect=true){
 		//$by='by'.ucfirst($_config['login']).'And'.ucfirst($_config['password']);
 		$className=static::config('className'); $login=static::config('login'); $password=static::config('password'); $id=static::config('id'); $logConnections=static::config('logConnections');
-		$connected=$redirect=$type=false;
+		$connected=$type=false;
 		if($className){
 			$where=static::config('authConditions');
 			$where[$login]=$user->$login;
@@ -136,7 +136,6 @@ class CSecure{
 			if($res=$query->where($where)->execute()){
 				$connected=$id===$login ? $user->$login : $res;
 				if($remember) self::createCookie($user);
-				$redirect=true;
 			}
 			$type=self::CONNECTION_FORM;
 		}elseif(($users=static::config('users'))){
@@ -145,8 +144,8 @@ class CSecure{
 		}elseif($logConnections) $type=self::CONNECTION_BASIC;
 		if($connected){
 			if($logConnections) self::logConnection($type,true,$user->$login,$connected);
-			self::authSuccess($id,$connected,$redirect);
-			static::onAuthenticated($type);
+			CSession::set('user_'.$id,$connected);
+			if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')),true,false);
 			return true;
 		}
 		if($logConnections) self::logConnection($type,false,$user->$login);
@@ -154,10 +153,6 @@ class CSecure{
 		return false;
 	}
 
-	protected static function authSuccess(&$id,&$connected,&$redirect){
-		CSession::set('user_'.$id,$connected);
-		if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')),true,false);
-	}
 	
 	protected static function authFailed(){
 		CSession::setFlash(_tC('Sorry, your login or your password is incorrect...'));
