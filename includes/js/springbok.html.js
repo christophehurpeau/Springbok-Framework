@@ -17,6 +17,13 @@ $$.html={
 		return a.attr('href',url);
 	},
 	
+	tag:function(tag,attrs,content,escape){
+		tag=$('<'+tag+'/>');
+		if(attrs) tag.attrs(attrs);
+		if(content) escape ? tag.text(content) : tag.html(content);
+		return tag;
+	},
+	
 	powered:function(){
 		return i18nc['Powered by']+' <a href="http://www.springbok-framework.com" target="_blank">Springbok Framework</a>.';
 	},
