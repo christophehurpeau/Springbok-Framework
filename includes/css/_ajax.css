@@ -1,0 +1,16 @@
+.globalAjaxLoading{
+	position:absolute;top:1px;right:10px;
+	z-index:999999;
+	padding:1px 7px 1px 5px;
+	line-height:16px;
+	bg-gradient-tb(#eeeeee,#cccccc);
+	border-radius-bottomRight(10px 25px);
+	border-radius-topLeft(10px 25px);
+}
+.globalAjaxLoading span{
+	background:transparent url('../img/ajax/ajax-roller.gif') no-repeat left center;
+	height:16px;width:16px;
+	display:inline-block;
+	padding-right:3px;
+	vertical-align:middle;
+}

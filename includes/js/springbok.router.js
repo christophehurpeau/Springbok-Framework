@@ -70,7 +70,6 @@
 		
 		/* Exemples :
 		* $$.router.getArrayLink(['/:id-:slug',post.id,post.slug])
-		* $$.router.getArrayLink(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
 		*/
 		getArrayLink:function(params){
 			var options=$$.isObject(url.sbLast()) ? url.pop() : {},

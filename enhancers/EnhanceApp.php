@@ -69,9 +69,11 @@ class EnhanceApp extends AEnhance{
 	}
 	
 	public function afterEnhance(&$dev,&$prod){
-		if(!empty($this->config['includes'])){
+		//if(!empty($this->config['includes'])){
+		if(empty($this->config['includes'])) $this->config['includes']=array();
+		$this->config['includes']['img'][]='ajax';
 			foreach($this->config['includes'] as $type=>$includes){
-				if(is_string($includes)){ $includes=array($includes); $type=''; }
+				if(is_string($includes)){ $includes=explode(',',$includes); $type=''; }
 				else $type=$type.DS;
 				foreach($includes as $filename){
 					$srcFile=CORE.'includes/'.$type.$filename;
@@ -79,7 +81,7 @@ class EnhanceApp extends AEnhance{
 					
 					$dests=array($dev->getPath().'web/'.$type,$prod->getPath().'web/'.$type);
 					if(is_dir($srcFile)){
-						if(!file_exists($this->appDir.'src/web/'.$type.$filename)) throw new Exception('You should create the folder : web/'.$type.$filename);
+						//if(!file_exists($this->appDir.'src/web/'.$type.$filename)) throw new Exception('You should create the folder : web/'.$type.$filename);
 						
 						$srcFile=new Folder($srcFile);
 						$this->recursiveCopyDir($srcFile,$dests);
@@ -89,7 +91,7 @@ class EnhanceApp extends AEnhance{
 					}
 				}
 			}
-		}
+		//}
 		if(!empty($this->config['plugins'])){
 			foreach($this->config['plugins'] as &$plugin){
 				$pluginPath=EnhancerFile::$DEV_CONFIG['pluginsPaths'][$plugin[0]].$plugin[1];

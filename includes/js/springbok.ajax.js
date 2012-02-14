@@ -59,7 +59,7 @@ includeCore('springbok.history');
 		},
 		load:function(url,data,type){
 			if(url.substr(0,1)==='?') url=location.href+url;
-			var ajaxurl=url;
+			var ajaxurl=url,divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			data=data||{};
 			if(type==='post'){
 				ajaxurl+=(ajaxurl.indexOf('?')==-1?'?':'&')+'SpringbokAjaxPage='+(divPage.length>0?divPage.data('layoutname'):'')+'&SpringbokAjaxContent='+(divContent.length>0?divContent.data('layoutname'):'');
@@ -73,7 +73,7 @@ includeCore('springbok.history');
 			
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
-			$('body').addClass('cursorWait');
+			$('body').addClass('cursorWait').append(divLoading);
 			
 			$$.history.navigate(url);
 			
@@ -103,6 +103,7 @@ includeCore('springbok.history');
 					div.html(data);//.fadeTo(0,1);
 					$(window).scrollTop(0);
 					$('body').removeClass('cursorWait');
+					divLoading.remove();
 					
 					if(to === 'base') divPage=$('#page');
 					else if(to==='page') divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass')); // 
