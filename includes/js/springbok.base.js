@@ -85,7 +85,7 @@ var $$={
 	},
 	
 	isString:function(varName){ return typeof(varName)==='string'; },
-	/*isArray:Array.isArray || function(varName){ return jQuery.type(obj) === "array"; },*/
+	isArray:Array.isArray || $.isArray,
 	isObject:function(){ return typeof(varName)==='object' }
 	
 };
