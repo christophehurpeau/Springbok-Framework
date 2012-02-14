@@ -3,7 +3,7 @@ $$.html={
 	link:function(title,url,options){
 		options=$.extend({},{escape:true},options);
 		
-		if(url){
+		if(url || url===false){
 			if(url!=='#' && url[0]!=='?' && ($$.isArray(url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
 		}else title=url=this.url(title,options.fullUrl);
 		delete options.fullUrl;
