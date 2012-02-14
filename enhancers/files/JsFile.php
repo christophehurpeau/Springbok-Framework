@@ -87,11 +87,9 @@ class JsFile extends EnhancerFile{
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
 		if(!empty($res)){
-			debugCode($destination."\n".$res);
-			debugCode($content);
+			debugCode($destination."\n".$res,false);
 			if(preg_match('/\[ERROR\]\s+([0-9]+)\:([0-9]+)/',$res,$m)){
-				debugVar($m);
-				prettyDebug(HText::highlightLine($content,null,$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')));
+				prettyDebug(HText::highlightLine($content,null,$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
 			}else h($content);
 		}
 		unlink($tmpfname);

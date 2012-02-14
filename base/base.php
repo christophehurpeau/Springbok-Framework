@@ -101,17 +101,17 @@ function short_debug_var($var,$showFullContent=0){
 	}
 }
 
-function prettyDebug($message,$skipLength=2,$flush=true,$withBacktrace=true){
+function prettyDebug($message,$skipLength=2,$flush=true){
 	if(!defined('STDIN')){
 		$id=uniqid('',true);
 		echo str_pad('<div style="text-align:left;background:#FFDDAA;color:#333;border:1px solid #E07308;overflow:auto;padding:1px 2px;position:relative;z-index:999">'
 			.'<pre style="text-align:left;margin:0;overflow:auto;font:normal 9pt \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.$message.'</pre>'
 			.'<div style="margin-top:5px"><a href="javascript:;" style="color:#CA6807;text-decoration:none;font-size:7pt;font-style:italic;" onclick="var el=document.getElementById(\''.$id.'\'); el.style.display=el.style.display==\'none\'?\'block\':\'none\';">Afficher / cacher le backtrace</a></div><div id="'.$id.'" class="backtrace" style="display:none">'
-			.($withBacktrace?'<pre style="text-align:left;margin:0;overflow:auto;background:#FFFFCE;font:normal 9pt \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.prettyHtmlBackTrace($skipLength).'</pre>':'')
+			.($skipLength!==false?'<pre style="text-align:left;margin:0;overflow:auto;background:#FFFFCE;font:normal 9pt \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.prettyHtmlBackTrace($skipLength).'</pre>':'')
 			.'</div></div><br />',4096);
 	}else{
 		echo $message;
-		if($withBacktrace) echo PHP_EOL.prettyBackTrace($skipLength);
+		if($skipLength!==false) echo PHP_EOL.prettyBackTrace($skipLength);
 	}
 	if($flush && ob_get_length()>0){ ob_flush(); flush(); }
 }
@@ -119,7 +119,7 @@ function debug($object,$flush=true){
 	prettyDebug(print_r($object,true),2,$flush);
 }
 function debugCode($code,$withBacktrace=true){
-	prettyDebug(htmlentities($code,ENT_QUOTES,'UTF-8'),2,true,$withBacktrace);
+	prettyDebug(htmlentities($code,ENT_QUOTES,'UTF-8'),$withBacktrace?2:false,true);
 }
 function debugVar(){
 	ob_start();
