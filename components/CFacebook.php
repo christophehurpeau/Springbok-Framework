@@ -1,6 +1,6 @@
 <?php
 /*include CLIBS.'facebook/facebook.php';*/
-class CFacebook{
+class CFacebook extends CAbstractOAuthConnect{
 	/*private $facebook;
 	
 	public function __construct(){
@@ -17,7 +17,7 @@ class CFacebook{
 	*/
 	
 	public static function redirectForConnection($url,$state,$scope){
-		Controller::redirect('https://www.facebook.com/dialog/oauth?client_id=220086468082002&redirect_uri='.urlencode($url).'&state='.$state.(empty($scope)?'':'&scope='.$scope));
+		Controller::redirect('https://www.facebook.com/dialog/oauth?client_id='.Config::$facebook_appId.'&redirect_uri='.urlencode($url).'&state='.$state.(empty($scope)?'':'&scope='.$scope));
 	}
 	
 	public static function getAccessToken($url,$code){
@@ -27,30 +27,10 @@ class CFacebook{
 		return $params['access_token'];
 	}
 	
-	
-	private $accessToken,$me=null;
-	public function __construct($accessToken,$retrieveMe=false){
-		$this->accessToken=&$accessToken;
-		if($retrieveMe===true) $this->retrieveMe();
-	}
-	
 	public function retrieveMe(){
 		$graph_url = "https://graph.facebook.com/me?access_token=".$this->accessToken;
 		$this->me=json_decode(CSimpleHttpClient::get($graph_url),true);
 		return $this->me;
-	}
-	
-	public function isValidMe(){
-		return !empty($this->me) && !isset($this->me['error']) && !empty($this->me['id']);
-	}
-	
-	public function &me($name){
-		return $this->me[$name];
-	}
-	
-	public function sayHello(){
-		if($this->me===null) $this->retrieveMe();
-		return 'Hello '.$this->me['name'];
 	}
 	
 	public function createUser(){
