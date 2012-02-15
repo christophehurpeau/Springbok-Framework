@@ -118,4 +118,6 @@ class Springbok{
 	}
 }
 
-function __autoload($className){ Springbok::load($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */); }
+function __autoload($className){ /* DEV */
+	if($className==='Config') eval('class Config{}');
+/* /DEV */ Springbok::load($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */); }
