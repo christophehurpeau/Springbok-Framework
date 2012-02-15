@@ -51,7 +51,7 @@
 				type:'post',cache:false,
 				beforeSend:function(){submit.hide();submit.parent().append($('<span/>').attr({id:'imgLoadingSubmit'+currentNum,'class':"img imgLoading"}));},
 				data:form.serialize(),
-				complete:function(){submit.show();$('#imgLoadingSubmit'+currentNum).remove();form.fadeTo(150,1)},
+				complete:function(){submit.show().blur();$('#imgLoadingSubmit'+currentNum).remove();form.fadeTo(150,1)},
 				error:error
 			};
 			if(success) ajaxOptions.success=success;
