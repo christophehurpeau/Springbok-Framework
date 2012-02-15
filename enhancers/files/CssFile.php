@@ -150,6 +150,8 @@ class CssFile extends EnhancerFile{
 			'VARIABLE_H1_TEXT_SHADOW'=>'false',
 			'VARIABLE_CONTENT_BACKGROUND'=>'false',
 			
+			'IE6_VARIABLE_WIDTH'=>'700px',
+			
 			'PAGE_SHADOWED_BOX_BACKGROUND'=>'#FFF',
 			'PAGE_SHADOWED_BOX_BORDER'=>'false',
 			'PAGE_SHADOWED_BOX_SHADOW_COLOR'=>'#888',

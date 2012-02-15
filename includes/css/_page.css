@@ -202,7 +202,7 @@ IFNOT(PAGE_FIXED)
 /* IE <= 6 */
 * html body #page div.variable{
 	float:left;
-	width: 700px;
+	width:IE6_VARIABLE_WIDTH;
 }
 ENDIF
 
