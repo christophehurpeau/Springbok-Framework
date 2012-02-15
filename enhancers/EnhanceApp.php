@@ -72,6 +72,7 @@ class EnhanceApp extends AEnhance{
 		//if(!empty($this->config['includes'])){
 		if(empty($this->config['includes'])) $this->config['includes']=array();
 		$this->config['includes']['img'][]='ajax';
+		$this->config['includes']['js'][]='ie-lt8.js';
 			foreach($this->config['includes'] as $type=>$includes){
 				if(is_string($includes)){ $includes=explode(',',$includes); $type=''; }
 				else $type=$type.DS;
