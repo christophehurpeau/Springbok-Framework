@@ -21,7 +21,7 @@ class App{
 	
 	public static function run($action,$argv){
 		/* DEV */
-		if($argv[1]!=='noenhance'){
+		if(!empty($argv[1]) && $argv[1]!=='noenhance'){
 			include CORE.'enhancers/EnhanceApp.php';
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
 			$changes=$enhanceApp->process();
@@ -29,7 +29,7 @@ class App{
 		/* /DEV */
 		include APP.'config/_'.ENV.'.php';
 		/* DEV */
-		if($argv[1]!=='noenhance'){
+		if(!empty($argv[1]) && $argv[1]!=='noenhance'){
 			$schemaProcessing=new DBSchemaProcessing(new Folder(APP.'models'),new Folder(APP.'triggers'),true,false);
 			self::$enhancing=false;
 		}

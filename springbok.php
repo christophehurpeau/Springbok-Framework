@@ -53,7 +53,7 @@ class Springbok{
 		if(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
 		if(isset($_SERVER['REQUEST_URI'])) $log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
-		if(CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
+		if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
 		$log.="\nCall Stack:\n".$exception->getTraceAsString();
 		
 		if($exception instanceof HttpException){
@@ -74,11 +74,11 @@ class Springbok{
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		$log=self::getErrorText($code)." : $message ($file:$line)\n";
 		if(isset($_SERVER['REQUEST_URI'])) $log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
-		if(CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
+		if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
 		$log.="\nCall Stack:\n".prettyBackTrace();
 		if($message==='Unsupported operand types') $log.="\nContext:\n".print_r($context,true);
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('error')->log($log);
-		/* DEV */elseif(App::$enhancing){debug($log); exit;}else die($log);/* /DEV */
+		/* DEV *//*elseif(App::$enhancing){debug($log); exit;}else die($log);*//* /DEV */
 		
 		/* PROD */ if(! in_array($code,array(E_ERROR,E_CORE_ERROR,E_USER_ERROR,E_WARNING,E_CORE_WARNING,E_COMPILE_WARNING,E_USER_WARNING,E_RECOVERABLE_ERROR))) return true; /* /PROD */
 		

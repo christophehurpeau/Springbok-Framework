@@ -1,6 +1,6 @@
 <?php
 include __DIR__.DS.'AEnhancerFile.php';
-include CORE.'utils/UFile.php';
+if(!class_exists('UFile',false)) include CORE.'utils/UFile.php';
 include CORE.'utils/UPhp.php';
 include CORE.'utils/UInflector.php';
 include CORE.'utils/UArray.php';
