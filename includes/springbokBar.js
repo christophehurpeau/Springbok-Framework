@@ -16,7 +16,7 @@ $(document).ready(function(){
 	var ajaxSpanCount=$('#springbok-bar a[rel=ajax] span');
 	$('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 		if(!checkedDivFixedPosition) checkDivFixedPosition();
-		console.log(e,xhr,settings);
+		//console.log(e,xhr,settings);
 		ajaxSpanCount.text(new Number(ajaxSpanCount.text())+1);
 		$('<li/>').append(settings.type+' ',$('<b/>').text(settings.url),' [ '+(settings.async?'async':'sync')+' ]'//,' - ',
 					//$('<a href="#"/>').text('See Request Headers').click(function(){displaySpringbokBarPopup(xhr.responseText);return false;})

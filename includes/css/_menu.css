@@ -104,7 +104,7 @@ IF(VARIABLE_MENU_COLOR)#page menu.top li a:hover{color:VARIABLE_MENU_COLOR}ENDIF
 }
 #page menu.top li a.current{
 	position: relative; z-index: 2; /* couvre l'ombre, si existe, du div suivant */
-	background:VARIABLE_MENU_CURRENT_BACKGROUND;
+	IF(VARIABLE_MENU_CURRENT_BACKGROUND) background:VARIABLE_MENU_CURRENT_BACKGROUND; ENDIF
 	color:VARIABLE_MENU_CURRENT_COLOR;
 }
 

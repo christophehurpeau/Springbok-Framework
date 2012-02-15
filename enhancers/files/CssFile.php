@@ -187,9 +187,10 @@ class CssFile extends EnhancerFile{
 			'HEADER_MENU_A_CURRENTHOVER_COLOR'=>'false',
 			'HEADER_MENU_A_CURRENTHOVER_BACKGROUND'=>'false',
 			'HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB'=>'false',
+			'HEADER_MENU_A_CURRENT_HOVER_BACKGROUND'=>'false',
+			'HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB'=>'false',
 			'HEADER_MENU_A_CURRENT_HOVER_COLOR'=>'false',
 			'HEADER_MENU_A_CURRENT_HOVER_SHADOW'=>'false',
-			'HEADER_MENU_A_CURRENT_HOVER_BACKGROUND'=>'false',
 			'VARIABLE_MENU_COLOR'=>'false',
 			'VARIABLE_MENU_CURRENT_BACKGROUND'=>'false',
 
@@ -219,8 +220,12 @@ class CssFile extends EnhancerFile{
 		);
 		for($i=1;$i<=5;$i++){
 			$constantes['COLOR'.$i]='false';
+			$constantes['BACKGROUND_COLOR'.$i]='false';
 			$constantes['BACKGROUND_TB_COLOR'.$i]='false';
 			$constantes['BLOCK_COLOR'.$i.'_COLOR']='false';
+			$constantes['BUTTON_COLOR'.$i.'_COLOR']='false';
+			$constantes['BUTTON_COLOR'.$i.'_BORDER']='false';
+			$constantes['BUTTON_COLOR'.$i.'_TEXTSHADOW']='false';
 		}
 		
 		$content=preg_replace_callback('/@CONST\s+([0-9\w_-]+)\s*=\s*\'?([0-9\w\s\._\-\#\,]+)\'?;/Ui',function($matches) use(&$constantes){
@@ -228,6 +233,7 @@ class CssFile extends EnhancerFile{
 			return '';
 		},$content);
 		uksort($constantes,function(&$k1,&$k2){return strlen($k1)<strlen($k2);}); // trie les constantes du plus grd au moins grd pour éviter de remplacer des bouts de constantes
+		
 		foreach($constantes as $const=>$replacement)
 			$content=str_replace(array('$'.$const,$const),$replacement,$content);
 		return $content;
@@ -252,7 +258,7 @@ class CssFile extends EnhancerFile{
 				//$vals[$key]='true';
 				$vals[$key]="'".$vals[$key]."'";
 			}
-			
+			if($matches[0]==='IF(BACKGROUND_TB_COLOR1) bg-gradient-tb(BACKGROUND_TB_COLOR$I); ENDIF') debugVar($vals);
 			//debugVar($matches[2].' => '.'return '.implode(' ',$vals).';');
 			$eval='return '.implode(' ',$vals).';';
 			//$eval=str_replace('true true','true',str_replace('true true','true',$eval));
