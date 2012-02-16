@@ -81,10 +81,6 @@ includeCore('springbok.history');
 				type:type?type:'GET', data:data,
 				async:false,
 				success:function(data,textStatus,jqXHR){
-					if(jqXHR.getResponseHeader('SpringbokAjaxTitle')==='File Transfer'){
-						return;
-					}
-					
 					var h,div,to;
 					
 					if(h=jqXHR.getResponseHeader('SpringbokAjaxTitle')) $$.setTitle($.parseJSON(h));
