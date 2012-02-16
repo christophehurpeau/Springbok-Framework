@@ -1,6 +1,6 @@
 <?php
 /*include CLIBS.'facebook/facebook.php';*/
-class CFacebook extends CAbstractOAuthConnect{
+class COAuth2Facebook extends CAbstractOAuthConnect{
 	/*private $facebook;
 	
 	public function __construct(){

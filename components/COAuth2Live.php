@@ -5,7 +5,7 @@
 * scopes : http://msdn.microsoft.com/en-us/library/hh243646.aspx
 * user api : http://msdn.microsoft.com/en-us/library/hh243648.aspx#user
 */
-class CLive extends CAbstractOAuthConnect{
+class COAuth2Live extends CAbstractOAuthConnect{
 	public static function redirectForConnection($url,$state,$scope='wl.basic%20wl.signin%20wl.offline_access'){
 		Controller::redirect('https://oauth.live.com/authorize?client_id='.Config::$wlive_appId.'&scope='.$scope.'&response_type=code&redirect_uri='.urlencode($url).'&state='.$state);
 	}
