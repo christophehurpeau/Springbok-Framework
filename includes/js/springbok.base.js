@@ -89,11 +89,11 @@ var $$={
 	isObject:function(){ return typeof(varName)==='object' }
 	
 };
-/*includeCore('springbok.ext.object');*/
+
 includeCore('springbok.ext.string');
 includeCore('springbok.ext.arrays');
 
-RegExp.sbEscape=function(value){
+RegExp.prototype.sbEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
@@ -139,3 +139,25 @@ function handleError(e){
 	return true;
 }
 //window.onerror = handleError;
+
+
+function extend(subclass,superclass,extendsPrototype){
+	var f=function (){},i;
+	f.prototype=superclass.prototype;
+	subclass.prototype=new f();
+	subclass.prototype.constructor=subclass;
+	subclass.superconstructor=superclass;
+	subclass.superclass=superclass.prototype;
+	
+	extendPrototype(subclass,extendsPrototype);
+}
+function extendPrototype(targetclass,p){
+	for(var i in p)
+		targetclass.prototype[i]=p[i];
+}
+
+/*function extendBasic(subclass,superclass,basicsuperclass,varName,extendsPrototype){
+	extend(subclass,superclass,extendsPrototype);
+	for(var i in basicsuperclass.prototype)
+		subclass.prototype[i]=function(){return basicsuperclass.prototype[i].apply(this[varName],arguments);}
+}*/

@@ -49,7 +49,7 @@
 		
 		find:function(all){
 			this.all='/'+all.sbTrim('/');
-			console.log(this.all);
+			console.log('router : find :'+this.all);
 			var route=false,lang=$$.langs.get();
 			$.each(routes,function(i,r){
 				if(r[lang].matches(all)){

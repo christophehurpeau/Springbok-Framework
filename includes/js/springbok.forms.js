@@ -100,183 +100,178 @@ function HForm(modelName,formAttributes,tagContainer,options){
 	this.name=modelName?modelName.sbLcFirst():false;
 	this.tagContainer=tagContainer!==undefined?tagContainer:'div';
 }
-HForm.prototype.end=function(submit){
-	if(submit || submit==undefined) this.$.append(this.submit(submit))
-	return this.$;
-};
+extendPrototype(HForm,{
+	end:function(submit){
+		if(submit || submit==undefined) this.$.append(this.submit(submit))
+		return this.$;
+	},
+	_container:function(res,defaultClass,attributes,labelFor,label,appendLabel){
+		if(this.tagContainer && (attributes || attributes===undefined)){
+			attributes=$.extend({},{'class':defaultClass},attributes);
+			res=$('<'+this.tagContainer+'/>').html(res);
+			if(attributes.before){ res.prepend(attributes.before); delete attributes.before; }
+			if(attributes.after){ res.append(attributes.after); delete attributes.after; }
+			res.attr(attributes);
+			if(label) res[appendLabel?'append':'prepend']($('<label/>').attr('for',labelFor).text(label));
+		}
+		return res;
+	},
+	_input:function(name,type,label,inputAttributes,containerAttributes){
+		inputAttributes=$.extend({},{
+			id:(this.modelName ? this.modelName : 'Input')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+			name:(this.name ? this.name+'['+name+']' : name)
+		},inputAttributes);
+		delete inputAttributes.idSuffix;
+	
+		var res=$('<input type="'+type+'"/>');
+		
+		if(inputAttributes.before){ res.before(inputAttributes.before); delete inputAttributes.before; }
+		if(inputAttributes.after){ res.after(inputAttributes.after); delete inputAttributes.after; }
+		
+		res.attr(inputAttributes);
+		
+		return this._container(res,'input '+(type!=='text'?'text ':'')+type,containerAttributes,inputAttributes.id,label);
+	},
+	inputText:function(name,label,inputAttributes,containerAttributes){
+		return this._input(name,'text',label,inputAttributes,containerAttributes);
+	},
+	appendInputText:function(name,label,inputAttributes,containerAttributes){
+		this.$.append(this.inputText(name,label,inputAttributes,containerAttributes));
+		return this;
+	},
+	inputPassword:function(name,label,inputAttributes,containerAttributes){
+		return this._input(name,'password',label,inputAttributes,containerAttributes);
+	},
+	appendInputPassword:function(name,label,inputAttributes,containerAttributes){
+		this.$.append(this.inputPassword(name,label,inputAttributes,containerAttributes));
+		return this;
+	},
+	inputNumber:function(name,label,inputAttributes,containerAttributes){
+		return this._input(name,'number',label,inputAttributes,containerAttributes);
+	},
+	appendInputNumber:function(name,label,inputAttributes,containerAttributes){
+		this.$.append(this.inputNumber(name,label,inputAttributes,containerAttributes));
+		return this;
+	},
+	inputUrl:function(name,label,inputAttributes,containerAttributes){
+		return this._input(name,'url',label,inputAttributes,containerAttributes);
+	},
+	appendInputUrl:function(name,label,inputAttributes,containerAttributes){
+		this.$.append(this.inputUrl(name,label,inputAttributes,containerAttributes));
+		return this;
+	},
+	inputEmail:function(name,label,inputAttributes,containerAttributes){
+		return this._input(name,'email',label,inputAttributes,containerAttributes);
+	},
+	appendInputEmail:function(name,label,inputAttributes,containerAttributes){
+		this.$.append(this.inputEmail(name,label,inputAttributes,containerAttributes));
+		return this;
+	},
 
-HForm.prototype._container=function(res,defaultClass,attributes,labelFor,label,appendLabel){
-	if(this.tagContainer && (attributes || attributes===undefined)){
-		attributes=$.extend({},{'class':defaultClass},attributes);
-		res=$('<'+this.tagContainer+'/>').html(res);
-		if(attributes.before){ res.prepend(attributes.before); delete attributes.before; }
-		if(attributes.after){ res.append(attributes.after); delete attributes.after; }
-		res.attr(attributes);
-		if(label) res[appendLabel?'append':'prepend']($('<label/>').attr('for',labelFor).text(label));
+
+	select:function(name,list,options,inputAttributes,containerAttributes){
+		options=$.extend({},{empty:undefined},options);
+		inputAttributes=$.extend({},{
+			id:(this.modelName ? this.modelName : 'Select')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+			name:(this.name ? this.name+'['+name+']' : name)
+		},inputAttributes);
+		delete inputAttributes.idSuffix;
+	
+		var select=$('<select/>').attr(inputAttributes),t=this;
+		if(options.empty != undefined)
+			select.append($('<option value=""/>').text(options.empty));
+		
+		$.each(list,function(k,v){
+			if(v) select.append(t.option(k,v,options.selected));
+		});
+		
+		return this._container(select,'input select',containerAttributes,inputAttributes.id,options.label);
+	},
+	appendSelect:function(name,list,options,inputAttributes,containerAttributes){
+		this.$.append(this.select(name,list,options,inputAttributes,containerAttributes));
+		return this;
+	},
+
+	option:function(value,name,selected){
+		return $('<option'+(selected===undefined?'':(selected==value?' selected="selected"':''))+'/>').attr('value',value).text(name);
+	},
+
+
+	selectHour:function(name,options,inputAttributes,containerAttributes){
+		return this.select(name,['0',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],options,inputAttributes,containerAttributes);
+	},
+	appendSelectHour:function(name,options,inputAttributes,containerAttributes){
+		this.$.append(this.selectHour(name,options,inputAttributes,containerAttributes));
+		return this;
+	},
+
+	selectHourMorning:function(name,options,inputAttributes,containerAttributes){
+		return this.select(name,['0',1,2,3,4,5,6,7,8,9,10,11,12],options,inputAttributes,containerAttributes);
+	},
+	appendSelectHourMorning:function(name,options,inputAttributes,containerAttributes){
+		this.$.append(this.selectHourMorning(name,options,inputAttributes,containerAttributes));
+		return this;
+	},
+
+	selectHourAfternoon:function(name,options,inputAttributes,containerAttributes){
+		return this.select(name,{12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:21,22:22,23:23},options,inputAttributes,containerAttributes);
+	},
+	appendSelectHourAfternoon:function(name,options,inputAttributes,containerAttributes){
+		this.$.append(this.selectHourAfternoon(name,options,inputAttributes,containerAttributes));
+		return this;
+	},
+	
+	
+	textarea:function(name,label,inputAttributes,containerAttributes){
+		inputAttributes=$.extend({},{
+			id:(this.modelName ? this.modelName : 'Textarea')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+			name:(this.name ? this.name+'['+name+']' : name)
+		},inputAttributes);
+		delete inputAttributes.idSuffix;
+		
+		var res=$('<textarea/>');
+		if(inputAttributes.value){
+			res.text(inputAttributes.value);
+			delete inputAttributes.value;
+		}
+		res.attr(inputAttributes);
+		
+		return this._container(res,'input textarea',containerAttributes,inputAttributes.id,label);
+	},
+	appendTextarea:function(name,options,inputAttributes,containerAttributes){
+		this.$.append(this.textarea(name,options,inputAttributes,containerAttributes));
+		return this;
+	},
+
+
+	checkbox:function(name,label,attributes,containerAttributes){
+		attributes=$.extend({},{
+			type:'checkbox',
+			id:(this.modelName ? this.modelName : 'Checkbox')+name.sbUcFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
+			name:(this.name ? this.name+'['+name+']' : name)
+		},attributes);
+		delete attributes.idSuffix;
+		attributes.checked ? attributes.checked='checked' : delete attributes.checked;
+		
+		var res=$('<input/>').attr(attributes);
+		return this._container(res,'input checkbox',containerAttributes,attributes.id,label,true);
+	},
+	appendCheckbox:function(name,options,inputAttributes,containerAttributes){
+		this.$.append(this.checkbox(name,options,inputAttributes,containerAttributes));
+		return this;
+	},
+	
+	
+	submit:function(title,attributes,containerAttributes){
+		if(title===undefined) title=i18nc.Save;
+		attributes=$.extend({},{'class':'submit'},attributes);
+		var str=$('<input type="submit"/>').attr('value',title).attr(attributes);
+		if(this.tagContainer !== 'div' || containerAttributes!==undefined)
+			str=$('<'+this.tagContainer+' class="submit"/>').attr(containerAttributes||{}).html(str); 
+		return str;
+	},
+	appendSubmit:function(title,attributes,containerAttributes){
+		this.$.append(this.submit(title,attributes,containerAttributes));
+		return this;
 	}
-	return res;
-};
-
-HForm.prototype._input=function(name,type,label,inputAttributes,containerAttributes){
-	inputAttributes=$.extend({},{
-		id:(this.modelName ? this.modelName : 'Input')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
-		name:(this.name ? this.name+'['+name+']' : name)
-	},inputAttributes);
-	delete inputAttributes.idSuffix;
-	
-	var res=$('<input type="'+type+'"/>');
-	
-	if(inputAttributes.before){ res.before(inputAttributes.before); delete inputAttributes.before; }
-	if(inputAttributes.after){ res.after(inputAttributes.after); delete inputAttributes.after; }
-	
-	res.attr(inputAttributes);
-	
-	return this._container(res,'input '+(type!=='text'?'text ':'')+type,containerAttributes,inputAttributes.id,label);
-};
-
-HForm.prototype.inputText=function(name,label,inputAttributes,containerAttributes){
-	return this._input(name,'text',label,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendInputText=function(name,label,inputAttributes,containerAttributes){
-	this.$.append(this.inputText(name,label,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.inputPassword=function(name,label,inputAttributes,containerAttributes){
-	return this._input(name,'password',label,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendInputPassword=function(name,label,inputAttributes,containerAttributes){
-	this.$.append(this.inputPassword(name,label,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.inputNumber=function(name,label,inputAttributes,containerAttributes){
-	return this._input(name,'number',label,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendInputNumber=function(name,label,inputAttributes,containerAttributes){
-	this.$.append(this.inputNumber(name,label,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.inputUrl=function(name,label,inputAttributes,containerAttributes){
-	return this._input(name,'url',label,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendInputUrl=function(name,label,inputAttributes,containerAttributes){
-	this.$.append(this.inputUrl(name,label,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.inputEmail=function(name,label,inputAttributes,containerAttributes){
-	return this._input(name,'email',label,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendInputEmail=function(name,label,inputAttributes,containerAttributes){
-	this.$.append(this.inputEmail(name,label,inputAttributes,containerAttributes));
-	return this;
-};
-
-
-HForm.prototype.select=function(name,list,options,inputAttributes,containerAttributes){
-	options=$.extend({},{empty:undefined},options);
-	inputAttributes=$.extend({},{
-		id:(this.modelName ? this.modelName : 'Select')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
-		name:(this.name ? this.name+'['+name+']' : name)
-	},inputAttributes);
-	delete inputAttributes.idSuffix;
-
-	var select=$('<select/>').attr(inputAttributes),t=this;
-	if(options.empty != undefined)
-		select.append($('<option value=""/>').text(options.empty));
-	
-	$.each(list,function(k,v){
-		if(v) select.append(t.option(k,v,options.selected));
-	});
-	
-	return this._container(select,'input select',containerAttributes,inputAttributes.id,options.label);
-};
-HForm.prototype.appendSelect=function(name,list,options,inputAttributes,containerAttributes){
-	this.$.append(this.select(name,list,options,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.option=function(value,name,selected){
-	return $('<option'+(selected===undefined?'':(selected==value?' selected="selected"':''))+'/>').attr('value',value).text(name);
-};
-
-
-HForm.prototype.selectHour=function(name,options,inputAttributes,containerAttributes){
-	return this.select(name,['0',1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],options,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendSelectHour=function(name,options,inputAttributes,containerAttributes){
-	this.$.append(this.selectHour(name,options,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.selectHourMorning=function(name,options,inputAttributes,containerAttributes){
-	return this.select(name,['0',1,2,3,4,5,6,7,8,9,10,11,12],options,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendSelectHourMorning=function(name,options,inputAttributes,containerAttributes){
-	this.$.append(this.selectHourMorning(name,options,inputAttributes,containerAttributes));
-	return this;
-};
-
-HForm.prototype.selectHourAfternoon=function(name,options,inputAttributes,containerAttributes){
-	return this.select(name,{12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:21,22:22,23:23},options,inputAttributes,containerAttributes);
-};
-HForm.prototype.appendSelectHourAfternoon=function(name,options,inputAttributes,containerAttributes){
-	this.$.append(this.selectHourAfternoon(name,options,inputAttributes,containerAttributes));
-	return this;
-};
-
-
-HForm.prototype.textarea=function(name,label,inputAttributes,containerAttributes){
-	inputAttributes=$.extend({},{
-		id:(this.modelName ? this.modelName : 'Textarea')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
-		name:(this.name ? this.name+'['+name+']' : name)
-	},inputAttributes);
-	delete inputAttributes.idSuffix;
-	
-	var res=$('<textarea/>');
-	if(inputAttributes.value){
-		res.text(inputAttributes.value);
-		delete inputAttributes.value;
-	}
-	res.attr(inputAttributes);
-	
-	return this._container(res,'input textarea',containerAttributes,inputAttributes.id,label);
-};
-HForm.prototype.appendTextarea=function(name,options,inputAttributes,containerAttributes){
-	this.$.append(this.textarea(name,options,inputAttributes,containerAttributes));
-	return this;
-};
-
-
-HForm.prototype.checkbox=function(name,label,attributes,containerAttributes){
-	attributes=$.extend({},{
-		type:'checkbox',
-		id:(this.modelName ? this.modelName : 'Checkbox')+name.sbUcFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
-		name:(this.name ? this.name+'['+name+']' : name)
-	},attributes);
-	delete attributes.idSuffix;
-	attributes.checked ? attributes.checked='checked' : delete attributes.checked;
-	
-	var res=$('<input/>').attr(attributes);
-	return this._container(res,'input checkbox',containerAttributes,attributes.id,label,true);
-}
-HForm.prototype.appendCheckbox=function(name,options,inputAttributes,containerAttributes){
-	this.$.append(this.checkbox(name,options,inputAttributes,containerAttributes));
-	return this;
-};
-
-
-HForm.prototype.submit=function(title,attributes,containerAttributes){
-	if(title===undefined) title=i18nc.Save;
-	attributes=$.extend({},{'class':'submit'},attributes);
-	var str=$('<input type="submit"/>').attr('value',title).attr(attributes);
-	if(this.tagContainer !== 'div' || containerAttributes!==undefined)
-		str=$('<'+this.tagContainer+' class="submit"/>').attr(containerAttributes||{}).html(str); 
-	return str;
-};
-HForm.prototype.appendSubmit=function(title,attributes,containerAttributes){
-	this.$.append(this.submit(title,attributes,containerAttributes));
-	return this;
-};
+});

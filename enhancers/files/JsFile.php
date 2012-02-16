@@ -10,7 +10,7 @@ class JsFile extends EnhancerFile{
 				.'$$.app.jsapp('.json_encode(EnhancerFile::$APP_CONFIG['projectName']).','.time().');' // force également à toujours refaire le fichier
 				.(empty($matchesLayout[1])?'':'$$.app.header='.JsAppFile::viewToJavascript($matchesLayout[1]).';')
 				.(empty($matchesLayout[2])?'':'$$.app.footer='.JsAppFile::viewToJavascript($matchesLayout[2]).';')
-				.('$$.router.init('.substr(file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/routes.js'),7).');')
+				.('$$.router.init('.substr(file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/routes.js'),7,-1).');')
 				.$srcContent;
 			//debugCode($srcContent);
 		}
