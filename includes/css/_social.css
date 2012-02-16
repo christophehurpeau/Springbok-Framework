@@ -7,6 +7,9 @@
 	text-shadow: none;
 	text-decoration:none;
 }
+.fb-button:hover,.fb-button:focus,.wlive-button:hover,.wlive-button:focus{
+	text-decoration:none;outline:none;
+}
 
 .fb-button{
 	background:#627aac url('COREIMG/social/facebook_18.png') no-repeat;
@@ -25,7 +28,7 @@
 	text-shadow: none;
 }
 .fb-button:hover,.fb-button:focus{
-	color:#FFF;text-decoration:none;outline:none;
+	color:#FFF;
 }
 
 .wlive-button{

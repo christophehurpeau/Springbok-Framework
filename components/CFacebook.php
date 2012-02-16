@@ -51,10 +51,12 @@ class CFacebook extends CAbstractOAuthConnect{
 		$user->first_name=$this->me['first_name'];
 		$user->last_name=$this->me['last_name'];
 		$facebookUser->access_token=$this->accessToken;
+		$facebookUser->outdated=false;
 		$facebookUser->facebook_id=$this->me['id'];
 		$facebookUser->facebook_username=$this->me['username'];
 		$facebookUser->link=$this->me['link'];
 		if(isset($this->me['email'])) $user->email=$facebookUser->email=$this->me['email'];
+		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==="male" ? AConsts::MAN : ($this->me['gender']==='female' ? AConsts::WOMAN : AConsts::UNKNOWN );
 		$facebookUser->facebook_verified=$this->me['verified'];
 		return true;
 	}
