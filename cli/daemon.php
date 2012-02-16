@@ -40,11 +40,11 @@ else{
 		pcntl_signal(SIGCHLD, 'sig_handler');
 		function sig_handler($signo){
 			if($signo===SIGTERM || $signo===SIGINT){
-				CLogger::get('daemon')->log(/*$argv[1].'--'.$argv[2].': '.*/($signo===SIGTERM?'SIGTERM':'SIGINT'));
+				CLogger::get('daemon')->log(/*$argv[1].'--'.$argv[2].': '.*//*($signo===SIGTERM?'SIGTERM':'SIGINT'));
 				Daemon::_exit();
 				exit;
 			}elseif($signo===SIGHUP){
-				CLogger::get('daemon')->log(/*$argv[1].'--'.$argv[2].*/': SIGUP');
+				CLogger::get('daemon')->log(/*$argv[1].'--'.$argv[2].*//*': SIGUP');
 				Daemon::_restart();
 			}elseif($signo===SIGCHLD) pcntl_waitpid(-1, $status);
 		}
