@@ -1,6 +1,6 @@
 <?php
 /*include CLIBS.'facebook/facebook.php';*/
-class COAuth2Facebook extends CAbstractOAuthConnect{
+class COAuth2Facebook extends COAuth2Connect{
 	/*private $facebook;
 	
 	public function __construct(){
@@ -16,21 +16,17 @@ class COAuth2Facebook extends CAbstractOAuthConnect{
 	}
 	*/
 	
-	public static function redirectForConnection($url,$state,$scope){
-		Controller::redirect('https://www.facebook.com/dialog/oauth?client_id='.Config::$facebook_appId.'&redirect_uri='.urlencode($url).'&state='.$state.(empty($scope)?'':'&scope='.$scope));
-	}
+	protected static $OAUTH_URL='https://www.facebook.com/dialog/oauth',$TOKEN_URL='https://graph.facebook.com/oauth/access_token',$API_URL='https://graph.facebook.com';
 	
-	public static function getAccessToken($url,$code){
-		$token_url='https://graph.facebook.com/oauth/access_token?client_id='.Config::$facebook_appId.'&redirect_uri='.urlencode($url).'&client_secret='.Config::$facebook_secret.'&code='.$code;
-		$response=file_get_contents($token_url);
+	protected static function appId(){ return Config::$facebook_appId; }
+	protected static function secret(){ return Config::$facebook_secret; }
+	
+	
+	public static function getTokens($url,$code){
+		$token_url=self::$TOKEN_URL.'?client_id='.Config::$facebook_appId.'&redirect_uri='.urlencode($url).'&client_secret='.Config::$facebook_secret.'&code='.$code;
+		$response=CSimpleHttpClient::get($token_url);
 		parse_str($response,$params);
-		return $params['access_token'];
-	}
-	
-	public function retrieveMe(){
-		$graph_url = "https://graph.facebook.com/me?access_token=".$this->accessToken;
-		$this->me=json_decode(CSimpleHttpClient::get($graph_url),true);
-		return $this->me;
+		return $params;
 	}
 	
 	public function createUser(){

@@ -5,7 +5,13 @@
 * scopes : http://msdn.microsoft.com/en-us/library/hh243646.aspx
 * user api : http://msdn.microsoft.com/en-us/library/hh243648.aspx#user
 */
-class COAuth2Live extends CAbstractOAuthConnect{
+class COAuth2Live extends COAuth2Connect{
+	protected static $OAUTH_URL='https://oauth.live.com/authorize',$TOKEN_URL='https://oauth.live.com/token',$API_URL='https://apis.live.net/v5.0';
+	
+	protected static function appId(){ return Config::$wlive_appId; }
+	protected static function secret(){ return Config::$wlive_secret; }
+	
+	/*
 	public static function redirectForConnection($url,$state,$scope='wl.basic%20wl.signin%20wl.offline_access'){
 		Controller::redirect('https://oauth.live.com/authorize?client_id='.Config::$wlive_appId.'&scope='.$scope.'&response_type=code&redirect_uri='.urlencode($url).'&state='.$state);
 	}
@@ -15,21 +21,11 @@ class COAuth2Live extends CAbstractOAuthConnect{
 		return CSimpleHttpClient::getJson($token_url);
 	}
 	
-	public static function refreshToken($url,$refreshToken){
+	public static function refreshTokens($url,$refreshToken){
 		$token_url='https://oauth.live.com/token?client_id='.Config::$wlive_appId.'&redirect_uri='.urlencode($url).'&client_secret='.urlencode(Config::$wlive_secret).'&refresh_token='.$refreshToken.'&grant_type=refresh_token';
 		return CSimpleHttpClient::getJson($token_url);
-	}
+	}*/
 	
-	public function __construct($accessTokens,$retrieveMe=false){
-		parent::__construct($accessTokens['access_token'],$retrieveMe);
-		if(!empty($accessTokens['refresh_token'])) $this->refreshToken=$accessTokens['refresh_token'];
-	}
-
-	public function retrieveMe(){
-		$graph_url = "https://apis.live.net/v5.0/me?access_token=".$this->accessToken;
-		$this->me=CSimpleHttpClient::getJson($graph_url);
-		return $this->me;
-	}
 	
 	
 	public function createUser(){
