@@ -6,7 +6,7 @@ $$.tinymce={
 			$$.loadSyncScript(webdir+'js/tinymce.js');
 			$$.loadSyncScript(webdir+'js/tinymce.'+i18n_lang+'.js');
 			// bug for ajax partial load - document.ready should not be necessary, but we never know !
-			$(document).ready(function(){tinymce.dom.Event._pageInit(window)});
+			$$.ready(function(){tinymce.dom.Event._pageInit(window)});
 		}
 		return this;
 	},

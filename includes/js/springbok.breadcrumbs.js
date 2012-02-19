@@ -1,6 +1,6 @@
 (function(){
 	var breadcrumbs,linkoptions={itemprop:'url'},separator=' &raquo; ';
-	$(document).ready(function(){
+	$$.ready(function(){
 		breadcrumbs=$('#breadcrumbs > span:first');
 	});
 	$$.breadcrumbs=function(links){

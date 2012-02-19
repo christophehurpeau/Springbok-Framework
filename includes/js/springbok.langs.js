@@ -1,6 +1,5 @@
 $$.langs={
-	lang:'en',
 	get:function(){
-		return this.lang; 
+		return i18n_lang; 
 	}
 };

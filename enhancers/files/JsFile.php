@@ -6,7 +6,7 @@ class JsFile extends EnhancerFile{
 		if($this->fileName()==='jsapp.js'){
 			$layout=file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/layout.php');
 			preg_match('#<header>\s*(.*)\s*</header>.*<footer>\s*(.*)</footer>\s*#Us',$layout,$matchesLayout);
-			$srcContent="includeCore('springbok.jsapp');\nincludeCore('springbok.router');"
+			$srcContent="includeCore('springbok.jsapp');"
 				.'$$.app.jsapp('.json_encode(EnhancerFile::$APP_CONFIG['projectName']).','.time().');' // force également à toujours refaire le fichier
 				.(empty($matchesLayout[1])?'':'$$.app.header='.JsAppFile::viewToJavascript($matchesLayout[1]).';')
 				.(empty($matchesLayout[2])?'':'$$.app.footer='.JsAppFile::viewToJavascript($matchesLayout[2]).';')
@@ -26,7 +26,7 @@ class JsFile extends EnhancerFile{
 		else $entrances=array();
 		if(in_array($this->fileName(),$jsFiles))
 			$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(in_array(substr($this->fileName(),0,-3),$entrances)?'/'.substr($this->fileName(),0,-3):'')."/'"
-				./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",webdir=basedir+'web/',webdirupd=webdir,imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
+				./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",webdir=basedir+'web/',staticUrl=webdir,imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
 	}
 	
 	public function getMd5Content(){

@@ -3,7 +3,7 @@ includeCore('springbok.history');
 	var lastConfirmResult=true;
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
 	var divContainer,divPage,divVariable,divContent;
-	$(document).ready(function(){
+	$$.ready(function(){
 		//console.log('AJAX DOCUMENT READY');
 		divContainer=$('#container');
 		divPage=$('#page');

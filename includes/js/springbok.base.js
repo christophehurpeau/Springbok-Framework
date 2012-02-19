@@ -1,16 +1,7 @@
 /*! Springbok */
 'use strict';
 var $$={
-	action:function(controller, action, options){
-		var action=basedir+controller+(action ? '/'+action : '');
-		if(options){
-			action+='?';
-			var opts='';
-			for(key in options)	action+=key+'='+options[key]+'&';
-				return action.substring(0,action.length-1);
-		}
-		return action;
-	},
+	ready:function(callback){ $(document).ready(callback); },
 	redirect:function(url){ window.location=url; },
 	setTitle:function(title){document.title=title;},
 	

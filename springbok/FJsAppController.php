@@ -10,12 +10,13 @@ class FJsAppController extends Controller{
 			.'<title>'.Config::$projectName.' - '.($loading=_tC('Loading...')).'</title>';
 		HHtml::cssLink();
 		echo HHtml::jsInline(
-			'window.onload=function(){'
+			'var i18n_lang="'.CLang::get().'";'
+			.'window.onload=function(){'
+				
 				.'var script=document.createElement("script");'
 				.'script.type="text/javascript";'
 				.'script.src="'.HHtml::staticUrl('/jsapp'.'.js','js').'";'
 				.'document.body.appendChild(script);'
-				//.'script=document.createElement("script");script.type="text/javascript";script.src="'.HHtml::staticUrl('/i18n-'.CLang::get().'.js','js').'";document.body.appendChild(script);'
 			.'};'
 		);
 		echo '</head><body>'

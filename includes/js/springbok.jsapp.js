@@ -1,10 +1,10 @@
 includeLib('jquery-1.7.min');
 includeCore('springbok.base');
-includeCore('springbok.html');
-includeCore('springbok.menu');
-includeCore('springbok.forms');
+
+$$.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 
 (function($){
+	var readyCallbacks=$.Callbacks();
 	$$.app={
 		name:'',version:1,
 		header:'',footer:true,
@@ -16,14 +16,27 @@ includeCore('springbok.forms');
 			$('#container').html('').append($('<header/>').html(this.header))
 				.append('<div id="page"/>')
 				.append($('<footer/>').html(this.footer));
+		},
+		
+		ready:function(callback){
+			readyCallbacks.add(callback);
+		},
+		
+		run:function(){
+			$$.app.init();
+			readyCallbacks.fire();
+			$$.history.loadUrl();//TODO duplicate if #
 		}
 	};
-	
-	$(document).ready(function(){
-		$$.app.init();
-	});
+	$$.ready=$$.app.ready;
 }(jQuery));
-	
+
+includeCore('springbok.langs');
+includeCore('springbok.router');
+includeCore('springbok.html');
+includeCore('springbok.menu');
+includeCore('springbok.forms');
+includeCore('springbok.date');
 includeCore('springbok.ajax');
 
 $$.history.loadUrl=function(fragmentOverride){
@@ -38,6 +51,4 @@ $$.history.loadUrl=function(fragmentOverride){
 	}
 };
 
-$(document).ready(function(){
-	$$.history.loadUrl();
-});
+$$.app.run();
