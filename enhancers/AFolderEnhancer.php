@@ -97,6 +97,7 @@ abstract class AFolderEnhancer{
 				if(($entrance=basename(dirname($file->getPath()))) != 'controllers') $key=$entrance.DS;
 				else $key='';
 				$this->controllers[$key][]=substr($filename,0,-4);
+				if($filename[0]==='_') $justDev=true; 
 			}
 			
 			$nf=new $class($this->config,$file->getPath());
