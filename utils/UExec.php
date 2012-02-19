@@ -83,10 +83,11 @@ class UExec{
 		return UEncoding::convertToUtf8(trim(shell_exec($command.' 2>&1')));
 	}
 	
-	public static function createTarGz(/* HIDE */$cd,$archive,$files/* /HIDE */){
+	public static function createTarGz(/* HIDE */$cd,$options,$archive,$files/* /HIDE */){
 		$files=func_get_args();
 		$cd=array_shift($files);
+		$options=array_shift($files);
 		$archive=array_shift($files);
-		return self::exec('cd '.escapeshellarg($cd).' && tar -czf '.escapeshellarg($archive).' '.implode(' ',array_map('escapeshellarg',$files)));
+		return self::exec('cd '.escapeshellarg($cd).' && tar'.$options.' -czf '.escapeshellarg($archive).' '.implode(' ',array_map('escapeshellarg',$files)));
 	}
 }
