@@ -11,7 +11,7 @@ class UExec{
 	
 	public static function rsync($source,$dest,$options,$rsyncOptions=false){
 		/* bug : rsync: getcwd(): No such file or directory (2) */
-		$command='cd / && rsync -'.($options['simulation'] === true ? 'rtvn' : 'rtv').' --delete';
+		$command='cd / && rsync -'.($options['simulation'] === true ? 'rtvnz' : 'rtvlz').' --delete';
 		if($rsyncOptions!==false) $command.=' '.$rsyncOptions;
 		
 		//$dest=$dest;
