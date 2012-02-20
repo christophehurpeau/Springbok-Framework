@@ -2,7 +2,8 @@
 class CSecure{
 	const BACK_URL='SECURE_BACK_URL',
 		CONNECTION_FORM=0,CONNECTION_BASIC=1,CONNECTION_COOKIE=2,CONNECTION_AFTER_REGISTRATION=3;
-	private static $_config,$_user=NULL,$_cookie;
+	private static $_config,$_user=NULL;
+	protected static $_cookie;
 	
 	public static function init(){
 		self::$_config=self::loadConfig();
@@ -91,10 +92,12 @@ class CSecure{
 			
 				$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
 				if($res=$query->where($where)->execute()){
-					self::$_cookie->write();
 					self::setConnected(self::CONNECTION_COOKIE,($id===$login ? self::$_cookie->user : $res),self::$_cookie->user);
-					if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')));
-					return true;
+					if(static::checkCookie(self::$_cookie)){
+						self::$_cookie->write();
+						if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')));
+						return true;
+					}else CSession::destroy();
 				}
 			}
 			if(static::config('logConnections')) self::logConnection(self::CONNECTION_COOKIE,false,self::$_cookie->user);
@@ -121,6 +124,11 @@ class CSecure{
 		self::$_cookie->agent=sha1($_SERVER['HTTP_USER_AGENT'].CSecure::getSalt());
 		self::$_cookie->write();
 	}
+	
+	protected static function checkCookie(){
+		return true;
+	}
+	
 	
 	public static function authenticate($user,$remember=false,$redirect=true){
 		//$by='by'.ucfirst($_config['login']).'And'.ucfirst($_config['password']);

@@ -86,11 +86,11 @@ class AjaxPageView extends AbstractAjaxView{
 		if(($this->active= !isset($_GET['SpringbokAjaxPage'])||$_GET['SpringbokAjaxPage']!==$layoutNameOverride)===true){
 			parent::__construct($title,$layout);
 			echo '<div id="page" class="'.$class.'" data-layoutname="'.$layoutNameOverride.'">';
-			echo static::pre_content($title);
 		}else{
 			$this->ajaxHeaders($title,'page');
 			header('SpringbokAjaxPageClass: '.$class);
 		}
+			echo static::pre_content($title);
 	}
 	protected static function pre_content(&$layout_title){ return ''; }
 	protected static function post_content(){ return ''; }

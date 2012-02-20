@@ -20,7 +20,7 @@ class HForm{
 				$formOptions['method']='post';
 			}
 			echo '<form action="'.HHtml::url($formOptions['action'],$formOptions['urlfull'],true).'" method="'.($method=$formOptions['method']).'"';
-			unset($formOptions['action'],$formOptions['method'],$formOptions['name']);
+			unset($formOptions['action'],$formOptions['method'],$formOptions['name'],$formOptions['urlfull']);
 			HHtml::_echoAttributes($formOptions);
 			echo '>';
 		}
