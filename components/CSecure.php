@@ -143,7 +143,7 @@ class CSecure{
 			
 			if($res=$query->where($where)->execute()){
 				$connected=$id===$login ? $user->$login : $res;
-				if($remember) self::createCookie($user);
+				if($remember) static::createCookie($user);
 			}
 			$type=self::CONNECTION_FORM;
 		}elseif(($users=static::config('users'))){

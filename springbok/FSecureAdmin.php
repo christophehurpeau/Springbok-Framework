@@ -16,9 +16,5 @@ class FSecureAdmin extends CSecure{
 		self::$_cookie->admin=true;
 		parent::createCookie($user);
 	}
-	
-	protected static function checkCookie(){
-		return isset(self::$_cookie->admin);
-	}
 }
 FSecureAdmin::init();
