@@ -66,6 +66,12 @@ $$.tinymce={
 	syntaxhl:function(){ this.attrs.plugins+=',syntaxhl'; return this; },
 	autolink:function(){ this.attrs.plugins+=',autolink'; return this; },
 	autoSave:function(){ this.attrs.plugins+=',autosave'; this.attrs.theme_advanced_buttons1+=",|,restoredraft"; return this; },
+	simpleText:function(){
+		this.attrs.force_br_newlines=true;
+		this.attrs.force_p_newlines=false;
+		this.attrs.forced_root_block='';
+		return this;
+	},
 	
 	absoluteUrls:function(withDomain){
 		this.attrs.convert_urls=true;
