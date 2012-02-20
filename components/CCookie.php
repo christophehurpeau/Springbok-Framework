@@ -99,5 +99,9 @@ class CCookie{
 	public function &_getData(){
 		return $this->data;
 	}
+	
+	public function __toString(){
+		return UPhp::exportCode($this->data);
+	}
 }
 CCookie::init();
