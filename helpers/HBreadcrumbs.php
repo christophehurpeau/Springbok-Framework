@@ -10,8 +10,6 @@ class HBreadcrumbs{
 	
 	public static function display($homeLink,$lastTitle,$options=array('class'=>'breadcrumbs')){
 		if(empty(self::$_links) && empty($lastTitle)) return;
-		if(self::$_lastTitle!==null) self::$_links[]=self::$_lastTitle;
-		elseif(!empty($lastTitle)) self::$_links[]=$lastTitle;
 		if(isset($options['spanAttributes'])) $spanAttributes=&$options['spanAttributes'];
 		else $spanAttributes=array();
 		if(isset($options['linkoptions'])) $linkoptions=&$options['linkoptions'];
@@ -24,11 +22,14 @@ class HBreadcrumbs{
 		$attributes=array('id'=>'breadcrumbs','itemscope'=>null,'itemtype'=>'http://data-vocabulary.org/Breadcrumb');
 		
 		echo HHtml::openTag(self::$tagName,$attributes);
-		if(is_array($homeLink)) self::link($homeLink[0],$homeLink[1],$linkoptions,$spanAttributes);
-		else self::link($homeLink,'/',$linkoptions,$spanAttributes);
-		foreach(self::$_links as $title=>$value){
-			echo $separator.'<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">';
-			self::link($title,$value,$linkoptions,$spanAttributes);
+		echo is_array($homeLink) ?  self::link($homeLink[0],$homeLink[1],$linkoptions,$spanAttributes) : self::link($homeLink,'/',$linkoptions,$spanAttributes);
+		foreach(self::$_links as $title=>$value)
+			echo $separator.'<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'
+				.self::link($title,$value,$linkoptions,$spanAttributes);
+		{
+			$spanAttributes['class']='last';
+			if(self::$_lastTitle!==null) echo $separator.'<span class="last" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><span itemprop="title">'.h(self::$_lastTitle).'</span></span>';
+			elseif(!empty($lastTitle)) echo $separator.'<span class="last" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><span itemprop="title">'.h($lastTitle).'</span></span>';
 		}
 		foreach(self::$_links as $title=>$value) echo '</span>';
 		echo HHtml::closeTag(self::$tagName);
@@ -36,14 +37,14 @@ class HBreadcrumbs{
 	
 	public static function link($title,$value,$linkoptions,$spanAttributes){
 		if(is_int($title)){
-			echo HHtml::tag('span',$spanAttributes,$value);
+			return HHtml::tag('span',$spanAttributes,$value);
 		}else{
 			if(!is_array($value)) $url=$value;
 			else{
 				$url=$value['url'];
 				if(!empty($value['options'])) $linkoptions=$value['options']+$linkoptions;
 			}
-			echo HHtml::link('<span itemprop="title">'.h($title).'</span>',$url,$linkoptions);
+			return HHtml::link('<span itemprop="title">'.h($title).'</span>',$url,$linkoptions);
 			//echo HHtml::link($title,$url,$linkoptions);
 		}
 	}
