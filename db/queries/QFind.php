@@ -340,7 +340,7 @@ abstract class QFind extends QSelect{
 				return self::_createHasManyQuery($w,$obj->_get($objField),$resField);
 			case 'hasOneThrough':
 				$withMore=array(); reset($w['joins']);
-				self::_recursiveThroughWith($withMore,$w['joins'],$obj::$__className);
+				self::_recursiveThroughWith($withMore,$w['joins'],$w);
 				$rel=$obj::$_relations[$w['relName']];
 				
 				$objField =& $rel['foreignKey'];
@@ -349,7 +349,7 @@ abstract class QFind extends QSelect{
 				return self::_createBelongsToAndHasOneQuery($w,$obj->_get($objField),$resField,false,$withMore['with'],$rel['alias']);
 			case 'hasManyThrough':
 				$withMore=array(); reset($w['joins']);
-				self::_recursiveThroughWith($withMore,$w['joins'],$obj::$__className);
+				self::_recursiveThroughWith($withMore,$w['joins'],$w);
 				$rel=$obj::$_relations[$w['relName']];
 				
 				$objField =& $rel['foreignKey'];
@@ -369,12 +369,13 @@ abstract class QFind extends QSelect{
 		}
 	}
 
-	private static function _recursiveThroughWith(&$with,&$joins/*,&$lastModelName*/){
+	private static function _recursiveThroughWith(&$with,&$joins,$w=array()/*,&$lastModelName*/){
 		$relName=key($joins); $options=current($joins);
 		if(is_int($relName)){ $relName=$options; $options=array(); }
 		$options+=array('fields'=>false,'forceJoin'=>true);
 		/* DEV *///if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
 		//$options+=$lastModelName::$_relations[$relName];
+		if(isset($w['withOptions'][$relName])) $options=$w['withOptions'][$relName]+$options;// can override 'fields'
 		$with['with']=array($relName=>$options);
 		if(next($joins)===false) return;
 		self::_recursiveThroughWith($with['with'][$relName],$joins/*,$lastModelName::$_relations[$relName]['modelName']*/);
