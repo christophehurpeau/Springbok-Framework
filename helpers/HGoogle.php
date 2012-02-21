@@ -7,6 +7,18 @@ class HGoogle{
 		if($center!==false) $url.='&center='.$center;
 		if($path!==false) $url.='&path='.implode('|',$path);
 		if($zoom!==false) $url.='&zoom='.$zoom;
+		if($markers!==null){
+			if(isset($markers['multiple'])) unset($markers['multiple']);
+			else $markers=array($markers);
+			foreach($markers as $marker){
+				$url.='&markers=';
+				if(isset($marker['style'])){
+					$url.=implode('|',$marker['style']).'|';
+					unset($marker['style']);
+				}
+				$url.=implode('|',$marker);
+			}
+		}
 		$url.='&size='.$size.($mapType===null?'':'&maptype='.$mapType);
 		return 'http://maps.googleapis.com/maps/api/staticmap?sensor=false'.$url;
 	}
