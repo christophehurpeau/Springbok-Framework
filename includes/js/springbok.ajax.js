@@ -59,14 +59,17 @@ includeCore('springbok.history');
 		},
 		load:function(url,data,type){
 			if(url.substr(0,1)==='?') url=location.href+url;
-			var ajaxurl=url,divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
+			var ajaxurl=url,divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>'),headers={};
 			data=data||{};
 			if(type==='post'){
 				ajaxurl+=(ajaxurl.indexOf('?')==-1?'?':'&')+'SpringbokAjaxPage='+(divPage.length>0?divPage.data('layoutname'):'')+'&SpringbokAjaxContent='+(divContent.length>0?divContent.data('layoutname'):'');
 				if($$.breadcrumbs) ajaxurl+='&breadcrumbs';
 				url+=(url.indexOf('?')==-1?'?':'&')+data;
 			}else{
-				if($$.breadcrumbs) data.breadcrumbs='';
+				if($$.breadcrumbs){
+					data.breadcrumbs='';
+				}
+				//headers['SpringbokBreadcrumbs']='test';
 				data.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname'):'';
 				data.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
 			}
@@ -80,6 +83,9 @@ includeCore('springbok.history');
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data,
 				async:false,
+				/*beforeSend:function(jqXHR){
+					jqXHR.setRequestHeader('SpringbokBreadcrumbs','test');
+				},*/
 				success:function(data,textStatus,jqXHR){
 					var h,div,to;
 					
