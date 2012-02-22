@@ -8,6 +8,10 @@ class HBreadcrumbs{
 		self::$_lastTitle=&$lastTitle;
 	}
 	
+	public static function add($titleLink,$link){
+		self::$_links[$titleLink]=$link;
+	}
+	
 	public static function display($homeLink,$lastTitle,$options=array('class'=>'breadcrumbs')){
 		if(empty(self::$_links) && empty($lastTitle)) return;
 		if(isset($options['spanAttributes'])) $spanAttributes=&$options['spanAttributes'];
