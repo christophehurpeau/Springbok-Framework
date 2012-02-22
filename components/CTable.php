@@ -9,7 +9,7 @@ class CTable{
 		return new CTable($query);
 	}
 	
-	public $modelName,$fields,$modelFields,$queryFields,$rowActions,$defaultAction,$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller;
+	public $modelName,$fields,$modelFields,$queryFields,$fieldsEditable,$rowActions,$defaultAction,$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller;
 	protected $pagination,$query,$executed,$results,$totalResults;
 
 	public function __construct($query){
@@ -133,6 +133,7 @@ class CTable{
 		}
 	}
 	
+	public function getModelName(){ return $this->query->getModelName(); }
 	public function getTotalResults(){ return $this->totalResults; }
 	public function hasPager(){ return $this->pagination->hasPager(); }
 	public function &getResults(){ return $this->results; }
@@ -153,6 +154,7 @@ class CTable{
 			if(is_int($key)){
 			}else{
 				$val['key']=$key;
+				if($this->fieldsEditable !==null && isset($this->fieldsEditable[$key])) $val['editable']=$this->fieldsEditable[$key];
 	
 				$modelName=&$this->modelFields[$key];
 				if($modelName !== NULL){

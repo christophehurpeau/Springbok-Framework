@@ -29,7 +29,7 @@ class HForm{
 	}
 	
 	private $modelName,$name,$method,$tagContainer,$defaultLabel;
-	private function __construct(&$modelName,&$name,&$method,&$tagContainer,&$defaultLabel,&$setValuesFromVar){
+	public function __construct($modelName,$name,$method,$tagContainer,$defaultLabel,$setValuesFromVar){
 		$this->method=&$method;
 		$this->setModelName($modelName,$name,$setValuesFromVar);
 		$this->tagContainer=&$tagContainer;
@@ -156,7 +156,7 @@ class HForm{
 		return $this->_inputContainer($content,'textarea'.($hasError?' invalid':''),$containerAttributes);
 	}
 	
-	public function &input($name,$attributes=array(),$containerAttributes=array()){
+	public function &input($name,$attributes=array(),$containerAttributes=array(),$largeSize=1){
 		if(is_string($attributes)) $attributes=array('value'=>$attributes);
 		
 		$type='text';
@@ -197,6 +197,7 @@ class HForm{
 						elseif($attributes['maxlength'] < 160) $attributes['size']=50;
 						elseif($attributes['maxlength'] < 200) $attributes['size']=60;
 						else $attributes['size']=70;
+						$attributes['size']*=$largeSize;
 					}
 				}
 			}
