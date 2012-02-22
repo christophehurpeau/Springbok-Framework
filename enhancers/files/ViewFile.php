@@ -80,11 +80,11 @@ class ViewFile extends PhpFile{
 			},$content);
 		
 		
-		if(strpos($content,'<?=')){ debugCode($content); exit(htmlspecialchars('<?= still exist !'));}
+		if(strpos($content,'<?=')){ debugCode($content); exit(htmlspecialchars('<?= still exist !')); }
 		
-		if(preg_match('/^\s*<\?php\s+(?:\$v\=\s*)?new (?:[A-Za-z]*)View\(.*/s',$content)>0){
-			$content=preg_replace('/^\s*<\?php\s+(?:\$v\=\s*)?new\s+([A-Za-z]*)View\(/s',
-				'<?php $v=new $1View(',$content)
+		if(preg_match('/^\s*<\?php\s+(.*)(?:\$v\=\s*)?new (?:[A-Za-z]*)View\(.*/Us',$content)>0){
+			$content=preg_replace('/^\s*<\?php\s+(.*)(?:\$v\=\s*)?new\s+([A-Za-z]*)View\(/Us',
+				'<?php $1$v=new $2View(',$content)
 				.'<?php $v->render();?>';
 		}
 		
