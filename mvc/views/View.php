@@ -87,10 +87,11 @@ class AjaxPageView extends AbstractAjaxView{
 			parent::__construct($title,$layout);
 			echo '<div id="page" class="'.$class.'" data-layoutname="'.$layoutNameOverride.'">';
 		}else{
+			//if(isset($_GET['breadcrumbs'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
 			$this->ajaxHeaders($title,'page');
 			header('SpringbokAjaxPageClass: '.$class);
 		}
-			echo static::pre_content($title);
+		echo static::pre_content($title);
 	}
 	protected static function pre_content(&$layout_title){ return ''; }
 	protected static function post_content(){ return ''; }

@@ -1,7 +1,7 @@
 <?php
 class HBreadcrumbs{
 	public static $tagName='div';
-	private static $_links,$_lastTitle;
+	private static $_links=array(),$_lastTitle;
 	
 	public static function set($links,$lastTitle=null){
 		self::$_links=&$links;
@@ -51,14 +51,15 @@ class HBreadcrumbs{
 	
 	
 	public static function toJs($lastTitle){
-		if(!empty($lastTitle)) self::$_links[]=$lastTitle;
+		if(self::$_lastTitle!==null) self::$_links[]=self::$_lastTitle;
+		elseif(!empty($lastTitle)) self::$_links[]=$lastTitle;
 		array_walk(self::$_links,function(&$value,&$title){
 			if(!is_int($title)){
 				if(!is_array($value)) $value=HHtml::url($value,false,false);
 				else $value['url']=HHtml::url($value['url'],false,false);
 			}
 		});
-		return json_encode(self::$_links);
+		return json_encode(self::$_links,JSON_FORCE_OBJECT);
 	}
 }
 	
