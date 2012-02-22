@@ -59,20 +59,13 @@ includeCore('springbok.history');
 		},
 		load:function(url,data,type){
 			if(url.substr(0,1)==='?') url=location.href+url;
-			var ajaxurl=url,divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>'),headers={};
-			data=data||{};
-			if(type==='post'){
-				ajaxurl+=(ajaxurl.indexOf('?')==-1?'?':'&')+'SpringbokAjaxPage='+(divPage.length>0?divPage.data('layoutname'):'')+'&SpringbokAjaxContent='+(divContent.length>0?divContent.data('layoutname'):'');
-				if($$.breadcrumbs) ajaxurl+='&breadcrumbs';
-				url+=(url.indexOf('?')==-1?'?':'&')+data;
-			}else{
-				if($$.breadcrumbs){
-					data.breadcrumbs='';
-				}
-				//headers['SpringbokBreadcrumbs']='test';
-				data.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname'):'';
-				data.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
-			}
+			var ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
+			
+			if(type==='post' && data) url+=(url.indexOf('?')==-1?'?':'&')+data;
+			
+			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname'):'';
+			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
+			if($$.breadcrumbs) headers.SpringbokBreadcrumbs='1';
 			
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
@@ -81,13 +74,19 @@ includeCore('springbok.history');
 			$$.history.navigate(url);
 			
 			$.ajax(ajaxurl,{
-				type:type?type:'GET', data:data,
+				type:type?type:'GET', data:data, headers:headers,
 				async:false,
-				/*beforeSend:function(jqXHR){
-					jqXHR.setRequestHeader('SpringbokBreadcrumbs','test');
-				},*/
 				success:function(data,textStatus,jqXHR){
 					var h,div,to;
+					
+					$('body').removeClass('cursorWait');
+					divLoading.remove();
+					
+					
+					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
+						$$.ajax.load(h);
+						return;
+					}
 					
 					if(h=jqXHR.getResponseHeader('SpringbokAjaxTitle')) $$.setTitle($.parseJSON(h));
 					if(h=jqXHR.getResponseHeader('SpringbokAjaxBreadcrumbs')) $$.breadcrumbs($.parseJSON(h));
@@ -104,8 +103,6 @@ includeCore('springbok.history');
 					});
 					div.html(data);//.fadeTo(0,1);
 					$(window).scrollTop(0);
-					$('body').removeClass('cursorWait');
-					divLoading.remove();
 					
 					if(to === 'base') divPage=$('#page');
 					else if(to==='page') divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass')); // 

@@ -72,7 +72,7 @@ class AbstractAjaxView extends View{
 class AjaxBaseView extends AbstractAjaxView{
 	public function __construct($title=false,$layout=null){
 		if($layout===null) $layout=Springbok::$prefix.'base';
-		if(($this->active= !isset($_GET['SpringbokAjaxPage']))===true){
+		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE']))===true){
 			parent::__construct($title,$layout);
 			echo '<div id="container" data-layoutname="'.$layout.'">';
 		}else $this->ajaxHeaders($title,'base');
@@ -83,11 +83,11 @@ class AjaxPageView extends AbstractAjaxView{
 	public function __construct($title=false,$class='ml200',$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Springbok::$prefix.'page';
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
-		if(($this->active= !isset($_GET['SpringbokAjaxPage'])||$_GET['SpringbokAjaxPage']!==$layoutNameOverride)===true){
+		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])||$_SERVER['HTTP_SPRINGBOKAJAXPAGE']!==$layoutNameOverride)===true){
 			parent::__construct($title,$layout);
 			echo '<div id="page" class="'.$class.'" data-layoutname="'.$layoutNameOverride.'">';
 		}else{
-			//if(isset($_GET['breadcrumbs'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
+			//if(isset($_SERVER['SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
 			$this->ajaxHeaders($title,'page');
 			header('SpringbokAjaxPageClass: '.$class);
 		}
@@ -115,11 +115,11 @@ class AjaxContentView extends AbstractAjaxView{
 	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Controller::$defaultLayout;
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
-		if(($this->active= !isset($_GET['SpringbokAjaxContent'])||$_GET['SpringbokAjaxContent']!==$layoutNameOverride)===true){
+		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXCONTENT'])||$_SERVER['HTTP_SPRINGBOKAJAXCONTENT']!==$layoutNameOverride)===true){
 			parent::__construct($title,$layout);
 			echo '<div class="content" data-layoutname="'.$layoutNameOverride.'">';
 		}else{
-			if(isset($_GET['breadcrumbs'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
+			if(isset($_SERVER['HTTP_SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
 			$this->ajaxHeaders($title,'content');
 		}
 	}

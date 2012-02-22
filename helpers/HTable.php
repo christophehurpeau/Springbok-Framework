@@ -33,7 +33,7 @@ class HTable{
 				if(!empty($_POST)) $href.=http_build_query($_POST,'','&').'&';
 				if(!empty($_GET)){
 					$get=$_GET;
-					unset($get['page'],$get['ajax'],$get['breadcrumbs'],$get['SpringbokAjaxPage'],$get['SpringbokAjaxContent']);
+					unset($get['page'],$get['ajax']);
 					if(!empty($get)) $href.=http_build_query($get,'','&').'&';
 				}
 			}

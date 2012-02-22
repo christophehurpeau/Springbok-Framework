@@ -147,22 +147,14 @@ class Controller{
 		}elseif(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
 				self::renderHtml(HHtml::jsInline('$$.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
-			else*/if(isset($_GET['SpringbokAjaxPage'])){
-				header('Location: '.HHtml::url($to).'?SpringbokAjaxPage='.$_GET['SpringbokAjaxPage'].'&SpringbokAjaxContent='.$_GET['SpringbokAjaxContent']
-					.(isset($_GET['breadcrumbs'])?'&breadcrumbs':''));
+			else*/if(isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])){
+				header('SpringbokRedirect: '.HHtml::url($to));
 				if($exit) exit;
 				return;
 			}
 			elseif($forbiddendForAjax) forbidden();
 		}
-		/* PROD */  /* /PROD */
 		header('Location: '.HHtml::url($to));
-		/* DEV */
-		/*
-		include_once CORE.'mvc/views/View.php';
-		$vars=array('url'=>$to);
-		render(CORE.'mvc/views/redirect.php',$vars);*/
-		/* /DEV */
 		if($exit) exit;
 	}
 	
