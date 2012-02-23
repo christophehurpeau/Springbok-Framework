@@ -133,6 +133,9 @@ input.bigInput, form.big .text input{
 	box-shadow:0 0 10px #eee inset; -moz-box-shadow:0 0 10px #eee inset; -webkit-box-shadow:0 0 10px #eee inset;
 	border-radius(6px);
 }
+form.big .text label{
+	height:30px; line-height:30px;
+}
 input.bigInput:hover, form.big .text input:hover{background:#FAFAFA}
 input.bigInput:focus, form.big .text input:focus{background:#FFF}
 input.submit.big, form.big input.submit{

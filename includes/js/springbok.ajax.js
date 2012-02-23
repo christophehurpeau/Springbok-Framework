@@ -63,7 +63,7 @@ includeCore('springbok.history');
 			
 			if(type==='post' && data) url+=(url.indexOf('?')==-1?'?':'&')+data;
 			
-			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname'):'';
+			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname')||'0':'0';
 			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
 			if($$.breadcrumbs) headers.SpringbokBreadcrumbs='1';
 			
@@ -76,12 +76,12 @@ includeCore('springbok.history');
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data, headers:headers,
 				async:false,
-				success:function(data,textStatus,jqXHR){
-					var h,div,to;
-					
+				complete:function(){
 					$('body').removeClass('cursorWait');
 					divLoading.remove();
-					
+				},
+				success:function(data,textStatus,jqXHR){
+					var h,div,to;
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
 						$$.ajax.load(h);

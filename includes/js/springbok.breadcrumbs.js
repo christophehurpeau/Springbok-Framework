@@ -1,11 +1,7 @@
 (function(){
-	var breadcrumbs,linkoptions={itemprop:'url'},separator=' &raquo; ';
-	$$.ready(function(){
-		breadcrumbs=$('#breadcrumbs > span:first');
-	});
+	var linkoptions={itemprop:'url'},separator=' &raquo; ';
 	$$.breadcrumbs=function(links){
-		breadcrumbs.html('');
-		var b=breadcrumbs,first=true,url;
+		var b=$('#breadcrumbs > span:first').html(''),first=true,url;
 		$.each(links,function(i,l){
 			first ? first=false : b.append(separator);
 			b=$('<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"/>').appendTo(b);

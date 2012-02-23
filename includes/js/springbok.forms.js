@@ -38,7 +38,9 @@
 	$.fn.ajaxForm=function(url,success,beforeSubmit,error){
 		if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
 		var form=this,submit;
-		this.unbind('submit').submit(function(){
+		this.unbind('submit').submit(function(evt){
+			evt.preventDefault();
+			evt.stopPropagation();
 			submit=form.find(':submit');
 			form.fadeTo(180,0.4);
 			if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
@@ -57,12 +59,12 @@
 			if(success) ajaxOptions.success=success;
 			$.ajax(url,ajaxOptions);
 			return false;
-		}).find(':submit').unbind('click').click(function(){
+		})/*.find(':submit').unbind('click').click(function(){
 			//var validator=form.data('validator');
 			//if(validator && !validator.checkValidity()) return false;
 			//submit=$(this);
 			return true;
-		});
+		});*/
 		return this;
 	};
 	
