@@ -20,7 +20,7 @@ class CRUD{
 			};
 			
 			foreach($with as $key=>$w){
-				echo '<h5 class="separated">'.$w['title'].'</h5>';
+				echo '<h5 class="sepTop">'.$w['title'].'</h5>';
 				$table=CTable::create(QFind::createWithQuery($obj,$w));
 				if(isset($w['table'])) foreach($w['table'] as $k=>&$val) $table->$k=$val;
 				HTable::table($table,false);

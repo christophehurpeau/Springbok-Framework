@@ -131,6 +131,9 @@ class CssFile extends EnhancerFile{
 	public function &constantes(&$content){
 		$matches=array();
 		$constantes=array(
+			/* _global.css */
+			'SEP_BORDER'=>'1px solid #BBB',
+		
 			/* _page.css */
 			'PAGE_FIXED'=>'false',
 			'HEADER_BACKGROUND'=>'false',
@@ -225,6 +228,7 @@ class CssFile extends EnhancerFile{
 			$constantes['BACKGROUND_COLOR'.$i]='false';
 			$constantes['BACKGROUND_TB_COLOR'.$i]='false';
 			$constantes['BLOCK_COLOR'.$i.'_COLOR']='false';
+			$constantes['BLOCK_COLOR'.$i.'_BORDER']='false';
 			$constantes['BUTTON_COLOR'.$i.'_COLOR']='false';
 			$constantes['BUTTON_COLOR'.$i.'_BORDER']='false';
 			$constantes['BUTTON_COLOR'.$i.'_TEXTSHADOW']='false';

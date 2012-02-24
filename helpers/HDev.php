@@ -28,7 +28,7 @@ class HDev{
 		if(!empty(App::$changes)){
 			echo '<div class="italic">Enhancing took : <b>'.App::$changes[0][0].'</b> s</div>';
 			foreach(App::$changes[0][1] as $type=>$files){
-				echo '<h5 class="separated">'.$type.'</h5><ul class="compact">';
+				echo '<h5 class="sepTop">'.$type.'</h5><ul class="compact">';
 				foreach($files as $file) echo '<li>'.$file.'</li>';
 				echo '</ul>';
 			}

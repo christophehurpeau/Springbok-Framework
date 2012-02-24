@@ -22,12 +22,17 @@ br.clear{line-height:0;font-size:0;height:0}
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0}
 h1{font-size:16pt;margin-bottom:15px;}
 h2{font-size:14pt;margin:4px 0 4px;}
-h3{font-size:13pt;margin-bottom:10px;}
-h4{font-size:12pt;margin-bottom:8px;}
-h5{font-size:11pt;margin-bottom:5px;}
+h3{font-size:12pt;margin-bottom:10px;}
+h4{font-size:11pt;margin-bottom:8px;}
+h5{font-size:10pt;margin-bottom:5px;}
 h6{font-size:9pt;margin-bottom:5px;}
-div.separated,h2.separated,h2.separated,h3.separated,h4.separated,h5.separated{margin-top:8px;padding-top:8px;}
-div.separated,h2.separated,h2.separated,h3.separated,h4.separated.b,h5.separated.b{border-top:1px solid #BBB}
+
+.sepTop{margin-top:8px;padding-top:8px;}
+.sepBottom{margin-bottom:8px;padding-bottom:8px;}
+.sepTop,.sepT{border-top:SEP_BORDER;}
+.sepL{border-left:SEP_BORDER;}
+.sepR{border-right:SEP_BORDER;}
+.sepB{border-bottom:SEP_BORDER;}
 
 .clearfix:after { 
 	clear: both; 
@@ -118,5 +123,6 @@ IF(BACKGROUND_TB_COLOR$I || BACKGROUND_COLOR$I) .block$I{
 	IF(BACKGROUND_TB_COLOR$I) bg-gradient-tb(BACKGROUND_TB_COLOR$I); ENDIF
 	IFNOT(BACKGROUND_TB_COLOR$I) background:BACKGROUND_COLOR$I; ENDIF
 	IF(BLOCK_COLOR$I_COLOR) color:BLOCK_COLOR$I_COLOR ENDIF
+	IF(BLOCK_COLOR$I_BORDER) border:BLOCK_COLOR$I_BORDER ENDIF
 } ENDIF
 ENDFOR

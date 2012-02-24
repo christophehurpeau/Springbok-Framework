@@ -49,7 +49,7 @@ class HTable{
 		echo '<table class="table">';
 		if(!$component->filter && empty($results)) echo '<tr><td>'._tC('No result').'</td></td>';
 		else{
-			echo '<tr>';
+			echo '<thead><tr>';
 			
 			foreach($component->fields as &$field){
 				$th='';
@@ -94,11 +94,13 @@ class HTable{
 				echo '</tr>';
 			}
 			
+			echo '</thead><tbody>';
+			
 			if(empty($results)) echo '<tr><td colspan="'.count($component->fields).'">'._tC('No result').'</td></td>';
 			else static::displayResults($component,$results);
 			
 		}
-		echo '</table>';
+		echo '</tbody></table>';
 		if($component->filter) $form->end(false);
 		echo $pager;
 	}
