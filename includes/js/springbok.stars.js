@@ -41,9 +41,9 @@ $$.stars={
 			return false;
 		})
 		.hover(function(){
-			$(this).prevAll().andSelf().addClass('rating-over');
+			$(this).prevAll().andSelf().addClass('rating-hover');
 		 },function(){
-			$(this).siblings().andSelf().removeClass('rating-over');
+			$(this).siblings().andSelf().removeClass('rating-hover');
 		})
 		
 	},

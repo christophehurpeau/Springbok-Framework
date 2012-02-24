@@ -62,7 +62,7 @@ var $$={
 			attributes = attributes || {"target":"_blank"};
 			var attrs = "";
 			for(name in attributes) attrs += " "+ name +'="'+ attributes[name] +'"';
-			return str.toString().replace($$.tools.autolinkRegExp, '$1<img class="favicon" src="$3/favicon.ico" height="16" alt=""/><a href="$2"'+ attrs +'>$2</a>');
+			return str.toString().replace($$.tools.autolinkRegExp, '$1<img class="favicon" src="http://www.google.com/s2/favicons?domain=$3" height="16" alt=""/><a href="$2"'+ attrs +'>$2</a>');
 		}
 	},
 	

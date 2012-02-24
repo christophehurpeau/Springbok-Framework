@@ -17,6 +17,7 @@ br.clear{line-height:0;font-size:0;height:0}
 .hidden{display:none}
 .hiddenText{text-indent:-9999px}
 .smallinfo{font-size:8pt}
+.biginfo{font-size:11pt}
 .margin-left{margin-left:20px}
 
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0}
@@ -119,9 +120,12 @@ ul.overflow-ellipsis{
 
 FOR(I=1;I<5;I+1)
 IF(COLOR$I) .color$I{color:COLOR$I} ENDIF
-IF(BACKGROUND_TB_COLOR$I || BACKGROUND_COLOR$I) .block$I{
-	IF(BACKGROUND_TB_COLOR$I) bg-gradient-tb(BACKGROUND_TB_COLOR$I); ENDIF
-	IFNOT(BACKGROUND_TB_COLOR$I) background:BACKGROUND_COLOR$I; ENDIF
+IF(BACKGROUND_TB_COLOR$I || BACKGROUND_COLOR$I || BLOCK_COLOR$I_BACKGROUND) .block$I{
+	IF(BLOCK_COLOR$I_BACKGROUND) background:BLOCK_COLOR$I_BACKGROUND; ENDIF
+	IFNOT(BLOCK_COLOR$I_BACKGROUND)
+		IF(BACKGROUND_TB_COLOR$I) bg-gradient-tb(BACKGROUND_TB_COLOR$I); ENDIF
+		IFNOT(BACKGROUND_TB_COLOR$I) background:BACKGROUND_COLOR$I; ENDIF
+	ENDIF
 	IF(BLOCK_COLOR$I_COLOR) color:BLOCK_COLOR$I_COLOR ENDIF
 	IF(BLOCK_COLOR$I_BORDER) border:BLOCK_COLOR$I_BORDER ENDIF
 } ENDIF

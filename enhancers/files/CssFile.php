@@ -227,6 +227,7 @@ class CssFile extends EnhancerFile{
 			$constantes['COLOR'.$i]='false';
 			$constantes['BACKGROUND_COLOR'.$i]='false';
 			$constantes['BACKGROUND_TB_COLOR'.$i]='false';
+			$constantes['BLOCK_COLOR'.$i.'_BACKGROUND']='false';
 			$constantes['BLOCK_COLOR'.$i.'_COLOR']='false';
 			$constantes['BLOCK_COLOR'.$i.'_BORDER']='false';
 			$constantes['BUTTON_COLOR'.$i.'_COLOR']='false';
