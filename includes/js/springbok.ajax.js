@@ -2,11 +2,13 @@ includeCore('springbok.history');
 (function($){
 	var lastConfirmResult=true;
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
-	var divContainer,divPage,divVariable,divContent;
+	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref;
 	$$.ready(function(){
 		//console.log('AJAX DOCUMENT READY');
 		divContainer=$('#container');
 		divPage=$('#page');
+		linkFavicon=$('head link[rel="icon"],head link[rel="shortcut icon"]');
+		normalFaviconHref=linkFavicon.length===0 ? false : linkFavicon.attr('href');
 		$$.ajax.updateVariable(divPage);
 		$$.history.start();
 		$$.ajax.init();
@@ -70,6 +72,7 @@ includeCore('springbok.history');
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
 			$('body').addClass('cursorWait').append(divLoading);
+			if(normalFaviconHref) linkFavicon.attr('href',webdir+'img/ajax-roller.gif');
 			
 			$$.history.navigate(url);
 			
@@ -103,6 +106,7 @@ includeCore('springbok.history');
 					});
 					div.html(data);//.fadeTo(0,1);
 					$(window).scrollTop(0);
+					if(normalFaviconHref) linkFavicon.attr('href',normalFaviconHref);
 					
 					if(to === 'base') divPage=$('#page');
 					else if(to==='page') divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass')); // 
