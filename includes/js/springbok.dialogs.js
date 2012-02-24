@@ -1,7 +1,7 @@
-$$.dialogs={
+S.dialogs={
 	alert:function(title,message){
 		var div=$('<div/>');
-		$$.isString(message) ? div.text(message) : div.html(message);
+		S.isString(message) ? div.text(message) : div.html(message);
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
@@ -18,7 +18,7 @@ $$.dialogs={
 			callback=defaultVal;
 			defaultVal='';
 		}
-		$$.isString(message) ? div.text(message) : div.html(message);
+		S.isString(message) ? div.text(message) : div.html(message);
 		div.append($('<input type="text" style="width:99%"/>').val(defaultVal).keydown(function(e){
 			if(e.keyCode == '13'){
 				e.preventDefault();

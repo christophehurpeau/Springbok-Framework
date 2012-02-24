@@ -1,13 +1,13 @@
-function HPagination(url,content,pager,resultPerPage,options){
+S.HPagination=function(url,content,pager,resultPerPage,options){
 	this.url=url;
 	this.$content=content;
 	this.$pager=pager;
 	
 	this.totalPages=pager.find('li.page:last').text();
 	this.options=$.extend({},{nbBefore:3,nbAfter:3,hidden:true,withText:false},options);
-}
+};
 
-HPagination.prototype.updatePager=function(page){
+S.HPagination.prototype.updatePager=function(page){
 	var t=this,options=t.options,pager=t.$pager.empty();
 	if(page==1){
 		if(options.hidden) pager.append('<li class="first hidden"><a href="javascript:;">&lt;&lt;'+(options.withText?' '+i18nc.Start:'')+'</a></li>'

@@ -1,4 +1,4 @@
-$$.arraysort={
+S.arraysort={
 	'':function(a,b){
 		if(a < b) return -1;
 		if(a > b) return 1;
@@ -8,8 +8,8 @@ $$.arraysort={
 		return a-b;
 	},
 	stringDates:function(a,b){
-		var da=$$.dates.parseStringDate(a),
-			db=$$.dates.parseStringDate(b);
+		var da=S.dates.parseStringDate(a),
+			db=S.dates.parseStringDate(b);
 		return da-db;
 	},
 	stringNoCase:function(a,b){

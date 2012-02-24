@@ -1,4 +1,4 @@
-$$.stars={
+S.stars={
 	create:function(nbStars,value,split){
 		var div=$('<div class="stars"/>');
 		for(var i=1;i<=nbStars;i++) div.append('<input name="rating" type="radio" value="'+i+'"/>');
@@ -17,7 +17,7 @@ $$.stars={
 					if(rating) $item.attr('title',rating);
 					if(split)
 						$item.addClass('rating-'+(i%split));
-					$list.append($$.stars.addHandlers($item,i+1));
+					$list.append(S.stars.addHandlers($item,i+1));
 					if($(this).is(':checked')) $item.prevAll().andSelf().addClass('rating');
 				})
 				.hide()

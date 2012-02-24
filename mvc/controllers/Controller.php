@@ -146,7 +146,7 @@ class Controller{
 			header('Status: 301 Moved Permanently',false,301);
 		}elseif(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
-				self::renderHtml(HHtml::jsInline('$$.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
+				self::renderHtml(HHtml::jsInline('S.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
 			else*/if(isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])){
 				header('SpringbokRedirect: '.HHtml::url($to));
 				if($exit) exit;

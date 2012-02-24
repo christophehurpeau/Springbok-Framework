@@ -1,4 +1,4 @@
-$$.menu={
+S.menu={
 	tagName:'menu',separator:'-',
 	top:function(options,links){
 		return this.create(options,links,'top');
@@ -17,21 +17,21 @@ $$.menu={
 	},
 	
 	/* Exemples :
-	* $$.menu.left([
+	* S.menu.left([
 	* 	['Home',false],
 	* 	['Login','/user/login'],
 	* 	['Logout','/user/logout',{'class':'logout'}]
 	* ])
 	*/
 	create:function(options,links,type){
-		if($$.isArray(options)){
+		if(S.isArray(options)){
 			links=options;
 			options={};
 		}
 		options=$.extend({},{menuAttributes:{'class':type},lioptions:{},linkoptions:{},startsWith:false},options);
-		var t=this,res=$$.html.tag(this.tagName,options.menuAttributes);
+		var t=this,res=S.html.tag(this.tagName,options.menuAttributes);
 		links.sbEach(function(k,item){
-			if(!item[0]){ res.append($$.html.tag('li',{'class':'separator'},this.separator,1)); return; }
+			if(!item[0]){ res.append(S.html.tag('li',{'class':'separator'},this.separator,1)); return; }
 			var linkOptions=$.extend({},options.linkoptions,item[2]);
 			
 			if(linkOptions.visible===false) return;
@@ -50,8 +50,8 @@ $$.menu={
 			linkoptions.current=linkoptions.startsWith!==undefined ? linkoptions.startsWith : options.startsWith;
 			delete linkoptions.startsWith;
 		}
-		var res=$$.html.link(title,url,linkoptions);
-		if(linkoptions) res=$$.html.tag('li',lioptions,res,0);
+		var res=S.html.link(title,url,linkoptions);
+		if(linkoptions) res=S.html.tag('li',lioptions,res,0);
 		return res;
 	}
 };

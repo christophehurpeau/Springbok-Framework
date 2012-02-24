@@ -5,7 +5,7 @@
 		this.keyup(function(){
 			var val=input.val();
 			if(val != '' && val.length >= minLength && val!=lastVal){
-				$$.history.navigate(url+'/'+val);
+				S.history.navigate(url+'/'+val);
 				lastVal=val;
 				if(xhr){xhr.abort(); xhr=null;}
 				if(currentTimeout) clearTimeout(currentTimeout);

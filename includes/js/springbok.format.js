@@ -1,4 +1,4 @@
-$$.format={
+S.format={
 	
 	/* http://phpjs.org/functions/number_format:481 */
 	number:function(number, decimals, dec_point, thousands_sep){

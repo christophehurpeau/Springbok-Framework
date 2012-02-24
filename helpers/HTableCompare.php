@@ -9,7 +9,7 @@ class HTableCompare extends HTable{
 			if($component->defaultAction!==null){
 				$link=HHtml::url($component->defaultAction.'/'.$pkValue,false,true);
 				$class.=' pointer';
-				echo ' onclick="$$.redirect(\''.$link.'\')"';
+				echo ' onclick="S.redirect(\''.$link.'\')"';
 			}else $link=false;
 			echo (empty($class)?'':' class="'.trim($class).'"').'>';
 			foreach($component->displayedModelFields as $key=>$field){

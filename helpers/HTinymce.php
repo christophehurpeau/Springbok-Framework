@@ -99,7 +99,7 @@ $(document).ready(function(){tinyMCE.init({
 	},
 	setup:function(ed){
 		ed.onKeyUp.add(function(ed, e){
-			var strip = $$.html.entitiesDecode(tinyMCE.activeEditor.getContent().replace(/(<([^>]+)>)/g,''));
+			var strip = S.html.entitiesDecode(tinyMCE.activeEditor.getContent().replace(/(<([^>]+)>)/g,''));
 			var text = strip.split(' ').length + " Mots, " +  strip.length + " Caractères"
 			tinymce.DOM.setHTML(tinymce.DOM.get(tinyMCE.activeEditor.id +'_count_words_and_char'),text);   
 		});

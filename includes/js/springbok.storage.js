@@ -5,37 +5,37 @@
 */
 
 /**
-* $$.Storage
+* S.Storage
 *
 * Methods:
 *
 * -set(key, value)
-* $$.Storage.set(key, value) -> saves a value
+* S.Storage.set(key, value) -> saves a value
 *
 * -get(key[, default])
 * value = $.jStorage.get(key [, default]) ->
 * retrieves value if key exists, or default if it doesn't
 *
 * -deleteKey(key)
-* $$.Storage.deleteKey(key) -> removes a key from the storage
+* S.Storage.deleteKey(key) -> removes a key from the storage
 *
 * -flush()
-* $$.Storage.flush() -> clears the cache
+* S.Storage.flush() -> clears the cache
 *
 * -storageObj()
-* $$.Storage.storageObj() -> returns a read-ony copy of the actual storage
+* S.Storage.storageObj() -> returns a read-ony copy of the actual storage
 *
 * -storageSize()
-* $$.Storage.storageSize() -> returns the size of the storage in bytes
+* S.Storage.storageSize() -> returns the size of the storage in bytes
 *
 * -index()
-* $$.Storage.index() -> returns the used keys as an array
+* S.Storage.index() -> returns the used keys as an array
 *
 * -storageAvailable()
-* $$.Storage.storageAvailable() -> returns true if storage is available
+* S.Storage.storageAvailable() -> returns true if storage is available
 *
 * -reInit()
-* $$.Storage.reInit() -> reloads the data from browser storage
+* S.Storage.reInit() -> reloads the data from browser storage
 *
 * <value> can be any JSON-able value, including objects and arrays.
 *
@@ -275,7 +275,7 @@
     }
     ////////////////////////// PUBLIC INTERFACE /////////////////////////
 
-    $$.Storage = {
+    S.Storage = {
         /* Version number */
         version: "0.1.6.1",
 
@@ -488,7 +488,7 @@
 
 function StoredConfig(name){
 	this.name=name;
-	this.config=$$.Storage.get(name)||{};
+	this.config=S.Storage.get(name)||{};
 }
 StoredConfig.prototype.get=function(key){
 	return this.config[key];
@@ -498,6 +498,6 @@ StoredConfig.prototype.set=function(key,value){
 		for(var k in key) this.set(key,key[k]);
 	}else{
 		this.config[key]=value;
-		$$.Storage.set(this.name,this.config);
+		S.Storage.set(this.name,this.config);
 	}
 };

@@ -117,7 +117,7 @@ class HTable{
 					$defaultActionUrl[]=$pkValue;
 				}else $defaultActionUrl=$component->defaultAction.'/'.$pkValue;
 				$class.=' pointer';
-				echo ' onclick="$$.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
+				echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
 			}
 			echo (empty($class)?'':' class="'.trim($class).'"').'>';
 			foreach($component->fields as $i=>$field){

@@ -1,7 +1,7 @@
 /* http://documentcloud.github.com/backbone/backbone.js */
 (function($){
 	var historyStarted=false;
-	$$.history={
+	S.history={
 		options:{pushState:true},
 		hashStrip:/^#*/,isIE:/msie [\w.]+/,interval:50,
 		
@@ -58,7 +58,7 @@
 		// Checks the current URL to see if it has changed, and if it has,
 		// calls `loadUrl`, normalizing across the hidden iframe.
 		checkUrl:function(e){
-			var hist=$$.history;
+			var hist=S.history;
 			var current = hist.getFragment();
 			if(current == hist.fragment && hist.iframe) current = hist.getFragment(hist.iframe.location.hash);
 			if(current == hist.fragment || current == decodeURIComponent(hist.fragment)) return false;
@@ -71,7 +71,7 @@
 			var fragment = this.fragment = this.getFragment(fragmentOverride);
 			if(fragment){
 				var a=$('a[href="'+fragment+'"]');
-				a.length===0 ? $$.redirect(fragment) : a.click();
+				a.length===0 ? S.redirect(fragment) : a.click();
 			}
 		},
 		

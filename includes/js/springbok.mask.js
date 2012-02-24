@@ -15,7 +15,7 @@
 	}
 	
 	function call(fn){ if(fn) return fn.call($.mask); }
-	$$.mask={
+	S.mask={
 		maskId:'exposeMask',
 		options:{loadSpeed:'slow',closeSpeed:'fast',closeOnClick:true,closeOnEsc:true,
 				zIndex:9998,opacity:0.8,startOpacity:0,color:'#000',onLoad:null,onClose:null},

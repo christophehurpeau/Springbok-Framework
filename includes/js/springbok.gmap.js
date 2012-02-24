@@ -2,7 +2,7 @@ var gmap={
 	googlemap:null,coord:[],blocked:false,
 	
 	load:function(callbackName,sensor){
-		$$.loadScript('http://maps.google.com/maps/api/js?sensor='+(sensor?'true':'false')+'&callback='+callbackName);
+		S.loadScript('http://maps.google.com/maps/api/js?sensor='+(sensor?'true':'false')+'&callback='+callbackName);
 	},
 	autozoom:function(coord,options){
 		if(!coord) options.zoom=13;

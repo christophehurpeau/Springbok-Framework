@@ -1,17 +1,23 @@
-var HttpException=function(core,error,details){
+function HttpException(code,error,details){
 	this.code=code;
 	this.error=error;
 	this.details=details;
 }
-HttpException.prototype.getCode=function(){return this.code;}
-HttpException.prototype.getError=function(){return this.error;}
-HttpException.prototype.getDetails=function(){return this.details;}
+extendPrototype(HttpException,{
+	getCode:function(){return this.code;},
+	getError:function(){return this.error;},
+	getDetails:function(){return this.details;}
+});
 
+
+function FatalHttpException(){
+	
+}
 
 function badRequest(){throw new HttpException(400,'Bad Request');}
 function unauthorized(){throw new HttpException(401,'Unauthorized');}
 function forbidden(){throw new HttpException(403,'Forbidden');}
-function notFound(){throw new HttpException(404,'Not Found',_tC('The page you requested was not found.'));}
+function notFound(){throw new HttpException(404,'Not Found',i18nc['The page you requested was not found.']);}
 function methodNotAllowed(){throw new HttpException(405,'Method Not Allowed');}
 function notAccepable(){throw new HttpException(406,'Not Acceptable');}
 function proxyAuthenticationRequired(){throw new HttpException(407,'Proxy Authentication Required');}

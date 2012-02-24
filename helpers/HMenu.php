@@ -93,7 +93,7 @@ class HMenu{
 					if(!empty($value)) $attributes=$value+$attributes;
 				}
 			}
-			$attributes['onclick']='$$.redirect("'.HHtml::url($url).'")';
+			$attributes['onclick']='S.redirect("'.HHtml::url($url).'")';
 			$res.=HHtml::tag('option',$attributes,$title);
 		}
 		return $res.HHtml::closeTag('select').HHtml::jsInline('$(document).ready(function(){$(\'#'.$options['selectAttributes']['id'].'\').combobox()})');

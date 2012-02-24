@@ -1,12 +1,12 @@
-$$.tinymce={
+S.tinymce={
 	attrs:{},
 	
 	load:function(plugins){
 		if(window.tinymce===undefined){
-			$$.loadSyncScript(webdir+'js/tinymce.js');
-			$$.loadSyncScript(webdir+'js/tinymce.'+i18n_lang+'.js');
+			S.loadSyncScript(webdir+'js/tinymce.js');
+			S.loadSyncScript(webdir+'js/tinymce.'+i18n_lang+'.js');
 			// bug for ajax partial load - document.ready should not be necessary, but we never know !
-			$$.ready(function(){tinymce.dom.Event._pageInit(window)});
+			S.ready(function(){tinymce.dom.Event._pageInit(window)});
 		}
 		return this;
 	},

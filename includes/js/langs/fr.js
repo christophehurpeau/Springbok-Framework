@@ -1,5 +1,5 @@
 includeCore('langs/core-fr');
-$$.i18n={
+S.i18n={
 	date:{
 		format:'dd/mm/yyyy',
 		today:{full:'Aujourd\'hui',shortened:'Auj.'},
@@ -25,31 +25,31 @@ $$.i18n={
 					var now=new Date(),str;
 					if(date.getFullYear() == now.getFullYear()){
 						if(date.getMonth() == now.getMonth()){
-							if(now.getDate() == date.getDate()) str=$$.i18n.date.today.full;
-							else if(now.getDate()-1 == date.getDate()) str=$$.i18n.date.yesterday.full;
-							else str=$$.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate();
+							if(now.getDate() == date.getDate()) str=S.i18n.date.today.full;
+							else if(now.getDate()-1 == date.getDate()) str=S.i18n.date.yesterday.full;
+							else str=S.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate();
 						}else{
-							str=$$.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ $$.i18n.date.monthNames.full[date.getMonth()];
+							str=S.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ S.i18n.date.monthNames.full[date.getMonth()];
 						}
-					}else str=$$.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ $$.i18n.date.monthNames.full[date.getMonth()] + ' '+ date.getFullYear();
+					}else str=S.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ S.i18n.date.monthNames.full[date.getMonth()] + ' '+ date.getFullYear();
 					return str;
 				},
 				shortened:function(date){
 					var now=new Date(),month=date.getMonth(),str;
 					if(date.getFullYear() == now.getFullYear()){
 						if(month == now.getMonth()){
-							if(now.getDate() == date.getDate()) str=$$.i18n.date.today.shortened;
-							else if(now.getDate()-1 == date.getDate()) str=$$.i18n.date.yesterday.shortened;
-							else str=$$.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate();
+							if(now.getDate() == date.getDate()) str=S.i18n.date.today.shortened;
+							else if(now.getDate()-1 == date.getDate()) str=S.i18n.date.yesterday.shortened;
+							else str=S.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate();
 						}else{
-							str=$$.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+ (month<9?'0':'')+(month+1);
+							str=S.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+ (month<9?'0':'')+(month+1);
 						}
-					}else str=$$.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+(month<9?'0':'')+(month+1) + ' '+ date.getFullYear();
+					}else str=S.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+(month<9?'0':'')+(month+1) + ' '+ date.getFullYear();
 					return str;
 				},
 				simple:function(date){
 					var now=new Date(),
-						str=date.getDate()+' '+ $$.i18n.date.monthNames.full[date.getMonth()];
+						str=date.getDate()+' '+ S.i18n.date.monthNames.full[date.getMonth()];
 					if(date.getFullYear() != now.getFullYear()) str+=' '+date.getFullYear();
 					return str;
 				},
@@ -68,16 +68,16 @@ $$.i18n={
 			},
 			datetime:{
 				nice:function(date){
-					return $$.i18n.date.formats.date.nice(date)+' à '+$$.i18n.date.formats.times.simple(date);
+					return S.i18n.date.formats.date.nice(date)+' à '+S.i18n.date.formats.times.simple(date);
 				},
 				shortened:function(date){
-					return $$.i18n.date.formats.date.shortened(date)+' à '+$$.i18n.date.formats.times.simple(date);
+					return S.i18n.date.formats.date.shortened(date)+' à '+S.i18n.date.formats.times.simple(date);
 				},
 				simple:function(date){
-					return $$.i18n.date.formats.date.simple(date)+' à '+$$.i18n.date.formats.times.simple(date);
+					return S.i18n.date.formats.date.simple(date)+' à '+S.i18n.date.formats.times.simple(date);
 				},
 				compact:function(date){
-					return $$.i18n.date.formats.date.compact(date)+' à '+$$.i18n.date.formats.times.simple(date);
+					return S.i18n.date.formats.date.compact(date)+' à '+S.i18n.date.formats.times.simple(date);
 				}
 			}
 		}

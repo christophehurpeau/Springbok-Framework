@@ -1,25 +1,25 @@
 /* http://www.jankoatwarpspeed.com/post/2010/01/26/dynamic-tabs-jquery.aspx */
 
 (function($){
-	var oldFunctionInit=$$.ajax.init,oldFunctionSetTitle=$$.setTitle,ajaxFunctionUpdateVariable=$$.ajax.updateVariable,
+	var oldFunctionInit=S.ajax.init,oldFunctionSetTitle=S.setTitle,ajaxFunctionUpdateVariable=S.ajax.updateVariable,
 		dynamictabsMenu,dynamictabsContent,dynamictabsId=0;
-	$$.ajax.init=function(){
-		$$.dynamictabs.init();
+	S.ajax.init=function(){
+		S.dynamictabs.init();
 		$(document).bind('click',function(e){
 			if(e.which==2){
 				var target=$(e.target);
 				if(target.is('menu.dynamictabs a')){
-					$$.dynamictabs.delTab(target);
+					S.dynamictabs.delTab(target);
 				}else if(target.is('a:not(header a)')){
 					var a=target,menu=false;
-					$$.dynamictabs.addTab();
+					S.dynamictabs.addTab();
 					if(a.is('menu a')) menu=a.closest('menu');
 					
 					if(menu){
 						menu.find('a.current').removeClass('current');
 						a.addClass('current');
 					}
-					$$.ajax.load(a.attr('href'));
+					S.ajax.load(a.attr('href'));
 				}else return true;
 				e.preventDefault();
 				return false;
@@ -28,9 +28,9 @@
 		});
 		oldFunctionInit();
 	};
-	$$.setTitle=function(title){ oldFunctionSetTitle(title); $('menu.dynamictabs a.current').text(title); };
-	$$.ajax.updateVariable=function(divPage){ ajaxFunctionUpdateVariable(divPage); $$.dynamictabs.prepare(); };
-	$$.dynamictabs={
+	S.setTitle=function(title){ oldFunctionSetTitle(title); $('menu.dynamictabs a.current').text(title); };
+	S.ajax.updateVariable=function(divPage){ ajaxFunctionUpdateVariable(divPage); S.dynamictabs.prepare(); };
+	S.dynamictabs={
 		init:function(){
 			this.prepare();
 			$('menu.dynamictabs > li > a').die('click').live('click', function(){
@@ -74,7 +74,7 @@
 				// find the first tab
 				var firsttab=dynamictabsMenu.find('li:first a');
 				firsttab.addClass("current");
-				$$.ajax.updateVariable($('#'+firsttab.attr('rel')).show());
+				S.ajax.updateVariable($('#'+firsttab.attr('rel')).show());
 			}
 			a.parent().remove();
 		}

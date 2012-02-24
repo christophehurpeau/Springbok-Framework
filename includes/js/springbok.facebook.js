@@ -1,8 +1,8 @@
-$$.facebook={
+S.facebook={
 	loaded:false,locale:'en_US',appId:'',
 	load:function(){
 		if(this.loaded) return;
-		$$.loadScript('http://connect.facebook.net/'+this.locale+'/all.js');
+		S.loadScript('http://connect.facebook.net/'+this.locale+'/all.js');
 	},
 	onLoaded:function(){
 		
@@ -22,4 +22,4 @@ $$.facebook={
 		});
 	}
 };
-window.fbAsyncInit = function(){ $$.facebook.onLoaded() };
+window.fbAsyncInit = function(){ S.facebook.onLoaded() };

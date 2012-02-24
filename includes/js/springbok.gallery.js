@@ -7,7 +7,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	t.imageAttrs=imageAttrs||{};
 	t.albumsMap={};
 	
-	t.config=new StoredConfig('$$.gallery_'+to.attr('id'));
+	t.config=new StoredConfig('S.gallery_'+to.attr('id'));
 	t.sortBy=t.config.get('sortBy')||'created';
 	t.sortWay=t.config.get('sortWay')||'asc';
 	
@@ -27,7 +27,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	t.$.html('')
 		.append($('<div class="float_right mr10"/>')
 			.append($('<a href="#" class="action icon folder_add"/>').click(function(){
-				$$.dialogs.prompt(i18nc.Create,i18nc.Name,i18nc.Create,'',function(newAlbumName){
+				S.dialogs.prompt(i18nc.Create,i18nc.Name,i18nc.Create,'',function(newAlbumName){
 					$.getJSON(t.albumLink+'/addAlbum',{parentId:t.selectedAlbum,name:newAlbumName},function(data){
 						var album={id:data.id,name:newAlbumName,created:new Date().toSqlDate(),images:0},
 							albums=t.albumsMap[t.selectedAlbum].children,
@@ -106,7 +106,7 @@ Gallery.prototype.close=function(){
 Gallery.prototype.selectAlbum=function(idAlbum){
 	if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].sbInArray(idAlbum)!==-1) return false;
 	if(this.albumsMap[idAlbum]===undefined)
-		this.albumsMap[idAlbum]=$$.syncJson(this.albumLink,{id:idAlbum});
+		this.albumsMap[idAlbum]=S.syncJson(this.albumLink,{id:idAlbum});
 	this.selectedAlbum=idAlbum;
 	this.sort(true);
 };
@@ -149,7 +149,7 @@ Gallery.prototype.addImage=function(image,animate,idxOf){
 	t._addItem(li,animate,'image',idxOf);
 	li.contextmenu({menu:[
 		{title:i18nc.Rename,icon:'rename',callbacks:{click:function(){
-			$$.dialogs.prompt(i18nc.Rename,i18nc['New name ?'],i18nc.Rename,image.name,function(newName){
+			S.dialogs.prompt(i18nc.Rename,i18nc['New name ?'],i18nc.Rename,image.name,function(newName){
 				image.name=newName;
 				li.attr('title',newName).find('div:first').text(newName);
 				$.get(t.albumLink+'/renameImage',{id:image.id,newName:newName});
@@ -172,7 +172,7 @@ Gallery.prototype.addAlbum=function(album,animate,idxOf){
 	t._addItem(li,animate,'album',idxOf);
 	li.contextmenu({menu:[
 		{title:i18nc.Rename,icon:'rename',callbacks:{click:function(){
-			$$.dialogs.prompt(i18nc.Rename,i18nc['New name ?'],i18nc.Rename,album.name,function(newName){
+			S.dialogs.prompt(i18nc.Rename,i18nc['New name ?'],i18nc.Rename,album.name,function(newName){
 				album.name=newName;
 				li.attr('title',newName).find('div:first').text(newName+' ('+album.images+')');
 				$.get(t.albumLink+'/renameAlbum',{id:album.id,newName:newName});
@@ -229,7 +229,7 @@ Gallery.prototype.prepareUploader=function(options){
 			if(response['error']!==undefined) error=response.error.message;
 		}
 		if(error){
-			$$.dialogs.alert(i18nc.Error,error);
+			S.dialogs.alert(i18nc.Error,error);
 		}else{
 			options.onFileUploaded(file,response,resp);
 		}

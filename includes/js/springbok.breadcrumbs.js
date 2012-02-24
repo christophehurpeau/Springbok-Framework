@@ -1,6 +1,6 @@
 (function(){
 	var linkoptions={itemprop:'url'},separator=' &raquo; ';
-	$$.breadcrumbs=function(links){
+	S.breadcrumbs=function(links){
 		var b=$('#breadcrumbs > span:first').html(''),first=true,url;
 		$.each(links,function(i,l){
 			first ? first=false : b.append(separator);

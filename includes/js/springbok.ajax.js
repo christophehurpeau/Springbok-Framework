@@ -3,19 +3,19 @@ includeCore('springbok.history');
 	var lastConfirmResult=true;
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
 	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref;
-	$$.ready(function(){
+	S.ready(function(){
 		//console.log('AJAX DOCUMENT READY');
 		divContainer=$('#container');
 		divPage=$('#page');
 		linkFavicon=$('head link[rel="icon"],head link[rel="shortcut icon"]');
 		normalFaviconHref=linkFavicon.length===0 ? false : linkFavicon.attr('href');
-		$$.ajax.updateVariable(divPage);
-		$$.history.start();
-		$$.ajax.init();
+		S.ajax.updateVariable(divPage);
+		S.history.start();
+		S.ajax.init();
 	});
-	$$.redirect=function(url){ $$.ajax.load(url); }
-	$$.setTitle=function(title){ document.title=title; divVariable.find('h1:first').text(title) }
-	$$.ajax={
+	S.redirect=function(url){ S.ajax.load(url); }
+	S.setTitle=function(title){ document.title=title; divVariable.find('h1:first').text(title) }
+	S.ajax={
 		init:function(){
 			$(document).on('click','a[href]:not([href="javascript:;"]):not([href="#"]):not([href^="mailto:"]):not([target]):not([href^="http://"])',function(evt){
 				if($(evt.target).is('a[onclick^="return"]') && !lastConfirmResult) return false;
@@ -25,15 +25,15 @@ includeCore('springbok.history');
 				if(a.is('header menu.ajax a')){
 					menu=a.closest('menu');
 					var url=a.attr('href');
-					if(a.hasClass('current')) $$.ajax.load(url);
+					if(a.hasClass('current')) S.ajax.load(url);
 					else{
 						menu.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
 						var newPageContent=a.data('pagecontent');
 						if(newPageContent){
 							divPage.html(newPageContent.html).attr('class',newPageContent['class']);
-							$$.setTitle(newPageContent.title);
-							$$.history.navigate(url);
-						}else $$.ajax.load(url);
+							S.setTitle(newPageContent.title);
+							S.history.navigate(url);
+						}else S.ajax.load(url);
 					}
 					a.addClass('current');
 					return false;
@@ -45,12 +45,12 @@ includeCore('springbok.history');
 					menu.find('a.current').removeClass('current');
 					a.addClass('current');
 				}
-				$$.ajax.load(a.attr('href'));
+				S.ajax.load(a.attr('href'));
 				return false;
 			});
 			$(document).on('submit','form[href]:not([href="javascript:;"]):not([href="#"]):not([target]):not([href^="http://"])',function(){
 				var form=$(this);
-				$$.ajax.load(form.attr('action'),form.serialize(),'post');
+				S.ajax.load(form.attr('action'),form.serialize(),'post');
 				return false;
 			});
 		},
@@ -67,14 +67,14 @@ includeCore('springbok.history');
 			
 			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname')||'0':'0';
 			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
-			if($$.breadcrumbs) headers.SpringbokBreadcrumbs='1';
+			if(S.breadcrumbs) headers.SpringbokBreadcrumbs='1';
 			
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
 			$('body').addClass('cursorWait').append(divLoading);
 			if(normalFaviconHref) linkFavicon.attr('href',webdir+'img/ajax-roller.gif');
 			
-			$$.history.navigate(url);
+			S.history.navigate(url);
 			
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data, headers:headers,
@@ -87,12 +87,12 @@ includeCore('springbok.history');
 					var h,div,to;
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
-						$$.ajax.load(h);
+						S.ajax.load(h);
 						return;
 					}
 					
-					if(h=jqXHR.getResponseHeader('SpringbokAjaxTitle')) $$.setTitle($.parseJSON(h));
-					if(h=jqXHR.getResponseHeader('SpringbokAjaxBreadcrumbs')) $$.breadcrumbs($.parseJSON(h));
+					if(h=jqXHR.getResponseHeader('SpringbokAjaxTitle')) S.setTitle($.parseJSON(h));
+					if(h=jqXHR.getResponseHeader('SpringbokAjaxBreadcrumbs')) S.breadcrumbs($.parseJSON(h));
 					
 					if(!(to=jqXHR.getResponseHeader('SpringbokAjaxTo'))) to='base';
 					
@@ -110,7 +110,7 @@ includeCore('springbok.history');
 					
 					if(to === 'base') divPage=$('#page');
 					else if(to==='page') divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass')); // 
-					if(to === 'base' || to === 'page') $$.ajax.updateVariable(divPage);
+					if(to === 'base' || to === 'page') S.ajax.updateVariable(divPage);
 				},
 				error:function(jqXHR,textStatus,errorThrown){
 					$(window).scrollTop(0);

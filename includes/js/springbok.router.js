@@ -1,6 +1,6 @@
 (function(){
 	var routes={},routesLangs={};
-	$$.router={
+	S.router={
 		//all:'',controller:'',action:'',params:'',ext:'',
 		
 		init:function(r,rl){
@@ -50,7 +50,7 @@
 		find:function(all){
 			this.all='/'+all.sbTrim('/');
 			console.log('router : find :'+this.all);
-			var route=false,lang=$$.langs.get();
+			var route=false,lang=S.langs.get();
 			$.each(routes,function(i,r){
 				if(r[lang].matches(all)){
 					console.log(['matches!',r]);
@@ -65,14 +65,14 @@
 		},
 		
 		getLink:function(url){
-			return $$.isString(url) ? this.getStringLink(url) : this.getArrayLink(url);
+			return S.isString(url) ? this.getStringLink(url) : this.getArrayLink(url);
 		},
 		
 		/* Exemples :
-		* $$.router.getArrayLink(['/:id-:slug',post.id,post.slug])
+		* S.router.getArrayLink(['/:id-:slug',post.id,post.slug])
 		*/
 		getArrayLink:function(params){
-			var options=$$.isObject(url.sbLast()) ? url.pop() : {},
+			var options=S.isObject(url.sbLast()) ? url.pop() : {},
 				plus=options['?'] ? '?'+options['?'] : '',
 				route=routes[params.shift()];
 			if(options.ext) plus+='.'+params.ext;
@@ -83,7 +83,7 @@
 		},
 		
 		/* Exemples :
-		* $$.html.url('/site/login')
+		* S.html.url('/site/login')
 		*/
 		getStringLink:function(params){
 			var route=params.sbTrim('\/').split('/',3), controller=route[0], action=route[1] || this.DEFAULT_ACTION, params= route[2];

@@ -7,10 +7,10 @@ class JsFile extends EnhancerFile{
 			$layout=file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/layout.php');
 			preg_match('#<header>\s*(.*)\s*</header>.*<footer>\s*(.*)</footer>\s*#Us',$layout,$matchesLayout);
 			$srcContent="includeCore('springbok.jsapp');"
-				.'$$.app.jsapp('.json_encode(EnhancerFile::$APP_CONFIG['projectName']).','.time().');' // force également à toujours refaire le fichier
-				.(empty($matchesLayout[1])?'':'$$.app.header='.JsAppFile::viewToJavascript($matchesLayout[1]).';')
-				.(empty($matchesLayout[2])?'':'$$.app.footer='.JsAppFile::viewToJavascript($matchesLayout[2]).';')
-				.('$$.router.init('.substr(file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/routes.js'),7,-1).');')
+				.'S.app.jsapp('.json_encode(EnhancerFile::$APP_CONFIG['projectName']).','.time().');' // force également à toujours refaire le fichier
+				.(empty($matchesLayout[1])?'':'S.app.header='.JsAppFile::viewToJavascript($matchesLayout[1]).';')
+				.(empty($matchesLayout[2])?'':'S.app.footer='.JsAppFile::viewToJavascript($matchesLayout[2]).';')
+				.('S.router.init('.substr(file_get_contents(EnhancerFile::$APP_DIR.'src/jsapp/routes.js'),7,-1).');')
 				.$srcContent;
 			//debugCode($srcContent);
 		}
@@ -18,7 +18,7 @@ class JsFile extends EnhancerFile{
 		
 		//$this->_realSrcContent=$srcContent;
 		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()));
-		//$srcContent=str_replace('coreDeclareApp();','$$.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
+		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
 		$this->_srcContent=$srcContent;
 		$jsFiles=array('global.js','jsapp.js');
@@ -43,7 +43,7 @@ class JsFile extends EnhancerFile{
 		
 		$c=preg_replace_callback('/initSpringbokRoutes\(([^)]+)?\)/',function(&$m){
 			$suffix=(empty($m[1])?'':'_'.substr($m[1],1,-1));
-			return '$$.router.init('.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes'.$suffix.'.php').','.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes-langs'.$suffix.'.php').');';
+			return 'S.router.init('.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes'.$suffix.'.php').','.json_encode(include EnhancerFile::$APP_DIR.'src/config/routes-langs'.$suffix.'.php').');';
 		},$c);
 		
 		$this->_srcContent=$c;
@@ -52,7 +52,7 @@ class JsFile extends EnhancerFile{
 	public function getEnhancedDevContent(){
 		$content=$this->_srcContent;
 		//if($this->fileName()==='jsapp.js')
-		//	$content.='$$.app='.json_encode(array('name'=>self::$APP_CONFIG['projectName'],'version'=>time()));
+		//	$content.='S.app='.json_encode(array('name'=>self::$APP_CONFIG['projectName'],'version'=>time()));
 		//if($this->fileName()=='global.js')
 		//	return 'function include(fileName){document.write(\'<script type="text/javascript" src="\'+jsdir+fileName+\'.js"></script>\');var notifier = new EventNotifier();setTimeout(notifier,100);notifier.wait->();}'.$this->_realSrcContent;
 		//return $this->_realSrcContent;
@@ -74,7 +74,7 @@ class JsFile extends EnhancerFile{
 				.substr($this->_srcContent,strpos($this->_srcContent,','));
 		}
 		//if($this->fileName()==='jsapp.js')
-		//	$this->_srcContent.='$$.app='.json_encode(array('name'=>self::$APP_CONFIG['projectName'],'version'=>time()));
+		//	$this->_srcContent.='S.app='.json_encode(array('name'=>self::$APP_CONFIG['projectName'],'version'=>time()));
 		
 		//$this->_srcContent=preg_replace('/\/\*\!?\s+[^\(?:\*\/)]*\s+\*\//mU','',$this->_srcContent);
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($prodFile->getPath()))==='ace') $prodFile->write($this->_srcContent);

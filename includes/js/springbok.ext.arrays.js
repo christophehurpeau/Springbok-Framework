@@ -21,7 +21,7 @@ extendPrototype(Array,{
 		return res;
 	},
 	sbSortBy:function(propName,asc,sortFunc){
-		if(!$.isFunction(sortFunc)) sortFunc=$$.arraysort[sortFunc===undefined?'':sortFunc];
+		if(!$.isFunction(sortFunc)) sortFunc=S.arraysort[sortFunc===undefined?'':sortFunc];
 		return this.sort(function(a,b){
 			if(asc) return sortFunc(a[propName],b[propName]);
 			return sortFunc(b[propName],a[propName]);

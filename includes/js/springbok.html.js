@@ -1,10 +1,10 @@
-$$.html={
+S.html={
 	baseurl:basedir.substr(0,basedir.length-1),
 	link:function(title,url,options){
 		options=$.extend({},{escape:true},options);
 		
 		if(url || url===false){
-			if(url!=='#' && url[0]!=='?' && ($$.isArray(url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
+			if(url!=='#' && url[0]!=='?' && (S.isArray(url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
 		}else title=url=this.url(title,options.fullUrl);
 		delete options.fullUrl;
 		
@@ -50,21 +50,21 @@ $$.html={
 	},
 	
 	/* Exemples :
-	* $$.html.url(['/:id-:slug',post.id,post.slug])
-	* $$.html.url('/site/login')
-	* $$.html.url(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
+	* S.html.url(['/:id-:slug',post.id,post.slug])
+	* S.html.url('/site/login')
+	* S.html.url(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
 	*/
 	url:function(url,full){
-		if($$.isString(url) || !url){
+		if(S.isString(url) || !url){
 			if(url) url=url.sbTrim();
 			if(!url || url==='/') return (full || '') + this.baseurl + '/';
 			else{
 				if(url.sbContains('://')) return url;
 				if(url.sbStartsWith('\\/')) return url.substr(1);
-				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + ($$.router ? $$.router.getStringLink(url.substr(1)) : url);
+				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
 			}
 		}else{
-			return (full || '') + this.baseurl + ($$.router ? $$.router.getArrayLink(url) : url);
+			return (full || '') + this.baseurl + (S.router ? S.router.getArrayLink(url) : url);
 		}
 	}
 };

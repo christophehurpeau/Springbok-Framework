@@ -1,4 +1,4 @@
-$$.videos={
+S.videos={
 	getYoutubeLinks:function(str){
 		// short youtube video : "http://youtu.be/id"
 		//function getYoutubeVideos(){
