@@ -1,6 +1,6 @@
 <?php
 return array(
-	'decimalFormat'=>array('decimal_sep'=>',','thousands_sep'=>' '),
+	'decimalFormat'=>array('decimal_sep'=>',','thousands_sep'=>' '),
 	'percentFormat'=>'%s %%',
 	'scientificFormat' => '#E0',
 	'currencyFormat' => '#,##0.00 ¤',
