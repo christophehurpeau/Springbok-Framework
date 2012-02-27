@@ -24,13 +24,13 @@ div.input label,div.textarea label,form .radio .title{
 	padding:1px 3px;
 	vertical-align:top;
 }
-form.large-label div.input label,form.large-label .radio .title{
+.large-label div.input label,.large-label .radio .title{
 	width:FORM_LARGE_LABEL_WIDTH;
 }
-form.small-label div.input label,form.small-label .radio .title{
+.small-label div.input label,.small-label .radio .title{
 	width:FORM_SMALL_LABEL_WIDTH;
 }
-form.medium-label div.input label,form.medium-label .radio .title{
+.medium-label div.input label,.medium-label .radio .title{
 	width:FORM_MEDIUM_LABEL_WIDTH;
 }
 

@@ -434,7 +434,7 @@ class HForm{
 		return HHtml::tag('input',$attributes).($label===null?'':HHtml::tag('label',array('for'=>$attributes['id']),$label));
 	}
 	
-	public function _radio($name,$value,$selected,$attributes){
+	public function _radio($name,$value,$selected,$attributes=array()){
 		$attributes['type']='radio';
 		$attributes['name']=$name;
 		$attributes['value']=$value;
@@ -442,6 +442,20 @@ class HForm{
 		return HHtml::tag('input',$attributes);
 	}
 	
+	
+	public function stars($name,$nbStars=5,$attributes=array(),$containerAttributes=array()){
+		$title=isset($attributes['title']) ? $attributes['title'] : ($this->defaultLabel ? ($this->modelName != NULL ? _tF($this->modelName,$name) : $name): false); unset($attributes['title']);
+		$value=$this->_getValue($name);
+		if($this->modelName !== NULL) $name=$this->name.'['.$name.']';
+		
+		if($title) $content=HHtml::tag('div',array('class'=>'title'),$title).' ';
+		else $content='';
+		
+		for($i=1;$i<=$nbStars;$i++)
+			$content.=self::_radio($name,$i,$value);
+		
+		return $this->_inputContainer($content,'radio stars',$containerAttributes);
+	}
 	
 	private function _setValue(&$name,&$attributes){
 		if(!isset($attributes['value'])){

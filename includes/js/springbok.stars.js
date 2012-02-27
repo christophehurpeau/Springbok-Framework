@@ -11,17 +11,17 @@ S.stars={
 			$(this)
 				.find('input:radio')
 				.each(function(i){
-					var rating = $(this).parent().text();
+					var $this=$(this),rating = $this.parent().text();
 					var $item = $('<a href="#"></a>')
 						.text(rating);
 					if(rating) $item.attr('title',rating);
 					if(split)
 						$item.addClass('rating-'+(i%split));
 					$list.append(S.stars.addHandlers($item,i+1));
-					if($(this).is(':checked')) $item.prevAll().andSelf().addClass('rating');
+					if($this.is(':checked')) $item.prevAll().andSelf().addClass('rating');
 				})
 				.hide()
-				.parent().append($list);
+				.last().after($list);
 		});
 	},
 	addHandlers:function(item,value){

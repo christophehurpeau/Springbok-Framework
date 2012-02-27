@@ -233,6 +233,7 @@ class CssFile extends EnhancerFile{
 			$constantes['BUTTON_COLOR'.$i.'_COLOR']='false';
 			$constantes['BUTTON_COLOR'.$i.'_BORDER']='false';
 			$constantes['BUTTON_COLOR'.$i.'_TEXTSHADOW']='false';
+			$constantes['BUTTON_COLOR'.$i.'_BOXSHADOW']='false';
 		}
 		
 		$content=preg_replace_callback('/@CONST\s+([0-9\w_-]+)\s*=\s*\'?([0-9\w\s\._\-\#\,]+)\'?;/Ui',function($matches) use(&$constantes){
