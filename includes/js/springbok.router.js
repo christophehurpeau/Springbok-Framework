@@ -51,7 +51,6 @@
 		},
 		
 		find:function(all){
-<<<<<<< HEAD
 			all=this.all='/'+all.sbTrim('/');
 			console.log('router: find: "'+all+'"');
 			var route=false,lang=S.langs.get(),m;
@@ -65,16 +64,6 @@
 						action:c_a[1],
 						params:m,
 						ext:false
-=======
-			this.all='/'+all.sbTrim('/');
-			console.log('router : find :'+this.all);
-			var route=false,lang=S.langs.get();
-			$.each(routes,function(i,r){
-				if(r[lang].matches(all)){
-					console.log(['matches!',r]);
-					route=new Route({
-						controller:r.controller
->>>>>>> 8137dd7c3c15b1229437aa4c8d3a8d7144ad8e56
 					});
 					return false;
 				}
