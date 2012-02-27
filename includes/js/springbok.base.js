@@ -145,6 +145,7 @@ function extend(subclass,superclass,extendsPrototype){
 function extendPrototype(targetclass,p){
 	for(var i in p)
 		targetclass.prototype[i]=p[i];
+	return targetclass;
 }
 
 /*function extendBasic(subclass,superclass,basicsuperclass,varName,extendsPrototype){

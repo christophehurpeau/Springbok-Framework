@@ -3,9 +3,10 @@ S.html={
 	link:function(title,url,options){
 		options=$.extend({},{escape:true},options);
 		
-		if(url || url===false){
-			if(url!=='#' && url[0]!=='?' && (S.isArray(url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:'))) url=this.url(url,options.fullUrl);
-		}else title=url=this.url(title,options.fullUrl);
+		if(url===false) url=this.url(url,options.fullUrl);
+		else if(!url) title=url=this.url(title,options.fullUrl);
+		else if(url!=='#' && url[0]!=='?' && (S.isArray(url) || (url.substr(0,11)!=='javascript:' && url.substr(0,7)!=='mailto:')))
+				url=this.url(url,options.fullUrl);
 		delete options.fullUrl;
 		
 		var a=$('<a/>'),current=false;

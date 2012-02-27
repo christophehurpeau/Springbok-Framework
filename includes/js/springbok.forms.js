@@ -95,14 +95,14 @@
 })(jQuery);
 
 
-function HForm(modelName,formAttributes,tagContainer,options){
+S.HForm=function(modelName,formAttributes,tagContainer,options){
 	formAttributes=$.extend({},{action:'',method:'post'},formAttributes);
 	this.$=$('<form/>').attr(formAttributes);
 	this.modelName=modelName||false;
 	this.name=modelName?modelName.sbLcFirst():false;
 	this.tagContainer=tagContainer!==undefined?tagContainer:'div';
-}
-extendPrototype(HForm,{
+};
+S.HForm.prototype={
 	end:function(submit){
 		if(submit || submit==undefined) this.$.append(this.submit(submit))
 		return this.$;
@@ -276,4 +276,4 @@ extendPrototype(HForm,{
 		this.$.append(this.submit(title,attributes,containerAttributes));
 		return this;
 	}
-});
+};

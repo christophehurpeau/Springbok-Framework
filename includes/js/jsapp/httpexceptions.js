@@ -3,11 +3,11 @@ function HttpException(code,error,details){
 	this.error=error;
 	this.details=details;
 }
-extendPrototype(HttpException,{
+HttpException.prototype={
 	getCode:function(){return this.code;},
 	getError:function(){return this.error;},
 	getDetails:function(){return this.details;}
-});
+};
 
 
 function FatalHttpException(){
@@ -25,3 +25,4 @@ function requestTimeout(){throw new HttpException(408,'Request Timeout');}
 function internalServerError(){throw new FatalHttpException(500,'Internal Server Error');}
 function notImplemented(){throw new HttpException(501,'Not Implemented');}
 function serviceUnavailable(details){throw new FatalHttpException(503,'Service Unavailable',details);}
+

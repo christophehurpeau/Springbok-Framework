@@ -42,11 +42,17 @@ includeCore('springbok.date');
 includeCore('springbok.ajax');
 
 S.history.loadUrl=function(fragmentOverride){
-	var fragment = S.history.getFragment(fragmentOverride);
+	var fragment = S.history.getFragment(fragmentOverride),loadedControllers={};
 	if(fragment){
 		if(fragment.sbStartsWith(basedir)) fragment = fragment.substr(basedir.length);
 		try{
 			var route=S.router.find(fragment);
+			console.log(route);
+			if(!loadedControllers[route.controller]){
+				loadedControllers[route.controller]=true;
+				S.loadSyncScript(staticUrl+'js/jsapp/'+route.controller+'.js');
+			}
+			
 		}catch(err){
 			if(err instanceof HttpException){
 				

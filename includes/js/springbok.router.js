@@ -1,8 +1,12 @@
 (function(){
+	S.Route=function(attrs){
+		$.extend(this,attrs);
+	};
+	S.Route.prototype={
+		
+	};
 	var routes={},routesLangs={};
 	S.router={
-		//all:'',controller:'',action:'',params:'',ext:'',
-		
 		init:function(r,rl){
 			$.each(r,function(url,route){
 				routes[url]={_:route[0]};
@@ -11,7 +15,6 @@
 				
 				route=langs || {};
 				route['en']=url;
-				
 				$.each(route,function(lang,routeLang){
 					var paramsNames=[],specialEnd,specialEnd2,routeLangPreg;
 					if(specialEnd=routeLang.sbEndsWith('/*')) routeLangPreg=routeLang.substr(0,-2);
@@ -22,13 +25,13 @@
 					if(specialEnd) routeLangPreg+='(?:\/(.*))?';
 					else if(specialEnd2) routeLangPreg=routeLangPreg.substr(0,routeLang.length-2)+'(?:\/(.*))?'+routeLangPreg.substr(routeLang.length-2);
 					
-					routes[url][lang]=[routeLangPreg.replace(/(\(\?)?\:([a-zA-Z_]+)/g,function(str,p1,p2){
+					routes[url][lang]=[new RegExp(routeLangPreg.replace(/(\(\?)?\:([a-zA-Z_]+)/g,function(str,p1,p2){
 						if(p1) return str;
 						paramsNames.push(p2);
 						if(paramsDef && paramsDef[p2]) return paramsDef[p2]==='id' ? '([0-9]+)' : '('+paramsDef[p2]+')';
 						if(['id'].sbInArray(p2)) return '([0-9]+)';
 						return '([^\/]+)';
-					}) + (routes[url].ext ? (routes[url].ext==='html' ? '(?:\.html)?':'\.'+routes[url].ext) : ''),
+					}) + (routes[url].ext ? (routes[url].ext==='html' ? '(?:\.html)?':'\.'+routes[url].ext) : '')),
 						routeLang.replace(/(\:[a-zA-Z_]+)/g,'%s').replace(/[\?\(\)]/g,'').replace('/*','%s').sbRtrim()];
 					if(paramsNames) routes[url][':']=paramsNames;
 				});
@@ -48,6 +51,21 @@
 		},
 		
 		find:function(all){
+<<<<<<< HEAD
+			all=this.all='/'+all.sbTrim('/');
+			console.log('router: find: "'+all+'"');
+			var route=false,lang=S.langs.get(),m;
+			$.each(routes,function(i,r){
+				console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all));
+				if(m=(r[lang]||r['en'])[0].exec(all)){
+					var c_a=r['_'].split('::');
+					route=new S.Route({
+						all:all,
+						controller:c_a[0],
+						action:c_a[1],
+						params:m,
+						ext:false
+=======
 			this.all='/'+all.sbTrim('/');
 			console.log('router : find :'+this.all);
 			var route=false,lang=S.langs.get();
@@ -56,12 +74,14 @@
 					console.log(['matches!',r]);
 					route=new Route({
 						controller:r.controller
+>>>>>>> 8137dd7c3c15b1229437aa4c8d3a8d7144ad8e56
 					});
 					return false;
 				}
 			});
 			
 			if(!route) notFound();
+			return route;
 		},
 		
 		getLink:function(url){
