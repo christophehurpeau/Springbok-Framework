@@ -21,10 +21,9 @@ includeCore('springbok.history');
 				if($(evt.target).is('a[onclick^="return"]') && !lastConfirmResult) return false;
 				evt.preventDefault();
 				evt.stopPropagation();
-				var a=$(this),rel='content',menu=false;
+				var a=$(this),rel='content',menu,url=a.attr('href');
 				if(a.is('header menu.ajax a')){
 					menu=a.closest('menu');
-					var url=a.attr('href');
 					if(a.hasClass('current')) S.ajax.load(url);
 					else{
 						menu.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
@@ -37,15 +36,17 @@ includeCore('springbok.history');
 					}
 					a.addClass('current');
 					return false;
-				}else if(a.is('menu a')){
-					menu=a.closest('menu');
 				}
 				
-				if(menu){
+				var allMenuLinks=$('menu a[href="'+url+'"]');
+				menu=allMenuLinks.closest('menu');
+				
+				if(menu.size !== 0){
 					menu.find('a.current').removeClass('current');
-					a.addClass('current');
+					allMenuLinks.addClass('current');
 				}
-				S.ajax.load(a.attr('href'));
+				
+				S.ajax.load(url);
 				return false;
 			});
 			$(document).on('submit','form[href]:not([href="javascript:;"]):not([href="#"]):not([target]):not([href^="http://"])',function(){

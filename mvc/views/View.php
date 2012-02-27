@@ -112,6 +112,7 @@ class AjaxPageDynamicTabsView extends AjaxPageView{
 }
 
 class AjaxContentView extends AbstractAjaxView{
+	private $title;
 	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Controller::$defaultLayout;
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
@@ -119,9 +120,12 @@ class AjaxContentView extends AbstractAjaxView{
 			parent::__construct($title,$layout);
 			echo '<div class="content" data-layoutname="'.$layoutNameOverride.'">';
 		}else{
-			if(isset($_SERVER['HTTP_SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
-			$this->ajaxHeaders($title,'content');
+			$this->ajaxHeaders($this->title=$title,'content');
 		}
+	}
+	public function render(){
+		if($this->active===true) parent::render();
+		else if(isset($_SERVER['HTTP_SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($this->title));
 	}
 }
 
