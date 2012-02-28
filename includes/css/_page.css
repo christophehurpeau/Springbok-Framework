@@ -98,6 +98,10 @@ footer{
 	ENDIF
 	IF(BREADCRUMBS_FONTSIZE) font-size:BREADCRUMBS_FONTSIZE; ENDIF
 }
+#breadcrumbs span.last{
+	cursor:default;
+	color:INTERACTION_CURRENT_COLOR;
+}
 
 
 #page{
