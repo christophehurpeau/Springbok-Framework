@@ -49,7 +49,7 @@ includeCore('springbok.history');
 				S.ajax.load(url);
 				return false;
 			});
-			$(document).on('submit','form[href]:not([href="javascript:;"]):not([href="#"]):not([target]):not([href^="http://"])',function(){
+			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([action^="http://"])',function(){
 				var form=$(this);
 				S.ajax.load(form.attr('action'),form.serialize(),'post');
 				return false;
