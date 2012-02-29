@@ -47,8 +47,14 @@ abstract class AQuery{
 				}else $op='=';
 				
 				if(is_array($value)){
-					if($op===' IN ' || $op===' NOT IN ') $sql.=$this->formatField($key,$fieldPrefix).$op.'('.implode(',',array_map(array(&$this->_db,'escape'),$value)).')';
-					else{
+					if($op===' IN ' || $op===' NOT IN '){
+						$values=array();
+						foreach($value as &$v){
+							if(is_float($v) || is_int($v)) $values[]=$v;
+							else $values[]=$this->_db->escape($v);
+						}
+						$sql.=$this->formatField($key,$fieldPrefix).$op.'('.implode(',',$values).')';
+					}else{
 						$start=$this->formatField($key,$fieldPrefix).$op;$db=&$this->_db;
 						$sql.='('.implode(' OR ',array_map(function(&$v) use(&$start,&$db){return $start.$db->escape($v);},$value)).')';
 					}
