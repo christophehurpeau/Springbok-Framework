@@ -75,7 +75,7 @@ class HDev{
 	public static function error(&$e_message,&$e_file,&$e_line,&$e_context){
 		echo '<pre style="white-space:pre-wrap; word-wrap:break-word">'.h($e_message).' ('.geditURL($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown'){
-			echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
+			echo '<br/><h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
 			echo HText::highlightLine(file_get_contents($e_file),'php',$e_line,false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;'));
 		}
 		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre>'.prettyHtmlBackTrace(3).'</pre>';
@@ -86,7 +86,7 @@ class HDev{
 	public static function exception(&$e_message,&$e_file,&$e_line,&$e_trace){
 		echo '<pre style="white-space:pre-wrap; word-wrap:break-word">'.h($e_message).' ('.geditURL($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown'){
-			echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
+			echo '<br/><h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
 			echo HText::highlightLine(file_get_contents($e_file),'php',$e_line,false,'background:#EBB',true,10);
 		}
 		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre>'.prettyHtmlBackTrace(0,$e_trace).'</pre>';
