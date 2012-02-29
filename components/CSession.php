@@ -54,15 +54,17 @@ class CSession{
 		$_SESSION[$name]=$value;
 	}
 	
-	public static function setFlash($message, $element='div', $params=array(), $key='message'){
-		self::set('flash.'.$key,compact('message','element','params'));
+	public static function setFlash($message,$key='message',$params=array()){
+		self::set('flash.'.$key,compact('message','params'));
 	}
 	
-	public static function flash($key='message'){
+	public static function flash($key='message',$element='div',$params=array()){
 		if(!self::exists('flash.'.$key)) return;
 		$flash=self::getAndRemove('flash.'.$key);
-		if(!isset($flash['params']['class'])) $flash['params']['class']='flashMessage';
-		return HHtml::tag($flash['element'],$flash['params'],$flash['message']).HHtml::jsInline('$(".flashMessage").delay(4500).fadeOut(600)');
+		$params+=$flash['params'];
+		if(!isset($params['class'])) $params['class']='flashMessage';
+		if(!isset($params['id'])) $params['id']=uniqid('f_');
+		return HHtml::tag($element,$params,$flash['message']).HHtml::jsInline('$("#'.$params['id'].'").delay(5500).fadeOut(800)');
 	}
 }
 CSession::init();
