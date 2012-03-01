@@ -182,6 +182,16 @@ class DBMySQL extends DB{
 		$r->close();
 		return $res;
 	}
+	public function &/* DEV */_/* /DEV */doSelectListObjects(&$query,&$queryObj,&$fields){
+		$r=$this->_query_($query,$fields);
+		$res=array();
+		while($r->fetch()){
+			$obj=&$queryObj->_createObj();
+			$res[$fields[0]]=$obj;
+		}
+		$r->close();
+		return $res;
+	}
 	
 	public function &/* DEV */_/* /DEV */doSelectObject(&$query,&$queryObj,&$fields){
 		$r=$this->_query_($query,$fields);

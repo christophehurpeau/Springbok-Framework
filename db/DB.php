@@ -295,6 +295,9 @@ abstract class DB{
 	public function doSelectObjects(&$query,&$queryObj,&$fields){
 		return $this->doSelect('Objects',array(&$query,&$queryObj,&$fields));
 	}
+	public function doSelectListObjects(&$query,&$queryObj,&$fields){
+		return $this->doSelect('ListObjects',array(&$query,&$queryObj,&$fields));
+	}
 	public function doSelectAssocObjects(&$query,&$queryObj,&$fields,&$tabResKey){
 		return $this->doSelect('AssocObjects',array(&$query,&$queryObj,&$fields,&$tabResKey));
 	}

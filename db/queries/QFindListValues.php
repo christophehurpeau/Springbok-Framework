@@ -2,15 +2,29 @@
 include_once __DIR__.DS.'QFindAll.php';
 class QFindListValues extends QFindAll{
 	public function &execute(){
-		$rows=$this->_db->doSelectListValues_($this->_toSQL());
-		//debugVar($rows);
-		$res=array();
-		if($rows){
-			foreach($rows as $key=>&$row)
-				$res[$key]=&$this->_createObject($row);
-			if($this->calcFoundRows) $this->calcFoundRows=$this->_db->doSelectValue('SELECT FOUND_ROWS()');
+		$res=$this->_db->doSelectListObjects($this->_toSQL(),$this,$this->queryResultFields);
+		
+		if($res){
+			if($this->calcFoundRows===true) $this->calcFoundRows=(int)$this->_db->doSelectValue('SELECT FOUND_ROWS()');
 			$this->_afterQuery_objs($res);
-		}elseif($this->calcFoundRows) $this->calcFoundRows=0;
+		}elseif($this->calcFoundRows===true) $this->calcFoundRows=0;
 		return $res;
+	}
+	
+	public function &calcFoundRows(){
+		$this->calcFoundRows=true;
+		return $this;
+	}
+	public function &noCalcFoundRows(){
+		$this->calcFoundRows=null;
+		return $this;
+	}
+	
+	public function &hasCalcFoundRows(){
+		return $this->calcFoundRows;
+	}
+	
+	public function &foundRows(){
+		return $this->calcFoundRows;
 	}
 }

@@ -153,6 +153,13 @@ class DBSQLite extends DB{
 		$rows=$this->doSelectRows_($query);
 		foreach($rows as $row) $callback($queryObj->_createObject($row));
 	}
+	public function /* DEV */_/* /DEV */doSelectListObjects(&$query,&$queryObj,&$fields){
+		$rows=$this->doSelectRows_($query);
+		$res=array();
+		foreach($rows as $row)
+			$res[$row[0]]=$queryObj->_createObject($row);
+		return $res;
+	}
 	
 	public function &/* DEV */_/* /DEV */doSelectAssocObjects(&$query,&$queryObj,&$fields,&$tabResKey){
 		$rows=$this->doSelectRows_($query);
