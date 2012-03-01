@@ -8,6 +8,12 @@ S.dates={
 		}
 		return new Date(date[0][0],date[0][1]-1,date[0][2]);
 	},
+	getDaysInMonth:function(year, month){
+		return [31,(this.isLeapYear(year)?29:28),31,30,31,30,31,31,30,31,30,31][month];
+	},
+	isLeapYear:function(year){
+		return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
+	},
 	niceDate:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
