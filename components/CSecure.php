@@ -59,6 +59,10 @@ class CSecure{
 		return self::$_user;
 	}
 	
+	public static function &userSafe(){
+		return self::$_user;
+	}
+	
     public static function isAdmin(){ return static::user()->isAdmin(); }
     
 	public static function checkAccess($params=null){
