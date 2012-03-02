@@ -58,6 +58,10 @@ S.i18n={
 						str=(day<10?'0':'')+day+'/'+ (month<9?'0':'')+(month+1);
 					if(date.getFullYear() != now.getFullYear()) str+='/'+date.getFullYear();
 					return str;
+				},
+				complete:function(date){
+					var now=new Date(),day=date.getDate(),month=date.getMonth()
+					return (day<10?'0':'')+day+'/'+ (month<9?'0':'')+(month+1)+'/'+date.getFullYear();
 				}
 			},
 			times:{
@@ -78,6 +82,9 @@ S.i18n={
 				},
 				compact:function(date){
 					return S.i18n.date.formats.date.compact(date)+' à '+S.i18n.date.formats.times.simple(date);
+				},
+				complete:function(date){
+					return S.i18n.date.formats.date.complete(date)+' à '+S.i18n.date.formats.times.simple(date);
 				}
 			}
 		}
