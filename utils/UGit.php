@@ -4,17 +4,21 @@ class_exists('URepository',true);
 /* & http://code.fealdia.org/viewgit/?a=viewblob&p=viewgit&h=d292901c58ccae33d8c249afcccc2cdd065b375c&hb=93bdbda834621af67d8f3d6bdeac8a81d3f05f33&f=inc/functions.php */
 /* & Redmine */
 class UGit{
-	public static function &create($repo_path,$source=NULL){
-		if(is_dir($repo_path) && file_exists($repo_path."/.git") && is_dir($repo_path."/.git"))
+	public static function &create($repo_path,$source=null,$bare=false){
+		if(self::exists($repo_path));
 			throw new Exception('"'.$repo_path.'" is already a git repository');
 		$repo=new GitRepository($repo_path,true,false);
-		if($source !== NULL) $repo->clone_from($source);
-		else $repo->run('init');
+		if($source !== null) $repo->clone_from($source);
+		else $repo->run('init'.($bare?' --bare':''));
 		return $repo;
 	}
 	
 	public static function open($repo_path){
 		return new GitRepository($repo_path);
+	}
+	
+	public static function exists($repo_path){
+		return is_dir($repo_path) && file_exists($repo_path."/.git") && is_dir($repo_path."/.git");
 	}
 }
 
