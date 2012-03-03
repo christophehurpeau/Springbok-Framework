@@ -8,9 +8,12 @@ class ConfigFile extends PhpFile{
 	public function getMd5Content(){
 		//return '';
 		$md5=$this->_srcContent;
+		
+		if($this->fileName()==='routes.php' || substr($this->fileName(),0,7)==='routes_')
+			$md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/routes-langs'.substr($this->fileName(),6));
+		
 		if(!empty(self::$baseConfigArray) && substr($this->fileName(),0,1) == '_'){
 			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
-			if($this->fileName()==='routes.php' || substr($this->fileName(),0,7)==='routes_') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/routes-langs'.substr($this->fileName(),7));
 			
 			
 			if(!empty(self::$baseConfigArray['plugins'])){
