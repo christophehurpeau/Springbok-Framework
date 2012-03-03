@@ -9,8 +9,10 @@ class ConfigFile extends PhpFile{
 		//return '';
 		$md5=$this->_srcContent;
 		
-		if($this->fileName()==='routes.php' || substr($this->fileName(),0,7)==='routes_')
-			$md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/routes-langs'.substr($this->fileName(),6));
+		if($this->fileName()==='routes.php' || substr($this->fileName(),0,7)==='routes_'){
+			$routesLangsFileName=dirname($this->srcFile()->getPath()).'/routes-langs'.substr($this->fileName(),6);
+			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
+		}
 		
 		if(!empty(self::$baseConfigArray) && substr($this->fileName(),0,1) == '_'){
 			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
