@@ -82,7 +82,7 @@ class GitRepository{
 	}
 	
 	public function update(){
-		$this->run('git fetch origin master:master');
+		$this->run('fetch origin master:master');
 	}
 	
 	public function clone_to($target){
