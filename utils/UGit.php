@@ -5,10 +5,10 @@ class_exists('URepository',true);
 /* & Redmine */
 class UGit{
 	public static function &create($repo_path,$source=null,$bare=false){
-		if(self::exists($repo_path));
+		if(self::exists($repo_path))
 			throw new Exception('"'.$repo_path.'" is already a git repository');
 		$repo=new GitRepository($repo_path,true,false);
-		if($source !== null) $repo->clone_from($source);
+		if($source !== null) $repo->clone_from($source,$bare);
 		else $repo->run('init'.($bare?' --bare':''));
 		return $repo;
 	}
@@ -18,7 +18,7 @@ class UGit{
 	}
 	
 	public static function exists($repo_path){
-		return is_dir($repo_path) && file_exists($repo_path."/.git") && is_dir($repo_path."/.git");
+		return is_dir($repo_path) && (file_exists($repo_path."/.git") && is_dir($repo_path."/.git") || (file_exists($repo_path.'/HEAD')));
 	}
 }
 
@@ -47,7 +47,7 @@ class GitRepository{
 		if($new_path=realpath($repo_path)){
 			$repo_path = $new_path;
 			if(is_dir($repo_path)){
-				if (file_exists($repo_path."/.git") && is_dir($repo_path."/.git"))
+				if((file_exists($repo_path."/.git") && is_dir($repo_path."/.git")) || file_exists($repo_path.'/HEAD'))
 					$this->repo_path = $repo_path;
 				elseif($create_new){
 					$this->repo_path = $repo_path;
@@ -61,7 +61,7 @@ class GitRepository{
 					$this->repo_path = $repo_path;
 					if ($_init) $this->run('init');
 				}else throw new Exception('cannot create repository in non-existent directory');
-			}else throw new Exception('"$repo_path" does not exist');
+			}else throw new Exception('"'.$repo_path.'" does not exist');
 		}
 	}
 	
@@ -81,12 +81,16 @@ class GitRepository{
 		return $this->run('commit -av -m '.escapeshellarg($message));
 	}
 	
+	public function update(){
+		$this->run('git fetch origin master:master');
+	}
+	
 	public function clone_to($target){
 		return UExec::exec('git clone '.escapeshellarg($this->repo_path).' '.escapeshellarg($target));
 	}
 
-	public function clone_from($source){
-		return UExec::exec('git clone '.escapeshellarg($this->repo_path).' '.escapeshellarg($target));
+	public function clone_from($source,$bare=false){
+		return UExec::exec('git clone'.($bare?' --bare':'').' '.escapeshellarg($source).' '.escapeshellarg($this->repo_path));
 	}
 	
 	public function branch_create($name){
