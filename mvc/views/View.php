@@ -97,7 +97,7 @@ class AjaxPageView extends AbstractAjaxView{
 	protected static function post_content(){ return ''; }
 }
 class AjaxBreadcrumbsPageView extends AjaxPageView{
-	protected static function pre_content(&$layout_title){ HBreadcrumbs::display(_t('Home'),$layout_title); return ''; }
+	protected static function pre_content(&$layout_title){ HBreadcrumbs::display(_tC('Home'),$layout_title); return ''; }
 }
 class AjaxPageDynamicTabsView extends AjaxPageView{
 	public function __construct($title=false,$class='ml200',$layout=null,$layoutNameOverride=null){

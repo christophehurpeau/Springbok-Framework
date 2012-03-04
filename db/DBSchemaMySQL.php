@@ -217,7 +217,8 @@ class DBSchemaMySQL extends DBSchema{
 	
 	
 	public function getForeignKeys(){
-		$createTable=$this->db->doSelectValue('SHOW CREATE TABLE '.$this->db->formatTable($this->tableName),1);
+		$createTable=$this->db->doSelectRow_('SHOW CREATE TABLE '.$this->db->formatTable($this->tableName));
+		$createTable=$createTable[1];
 		//preg_match_all('/CONSTRAINT `(.*)` FOREIGN KEY \(`(.*)`\) REFERENCES `(.*)` \(`(.*)`\)/',$createTable,$matches);
 		//debug($createTable);
 		$foreignsKeys=array();

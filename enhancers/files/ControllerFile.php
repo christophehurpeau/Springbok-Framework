@@ -8,6 +8,7 @@ class ControllerFile extends PhpFile{
 		preg_match('/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)Controller/U',$phpContent,$matches);//debug($matches);
 		if(empty($matches[2])) return parent::enhancePhpContent($phpContent);
 		$this->_className=$matches[2];
+		self::_delAclPermissions($this->_className);
         $this->_classAnnotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1]);
 		
 		//$content=preg_replace_callback('/(?:\/\*\*(.*)\*\/)?[\s]+public[\s]+function[\s]+([a-zA-Z0-9_ \$]+)[\s]*\((.*)\)[\s]*{([^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{.*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*)}/Ums',array($this,'enhanceMethodParams'),$content);
@@ -67,6 +68,16 @@ class ControllerFile extends PhpFile{
 		$mdef['annotations']=isset($annotations['!'])?$annotations['!']:array();
 		
 		$methodBody=$matches[4];
+		
+		/* Dernier à etre testé */
+		if(isset($mdef['annotations']['Acl']) || isset($this->_classAnnotations['Acl'])){
+			$aclAnnotation=isset($mdef['annotations']['Acl'])?$mdef['annotations']['Acl']:$this->_classAnnotations['Acl'];
+			$permission=$aclAnnotation[0];
+			self::_addAclPermission($this->_className,$permission);
+			$methodBody='if(false===ACAcl::checkAccess('.UPhp::exportString($permission).(empty($aclAnnotation[1])?'':','.$aclAnnotation[1]).')) forbidden();'
+					.$methodBody;
+			unset($mdef['annotations']['Acl']);
+		}
 		if(isset($mdef['annotations']['Check']) || isset($this->_classAnnotations['Check'])){
 			$checkAnnotation=isset($mdef['annotations']['Check'])?$mdef['annotations']['Check']:$this->_classAnnotations['Check'];
 			if(is_string($checkAnnotation[0]))
@@ -74,14 +85,6 @@ class ControllerFile extends PhpFile{
 			else
 				$methodBody='ACSecure::checkAccess('.UPhp::exportCode($checkAnnotation,'').');'.$methodBody;
 			unset($mdef['annotations']['Check']);
-		}
-		if(isset($mdef['annotations']['Post']) || isset($this->_classAnnotations['Post'])){
-			$methodBody='if(empty($_POST)) /* DEV */throw new Exception("POST empty");/* /DEV *//* PROD */notFound();/* /PROD */'.$methodBody;
-			unset($mdef['annotations']['Post']);
-		}
-		if(isset($mdef['annotations']['Ajax']) || isset($this->_classAnnotations['Ajax'])){
-			$methodBody='if(!CHttpRequest::isAjax()) /* DEV */throw new Exception("Should be ajax");/* /DEV *//* PROD */notFound();/* /PROD */'.$methodBody;
-			unset($mdef['annotations']['Ajax']);
 		}
 		
 		if(isset($mdef['annotations']['Required'])){
@@ -101,7 +104,18 @@ class ControllerFile extends PhpFile{
 				$mdef['params'][$paramName]['annotations']['Required']=false;
 			unset($mdef['annotations']['AllRequired']);
 		}
+
+		/* Les premiers à être testés */
+		if(isset($mdef['annotations']['Post']) || isset($this->_classAnnotations['Post'])){
+			$methodBody='if(empty($_POST)) /* DEV */throw new Exception("POST empty");/* /DEV *//* PROD */notFound();/* /PROD */'.$methodBody;
+			unset($mdef['annotations']['Post']);
+		}
+		if(isset($mdef['annotations']['Ajax']) || isset($this->_classAnnotations['Ajax'])){
+			$methodBody='if(!CHttpRequest::isAjax()) /* DEV */throw new Exception("Should be ajax");/* /DEV *//* PROD */notFound();/* /PROD */'.$methodBody;
+			unset($mdef['annotations']['Ajax']);
+		}
 		
+
 		$this->_methodDefFiles[$this->_className.'-'.$matches[2]]='<?php return '.UPhp::exportCode($mdef).';';
 
 		return 'public static function '.$matches[2].'('.$paramsString.'){'.PHP_EOL.$methodBody.PHP_EOL.'}';
@@ -162,9 +176,15 @@ class ControllerFile extends PhpFile{
 	}
 
 
-
-	private static $defFiles,$controllersDeleted;
+	
+	private static $defFiles,$controllersDeleted,$aclPermissionsConfig,$aclPermissionsChanges=false;
 	public static function initFolder($folder,&$config){
+		$f=new File($folder->getPath().'config/jobs.php');
+		if($f->exists()){
+			//$f->moveTo($tmpFolder.'jobs.php');
+			self::$aclPermissionsConfig=include $f->getPath();
+		}else self::$aclPermissionsConfig=array();
+		
 		/*$entrances=empty($config['entrances']) ? array() : $config['entrances']; 
 		$entrances[]='index';
 		
@@ -180,13 +200,37 @@ class ControllerFile extends PhpFile{
 		self::$defFiles=array();
 	}
 	public static function fileDeleted($file){
+		$controllerName=substr($file->getName(),0,-(4+10));
 		if(($entrance=basename(dirname($file->getPath()))) != 'controllers') $key='.'.$entrance;
 		else $key='';
-		self::$controllersDeleted[$key][]=substr($file->getName(),0,-(4+10));
+		self::$controllersDeleted[$key][]=$controllerName;
+		
+		self::_delAclPermissions($controllerName);
 	}
+	private static function _delAclPermissions($controllerName){
+		if(!empty(self::$aclPermissionsConfig['controllers'][$controllerName])){
+			self::$aclPermissionsChanges=true;
+			foreach(self::$aclPermissionsConfig['controllers'][$controllerName] as $permission){
+				unset(self::$aclPermissionsConfig['permissions'][$permission]['controllers'][$controllerName]);
+				if(empty(self::$aclPermissionsConfig['permissions'][$permission]['controllers'])) 
+					unset(self::$aclPermissionsConfig['permissions'][$permission]);
+			}
+		}
+	}
+	private static function _addAclPermission($controllerName,$permission){
+		self::$aclPermissionsChanges=true;
+		self::$aclPermissionsConfig['controllers'][$controllerName][]=$permission;
+		self::$aclPermissionsConfig['permissions'][$permission]['controllers'][$controllerName]=true;
+	}
+	
 	public static function endEnhanceApp(){}
 	
 	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
+		if(self::$aclPermissionsChanges){
+			$content='<?php return '.UPhp::exportCode(self::$aclPermissionsConfig).';';
+			file_put_contents($dev->getPath().'config/aclPermissions.php',$content);
+			file_put_contents($prod->getPath().'config/aclPermissions.php',$content);
+		}
 		if($hasOldDef){
 			$paths=array($dev->getPath(),$prod->getPath());
 			if(!empty(self::$controllersDeleted))
