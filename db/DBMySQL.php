@@ -71,8 +71,7 @@ class DBMySQL extends DB{
 		//$stmt->store_results();
 		$r = call_user_func_array(array(&$stmt,'bind_result'),$fields);
 		//$stmt->free_result();
-		if($r===false)
-			throw new DBException('Unable to bind result',$query);
+		if($r===false) throw new DBException('Unable to bind result',$query);
 		return $stmt;
 	}
 	
@@ -82,6 +81,8 @@ class DBMySQL extends DB{
 		return false;
 	}
 	
+	
+	/* SELECT SQL */
 	private function &getFieldsSQL(&$r){
 		$fields=$r->fetch_fields();
 		foreach($fields as &$field){
@@ -110,31 +111,24 @@ class DBMySQL extends DB{
 		}
 		return $fields;
 	}
-	
 	public function /* DEV */_/* /DEV */doSelectSql($query){
-		$r=$this->_query($query);
-		$fields=$this->getFieldsSQL($r);
-		$res=array();
+		$r=$this->_query($query); $fields=$this->getFieldsSQL($r); $res=array();
 		while($row=$r->fetch_row()) $res[]=$row;
-		$r->close();
-		return array('res'=>&$res,'fields'=>&$fields);
+		$r->close(); return array('res'=>&$res,'fields'=>&$fields);
 	}
-	
 	public function /* DEV */_/* /DEV */doSelectSqlCallback($query,$callback,$callbackFields){
 		$r=$this->_query($query);
 		$callbackFields($this->getFieldsSQL($r));
 		while($row=$r->fetch_row()) $callback($row);
-		$res=array();
 		$r->close();
 	}
 	
+	/* NORMAL SELECT */
 	public function &/* DEV */_/* /DEV */doSelectRows($query){
-		$r=$this->_query($query);
+		$r=$this->_query($query); $res=array();
 		//$res=$r->fetch_all(MYSQLI_ASSOC);
-		$res=array();
 		while($row=$r->fetch_assoc()) $res[]=$row;
-		$r->close();
-		return $res;
+		$r->close(); return $res;
 	}
 	public function /* DEV */_/* /DEV */doSelectRowsCallback($query,$callback){
 		$r=$this->_query($query);
@@ -144,12 +138,10 @@ class DBMySQL extends DB{
 	
 	
 	public function &/* DEV */_/* /DEV */doSelectRows_($query){
-		$r=$this->_query($query);
+		$r=$this->_query($query); $res=array();
 		//$res=$r->fetch_all(MYSQLI_NUM);
-		$res=array();
 		while($row=$r->fetch_row()) $res[]=$row;
-		$r->close();
-		return $res;
+		$r->close(); return $res;
 	}
 	public function /* DEV */_/* /DEV */doSelectRowsCallback_($query,$callback){
 		$r=$this->_query($query);
@@ -157,13 +149,60 @@ class DBMySQL extends DB{
 		$r->close();
 	}
 	
-	public function &/* DEV */_/* /DEV */doSelectObjects(&$query,&$queryObj,&$fields){
-		$r=$this->_query_($query,$fields);
-		$res=array();
-		while($r->fetch())
-			$res[]=$queryObj->_createObj();
+	
+	public function &/* DEV */_/* /DEV */doSelectRow($query){
+		$r=$this->_query($query);
+		$res=$r->fetch_assoc();
+		$r->close(); return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectRow_($query){
+		$r=$this->_query($query);
+		$res=$r->fetch_row();
+		$r->close(); return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectValues($query,$numCol=0){
+		$r=$this->_query($query); $res=array();
+		while($row=$r->fetch_row()) $res[]=$row[$numCol];
+		$r->close(); return $res;
+	}
+	public function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0){
+		$r=$this->_query($query); $res=array();
+		while($row=$r->fetch_row()) $callback($row[$numCol]);
 		$r->close();
-		return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
+		$value=false;
+		$fields=array(0=>&$value);
+		$r=$this->_query_($query,$fields);
+		if(!$r->fetch()) $value=false;
+		$r->close(); return $value;
+		/*
+		$r=$this->_query($query);
+		if($row=$r->fetch_row()) $res=$row[$numCol]; else $res=false;
+		$r->close(); return $res;*/
+	}
+	public function &/* DEV */_/* /DEV */doSelectListValues($query){
+		$r=$this->_query($query); $res=array();
+		while($row=$r->fetch_assoc()) $res[current($row)]=$row;
+		$r->close(); return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectListValues_($query){
+		$r=$this->_query($query); $res=array();
+		while($row=$r->fetch_row()) $res[$row[0]]=$row;
+		$r->close(); return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectListValue($query){
+		$r=$this->_query($query); $res=array();
+		while($row=$r->fetch_row()) $res[$row[0]]=$row[1];
+		$r->close(); return $res;
+	}
+	
+	/* SELECT USING PREPARE STATEMENT */
+	
+	public function &/* DEV */_/* /DEV */doSelectObjects(&$query,&$queryObj,&$fields){
+		$r=$this->_query_($query,$fields); $res=array();
+		while($r->fetch()) $res[]=$queryObj->_createObj();
+		$r->close(); return $res;
 	}
 	public function /* DEV */_/* /DEV */doSelectObjectsCallback(&$query,&$queryObj,&$fields,&$callback){
 		$r=$this->_query_($query,$fields);
@@ -173,8 +212,7 @@ class DBMySQL extends DB{
 	}
 	
 	public function &/* DEV */_/* /DEV */doSelectAssocObjects(&$query,&$queryObj,&$fields,&$tabResKey){
-		$r=$this->_query_($query,$fields);
-		$res=array();
+		$r=$this->_query_($query,$fields); $res=array();
 		while($r->fetch()){
 			$obj=&$queryObj->_createObj();
 			$res[$obj->$tabResKey]=$obj;
@@ -183,8 +221,7 @@ class DBMySQL extends DB{
 		return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectListObjects(&$query,&$queryObj,&$fields){
-		$r=$this->_query_($query,$fields);
-		$res=array();
+		$r=$this->_query_($query,$fields); $res=array();
 		while($r->fetch()){
 			$obj=&$queryObj->_createObj();
 			$res[$fields[0]]=$obj;
@@ -195,64 +232,7 @@ class DBMySQL extends DB{
 	
 	public function &/* DEV */_/* /DEV */doSelectObject(&$query,&$queryObj,&$fields){
 		$r=$this->_query_($query,$fields);
-		if($r->fetch())
-			$res=$queryObj->_createObj();
-		else $res=false;
-		$r->close();
-		return $res;
-	}
-	
-	
-	public function &/* DEV */_/* /DEV */doSelectRow($query){
-		$r=$this->_query($query);
-		$res=$r->fetch_assoc();
-		$r->close();
-		return $res;
-	}
-	public function &/* DEV */_/* /DEV */doSelectRow_($query){
-		$r=$this->_query($query);
-		$res=$r->fetch_row();
-		$r->close();
-		return $res;
-	}
-	public function &/* DEV */_/* /DEV */doSelectValues($query,$numCol=0){
-		$r=$this->_query($query);
-		$res=array();
-		while($row=$r->fetch_row()) $res[]=$row[$numCol];
-		$r->close();
-		return $res;
-	}
-	public function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0){
-		$r=$this->_query($query);
-		$res=array();
-		while($row=$r->fetch_row()) $callback($row[$numCol]);
-		$r->close();
-	}
-	public function &/* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
-		$r=$this->_query($query);
-		if($row=$r->fetch_row()) $res=$row[$numCol];
-		else $res=false;
-		$r->close();
-		return $res;
-	}
-	public function &/* DEV */_/* /DEV */doSelectListValues($query){
-		$r=$this->_query($query);
-		$res=array();
-		while($row=$r->fetch_assoc()) $res[current($row)]=$row;
-		$r->close();
-		return $res;
-	}
-	public function &/* DEV */_/* /DEV */doSelectListValues_($query){
-		$r=$this->_query($query);
-		$res=array();
-		while($row=$r->fetch_row()) $res[$row[0]]=$row;
-		$r->close();
-		return $res;
-	}
-	public function &/* DEV */_/* /DEV */doSelectListValue($query){
-		$r=$this->_query($query);
-		$res=array();
-		while($row=$r->fetch_row()) $res[$row[0]]=$row[1];
+		if($r->fetch()) $res=$queryObj->_createObj(); else $res=false;
 		$r->close();
 		return $res;
 	}

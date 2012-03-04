@@ -60,8 +60,7 @@ class DBSQLite extends DB{
 	}
 	
 	public function /* DEV */_/* /DEV */doSelectSql($query){
-		$r=$this->_query($query);
-		$res=array();$fields=$this->getFieldsSQL($r);
+		$r=$this->_query($query); $res=array(); $fields=$this->getFieldsSQL($r);
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[]=$row;
 		$r->close();
 		return array('res'=>&$res,'fields'=>&$fields);
@@ -71,14 +70,12 @@ class DBSQLite extends DB{
 		$r=$this->_query($query);
 		$callbackFields($this->getFieldsSQL($r));
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $callback($row);
-		$res=array();
-		$r->close();
+		$res=array(); $r->close();
 	}
 	
 	
 	public function &/* DEV */_/* /DEV */doSelectRows($query){
-		$r=$this->_query($query);
-		$res=array();
+		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[]=$row;
 		return $res;
 	}
@@ -87,8 +84,7 @@ class DBSQLite extends DB{
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $callback($row);
 	}
 	public function &/* DEV */_/* /DEV */doSelectRows_($query){
-		$r=$this->_query($query);
-		$res=array();
+		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[]=$row;
 		return $res;
 	}
@@ -108,8 +104,7 @@ class DBSQLite extends DB{
 		return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectValues($query,$numCol=0){
-		$r=$this->_query($query);
-		$res=array();
+		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[]=$row[$numCol];
 		return $res;
 	}
@@ -121,32 +116,27 @@ class DBSQLite extends DB{
 		//return $this->_connect->querySingle($query);
 		$r=$this->_query($query);
 		if($row=$r->fetchArray(SQLITE3_NUM)) return $row[0];
-		$res=false;return $res;
+		$res=false; return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectListValues($query){
-		$r=$this->_query($query);
-		$res=array();
+		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[current($row)]=$row;
 		return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectListValues_($query){
-		$r=$this->_query($query);
-		$res=array();
+		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row;
 		return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectListValue($query){
-		$r=$this->_query($query);
-		$res=array();
+		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row[1];
 		return $res;
 	}
 	
 	public function &/* DEV */_/* /DEV */doSelectObjects(&$query,&$queryObj,&$fields){
-		$rows=$this->doSelectRows_($query);
-		$res=array();
-		foreach($rows as $row)
-			$res[]=$queryObj->_createObject($row);
+		$rows=$this->doSelectRows_($query); $res=array();
+		foreach($rows as $row) $res[]=$queryObj->_createObject($row);
 		return $res;
 	}
 	public function /* DEV */_/* /DEV */doSelectObjectsCallback(&$query,&$queryObj,&$fields,&$callback){
@@ -154,16 +144,13 @@ class DBSQLite extends DB{
 		foreach($rows as $row) $callback($queryObj->_createObject($row));
 	}
 	public function /* DEV */_/* /DEV */doSelectListObjects(&$query,&$queryObj,&$fields){
-		$rows=$this->doSelectRows_($query);
-		$res=array();
-		foreach($rows as $row)
-			$res[$row[0]]=$queryObj->_createObject($row);
+		$rows=$this->doSelectRows_($query); $res=array();
+		foreach($rows as $row) $res[$row[0]]=$queryObj->_createObject($row);
 		return $res;
 	}
 	
 	public function &/* DEV */_/* /DEV */doSelectAssocObjects(&$query,&$queryObj,&$fields,&$tabResKey){
-		$rows=$this->doSelectRows_($query);
-		$res=array();
+		$rows=$this->doSelectRows_($query); $res=array();
 		foreach($rows as $row){
 			$obj=&$queryObj->_createObject($row);
 			$res[$obj->{$this->tabResKey}]=$obj;
@@ -173,8 +160,7 @@ class DBSQLite extends DB{
 	
 	public function &/* DEV */_/* /DEV */doSelectObject(&$query,&$queryObj,&$fields){
 		$row=$this->doSelectRow_($query);
-		if($row) $res=$queryObj->_createObject($row);
-		else $res=false;
+		if($row) $res=$queryObj->_createObject($row); else $res=false;
 		return $res;
 	}
 	
