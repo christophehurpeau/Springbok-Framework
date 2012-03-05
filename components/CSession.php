@@ -42,11 +42,11 @@ class CSession{
 		return $res;
 	}
 	
-	public static function getOr($name,$orValue=NULL){
+	public static function getOr($name,$orValue=null){
 		return self::exists($name) ? self::get($name) : $orValue;
 	}
 	
-	public static function getAndRemoveOr($name,$orValue=NULL){
+	public static function getAndRemoveOr($name,$orValue=null){
 		return self::exists($name) ? self::getAndRemove($name) : $orValue;
 	}
 	

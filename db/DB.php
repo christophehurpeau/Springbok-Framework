@@ -283,11 +283,15 @@ abstract class DB{
 	public function doSelectValue($query,$numCol=0){
 		return $this->doSelect('Value',func_get_args());
 	}
-	public function doSelectListValues($query){
-		return $this->doSelect('ListValues',func_get_args());
+	public function doSelectExist($query){
+		return $this->doSelect('Exist',func_get_args());
 	}
-	public function doSelectListValues_($query){
-		return $this->doSelect('ListValues_',func_get_args());
+	
+	public function doSelectListRows($query){
+		return $this->doSelect('ListRows',func_get_args());
+	}
+	public function doSelectListRows_($query){
+		return $this->doSelect('ListRows_',func_get_args());
 	}
 	public function doSelectListValue($query){
 		return $this->doSelect('ListValue',func_get_args());
@@ -339,8 +343,8 @@ abstract class DB{
 	public abstract function &/* DEV */_/* /DEV */doSelectValues($query);
 	public abstract function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0);
 	public abstract function &/* DEV */_/* /DEV */doSelectValue($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectListValues($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectListValues_($query);
+	public abstract function &/* DEV */_/* /DEV */doSelectListRows($query);
+	public abstract function &/* DEV */_/* /DEV */doSelectListRows_($query);
 	public abstract function &/* DEV */_/* /DEV */doSelectListValue($query);
 	
 	/* QUERIES LOG */

@@ -261,14 +261,14 @@ class Model implements Iterator{
 	
 	public static function QAll(){return new QFindAll(static::$__className);}
 	public static function QRows(){return new QFindRows(static::$__className);}
-	public static function QListValues(){return new QFindListValues(static::$__className);}
+	public static function QListAll(){return new QFindListAll(static::$__className);}
 	/** @return QFindOne */
 	public static function QOne(){return new QFindOne(static::$__className);}
 	public static function QRow(){return new QFindRow(static::$__className);}
 	public static function QExist(){return new QExist(static::$__className);}
 	/** @return QCount */
 	public static function QCount(){return new QCount(static::$__className);}
-	public static function QListValue(){return new QFindListValue(static::$__className);}
+	public static function QList(){return new QFindList(static::$__className);}
 	public static function QListRows(){return new QFindListRows(static::$__className);}
 	public static function QValue(){return new QFindValue(static::$__className);}
 	public static function QValues(){return new QFindValues(static::$__className);}
@@ -283,11 +283,11 @@ class Model implements Iterator{
 	public static function findAll(){return self::QAll()->execute();}
 	public static function findOne(){return self::QOne()->execute();}
 	
-	public static function QListValueName(){return self::QListValue()->setFields(array('id',static::$__displayField))->orderBy(static::$__displayField);}
-	public static function findListValue(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return self::QListValueName()->execute();}
+	public static function QListName(){return self::QList()->setFields(array('id',static::$__displayField))->orderBy(static::$__displayField);}
+	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return self::QListName()->execute();}
 	public static function findCachedListValue(){
 		$className=&static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use(&$className){return $className::findListValue();});
+		return CCache::get('models')->readOrWrite($className,function() use(&$className){return $className::findList();});
 	}
 	public static function findCachedListValues($fields){
 		$className=&static::$__className;
@@ -326,7 +326,7 @@ class Model implements Iterator{
 	}
 	
 	public static function __callStatic($method, $params){
-        if (!preg_match('/^(findOne|findAll|findValues|findValue|findListValues|findListValue|deleteOne|deleteAll|exist)(\w+)?By(\w+)$/',$method,$matches))
+        if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exist)(\w+)?By(\w+)$/',$method,$matches))
             throw new \Exception("Call to undefined method {$method}");
  
  		$className='Q'.ucfirst($matches[1]);

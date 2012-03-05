@@ -47,11 +47,8 @@ class CSecure{
 		else return false;
 	}
 	
-	public static function connected(){
-		return CSession::getOr('user_'.static::config('id'));
-	}
-	public static function connectedId(){
-		return (int)self::connected();
+	public static function connected($orValue=false){
+		return CSession::getOr('user_'.static::config('id'),$orValue);
 	}
 	
 	public static function &user(){

@@ -30,13 +30,13 @@
 								};
 						}) );
 					},
-					select: function( event, ui ){
-						//console.log(event);console.log(ui);
+					select:function(event,ui){
 						ui.item.option.selected = true;
 						self._trigger( "selected", event, {
 							item: ui.item.option
 						});
-						$(ui.item.option).has('[onclick]').click();
+						var $option=$(ui.item.option);
+						if($option.is('[onclick]')) $option.click();
 					},
 					change: function( event, ui ) {
 						if ( !ui.item ) {

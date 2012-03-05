@@ -29,13 +29,13 @@ $res=UProfiling::compare(1000,function() use(&$db){
 },function() use(&$db){
 	$result=$db->doSelectValue('SELECT help_topic_id FROM help_topic WHERE help_category_id='.$db->escape(16));
 },function() use(&$db){
-	$result=$db->doSelectListValues('SELECT * FROM help_topic');
+	$result=$db->doSelectListRows('SELECT * FROM help_topic');
 },function() use(&$db){
-	$result=$db->doSelectListValues('SELECT * FROM help_topic WHERE help_category_id='.$db->escape(16));
+	$result=$db->doSelectListRows('SELECT * FROM help_topic WHERE help_category_id='.$db->escape(16));
 },function() use(&$db){
-	$result=$db->doSelectListValues_('SELECT * FROM help_topic');
+	$result=$db->doSelectListRows_('SELECT * FROM help_topic');
 },function() use(&$db){
-	$result=$db->doSelectListValues_('SELECT * FROM help_topic WHERE help_category_id='.$db->escape(16));
+	$result=$db->doSelectListRows_('SELECT * FROM help_topic WHERE help_category_id='.$db->escape(16));
 },function() use(&$db){
 	$result=$db->doSelectListValue('SELECT help_topic_id,name FROM help_topic');
 },function() use(&$db){

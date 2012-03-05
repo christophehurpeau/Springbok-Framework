@@ -118,12 +118,17 @@ class DBSQLite extends DB{
 		if($row=$r->fetchArray(SQLITE3_NUM)) return $row[0];
 		$res=false; return $res;
 	}
-	public function &/* DEV */_/* /DEV */doSelectListValues($query){
+	public function &/* DEV */_/* /DEV */doSelectExist($query){
+		$r=$this->_query($query);
+		if($row=$r->fetchArray(SQLITE3_NUM)) $res=true; else $res=false;
+		return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectListRows($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[current($row)]=$row;
 		return $res;
 	}
-	public function &/* DEV */_/* /DEV */doSelectListValues_($query){
+	public function &/* DEV */_/* /DEV */doSelectListRows_($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row;
 		return $res;

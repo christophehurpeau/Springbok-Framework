@@ -172,7 +172,7 @@ class DBMySQL extends DB{
 	}
 	public function &/* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
 		$value=false;
-		$fields=array(0=>&$value);
+		$fields=array(&$value);
 		$r=$this->_query_($query,$fields);
 		if(!$r->fetch()) $value=false;
 		$r->close(); return $value;
@@ -181,19 +181,26 @@ class DBMySQL extends DB{
 		if($row=$r->fetch_row()) $res=$row[$numCol]; else $res=false;
 		$r->close(); return $res;*/
 	}
-	public function &/* DEV */_/* /DEV */doSelectListValues($query){
+	public function &/* DEV */_/* /DEV */doSelectExist($query){
+		$r=$this->_query($query);
+		if($row=$r->fetch_row()) $res=true; else $res=false;
+		$r->close(); return $res;
+	}
+	public function &/* DEV */_/* /DEV */doSelectListRows($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetch_assoc()) $res[current($row)]=$row;
 		$r->close(); return $res;
 	}
-	public function &/* DEV */_/* /DEV */doSelectListValues_($query){
+	public function &/* DEV */_/* /DEV */doSelectListRows_($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetch_row()) $res[$row[0]]=$row;
 		$r->close(); return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectListValue($query){
-		$r=$this->_query($query); $res=array();
-		while($row=$r->fetch_row()) $res[$row[0]]=$row[1];
+		$key;$value;
+		$fields=array(&$key,&$value);
+		$r=$this->_query_($query,$fields); $res=array();
+		while($row=$r->fetch()) $res[$key]=$value;
 		$r->close(); return $res;
 	}
 	
