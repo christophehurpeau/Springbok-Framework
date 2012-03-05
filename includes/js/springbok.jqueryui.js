@@ -8,9 +8,9 @@
 				value = selected.val() ? selected.text() : "";
 			var input = this.input = $( "<input>" ).addClass('ui-combobox ui-widget ui-widget-content ui-corner-left')
 				.insertAfter( select )
-				.val( value )
-				.css({'width':orgWidth})
-				.autocomplete({
+				.val( value );
+			if(orgWidth) input.css({'width':orgWidth});
+			input.autocomplete({
 					delay: 0,
 					minLength: 0,
 					source: function( request, response ) {

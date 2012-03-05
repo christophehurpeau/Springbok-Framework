@@ -157,6 +157,7 @@ class CSecure{
 		if($connected){
 			if($logConnections) self::logConnection($type,true,$user->$login,$connected);
 			CSession::set('user_'.$id,$connected);
+			static::onAuthenticated($type);
 			if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')),true,false);
 			return true;
 		}
