@@ -1,7 +1,7 @@
 <?php
 class Controller{
 	protected static $methodName,$suffix;
-	public static $defaultLayout;//init en bas du fichier
+	public static $defaultLayout;//init in "app.php"
 
 	private static $viewVars=array(),$layoutVars=array();
 
@@ -307,4 +307,3 @@ class Controller{
 		return true;
 	}
 }
-Controller::$defaultLayout=Springbok::$prefix.'default';

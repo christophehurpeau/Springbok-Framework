@@ -23,7 +23,7 @@ class HTableEditable extends HTable{
 			$def=$modelName::$__PROP_DEF[$name=$field['key']];
 			$infos=$modelName::$__modelInfos['columns'][$name];
 			
-			$attributes=array('onchange'=>'editableTable.updateField(\''.$name.'\','.$jsonPkValue.',this)','value'=>$value);
+			$attributes=array('onchange'=>'editableTable.updateField(\''.$name.'\','.$jsonPkValue.',this)','value'=>&$value);
 			$containerAttributes=array('sytle'=>'width:100%;position:relative');
 			
 			if(substr($name,-3)==='_id' && Controller::_isset($vname=UInflector::pluralize(substr($name,0,-3))))
@@ -32,7 +32,8 @@ class HTableEditable extends HTable{
 				$attrs=$attributes;
 				if($value==='') $attrs['checked']=true;
 				return self::$form->checkbox($name,false,$attrs,$containerAttributes);
-			}elseif(isset($def['annotations']['Enum'])) return self::$form->select($name,call_user_func($modelName.'::'.$def['annotations']['Enum'].'List'),$attributes,$containerAttributes);
+			}elseif(isset($def['annotations']['Enum'])) return self::$form->select($name,call_user_func($modelName.'::'.$def['annotations']['Enum'].'List'),
+																	array('onchange'=>$attributes['onchange'],'selected'=>&$value),$containerAttributes);
 			elseif(isset($def['annotations']['Text'])) return self::$form->textarea($name,$attributes,$containerAttributes);
 			else return self::$form->input($name,$attributes+array('style'=>'width:98%'),$containerAttributes,1.4);
 		}

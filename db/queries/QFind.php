@@ -32,7 +32,7 @@ abstract class QFind extends QSelect{
 		$join=array('type'=>$type,'modelName'=>$modelName,'fields'=>$fields,'onConditions'=>$onConditions)+$options
 			+array('fieldsInModel'=>false,'dataName'=>lcfirst($modelName),'isCount'=>false);
 		if(!isset($join['alias'])) $join['alias']=$modelName::$__alias;
-		$this->joins[]=$join; 
+		$this->joins[$join['alias']]=$join; 
 	}
 	
 	public function &setAllWith($with){
@@ -300,6 +300,7 @@ abstract class QFind extends QSelect{
 				$data=array();
 				foreach($joinData as $key=>$val) $data[$key]=$val;//copy
 				$type=&$join['modelName'];
+				/* DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.short_debug_var($type)); /* /DEV */
 				$joinObj=new $type();
 				$joinObj->_copyData($data);
 				$obj->$join['dataName']=$joinObj;

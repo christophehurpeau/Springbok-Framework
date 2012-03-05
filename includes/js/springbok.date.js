@@ -81,7 +81,7 @@ S.dates={
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.date.formats.date.complete(date);
-	},
+	}
 };
 Date.prototype.toSqlDate=function(justDate){
 	var day=this.getDate(),month=this.getMonth(),

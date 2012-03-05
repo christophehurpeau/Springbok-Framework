@@ -128,6 +128,7 @@ class App{
 			}else{
 				Springbok::$prefix=Springbok::$scriptname.'_';
 				Springbok::$suffix='.'.Springbok::$scriptname;
+				
 				/* DEV */
 				CRoute::init(!isset(Config::$dev_prefixed_routes)||Config::$dev_prefixed_routes?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
 				if(CRoute::getController()==='Web'){
@@ -138,6 +139,7 @@ class App{
 				CRoute::init('','_'.Springbok::$scriptname);
 				/* /PROD */
 			}
+			Controller::$defaultLayout=Springbok::$prefix.'default';
 			
 			// do some optimization with cache + langs
 			$filename=APP.'controllers'.Springbok::$suffix.'/methods/'.CRoute::getController().'-'.CRoute::getAction();

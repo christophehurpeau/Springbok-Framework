@@ -65,5 +65,5 @@ S.dialogs={
 		    buttons:buttons,
 		    zIndex:2000 //fancybox : 1000
 		});
-	},
-}
+	}
+};

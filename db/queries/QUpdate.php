@@ -56,7 +56,7 @@ class QUpdate extends AQuery{
 			elseif(is_bool($value)) $sql.=($value===true?'""':'NULL').',';
 			else $sql.=$this->_db->escape($value).',';
 		}
-		if($this->updatedField!==null) $sql.=$this->_db->formatField($this->updatedField).'=NOW(),';
+		if($this->updatedField!==null) $sql.=$this->_db->formatField($this->updatedField).'=NOW(),'; //UNIX_TIMESTAMP()
 		$sql=substr($sql,0,-1);
 		
 		if(isset($this->where)){

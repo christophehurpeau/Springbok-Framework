@@ -51,6 +51,10 @@ class ModelFile extends PhpFile{
 							$column['type']='int(11)';
 							unset($field['Datetime']);
 							$field['Format']=$field['var']='datetime';
+						}elseif(isset($field['Price'])){
+							$column['type']='decimal('.$field['Price'][0].')';
+							unset($field['Price']);
+							$field['Format']='price';
 						}elseif(isset($field['SqlType'])) $column['type']=str_replace('"',"'",$field['SqlType'][0]);
 						$column['default']=(isset($field['DefaultValue'])?$field['DefaultValue'][0]:(isset($field['Default'])?$field['Default'][0]:false));
 						$column['notnull']=isset($field['Null'])?false:true;
@@ -71,7 +75,9 @@ class ModelFile extends PhpFile{
 					if(isset($field['UpdatedField']) || (!$updatedField && isset($column['type']) && in_array($column['type'],array('DATE','DATETIME','date','datetime')) 
 								&& in_array($name,array('updated','modified','udate','mdate','date_modified','date_updated','date_upd')))){
 						$field['NotBindable']=0;
-						//$field['Format']='datetime';
+						if($column['type']==='date'|| $column['type']==='DATE') $field['Format']='date_';
+						elseif($column['type']==='datetime'||$column['type']==='DATETIME') $field['Format']='datetime_';
+						elseif($column['type']==='int(10)'||$column['type']==='int(11)') $field['Format']='datetime';
 						$updatedField=$name;
 					}
 					if(isset($field['ForeignKey'])) $column['ForeignKey']=$field['ForeignKey'];

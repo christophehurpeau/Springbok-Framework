@@ -89,7 +89,7 @@ class DBSchemaMySQL extends DBSchema{
 			$this->_alterOperations[]='DROP '.$column;
 			$this->_alterOperations[]='CHANGE '.$tmpColumn.' '.$column.' '.$colDefSQL;
 			return;
-		}
+		}/*elseif($oldColumn['type']==='char(0)' && $this->modelInfos['columns'][$colName]['type']==='datetime'){}*/
 		$this->_alterOperations[]='MODIFY '.$column.' '.self::_getColumnDef($this->modelInfos['columns'][$colName]).($prev!==null?($prev?' AFTER '.$this->db->formatColumn($prev):' FIRST'):'');
 	}
 	public function removeColumn($colName){
