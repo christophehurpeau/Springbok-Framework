@@ -105,9 +105,8 @@ class GitRepository{
 		$output=explode("\n",$this->run('branch --no-color --verbose --no-abbrev'));
 		$branches=array();
 		foreach($output as $i=>&$branch){
-			if(preg_match('/^\s*\*?\s*(.*?)\s*([0-9a-f]{40}).*$/U',$branch))
-				$branches[$branch[1]]=array('revision'=>$branch[2],'identifier'=>$branch[2]);
-			//$branches[$i]=$branch; ?
+			if(preg_match('/^\s*\*?\s*(.*)\s+([0-9a-f]{40}).*$/',$branch,$m))
+				$branches[$m[1]]=array('revision'=>$m[2],'identifier'=>$m[2]);
 		}
 		return $branches;
 	}
@@ -164,11 +163,11 @@ class GitRepository{
 		return $entries;
 	}
 	
-	public function cat($path,$identifier=NULL){
-		return $this->run('show '.($identifier===NULL?'HEAD':$identifier).':'.$path);
+	public function cat($path,$identifier=null){
+		return $this->run('show '.($identifier===null?'HEAD':$identifier).':'.$path);
 	}
-	public function diff($path,$identifierFrom,$identifierTo=null){
-		return $this->run('diff '.($identifierTo===NULL?'HEAD':$identifierTo).' '.$identifierFrom.' '.$path);
+	public function diff($path,$identifierFrom,$identifierTo=null,$branch=null){
+		return $this->run(($identifierTo===NULL?'show ':'diff '.$identifierTo).' '.$identifierFrom.' -- '.$path);
 	}
 	
 	public function checkout($branch){
@@ -203,7 +202,7 @@ class GitRepository{
 			.(isset($options['limit'])?' -n'.$options['limit']:'')
 			.($identifierFrom===null?'':$identifierFrom.'..')
 			.($identifierTo===null?'':$identifierTo)
-			.(!empty($path)?' --'.$path:''));
+			.(!empty($path)?' -- '.$path:''));
 		return self::parseShortRevisions($output);
 	}
 	
