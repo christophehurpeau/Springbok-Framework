@@ -19,14 +19,25 @@ class ImgFile extends EnhancerFile{
 			
 			$optimizedImgPaths=array();
 			
+			$logger=CLogger::get('opti_img');
+			$logger->log('IMAGE : '.$filename);
 			if($ext==='png'){
+				//$t=microtime(true);
+				//UExec::exec('optipng -o7 -force -full -quiet '.escapeshellarg($srcPath).' -out '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'optipng_1_'.$filename));
+				UExec::exec('optipng -o7 -i0 -force -full -quiet '.escapeshellarg($srcPath).' -out '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'optipng_2_'.$filename));
+				UExec::exec('optipng -o7 -i1 -force -full -quiet '.escapeshellarg($srcPath).' -out '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'optipng_3_'.$filename));
+				//$logger->log('optipng : '.(microtime(true) - $t));
+				//$t=microtime(true);
 				UExec::exec('pngcrush -rem alla -reduce -brute '.escapeshellarg($srcPath).' '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'pngcrush_'.$filename));
-				copy($srcPath,$optimizedImgPaths[]=$tmpFolder.'optipng_'.$filename);
-				UExec::exec('optipng -o7'.escapeshellarg($tmpFolder.'optipng_'.$filename));
+				//$logger->log('pngcrush : '.(microtime(true) - $t));
 			}elseif($ext==='jpg' || $ext==='jpeg'){
+				//$t=microtime(true);
+				UExec::exec('jpegtran -copy none -optimize -perfect '.escapeshellarg($srcPath).' > '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'jpegtran_'.$filename));
+				//$logger->log('jpegtran : '.(microtime(true) - $t));
+				/*$t=microtime(true);
 				copy($srcPath,$optimizedImgPaths[]=$tmpFolder.'jpegoptim_'.$filename);
 				UExec::exec('jpegoptim --strip-all '.escapeshellarg($tmpFolder.'jpegoptim_'.$filename));
-				UExec::exec('jpegtran -copy none -optimize -perfect '.escapeshellarg($srcPath).' > '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'jpegtran_'.$filename));
+				$logger->log('jpegoptim : '.(microtime(true) - $t));*/
 			}
 			
 			foreach($optimizedImgPaths as $oIp){
@@ -36,6 +47,7 @@ class ImgFile extends EnhancerFile{
 				}
 			}
 			//debugVar($filename,$this->_smallerTmpImgPath);
+			$logger->log('winner : '.$this->_smallerTmpImgPath);
 			
 			copy($this->_smallerTmpImgPath,$devFile->getPath());
 		}else $this->srcFile()->copyTo($devFile->getPath());

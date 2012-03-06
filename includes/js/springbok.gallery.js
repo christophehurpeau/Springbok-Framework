@@ -207,7 +207,7 @@ Gallery.prototype.prepareUploader=function(options){
 		flash_swf_url :jsdir+'plupload/plupload.flash.swf',
 		silverlight_xap_url : jsdir+'plupload/plupload.silverlight.xap',
 		filters : [
-			{title : "Images", extensions : "jpg,jpeg,gif,png"},
+			{title : "Images", extensions : "jpg,jpeg,gif,png"}
 		]
 	});/*
 	uploader.bind('Init', function(up, params){

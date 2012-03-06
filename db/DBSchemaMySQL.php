@@ -279,6 +279,6 @@ class DBSchemaMySQL extends DBSchema{
 */
 
 	public function getTriggers(){
-		return $this->db->doSelectListValues('SHOW TRIGGERS WHERE `table` LIKE '.$this->db->escape($this->tableName));
+		return $this->db->doSelectListRows('SHOW TRIGGERS WHERE `table` LIKE '.$this->db->escape($this->tableName));
 	}
 }

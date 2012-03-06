@@ -38,6 +38,13 @@ S.dates={
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.date.formats.date.simple(date);
 	},
+	completeDate:function(date){
+		if(!date) date=new Date();
+		else if(S.isString(date)) date=this.parseStringDate(date);
+		else if(parseInt(date) === date) date=new Date(date);
+		return S.i18n.date.formats.date.complete(date);
+	},
+	
 	simpleTime:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
@@ -49,12 +56,6 @@ S.dates={
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.date.formats.datetime.nice(date);
-	},
-	shortDate:function(date){
-		if(!date) date=new Date();
-		else if(S.isString(date)) date=this.parseStringDate(date);
-		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.datetime.shortened(date);
 	},
 	compactDateTime:function(date){
 		if(!date) date=new Date();
@@ -74,13 +75,6 @@ S.dates={
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.date.formats.datetime.complete(date);
-	},
-	
-	completeDate:function(date){
-		if(!date) date=new Date();
-		else if(S.isString(date)) date=this.parseStringDate(date);
-		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.date.complete(date);
 	}
 };
 Date.prototype.toSqlDate=function(justDate){

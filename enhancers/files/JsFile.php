@@ -60,7 +60,11 @@ class JsFile extends EnhancerFile{
 	}
 	public function writeDevFile($devFile){
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($devFile->getPath()))==='ace') $devFile->write($this->_srcContent);
-		else self::executeCompressor($this->_srcContent,$devFile->getPath(),true);
+		else{
+			self::executeCompressor($this->_srcContent,$devFile->getPath(),true);
+			//self::executeGoogleCompressor($this->_srcContent,$devFile->getPath().'_googleclosure.js');
+			//self::uglify($this->_srcContent,$devFile->getPath().'_uglify.js');
+		}
 	}
 	public function writeProdFile($prodFile){
 		//if(in_array($this->fileName(),array('global.js','mobile.js','admin.js','jsapp.js')))
@@ -78,13 +82,17 @@ class JsFile extends EnhancerFile{
 		
 		//$this->_srcContent=preg_replace('/\/\*\!?\s+[^\(?:\*\/)]*\s+\*\//mU','',$this->_srcContent);
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($prodFile->getPath()))==='ace') $prodFile->write($this->_srcContent);
-		else self::executeCompressor($this->_srcContent,$prodFile->getPath());
+		else{
+			self::executeCompressor($this->_srcContent,$prodFile->getPath());
+			//self::executeGoogleCompressor($this->_srcContent,$prodFile->getPath().'_googleclosure.js');
+			//self::uglify($this->_srcContent,$prodFile->getPath().'_uglify.js');
+		}
 	}
 	
 	public static function executeCompressor(&$content,$destination,$nomunge=false){
 		$dest=$destination?$destination:tempnam('/tmp','yuidest');
 		$javaExecutable = 'java';
-		$jarFile=CLIBS.'_yuicompressor-2.4.6.jar';
+		$jarFile=CLIBS.'_yuicompressor-2.4.7.jar';
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --type js'.($nomunge?' --nomunge':'').' --line-break 8000 -o '.escapeshellarg($dest);
 		$tmpfname = tempnam('/tmp','yui');
 		file_put_contents($tmpfname,$content);
@@ -102,6 +110,36 @@ class JsFile extends EnhancerFile{
 			unlink($dest);
 			return $destination;
 		}
+	}
+	
+	public static function executeGoogleCompressor(&$content,$destination){
+		$dest=$destination?$destination:tempnam('/tmp','gclosuredest');
+		$javaExecutable = 'java';
+		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
+		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' --js ';
+		$tmpfname = tempnam('/tmp','gclosure');
+		file_put_contents($tmpfname,$content);
+		if(!empty($res)){
+			debugCode($destination."\n".$res,false);
+			if(preg_match('/\[ERROR\]\s+([0-9]+)\:([0-9]+)/',$res,$m)){
+				prettyDebug(HText::highlightLine($content,null,$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
+			}/*else h($content);*/
+		}
+		//unlink($tmpfname);
+		chmod($dest,0777);
+		if(!$destination){
+			$destination=file_get_contents($dest);
+			unlink($dest);
+			return $destination;
+		}
+	}
+	
+	public static function uglify(&$content,$dest,$beautify=false){
+		$tmpfname = tempnam('/tmp','uglify');
+		file_put_contents($tmpfname,$content);
+		$res=shell_exec('cd / && uglifyjs --lift-vars'.($beautify?' -b':'').' -o '.escapeshellarg($dest).' '.escapeshellarg($tmpfname).' 2>&1');
+		debugCode($dest."\n".$res,false);
+		chmod($dest,0777);
 	}
 	
 	public function getEnhancedProdContent(){}
