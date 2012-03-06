@@ -20,7 +20,7 @@ class CSecure{
 	
 	protected static function loadUser(){
 		//if(static::config('loadUser') && ($user=self::connected()) && !CHttpRequest::isAjax()){
-		if(($user=static::connected()) !== NULL){
+		if(($user=static::connected()) !== null){
 			$className=static::config('className');
 			$query=$className::QOne()->where(array(static::config('id')=>$user));
 			if(static::issetConfig('fields')) $query->setFields(static::config('fields'));
@@ -52,7 +52,7 @@ class CSecure{
 	}
 	
 	public static function &user(){
-		if(self::$_user===NULL) self::$_user=self::loadUser();
+		if(self::$_user===null) self::$_user=self::loadUser();
 		return self::$_user;
 	}
 	

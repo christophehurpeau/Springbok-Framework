@@ -70,11 +70,13 @@ class AbstractAjaxView extends View{
 }
 
 class AjaxBaseView extends AbstractAjaxView{
-	public function __construct($title=false,$layout=null){
+	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Springbok::$prefix.'base';
+		if($layoutNameOverride===null) $layoutNameOverride=$layout;
+		if(CSecure::isConnected()) $layoutNameOverride.=CSecure::connected();
 		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE']))===true){
 			parent::__construct($title,$layout);
-			echo '<div id="container" data-layoutname="'.$layout.'">';
+			echo '<div id="container" data-layoutname="'.$layoutNameOverride.'">';
 		}else $this->ajaxHeaders($title,'base');
 	}
 }
@@ -83,6 +85,7 @@ class AjaxPageView extends AbstractAjaxView{
 	public function __construct($title=false,$class='ml200',$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Springbok::$prefix.'page';
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
+		if(CSecure::isConnected()) $layoutNameOverride.=CSecure::connected();
 		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])||$_SERVER['HTTP_SPRINGBOKAJAXPAGE']!==$layoutNameOverride)===true){
 			parent::__construct($title,$layout);
 			echo '<div id="page" class="'.$class.'" data-layoutname="'.$layoutNameOverride.'">';
@@ -116,6 +119,7 @@ class AjaxContentView extends AbstractAjaxView{
 	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Controller::$defaultLayout;
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
+		if(CSecure::isConnected()) $layoutNameOverride.=CSecure::connected();
 		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXCONTENT'])||$_SERVER['HTTP_SPRINGBOKAJAXCONTENT']!==$layoutNameOverride)===true){
 			parent::__construct($title,$layout);
 			echo '<div class="content" data-layoutname="'.$layoutNameOverride.'">';
