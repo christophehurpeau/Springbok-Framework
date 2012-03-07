@@ -81,7 +81,7 @@ class GitRepository{
 		return $this->run('commit -av -m '.escapeshellarg($message));
 	}
 	
-	public function update(){
+	public function fetch(){
 		$this->run('fetch origin master:master');
 	}
 	
@@ -226,7 +226,7 @@ class GitRepository{
 					$revision=new GitRevision();
 				}
 				$revision->identifier=$revision->id=$m[1];
-				$revision->parents=empty($m[2])?null:$m[2];
+				$revision->parents=empty($m[2])?null:explode(' ',trim($m[2]));
 				$revision->files=array();
 			}elseif($parsing_state===0 && preg_match('/^(\w+):\s*(.*)$/s',$line,$m)){
 				if($m[1]==='Author') $revision->author=trim($m[2]);

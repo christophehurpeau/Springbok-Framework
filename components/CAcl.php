@@ -7,6 +7,6 @@ class CAcl{
 			$group_id=CSecure::user()->group_id;
 			if($group_id!==null) $groupId=$group_id;
 		}
-		return GroupPerm::QExist()->where(array('granted'=>true,'group_id'=>&$groupId,'permission'=>&$permission));
+		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>&$groupId,'permission'=>&$permission));
 	}
 }

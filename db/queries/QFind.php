@@ -466,7 +466,7 @@ abstract class QFind extends QSelect{
 						
 						$listRes=self::_createHasManyQuery($w,$values,$resField,false,$withMore['with'],$rel['alias'])->execute();
 						if($listRes!==false){
-							foreach($objs as $key=>&$obj){
+							foreach($objs as $k=>&$obj){
 								$listObjsRes=array();
 								foreach($listRes as &$res){
 									if($res->_get($resField) == $obj->_get($objField)){
@@ -484,7 +484,7 @@ abstract class QFind extends QSelect{
 					
 				case 'belongsToType':
 					$types=array();
-					foreach($objs as $key=>&$obj){
+					foreach($objs as $k=>&$obj){
 						$type=$obj->_get($w['fieldType']);
 						if(empty($w['types'][$type])) continue;
 						if($type!==null) $types[$w['types'][$type]][]=$obj;
@@ -492,6 +492,15 @@ abstract class QFind extends QSelect{
 					
 					foreach($types as $relName=>&$objsTyped){
 						$with=array($w['relations'][$relName]);
+						if(!empty($with[0]['with'])){
+							$with2=array();
+							foreach($with[0]['with'] as $k=>&$options){
+								if(is_numeric($k)){ $k=$options; $options=array();}
+								self::_addWith($with2,$k,$options,$with[0]['modelName']);
+							}
+							$with[0]['with']=$with2;
+						}
+						
 						self::AfterQuery_objs($with,$objsTyped);
 					}
 					
