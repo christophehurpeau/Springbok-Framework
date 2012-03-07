@@ -71,7 +71,7 @@ abstract class QFind extends QSelect{
 	public function &_setJoin(&$join){$this->join=&$join;return $this;}
 	
 	private function _addWithInJoin(&$modelName,&$modelAlias,&$key,&$join,$inRecursive=false){
-		$joinModelName=$join['modelName'];
+		$joinModelName=&$join['modelName'];
 		if(!($join['reltype']==='belongsTo' || $join['reltype']==='hasOne' || $join['reltype']==='hasOneThrough' || $join['forceJoin']===true || $join['isCount']===true)
 				 || ($modelName::$__dbName!==$joinModelName::$__dbName && !$modelName::$__modelDb->isInSameHost($joinModelName::$__modelDb))) return false;
 		//if(!empty($join['with'])) return false; //TODO should be handled someplace else because here generate a lot of requests... 
@@ -357,6 +357,14 @@ abstract class QFind extends QSelect{
 				$resField =& $rel['associationForeignKey'];
 				
 				return self::_createHasManyQuery($w,$obj->_get($objField),$resField,false,$withMore['with'],$rel['alias']);
+			case 'belongsToType':
+				$type=$obj->_get($w['fieldType']);
+				if(empty($w['types'][$type])) return false;
+				
+				$objField =& $w['foreignKey'];
+				$resField =& $w['associationForeignKey'];
+				
+				return self::_createBelongsToAndHasOneQuery($w['relations'][$w['types'][$type]],$obj->_get($objField),$resField);
 			default:
 				throw new Exception('Unknown relation; '.$w['reltype']);
 		}
@@ -364,8 +372,11 @@ abstract class QFind extends QSelect{
 	
 	private static function AfterQuery_obj(&$with,&$obj){
 		foreach($with as $key=>&$w){
-			$res=self::createWithQuery($obj,$w)->execute();
-			$obj->_set($w['dataName'],$res);
+			$query=self::createWithQuery($obj,$w);
+			if($query!==false){
+				$res=$query->execute();
+				$obj->_set($w['dataName'],$res);
+			}
 			unset($with[$key]);
 		}
 	}
@@ -397,7 +408,7 @@ abstract class QFind extends QSelect{
 					
 					$values=self::_getValues($objs,$objField);
 					if(!empty($values)){
-						$listRes = self::_createBelongsToAndHasOneQuery($w,$values,$resField,true)->execute();
+						$listRes = self::_createHasManyQuery($w,$values,$resField,true)->execute();
 						
 						if($listRes) foreach($objs as &$obj){
 							foreach($listRes as &$res)
@@ -471,7 +482,21 @@ abstract class QFind extends QSelect{
 					
 					break;
 					
-				default:
+				case 'belongsToType':
+					$types=array();
+					foreach($objs as $key=>&$obj){
+						$type=$obj->_get($w['fieldType']);
+						if(empty($w['types'][$type])) continue;
+						if($type!==null) $types[$w['types'][$type]][]=$obj;
+					}
+					
+					foreach($types as $relName=>&$objsTyped){
+						$with=array($w['relations'][$relName]);
+						self::AfterQuery_objs($with,$objsTyped);
+					}
+					
+					break;
+			default:
 					throw new Exception('Unknown relation; '.$w['reltype']);
 			}
 		}
@@ -486,7 +511,9 @@ abstract class QFind extends QSelect{
 	public static function &findWithPaginate($paginateClass,&$model,&$key,&$options){
 		$w=array();
 		self::_addWith($w,$key,$options,$model::$__className);
-		$res=$paginateClass::create(self::createWithQuery($model,$w[$key]));
+		$query=self::createWithQuery($model,$w[$key]);
+		if($query===false) return false;
+		$res=$paginateClass::create($query);
 		$model->_setRef($w[$key]['dataName'],$res); //not executed, but should be a reference to the variable
 		unset($w[$key]);
 		return $res;

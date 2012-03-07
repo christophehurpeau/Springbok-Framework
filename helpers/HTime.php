@@ -59,6 +59,10 @@ class HTime{
 		return self::$locale->formatMonthAndYear(strtotime($date),'simple');
 	}
 	
+	public static function hoursAndMinutes($date=null){
+		return self::$locale->formatTime(strtotime($date));
+	}
+	
 	
 	public static function toRSS($dateString){ return self::toRSSTime(strtotime($date)); }
 	public static function toRSSTime($date){ return date('r',$date); }

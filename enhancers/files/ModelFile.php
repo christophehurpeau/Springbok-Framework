@@ -155,7 +155,7 @@ class ModelFile extends PhpFile{
 			
 			$relations=&$contentInfos['relations'];
 			
-			foreach(array('hasMany','belongsTo','hasOne','hasOneThrough','hasManyThrough') as $relType){
+			foreach(array('hasMany','belongsTo','hasOne','hasOneThrough','hasManyThrough','belongsToType') as $relType){
 				$content=preg_replace_callback('/\s*public\s*(?:static)?\s*\$'.$relType.'\s*=\s*(array\(.*\);)/Us',function($matches2) use(&$relations,&$relType,&$contentInfos){
 					$eval=eval('return '.$matches2[1]);
 					foreach($eval as $key=>&$relation){

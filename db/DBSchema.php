@@ -404,44 +404,22 @@ abstract class DBSchema{
 			foreach($contentInfos['relations'] as $key=>&$relation){
 				$type=$relation['reltype'];
 				
-				if(!isset($relation['modelName'])) $relation['modelName']=$key;
-				if(!isset($relation['alias'])) $relation['alias']=$relation['modelName']::$__alias;
-				if(in_array($type,array('hasMany','belongsTo','hasOne')))
-					$relation+=array('fieldsInModel'=>false,'isCount'=>false,'isDistinct'=>false,'forceJoin'=>false,'type'=>' LEFT JOIN ','fields'=>null);
-				else $relation+=array('fields'=>null,'forceJoin'=>false,'isCount'=>false);
-				
-				$keyDataName=$key[0]==='E' && strtoupper(substr($key,0,3))==substr($key,0,3) ? substr($key,2) : $key;
-				if(!isset($relation['conditions'])){
-					switch($type){
-						case 'hasMany':
-							if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
-							if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
-							if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataName($keyDataName,$modelName);
-							break;
-						case 'belongsTo': // many to one
-							if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
-							if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=$relation['modelName']::_getPkName();
-							if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataNamePrefixless($keyDataName,$modelName);
-							break;
-						case 'hasOne': // one to one
-							if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
-							//if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
-							if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
-							if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataName($keyDataName,$modelName,false);
-							break;
-						case 'hasManyThrough':
-						case 'hasOneThrough':
-							if(is_string($relation['joins'])) $relation['joins']=explode(',',$relation['joins']);
-							if(!isset($relation['relName'])){
-								$relation['relName']=key($relation['joins']);
-								if(is_int($relation['relName'])) $relation['relName']=current($relation['joins']);
-								$relation['joins']=array_reverse($relation['joins'],true);
-							}
-							
-							if(!isset($relation['dataName'])) $relation['dataName']= $type==='hasOneThrough' ? self::defaultRelationDataNamePrefixless($keyDataName,$modelName) : self::defaultRelationDataName($keyDataName,$modelName);
-							break;
-						default: die($modelName.': Unknown type: '.$type);
+				if($type === 'belongsToType'){
+					if(!isset($relation['fieldType'])) $relation['fieldType']=$key;
+					$relation['forceJoin']=false; $relation['isCount']=false;
+					$relations=array();
+					/*debugVar($relation['types']);*/
+					foreach($relation['relations'] as $key2=>$rel2){
+						$rel2['reltype']='belongsTo';
+						$rel2['dataName']=$relation['dataName'];
+						if(!isset($rel2['foreignKey'])) $rel2['foreignKey']='rel_id';
+						
+						self::_defaultsRelation($modelName,$rel2['reltype'],$key2,$rel2);
+						$relations[$key2]=$rel2;
 					}
+					$relation['relations']=$relations;
+				}else{
+					self::_defaultsRelation($modelName,$type,$key,$relation);
 				}
 			}
 		
@@ -451,6 +429,49 @@ abstract class DBSchema{
 			$modelName::$_relations=&$contentInfos['relations'];
 		}
 	}
+
+	private static function _defaultsRelation(&$modelName,&$type,&$key,&$relation){
+		if(!isset($relation['modelName'])) $relation['modelName']=$key;
+		if(!isset($relation['alias'])) $relation['alias']=$relation['modelName']::$__alias;
+		if(in_array($type,array('hasMany','belongsTo','hasOne')))
+			$relation+=array('fieldsInModel'=>false,'isCount'=>false,'isDistinct'=>false,'forceJoin'=>false,'type'=>' LEFT JOIN ','fields'=>null);
+		else $relation+=array('fields'=>null,'forceJoin'=>false,'isCount'=>false);
+		
+		$keyDataName=$key[0]==='E' && strtoupper(substr($key,0,3))==substr($key,0,3) ? substr($key,2) : $key;
+		if(!isset($relation['conditions'])){
+			switch($type){
+				case 'hasMany':
+					if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
+					if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
+					if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataName($keyDataName,$modelName);
+					break;
+				case 'belongsTo': // many to one
+					if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
+					if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=$relation['modelName']::_getPkName();
+					if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataNamePrefixless($keyDataName,$modelName);
+					break;
+				case 'hasOne': // one to one
+					if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
+					//if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
+					if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
+					if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataName($keyDataName,$modelName,false);
+					break;
+				case 'hasManyThrough':
+				case 'hasOneThrough':
+					if(is_string($relation['joins'])) $relation['joins']=explode(',',$relation['joins']);
+					if(!isset($relation['relName'])){
+						$relation['relName']=key($relation['joins']);
+						if(is_int($relation['relName'])) $relation['relName']=current($relation['joins']);
+						$relation['joins']=array_reverse($relation['joins'],true);
+					}
+					
+					if(!isset($relation['dataName'])) $relation['dataName']= $type==='hasOneThrough' ? self::defaultRelationDataNamePrefixless($keyDataName,$modelName) : self::defaultRelationDataName($keyDataName,$modelName);
+					break;
+				default: throw new Exception($modelName.': Unknown type: '.$type);
+			}
+		}
+	}
+
 
 	private static function _defaultForeignKey($modelName){
 		$pkName=$modelName::_getPkName();
