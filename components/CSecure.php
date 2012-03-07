@@ -12,7 +12,7 @@ class CSecure{
 	protected static function &loadConfig($configName='secure'){
 		$config=App::configArray($configName)
 			+array('className'=>'User','login'=>'login','password'=>'pwd','auth'=>'','authConditions'=>array(),
-				'trim'=>". \t\n\r\0\x0B",'logConnections'=>false);
+				'trim'=>". \t\n\r\0\x0B",'logConnections'=>false,'userHistory'=>false);
 		if(!isset($config['cookiename'])) $config['cookiename']=$config['className'];
 		if(!isset($config['id'])) $config['id']=$config['login'];
 		return $config;
@@ -206,6 +206,7 @@ class CSecure{
 				if($connected!==NULL) $c->connected=$connected;
 				$c->ip=CHttpRequest::getClientIP();
 				$c->insert();
+				if(static::config('userHistory')) UserHistory::add(UserHistory::CONNECT);
 				break;
 			case 'file':
 				CLogger::get('connections')->log($type.': '.($succeed?'SUCCEED':'FAILED').' - '.$login.($connected!==NULL?(' => '.$connected):''));
