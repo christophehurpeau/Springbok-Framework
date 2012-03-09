@@ -317,7 +317,7 @@ class CssFile extends EnhancerFile{
 	}
 	
 	public function &phpfunctions(&$content){
-		$functions=array('lighten'=>array('UColors','_lighten'),'darken'=>array('UColors','_darken'));
+		$functions=array('lighten'=>array('UColors','_lighten'),'darken'=>array('UColors','_darken'),'findBestFgColor'=>array('UColors','findBestFgColor'));
 		foreach($functions as $fname=>$callback){
 			$content=preg_replace_callback('/'.$fname.'\((.*)\)([;|}])/',function($matches) use(&$fcontent,&$callback){
 				$params=explode(',',trim($matches[1]));

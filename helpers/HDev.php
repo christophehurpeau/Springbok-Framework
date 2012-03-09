@@ -17,7 +17,7 @@ class HDev{
 		echo '</div></div><div id="springbok-bar-route" class="springbok-bar-content"><div>';
 		self::springbokBarRoute();
 		echo '</div></div><div id="springbok-bar-ajax" class="springbok-bar-content"><div>';
-			echo '<ul></ul>';
+			echo '<ul class="nobullets spaced"></ul>';
 		echo '</div></div>';
 		
 		echo '<div id="springbok-bar-popup"><a href="javascript:;" onclick="$(\'#springbok-bar-popup\').fadeOut()">Close</a><pre></pre></div>';

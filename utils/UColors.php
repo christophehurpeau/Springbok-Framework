@@ -73,7 +73,7 @@ class UColors{
 		$res=array();
 		foreach($bg as $key=>$color){
 			$res[$key]['bg']=$color;
-			$res[$key]['fg']=self::_calcFG($color,$hexColor);
+			$res[$key]['fg']=self::findBestFgColor($color,$hexColor);
 		}
 		return $res;
 	}
@@ -114,7 +114,7 @@ class UColors{
 		return false;
 	}
 	
-	private static function _calcFG($bgHex,$fgHex){
+	public static function findBestFgColor($bgHex,$fgHex='#000000'){
 		// Given a background color $bgHex and a foreground color $fgHex,
 		// modifies the foreground color so it will have enough contrast
 		// to be seen against the background color.

@@ -116,7 +116,16 @@ ul.overflow-ellipsis{
 	overflow:hidden;
 	text-overflow:ellipsis;
 }
-
+/* interactions */
+li.clickable{
+	background:INTERACTION_DEFAULT_COLOR;
+	color:findBestFgColor(INTERACTION_DEFAULT_COLOR);
+	cursor:pointer;
+}
+li.clickable:hover{
+	background:INTERACTION_HOVER_COLOR;
+	color:findBestFgColor(INTERACTION_HOVER_COLOR);
+}
 
 FOR(I=1;I<5;I+1)
 IF(COLOR$I) .color$I{color:COLOR$I} ENDIF
