@@ -23,6 +23,7 @@ class ModelFile extends PhpFile{
 				if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
 				$createdField=isset($annotations['CreatedField'])?$annotations['CreatedField'][0][0]:false;
 				$updatedField=isset($annotations['UpdatedField'])?$annotations['UpdatedField'][0][0]:false;
+				$orderByField=isset($annotations['OrderByField'])?$annotations['PositionField'][0][0]:false;
 				$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
 				
 				$indexes=&$contentInfos['indexes'];
@@ -80,6 +81,10 @@ class ModelFile extends PhpFile{
 						elseif($column['type']==='int(10)'||$column['type']==='int(11)') $field['Format']='datetime';
 						$updatedField=$name;
 					}
+					if(isset($field['OrderByField']) || (!$orderByField && $name==='position' 
+						&& ((substr($column['type'],0,4)==='int(') || substr($column['type'],0,8)==='tinyint(')) ){
+						$orderByField=$name;
+					}
 					if(isset($field['ForeignKey'])) $column['ForeignKey']=$field['ForeignKey'];
 					$contentInfos['columns'][$name]=$column;
 					
@@ -89,7 +94,8 @@ class ModelFile extends PhpFile{
 					if(isset($field['Json'])){ $specialFields[$name]='Json';}
 					
 					unset($field['Pk'],$field['Boolean'],$field['SqlType'],$field['Null'],$field['NotNull'],$field['DefaultValue'],$field['Default'],$field['AutoIncrement'],
-								$field['CreatedField'],$field['UpdatedField'],$field['ForeignKey'],$field['Index'],$field['Comment']);
+								$field['CreatedField'],$field['UpdatedField'],$field['PositionField'],
+								$field['ForeignKey'],$field['Index'],$field['Comment']);
 					if(!empty($field)) $contentInfos['annotations'][$name]=$field;
 				}
 				
@@ -131,6 +137,7 @@ class ModelFile extends PhpFile{
 					.',$__pluralized='."'".UInflector::pluralizeCamelizedLastWord($matches[2])."'"
 					.($dbName?',$__dbName=\''.$dbName.'\',$__modelDb':'')
 					.(isset($annotations['DisplayField'][0][0])?',$__displayField=\''.$annotations['DisplayField'][0][0].'\'':'')
+					.($orderByField?',$__orderByField=\''.$orderByField.'\'':'')
 					.',$__cacheable='.($cacheable?'true':'false')
 					.';'
 					.(empty($specialFields)?'':

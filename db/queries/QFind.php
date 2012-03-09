@@ -287,22 +287,16 @@ abstract class QFind extends QSelect{
 	public function &_createObj(){
 		$type=&$this->modelName;
 		$obj=new $type();
-		if($this->objData){
-			$data=array();
-			foreach($this->objData as $key=>$val) $data[$key]=$val;//copy
-			$obj->_copyData($data);
-		}
+		if($this->objData) $obj->_copyData($this->objData);
 		if($this->joinData !== NULL) foreach($this->joinData as $alias=>&$joinData){
 			$join=&$this->joins[$alias];
 			if($join['fieldsInModel']){
-				foreach($joinData as $key=>$val) $obj->$key=$val;//copy
+				foreach($joinData as $key=>$val) $obj->_set($key,$val);//copy
 			}else{
-				$data=array();
-				foreach($joinData as $key=>$val) $data[$key]=$val;//copy
 				$type=&$join['modelName'];
 				/* DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.short_debug_var($type)); /* /DEV */
 				$joinObj=new $type();
-				$joinObj->_copyData($data);
+				$joinObj->_copyData($joinData);
 				$obj->$join['dataName']=$joinObj;
 			}
 		}

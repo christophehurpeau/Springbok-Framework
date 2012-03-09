@@ -1,6 +1,6 @@
 <?php
 class Model implements Iterator{
-	public static $__dbName='default',$__modelDb,$__displayField='name';
+	public static $__dbName='default',$__modelDb,$__displayField='name',$__orderByField=null;
 	public static $__loadedModels=array();
 	
 	public static function init($modelName){
@@ -58,8 +58,13 @@ class Model implements Iterator{
 	public function _setData(&$data){
 		$this->data=&$data;
 	}
-	public function _copyData($data){
-		$this->_setData($data);
+	public function _copyData(&$data){
+		$d=array();
+		foreach($data as $key=>$val){
+			$d[$key]=$val;//copy
+/*			$this->$key=&$d[$key];*/
+		}
+		$this->_setData($d);
 	}
 	
 	public function &_getData(){
@@ -72,9 +77,11 @@ class Model implements Iterator{
 	
 	public function _set($name,&$value){
 		$this->data[$name]=$value;
+		/*$this->$name=&$this->data[$name];*/
 	}
 	public function _setRef($name,&$value){
 		$this->data[$name]=&$value;
+		/*$this->$name=&$this->data[$name];*/
 	}
 	public function &_get($name){
 		return $this->data[$name];
@@ -283,7 +290,10 @@ class Model implements Iterator{
 	public static function findAll(){return self::QAll()->execute();}
 	public static function findOne(){return self::QOne()->execute();}
 	
-	public static function QListName(){return self::QList()->setFields(array('id',static::$__displayField))->orderBy(static::$__displayField);}
+	public static function QListName(){
+		$orderByField=&static::$__orderByField;
+		return self::QList()->setFields(array('id',static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
+	}
 	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return self::QListName()->execute();}
 	public static function findCachedListValue(){
 		$className=&static::$__className;
