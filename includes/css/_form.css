@@ -24,6 +24,7 @@ div.input label,div.textarea label,form .radio .title{
 	padding:1px 3px;
 	vertical-align:top;
 }
+div.input.select label{vertical-align:middle}
 .large-label div.input label,.large-label .radio .title{
 	width:FORM_LARGE_LABEL_WIDTH;
 }
