@@ -220,6 +220,7 @@ class ControllerFile extends PhpFile{
 	private static function _addAclPermission($controllerName,$permission){
 		self::$aclPermissionsChanges=true;
 		self::$aclPermissionsConfig['controllers'][$controllerName][]=$permission;
+		self::$aclPermissionsConfig['controllers'][$controllerName]=array_unique(self::$aclPermissionsConfig['controllers'][$controllerName]);
 		self::$aclPermissionsConfig['permissions'][$permission]['controllers'][$controllerName]=true;
 	}
 	
