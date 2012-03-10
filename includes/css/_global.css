@@ -126,6 +126,11 @@ li.clickable:hover{
 	background:INTERACTION_HOVER_COLOR;
 	color:findBestFgColor(INTERACTION_HOVER_COLOR);
 }
+li.clickable.current{
+	background:INTERACTION_CURRENT_COLOR;
+	color:findBestFgColor(INTERACTION_CURRENT_COLOR);
+}
+
 
 FOR(I=1;I<5;I+1)
 IF(COLOR$I) .color$I{color:COLOR$I} ENDIF

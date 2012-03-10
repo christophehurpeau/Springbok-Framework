@@ -18,11 +18,18 @@ $(document).ready(function(){
 		if(!checkedDivFixedPosition) checkDivFixedPosition();
 		//console.log(e,xhr,settings);
 		ajaxSpanCount.text(new Number(ajaxSpanCount.text())+1);
-		$('<li class="clickable"/>').append(settings.type+' ',$('<b/>').text(settings.url),' [ '+(settings.async?'async':'sync')+' ]',' - ',
+		$('<li class="clickable"/>').append(settings.type+' ',$('<b/>').text(settings.url),' [&nbsp;'+(settings.async?'async':'sync')+'&nbsp;]',' - ',
 					//$('<a href="#"/>').text('See Request Headers').click(function(){displaySpringbokBarPopup(xhr.responseText);return false;})
 				$('<i/>').text(xhr.status+' '+xhr.statusText)
-		).click(function(){displaySpringbokBarPopup(xhr.responseText);return false;})
-		//.click(function(){displaySpringbokBarPopup(xhr.getAllResponseHeaders());return false;})
+		).click(function(){
+			$('#SpringbokBarAjaxContent').html($('<h5 class="noclear"/>').text('Headers')).append(
+				$('<pre/>').text(xhr.getAllResponseHeaders()),
+				$('<h5 class="noclear mt6"/>').text('Content'),
+				$('<pre/>').text(xhr.responseText));
+			var $t=$(this); $t.parent().find('> li').removeClass('current');
+			$t.addClass('current');
+			return false;
+		})
 		.fadeOut(0).appendTo(this).fadeIn(); //fade isn't really usefull...
 	});
 	$('.springbok-bar-content').hide();
