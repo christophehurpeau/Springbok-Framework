@@ -1,5 +1,6 @@
 <?php
 _tC('Home');
+_tC('#');
 
 _tC('Save');
 _tC('Yes');
@@ -31,3 +32,4 @@ _tC('New name ?');
 _tC('Password lost ?');
 
 _tC('User');
+

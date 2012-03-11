@@ -65,6 +65,9 @@ class CBinder{
 	public static function bindDatetime($val){
 		return strtotime($val);
 	}
+	public static function bindDate($val){
+		return strtotime($val);
+	}
 	//public static function bindLong($val){ return (long)$val; }
 
 	public static function &_bindObject($type,&$val,$withValidation=false,$validProperties=null){
