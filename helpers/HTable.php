@@ -66,7 +66,7 @@ class HTable{
 				}
 			}*/
 			
-			if($component->defaultAction!==null && !is_array($component->defaultAction) && $component->defaultAction[0]!=='/') $component->defaultAction='/'.$component->controller.'/'.$component->defaultAction;
+			if($component->defaultAction!==null && is_string($component->defaultAction) && $component->defaultAction[0]!=='/') $component->defaultAction='/'.$component->controller.'/'.$component->defaultAction;
 			if($component->rowActions!==null){
 				echo '<th style="width:'.(count($component->rowActions)*16).'px">'.h2(_tC('Actions')).'</th>';
 				foreach($component->rowActions as $k=>&$action){
@@ -115,7 +115,11 @@ class HTable{
 				if(is_array($component->defaultAction)){
 					$defaultActionUrl=$component->defaultAction;
 					$defaultActionUrl[]=$pkValue;
-				}else $defaultActionUrl=$component->defaultAction.'/'.$pkValue;
+				}elseif(is_string($component->defaultAction)) $defaultActionUrl=$component->defaultAction.'/'.$pkValue;
+				else{
+					$callback=&$component->defaultAction;
+					$defaultActionUrl=$callback($pkValue);
+				}
 				$class.=' pointer';
 				echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
 			}
