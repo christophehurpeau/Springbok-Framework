@@ -95,7 +95,7 @@ class ControllerFile extends PhpFile{
 		
 		if(isset($mdef['annotations']['Valid'])){
 			foreach($mdef['annotations']['Valid'] as $valid)
-				$mdef['params'][$valid]['annotations']['Valid']=false;
+				$mdef['params'][$valid]['annotations']['Valid']=0;
 			unset($mdef['annotations']['Valid']);
 		}
 		
