@@ -452,7 +452,7 @@ class HForm{
 		else $content='';
 		
 		for($i=1;$i<=$nbStars;$i++)
-			$content.=self::_radio($name,$i,$value);
+			$content.=self::_radio($name,$i,$value==$i);
 		
 		return $this->_inputContainer($content,'radio stars',$containerAttributes);
 	}
