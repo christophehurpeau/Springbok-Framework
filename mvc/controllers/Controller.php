@@ -160,7 +160,8 @@ class Controller{
 	
 	public static function redirectLast($toIfNotFound,$exit=true){
 		$to=CHttpRequest::referer(true);
-		if($to===null) $to=&$toIfNotFound;
+		if($to===CRoute::getAll()) $to=&$toIfNotFound;
+		elseif($to===null) $to=&$toIfNotFound;
 		self::redirect($to,false,$exit);
 	}
 	

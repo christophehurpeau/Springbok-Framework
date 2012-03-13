@@ -79,7 +79,7 @@ class HTable{
 			if($component->filter){
 				echo '<tr class="form">';
 				foreach($component->fields as &$field){
-					$filterField=NULL; $attributes=array(); $filterName='filter_'.$field['key'];
+					$filterField=NULL; $attributes=array(); $filterName='filters['.$field['key'].']';
 					if(isset($field['filter']) && is_array($field['filter'])){
 						$attributes['empty']='';
 						$filterField=$form->select($filterName,$field['filter'],$attributes);
@@ -118,7 +118,7 @@ class HTable{
 				}elseif(is_string($component->defaultAction)) $defaultActionUrl=$component->defaultAction.'/'.$pkValue;
 				else{
 					$callback=&$component->defaultAction;
-					$defaultActionUrl=$callback($pkValue);
+					$defaultActionUrl=$callback($pkValue,$model);
 				}
 				$class.=' pointer';
 				echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName

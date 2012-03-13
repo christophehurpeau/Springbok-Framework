@@ -33,71 +33,6 @@ class CTable{
 		if($this->controller===null && ($this->defaultAction!==null || $this->rowActions!==null)) $this->controller=lcfirst(CRoute::getController());
 		
 		if($this->filter===true){
-			$filter=false;
-			$POST=isset($_POST)?$_POST:array();
-			//$POST = array_merge($cookie->getFamily($this->table.'Filter_'), (isset($_POST) ?  : array()));
-			
-			foreach($fields AS $key=>$fieldName){
-				if(isset($POST['filter_'.$fieldName]) && (!empty($POST['filter_'.$fieldName]) || $POST['filter_'.$fieldName]==='0')){
-					$filter=true;
-					$postValue=$POST['filter_'.$fieldName];
-					$condK=$fieldName; $condV=$postValue;
-					
-					$propDef=&$modelName::$__PROP_DEF[$fieldName];
-					$type=$propDef['type'];
-					
-					$condV=CBinder::bind($type,$condV);
-					
-					if(is_int($condV) || is_float($condV)){
-						
-					}elseif(is_string($condV)){
-						if(!isset($this->fields[$fieldName]['filter']) || $this->fields[$fieldName]['filter'] === 'like')
-							$condK.=' LIKE';
-					}elseif(is_array($condV)){
-						notImplemented();
-					}
-					
-					if(is_int($key)) $this->query->addCondition($condK,$condV);
-					else $this->query->addHavingCondition($condK,$condV);
-					
-					/*if (is_array($value)){
-							if($type=='rangeint' || $type=='rangedecimal'){
-								$values=array();
-								if(isset($value[0]) && $value[0] !=='') $values[]= $type=='rangeint' ? (int)$value[0] : (float)$value[0];
-								if(isset($value[1]) && $value[1] !=='') $values[]= $type=='rangeint' ? (int)$value[1] : (float)$value[1];
-								if(!empty($values)){
-									$sqlFilter .= ' AND ';
-									if(count($values)==1)
-										$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.current($values).' ';
-									else
-										$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' BETWEEN '.$values[0].' AND '.$values[1].' ';
-								}
-							}else{ //datetime or date
-								if (!empty($value[0])){
-									if (!Validate::isDate($value[0])) $this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
-									else $sqlFilter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
-								}
-								if (!empty($value[1])){
-									if (!Validate::isDate($value[1])) $this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
-									else $sqlFilter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
-								}
-							}
-						}else{
-							$sqlFilter .= ' AND ';
-							if ($type == 'int' OR $type == 'bool')
-								$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.intval($value).' ';
-							elseif ($type == 'decimal')
-								$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.floatval($value).' ';
-							elseif ($type == 'select')
-								$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.pSQL($value).' ';
-							else
-								$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
-						}*/
-				}
-			}
-			
-			if($filter) $this->query->calcFoundRows();
-			
 			if($this->autoBelongsTo!==false) foreach($belongsToFields as $field=>$relKey){
 				$relModelName=$modelName::$_relations[$relKey]['modelName'];
 				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
@@ -105,6 +40,79 @@ class CTable{
 					$belongsToFields[$field]=$relModelName::QList()->setFields(array('id',$relModelName::$__displayField))->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'forceJoin'=>true));
 				else $this->query->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
 			}
+			
+			$filter=false;
+			if(!empty($_POST['filters'])){
+				$FILTERS=$_POST['filters'];
+				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$FILTERS);
+			}elseif(!empty($_GET['filters'])){
+				$FILTERS=$_GET['filters'];
+				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$FILTERS);
+			}else
+				$FILTERS=CSession::getOr('CTableFilters'.$this->modelName.CRoute::getAll(),array());
+			
+			if(!empty($FILTERS)){
+				//debugVar($fields);
+				foreach($fields AS $key=>$fieldName){
+					if(isset($FILTERS[$fieldName]) && (!empty($FILTERS[$fieldName]) || $FILTERS[$fieldName]==='0')){
+						$filter=true;
+						$postValue=$FILTERS[$fieldName];
+						$condK=$fieldName; $condV=$postValue;
+						
+						$propDef=&$modelName::$__PROP_DEF[$fieldName];
+						$type=$propDef['type'];
+						
+						$condV=CBinder::bind($type,$condV);
+						
+						if(is_int($condV) || is_float($condV)){
+							
+						}elseif(is_string($condV)){
+							if(!isset($this->fields[$fieldName]['filter']) || $this->fields[$fieldName]['filter'] === 'like')
+								$condK.=' LIKE';
+						}elseif(is_array($condV)){
+							notImplemented();
+						}
+						
+						if(is_int($key)) $this->query->addCondition($condK,$condV);
+						else $this->query->addHavingCondition($condK,$condV);
+						
+						/*if (is_array($value)){
+								if($type=='rangeint' || $type=='rangedecimal'){
+									$values=array();
+									if(isset($value[0]) && $value[0] !=='') $values[]= $type=='rangeint' ? (int)$value[0] : (float)$value[0];
+									if(isset($value[1]) && $value[1] !=='') $values[]= $type=='rangeint' ? (int)$value[1] : (float)$value[1];
+									if(!empty($values)){
+										$sqlFilter .= ' AND ';
+										if(count($values)==1)
+											$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.current($values).' ';
+										else
+											$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' BETWEEN '.$values[0].' AND '.$values[1].' ';
+									}
+								}else{ //datetime or date
+									if (!empty($value[0])){
+										if (!Validate::isDate($value[0])) $this->_errors[] = Tools::displayError('\'from:\' date format is invalid (YYYY-MM-DD)');
+										else $sqlFilter .= ' AND '.pSQL($key).' >= \''.pSQL(Tools::dateFrom($value[0])).'\'';
+									}
+									if (!empty($value[1])){
+										if (!Validate::isDate($value[1])) $this->_errors[] = Tools::displayError('\'to:\' date format is invalid (YYYY-MM-DD)');
+										else $sqlFilter .= ' AND '.pSQL($key).' <= \''.pSQL(Tools::dateTo($value[1])).'\'';
+									}
+								}
+							}else{
+								$sqlFilter .= ' AND ';
+								if ($type == 'int' OR $type == 'bool')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.intval($value).' ';
+								elseif ($type == 'decimal')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.floatval($value).' ';
+								elseif ($type == 'select')
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' = '.pSQL($value).' ';
+								else
+									$sqlFilter .= (($key == $this->identifier OR $key == '`'.$this->identifier.'`') ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+							}*/
+					}
+				}
+			}
+			if($filter) $this->query->calcFoundRows();
 		}else{
 			if($this->autoBelongsTo!==false) foreach($belongsToFields as $field=>$relKey){
 				$relModelName=$modelName::$_relations[$relKey]['modelName'];
