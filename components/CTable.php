@@ -100,7 +100,7 @@ class CTable{
 			
 			if($this->autoBelongsTo!==false) foreach($belongsToFields as $field=>$relKey){
 				$relModelName=$modelName::$_relations[$relKey]['modelName'];
-				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListValue();
+				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
 				elseif(is_array($this->autoBelongsTo) && isset($this->autoBelongsTo[$field]))
 					$belongsToFields[$field]=$relModelName::QList()->setFields(array('id',$relModelName::$__displayField))->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'forceJoin'=>true));
 				else $this->query->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
