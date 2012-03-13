@@ -9,7 +9,8 @@ class CTable{
 		return new CTable($query);
 	}
 	
-	public $modelName,$fields,$modelFields,$queryFields,$fieldsEditable,$rowActions,$defaultAction,$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller;
+	public $modelName,$fields,$modelFields,$queryFields,$fieldsEditable,$rowActions,$defaultAction,$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller,
+		$FILTERS;
 	protected $pagination,$query,$executed,$results,$totalResults;
 
 	public function __construct($query){
@@ -43,20 +44,20 @@ class CTable{
 			
 			$filter=false;
 			if(!empty($_POST['filters'])){
-				$FILTERS=$_POST['filters'];
-				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$FILTERS);
+				$this->FILTERS=$_POST['filters'];
+				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$this->FILTERS);
 			}elseif(!empty($_GET['filters'])){
-				$FILTERS=$_GET['filters'];
-				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$FILTERS);
+				$this->FILTERS=$_GET['filters'];
+				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$this->FILTERS);
 			}else
-				$FILTERS=CSession::getOr('CTableFilters'.$this->modelName.CRoute::getAll(),array());
+				$this->FILTERS=CSession::getOr('CTableFilters'.$this->modelName.CRoute::getAll(),array());
 			
-			if(!empty($FILTERS)){
+			if(!empty($this->FILTERS)){
 				//debugVar($fields);
 				foreach($fields AS $key=>$fieldName){
-					if(isset($FILTERS[$fieldName]) && (!empty($FILTERS[$fieldName]) || $FILTERS[$fieldName]==='0')){
+					if(isset($this->FILTERS[$fieldName]) && (!empty($this->FILTERS[$fieldName]) || $this->FILTERS[$fieldName]==='0')){
 						$filter=true;
-						$postValue=$FILTERS[$fieldName];
+						$postValue=$this->FILTERS[$fieldName];
 						$condK=$fieldName; $condV=$postValue;
 						
 						$propDef=&$modelName::$__PROP_DEF[$fieldName];

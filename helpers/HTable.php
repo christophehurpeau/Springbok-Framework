@@ -82,12 +82,17 @@ class HTable{
 					$filterField=NULL; $attributes=array(); $filterName='filters['.$field['key'].']';
 					if(isset($field['filter']) && is_array($field['filter'])){
 						$attributes['empty']='';
+						if(isset($component->FILTERS[$field['key']])) $attributes['selected']=$component->FILTERS[$field['key']];
 						$filterField=$form->select($filterName,$field['filter'],$attributes);
 					}elseif(isset($field['tabResult'])){
 						$attributes['empty']='';
+						if(isset($component->FILTERS[$field['key']])) $attributes['selected']=$component->FILTERS[$field['key']];
 						$filterField=$form->select($filterName,$field['tabResult'],$attributes);
 					}
-					if($filterField===NULL) $filterField=$form->input($filterName,$attributes).'</td>';
+					if($filterField===NULL){
+						if(isset($component->FILTERS[$field['key']])) $attributes['value']=$component->FILTERS[$field['key']];
+						$filterField=$form->input($filterName,$attributes);
+					}
 					echo '<td>'.$filterField.'</td>';
 				}
 				if(isset($component->rowActions)) echo '<td></td>';
