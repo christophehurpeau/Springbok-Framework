@@ -152,8 +152,8 @@ class CSecure{
 			if($logConnections) $type=self::CONNECTION_BASIC;
 		}elseif($logConnections) $type=self::CONNECTION_BASIC;
 		if($connected){
-			if($logConnections) self::logConnection($type,true,$user->$login,$connected);
 			CSession::set('user_'.$id,$connected);
+			if($logConnections) self::logConnection($type,true,$user->$login,$connected);
 			static::onAuthenticated($type);
 			if($redirect) Controller::redirect(CSession::getOr(self::BACK_URL,static::config('url_redirect')),true,false);
 			return true;
@@ -196,17 +196,17 @@ class CSecure{
 	public static function onAuthenticated($type){}
 
 
-	private static function logConnection($type,$succeed,$login,$connected=NULL){
+	private static function logConnection($type,$succeed,$login,$connected=null){
 		switch(static::config('logConnections')){
 			case 'sql':
 				$c=new UserConnection;
 				$c->type=$type;
 				$c->succeed=$succeed;
 				$c->login=$login;
-				if($connected!==NULL) $c->connected=$connected;
+				if($connected!==null) $c->connected=$connected;
 				$c->ip=CHttpRequest::getClientIP();
 				$c->insert();
-				if(static::config('userHistory')) UserHistory::add(UserHistory::CONNECT);
+				if(static::config('userHistory') && $succeed) UserHistory::add(UserHistory::CONNECT,$c->id,$connected);
 				break;
 			case 'file':
 				CLogger::get('connections')->log($type.': '.($succeed?'SUCCEED':'FAILED').' - '.$login.($connected!==NULL?(' => '.$connected):''));
