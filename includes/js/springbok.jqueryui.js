@@ -8,11 +8,11 @@
 				value = selected.val() ? selected.text() : "";
 			var input = this.input = $( "<input>" ).addClass('ui-combobox ui-widget ui-widget-content ui-corner-left')
 				.insertAfter( select )
-				.val( value );
+				.val( value ),countOptions=select.children( "option" ).length;
 			if(orgWidth) input.css({'width':orgWidth});
 			input.autocomplete({
 					delay: 0,
-					minLength: 0,
+					minLength:countOptions > 50 ? (countOptions > 1000 ? 4 : 3) : 0,
 					source: function( request, response ) {
 						var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
 						response( select.children( "option" ).map(function() {
@@ -89,7 +89,7 @@
 					$( this ).blur();
 
 					// pass empty string as value to search for, displaying all results
-					input.autocomplete( "search", "" );
+					if(countOptions < 50) input.autocomplete( "search", "" );
 					input.focus();
 				});
 		},
@@ -104,7 +104,7 @@
 	
 	
 	$.fn.ajaxCRDSelectFiltrable=function(url,options){
-		url+='/'; options=options || ''; options.url=options.url || '';
+		url+='/'; options=options || {}; options.url=options.url || '';
 		$.each(this,function(i,div){
 			div=$(div);
 			var select=div.find('select:first').combobox(), val, t, o,
