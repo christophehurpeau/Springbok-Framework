@@ -12,7 +12,7 @@
 			if(orgWidth) input.css({'width':orgWidth});
 			input.autocomplete({
 					delay: 0,
-					minLength:countOptions > 50 ? (countOptions > 1000 ? 4 : 3) : 0,
+					minLength:countOptions > 50 ? (countOptions > 1000 ? 3 : 2) : 0,
 					source: function( request, response ) {
 						var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
 						response( select.children( "option" ).map(function() {
