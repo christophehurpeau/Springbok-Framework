@@ -339,7 +339,7 @@ class HForm{
 	}
 	
 	/**
-	 * options['style'] : radio, select
+	 * options['style'] : radio, checkbox
 	 */
 	public function multiple($name,$list,$options=NULL,$containerAttributes=array()){
 		if($options===NULL){ $selected=NULL; $options=array(); }
