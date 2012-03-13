@@ -186,8 +186,7 @@ class Model implements Iterator{
 		$this->$fieldName=$value;
 		$where=array();
 		foreach(static::$__modelInfos['primaryKeys'] as $pkName){
-			$where[$pkName]=$data[$pkName];
-			unset($data[$pkName]);
+			$where[$pkName]=$this->data[$pkName];
 		}
 		if(!static::QUpdateOne()->values(array($fieldName=>$value))->where($where)->execute()) return false;
 	}
