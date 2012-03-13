@@ -292,7 +292,7 @@ class Model implements Iterator{
 	
 	public static function QListName(){
 		$orderByField=&static::$__orderByField;
-		return self::QList()->setFields(array('id',static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
+		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
 	}
 	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return self::QListName()->execute();}
 	public static function findCachedListName(){
