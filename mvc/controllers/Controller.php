@@ -189,29 +189,34 @@ class Controller{
 		include_once CORE.'mvc/views/View.php';
 		if(static::beforeRender()){
 			$v=new AjaxContentView($title,$layout);
-			if($add!==false){
-				if(is_string($add)) $add=array('modelName'=>$add);
-				if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
-				if(!isset($add['formContainer'])) $add['formContainer']=false;
-				if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
-				$form=HForm::create($add['modelName'],$add['form'],$add['formContainer']);
-				foreach($add['fields'] as $field=>$label)
-					echo $form->input($field,array('label'=>$label));
-				echo $form->end(_tC('Add'));
-			}
+			self::_add($add);
 			HTable::table($table);
 			$v->render();
 		}
 	}
 	
-	protected static function renderEditableTable($title,&$table,$pkField,$url,$layout=null){
+	protected static function renderEditableTable($title,&$table,$pkField,$url,$add=false,$layout=null){
 		include_once CORE.'mvc/views/View.php';
 		if(static::beforeRender()){
 			$v=new AjaxContentView($title,$layout);
+			self::_add($add);
 			HTableEditable::table($table,$pkField,$url);
 			$v->render();
 		}
 		
+	}
+	
+	private static function _add($add){
+		if($add!==false){
+			if(is_string($add)) $add=array('modelName'=>$add);
+			if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
+			if(!isset($add['formContainer'])) $add['formContainer']=false;
+			if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
+			$form=HForm::create($add['modelName'],$add['form'],$add['formContainer']);
+			foreach($add['fields'] as $field=>$label)
+				echo $form->input($field,array('label'=>$label));
+			echo $form->end(_tC('Add'));
+		}
 	}
 	
 	public static function cacheFor($time){
