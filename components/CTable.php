@@ -25,7 +25,7 @@ class CTable{
 		$this->queryFields=$fields=$this->query->getFields();
 		if($fields===NULL) $fields=$modelName::$__modelInfos['colsName'];
 		
-		$belongsToFields=&$this->belongsToFields;
+		$belongsToFields=&$this->belongsToFields; $belongsToRel=array();
 		if($this->autoBelongsTo!==false && $belongsToFields!==false && empty($this->belongsToFields)){
 			foreach($modelName::$__modelInfos['relations'] as $relKey=>&$rel)
 				if($rel['reltype']==='belongsTo' && in_array($rel['foreignKey'],$fields)) $belongsToFields[$rel['foreignKey']]=$relKey;
@@ -35,7 +35,8 @@ class CTable{
 		
 		if($this->filter===true){
 			if($this->autoBelongsTo!==false) foreach($belongsToFields as $field=>$relKey){
-				$relModelName=$modelName::$_relations[$relKey]['modelName'];
+				$belongsToRel[$field]=$modelName::$_relations[$relKey];
+				$relModelName=$belongsToRel[$field]['modelName'];
 				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
 				elseif(is_array($this->autoBelongsTo) && isset($this->autoBelongsTo[$field]))
 					$belongsToFields[$field]=$relModelName::QList()->setFields(array('id',$relModelName::$__displayField))->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'forceJoin'=>true));
@@ -53,12 +54,17 @@ class CTable{
 				$this->FILTERS=CSession::getOr('CTableFilters'.$this->modelName.CRoute::getAll(),array());
 			
 			if(!empty($this->FILTERS)){
-				//debugVar($fields);
 				foreach($fields AS $key=>$fieldName){
 					if(isset($this->FILTERS[$fieldName]) && (!empty($this->FILTERS[$fieldName]) || $this->FILTERS[$fieldName]==='0')){
 						$filter=true;
 						$postValue=$this->FILTERS[$fieldName];
-						$condK=$fieldName; $condV=$postValue;
+						if(isset($belongsToFields[$fieldName])){
+							$rel=$belongsToRel[$fieldName];
+							$relModelName=$rel['modelName'];
+							$condK=$rel['alias'].'.'.$relModelName::$__displayField;
+						}else $condK=$fieldName;
+						
+						$condV=$postValue;
 						
 						$propDef=&$modelName::$__PROP_DEF[$fieldName];
 						$type=$propDef['type'];
@@ -201,6 +207,8 @@ class CTable{
 						if(!isset($val['icons'])) $val['icons']=array(false=>'disabled',true=>'enabled',''=>'enabled');
 						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='25';
 						$val['filter']=array('1'=>_tC('Yes'),'0'=>_tC('No'));
+					}elseif($type==='float'){
+						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='130';
 					}elseif($modelName !== NULL && isset($modelName::$__modelInfos['columns'][$key])){
 						$infos=$modelName::$__modelInfos['columns'][$key];
 						if($infos['type']==='datetime'){
