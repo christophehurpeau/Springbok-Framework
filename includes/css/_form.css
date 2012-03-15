@@ -18,13 +18,13 @@ legend{
 	padding:2px 6px;
 }
 
-div.input label,div.textarea label,form .radio .title{
+div.input label,div.textarea label,div.checkboxes > label,form .radio .title{
 	display:block;display:inline-block;
 	width:FORM_LABEL_WIDTH;
 	padding:1px 3px;
 	vertical-align:top;
 }
-div.input.select label{vertical-align:middle}
+div.input.select label,div.radio label{vertical-align:middle}
 .large-label div.input label,.large-label .radio .title{
 	width:FORM_LARGE_LABEL_WIDTH;
 }
@@ -123,7 +123,7 @@ tr.form td{border:1px solid #C4C4C4; padding:0}
 
 .checkboxes.mosaic{
 	float:left; width:100%; clear:both;
-	.checkbox{float:left;display:block;margin:0 5px 3px 2px;}
+	.checkbox,label{float:left;display:block;margin:0 5px 3px 2px;}
 }
 
 input.bigInput, form.big .text input{
