@@ -178,7 +178,7 @@ class HTable{
 	public static function export($type,&$component,&$fields,&$exportOutput,$filename,$title){
 		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache
 		$transformerClass='T'.ucfirst($type);
-		if($exportOutput===null && false){
+		if($exportOutput===null){
 			header('Content-Description: File Transfer');
 			header("Content-Disposition: attachment; filename=".date('Y-m-d')."_".$filename.".".$type);
 			Controller::noCache();
