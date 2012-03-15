@@ -566,6 +566,7 @@ abstract class QFind extends QSelect{
 		if(isset($w['limit'])) $query->limit($w['limit']);
 		if($moreWith!==NULL) $query->setAllWith($moreWith);
 		if(isset($w['groupResBy'])) $query->groupResBy($w['groupResBy']);
+		if(isset($w['tabResKey'])) $query->tabResKey($w['tabResKey']);
 		return $query;
 	}
 	
