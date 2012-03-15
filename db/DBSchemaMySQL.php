@@ -126,7 +126,9 @@ class DBSchemaMySQL extends DBSchema{
 	}
 	
 	public function removeIndex($name){
-		$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$name.'`');
+		try{
+			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$name.'`');
+		}catch(DBException $ex){}
 	}
 	
 	public function getIndexes(){
