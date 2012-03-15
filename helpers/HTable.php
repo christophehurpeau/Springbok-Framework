@@ -42,7 +42,7 @@ class HTable{
 				return ' href="#" onclick="return changePage('.$page.');"';
 			}:function($page) use(&$href){
 				return ' href="'.$href.'page='.$page.'"';
-			}).'</div>';
+			},3,3,null,null).'</div>';
 		}else $pager=false;
 
 
