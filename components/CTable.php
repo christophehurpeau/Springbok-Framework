@@ -57,19 +57,26 @@ class CTable{
 				foreach($fields AS $key=>$fieldName){
 					if(isset($this->FILTERS[$fieldName]) && (!empty($this->FILTERS[$fieldName]) || $this->FILTERS[$fieldName]==='0')){
 						$filter=true;
+						
 						$postValue=$this->FILTERS[$fieldName];
 						if(isset($belongsToFields[$fieldName])){
 							$rel=$belongsToRel[$fieldName];
 							$relModelName=$rel['modelName'];
-							$condK=$rel['alias'].'.'.$relModelName::$__displayField;
-						}else $condK=$fieldName;
+							$relFieldName=$relModelName::$__displayField;
+							$condK=$rel['alias'].'.'.$relFieldName;
+							
+							$propDef=&$relModelName::$__PROP_DEF[$relFieldName];
+							$type=$propDef['type'];
+						}else{
+							$condK=$fieldName;
+							
+							$propDef=&$modelName::$__PROP_DEF[$fieldName];
+							$type=$propDef['type'];
+						}
+						$condV=CBinder::bind($type,$postValue);
 						
-						$condV=$postValue;
 						
-						$propDef=&$modelName::$__PROP_DEF[$fieldName];
-						$type=$propDef['type'];
 						
-						$condV=CBinder::bind($type,$condV);
 						
 						if(is_int($condV) || is_float($condV)){
 							
