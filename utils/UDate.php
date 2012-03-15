@@ -18,4 +18,15 @@ class UDate{
 		}
 		return strtotime($year.'-'.$month.'-'.min($day,self::getDaysInMonth($year,$month)));
 	}
+	
+	public static function removeMonths($time,$months){
+		$day=date('j',$time);
+		$month=date('m',$time) - $months;
+		$year=date('Y',$time);
+		while($month<0){
+			$month+=12;
+			$year--;
+		}
+		return strtotime($year.'-'.$month.'-'.min($day,self::getDaysInMonth($year,$month)));
+	}
 }
