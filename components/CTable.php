@@ -75,9 +75,6 @@ class CTable{
 						}
 						$condV=CBinder::bind($type,$postValue);
 						
-						
-						
-						
 						if(is_int($condV) || is_float($condV)){
 							
 						}elseif(is_string($condV)){

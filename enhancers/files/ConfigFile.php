@@ -180,8 +180,9 @@ class ConfigFile extends PhpFile{
 		$content='<?php class Config{public static ';
 		$afterContent="define('STATIC_URL',";
 		if(isset($configArray['static_url'])){
-			$afterContent.=UPhp::exportString(rtrim($configArray['static_url'],'/').'/');
-			unset($configArray['static_url']);
+			$configArray['static_url']=rtrim($configArray['static_url'],'/');
+			$afterContent.=UPhp::exportString($configArray['static_url'].'/');
+			/*unset($configArray['static_url']);*/
 		}else $afterContent.="BASE_URL.'/web/'";
 		$afterContent.=".WEB_FOLDER);";
 		
