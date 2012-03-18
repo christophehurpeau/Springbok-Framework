@@ -16,7 +16,7 @@ class Springbok{
 	public static $scriptname='index',$prefix='',$suffix='';
 
 	public static function load($class_name,$path,$default_path){
-		if(strtoupper($class_name[1])===$class_name[1]){
+		if(ctype_upper($class_name[1])){
 			switch($class_name[0]){
 	    		case 'C': include $path.'components/'.$class_name.'.php'; break;
 	    		case 'H': include $path.'helpers/'.$class_name.'.php'; break;
