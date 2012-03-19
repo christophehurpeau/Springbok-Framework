@@ -33,8 +33,4 @@
 			});
 		}
 	}
-	
-	
-	function Controller(){
-	}
 }());

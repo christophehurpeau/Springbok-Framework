@@ -4,18 +4,17 @@ includeCore('springbok.base');
 S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 
 (function($){
-	var readyCallbacks=$.Callbacks();
+	var readyCallbacks=$.Callbacks(),loadedRequired={};
 	S.app={
 		name:'',version:1,
-		header:'',footer:true,
+		header:'',footer:true,page:0,
+		controllers:{},layouts:{},
 		
 		jsapp:function(name,version){this.name=name;this.version=version;},
 		
 		init:function(){
 			if(this.footer===true) this.footer=this.name+' | '+S.dates.niceDateTime(this.version*1000)+' | '+S.html.powered();
-			$('#container').html('').append($('<header/>').html(this.header))
-				.append('<div id="page"/>')
-				.append($('<footer/>').html(this.footer));
+			$('#container').html('').append($('<header/>').html(this.header),this.page=$('<div id="page"/>'),$('<footer/>').html(this.footer));
 		},
 		
 		ready:function(callback){
@@ -26,6 +25,13 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 			S.app.init();
 			readyCallbacks.fire();
 			S.history.loadUrl();//TODO duplicate if #
+		},
+		
+		require:function(fileName){
+			if(!loadedRequired[fileName]){
+				loadedRequired[fileName]=true;
+				S.loadSyncScript(staticUrl+'js/app/'+fileName+'.js');
+			}
 		}
 	};
 	S.ready=S.app.ready;
@@ -34,6 +40,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 includeCore('jsapp/httpexceptions');
 includeCore('jsapp/langs');
 includeCore('jsapp/controller');
+includeCore('jsapp/layout');
 includeCore('springbok.router');
 includeCore('springbok.html');
 includeCore('springbok.menu');
@@ -48,10 +55,8 @@ S.history.loadUrl=function(fragmentOverride){
 		try{
 			var route=S.router.find(fragment);
 			console.log(route);
-			if(!loadedControllers[route.controller]){
-				loadedControllers[route.controller]=true;
-				S.loadSyncScript(staticUrl+'js/jsapp/'+route.controller+'.js');
-			}
+			S.app.require('c/'+route.controller);
+			S.app.controllers[route.controller].dispatch(route);
 			
 		}catch(err){
 			if(err instanceof HttpException){
@@ -61,5 +66,3 @@ S.history.loadUrl=function(fragmentOverride){
 		}
 	}
 };
-
-S.app.run();
