@@ -1,14 +1,13 @@
 <?php
 class FSecureAdmin extends CSecure{
-	private static $_config,$_user;
+	private static $_config;
 	
 	public static function init(){
-		self::$_config=self::loadConfig('secure-admin');
+		self::$_config=self::loadConfig('secure-maj');
 	}
 	
 	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
 	protected static function &config($name){ return self::$_config[$name]; }
-	public static function &user(){ return self::$_user; }
 	
 	
 	public static function createCookie($user){
