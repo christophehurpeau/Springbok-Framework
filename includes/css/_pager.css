@@ -1,11 +1,16 @@
-div.totalResults{
+/*div.totalResults{
 	float:left;
 	font-weight: bold;
 	font-style: italic;
 }
 form div.totalResults{
 	text-align:right;
+}*/
+div.totalResults{
+	font-size:8pt; font-style:italic;
+	text-align:center;
 }
+
 div.filterHelp{
 	float:left;
 	font-size: 8pt;

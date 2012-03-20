@@ -289,6 +289,8 @@ class Model implements Iterator{
 	public static function findAll(){return self::QAll()->execute();}
 	public static function findOne(){return self::QOne()->execute();}
 	
+	public static function Table(){return new QTable(static::$__className);}
+	
 	public static function QListName(){
 		$orderByField=&static::$__orderByField;
 		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);

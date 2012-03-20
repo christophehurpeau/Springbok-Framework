@@ -30,18 +30,25 @@ table.table td{
 }*/
 
 table th .order{
-	float:right;
-	height:14px;
-	width:12px;
+	height:8px; width:30px;
+	margin:2px auto;
 	position:relative;
 }
 table .order .arrowUp{
-	arrow-up(5px,#000000);
+	IF(HEADER_COLOR) arrow-up(6px,HEADER_COLOR); ENDIF
+	IFNOT(HEADER_COLOR) arrow-up(6px,#000000); ENDIF
 	position:absolute;
-	top:1px;
+	left:0; bottom:0;
+}
+table .order .arrowUp:hover{
+	arrow-up-override(INTERACTION_HOVER_COLOR);
 }
 table .order .arrowDown{
-	arrow-down(5px,#000000);
+	IF(HEADER_COLOR) arrow-down(6px,HEADER_COLOR); ENDIF
+	IFNOT(HEADER_COLOR) arrow-down(6px,#000000); ENDIF
 	position:absolute;
-	bottom:1px;
+	right:0; bottom:0;
+}
+table .order .arrowDown:hover{
+	arrow-down-override(INTERACTION_HOVER_COLOR);
 }

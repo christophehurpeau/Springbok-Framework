@@ -9,7 +9,8 @@ class CTable{
 		return new CTable($query);
 	}
 	
-	public $modelName,$fields,$modelFields,$queryFields,$fieldsEditable,$rowActions,$defaultAction,$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller,
+	public $modelName,$fields,$modelFields,$queryFields,$fieldsEditable,$rowActions,$defaultAction,
+		$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller,
 		$FILTERS;
 	protected $pagination,$query,$executed,$results,$totalResults;
 
@@ -154,9 +155,7 @@ class CTable{
 			if($exportOutput!==null) return; else exit;
 		}
 		
-		$this->pagination=CPagination::create($this->query);
-		$this->pagination->pageSize(25);
-		$this->pagination->execute($this);
+		$this->pagination=CPagination::create($this->query)->pageSize(25)->execute($this);
 		$this->modelFields=$this->query->getModelFields();
 		$this->totalResults=$this->pagination->getTotalResults();
 		$this->results=$this->pagination->getResults();

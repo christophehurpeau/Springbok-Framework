@@ -20,20 +20,10 @@ include_once __DIR__.DS.'AQuery.php';
  * @author Christophe Hurpeau
  */
 abstract class QSelect extends AQuery{
-	const LEFT=' LEFT JOIN ',INNER=' INNER JOIN ';
+	const LEFT=' LEFT JOIN ',INNER=' INNER JOIN ',RIGHT=' RIGHT JOIN ';
 	
-	protected $fields,$where,$groupBy,$having,$orderBy,$limit;//,$calcFoundRows=false;
+	protected $where,$groupBy,$having,$orderBy,$limit;//,$calcFoundRows=false;
 	protected $calcFoundRows=false,$addByConditions=false;
-	
-	/** @return QSelect */
-	public function &fields($fields){$this->fields=explode(',',$fields);return $this;}
-	/** @return QSelect */
-	public function &field($field){$this->fields=array($field);return $this;}
-	/** @return QSelect */
-	public function &setFields($fields,$params=NULL){$this->fields=$fields;/* DEV */if($params !== NULL) throw new Exception('NOT SUPPORTED !'); /* /DEV */return $this;}
-	
-	public function &getFields(){return $this->fields; }
-	
 	
 	public function &by($query,$values){
 		$fields=explode('And',$query);
@@ -49,6 +39,11 @@ abstract class QSelect extends AQuery{
 	public function &addCondition($key,$value){$this->where[$key]=$value;return $this;}
 	public function &orderBy($orderBy){$this->orderBy=&$orderBy;return $this;}
 	public function &orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
+	public function getOrderBy(){
+		if(is_string($this->orderBy)) return $this->orderBy;
+		foreach($this->orderBy as $k=>$v)
+			return is_int($k) ? $v : $k;
+	}
 	
 	public function &groupBy($groupBy){
 		if(is_string($groupBy)) $groupBy=explode(',',$groupBy);

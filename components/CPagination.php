@@ -4,10 +4,10 @@ class CPagination{
 		return new self($query);
 	}
 	
-	protected $query,$pageSize=15,$page=1,$results,$totalResults,$totalPages=0;
+	protected $query,$pageSize=15,$page=1,$results,$totalResults,$totalPages=0,$return;
 	
-	private function __construct($query){
-		$this->query=$query;
+	private function __construct(&$query){
+		$this->query=&$query; $this->return=&$this;
 		if(isset($_REQUEST['page'])) $this->page=(int)$_REQUEST['page'];
 	}
 	
@@ -20,6 +20,7 @@ class CPagination{
 	public function &getResults(){return $this->results;}
 	public function isEmptyResults(){return empty($this->results);}
 	public function hasPager(){ return $this->pageSize < $this->totalResults;}
+	public function setReturn(&$return){$this->return=&$return;}
 	
 	public function &execute(){
 		/* HIDE *//* DEV */ try{ /* /DEV *//* /HIDE */
@@ -47,7 +48,7 @@ class CPagination{
 			} 
 			
 		}else $this->results=array();
-		return $this;
+		return $this->return;
 	}
 	
 	public function refindResults($page){

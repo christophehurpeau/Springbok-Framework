@@ -36,8 +36,8 @@ function arrow-up($size,$color){
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
 }
 function arrow-up-override($color){
-	border-color: transparent transparent transparent $color;
-	_border-color: pink pink pink $color;
+	border-color: transparent transparent $color transparent;
+	_border-color: pink pink $color pink;
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
 }
 

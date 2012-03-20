@@ -2,7 +2,7 @@
 class HTable{
 	private static $tAligns=array('center'=>'center','right'=>'align_right');
 	
-	public static function table(CTable $component,$displayTotalResults=true){
+	public static function table($component,$displayTotalResults=true){
 		/* DEV */if(!($component instanceof CTable)) throw new Exception('Your component must be an instance of CTable'); /* /DEV */
 		$component->execute();
 		
@@ -14,7 +14,6 @@ class HTable{
 			$form=HForm::create(NULL,array('id'=>$formId,'rel'=>'content'),false,false);
 		}
 
-		if(!empty($results) && $displayTotalResults===true) echo '<div class="totalResults">'.$component->getTotalResults().' '.($component->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		if($component->export!==false){
 			echo '<span class="exportLinks">'; 
 			foreach(explode(',',$component->export[0]) as $exportType)
@@ -46,6 +45,7 @@ class HTable{
 		}else $pager=false;
 
 
+		if(!empty($results) && $displayTotalResults===true) echo '<div class="totalResults">'.$component->getTotalResults().' '.($component->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		echo '<table class="table">';
 		if(!$component->filter && empty($results)) echo '<tr><td>'._tC('No result').'</td></td>';
 		else{
@@ -109,8 +109,9 @@ class HTable{
 			if(empty($results)) echo '<tr><td colspan="'.count($component->fields).'">'._tC('No result').'</td></td>';
 			else static::displayResults($component,$results);
 			
+			echo '</tbody>';
 		}
-		echo '</tbody></table>';
+		echo '</table>';
 		if($component->filter) $form->end(false);
 		echo $pager;
 	}

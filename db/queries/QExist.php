@@ -7,5 +7,5 @@ class QExist extends QFindOne{
 		return $res;
 	}
 	
-	public function &with($with,$options=array()){ $options+=array('fields'=>false,'forceJoin'=>true); self::_addWith($this->with,$with,$options,$this->modelName); return $this;}
+	public function &with($with,$options=array()){ $options+=array('fields'=>false,'forceJoin'=>true); $this->_addWithToQuery($with,$options); return $this;}
 }

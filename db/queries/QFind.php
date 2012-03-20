@@ -1,57 +1,100 @@
 <?php
+/**
+ * SELECT [STRAIGHT_JOIN]
+       [SQL_SMALL_RESULT] [SQL_BIG_RESULT] [SQL_BUFFER_RESULT]
+       [SQL_CACHE | SQL_NO_CACHE] [SQL_CALC_FOUND_ROWS] [HIGH_PRIORITY]
+       [DISTINCT | DISTINCTROW | ALL]
+    select_expression,...
+    [INTO {OUTFILE | DUMPFILE} 'nom_fichier' export_options]
+    [FROM table_references
+      [WHERE where_definition]
+      [GROUP BY {unsigned_integer | nom_de_colonne | formula} [ASC | DESC], ...
+      [HAVING where_definition]
+      [ORDER BY {unsigned_integer | nom_de_colonne | formula} [ASC | DESC] ,...]
+      [LIMIT [offset,] lignes]
+      [PROCEDURE procedure_name(argument_list)]
+      [FOR UPDATE | LOCK IN SHARE MODE]]
+
+ * @author Christophe Hurpeau
+ */
 abstract class QFind extends QSelect{
-	protected $alias,$joins=array(),$with=array(),$queryResultFields,$objData,$joinData,$objFields,$allFields=array();
+	protected $fields=array(0=>null),$alias,$joins=array(),$with=array(),$queryResultFields,$objData,$joinData,$objFields,$allFields=array();
 
 	//private $equalsFieldsInConditions;
 	//public function &calcFoundRows(){$this->calcFoundRows=true;return $this;}
 
+	public function __construct($modelName){
+		parent::__construct($modelName);
+		$this->alias=$modelName::$__alias;
+	}
+
+
+	/** @return QSelect */
+	public function &fields($fields){$this->fields[0]=explode(',',$fields);return $this;}
+	/** @return QSelect */
+	public function &field($field){$this->fields[0]=array($field);return $this;}
+	/** @return QSelect */
+	public function &setFields($fields,$params=NULL){$this->fields[0]=$fields;/* DEV */if($params !== NULL) throw new Exception('NOT SUPPORTED !'); /* /DEV */return $this;}
+	
+	public function &getFields(){return $this->fields[0]; }
+	
+
 	public function &alias($alias){ $this->alias=&$alias; return $this; }
 
-	public function &join($modelName,$fields=NULL,$conditions=array(),$options=array()){
+	public function &join($modelName,$fields=null,$conditions=array(),$options=array()){
 		$this->_join(',',$modelName,$fields,$conditions,$options);
 		return $this;
 	}
-	public function &leftjoin($modelName,$fields=NULL,$onConditions=array(),$options=array()){
-		$this->_join(' LEFT JOIN ',$modelName,$fields,$onConditions,$options);
+	public function &leftjoin($modelName,$fields=null,$onConditions=array(),$options=array()){
+		$this->_join(QSelect::LEFT,$modelName,$fields,$onConditions,$options);
 		return $this;
 	}
-	public function &innerjoin($modelName,$fields=NULL,$onConditions=array(),$options=array()){
-		$this->_join(' INNER JOIN ',$modelName,$fields,$onConditions,$options);
+	public function &innerjoin($modelName,$fields=null,$onConditions=array(),$options=array()){
+		$this->_join(QSelect::INNER,$modelName,$fields,$onConditions,$options);
 		return $this;
 	}
-	public function &rightjoin($modelName,$fields=NULL,$onConditions=array(),$options=array()){
-		$this->_join(' RIGHT JOIN ',$modelName,$fields,$onConditions,$options);
+	public function &rightjoin($modelName,$fields=null,$onConditions=array(),$options=array()){
+		$this->_join(QSelect::RIGHT,$modelName,$fields,$onConditions,$options);
 		return $this;
 	}
-	public function &fulljoin($modelName,$fields=NULL,$onConditions=array(),$options=array()){
+	public function &fulljoin($modelName,$fields=null,$onConditions=array(),$options=array()){
 		$this->_join(' FULL JOIN ',$modelName,$fields,$onConditions,$options);
 		return $this;
 	}
 	/** options: withoutFields, fieldsInModel, dataName */
 	private function _join($type,$modelName,$fields,$onConditions,$options){
-		$join=array('type'=>$type,'modelName'=>$modelName,'fields'=>$fields,'onConditions'=>$onConditions)+$options
+		$join=array('type'=>$type,'modelName'=>$modelName,'onConditions'=>$onConditions)+$options
 			+array('fieldsInModel'=>false,'dataName'=>lcfirst($modelName),'isCount'=>false);
 		if(!isset($join['alias'])) $join['alias']=$modelName::$__alias;
-		$this->joins[$join['alias']]=$join; 
+		$this->joins[$join['alias']]=$join;
+		$this->fields[$join['alias']]=$fields;
 	}
 	
 	public function &setAllWith($with){
 		foreach($with as $key=>&$options){
 			if(is_numeric($key)){ $key=$options; $options=array();}
-			self::_addWith($this->with,$key,$options,$this->modelName);
+			$this->_addWithToQuery($key,$options);
 		};
 		return $this;
 	}
-	public function &with($with,$options=array()){if(!is_array($options)) $options=array('fields'=>$options); self::_addWith($this->with,$with,$options,$this->modelName);return $this;}
+	public function &with($with,$options=array()){if(!is_array($options)) $options=array('fields'=>$options); $this->_addWithToQuery($with,$options);return $this;}
 	
 	public function &withLang($options=array(),$lang=false){
 		if($lang===false) $lang=CLang::get();
 		if(is_string($options)) $options=array('fields'=>$options);
 		$options+=array('fieldsInModel'=>true,'forceJoin'=>true,'onConditions'=>array('lang'=>$lang));
 		$mL=$this->modelName.'Lang';
-		self::_addWith($this->with,$mL,$options,$this->modelName);
+		$this->_addWithToQuery($mL,$options);
 		return $this;
-	}	
+	}
+	
+	protected function _addWithToQuery($key,$options){
+		$foptions=self::_addWith($this->with,$key,$options,$this->modelName);
+		
+		if($this->_addWithInJoin($this->modelName,$this->alias,$key,$foptions)===false) return;
+		unset($this->with[$key]);
+		if(isset($foptions['with'])) $this->_recursiveWith($foptions['with'],$foptions['modelName'],$foptions['alias']);
+	}
 	public static function _addWith(&$withArray,&$key,&$options,&$modelName){
 		/* DEV */if(!isset($modelName::$_relations[$key])) throw new Exception($modelName.' does not have a relation named "'.$key.'"'."\n".'Known relations : '.implode(', ',array_keys($modelName::$_relations))); /* /DEV */
 		$relation=&$modelName::$_relations[$key];
@@ -63,7 +106,7 @@ abstract class QFind extends QSelect{
 	
 		if(isset($foptions['fields']) && is_string($foptions['fields'])) $foptions['fields']=explode(',',$foptions['fields']);
 		if(isset($foptions['with'])) foreach($foptions['with'] as $kW=>&$opW){ if(is_int($kW)){unset($foptions['with'][$kW]); $kW=$opW;$opW=array();} self::_addWith($foptions['with'],$kW,$opW,$foptions['modelName']); }
-		$withArray[$key]=&$foptions;
+		return $withArray[$key]=&$foptions;
 	}
 	
 	
@@ -97,6 +140,8 @@ abstract class QFind extends QSelect{
 			else $options['onConditions']=$onConditions;
 			$options['reltype']=substr($join['reltype'],0,-7);
 			unset($options['joins']);
+			if(is_string($options['fields'])) $options['fields']=explode(',',$options['fields']);
+			$this->fields[$options['alias']]=&$options['fields'];
 			$this->joins[$options['alias']]=$options;
 		}else{
 			if($join['foreignKey']!==false){
@@ -104,6 +149,8 @@ abstract class QFind extends QSelect{
 				if(isset($join['onConditions'])) $join['onConditions']=array_merge($join['onConditions'],$onConditions);
 				else $join['onConditions']=$onConditions;
 			}
+			if(is_string($join['fields'])) $join['fields']=explode(',',$join['fields']);
+			$this->fields[$join['alias']]=&$join['fields'];
 			$this->joins[$join['alias']]=$join;
 		}
 		return true;
@@ -126,23 +173,17 @@ abstract class QFind extends QSelect{
 	public function &_toSQL($currentDb=NULL){
 		$modelName=&$this->modelName;
 		
-		$modelAlias=$this->alias!==NULL?$this->alias:(!empty($this->with) || !empty($this->joins)?$modelName::$__alias:NULL);
+		$modelAlias=(!empty($this->with) || !empty($this->joins)?$this->alias:null);
 		
-		if(!empty($this->with)){
-			foreach($this->with as $key=>$join){
-				if($this->_addWithInJoin($modelName,$modelAlias,$key,$join)===false) continue;
-				unset($this->with[$key]);
-				if(isset($join['with'])) $this->_recursiveWith($join['with'],$join['modelName'],$join['alias']);
-			}
-		}
-
-		$fieldPrefix=$modelAlias!==NULL?$modelAlias.'.':'';
+		$fieldPrefix=$modelAlias!==null?$modelAlias.'.':'';
 
 		$sql=$this->_SqlStart();
 		
-		if(isset($this->fields)){
-			if($this->fields){
-				foreach($this->fields as $field=>$alias){
+		$fields=$this->fields;
+		$modelFields=&$fields[0];
+		if($modelFields!==null){
+			if($modelFields){
+				foreach($modelFields as $field=>$alias){
 					if(is_int($field)){ $field=$alias; $alias=false;}
 					/*if($aspos=strpos($field,' AS')){
 						$fieldAlias=$this->allFields['_'][]=substr($field,$aspos+4);
@@ -178,15 +219,17 @@ abstract class QFind extends QSelect{
 			}	
 			$sql.=$fieldPrefix.'*,';
 		}
-
-		if(!empty($this->joins)){
+		
+		unset($fields[0]);
+		
+		if(!empty($fields)){
 			$hasCount=false;
-			foreach($this->joins as $join){
+			foreach($fields as $joinKey=>$joinFields){
+				$join=&$this->joins[$joinKey];
 				$joinModelName=$join['modelName'];
 				if(isset($join['fields'])){
 					if($join['fields']!==false){
-						if(is_string($join['fields'])) $join['fields']=explode(',',$join['fields']);
-						foreach($join['fields'] as $field=>$alias){
+						foreach($joinFields as $field=>$alias){
 							if(is_int($field)){ $field=$alias; $alias=false;}
 							if($fpos=strpos($field,'(')){
 								$sql.=$field;
@@ -236,7 +279,7 @@ abstract class QFind extends QSelect{
 		$sql=substr($sql,0,-1).' FROM '.($currentDb!==NULL && $currentDb->getDbName() !== $modelName::$__modelDb->getDbName()?$modelName::$__modelDb->getDbName().'.':'').$modelName::_fullTableName();
 		if($modelAlias!==NULL) $sql.=' '.$modelAlias;
 		
-		if(!empty($this->joins)){
+		if(!empty($this->joins)){debugVar($this->joins);
 			foreach($this->joins as $join){
 				$sql.=$join['type'].($modelName::$__dbName!==$join['modelName']::$__dbName || ($currentDb!==NULL && $currentDb->getDbName() !== $join['modelName']::$__modelDb->getDbName())?$join['modelName']::$__modelDb->getDbName().'.':'')
 					.$join['modelName']::_fullTableName().' '.$join['alias'];
