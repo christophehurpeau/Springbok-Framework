@@ -3,7 +3,7 @@ class FSecureAdmin extends CSecure{
 	private static $_config;
 	
 	public static function init(){
-		self::$_config=self::loadConfig('secure-maj');
+		self::$_config=self::loadConfig('secure-admin');
 	}
 	
 	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
