@@ -90,7 +90,6 @@ abstract class QFind extends QSelect{
 	
 	protected function _addWithToQuery($key,$options){
 		$foptions=self::_addWith($this->with,$key,$options,$this->modelName);
-		
 		if($this->_addWithInJoin($this->modelName,$this->alias,$key,$foptions)===false) return;
 		unset($this->with[$key]);
 		if(isset($foptions['with'])) $this->_recursiveWith($foptions['with'],$foptions['modelName'],$foptions['alias']);
@@ -110,8 +109,16 @@ abstract class QFind extends QSelect{
 	}
 	
 	
-	public function &_setWith(&$with){$this->with=&$with;return $this;}
-	public function &_setJoin(&$join){$this->join=&$join;return $this;}
+	public function &_setWith(&$with){
+		foreach($with as $key=>&$options){
+			if($this->_addWithInJoin($this->modelName,$this->alias,$key,$options)===false) $this->with[$key]=$options;
+			else{
+				if(isset($options['with'])) $this->_recursiveWith($options['with'],$options['modelName'],$options['alias']);
+			}
+		}
+		return $this;
+	}
+	public function &_setJoin(&$join){$this->joins=&$join;return $this;}
 	
 	private function _addWithInJoin(&$modelName,&$modelAlias,&$key,&$join,$inRecursive=false){
 		$joinModelName=&$join['modelName'];
@@ -140,20 +147,22 @@ abstract class QFind extends QSelect{
 			else $options['onConditions']=$onConditions;
 			$options['reltype']=substr($join['reltype'],0,-7);
 			unset($options['joins']);
-			if(is_string($options['fields'])) $options['fields']=explode(',',$options['fields']);
-			$this->fields[$options['alias']]=&$options['fields'];
-			$this->joins[$options['alias']]=$options;
+			$this->_addJoinInJoin($options);
 		}else{
 			if($join['foreignKey']!==false){
 				$onConditions=array($modelAlias.'.'.$join['foreignKey'].'='.$join['alias'].'.'.$join['associationForeignKey']);
 				if(isset($join['onConditions'])) $join['onConditions']=array_merge($join['onConditions'],$onConditions);
 				else $join['onConditions']=$onConditions;
 			}
-			if(is_string($join['fields'])) $join['fields']=explode(',',$join['fields']);
-			$this->fields[$join['alias']]=&$join['fields'];
-			$this->joins[$join['alias']]=$join;
+			$this->_addJoinInJoin($join);
 		}
 		return true;
+	}
+
+	private function _addJoinInJoin(&$join){
+		if(is_string($join['fields'])) $join['fields']=explode(',',$join['fields']);
+		$this->fields[$join['alias']]=$join['fields'];
+		$this->joins[$join['alias']]=$join;
 	}
 	
 	private function _recursiveWith(&$with,&$modelName,&$alias){
@@ -279,8 +288,8 @@ abstract class QFind extends QSelect{
 		$sql=substr($sql,0,-1).' FROM '.($currentDb!==NULL && $currentDb->getDbName() !== $modelName::$__modelDb->getDbName()?$modelName::$__modelDb->getDbName().'.':'').$modelName::_fullTableName();
 		if($modelAlias!==NULL) $sql.=' '.$modelAlias;
 		
-		if(!empty($this->joins)){debugVar($this->joins);
-			foreach($this->joins as $join){
+		if(!empty($this->joins)){
+			foreach($this->joins as &$join){
 				$sql.=$join['type'].($modelName::$__dbName!==$join['modelName']::$__dbName || ($currentDb!==NULL && $currentDb->getDbName() !== $join['modelName']::$__modelDb->getDbName())?$join['modelName']::$__modelDb->getDbName().'.':'')
 					.$join['modelName']::_fullTableName().' '.$join['alias'];
 				if(!empty($join['onConditions'])){

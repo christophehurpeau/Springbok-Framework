@@ -35,21 +35,21 @@ class QFindAll extends QFind{
 		$countQuery = new QCount($modelName);
 		
 		$join=$this->joins;$with=$this->with;
+		if(!empty($this->where)){
 		if($join)
 			foreach($join as &$j) $j['fields']=false;
-		if($with)
+		/*if($with)
 			foreach($with as &$w){
 				$w['fields']=false;
 				if(isset($w['with'])) foreach($w['with'] as &$w2) $w2['fields']=false;
 			}
-		
-		if(!empty($this->where)){
-			$countQuery->where($this->where)
-				->_setJoin($join)
-				->_setWith($with);
+		*/
+			$countQuery->where($this->where)->_setJoin($join);
+				//->_setWith($with);
 		}
 		$countQuery->having($this->having);
-		if($this->groupBy) $countQuery->setCountField('DISTINCT '.(!empty($this->where)&&($join||$with) && strpos($this->groupBy[0],'.')===false?$modelName::$__alias.'.':'').$this->groupBy[0]);
+		if($this->groupBy) $countQuery->setCountField('DISTINCT '.(!empty($this->where)&&($join/*||$with*/)
+					 && strpos($this->groupBy[0],'.')===false?$modelName::$__alias.'.':'').$this->groupBy[0]);
 		return $countQuery;
 	}
 	
