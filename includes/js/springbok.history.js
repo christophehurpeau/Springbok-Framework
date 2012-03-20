@@ -77,12 +77,14 @@
 		
 		navigate:function(fragment,state){
 			var frag = (fragment || '').replace(this.hashStrip, '');
+			if(frag.substr(0,1)==='?') frag=window.location.pathname+frag;
 			if(window._gaq!==undefined) _gaq.push(['_trackPageview',frag]);
 			if(this.fragment == frag || this.fragment == decodeURIComponent(frag)) return;
 			if(this._hasPushState){
 				var loc = window.location;
 				if (frag.indexOf(this.options.root) != 0) frag = this.options.root + frag;
 				this.fragment = frag;
+				/*if(console && console.log) console.log('push: '+loc.protocol + '//' + loc.host + frag);*/
 				window.history.pushState({}, document.title, loc.protocol + '//' + loc.host + frag);
 			}else{
 				window.location.hash = this.fragment = frag;

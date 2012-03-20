@@ -61,7 +61,7 @@ includeCore('springbok.history');
 			divContent=divVariable.is('.content') && divVariable.has('h1').length===0 ? divVariable : divVariable.find('.content:first');
 		},
 		load:function(url,data,type){
-			if(url.substr(0,1)==='?') url=location.href+url;
+			if(url.substr(0,1)==='?') url=location.pathname+url;
 			var ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
 			if(type==='post' && data) url+=(url.indexOf('?')==-1?'?':'&')+data;

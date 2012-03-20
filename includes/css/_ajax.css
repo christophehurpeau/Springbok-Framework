@@ -1,5 +1,5 @@
 .globalAjaxLoading{
-	position:absolute;top:1px;right:10px;
+	position:absolute;position:fixed;top:1px;right:10px;
 	z-index:999999;
 	padding:1px 7px 1px 5px;
 	line-height:16px;

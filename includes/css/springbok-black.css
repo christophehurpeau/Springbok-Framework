@@ -30,16 +30,7 @@
 @CONST COLOR_COMPARE_SAME='#464';
 @CONST COLOR_COMPARE_DIFF='#644';
 
-@includeCore '_global.css';
-@includeCore '_form.css';
-@includeCore '_table.css';
-@includeCore '_page.css';
-@includeCore '_menu.css';
-@includeCore '_pager.css';
-@includeCore '_springbok.css';
-@includeCore '_actions.css';
-@includeCore '_icons.css';
-@includeCore '_ui.css';
+@includeCore '_default.css';
 
 
 @CONST INTERACTION_DEFAULT_COLOR='#F5F5F5';

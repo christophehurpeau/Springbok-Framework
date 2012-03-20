@@ -25,16 +25,16 @@ class CTable{
 		$this->queryFields=$fields=$this->query->getFields();
 		if($fields===NULL) $fields=$modelName::$__modelInfos['colsName'];
 		
+		if($this->controller===null && ($this->defaultAction!==null || $this->rowActions!==null))
+			$this->controller=lcfirst(CRoute::getController());
+		
 		$belongsToFields=&$this->belongsToFields; $belongsToRel=array();
-		if($this->autoBelongsTo!==false && $belongsToFields!==false && empty($this->belongsToFields)){
-			foreach($modelName::$__modelInfos['relations'] as $relKey=>&$rel)
-				if($rel['reltype']==='belongsTo' && in_array($rel['foreignKey'],$fields)) $belongsToFields[$rel['foreignKey']]=$relKey;
-		}
-		
-		if($this->controller===null && ($this->defaultAction!==null || $this->rowActions!==null)) $this->controller=lcfirst(CRoute::getController());
-		
-		if($this->filter===true){
-			if($this->autoBelongsTo!==false) foreach($belongsToFields as $field=>$relKey){
+		if($this->autoBelongsTo!==false){
+			if($belongsToFields!==false && empty($this->belongsToFields)){
+				foreach($modelName::$__modelInfos['relations'] as $relKey=>&$rel)
+					if($rel['reltype']==='belongsTo' && in_array($rel['foreignKey'],$fields)) $belongsToFields[$rel['foreignKey']]=$relKey;
+			}
+			foreach($belongsToFields as $field=>$relKey){
 				$belongsToRel[$field]=$modelName::$_relations[$relKey];
 				$relModelName=$belongsToRel[$field]['modelName'];
 				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
@@ -42,14 +42,31 @@ class CTable{
 					$belongsToFields[$field]=$relModelName::QList()->setFields(array('id',$relModelName::$__displayField))->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'forceJoin'=>true));
 				else $this->query->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
 			}
-			
+		}
+		$SESSION_SUFFIX=$this->modelName.CRoute::getAll();
+		
+		if(isset($_GET['orderBy']) && in_array($_GET['orderBy'],$fields)){
+			CSession::set('CTableOrderBy'.$SESSION_SUFFIX,$orderByField=$_GET['orderBy']);
+			CSession::set('CTableOrderByWay'.$SESSION_SUFFIX,isset($_GET['orderByDesc'])?'DESC':'ASC');
+		}else $orderByField=CSession::getOr('CTableOrderBy'.$SESSION_SUFFIX);
+		
+		if($orderByField !==null){
+			if(isset($belongsToFields[$orderByField])){
+				$rel=$belongsToRel[$orderByField];
+				$relModelName=$rel['modelName'];
+				$orderByField=$rel['alias'].'.'.$relModelName::$__displayField;
+			}
+			$this->query->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
+		}
+		
+		if($this->filter===true){
 			$filter=false;
 			if(!empty($_POST['filters'])){
 				$this->FILTERS=$_POST['filters'];
-				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$this->FILTERS);
+				CSession::set('CTableFilters'.$SESSION_SUFFIX,$this->FILTERS);
 			}elseif(!empty($_GET['filters'])){
 				$this->FILTERS=$_GET['filters'];
-				CSession::set('CTableFilters'.$this->modelName.CRoute::getAll(),$this->FILTERS);
+				CSession::set('CTableFilters'.$SESSION_SUFFIX,$this->FILTERS);
 			}else
 				$this->FILTERS=CSession::getOr('CTableFilters'.$this->modelName.CRoute::getAll(),array());
 			

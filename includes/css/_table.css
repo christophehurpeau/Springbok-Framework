@@ -28,3 +28,20 @@ table.table td{
 /*table.table tr:hover{
 	background:INTERACTION_HOVER_COLOR;
 }*/
+
+table th .order{
+	float:right;
+	height:14px;
+	width:12px;
+	position:relative;
+}
+table .order .arrowUp{
+	arrow-up(5px,#000000);
+	position:absolute;
+	top:1px;
+}
+table .order .arrowDown{
+	arrow-down(5px,#000000);
+	position:absolute;
+	bottom:1px;
+}

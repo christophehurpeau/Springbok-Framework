@@ -1,0 +1,54 @@
+.arrow{
+	width:0; height:0; line-height:0;
+	border-style:solid;
+	display:block;
+}
+a.arrow{outline:none}
+
+function arrow-left($size,$color){
+	border-width: $size $size $size 0;
+	border-color: transparent $color transparent transparent;
+	_border-color: pink $color pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+function arrow-left-override($color){
+	border-color: transparent $color transparent transparent;
+	_border-color: pink $color pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+
+function arrow-right($size,$color){
+	border-width: $size $size $size 0;
+	border-color: transparent transparent transparent $color;
+	_border-color: pink pink pink $color;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+function arrow-right-override($color){
+	border-color: transparent transparent transparent $color;
+	_border-color: pink pink pink $color;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+
+function arrow-up($size,$color){
+	border-width: 0 $size $size $size;
+	border-color: transparent transparent $color transparent;
+	_border-color: pink pink $color pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+function arrow-up-override($color){
+	border-color: transparent transparent transparent $color;
+	_border-color: pink pink pink $color;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+
+function arrow-down($size,$color){
+	border-width: $size $size 0 $size;
+	border-color: $color transparent transparent transparent;
+	_border-color: $color pink pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+function arrow-down-override($color){
+	border-color: $color transparent transparent transparent;
+	_border-color: $color pink pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
