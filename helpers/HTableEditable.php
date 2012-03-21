@@ -1,7 +1,7 @@
 <?php
 class HTableEditable extends HTable{
 	private static $form,$modelName,$pkField,$pkValue;
-	public static function table(CTable $component,$pkField=null,$url=null,$displayTotalResults=true){
+	public static function table($component,$pkField=null,$url=null,$displayTotalResults=true){
 		self::$form=new HForm(self::$modelName=$component->getModelName(),null,'get','div',false,false);
 		self::$pkField=&$pkField;
 		echo HHtml::jsInline('var editableTable=new HTableEditable('.json_encode(HHtml::url($url)).')');
