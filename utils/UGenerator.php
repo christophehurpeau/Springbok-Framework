@@ -25,7 +25,7 @@ class UGenerator{
 		elseif($node !== '127.0.0.1') $node = ip2long($node);
 		else $node = null;
 
-		if(empty($node)) $node = crc32(CSecure::getSalt());
+		if(empty($node)) $node = crc32(USecure::getSalt());
 
 		if(function_exists('zend_thread_id')) $pid = zend_thread_id();
 		else $pid = getmypid();

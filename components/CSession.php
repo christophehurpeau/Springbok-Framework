@@ -6,7 +6,7 @@ class CSession{
 		session_set_cookie_params(5760,HHtml::url('/'));
 		self::start();
 		/*if(self::$_config['checkAgent']){
-			$agent=md5($_SERVER['HTTP_USER_AGENT'].CSecure::getSalt());
+			$agent=md5($_SERVER['HTTP_USER_AGENT'].USecure::getSalt());
 		}*/
 	}
 	public static function start(){

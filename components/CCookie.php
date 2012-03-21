@@ -48,7 +48,7 @@ class CCookie{
 	public function __construct($name,$config){
 		$this->name=$name; $this->config=$config;
 		if(isset($_COOKIE[$name])){
-			$decrytpeddata=CSecure::decryptAES($_COOKIE[$name],$config['key']);
+			$decrytpeddata=USecure::decryptAES($_COOKIE[$name],$config['key']);
 			if(empty($decrytpeddata)) $this->data=array();
 			else{
 				$jsondata=substr($decrytpeddata,40);
@@ -69,7 +69,7 @@ class CCookie{
 	
 	public function write(){
 		$jsondata=json_encode($this->data);
-		$_COOKIE[$this->name]=CSecure::encryptAES(sha1($jsondata).$jsondata,$this->config['key']);
+		$_COOKIE[$this->name]=USecure::encryptAES(sha1($jsondata).$jsondata,$this->config['key']);
 		return setcookie($this->name,$_COOKIE[$this->name],$this->config['expires'],$this->config['path'],$this->config['domain'],
 			$this->config['https'],$this->config['httponly']);
 	}
