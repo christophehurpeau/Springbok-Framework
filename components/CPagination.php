@@ -36,16 +36,18 @@ class CPagination{
 			else{
 				$down=$this->pageSize*($this->page-1);
 				if(isset($count) && $down > $count){
-					$this->results=array();
-					return $this;
+					throw new FPaginationOverrunException;
 				}
 			}
 			$this->results=$this->query->limit($this->pageSize,$down)->execute();
 			
 			if($hFR){
 				$count=$this->totalResults=$this->query->foundRows();
-				if($count > 0) $this->totalPages=(int)ceil((double)$count / $this->pageSize);
-			} 
+				if($count > 0){
+					$this->totalPages=(int)ceil((double)$count / $this->pageSize);
+					if(empty($this->results)) throw new FPaginationOverrunException;
+				}
+			}
 			
 		}else $this->results=array();
 		return $this->return;

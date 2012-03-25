@@ -8,7 +8,7 @@ form div.totalResults{
 }*/
 div.totalResults{
 	font-size:8pt; font-style:italic;
-	text-align:center;
+	text-align:center; clear:both;
 }
 
 div.filterHelp{

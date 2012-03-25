@@ -73,7 +73,19 @@ class Controller{
 		self::$viewVars=$array+self::$viewVars;
 	}
 	
+	public static function setForView($name,$value){
+		self::$viewVars[$name]=&$value;
+	}
+	
+	public static function setForView_($name,&$value){
+		self::$viewVars[$name]=&$value;
+	}
+	
 	public static function setForLayout($name,$value=null){
+		/* DEV */
+		if(is_array($name))
+			throw new Exception('Controller::setForLayout array => use msetForLayout');
+		/* /DEV */
 		if(is_array($name)) self::$layoutVars=$name+self::$layoutVars;
 		else self::$layoutVars[$name]=&$value;
 	}

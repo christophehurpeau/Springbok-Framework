@@ -14,10 +14,11 @@ class QFindAll extends QFind{
 				foreach($res as $key=>&$row) $finalRes[$row->$grbf][$key]=$row;
 				$res=&$finalRes;
 			}
-			
-			if($this->calcFoundRows===true) $this->calcFoundRows=(int)$this->_db->doSelectValue('SELECT FOUND_ROWS()');
-			$this->_afterQuery_objs($res);
-		}elseif($this->calcFoundRows===true) $this->calcFoundRows=0;
+		}
+		
+		if($this->calcFoundRows===true) $this->calcFoundRows=(int)$this->_db->doSelectValue('SELECT FOUND_ROWS()');
+		
+		if($res) $this->_afterQuery_objs($res);
 		return $res;
 	}
 	
