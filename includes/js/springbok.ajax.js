@@ -51,7 +51,7 @@ includeCore('springbok.history');
 			});
 			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([action^="http://"])',function(){
 				var form=$(this);
-				S.ajax.load(form.attr('action'),form.serialize(),'post');
+				S.ajax.load(form.attr('action'),form.serialize(),form.attr('method')|'post');
 				return false;
 			});
 		},
@@ -64,7 +64,7 @@ includeCore('springbok.history');
 			if(url.substr(0,1)==='?') url=location.pathname+url;
 			var ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
-			if(type==='post' && data) url+=(url.indexOf('?')==-1?'?':'&')+data;
+			if(data) url+=(url.indexOf('?')==-1?'?':'&')+data;
 			
 			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname')||'0':'0';
 			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';

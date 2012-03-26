@@ -4,7 +4,7 @@ $(document).ready(function(){
 		var divFixed=$('div.fixed');
 		if(divFixed.length!==0){
 			checkedDivFixedPosition=true;
-			if(divFixed.css('position')==='fixed') $('header').append('<style type="text/css">html body #page div.fixed{top:68px;}</style>')
+			if(divFixed.css('position')==='fixed') $('head').append('<style type="text/css">#container #page div.fixed{top:'+(parseInt(divFixed.css('top'))+28)+'px;}</style>')
 		}
 	}
 	checkDivFixedPosition();
