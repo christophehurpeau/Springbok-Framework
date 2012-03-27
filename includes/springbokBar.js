@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	var checkedDivFixedPosition=false;
 	function checkDivFixedPosition(){
+		$('#container').addClass('devEnvironnement');
 		var divFixed=$('div.fixed');
 		if(divFixed.length!==0){
 			checkedDivFixedPosition=true;

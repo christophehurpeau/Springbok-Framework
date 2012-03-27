@@ -33,16 +33,12 @@
                     });
                     
                     // Set position
-                    var ww = $(document).width();
-                    var wh = $(document).height();
-                    var w = c.outerWidth(1);
-                    var h = c.outerHeight(1);
-                    var x = e.pageX > (ww - w) ? ww : e.pageX;
-                    var y = e.pageY > (wh - h) ? wh : e.pageY;
+                    var ww = $(document).width(),wh = $(document).height();
+                    var w = c.outerWidth(1),h = c.outerHeight(1);
                     c.css({
                         display : 'block',
-                        top     : y,
-                        left    : x
+                        top     : e.pageY > (wh - h) ? wh : e.pageY,
+                        left    : e.pageX > (ww - w) ? ww : e.pageX
                     });
                 }
             });

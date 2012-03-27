@@ -43,7 +43,7 @@ div.input input{ width:250px; }
 input[type=submit],button{margin:5px 0 3px 10px;}
 
 input[type=radio],input[type=checkbox]{vertical-align:bottom; margin:0 3px;}
-form input.wp100,form textarea{
+div input.wp100,form textarea{
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -51,20 +51,20 @@ form input.wp100,form textarea{
 	width:100%
 }
 
-form input,form textarea{
+div input,div textarea{
 	background:#EDEDED;color:#4C4C4C;
 	border:1px solid #ccc;
 	box-shadow:0 0 10px #eee inset; -moz-box-shadow:0 0 10px #eee inset; -webkit-box-shadow:0 0 10px #eee inset;
 	transition(all,.3s);
 }
-form input:hover, form textarea:hover{background:#FAFAFA}
-form input:focus, form textarea:focus{background:#FFF}
+div input:hover, div textarea:hover{background-color:#FAFAFA}
+div input:focus, div textarea:focus{background-color:#FFF}
 
-form .input{ margin:1px 0; position:relative }
-form .textarea{ margin: 2px 0 }
+div .input{ margin:1px 0; position:relative }
+div .textarea{ margin: 2px 0 }
 
-form .input.text input,form .textarea textarea{border:1px solid #B4B4B4; margin:0;}
-form .input.text input[disabled="disabled"],form .text input[readonly="readonly"]{color:#333; background: #D5D5D5;}
+div .input.text input,div .textarea textarea{border:1px solid #B4B4B4; margin:0;}
+div .input.text input[disabled="disabled"],form .text input[readonly="readonly"]{color:#333; background-color:#D5D5D5;}
 
 .input.text input.default{color:#777;font-style:italic}
 
