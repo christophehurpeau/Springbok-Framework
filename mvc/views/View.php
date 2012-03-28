@@ -118,6 +118,7 @@ class AjaxContentView extends AbstractAjaxView{
 	private $title;
 	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Controller::$defaultLayout;
+		if($layoutNameOverride===null) $layoutNameOverride=Controller::$defaultLayoutOverride;
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
 		if(CSecure::isConnected()) $layoutNameOverride.=CSecure::connected();
 		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXCONTENT'])||$_SERVER['HTTP_SPRINGBOKAJAXCONTENT']!==$layoutNameOverride)===true){

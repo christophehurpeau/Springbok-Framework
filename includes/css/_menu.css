@@ -21,7 +21,7 @@ menu.left ul{
 }
 
 IF(HEADER_MENU_SHADOW || HEADER_MENU_BORDER_RADIUS || HEADER_MENU_BORDER || HEADER_MENU_BACKGROUND || HEADER_MENU_BACKGROUND_TB || HEADER_MENU_COLOR)
-header menu,div.header menu,ul.pager a{
+header menu,div.header menu,ul.pager a,table.table tr.head{
 	IF(HEADER_MENU_SHADOW) box-shadow(5px,HEADER_MENU_SHADOW); ENDIF
 	IF(HEADER_MENU_BORDER_RADIUS) border-radius-bottom(5px); ENDIF
 	IF(HEADER_MENU_BORDER) border:1px solid HEADER_MENU_BORDER; ENDIF

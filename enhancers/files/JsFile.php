@@ -119,6 +119,7 @@ class JsFile extends EnhancerFile{
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' --js ';
 		$tmpfname = tempnam('/tmp','gclosure');
 		file_put_contents($tmpfname,$content);
+		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
 		if(!empty($res)){
 			debugCode($destination."\n".$res,false);
 			if(preg_match('/\[ERROR\]\s+([0-9]+)\:([0-9]+)/',$res,$m)){

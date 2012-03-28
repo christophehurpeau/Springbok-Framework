@@ -51,6 +51,7 @@ hr{
 	background:#BBB;
 	border:0;
 }
+img{border:0}
 
 span.right_val{
     float: right;

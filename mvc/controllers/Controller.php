@@ -1,7 +1,7 @@
 <?php
 class Controller{
 	protected static $methodName,$suffix;
-	public static $defaultLayout;//init in "app.php"
+	public static $defaultLayout,$defaultLayoutOverride=null;//init in "app.php"
 
 	private static $viewVars=array(),$layoutVars=array();
 
