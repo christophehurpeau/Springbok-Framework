@@ -1,5 +1,5 @@
 <?php
-class FSoapController extends Controller{
+class SSoapController extends Controller{
 	protected static $uri;
 	
 	protected static function _wsdl($fileName=null,$folderName=null){
@@ -19,7 +19,7 @@ class FSoapController extends Controller{
 		$wsdl->addSoapBinding($binding,'rpc','http://schemas.xmlsoap.org/soap/http');
 		$wsdl->addService($name.'Service', $name.'Port','tns:'.$name.'Binding',static::$uri);
 		
-		foreach(array_diff(get_class_methods(get_called_class()),get_class_methods('Controller'),get_class_methods('FSoapController')) as $method){
+		foreach(array_diff(get_class_methods(get_called_class()),get_class_methods('Controller'),get_class_methods('SSoapController')) as $method){
 			$filename=APP.'controllers/methods/'.$name.'-'.$method;
 			if(!file_exists($filename)) continue;
 			$infos=include $filename;

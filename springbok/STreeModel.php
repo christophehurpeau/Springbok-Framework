@@ -3,7 +3,7 @@
  * http://www.sitepoint.com/hierarchical-data-database-3/
  * http://www.phpro.org/tutorials/Managing-Hierarchical-Data-with-PHP-and-MySQL.html#2
  */
-class FTreeModel extends Model{
+class STreeModel extends Model{
 	protected static $where=array();
 	
 	protected function beforeInsert(){

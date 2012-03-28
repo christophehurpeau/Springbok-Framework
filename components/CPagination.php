@@ -36,7 +36,7 @@ class CPagination{
 			else{
 				$down=$this->pageSize*($this->page-1);
 				if(isset($count) && $down > $count){
-					throw new FPaginationOverrunException;
+					throw new SPaginationOverrunException;
 				}
 			}
 			$this->results=$this->query->limit($this->pageSize,$down)->execute();
@@ -45,7 +45,7 @@ class CPagination{
 				$count=$this->totalResults=$this->query->foundRows();
 				if($count > 0){
 					$this->totalPages=(int)ceil((double)$count / $this->pageSize);
-					if(empty($this->results)) throw new FPaginationOverrunException;
+					if(empty($this->results)) throw new SPaginationOverrunException;
 				}
 			}
 			

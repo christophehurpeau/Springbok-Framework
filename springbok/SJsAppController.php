@@ -1,5 +1,5 @@
 <?php
-class FJsAppController extends Controller{
+class SJsAppController extends Controller{
 	public static function beforeDispatch(){
 		if(!CHttpRequest::isAjax()) self::renderStartPage();
 	}

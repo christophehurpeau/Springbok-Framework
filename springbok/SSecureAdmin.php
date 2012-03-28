@@ -1,5 +1,5 @@
 <?php
-class FSecureAdmin extends CSecure{
+class SSecureAdmin extends CSecure{
 	private static $_config;
 	
 	public static function init(){

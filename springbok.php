@@ -28,12 +28,12 @@ class Springbok{
 	    		case 'B': include $path.'behaviors/'.$class_name.'.php'; break;
 	    		case 'T': include $path.'transformers/'.$class_name.'.php'; break;
 				case 'R': include $path.'ressources/'.$class_name.'.php'; break;
-				case 'F': include CORE.'springbok/'.$class_name.'.php'; break; // like Fundamental or First...
 				
 				case 'V': include APP.'viewsElements/'.substr($class_name,1).'/class.php'; break;
 	    		case 'E': include APP.'models/'.$class_name[1].DS.substr($class_name,2).'.php'; break; //Entity...
 				case 'M': include APP.'modules/'.$class_name.'.php'; break;
-				case 'S': include APP.'services/'.$class_name.'.php'; break;
+				//case 'S': include APP.'services/'.$class_name.'.php'; break;
+				case 'S': include CORE.'springbok/'.$class_name.'.php'; break;
 				
 				case 'P': $plugin=explode('_',$class_name,3);
 					self::load($plugin[1],CPlugins::path(substr($plugin[0],1)),NULL);
