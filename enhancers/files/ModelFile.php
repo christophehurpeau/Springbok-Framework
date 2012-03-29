@@ -218,7 +218,7 @@ class ModelFile extends PhpFile{
 	}
 	
 	
-	public static function initFolder($folder,&$config){
+	public static function initFolder($folder,$config){
 		$d=new Folder($folder->getPath().'models/infos');
 		//if($d->exists()) $d->moveTo($tmpFolder.'models/infos');
 		if(!$d->exists()) $d->mkdirs(0775);

@@ -27,7 +27,7 @@ class EnhancePlugin extends AEnhance{
 		foreach(array_diff_key($devFolder->listDirs(false),$dirs) as $d) if(!$exclude || !in_array($d->getName(),$exclude)) $d->delete();
 		foreach(array_diff_key($prodFolder->listDirs(false),$dirs) as $d) if(!$exclude || !in_array($d->getName(),$exclude)) $d->delete();
 		*/
-		$this->newDef['enhancedFolders'][$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
+		$this->enhanced->newDef['enhancedFolders'][$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
 		
 		
 		$defaultClass=$class;
@@ -54,7 +54,7 @@ class EnhancePlugin extends AEnhance{
 					$class::startEnhanceApp();
 			}else $class=$defaultClass;
 			
-			$folderEnhancer=new DefaultFolderEnhancer($this->config,$d, $newDevDir,$newProdDir,$this->oldDef,$this->newDef);
+			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
 			$folderEnhancer->process($class,$excludeFiles);
 			
 			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$exclude,$class);

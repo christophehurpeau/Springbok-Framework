@@ -1,14 +1,13 @@
 <?php
 abstract class EnhancerFile{
-	public static $APP_CONFIG,$APP_DIR,$DEV_CONFIG;
 	private $srcFile,$fileName,$_isCore,$_isProd,$_config,$_isInLibDir;
 	public $currentDestFile;
 	
-	protected $config,$_srcContent;
+	protected $enhanced,$_srcContent;
 	
-	public function __construct($config,$filename,$isCore=false,$isInLibDir=false){
+	public function __construct(&$enhanced,$filename,$isCore=false,$isInLibDir=false){
 		$this->srcFile=new File($filename);
-		$this->config=&$config;
+		$this->enhanced=&$enhanced;
 		$this->_isCore=$isCore; $this->fileName=$this->srcFile->getName();
 		$this->_isInLibDir=$isInLibDir;
 		$this->loadContent($this->srcFile->read());
@@ -88,8 +87,8 @@ abstract class EnhancerFile{
 	}
 
 	public static function reset(){}
-	public static function initFolder($folder,&$config){}
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){}
+	public static function initFolder($folder,$config){}
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){}
 	public static function initEnhanceApp(){}
 	public static function startEnhanceApp(){}
 	public static function fileDeleted($file){}

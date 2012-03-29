@@ -58,8 +58,8 @@ class ImgFile extends EnhancerFile{
 		}else $this->srcFile()->copyTo($prodFile->getPath());
 	}
 	
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
-		CssFile::afterEnhanceApp($hasOldDef, $newDef, $appDir, $dev,$prod);
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
+		CssFile::afterEnhanceApp($enhanced,$dev,$prod);
 	}
 	
 	/*

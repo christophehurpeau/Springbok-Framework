@@ -28,7 +28,7 @@ class ModuleFile extends PhpFile{
 	
 	
 	private static $_modulesConfig=array(),$_changes=false;
-	public static function initFolder($folder,&$config){
+	public static function initFolder($folder,$config){
 		$f=new File($folder->getPath().'config'.DS.'modules.php');
 		if($f->exists()){
 			self::$_modulesConfig=include $f->getPath();
@@ -41,7 +41,7 @@ class ModuleFile extends PhpFile{
 			unset($modules[$moduleName]);
 	}
 	
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$_changes){
 			foreach(self::$_modulesConfig as $methodName=>&$modules)
 				self::$_modulesConfig[$methodName]=array_unique($modules);

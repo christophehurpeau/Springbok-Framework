@@ -178,7 +178,7 @@ class ControllerFile extends PhpFile{
 
 	
 	private static $defFiles,$controllersDeleted,$aclPermissionsConfig,$aclPermissionsChanges=false;
-	public static function initFolder($folder,&$config){
+	public static function initFolder($folder,$config){
 		$f=new File($folder->getPath().'config/jobs.php');
 		if($f->exists()){
 			//$f->moveTo($tmpFolder.'jobs.php');
@@ -226,13 +226,13 @@ class ControllerFile extends PhpFile{
 	
 	public static function endEnhanceApp(){}
 	
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$aclPermissionsChanges){
 			$content='<?php return '.UPhp::exportCode(self::$aclPermissionsConfig).';';
 			file_put_contents($dev->getPath().'config/aclPermissions.php',$content);
 			file_put_contents($prod->getPath().'config/aclPermissions.php',$content);
 		}
-		if($hasOldDef){
+		if($enhanced->hasOldDef()){
 			$paths=array($dev->getPath(),$prod->getPath());
 			if(!empty(self::$controllersDeleted))
 				foreach(self::$controllersDeleted as $key=>$controllers){

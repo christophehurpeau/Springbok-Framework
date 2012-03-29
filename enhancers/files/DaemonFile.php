@@ -12,7 +12,7 @@ class DaemonFile extends PhpFile{
 	}
 	
 	private static $_daemonsConfig,$_changes=false;
-	public static function initFolder($folder,&$config){
+	public static function initFolder($folder,$config){
 		$f=new File($folder->getPath().'config/daemons.php');
 		if($f->exists()){
 			//$f->moveTo($tmpFolder.'daemons.php');
@@ -25,7 +25,7 @@ class DaemonFile extends PhpFile{
 		unset(self::$_daemonsConfig[$daemonName]);
 	}
 	
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$_changes){
 			$content='<?php return '.UPhp::exportCode(self::$_daemonsConfig).';';
 			file_put_contents($dev->getPath().'config/daemons.php',$content);

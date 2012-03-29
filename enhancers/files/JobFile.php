@@ -29,7 +29,7 @@ class JobFile extends PhpFile{
 	}
 	
 	private static $_jobsConfig,$_changes=false;
-	public static function initFolder($folder,&$config){
+	public static function initFolder($folder,$config){
 		$f=new File($folder->getPath().'config/jobs.php');
 		if($f->exists()){
 			//$f->moveTo($tmpFolder.'jobs.php');
@@ -42,7 +42,7 @@ class JobFile extends PhpFile{
 		unset(self::$_jobsConfig[$jobName]);
 	}
 	
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$_changes){
 			$content='<?php return '.UPhp::exportCode(self::$_jobsConfig).';';
 			file_put_contents($dev->getPath().'config/jobs.php',$content);

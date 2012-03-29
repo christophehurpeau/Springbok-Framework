@@ -3,7 +3,6 @@ include_once __DIR__.DS.'AEnhance.php';
 include_once __DIR__.DS.'DefaultFolderEnhancer.php';
 
 class EnhanceLibs extends AEnhance{
-	
 	/**
 	 * @param Folder $dir
 	 */
@@ -26,7 +25,7 @@ class EnhanceLibs extends AEnhance{
 				$class='PhpFile';
 			}else $class=$defaultClass;
 			
-			$folderEnhancer=new DefaultFolderEnhancer($this->config,$d, $newDevDir,$newProdDir,$this->oldDef,$this->newDef);
+			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
 			$folderEnhancer->process($class,$excludeFiles);
 			
 			$this->recursiveDir($d, $newDevDir,$newProdDir,$exclude,$class);

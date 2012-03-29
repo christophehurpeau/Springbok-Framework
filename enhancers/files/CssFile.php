@@ -355,10 +355,10 @@ class CssFile extends EnhancerFile{
 	
 	
 	private static $spriteGenDone=NULL;
-	public static function afterEnhanceApp($hasOldDef,&$newDef,&$appDir,&$dev,&$prod){
-		if(self::$spriteGenDone===NULL && ((!empty($newDef['changes']['Css'])) || (!empty($newDef['changes']['Img'])))){
-			self::$spriteGenDone=true;$cssImgs=array();$spritename='img-sprite.png';
-			$compiledCssFolder=new Folder(self::$APP_DIR.'tmp/compiledcss/prod/');
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
+		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img'))){
+			self::$spriteGenDone=true;$cssImgs=array(); $spritename='img-sprite.png';
+			$compiledCssFolder=new Folder($enhanced->getAppDir().'tmp/compiledcss/prod/');
 			//
 			foreach($compiledCssFolder->listFiles() as $file){
 				$fileContent=file_get_contents($file->getPath());
@@ -392,7 +392,7 @@ class CssFile extends EnhancerFile{
 				$cssSpriteGen=new CssSpriteGen();
 				$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritename);
 				/*if(file_exists($imgDir.$spritename)) */copy($imgDir.$spritename,$dev->getPath().'web/img/'.$spritename);
-				copy($imgDir.$spritename,$appDir.'src/web/img/'.$spritename);
+				copy($imgDir.$spritename,$enhanced->getAppDir().'src/web/img/'.$spritename);
 				//debug($cssRules);
 				
 				/* background: background-color background-image background-repeat background-attachment background-position

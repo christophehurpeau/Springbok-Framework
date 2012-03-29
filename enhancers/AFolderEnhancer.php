@@ -1,10 +1,9 @@
 <?php
 abstract class AFolderEnhancer{
-	private $config,$dir,$devDir,$prodDir,$oldDef,$newDef;
+	private $dir,$devDir,$prodDir,$enhanced;
 	
-	public function __construct($config,&$dir,&$devDir,&$prodDir,&$oldDef,&$newDef){
-		$this->config=&$config; $this->dir=&$dir;$this->devDir=&$devDir;$this->prodDir=&$prodDir;
-		$this->oldDef=&$oldDef;$this->newDef=&$newDef;
+	public function __construct(&$enhanced,&$dir,&$devDir,&$prodDir){
+		$this->enhanced=&$enhanced; $this->dir=&$dir;$this->devDir=&$devDir;$this->prodDir=&$prodDir;
 	}
 	
 	
@@ -58,15 +57,15 @@ abstract class AFolderEnhancer{
 				$srcMD5=md5_file($file->getPath());
 				
 				if(!(file_exists($devDir.$destFilename) && file_exists($prodDir.$destFilename)
-						&& isset($this->oldDef['files'][$file->getPath()])
-						&& $this->oldDef['files'][$file->getPath()]==$srcMD5)){
+						&& isset($this->enhanced->oldDef['files'][$file->getPath()])
+						&& $this->enhanced->oldDef['files'][$file->getPath()]==$srcMD5)){
 					//debugVar('file changed :',$file->getPath(),file_exists($devDir.$filename),file_exists($prodDir.$filename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
-					$this->newDef['changes']['all'][]=$file->getPath();
+					$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
 					copy($file->getPath(),$devDir.$destFilename);
 					copy($file->getPath(),$prodDir.$destFilename);
-					$this->newDef['enhancedFiles'][$file->getPath()]=array('class'=>false,'dev'=>$devDir.$destFilename,'prod'=>$prodDir.$destFilename);
+					$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>false,'dev'=>$devDir.$destFilename,'prod'=>$prodDir.$destFilename);
 				}
-				$this->newDef['files'][$file->getPath()]=$srcMD5;
+				$this->enhanced->newDef['files'][$file->getPath()]=$srcMD5;
 				continue;
 			}
 			
@@ -100,21 +99,21 @@ abstract class AFolderEnhancer{
 				if($filename[0]==='_') $justDev=true; 
 			}
 			
-			$nf=new $class($this->config,$file->getPath());
+			$nf=new $class($this->enhanced,$file->getPath());
 			$srcMD5=$nf->getMd5Content();
 			$in=false;
 			//$t=microtime(true);
 			if(!(file_exists($devDir.$destFilename) && ($justDev || file_exists($prodDir.$destFilename))
-					&& isset($this->oldDef['files'][$file->getPath()])
-					&& $this->oldDef['files'][$file->getPath()]==$srcMD5)){
+					&& isset($this->enhanced->oldDef['files'][$file->getPath()])
+					&& $this->enhanced->oldDef['files'][$file->getPath()]==$srcMD5)){
 				//debugVar('file changed :',$file->getPath(),file_exists($devDir.$destFilename),file_exists($prodDir.$destFilename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
 				$nf->processEhancing($devDir.$destFilename,$prodDir.$destFilename,$justDev);
-				$this->newDef['changes']['all'][]=$file->getPath();
-				$this->newDef['changes'][substr($class,0,-4)][]=$file->getPath();
+				$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
+				$this->enhanced->newDef['changes'][substr($class,0,-4)][]=$file->getPath();
 				
-				$this->newDef['enhancedFiles'][$file->getPath()]=array('class'=>$class,'dev'=>$devDir.$destFilename,'prod'=>$justDev?false:$prodDir.$destFilename);
+				$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>$class,'dev'=>$devDir.$destFilename,'prod'=>$justDev?false:$prodDir.$destFilename);
 			}
-			$this->newDef['files'][$file->getPath()]=$srcMD5;
+			$this->enhanced->newDef['files'][$file->getPath()]=$srcMD5;
 			/*$t=(microtime(true) - $t);
 			if($t > 1) debugVar($file->getPath() .' : '.$t,$in,
 				!file_exists($devDir.$destFilename) || !($justDev || file_exists($prodDir.$destFilename))

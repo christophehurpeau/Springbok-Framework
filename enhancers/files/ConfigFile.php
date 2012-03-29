@@ -1,10 +1,5 @@
 <?php
 class ConfigFile extends PhpFile{
-	public static $baseConfigArray=array();
-	public static function reset(){
-		self::$baseConfigArray=array();
-	}
-	
 	public function getMd5Content(){
 		//return '';
 		$md5=$this->_srcContent;
@@ -14,13 +9,13 @@ class ConfigFile extends PhpFile{
 			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
 		}
 		
-		if(!empty(self::$baseConfigArray) && substr($this->fileName(),0,1) == '_'){
+		if(!$this->enhanced->appConfig && substr($this->fileName(),0,1) == '_'){
 			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
 			
 			
-			if(!empty(self::$baseConfigArray['plugins'])){
+			if(!empty($this->enhanced->appConfig['plugins'])){
 				$configArray=include $this->srcFile()->getPath();
-				foreach(self::$baseConfigArray['plugins'] as $key=>$plugin){
+				foreach($this->enhanced->appConfig['plugins'] as $key=>$plugin){
 					//$pluginPath=$configArray['pluginsPaths'][$plugin[0]].$plugin[1].DS.($this->fileName()==='_'.ENV.'.php'?'dev'.DS:'');
 					$devPluginPath=include dirname($this->srcFile()->getPath()).'/_'.ENV.'.php';
 					$devPluginPath=$devPluginPath['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
@@ -124,11 +119,11 @@ class ConfigFile extends PhpFile{
 		*/}elseif($configname==='_'){
 			
 			
-			//self::$baseConfigArray['enhance_time']=time();
+			//$this->enhanced->appConfig['enhance_time']=time();
 			//$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}elseif($configname[0]==='_'){
 			$configArray=include $this->srcFile()->getPath();
-			if(!empty(self::$baseConfigArray)){ // if ! config plugin
+			if(!empty($this->enhanced->appConfig)){ // if ! config plugin
 				foreach(array('site_url') as $attr)
 					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
@@ -140,10 +135,10 @@ class ConfigFile extends PhpFile{
 				
 				if(!isset($configArray['cookie_domain'])) $configArray['cookie_domain']='';
 
-				$configArray=UArray::union_recursive($configArray,self::$baseConfigArray);
+				$configArray=UArray::union_recursive($configArray,$this->enhanced->appConfig);
 				$configArray['autoload_default']=APP.'models/';
-				if(!empty(self::$baseConfigArray['plugins']))
-					foreach(self::$baseConfigArray['plugins'] as $key=>$plugin){
+				if(!empty($this->enhanced->appConfig['plugins']))
+					foreach($this->enhanced->appConfig['plugins'] as $key=>$plugin){
 						if(isset($plugin[2])){
 							$pluginPath=$configArray['pluginsPaths'][$plugin[0]].$plugin[1].DS.($configname==='_'.ENV?'dev/':'');
 							$configArray['autoload_default']=$pluginPath.'models/';

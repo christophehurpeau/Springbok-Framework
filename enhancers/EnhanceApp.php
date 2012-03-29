@@ -1,15 +1,17 @@
 <?php
 include_once __DIR__.DS.'AEnhance.php';
 include_once __DIR__.DS.'DefaultFolderEnhancer.php';
+include_once __DIR__.DS.'EnhancedApp.php';
+include_once __DIR__.'/../utils/UColors.php';
 
 class EnhanceApp extends AEnhance{
+	public function __construct($dirname){
+		$this->enhanced=new EnhancedApp($dirname);
+	}
+	
 	public function init(){
-		ConfigFile::$baseConfigArray=EnhancerFile::$APP_CONFIG=include $this->appDir.'src/config/_.php';
-		EnhancerFile::$DEV_CONFIG=include $this->appDir.'src/config/_'.ENV.'.php';
-		EnhancerFile::$APP_DIR=$this->appDir;
-		
 		foreach(array('project_name','projectName') as $attr){
-			if(!isset(EnhancerFile::$APP_CONFIG[$attr])) throw new Exception('Missing attr config : '.$attr);
+			if(!$this->enhanced->appConfigExist($attr)) throw new Exception('Missing attr config : '.$attr);
 		}
 	}
 	
@@ -18,7 +20,7 @@ class EnhanceApp extends AEnhance{
 		
 		global $enhancers;
 		foreach($enhancers as $className)
-			$className::initFolder($dev,$this->config);
+			$className::initFolder($dev,$this->enhanced->getConfig());
 		
 		$d=new Folder($dev->getPath().'logs',0777);
 		$d=new Folder($dev->getPath().'tmp',0777);
@@ -29,7 +31,7 @@ class EnhanceApp extends AEnhance{
 		
 		global $enhancers;
 		foreach($enhancers as $className)
-			$className::initFolder($prod,$this->config);
+			$className::initFolder($prod,$this->enhanced->getConfig());
 		
 		$d=new Folder($prod->getPath().'logs',0777);
 		$d=new Folder($prod->getPath().'tmp',0777);
@@ -62,7 +64,7 @@ class EnhanceApp extends AEnhance{
 			$dest.$srcFile->getName();
 			if(!file_exists($dest) || $srcMd5 != md5_file($dest)){//debugVar(!file_exists($dest)/*,$srcMd5 != md5_file($dest)*/);
 				$srcFile->copyTo($dest);
-				$this->newDef['changes']['all'][]=$srcFile->getPath();
+				$this->enhanced->newDef['changes']['all'][]=array('path'=>$srcFile->getPath());
 				//echo $dest.'('.$srcMd5.' - '.md5_file($dest).')'.'<br />';
 			}
 		}
@@ -70,10 +72,10 @@ class EnhanceApp extends AEnhance{
 	
 	public function afterEnhance(&$dev,&$prod){
 		//if(!empty($this->config['includes'])){
-		if(empty($this->config['includes'])) $this->config['includes']=array();
-		$this->config['includes']['img'][]='ajax';
-		$this->config['includes']['js'][]='ie-lt9.js';
-			foreach($this->config['includes'] as $type=>$includes){
+		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
+		$this->enhanced->config['includes']['img'][]='ajax';
+		$this->enhanced->config['includes']['js'][]='ie-lt9.js';
+			foreach($this->enhanced->config['includes'] as $type=>$includes){
 				if(is_string($includes)){ $includes=explode(',',$includes); $type=''; }
 				else $type=$type.DS;
 				foreach($includes as $filename){
@@ -93,9 +95,10 @@ class EnhanceApp extends AEnhance{
 				}
 			}
 		//}
-		if(!empty($this->config['plugins'])){
-			foreach($this->config['plugins'] as &$plugin){
-				$pluginPath=EnhancerFile::$DEV_CONFIG['pluginsPaths'][$plugin[0]].$plugin[1];
+		if($this->enhanced->configNotEmpty('plugins')){
+			$pluginsPaths=$this->enhanced->devConfig('pluginsPaths');
+			foreach($this->enhanced->config['plugins'] as &$plugin){
+				$pluginPath=$pluginsPaths[$plugin[0]].$plugin[1];
 				if(!isset($plugin[2]))
 				
 					$this->recursiveDir($pluginPath.'/',new Folder($pluginPath), $dev->getPath(), $prod->getPath(),true,false,false);
@@ -131,7 +134,7 @@ class EnhanceApp extends AEnhance{
 			foreach(array_diff_key($prodFolder->listDirs(false),$dirs) as $d) if(!$exclude || !in_array($d->getName(),$exclude)) $d->delete();
 		}*/
 		
-		$this->newDef['enhancedFolders'][$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
+		$this->enhanced->newDef['enhancedFolders'][$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
 		
 		$defaultClass=$class;
 		foreach($dirs as $d){
@@ -170,7 +173,7 @@ class EnhanceApp extends AEnhance{
 					$class::startEnhanceApp();
 			}else $class=$defaultClass;
 			
-			$folderEnhancer=new DefaultFolderEnhancer($this->config,$d, $newDevDir,$newProdDir,$this->oldDef,$this->newDef);
+			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
 			$folderEnhancer->process($class,$excludeFiles);
 			
 			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$excludeChild,$class);
@@ -185,7 +188,7 @@ class EnhanceApp extends AEnhance{
 	
 	
 	private function createIndexFile(&$dev,&$prod){
-		$entrances=empty($this->config['entrances']) ? array() : $this->config['entrances'];
+		$entrances=$this->enhanced->configNotEmpty('entrances') ? $this->enhanced->config('entrances') : array();
 
 		$htaccess='<IfModule mod_rewrite.c>
 	Options -Indexes
