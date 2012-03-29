@@ -10,7 +10,7 @@ div.startloading{
 	IF(HEADER_MENU_A_BACKGROUND) background:HEADER_MENU_A_BACKGROUND; ENDIF
 	IF(HEADER_MENU_A_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_BACKGROUND_TB); ENDIF
 	IF(FIXED_VARIABLE_SHADOW) box-shadow(8px,FIXED_VARIABLE_SHADOW); ENDIF
-	border-radius(16px);
+	border-radius:16px;
 	color:HEADER_MENU_A_COLOR;
 	text-align:center;
 	font-size:14pt;

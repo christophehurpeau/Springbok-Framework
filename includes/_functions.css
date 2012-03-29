@@ -1,78 +1,29 @@
 function box-shadow($length,$color){
-	-moz-box-shadow: 0 0 $length $color;
-	-webkit-box-shadow: 0 0 $length $color;
 	box-shadow: 0 0 $length $color;
 }
 function box-shadow-rb($length,$color){
-	-moz-box-shadow: 1px 1px $length $color;
-	-webkit-box-shadow: 1px 1px $length $color;
 	box-shadow: 1px 1px $length $color;
 }
 
 function noboxshadow(){
-	-moz-box-shadow: 0 0 0;
-	-webkit-box-shadow: 0 0 0;
 	box-shadow: 0 0 0;
 }
-function border-radius($length){
-	border-radius:$length;
-	-moz-border-radius:$length;
-	-webkit-border-radius:$length;
-}
 function border-radius-bottom($length){
-	-webkit-border-bottom-right-radius: $length;
-	-webkit-border-bottom-left-radius: $length;
-	-moz-border-radius-bottomright: $length;
-	-moz-border-radius-bottomleft: $length;
 	border-bottom-right-radius: $length;
 	border-bottom-left-radius: $length;
 }
 function border-radius-top($length){
-	-webkit-border-top-right-radius: $length;
-	-webkit-border-top-left-radius: $length;
-	-moz-border-radius-topright: $length;
-	-moz-border-radius-topleft: $length;
 	border-top-right-radius: $length;
 	border-top-left-radius: $length;
 }
 function border-radius-right($length){
-	-webkit-border-top-right-radius: $length;
-	-webkit-border-bottom-right-radius: $length;
-	-moz-border-radius-topright: $length;
-	-moz-border-radius-bottomright: $length;
 	border-top-right-radius: $length;
 	border-bottom-right-radius: $length;
 }
 function border-radius-left($length){
-	-webkit-border-top-left-radius: $length;
-	-webkit-border-bottom-left-radius: $length;
-	-moz-border-radius-topleft: $length;
-	-moz-border-radius-bottomleft: $length;
 	border-top-left-radius: $length;
 	border-bottom-left-radius: $length;
 }
-
-function border-radius-bottomLeft($length){
-	-webkit-border-bottom-left-radius: $length;
-	-moz-border-radius-bottomleft: $length;
-	border-bottom-left-radius: $length;
-}
-function border-radius-bottomRight($length){
-	-webkit-border-bottom-right-radius: $length;
-	-moz-border-radius-bottomright: $length;
-	border-bottom-right-radius: $length;
-}
-function border-radius-topLeft($length){
-	-webkit-border-top-left-radius: $length;
-	-moz-border-radius-topleft: $length;
-	border-top-left-radius: $length;
-}
-function border-radius-topRight($length){
-	-webkit-border-top-right-radius: $length;
-	-moz-border-radius-topright: $length;
-	border-top-right-radius: $length;
-}
-
 
 function bg-gradient-lr($left,$right){
 	background: $left; /* Old browsers */
@@ -109,13 +60,4 @@ function bg-gradient-tb-m($top_bottom,$middle){
 function webkit-antialiased(){
 	-webkit-font-smoothing: subpixel-antialiased; /* or antialiased; */
 	-webkit-text-stroke: .04pt black;
-}
-
-
-
-function transition($property,$time){
-	-moz-transition:$property $time; /* Firefox 4 */
-	-webkit-transition:$property $time; /* Safari and Chrome */
-	-o-transition:$property $time; /* Opera */
-	transition:$property $time;
 }

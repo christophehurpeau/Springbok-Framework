@@ -4,8 +4,8 @@
 	padding:1px 7px 1px 5px;
 	line-height:16px;
 	bg-gradient-tb(#eeeeee,#cccccc);
-	border-radius-bottomRight(10px 25px);
-	border-radius-topLeft(10px 25px);
+	border-bottom-right-radius:10px 25px;
+	border-top-left-radius:10px 25px;
 }
 .globalAjaxLoading span{
 	background:transparent url('../img/ajax/ajax-roller.gif') no-repeat left center;

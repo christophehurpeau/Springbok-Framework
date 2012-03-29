@@ -90,7 +90,7 @@ footer{
 	IF(BREADCRUMBS_BACKGROUND) margin:3px 3px 5px;padding:2px 3px 3px; background:BREADCRUMBS_BACKGROUND; ENDIF
 	IFNOT(BREADCRUMBS_IN_VARIABLE)
 		IF(FIXED_VARIABLE_SHADOW) box-shadow(3px,FIXED_VARIABLE_SHADOW); ENDIF
-		IF(FIXED_VARIABLE_BORDER_RADIUS) border-radius(FIXED_VARIABLE_BORDER_RADIUS); ENDIF
+		IF(FIXED_VARIABLE_BORDER_RADIUS) border-radius:FIXED_VARIABLE_BORDER_RADIUS; ENDIF
 		IFNOT(BREADCRUMBS_BACKGROUND)
 			IF(FIXED_VARIABLE_BACKGROUND) margin:3px 3px 5px;padding:2px 3px 3px; background:FIXED_VARIABLE_BACKGROUND; ENDIF
 			IFNOT(FIXED_VARIABLE_BACKGROUND) margin:0 0 5px; ENDIF
@@ -132,7 +132,7 @@ footer{
 		/*position:absolute;right:0;top:0;left:0;bottom:0;*/
 		ENDIF
 		IF(FIXED_VARIABLE_SHADOW) box-shadow(3px,FIXED_VARIABLE_SHADOW); ENDIF
-		IF(FIXED_VARIABLE_BORDER_RADIUS) border-radius(FIXED_VARIABLE_BORDER_RADIUS); ENDIF
+		IF(FIXED_VARIABLE_BORDER_RADIUS) border-radius:FIXED_VARIABLE_BORDER_RADIUS; ENDIF
 		IF(FIXED_VARIABLE_BACKGROUND) background:FIXED_VARIABLE_BACKGROUND; ENDIF
 		IF(FIXED_VARIABLE_BORDER) border:FIXED_VARIABLE_BORDER; ENDIF
 	}
@@ -213,7 +213,7 @@ ENDIF
 
 div.shadowed-box{
 	padding:4px 6px; margin:0 5px 10px;
-	border-radius(4px);
+	border-radius:4px;
 	box-shadow(4px,PAGE_SHADOWED_BOX_SHADOW_COLOR);
 	background:PAGE_SHADOWED_BOX_BACKGROUND;
 	IF(PAGE_SHADOWED_BOX_BORDER) border:PAGE_SHADOWED_BOX_BORDER; ENDIF
@@ -293,7 +293,7 @@ html body .ml10{margin-left:10px}
 .ml20{margin-left:20px}
 
 html body .mt10{margin-top:10px}
-.mt20,div.separated.mt20{margin-top:20px}
+.mt20,div.sepTop.mt20{margin-top:20px}
 .mt6{margin-top:6px}
 
 html body .mb10{margin-bottom:10px}
@@ -323,14 +323,12 @@ html body .mb10{margin-bottom:10px}
 	left:50%; margin-left:-210px;
 	ENDIF
 	box-shadow:0 0 15px 2px #999;
-	-moz-box-shadow:0 0 15px 2px #999;
-	-webkit-box-shadow:0 0 15px 2px #999;
 }
 
 .message{
 	padding:10px;
 	margin:5px 0;
-	border-radius(1px);
+	border-radius:1px;
 	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
 }
 .smallinfo .message,.message.smallinfo{
