@@ -103,6 +103,7 @@ class CssFile extends EnhancerFile{
 		$content=$this->if_endif($content);
 		$content=$this->functions($content);
 		$content=$this->phpfunctions($content);
+		$content=$this->browsersSupport($content);
 		//$content=$this->comments($content);
 		$content=$this->recursive_selectors($content);
 
@@ -330,6 +331,26 @@ class CssFile extends EnhancerFile{
 	public function &comments(&$content){
 		$content=preg_replace('#/\*.*?\*/#s','',$content);
 		$content=preg_replace('#(?<!:)(//.*)#','',$content);
+		return $content;
+	}
+	
+	public function browsersSupport($content){
+		$rules=array(
+			'transition'=>array('-moz-transition','-webkit-transition','-o-transition'),
+			'border-radius'=>array('-moz-border-radius','-webkit-border-radius','-ms-border-radius'),
+			'border-top-right-radius'=>array('-moz-border-radius-topright','-webkit-border-top-right-radius'),
+			'border-top-left-radius'=>array('-moz-border-radius-topleft','-webkit-border-top-left-radius'),
+			'border-bottom-right-radius'=>array('-moz-border-radius-bottomright','-webkit-border-bottom-right-radius'),
+			'border-bottom-left-radius'=>array('-moz-border-radius-bottomleft','-webkit-border-bottom-left-radius'),
+			'box-shadow'=>array('-moz-box-shadow','-webkit-box-shadow')
+		);
+		foreach($rules as $rule=>$copyRules){
+			$content=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function(&$m) use(&$copyRules){
+				$return='';
+				foreach($copyRules as $copyRule) $return.=$copyRule.':'.$m[1].';';
+				return $return.$m[0];
+			},$content);
+		}
 		return $content;
 	}
 	

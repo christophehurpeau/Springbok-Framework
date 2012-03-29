@@ -38,7 +38,7 @@ header menu li a,div.header menu li a,ul.pager a{
 	IF(HEADER_MENU_A_BACKGROUND) background:HEADER_MENU_A_BACKGROUND; ENDIF
 	IF(HEADER_MENU_A_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_BACKGROUND_TB); ENDIF
 	IF(HEADER_MENU_A_COLOR) color:HEADER_MENU_A_COLOR; ENDIF
-	IF(HEADER_MENU_A_BORDER_RADIUS) border-radius(HEADER_MENU_A_BORDER_RADIUS); ENDIF
+	IF(HEADER_MENU_A_BORDER_RADIUS) border-radius:HEADER_MENU_A_BORDER_RADIUS; ENDIF
 	margin:1px 2px;
 	/*text-shadow:0 0 1px #EFEFEF;*/
 	IF(HEADER_MENU_A_SHADOW)text-shadow: -1px 0 1px HEADER_MENU_A_SHADOW,0 1px 1px HEADER_MENU_A_SHADOW,1px 0 1px HEADER_MENU_A_SHADOW,0 -1px 1px HEADER_MENU_A_SHADOW;ENDIF
@@ -98,8 +98,8 @@ ENDIF
 IF(VARIABLE_MENU_COLOR)#page menu.top li a:hover{color:VARIABLE_MENU_COLOR}ENDIF
 #page menu.top li a{
 	padding:2px 6px 3px;
-	border-radius-bottomRight(10px 25px);
-	border-radius-topLeft(10px 25px);
+	border-bottom-right-radius:10px 25px;
+	border-top-left-radius:10px 25px;
 	background:#CCC;
 }
 #page menu.top li a.current{

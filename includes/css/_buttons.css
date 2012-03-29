@@ -1,15 +1,13 @@
 input.submit,button,.button{
 	bg-gradient-tb(BUTTON_BACKGROUND_TB);
-	border-radius(3px);
-	-moz-box-shadow:0 1px 1px rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.4);
-	-webkit-box-shadow:0 1px 1px rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.4);
+	border-radius:3px;
 	box-shadow:0 1px 1px rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.4);
 	border:BUTTON_BORDER;
 	color:BUTTON_COLOR;
 	text-shadow:BUTTON_TEXTSHADOW;
 	padding:2px 8px;
 	cursor:pointer;
-	transition(all,.3s);
+	transition:all .3s;
 }
 input.submit:hover,button:hover,.button:hover{
 	bg-gradient-tb(BUTTON_HOVER_BACKGROUND_TB);
@@ -33,8 +31,6 @@ IF(BACKGROUND_TB_COLOR$I)
 		IF(BUTTON_COLOR$I_BORDER) border:BUTTON_COLOR$I_BORDER; ENDIF
 		IF(BUTTON_COLOR$I_TEXTSHADOW) text-shadow:BUTTON_COLOR$I_TEXTSHADOW 0 0 1px; ENDIF
 		IF(BUTTON_COLOR$I_BOXSHADOW)
-			-moz-box-shadow:BUTTON_COLOR$I_BOXSHADOW;
-			-webkit-box-shadow:BUTTON_COLOR$I_BOXSHADOW;
 			box-shadow:BUTTON_COLOR$I_BOXSHADOW;
 		ENDIF
 	}

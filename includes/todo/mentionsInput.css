@@ -35,9 +35,7 @@
   border-top-right-radius:0;
   border-top-left-radius:0;
 
-  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.148438);
-     -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.148438);
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.148438);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.148438);
 }
 
 .mentions-input-box .mentions-autocomplete-list ul {
