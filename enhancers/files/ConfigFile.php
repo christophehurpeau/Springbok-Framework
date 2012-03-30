@@ -7,6 +7,8 @@ class ConfigFile extends PhpFile{
 		if($this->fileName()==='routes.php' || substr($this->fileName(),0,7)==='routes_'){
 			$routesLangsFileName=dirname($this->srcFile()->getPath()).'/routes-langs'.substr($this->fileName(),6);
 			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
+			$routesLangsFileName=dirname($this->srcFile()->getPath()).'/routes-langs.php';
+			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
 		}
 		
 		if(!$this->enhanced->appConfig && substr($this->fileName(),0,1) == '_'){

@@ -22,7 +22,7 @@ class JsFile extends EnhancerFile{
 		
 		$this->_srcContent=$srcContent;
 		$jsFiles=array('global.js','jsapp.js');
-		if(!empty($this->config['entrances'])) foreach(($entrances=$this->config['entrances']) as $entrance) $jsFiles[]=$entrance.'.js';
+		if(!empty($this->enhanced->config['entrances'])) foreach(($entrances=$this->enhanced->config['entrances']) as $entrance) $jsFiles[]=$entrance.'.js';
 		else $entrances=array();
 		if(in_array($this->fileName(),$jsFiles))
 			$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(in_array(substr($this->fileName(),0,-3),$entrances)?'/'.substr($this->fileName(),0,-3):'')."/'"
