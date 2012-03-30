@@ -4,11 +4,11 @@ class QFindAll extends QFind{
 	
 	public function &execute(){
 		//$res=$this->_db->doSelectRows_($query);
-		if($this->tabResKey !== NULL) $res=$this->_db->doSelectAssocObjects($this->_toSQL(),$this,$this->queryResultFields,$this->tabResKey);
+		if($this->tabResKey !== null) $res=$this->_db->doSelectAssocObjects($this->_toSQL(),$this,$this->queryResultFields,$this->tabResKey);
 		else $res=$this->_db->doSelectObjects($this->_toSQL(),$this,$this->queryResultFields);
 		
 		if($res){
-			if($this->groupResBy!==NULL){
+			if($this->groupResBy!==null){
 				$grbf=$this->groupResBy;
 				$finalRes=array();
 				foreach($res as $key=>&$row) $finalRes[$row->$grbf][$key]=$row;

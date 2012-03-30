@@ -342,7 +342,9 @@ class CssFile extends EnhancerFile{
 			'border-top-left-radius'=>array('-moz-border-radius-topleft','-webkit-border-top-left-radius'),
 			'border-bottom-right-radius'=>array('-moz-border-radius-bottomright','-webkit-border-bottom-right-radius'),
 			'border-bottom-left-radius'=>array('-moz-border-radius-bottomleft','-webkit-border-bottom-left-radius'),
-			'box-shadow'=>array('-moz-box-shadow','-webkit-box-shadow')
+			'box-shadow'=>array('-moz-box-shadow','-webkit-box-shadow'),
+			'appearance'=>array('-moz-appearance','-webkit-appearance'),
+			'backface-visibility'=>array('-moz-backface-visibility','-webkit-backface-visibility')
 		);
 		foreach($rules as $rule=>$copyRules){
 			$content=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function(&$m) use(&$copyRules){

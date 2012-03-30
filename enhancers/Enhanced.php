@@ -1,7 +1,7 @@
 <?php
 class Enhanced{
-	private $appDir,$oldDef=array();
-	public $config,$newDef=array();
+	private $appDir;
+	public $config,$oldDef=array(),$newDef=array();
 	
 	public function __construct(&$dirname){
 		if(!substr($dirname,-(strlen(DS))) != DS) $dirname.=DS;
