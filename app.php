@@ -96,6 +96,7 @@ class App{
 			if(isset(Config::$plugins)){
 				include CORE.'enhancers/EnhancePlugin.php';
 				foreach(Config::$plugins as $key=>&$plugin){
+					if(!isset($plugin[2])) continue;
 					self::$enhancing=$enhancePlugin=new EnhancePlugin($pluginFolder=(Config::$pluginsPaths[$plugin[0]].$plugin[1]));
 					$changes=$enhancePlugin->process();
 					self::$enhancing=false;

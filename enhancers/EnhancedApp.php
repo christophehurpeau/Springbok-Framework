@@ -5,8 +5,8 @@ class EnhancedApp extends Enhanced{
 	
 	public function __construct(&$dirname){
 		parent::__construct($dirname);
-		$this->appConfig=include $this->getAppDir().'src/config/_.php';
-		$this->devConfig=include $this->getAppDir().'src/config/_'.ENV.'.php';
+		if(file_exists($this->getAppDir().'src/config/_.php')) $this->appConfig=include $this->getAppDir().'src/config/_.php';
+		if(file_exists($this->getAppDir().'src/config/_'.ENV.'.php')) $this->devConfig=include $this->getAppDir().'src/config/_'.ENV.'.php';
 	}
 	
 	public function &appConfig($attr){ return $this->appConfig[$attr]; }

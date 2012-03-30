@@ -175,7 +175,7 @@ var s=document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(ga
 	}
 	
 	public static function iconAction($icon,$url,$optionsLink=array()){
-		$optionsLink['class']='action icon '.$icon;
+		$optionsLink['class']='action icon '.$icon.(isset($optionsLink['class'])?' '.$optionsLink['class']:'');
 		return self::link('',$url,$optionsLink);
 	}
 	

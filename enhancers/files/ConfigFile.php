@@ -12,7 +12,6 @@ class ConfigFile extends PhpFile{
 		if(!$this->enhanced->appConfig && substr($this->fileName(),0,1) == '_'){
 			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
 			
-			
 			if(!empty($this->enhanced->appConfig['plugins'])){
 				$configArray=include $this->srcFile()->getPath();
 				foreach($this->enhanced->appConfig['plugins'] as $key=>$plugin){

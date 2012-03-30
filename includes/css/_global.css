@@ -19,8 +19,10 @@ br.clear{line-height:0;font-size:0;height:0}
 .smallinfo{font-size:8pt}
 .biginfo{font-size:11pt}
 .margin-left{margin-left:20px}
+.aposTR{position:absolute;top:0;right:0}
+.aposR{position:absolute;right:0}
 
-h1,h2,h3,h4,h5,h6{clear:both; margin-top:0}
+h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
 h1{font-size:16pt;margin-bottom:15px;}
 h2{font-size:14pt;margin:4px 0 12px;}
 h3{font-size:12pt;margin-bottom:10px;}

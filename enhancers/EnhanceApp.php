@@ -100,7 +100,6 @@ class EnhanceApp extends AEnhance{
 			foreach($this->enhanced->config['plugins'] as &$plugin){
 				$pluginPath=$pluginsPaths[$plugin[0]].$plugin[1];
 				if(!isset($plugin[2]))
-				
 					$this->recursiveDir($pluginPath.'/',new Folder($pluginPath), $dev->getPath(), $prod->getPath(),true,false,false);
 			}
 		}
