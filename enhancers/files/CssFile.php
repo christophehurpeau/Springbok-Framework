@@ -113,7 +113,7 @@ class CssFile extends EnhancerFile{
 	}
 
 	public static function &includes($content,$currentPath,$include){
-		$content=preg_replace_callback('/@'.($include?'include':'import').'(Core|Lib)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,$include){
+		$content=preg_replace_callback('/@'.($include?'include':'import').'(Core|Lib)?\s+\'([\w\s\._\-\&\/]+)\'\;/Ui',function($matches) use($currentPath,$include){
 			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;
 			if(empty($matches[1])) $filename=$currentPath.'/';
 			else{

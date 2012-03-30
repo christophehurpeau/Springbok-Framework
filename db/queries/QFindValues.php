@@ -9,4 +9,6 @@ class QFindValues extends QFind{
 	public function callback($callback){
 		$this->_db->doSelectValuesCallback($this->_toSQL(),$callback);
 	}
+	
+	public function tabResKey(){}
 }

@@ -12,5 +12,6 @@
 				b.append($('<a/>').attr(linkoptions).attr('href',url).html($('<span itemprop="title"/>').text(i)));
 			}
 		});
+		b.addClass('last');
 	};
 })();
