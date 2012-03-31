@@ -40,6 +40,7 @@ abstract class DBSchema{
 					$this->createTable();
 					$this->columns=$this->getColumns();
 					$this->generatePropDefs();
+					if(method_exists($modelName,'afterCreateTable')) $modelName::afterCreateTable();
 				}
 			}else{
 				if(!$this->checkTable()){
