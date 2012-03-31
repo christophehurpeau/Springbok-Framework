@@ -155,6 +155,13 @@ class ConfigFile extends PhpFile{
 				$configArray['models_infos']=NULL;
 			}
 			$this->writeClass($configname,$configArray,$devFile,$prodFile);
+		}elseif($configname==='basicSettings'){
+			$configArray=include $this->srcFile()->getPath();
+			if(!file_exists($settingsFile=($this->enhanced->getAppDir().'data/settings.php'))) $settingsData=$configArray;
+			else $settingsData=(include $settingsFile)+$configArray;
+			
+			file_put_contents($settingsFile,'<?php return '.UPhp::exportCode($settingsData).';');
+			$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}else{
 			if(substr(file_get_contents($this->srcFile()->getPath()),0,12)=='<?php return'){
 				$configArray=include $this->srcFile()->getPath();

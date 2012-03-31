@@ -295,7 +295,7 @@ class Model implements Iterator{
 		$orderByField=&static::$__orderByField;
 		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
 	}
-	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return self::QListName()->execute();}
+	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return static::QListName()->execute();}
 	public static function findCachedListName(){
 		$className=&static::$__className;
 		return CCache::get('models')->readOrWrite($className,function() use(&$className){return $className::findListName();});

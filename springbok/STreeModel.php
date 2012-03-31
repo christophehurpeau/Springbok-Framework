@@ -38,6 +38,14 @@ class STreeModel extends Model{
 	
 	
 	
+	public function isDescendantOf($id){
+		return false;//TODO
+	}
+	
+	public function isAncestorOf($id){
+		return false;//TODO
+	}
+	
 	
 	/**
 	 * @param int|bool $number how many places to move the node or true to move to last position
