@@ -31,8 +31,11 @@ class CRUD{
 	}
 	
 	public static function edit($model,$id,$fields=null,$renderView=true){
-		if(!empty($_POST)){
-			$pName=lcfirst($model); $data=&$_POST[$pName];
+		$DATA=null;
+		if(!empty($_POST)) $DATA=&$_POST;
+		elseif(!empty($_GET)) $DATA=&$_GET;
+		if(!empty($DATA)){
+			$pName=lcfirst($model); $data=&$DATA[$pName];
 			foreach($data as $key=>&$val) if($val==='') $val=null;
 			$val=CBinder::_bindObject($model,$data,$pName,false);
 			$val->id=$id;
