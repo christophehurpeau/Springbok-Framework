@@ -15,6 +15,10 @@ class QInsert extends AQuery{
 		$this->createdField=$createdField;
 	}
 	
+	public function &cols($cols){
+		$this->cols=is_string($cols)?explode(',',$cols):$cols;
+		return $this;
+	}
 	public function &set($data){
 		$this->data($data);
 		return $this;
@@ -32,7 +36,12 @@ class QInsert extends AQuery{
 	}
 	
 	public function &values($values){
-		$this->values=array($values);
+		$this->values=array(&$values);
+		return $this;
+	}
+	
+	public function &mvalues($values){
+		$this->values=&$values;
 		return $this;
 	}
 	
