@@ -14,3 +14,4 @@ class CSettings{
 		return self::$settings[$name];
 	}
 }
+CSettings::init();

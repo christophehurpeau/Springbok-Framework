@@ -16,11 +16,11 @@ class UTime{
         return $toAdd;
 	}
 	
-	const REG_EXPR_HOURS_MINUTES=/* HIDE */''/*/HIDE *//* EVAL '((\d+)(h|hours?))(?:\s*(\d+)(m|min)?)?'
-								.'|'.'((\d+)(h|hours?|m|min))'
-								.'|'.'(\d+:\d+)'
-								.'|'.'(\d+(?:[\.,]\d+)?)h?' */;
-	public static function parseHoursDuration($duration){
-		
+	const REG_EXPR_HOURS_MINUTES='((?:(?:(\d+)(?:hours?|h))(?:\s*(\d+)(?:mins?|m)?)?)|(?:(\d+)(?:mins?|m))|(?:(\d+(?:[\.,]\d+)?)(?:hours?|h)))';
+	public static function parseHoursDuration($hours){
+		if(preg_match('/(\d+[\.,]\d+)(?:hours?|h)/i',$hours,$m)) return (float)str_replace(',','.',$m[1]);
+		if(preg_match('/(?:(\d+)(?:hours?|h))(?:\s*(\d+)(?:mins?|m)?)?/i',$hours,$m)) return $m[1]+(empty($m[2])?0:($m[2]/60));
+		if(preg_match('/(\d+)(?:mins?|m)/i',$hours,$m)) return ($m[1]/60);
+		return false;
 	}
 }
