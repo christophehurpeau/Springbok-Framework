@@ -19,6 +19,11 @@ class CDaemons{
 		return UExec::exec('php '.escapeshellarg(CORE.'daemon.php').' '.escapeshellarg(APP).' '.escapeshellarg($daemon).' '.escapeshellarg($instance).' 1>/dev/null 2>&1');
 	}
 	
+	public static function startIfNotAlive($daemon,$instance='default'){
+		if(self::isAlive($daemon,$instance)) return false;
+		return self::start($daemon);
+	}
+	
 	public static function startAll(){
 		return UExec::exec('php '.escapeshellarg(APP.'cli.php').' daemons');
 	}
