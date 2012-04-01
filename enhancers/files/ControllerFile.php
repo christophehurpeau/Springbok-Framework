@@ -69,16 +69,18 @@ class ControllerFile extends PhpFile{
 		
 		$methodBody=$matches[4];
 		
+		$hasCheck=isset($mdef['annotations']['Check']) || isset($this->_classAnnotations['Check']);
 		/* Dernier à etre testé */
 		if(isset($mdef['annotations']['Acl']) || isset($this->_classAnnotations['Acl'])){
 			$aclAnnotation=isset($mdef['annotations']['Acl'])?$mdef['annotations']['Acl']:$this->_classAnnotations['Acl'];
 			$permission=$aclAnnotation[0];
 			self::_addAclPermission($this->_className,$permission);
-			$methodBody='if(false===ACAcl::checkAccess('.UPhp::exportString($permission).(empty($aclAnnotation[1])?'':','.$aclAnnotation[1]).')) forbidden();'
+			$methodBody='if(false===ACAcl::checkAccess('.UPhp::exportString($permission).(empty($aclAnnotation[1])?'':','.$aclAnnotation[1]).')) '
+				.($hasCheck?'':'CSecure::isConnected() ?').'forbidden()'.($hasCheck?'':':CSecure::redirectToLogin()').';'
 					.$methodBody;
 			unset($mdef['annotations']['Acl']);
 		}
-		if(isset($mdef['annotations']['Check']) || isset($this->_classAnnotations['Check'])){
+		if($hasCheck){
 			$checkAnnotation=isset($mdef['annotations']['Check'])?$mdef['annotations']['Check']:$this->_classAnnotations['Check'];
 			if(is_string($checkAnnotation[0]))
 				$methodBody=array_shift($checkAnnotation).'::checkAccess('.UPhp::exportCode($checkAnnotation,'').');'.$methodBody;

@@ -66,7 +66,7 @@ class CSecure{
 		if(!static::connect(false)){
 			if(($auth=static::config('auth'))===''){
 				CSession::set(self::BACK_URL,CHttpRequest::isGET() ? CRoute::getAll() : '/');
-				Controller::redirect(static::config('url_login'));
+				self::redirectToLogin();
 			}else call_user_func(array('self','authenticate_'.$auth));
 			// foreach(explode(',',$check) as $profile) static::check($profile)
 		}
@@ -77,6 +77,10 @@ class CSecure{
 				Controller::redirect($params[1]);
 			}
 		}
+	}
+	
+	public static function redirectToLogin(){
+		Controller::redirect(static::config('url_login'));
 	}
 	
 	public static function connect($redirect=true){
