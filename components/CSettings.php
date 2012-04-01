@@ -13,5 +13,11 @@ class CSettings{
 	public static function get($name){
 		return self::$settings[$name];
 	}
+	
+	public static function afterDeploy(){
+		if(empty(self::$settings)) self::$settings=include APP.'config/basicSettings.php';
+		else self::$settings+=include APP.'config/basicSettings.php';
+		self::write();
+	}
 }
 CSettings::init();
