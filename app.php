@@ -211,7 +211,7 @@ class App{
 	/**
 	 * @param Exception $exception
 	 */
-	public static function displayException($exception,$forceDefault){
+	public static function displayException(&$exception,$forceDefault){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
 		$vars=array(
 			'e'=>&$exception,
@@ -227,7 +227,7 @@ class App{
 		}else render(CORE.'mvc/views/exception.php',$vars);
 	}
 	
-	public static function displayError($forceDefault,$code, $message, $file, $line, $context=null, $stack=null){
+	public static function displayError($forceDefault,&$code,&$message,&$file,&$line,&$context=null,&$stack=null){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
 		$vars=array(
 			'e_name'=>Springbok::getErrorText($code),

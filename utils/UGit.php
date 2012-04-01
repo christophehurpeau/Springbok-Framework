@@ -258,7 +258,7 @@ class GitRepository{
 			.(isset($options['limit'])?' -n'.$options['limit']:'')
 			.($identifierFrom===null?'':$identifierFrom.'..')
 			.($identifierTo===null?'':$identifierTo)
-			.' '.$path);
+			.' -- '.$path);
 		return self::parseShortRevisions($output);
 	}
 }
