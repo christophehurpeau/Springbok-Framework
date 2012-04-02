@@ -16,4 +16,4 @@ class SSecureAdmin extends CSecure{
 		parent::createCookie($user);
 	}
 }
-FSecureAdmin::init();
+SSecureAdmin::init();
