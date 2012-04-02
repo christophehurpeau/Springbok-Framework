@@ -10,8 +10,8 @@ header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Pragma: no-cache");
 
-define('CORE_SRC',__DIR__.'/src/');
-define('CLIBS',__DIR__.'/libs/dev/');
+define('CORE_SRC',__DIR__.'/');
+define('CLIBS',dirname(__DIR__).'/libs/dev/');
 include CORE_SRC.'utils/UFile.php';
 include CORE_SRC.'utils/UPhp.php';
 include CORE_SRC.'utils/UExec.php';
@@ -163,13 +163,13 @@ class EnhanceSpringbok{
 
 echo '<h1>Core</h1>';
 $instance=new EnhanceSpringbok();
-$changes=$instance->process(__DIR__.DS);
+$changes=$instance->process(dirname(__DIR__).DS);
 if(empty($changes)) echo "No changes.";
 else echo "<pre>".implode("\n",$changes)."</pre>";
 
 echo '<h1>Libs</h1>';
 $instance=new EnhanceSpringbok();
-$changes=$instance->process(__DIR__.'/libs/',true);
+$changes=$instance->process(dirname(__DIR__).'/libs/',true);
 if(empty($changes)) echo "No changes.";
 else echo "<pre>".implode("\n",$changes)."</pre>";
 
