@@ -113,7 +113,7 @@ class CssFile extends EnhancerFile{
 	}
 
 	public static function &includes($content,$currentPath,$include){
-		$content=preg_replace_callback('/@'.($include?'include':'import').'(Core|Lib)?\s+\'([\w\s\._\-\&\/]+)\'\;/Ui',function($matches) use($currentPath,$include){
+		$content=preg_replace_callback('/@'.($include?'include':'import').'(Core|Lib)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,$include){
 			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;
 			if(empty($matches[1])) $filename=$currentPath.'/';
 			else{
@@ -431,12 +431,15 @@ class CssFile extends EnhancerFile{
 							}else{
 								if((!empty($matches[2]) && trim($matches[2])==='transparent') || substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
 										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+9) === '../img/jquery-ui'
-										|| $url==='../img/'.$spritename)
+										|| $url==='../img/'.$spritename){
 									return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
+								}
 								$key=substr($url,7);
 							}
-							if(!isset($cssRules[$key]))
+							if(!isset($cssRules[$key])){
+								debugVar($url);
 								return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
+							}
 							$val=$cssRules[$key];
 							
 							return 'background:'.(empty($matches[2])?' ':$matches[2].' ').'url(\'../img/'.$spritename.'\')'.(empty($matches[4])?' ':rtrim($matches[4],'}').' ').$val['position']
