@@ -23,7 +23,7 @@ class CImages{
 	public static function uploadM($name,$toJpeg=true,$folderPrefix=''){
 		$images=$errors=array();
 		foreach($_FILES[$name]['error'] as $key => $error){
-			if ($error == UPLOAD_ERR_OK){
+			if($error == UPLOAD_ERR_OK){
 				$tmpFile=tempnam('/tmp','img');
 				move_uploaded_file($_FILES[$name]['tmp_name'][$key], $tmpFile);
 				$image=static::createImage();
@@ -34,7 +34,12 @@ class CImages{
 				}catch(Exception $ex){
 					$errors[$_FILES[$name]['name'][$key]]=$ex->getMessage();
 				}
-			}
+			}elseif($error===UPLOAD_ERR_INI_SIZE)
+				$errors[$_FILES[$name]['name'][$key]]=_tC('The uploaded file exceeds the maximum size allowed by the configuration.');
+			elseif($error===UPLOAD_ERR_FORM_SIZE)
+				$errors[$_FILES[$name]['name'][$key]]=_tC('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.');
+			elseif($error===UPLOAD_ERR_PARTIAL)
+				$errors[$_FILES[$name]['name'][$key]]=_tC('The uploaded file was only partially uploaded.');
 		}
 		return array($images,$errors);
 	}
