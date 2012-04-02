@@ -22,17 +22,17 @@ class CssFile extends EnhancerFile{
 	public function writeDevFile($devFile){
 		if($this->_config['compress']) self::executeCompressor($this->getEnhancedDevContent(),$devFile->getPath(),true);
 		else $devFile->write($this->getEnhancedDevContent());
-		if(!empty(self::$APP_DIR) && !$this->isCore()){
-			if(!file_exists(self::$APP_DIR.'tmp/compiledcss/dev/')) mkdir(self::$APP_DIR.'tmp/compiledcss/dev/',0755,true);
-			$devFile->copyTo(self::$APP_DIR.'tmp/compiledcss/'.$devFile->getName());
+		if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore()){
+			if(!file_exists($appDir.'tmp/compiledcss/dev/')) mkdir($appDir.'tmp/compiledcss/dev/',0755,true);
+			$devFile->copyTo($appDir.'tmp/compiledcss/'.$devFile->getName());
 		}
 	}
 	public function writeProdFile($prodFile){
 		if($this->_config['compress']) self::executeCompressor($this->getEnhancedProdContent(),$prodFile->getPath());
 		else $prodFile->write($this->getEnhancedProdContent());
-		if(!empty(self::$APP_DIR)){
-			if(!file_exists(self::$APP_DIR.'tmp/compiledcss/prod/')) mkdir(self::$APP_DIR.'tmp/compiledcss/prod/',0755);
-			$prodFile->copyTo(self::$APP_DIR.'tmp/compiledcss/prod/'.$prodFile->getName());
+		if(($appDir=$this->enhanced->getAppDir())){
+			if(!file_exists($appDir.'tmp/compiledcss/prod/')) mkdir($appDir.'tmp/compiledcss/prod/',0755);
+			$prodFile->copyTo($appDir.'tmp/compiledcss/prod/'.$prodFile->getName());
 		}
 	}
 	
@@ -382,7 +382,7 @@ class CssFile extends EnhancerFile{
 		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img'))){
 			self::$spriteGenDone=true;$cssImgs=array(); $spritename='img-sprite.png';
 			$compiledCssFolder=new Folder($enhanced->getAppDir().'tmp/compiledcss/prod/');
-			//
+			
 			foreach($compiledCssFolder->listFiles() as $file){
 				$fileContent=file_get_contents($file->getPath());
 				$matches=array();

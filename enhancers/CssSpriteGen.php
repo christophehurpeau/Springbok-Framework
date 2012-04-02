@@ -516,7 +516,7 @@ class CssSpriteGen {
                // create a unqiue filename for sprite image
                //$this->sTempSpriteName =  ConfigHelper::Get('/cache/sprite_dir').uniqid('csg-').".$sOutputFormat";
                // write image to file (deleted by cron script after a limited time period)
-               $this->WriteImage($oSprite, $sOutputFormat, $outputFile);
+               $this->WriteImage($oSprite,$sOutputFormat,$outputFile);
                // destroy object created for sprite image to save memory
                if ($this->sImageLibrary == 'imagick') {
                   $oSprite->destroy();
