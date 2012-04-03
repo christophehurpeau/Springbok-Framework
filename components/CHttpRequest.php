@@ -69,13 +69,13 @@ class CHttpRequest{
 
 	public static function isMobile(){
 		if(empty($_SERVER['HTTP_USER_AGENT'])) return false;
-		$devices=array(
+		return (bool)preg_match('/'./* EVAL "'".implode('|',array(
+			'Mobile',
 			'Android', 'AvantGo', 'BlackBerry', 'DoCoMo', 'Fennec', 'iPod', 'iPhone',
 			'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'PalmOS', 'PalmSource',
 			'portalmmm', 'Plucker', 'ReqwirelessWeb', 'SonyEricsson', 'Symbian', 'UP\\.Browser',
 			'webOS', 'Windows CE', 'Xiino'
-		);
-		return (bool)preg_match('/'.implode('|',$devices).'/i',$_SERVER['HTTP_USER_AGENT']);
+		))."'" /EVAL *//* HIDE */''/* /HIDE */.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 	
 	public static function isBot(){
