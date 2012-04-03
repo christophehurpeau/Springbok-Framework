@@ -122,6 +122,8 @@ RegExp.sbEscape=function(value){
 		}
 		return $(this).delayedBind(delay,'keyup',undefined,handler);
 	};
+	$.fn.sHide=function(){ this.addClass('hidden'); return this; };
+	$.fn.sShow=function(){ this.removeClass('hidden'); return this; };
 })(jQuery);
 
 function handleError(e){

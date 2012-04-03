@@ -1,6 +1,8 @@
 extendPrototype(String,{
-	sbLcFirst:function(){return this.charAt(0).toLowerCase()+this.substr(1);},
-	sbUcFirst:function(){return this.charAt(0).toUpperCase()+this.substr(1);},
+	sToLC:String.toLowerCase,
+	sToUC:String.toUpperCase,
+	sbLcFirst:function(){return this.charAt(0).sToLC()+this.substr(1);},
+	sbUcFirst:function(){return this.charAt(0).sToUC()+this.substr(1);},
 	sbStartsWith:function(str){return this.indexOf(str)===0;},
 	sbEndsWith:function(str){return this.match(RegExp.sbEscape(str)+"$")==str;},
 	sbContains:function(str){return this.indexOf(str)!==-1},

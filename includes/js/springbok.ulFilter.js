@@ -4,7 +4,7 @@
 		else{
 			this.find('li').each(function(i,li){
 				li=$(li);
-				li.text().toLowerCase().indexOf(filter.toLowerCase())===-1 ? li.addClass('hidden') : li.removeClass('hidden');
+				li.text().toLowerCase().indexOf(filter.toLowerCase())===-1 ? li.sHide() : li.sShow();
 			});
 		}
 	}

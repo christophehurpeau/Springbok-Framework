@@ -84,7 +84,7 @@ class Springbok{
 		
 		if(ob_get_length()>0) ob_end_clean();
 		
-		/* DEV */ $stack=xdebug_get_function_stack(); /* /DEV */
+		/* DEV */ $stack=function_exists('xdebug_get_function_stack') ? xdebug_get_function_stack() : null; /* /DEV */
 		App::displayError($forceDefault,$code, $message, $file, $line,$context/* DEV */,$stack/* /DEV */);
 		exit(1);
 	}
