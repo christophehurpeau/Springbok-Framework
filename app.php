@@ -181,9 +181,9 @@ class App{
 			/* /DEV */
 			/* PROD */
 			$vars=array('title'=>$e->getHttpCode().' '.$e->getMessage(),'descr'=>$e->getDescription());
-			if(file_exists(APP.'views/http-exception.php')){
+			if(file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){
 				include_once CORE.'mvc/views/View.php';
-				render(APP.'views/http-exception.php',$vars);
+				render(APP.'views'.Springbok::$suffix.'/http-exception.php',$vars);
 			}else render(CORE.'mvc/views/http-exception.php',$vars);
 			/* /PROD */
 		}
@@ -221,9 +221,9 @@ class App{
 			'e_line'=>$exception->getLine(),
 			'e_trace'=>$exception->getTrace(),
 		);
-		if($forceDefault===false && file_exists(APP.'views/exception.php')){
+		if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/exception.php')){
 			include_once CORE.'mvc/views/View.php';
-			render(APP.'views/exception.php',$vars);
+			render(APP.'views'.Springbok::$suffix.'/exception.php',$vars);
 		}else render(CORE.'mvc/views/exception.php',$vars);
 	}
 	
@@ -237,9 +237,9 @@ class App{
 			'e_context'=>$context
 		);
 		//debugVar($vars);
-		if($forceDefault===false && file_exists(APP.'views/error.php')){
+		if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/error.php')){
 			include_once CORE.'mvc/views/View.php';
-			render(APP.'views/error.php',$vars);
+			render(APP.'views'.Springbok::$suffix.'/error.php',$vars);
 		}else render(CORE.'mvc/views/error.php',$vars);
 	}
 }
