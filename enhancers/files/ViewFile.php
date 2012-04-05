@@ -6,9 +6,11 @@ class ViewFile extends PhpFile{
 		$content=$this->_srcContent;
 		$content=preg_replace('/{include\s+(APP\.[^}]+)\s*\}/','<?php include $1; ?>',$content);
 		
-		$parentFolder=dirname($this->srcFile()->getPath());
+		$parentFolder=dirname($this->srcFile()->getPath()); $viewsFolder=$this->enhanced->getAppDir().'src/views/';
 		for($i=0;$i++<2;)
-			$content=preg_replace_callback('/{include\s+([^}]+)\s*\}/',function(&$matches) use(&$parentFolder){return file_get_contents($parentFolder.DS.$matches[1]);},$content);
+			$content=preg_replace_callback('/{include\s+([^}]+)\s*\}/',function(&$matches) use(&$parentFolder,&$viewsFolder){
+					return file_get_contents(substr($matches[1],0,6)==='VIEWS/'?$viewsFolder.substr($matches[1],6):$parentFolder.DS.$matches[1]);
+			},$content);
 		$this->_srcContent=$content;
 	}
 	
