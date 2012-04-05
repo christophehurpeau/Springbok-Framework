@@ -105,13 +105,13 @@ class Model implements Iterator{
 	protected function beforeDelete(){return true;}
 	
 	
-	private function _afterInsert(){
-		$this->afterSave();
-		$this->afterInsert();
+	private function _afterInsert(&$data){
+		$this->afterSave($data);
+		$this->afterInsert($data);
 	}
-	private function _afterUpdate(){
-		$this->afterSave();
-		$this->afterUpdate();
+	private function _afterUpdate(&$data){
+		$this->afterSave($data);
+		$this->afterUpdate($data);
 	}
 	
 	protected function afterSave(){}
@@ -130,7 +130,7 @@ class Model implements Iterator{
 		$data=$this->_getSaveData(func_get_args());
 		$id=static::QInsert()->data($data)->execute();
 		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-		$this->_afterInsert();
+		$this->_afterInsert($data);
 		return $id;
 	}
 	public function insertIgnore(){
@@ -138,7 +138,7 @@ class Model implements Iterator{
 		$data=$this->_getSaveData(func_get_args());
 		$id=static::QInsert()->ignore()->data($data)->execute();
 		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-		$this->_afterInsert();
+		$this->_afterInsert($data);
 		return $id;
 	}
 	
@@ -147,7 +147,7 @@ class Model implements Iterator{
 		$data=$this->_getSaveData(func_get_args());
 		$id=static::QReplace()->data($data)->execute();
 		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-		$this->afterSave();
+		$this->afterSave($data);
 		return $id;
 	}
 	
@@ -160,7 +160,7 @@ class Model implements Iterator{
 			unset($data[$pkName]);
 		}
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
-		$this->_afterUpdate();
+		$this->_afterUpdate($data);
 		return true;
 		
 	}
@@ -173,12 +173,13 @@ class Model implements Iterator{
 		if(self::QExist()->where($where)->execute()){
 			foreach(array_keys($where) as $pkName) unset($data[$pkName]);
 			$res=static::QUpdateOne()->values($data)->where($where)->execute();
+			$this->_afterUpdate($data);
 		}else{
 			foreach($where as $pkName=>&$value) $data[$pkName]=$value;
 			$res=static::QInsert()->data($data)->execute();
+			$this->_afterInsert($data);
 			if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$res;
 		}
-		$this->afterSave();
 		return $res;
 	}
 	
