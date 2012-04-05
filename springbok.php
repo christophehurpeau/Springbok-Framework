@@ -47,7 +47,7 @@ class Springbok{
 
 	/** @param Exception $exception */
 	public static function handleException(&$exception){
-		$forceDefault=self::$inError===true;
+		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
 		self::$inError=true;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		if(ob_get_length()>0) ob_end_clean();
@@ -69,7 +69,7 @@ class Springbok{
 	
 	
 	public static function handleError(&$code,&$message,&$file,&$line,&$context=null){//debugCode(print_r($context,true));
-		$forceDefault=self::$inError===true;
+		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
 		self::$inError=true;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		$log=self::getErrorText($code)." : $message ($file:$line)\n";
