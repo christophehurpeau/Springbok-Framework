@@ -247,7 +247,7 @@ abstract class DBSchema{
 	}
 	
 	
-	private function generatePropDefs(){
+	public function generatePropDefs(){
 		$modelName=&$this->modelName;
 		$properties=$this->createModelPropDef();
 		

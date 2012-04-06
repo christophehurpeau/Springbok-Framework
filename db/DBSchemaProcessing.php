@@ -42,6 +42,9 @@ class DBSchemaProcessing{
 		}
 		
 		/* DEV */
+		//regenerate after modifs
+		if($generate) foreach($schemas as $schema) $schema->generatePropDefs();
+		
 		if($this->logs !==NULL && $generate){
 			$vars=array('dbs'=>&$this->logs);
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
