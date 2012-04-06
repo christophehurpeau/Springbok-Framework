@@ -1,5 +1,6 @@
 <?php
 abstract class DBSchema{
+	private $tableExist=true;
 	protected $schemaProcessing,$modelName,$tableName,$modelInfos,$isEntity,$columns=false;
 	/**  @var DB */
 	protected $db;
@@ -34,7 +35,7 @@ abstract class DBSchema{
 		$db=&$this->db;
 		
 		if($this->isGenerateSchema() && $this->schemaProcessing->isGenerate()){
-			if(!$this->tableExist()){
+			if(!($this->tableExist=$this->tableExist())){
 				$this->log('Create table');
 				if($this->shouldApply()){
 					$this->createTable();
@@ -248,7 +249,8 @@ abstract class DBSchema{
 	
 	
 	public function generatePropDefs(){
-		if($this->columns===null) $this->columns=$this->getColumns();
+		if(!$this->tableExist) return;
+		if($this->columns===false) $this->columns=$this->getColumns();
 		$modelName=&$this->modelName;
 		$properties=$this->createModelPropDef();
 		
