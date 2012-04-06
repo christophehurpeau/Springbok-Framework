@@ -248,6 +248,7 @@ abstract class DBSchema{
 	
 	
 	public function generatePropDefs(){
+		if($this->columns===null) $this->columns=$this->getColumns();
 		$modelName=&$this->modelName;
 		$properties=$this->createModelPropDef();
 		
