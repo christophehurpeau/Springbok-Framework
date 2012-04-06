@@ -224,7 +224,7 @@ class CssFile extends EnhancerFile{
 			'BUTTON_FOCUS_COLOR'=>'#FFF',
 			'BUTTON_TEXTSHADOW'=>'#555',
 		);
-		for($i=1;$i<=5;$i++){
+		for($i=1;$i<=10;$i++){
 			$constantes['COLOR'.$i]='false';
 			$constantes['BACKGROUND_COLOR'.$i]='false';
 			$constantes['BACKGROUND_TB_COLOR'.$i]='false';

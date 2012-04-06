@@ -23,7 +23,7 @@ a.button,a.button:hover{text-decoration:none;display:inline-block;}
 button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
 
 
-FOR(I=1;I<5;I+1)
+FOR(I=1;I<11;I+1)
 IF(BACKGROUND_TB_COLOR$I)
 	input.type$I.submit,button.type$I,.button.type$I{
 		bg-gradient-tb(BACKGROUND_TB_COLOR$I);
