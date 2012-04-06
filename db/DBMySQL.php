@@ -161,13 +161,23 @@ class DBMySQL extends DB{
 		$r->close(); return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectValues($query,$numCol=0){
-		$r=$this->_query($query); $res=array();
+		/*$r=$this->_query($query); $res=array();
 		while($row=$r->fetch_row()) $res[]=$row[$numCol];
+		$r->close(); return $res;*/
+		$value=false; $res=array();
+		$fields=array(&$value);
+		$r=$this->_query_($query,$fields);
+		while($r->fetch()) $res[]=$value;
 		$r->close(); return $res;
 	}
 	public function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0){
-		$r=$this->_query($query); $res=array();
+		/*$r=$this->_query($query); $res=array();
 		while($row=$r->fetch_row()) $callback($row[$numCol]);
+		$r->close();*/
+		$value=false; $res=array();
+		$fields=array(&$value);
+		$r=$this->_query_($query,$fields);
+		while($r->fetch()) $callback($value);
 		$r->close();
 	}
 	public function &/* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
