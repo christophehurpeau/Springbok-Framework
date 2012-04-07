@@ -63,6 +63,9 @@ class JsFile extends EnhancerFile{
 	public function writeDevFile($devFile){
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($devFile->getPath()))==='ace') $devFile->write($this->_srcContent);
 		else{
+			$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
+			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
+			
 			self::executeCompressor($this->_srcContent,$devFile->getPath(),true);
 			//self::executeGoogleCompressor($this->_srcContent,$devFile->getPath().'_googleclosure.js');
 			//self::uglify($this->_srcContent,$devFile->getPath().'_uglify.js');
@@ -85,6 +88,9 @@ class JsFile extends EnhancerFile{
 		//$this->_srcContent=preg_replace('/\/\*\!?\s+[^\(?:\*\/)]*\s+\*\//mU','',$this->_srcContent);
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($prodFile->getPath()))==='ace') $prodFile->write($this->_srcContent);
 		else{
+			$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
+			$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
+			
 			self::executeCompressor($this->_srcContent,$prodFile->getPath());
 			//self::executeGoogleCompressor($this->_srcContent,$prodFile->getPath().'_googleclosure.js');
 			//self::uglify($this->_srcContent,$prodFile->getPath().'_uglify.js');
