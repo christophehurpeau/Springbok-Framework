@@ -44,9 +44,6 @@ input[type=submit],button{margin:5px 0 3px 10px;}
 
 input[type=radio],input[type=checkbox]{vertical-align:bottom; margin:0 3px;}
 div input.wp100,form textarea{
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	width:100%
 }

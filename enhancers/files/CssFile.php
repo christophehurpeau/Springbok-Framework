@@ -343,6 +343,7 @@ class CssFile extends EnhancerFile{
 			'border-bottom-right-radius'=>array('-moz-border-radius-bottomright','-webkit-border-bottom-right-radius'),
 			'border-bottom-left-radius'=>array('-moz-border-radius-bottomleft','-webkit-border-bottom-left-radius'),
 			'box-shadow'=>array('-moz-box-shadow','-webkit-box-shadow'),
+			'box-sizing'=>array('-moz-box-sizing','-webkit-box-sizing','-ms-box-sizing'),
 			'appearance'=>array('-moz-appearance','-webkit-appearance'),
 			'backface-visibility'=>array('-moz-backface-visibility','-webkit-backface-visibility')
 		);
