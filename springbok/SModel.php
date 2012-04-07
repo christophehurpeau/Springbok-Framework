@@ -1,5 +1,5 @@
 <?php
-class SModel implements Iterator{
+abstract class SModel implements Iterator{
 	/* Properties */
 	
 	protected $data=array();

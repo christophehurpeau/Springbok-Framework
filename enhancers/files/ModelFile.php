@@ -184,6 +184,7 @@ class ModelFile extends PhpFile{
 	}
 
 	private function writeInfos(){
+		if(empty($this->_className)) return;
 		$dirname=$this->currentDestFile->getPath();
 		while(basename(($dirname=dirname($dirname))) != 'models');
 		
