@@ -80,11 +80,11 @@ includeCore('springbok.history');
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data, headers:headers,
 				async:false,
-				complete:function(){
-					$('body').removeClass('cursorWait');
+				complete:function(jqXHR){
+				/*	$('body').removeClass('cursorWait');
 					divLoading.remove();
 				},
-				success:function(data,textStatus,jqXHR){
+				success:function(data,textStatus,jqXHR){*/
 					var h,div,to;
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
@@ -105,20 +105,23 @@ includeCore('springbok.history');
 						//tinyMCE.execCommand('mceRemoveControl',false,this.id.substr(0,this.id.length-7))
 						tinyMCE.remove(this.id.substr(0,this.id.length-7));
 					});
-					div.html(data);//.fadeTo(0,1);
+					div.html(jqXHR.responseText);//.fadeTo(0,1);
 					$(window).scrollTop(0);
 					if(normalFaviconHref) linkFavicon.attr('href',normalFaviconHref);
 					
 					if(to === 'base') divPage=$('#page');
 					else if(to==='page') divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass')); // 
 					if(to === 'base' || to === 'page') S.ajax.updateVariable(divPage);
-				},
+					
+					$('body').removeClass('cursorWait');
+					divLoading.remove();
+				}/*,
 				error:function(jqXHR,textStatus,errorThrown){
 					$(window).scrollTop(0);
 					divContainer.html($('<p/>').attr('class','message error')
 						.text(i18nc.Error+(textStatus?' ['+textStatus+']':'')+(errorThrown?' : '+errorThrown:''))).append(jqXHR.responseText);//.fadeTo(150,1);
 					divPage=divVariable=divContent=false;
-				}
+				}*/
 			});
 		}
 	};
