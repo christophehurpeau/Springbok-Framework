@@ -32,4 +32,5 @@ _tC('New name ?');
 _tC('Password lost ?');
 
 _tC('User');
-
+_tC('Guest');
+_tC('Basic user');
