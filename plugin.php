@@ -9,8 +9,6 @@ set_time_limit(0);
 define('BASE_URL',''); define('WEB_FOLDER','');
 include CORE.'springbok.php';
 
-//data
-include CORE.'mvc/models/Model.php';
 
 class App{
 	public static function configArray($name,$withSuffix=false){

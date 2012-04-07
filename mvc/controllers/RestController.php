@@ -42,7 +42,7 @@ class RestController{
 	}
 
 	protected static function renderModels($models){
-		self::render(Model::mToArray($models));
+		self::render(SModel::mToArray($models));
 	}
 	protected static function renderModel($model){
 		self::render($model===false?false:$model->toArray());

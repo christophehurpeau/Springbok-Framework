@@ -7,7 +7,9 @@ class ModelFile extends PhpFile{
 		//preg_match('/class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches);
 		//debug($matches);
 		
-		if(preg_match('/class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches) && !empty($matches[1])){
+		if(preg_match('/\*\*([^{]*)\*\/\s+class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches) && !empty($matches[2])
+						 && preg_match('/@TableAlias\(/',$matches[1])){
+			// SQL MODEL
 			//$content=parent::enhancePhp($content,false);
 			
 			$content=preg_replace_callback('/\/\*\*([^;{]*)\*\/\s+public\s+\$([A-Za-z0-9\s_]+);/Ums',array($this,'fields'),$content);
@@ -176,7 +178,7 @@ class ModelFile extends PhpFile{
 			}
 			$this->_contentInfos='<?php return '.UPhp::exportCode($contentInfos).';';
 			
-			$content.=$matches[1].'::init("'.$matches[1].'");';
+			$content.=$matches[2].'::init("'.$matches[2].'");';
 		}
 		$this->_phpContent=$this->addExecuteToQueries($content,true);
 	}

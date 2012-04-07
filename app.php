@@ -12,7 +12,6 @@ define('APP_DATE',time());
 define('WEB_FOLDER','');
 /* /DEV */
 
-require 'mvc/models/Model.php';
 require 'mvc/controllers/Controller.php';
 require 'components/CRoute.php';
 require 'components/CHttpRequest.php';
