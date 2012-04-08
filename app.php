@@ -113,8 +113,8 @@ class App{
 		/* /DEV */
 
 		
-		if(isset(Config::$base))
-			foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
+		//if(isset(Config::$base))
+		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			/* DEV */
 			if(isset(Config::$dev_prefixed_routes) && !Config::$dev_prefixed_routes){

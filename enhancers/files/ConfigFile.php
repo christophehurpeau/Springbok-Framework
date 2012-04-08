@@ -208,6 +208,7 @@ class ConfigFile extends PhpFile{
 			}else $content.='$'.$key.'='.$code.',';
 		}
 		$content=substr($content,0,-1).';}'.$afterContent;
+		foreach($this->enhanced->config['base'] as $name) $content.='include CORE.\'base/'.$name.'.php\';';
 		foreach(array($devFile,$prodFile) as $dest){
 			$dest=new File(dirname($dest).DS.$configname.'.php');
 			$dest->write($content);
