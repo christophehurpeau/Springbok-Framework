@@ -88,6 +88,7 @@ includeCore('springbok.history');
 					var h,div,to;
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
+						divLoading.remove();
 						S.ajax.load(h);
 						return;
 					}
