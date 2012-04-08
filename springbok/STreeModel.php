@@ -7,18 +7,17 @@ class STreeModel extends SSqlModel{
 	protected static $where=array();
 	
 	protected function beforeInsert(){
-		$this->level_depth=self::QValue()->field('level_depth')->byId($this->parent_id)->execute()+1;
-		if($this->parent_id){
-			
+		if(empty($this->parent_id)){
+			//$edge=self::_getMax();
+			$this->level_depth=1;
 		}else{
-			$edge=self::_getMax();
+			$this->level_depth=self::QValue()->field('level_depth')->byId($this->parent_id)->execute()+1;
 		}
-		
 		return parent::beforeInsert();
 	}
 	
 	protected function afterInsert(){
-		$this->_setParent($this->parent_id);
+		if(!empty($this->parent_id)) $this->_setParent($this->parent_id);
 	}
 	
 	private $mustRebuild;
