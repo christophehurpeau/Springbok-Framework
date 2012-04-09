@@ -27,7 +27,7 @@ a:hover{color:INTERACTION_HOVER_COLOR}
 ENDIF
 
 
-#container pre{
+#container pre,#container code{
 	font:normal 9.5pt 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;
 }
 
