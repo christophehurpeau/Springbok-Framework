@@ -174,7 +174,7 @@ class GitRepository{
 		return $this->run('checkout '.escapeshellarg($branch));
 	}
 	
-	const FORMAT_SHORT_REVISIONS='"%H %at%n%an (%ae)%n%s"';
+	const FORMAT_SHORT_REVISIONS='"%H %at%n%an%n%ae%n%s"';
 	private static function &parseShortRevisions($output){
 		$revisions=array();
 		if(empty($output)) return $revisions;
@@ -186,9 +186,12 @@ class GitRepository{
 				$revisions[]=&$revision;
 				$numLine=1;
 			}elseif($numLine===1){
-				$revision['author']=$line;
-				$numLine=2;
+				$revision['authorName']=$line;
+				$numLine++;
 			}elseif($numLine===2){
+				$revision['authorEmail']=$line;
+				$numLine++;
+			}elseif($numLine===3){
 				$revision['comment'].=$line;
 			}
 		}
@@ -229,8 +232,14 @@ class GitRepository{
 				$revision->parents=empty($m[2])?null:explode(' ',trim($m[2]));
 				$revision->files=array();
 			}elseif($parsing_state===0 && preg_match('/^(\w+):\s*(.*)$/s',$line,$m)){
-				if($m[1]==='Author') $revision->author=trim($m[2]);
-				elseif($m[1]==='CommitDate') $revision->time=strtotime($m[2]); 
+				if($m[1]==='Author' || $m[1]==='Commit'){
+					preg_match('/^\s*(.*)\s+\<\s*([^>]+)\s*>\s*$/U',$m[2],$m2);
+					$fieldName= $m[1]==='Author' ? 'authorName' : 'committerName';
+					$revision->$fieldName=empty($m2)?$m[2]:$m2[1];
+					$fieldName= $m[1]==='Author' ? 'authorEmail' : 'committerEmail';
+					$revision->$fieldName=empty($m2)?'':$m2[2];
+				}elseif($m[1]==='CommitDate') $revision->time=strtotime($m[2]);
+				elseif($m[1]==='AuthorDate') $revision->authorTime=strtotime($m[2]);
 			}elseif($parsing_state===0 && $line===''){
 				$parsing_state=1;
 				$revision->comment='';
