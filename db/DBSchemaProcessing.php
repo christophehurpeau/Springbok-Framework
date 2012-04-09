@@ -45,7 +45,7 @@ class DBSchemaProcessing{
 		//regenerate after modifs
 		if($generate) foreach($schemas as $schema) $schema->generatePropDefs();
 		
-		if($this->logs !==NULL && $generate){
+		if($this->logs !==NULL && $generate && isset($_SERVER['REQUEST_URI'])){
 			$vars=array('dbs'=>&$this->logs);
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
 			else render(CORE.'db/applied-view.php',$vars);
