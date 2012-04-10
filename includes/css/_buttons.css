@@ -8,6 +8,7 @@ input.submit,button,.button{
 	padding:2px 8px;
 	cursor:pointer;
 	transition:all .3s;
+	box-sizing: border-box;
 }
 input.submit:hover,button:hover,.button:hover{
 	bg-gradient-tb(BUTTON_HOVER_BACKGROUND_TB);
