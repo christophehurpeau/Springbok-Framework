@@ -41,17 +41,16 @@ class App{
 			echo 'CONFIG does not exists';exit;
 		}
 		
-		if(isset(Config::$base))
-			foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
+		//if(isset(Config::$base))
+		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			CRoute::cliinit('','');
-			if(file_exists($filename=APP.'cli'.DS.$action.'.php'))
+			if(file_exists($filename=APP.'cli/'.$action.'.php'))
 				include $filename;
-			else include CORE.'cli'.DS.$action.'.php';
+			else include CORE.'cli/'.$action.'.php';
 		}catch(Exception $exception){
 			if(!($exception instanceof HttpException)){
-				if($exception instanceof PDOException) $e=new HttpException(503,'Service Temporarily Unavailable');
-				else $e=new HttpException(500,'Internal Server Error');
+				$e=new HttpException(500,'Internal Server Error');
 			}else $e=$exception;
 			
 			Springbok::handleException($exception);

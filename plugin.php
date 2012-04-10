@@ -19,16 +19,15 @@ class App{
 		self::configArray('',true);
 		Config::$autoload_default=APP.'models/';
 		Config::$models_infos=APP.'models/infos/';
-		if(isset(Config::$base))
-			foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
+		//if(isset(Config::$base))
+		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			if(file_exists($filename=APP.'cli/'.$action.'.php'))
 				include $filename;
 			else include CORE.'cli/'.$action.'.php';
 		}catch(Exception $exception){
 			if(!($exception instanceof HttpException)){
-				if($exception instanceof PDOException) $e=new HttpException(503,'Service Temporarily Unavailable');
-				else $e=new HttpException(500,'Internal Server Error');
+				$e=new HttpException(500,'Internal Server Error');
 			}else $e=$exception;
 			
 			Springbok::handleException($exception);

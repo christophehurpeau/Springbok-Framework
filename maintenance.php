@@ -17,8 +17,8 @@ class App{
 	
 	public static function run(){
 		self::configArray('',true);
-		if(isset(Config::$base))
-			foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
+		//if(isset(Config::$base))
+		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		
 		$vars=array();
 		if(file_exists(APP.'views/maintenance.php')) render(APP.'views/maintenance.php',$vars);

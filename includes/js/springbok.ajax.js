@@ -49,6 +49,13 @@ includeCore('springbok.history');
 				S.ajax.load(url);
 				return false;
 			});
+			$(document).on('click','ul.clickable li[rel]',function(evt){
+				var li=$(this),ul=li.closest('ul');
+				ul.find('li').removeClass('current');
+				li.addClass('current');
+				S.ajax.load(li.attr('rel'));
+				return false;
+			});
 			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([action^="http://"])',function(){
 				var form=$(this);
 				S.ajax.load(form.attr('action'),form.serialize(),form.attr('method')==='get'?0:'post');

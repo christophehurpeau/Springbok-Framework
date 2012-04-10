@@ -333,7 +333,8 @@ html body .mb10{margin-bottom:10px}
 }
 .smallinfo .message,.message.smallinfo{
 	margin:0;
-	padding:2px 4px;
+	padding:3px 5px;
+	background:rgba(77,77,77,0.25);
 }
 .message.error{
 	border:1px solid #B80000;	

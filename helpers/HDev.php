@@ -18,7 +18,7 @@ class HDev{
 		echo '</div></div><div id="springbok-bar-route" class="springbok-bar-content"><div>';
 		self::springbokBarRoute();
 		echo '</div></div><div id="springbok-bar-ajax" class="springbok-bar-content"><div>';
-			echo '<div style="float:left;width:300px"><ul class="nobullets spaced"></ul></div>'
+			echo '<div style="float:left;width:300px"><ul class="clickable nobullets spaced"></ul></div>'
 					.'<div id="SpringbokBarAjaxContent" style="margin-left:310px">';
 		echo '</div></div>';
 		

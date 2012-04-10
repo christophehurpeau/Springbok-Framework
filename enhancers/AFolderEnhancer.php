@@ -11,16 +11,16 @@ abstract class AFolderEnhancer{
 	public static function findEnhancer(&$filename,&$ext){
 		foreach(static::$fileEnhancers as &$fileEnhancer){
 			if(!((is_string($fileEnhancer['ext']) && $ext==$fileEnhancer['ext']) || (is_array($fileEnhancer['ext']) && in_array($ext,$fileEnhancer['ext'])))) continue;
-			$justDev=$fileEnhancer['_justdev'] ? substr($filename,0,1)=='_' : false;
+			$justSrc=$fileEnhancer['_justsrc'] ? substr($filename,0,1)=='_' : false;
 			$copy=$fileEnhancer['copy']?true:false;
 			$destFilename=false;
 			if($fileEnhancer['destExt']!==false && $fileEnhancer['destExt']!==$ext) $destFilename=substr($filename,0,-strlen($ext)).$fileEnhancer['destExt'];
-			return array($fileEnhancer['class'],$justDev,$destFilename,$copy);
+			return array($fileEnhancer['class'],$justSrc,$destFilename,$copy);
 		}
 		return false;
 	}
-	public static function registerEnhancer($class,$ext,$_justdev=false,$destExt=false,$copy=false){
-		static::$fileEnhancers[]=array('class'=>&$class,'ext'=>&$ext,'_justdev'=>$_justdev,'destExt'=>$destExt,'copy'=>$copy);
+	public static function registerEnhancer($class,$ext,$_justsrc=false,$destExt=false,$copy=false){
+		static::$fileEnhancers[]=array('class'=>&$class,'ext'=>&$ext,'_justsrc'=>$_justsrc,'destExt'=>$destExt,'copy'=>$copy);
 	}
 	
 	
@@ -48,9 +48,14 @@ abstract class AFolderEnhancer{
 			
 			$found=$this->findEnhancer($filename,$ext);
 			if($found===false){
-				$justDev=$destFilename=false;
+				$justSrc=$justDev=$destFilename=false;
 				$copy=$ext!=='php';
-			}else list($class,$justDev,$destFilename,$copy)=$found;
+			}else{
+				$justDev=false;
+				list($class,$justSrc,$destFilename,$copy)=$found;
+			}
+			
+			if($justSrc) continue;
 			if($destFilename===false) $destFilename=$filename;
 			
 			if($copy){
