@@ -7,7 +7,7 @@ class JsFile extends EnhancerFile{
 			$layout=file_get_contents($this->enhanced->getAppDir().'src/jsapp/layout.php');
 			preg_match('#<header>\s*(.*)\s*</header>.*<footer>\s*(.*)</footer>\s*#Us',$layout,$matchesLayout);
 			$srcContent="includeCore('springbok.jsapp');"
-				.'S.app.jsapp('.json_encode(EnhancerFile::$APP_CONFIG['projectName']).','.time().');' // force également à toujours refaire le fichier
+				.'S.app.jsapp('.json_encode($this->enhanced->appConfig('projectName')).','.time().');' // force également à toujours refaire le fichier
 				.('S.router.init('.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1).','
 						.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes-langs.js'),6,-1).');')
 				.$srcContent

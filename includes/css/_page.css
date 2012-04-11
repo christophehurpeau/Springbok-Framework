@@ -172,7 +172,7 @@ footer{
 	
 	.content{padding:5px 10px;}
 	div.variable.padding{padding:8px 10px}
-	IFNOT(VARIABLE_BACKGROUND) div.variable > div.content{padding:5px 5px 0 0;} ENDIF
+	IFNOT(VARIABLE_BACKGROUND) IFNOT(FIXED_VARIABLE_BACKGROUND) div.variable > div.content{padding:5px 5px 0 0} ENDIF ENDIF
 	div.variable.padding > div.content{padding:5px 0;}
 	
 	div.variable h1{
