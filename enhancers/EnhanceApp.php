@@ -144,7 +144,7 @@ class EnhanceApp extends AEnhance{
 			if($dirname[0]==='.' || $dPath===$srcDir.'web/tinymce/') continue;
 			
 			
-			if($dPath===$srcDir.'web/files/'){
+			if($dPath===$srcDir.'web/files/' || $dPath===$srcDir.'web/img/icons/'){
 				$this->recursiveCopyDir($d,array($devDir,$prodDir));
 				continue;
 			}
