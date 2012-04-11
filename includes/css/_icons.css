@@ -1,12 +1,12 @@
 .icon_wrap div{height:30px;padding-left:28px}
 .icon{width:16px;height:16px;margin:2px 3px 2px 0;text-indent: -99999px;}/* pourquoi pas en display inline-block ? */
-li .icon{margin:0 2px 0 0}
+li .icon,.button .icon{margin:0 2px 0 0}
 
 .icon.page_add{background:url('COREIMG/silk_icon_set/page_white_add.png');}
 .icon.page_delete{background:url('COREIMG/silk_icon_set/page_white_delete.png');}
 .icon.page_edit{background:url('COREIMG/silk_icon_set/page_white_edit.png');}
 .icon.add{background:url('COREIMG/silk_icon_set/add.png');}
-.icon.edit{background:url('COREIMG/silk_icon_set/page_white_edit.png');}
+.icon.edit{background:url('COREIMG/silk_icon_set/pencil.png');}
 .icon.editText{background:url('COREIMG/silk_icon_set/page_white_text.png');}
 .icon.delete{background:url('COREIMG/silk_icon_set/delete.png');}
 .icon.refresh{background:url('COREIMG/silk_icon_set/arrow_refresh.png');}

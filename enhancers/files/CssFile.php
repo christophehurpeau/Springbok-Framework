@@ -225,19 +225,32 @@ class CssFile extends EnhancerFile{
 			'BUTTON_TEXTSHADOW'=>'#555',
 		);
 		for($i=1;$i<=10;$i++){
-			$constantes['COLOR'.$i]='false';
-			$constantes['BACKGROUND_COLOR'.$i]='false';
-			$constantes['BACKGROUND_TB_COLOR'.$i]='false';
-			$constantes['BLOCK_COLOR'.$i.'_BACKGROUND']='false';
-			$constantes['BLOCK_COLOR'.$i.'_COLOR']='false';
-			$constantes['BLOCK_COLOR'.$i.'_BORDER']='false';
-			$constantes['BUTTON_COLOR'.$i.'_COLOR']='false';
-			$constantes['BUTTON_COLOR'.$i.'_BORDER']='false';
-			$constantes['BUTTON_COLOR'.$i.'_TEXTSHADOW']='false';
-			$constantes['BUTTON_COLOR'.$i.'_BOXSHADOW']='false';
-			$constantes['BLOCK_COLOR'.$i.'_BACKGROUND_CLICKABLE_HOVER']='false';
-			$constantes['BLOCK_COLOR'.$i.'_BACKGROUND_TB_CLICKABLE_HOVER']='false';
-			$constantes['BLOCK_COLOR'.$i.'_COLOR_CLICKABLE_HOVER']='false';
+			$constantes['TYPE'.$i.'_COLOR']='false';
+			$constantes['TYPE'.$i.'_BACKGROUND']='false';
+			$constantes['TYPE'.$i.'_BACKGROUND_TB']='false';
+			$constantes['TYPE'.$i.'_BORDER']='false';
+			
+			$constantes['TYPE'.$i.'_HOVER_BACKGROUND']='false';
+			$constantes['TYPE'.$i.'_HOVER_BACKGROUND_TB']='false';
+			$constantes['TYPE'.$i.'_HOVER_COLOR']='false';
+			$constantes['TYPE'.$i.'_HOVER_BORDER']='false';
+			
+			$constantes['TYPE'.$i.'_FOCUS_BACKGROUND']='false';
+			$constantes['TYPE'.$i.'_FOCUS_BACKGROUND_TB']='false';
+			$constantes['TYPE'.$i.'_FOCUS_COLOR']='false';
+			$constantes['TYPE'.$i.'_FOCUS_BORDER']='false';
+			
+			$constantes['TYPE'.$i.'_BLOCK_BACKGROUND']='false';
+			$constantes['TYPE'.$i.'_BLOCK_BACKGROUND_TB']='false';
+			$constantes['TYPE'.$i.'_BLOCK_COLOR']='false';
+			$constantes['TYPE'.$i.'_BLOCK_BORDER']='false';
+			
+			$constantes['TYPE'.$i.'_BUTTON_COLOR']='false';
+			$constantes['TYPE'.$i.'_BUTTON_BACKGROUND']='false';
+			$constantes['TYPE'.$i.'_BUTTON_BACKGROUND_TB']='false';
+			$constantes['TYPE'.$i.'_BUTTON_BORDER']='false';
+			$constantes['TYPE'.$i.'_BUTTON_TEXTSHADOW']='false';
+			$constantes['TYPE'.$i.'_BUTTON_BOXSHADOW']='false';
 		}
 		
 		$content=preg_replace_callback('/@CONST\s+([0-9\w_-]+)\s*=\s*\'?([0-9\w\s\._\-\#\,]+)\'?;/Ui',function($matches) use(&$constantes){

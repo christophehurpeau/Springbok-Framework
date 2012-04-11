@@ -212,6 +212,7 @@ class HForm{
 		
 		if($label) $content=HHtml::tag('label',array('for'=>$attributes['id']),$label).' ';
 		else $content='';
+		if(isset($attributes['between'])){ $content.=$attributes['between']; unset($attributes['between']);}
 		$content.=HHtml::tag('input',$attributes);
 		
 		if($hasError=(!isset($containerAttributes['error']) || $containerAttributes['error']) && CValidation::hasError($key=($this->modelName === NULL ? $name : $this->name.'.'.$name)))

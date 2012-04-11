@@ -7,8 +7,7 @@
 			b=$('<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"/>').appendTo(b);
 			if(/*$.type(i)==='number'*/$.isNumeric(i)) b=$('<span/>').text(l).appendTo(b);
 			else{
-				if($.type(l)!=='array') url=l;
-				else url=l.url;
+				url=S.isObject(l) ? l.url : l;
 				b.append($('<a/>').attr(linkoptions).attr('href',url).html($('<span itemprop="title"/>').text(i)));
 			}
 		});

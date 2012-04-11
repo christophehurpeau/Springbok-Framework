@@ -1,0 +1,52 @@
+FOR(I=1;I<11;I+1)
+	IF(TYPE$I_COLOR)
+		.block$I,.block$I a,.block$I a:hover,#container #page .block$I,input.type$I.submit,button.type$I,.button.type$I{color:TYPE$I_COLOR}
+	ENDIF
+	
+	IF(TYPE$I_BACKGROUND || TYPE$I_BACKGROUND_TB || TYPE$I_BORDER)
+		.block$I,#container #page .block$I,input.type$I.submit,button.type$I,.button.type$I,.button.type$I:hover,.button.type$I:focus{
+			IF(TYPE$I_BACKGROUND) background:TYPE$I_BACKGROUND; ENDIF
+			IF(TYPE$I_BACKGROUND_TB) bg-gradient-tb(TYPE$I_BACKGROUND_TB); ENDIF
+			IF(TYPE$I_BORDER) border:TYPE$I_HOVER_BORDER; ENDIF
+		}
+	ENDIF
+	
+	IF(TYPE$I_HOVER_BACKGROUND || TYPE$I_HOVER_BACKGROUND_TB || TYPE$I_HOVER_COLOR || TYPE$I_HOVER_BORDER)
+		.clickable .block$I:hover,#container #page .clickable .block$I:hover,input.type$I.submit:hover,button.type$I:hover,.button.type$I:hover,.button.type$I:focus{
+			IF(TYPE$I_HOVER_BACKGROUND) background:TYPE$I_HOVER_BACKGROUND; ENDIF
+			IF(TYPE$I_HOVER_BACKGROUND_TB) bg-gradient-tb(TYPE$I_HOVER_BACKGROUND_TB); ENDIF
+			IF(TYPE$I_HOVER_COLOR) color:TYPE$I_HOVER_COLOR; ENDIF
+			IF(TYPE$I_HOVER_BORDER) border:TYPE$I_HOVER_BORDER; ENDIF
+		}
+	ENDIF
+
+	IF(TYPE$I_FOCUS_BACKGROUND || TYPE$I_FOCUS_BACKGROUND_TB || TYPE$I_FOCUS_COLOR || TYPE$I_FOCUS_BORDER)
+		.clickable .block$I:focus,#container #page .clickable .block$I:focus,input.type$I.submit:focus,button.type$I:focus,.button.type$I:focus{
+			IF(TYPE$I_FOCUS_BACKGROUND) background:TYPE$I_FOCUS_BACKGROUND; ENDIF
+			IF(TYPE$I_FOCUS_BACKGROUND_TB) bg-gradient-tb(TYPE$I_FOCUS_BACKGROUND_TB); ENDIF
+			IF(TYPE$I_HOVER_COLOR) color:TYPE$I_FOCUS_COLOR; ENDIF
+			IF(TYPE$I_HOVER_BORDER) border:TYPE$I_FOCUS_BORDER; ENDIF
+		}
+	ENDIF
+
+	IF(TYPE$I_BLOCK_BACKGROUND || TYPE$I_BLOCK_BACKGROUND_TB || TYPE$I_BLOCK_COLOR || TYPE$I_BLOCK_BORDER)
+		.block$I,#container #page .block$I{
+			IF(TYPE$I_BLOCK_BACKGROUND) background:TYPE$I_BLOCK_BACKGROUND; ENDIF
+			IF(TYPE$I_BLOCK_BACKGROUND_TB) bg-gradient-tb(TYPE$I_BLOCK_BACKGROUND_TB); ENDIF
+			IF(TYPE$I_BLOCK_COLOR) color:TYPE$I_BLOCK_COLOR; ENDIF
+			IF(TYPE$I_BLOCK_BORDER) border:TYPE$I_BLOCK_BORDER; ENDIF
+		}
+	ENDIF
+	
+	IF(TYPE$I_BUTTON_HOVER_BACKGROUND || TYPE$I_BUTTON_HOVER_BACKGROUND_TB || TYPE$I_BUTTON_HOVER_COLOR || TYPE$I_BUTTON_HOVER_BORDER || TYPE$I_BUTTON_HOVER_TEXTSHADOW || TYPE$I_BUTTON_HOVER_BOXSHADOW)
+		input.type$I.submit,button.type$I,.button.type$I,input.type$I.submit:hover,button.type$I:hover,.button.type$I:hover,.button.type$I:focus{
+			IF(TYPE$I_BUTTON_HOVER_BACKGROUND) background:TYPE$I_BUTTON_HOVER_BACKGROUND; ENDIF
+			IF(TYPE$I_BUTTON_HOVER_BACKGROUND_TB) bg-gradient-tb(TYPE$I_BUTTON_HOVER_BACKGROUND_TB); ENDIF
+			IF(TYPE$I_BUTTON_HOVER_COLOR) color:TYPE$I_BUTTON_HOVER_COLOR; ENDIF
+			IF(TYPE$I_BUTTON_HOVER_BORDER) border:TYPE$I_BUTTON_HOVER_BORDER; ENDIF
+			IF(TYPE$I_BUTTON_HOVER_TEXTSHADOW) text-shadow:TYPE$I_BUTTON_HOVER_TEXTSHADOW; ENDIF
+			IF(TYPE$I_BUTTON_HOVER_BOXSHADOW) box-shadow:TYPE$I_BUTTON_HOVER_BOXSHADOW; ENDIF
+		}
+	ENDIF
+
+ENDFOR
