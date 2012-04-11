@@ -362,9 +362,11 @@ class CssFile extends EnhancerFile{
 	
 	public function &recursive_selectors($content){
 		$content=preg_replace_callback('/([^{};\/]+){((?:[^{}]+(?:{[^}]*}\s*)?)*)}/',function($matches){
-			$foundInternalSelectors=array();$selector=explode(',',trim($matches[1]));
-			$internalContent=preg_replace_callback('/[;|}|\n]([^{;}\/]+){([^}]*)}/',function($matches) use(&$foundInternalSelectors,&$selector){
-				$internalSelector=explode(',',trim($matches[1]));
+			$selectors=trim($matches[1]);
+			if($selectors[0]==='@') return $matches[0];
+			$foundInternalSelectors=array();$selector=explode(',',$selectors);
+			$internalContent=preg_replace_callback('/(;|}|\n)([^{;}\/@]+){([^}]*)}/',function($matches) use(&$foundInternalSelectors,&$selector){
+				$internalSelector=explode(',',trim($matches[2]));
 				$finalInternalSelector=array();
 				foreach($selector as $selctr){ $selctr=trim($selctr);
 					foreach($internalSelector as $iselctr){
@@ -372,8 +374,8 @@ class CssFile extends EnhancerFile{
 					}
 				}
 				$finalInternalSelector=implode(',',$finalInternalSelector);
-				$foundInternalSelectors[]=$finalInternalSelector.'{'.$matches[2].'}';
-				return ';';
+				$foundInternalSelectors[]=$finalInternalSelector.'{'.$matches[3].'}';
+				return $matches[1];
 			},$matches[2]);
 			return $matches[1].'{'.rtrim($internalContent,'; ').'}'.implode(PHP_EOL,$foundInternalSelectors);
 		},$content);
