@@ -1,7 +1,17 @@
 /* https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.autocomplete.js */
 (function($){
+	var defaultDisplayList=function(data,ulAttrs){
+		var li; result=$('<ul/>').attr(ulAttrs);
+		$.each(data,function(i,v){
+			li=$('<li/>');
+			if(typeof(v) ==='string') li.html(v);
+			else li.html($('<a/>').attr('href',v.url).text(v.text));
+			result.append(li);
+		});
+	};
 	$.fn.ajaxSearch=function(url,minLength,destContent,display){
 		var xhr,input=this,lastVal='',currentTimeout;
+		display=display||defaultDisplayList;
 		this.keyup(function(){
 			var val=input.val();
 			if(val != '' && val.length >= minLength && val!=lastVal){
@@ -15,17 +25,7 @@
 						data:{term:val},
 						dataType: 'json',
 						success:function(data){
-							if(display) result=display(data);
-							else{
-								var result=$('<ul/>'),li;
-								$.each(data,function(i,v){
-									li=$('<li/>');
-									if(typeof(v) ==='string') li.html(v);
-									else li.html($('<a/>').attr('href',v.url).text(v.text));
-									result.append(li);
-								});
-							}
-							destContent.html(result);
+							destContent.html(display(data));
 						},
 						error:function(){
 							destContent.html('');
@@ -36,4 +36,11 @@
 		});
 		return this;
 	};
+	$.fn.autoComplete=function(url,minLength){
+		var divResult=$('<div class="divAutocomplete hidden"/>').appendTo($('body'));
+		this.ajaxSearch(url,minLength,divResult,function(data){
+			divResult.html('').sShow();
+			return defaultDisplayList(data,{'class':'clickable'});
+		});
+	}
 })(jQuery);
