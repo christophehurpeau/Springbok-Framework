@@ -7,7 +7,7 @@
 <?php /* DEV */
 echo '<script type="text/javascript">
 //<![CDATA[
-'.file_get_contents(dirname(CORE).'/includes/js/jquery-1.7.min.js').'
+'.file_get_contents(dirname(CORE).'/includes/js/jquery-1.7.1.min.js').'
 //]]>
 </script>';
 /* /DEV */
