@@ -1,9 +1,10 @@
-<?php
-return array(
+<?php return array(
 	'decimalFormat'=>array('decimal_sep'=>',','thousands_sep'=>' '),
 	'percentFormat'=>'%s %%',
 	'scientificFormat' => '#E0',
 	'currencyFormat' => '#,##0.00 ¤',
+	
+	'isPlural'=>function(&$number){ return $number>1; },
 	
 	'dates'=>array(
 		'monthNames'=>array(

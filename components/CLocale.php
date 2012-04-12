@@ -48,4 +48,8 @@ class CLocale{
 	public function monthNum($month,$type='full'){
 		return array_search($month,$this->data['dates']['monthNames'][$type]);
 	}
+	
+	public function isPlural($number){
+		return $this->data['isPlural']($number);
+	}
 }
