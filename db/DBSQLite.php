@@ -1,9 +1,10 @@
 <?php
 class DBSQLite extends DB{
+	public static $DEFAULT_FLAGS;
 	public function _getType(){return 'SQLite';}
 	
 	public function __construct($configName,$config){
-		if(!isset($config['flags'])) $config['flags']=SQLITE3_OPEN_READWRITE/* DEV */ | SQLITE3_OPEN_CREATE/* /DEV */;
+		if(!isset($config['flags'])) $config['flags']=self::$DEFAULT_FLAGS;
 		parent::__construct($configName,$config);
 	}
 	
@@ -198,3 +199,4 @@ class DBSQLite extends DB{
 		return $this->doSelectValue("SELECT 1 FROM  sqlite_master WHERE type='table' AND name=".$this->escape($tableName));
 	}
 }
+DBSQLite::$DEFAULT_FLAGS=SQLITE3_OPEN_READWRITE/* DEV */ | SQLITE3_OPEN_CREATE/* /DEV */;
