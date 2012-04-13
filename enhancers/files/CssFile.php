@@ -414,7 +414,7 @@ class CssFile extends EnhancerFile{
 						}else{
 							if((!empty($matches[2][$i]) && trim($matches[2][$i])==='transparent') || substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || $url=='../img/'.$spritename
 										|| substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
-										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+9) === '../img/jquery-ui') continue;
+										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery') continue;
 							$cssImgs[]=substr($url,7);
 						}
 					}
@@ -450,7 +450,7 @@ class CssFile extends EnhancerFile{
 								$key=$url;
 							}else{
 								if((!empty($matches[2]) && trim($matches[2])==='transparent') || substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
-										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+9) === '../img/jquery-ui'
+										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery'
 										|| $url==='../img/'.$spritename){
 									return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
 								}
