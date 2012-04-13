@@ -10,7 +10,7 @@ class HPagination{
 	 * if($totalPages > 1) echo $pagination='<div class="pager">'.HPagination::createPager($p,$totalPages,function($i) use(&$urlbase){return ' href="'.$urlbase.$i.'"';},
 		(isset($_GET['b']) && $p<1000?($_GET['b']>$p?3:2):2)+($p<=20?1:0),(isset($_GET['b']) && $p<1000?($_GET['b']<$p?3:2):2)+($p<=20?1:0)).'</div>';
 	 */
-	public static function createPager($page,$totalPages,$callback,$nbBefore=3,$nbAfter=3,$disabled=true,$withText=false){
+	public static function createPager($page,$totalPages,$callback,$nbBefore=3,$nbAfter=3,$disabled=true,$withText=null,$tiny=false){
 		$str='<ul class="pager">';
 		if($withText!==null){
 			if($page==1){
@@ -27,8 +27,10 @@ class HPagination{
 			$i=1; $str.='<li class="page"><a '.$callback($i).'>'.$i.'</a></li>';
 			$i=ceil(($start)/2);
 			if($i != 1){
-				if($i != 2) $str.='<li>&nbsp</li>';
-				$str.='<li class="page"><a '.$callback($i).'>'.$i.'</a></li>';
+				if($tiny===false){
+					if($i != 2) $str.='<li>&nbsp</li>';
+					$str.='<li class="page"><a '.$callback($i).'>'.$i.'</a></li>';
+				}
 				if($i+1 != $start) $str.='<li>&nbsp</li>';
 			}
 		}
@@ -41,10 +43,12 @@ class HPagination{
 		}
 		
 		if($end < $totalPages){
-			$i=floor(($totalPages-$i)/2+$end);
-			if($i != $end){
-				if($end+1 != $i) $str.='<li>&nbsp</li>';
-				$str.='<li class="page'; $str.='"><a '.$callback($i).'>'.$i.'</a></li>';
+			if($tiny===false || $i===$start){
+				$i=floor(($totalPages-$i)/2+$end);
+				if($i != $end){
+					if($end+1 != $i) $str.='<li>&nbsp</li>';
+					$str.='<li class="page'; $str.='"><a '.$callback($i).'>'.$i.'</a></li>';
+				}
 			}
 			if($i!=$totalPages-1) $str.='<li>&nbsp</li>';
 			$i=$totalPages; $str.='<li class="page'; $str.='"><a '.$callback($i).'>'.$i.'</a></li>';
