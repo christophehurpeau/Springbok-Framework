@@ -182,8 +182,8 @@ footer{
 		IFNOT(VARIABLE_H1_BACKGROUND) padding:0 0 4px; ENDIF
 		IF(VARIABLE_H1_TEXT_SHADOW) text-shadow:VARIABLE_H1_TEXT_SHADOW; ENDIF
 	}
-	div.variable.content .content,div.variable .content .content{clear:both;position:relative;IF(VARIABLE_CONTENT_BACKGROUND)background:VARIABLE_CONTENT_BACKGROUND; ENDIF}
-	div.variable.content .content.float_left,div.variable .content .content.float_left{clear:none}
+	div.variable.content div.content,div.variable .content div.content{clear:both;position:relative;IF(VARIABLE_CONTENT_BACKGROUND)background:VARIABLE_CONTENT_BACKGROUND; ENDIF}
+	div.variable.content div.content.float_left,div.variable .content div.content.float_left{clear:none}
 	div.variable div.content.float_left.noclear{clear:none}
 	/*div.variable div.content h2{ margin:2px 0; }*/
 	

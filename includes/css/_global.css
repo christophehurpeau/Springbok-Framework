@@ -90,7 +90,7 @@ ul.mosaic{
 	list-style: none;
 	margin:0;padding:0;
 	li{float:left;display:block;margin:0 5px 3px 2px;}
-	li a{display:block; text-decoration: none;}
+	li > a{display:block; text-decoration: none;}
 	li img{display:block; margin:0 auto 0; border:0}
 }
 

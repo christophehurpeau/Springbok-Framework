@@ -43,7 +43,7 @@ div.input input{ width:250px; }
 input[type=submit],button{margin:5px 0 3px 10px;}
 
 input[type=radio],input[type=checkbox]{vertical-align:bottom; margin:0 3px;}
-div input.wp100,form textarea{
+input.wp100,div input.wp100,form textarea{
 	box-sizing: border-box;
 	width:100%
 }
