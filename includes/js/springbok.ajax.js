@@ -10,8 +10,9 @@ includeCore('springbok.history');
 		linkFavicon=$('head link[rel="icon"],head link[rel="shortcut icon"]');
 		normalFaviconHref=linkFavicon.length===0 ? false : linkFavicon.attr('href');
 		S.ajax.updateVariable(divPage);
-		S.history.start();
+		var mustLoad=!S.history.start();
 		S.ajax.init();
+		if(mustLoad) S.history.loadUrl();
 	});
 	S.redirect=function(url){ S.ajax.load(url); }
 	S.setTitle=function(title){ document.title=title; divVariable.find('h1:first').text(title) }
@@ -29,7 +30,7 @@ includeCore('springbok.history');
 						menu.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
 						var newPageContent=a.data('pagecontent');
 						if(newPageContent){
-							divPage.html(newPageContent.html).attr('class',newPageContent['class']);
+							divPage.html(newPageContent.html).attr('class',newPageContent['class']||"");
 							S.setTitle(newPageContent.title);
 							S.history.navigate(url);
 						}else S.ajax.load(url);

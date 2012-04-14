@@ -24,7 +24,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 		run:function(){
 			S.app.init();
 			readyCallbacks.fire();
-			S.history.loadUrl();//TODO duplicate if #
+			S.ajax.load(S.history.getFragment());//TODO duplicate if #
 		},
 		
 		require:function(fileName){
@@ -48,21 +48,21 @@ includeCore('springbok.forms');
 includeCore('springbok.date');
 includeCore('springbok.ajax');
 
-S.history.loadUrl=function(fragmentOverride){
-	var fragment = S.history.getFragment(fragmentOverride),loadedControllers={};
-	if(fragment){
-		if(fragment.sbStartsWith(basedir)) fragment = fragment.substr(basedir.length);
-		try{
-			var route=S.router.find(fragment);
-			console.log(route);
-			S.app.require('c/'+route.controller);
-			S.app.controllers[route.controller].dispatch(route);
+S.ajax.load=function(url){
+	if(url.sbStartsWith(basedir)) url = url.substr(basedir.length);
+	try{
+		var route=S.router.find(url);
+		console.log(route);
+		S.app.require('c/'+route.controller);
+		S.app.controllers[route.controller].dispatch(route);
+		
+	}catch(err){
+		if(err instanceof HttpException){
 			
-		}catch(err){
-			if(err instanceof HttpException){
-				
-			}
-			console.log(err);
 		}
+		console.log(err);
 	}
 };
+S.ajax.load=function(url){
+	
+}
