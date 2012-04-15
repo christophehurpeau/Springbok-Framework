@@ -7,7 +7,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	t.imageAttrs=imageAttrs||{};
 	t.albumsMap={};
 	
-	t.config=new StoredConfig('S.gallery_'+to.attr('id'));
+	t.config=new S.StoredConfig('S.gallery_'+to.attr('id'));
 	t.sortBy=t.config.get('sortBy')||'created';
 	t.sortWay=t.config.get('sortWay')||'asc';
 	

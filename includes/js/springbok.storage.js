@@ -486,18 +486,15 @@
 /* StoredConfig object */
 
 
-function StoredConfig(name){
+S.StoredConfig=function(name){
 	this.name=name;
 	this.config=S.Storage.get(name)||{};
-}
-StoredConfig.prototype.get=function(key){
-	return this.config[key];
 };
-StoredConfig.prototype.set=function(key,value){
-	if(typeof key === "object"){
-		for(var k in key) this.set(key,key[k]);
-	}else{
+S.StoredConfig.prototype={
+	get:function(key){ return this.config[key]; },
+	set:function(key,value){
 		this.config[key]=value;
 		S.Storage.set(this.name,this.config);
-	}
+	},
+	mset:function(v){ for(var k in key) this.set(key,key[k]); }
 };

@@ -31,7 +31,10 @@ class JsFile extends EnhancerFile{
 	
 	public function getMd5Content(){
 		$md5=$this->_srcContent;
-		if(preg_match('/initSpringbokRoutes\(([^)]+)?\)/',$md5,$m)){
+		if($this->fileName()==='jsapp.js'){
+			$md5.=file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js')
+				.file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes-langs.js');
+		}elseif(preg_match('/initSpringbokRoutes\(([^)]+)?\)/',$md5,$m)){
 			$suffix=(empty($m[1])?'':'_'.substr($m[1],1,-1));
 			$md5.=file_get_contents($this->enhanced->getAppDir().'src/config/routes'.$suffix.'.php')
 				.file_get_contents($this->enhanced->getAppDir().'src/config/routes-langs'.$suffix.'.php');

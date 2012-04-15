@@ -27,11 +27,35 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 			S.ajax.load(S.history.getFragment());//TODO duplicate if #
 		},
 		
-		require:function(fileName){
-			if(!loadedRequired[fileName]){
-				loadedRequired[fileName]=true;
-				S.loadSyncScript(staticUrl+'js/app/'+fileName+'.js');
-			}
+		require:function(){
+			$.each(arguments,function(k,fileName){
+				if(!loadedRequired[fileName]){
+					loadedRequired[fileName]=true;
+					S.loadSyncScript(staticUrl+'js/app/'+fileName+'.js');
+				}
+			});
+		},
+		
+		api:{
+			//List,Retrieve
+			get:function(url){
+				var result,headers={};
+				jQuery.ajax({
+					headers:headers,
+					url: url,
+					data: data,
+					success: function(r){result=r;},
+					dataType:'json',
+					async:false
+				});
+				return result;
+			},
+			//Create
+			post:function(){},
+			//Replace
+			put:function(){},
+			//Delete
+			del:function(){},
 		}
 	};
 	S.ready=S.app.ready;
@@ -47,22 +71,20 @@ includeCore('springbok.menu');
 includeCore('springbok.forms');
 includeCore('springbok.date');
 includeCore('springbok.ajax');
+includeCore('springbok.storage');
 
-S.ajax.load=function(url){
+S.app.load=S.ajax.load=function(url){
 	if(url.sbStartsWith(basedir)) url = url.substr(basedir.length);
 	try{
 		var route=S.router.find(url);
-		console.log(route);
+		//console.log(route);
+		S.history.navigate(url);
 		S.app.require('c/'+route.controller);
 		S.app.controllers[route.controller].dispatch(route);
-		
 	}catch(err){
 		if(err instanceof HttpException){
 			
 		}
-		console.log(err);
+		console.log("APP : catch error :",err);
 	}
 };
-S.ajax.load=function(url){
-	
-}

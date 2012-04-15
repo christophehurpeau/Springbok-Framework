@@ -7,6 +7,7 @@
 	};
 	var routes={},routesLangs={};
 	S.router={
+		DEFAULT:{controller:'Site',action:'index'},
 		init:function(r,rl){
 			$.each(r,function(url,route){
 				routes[url]={_:route[0]};
@@ -25,13 +26,13 @@
 					if(specialEnd) routeLangPreg+='(?:\/(.*))?';
 					else if(specialEnd2) routeLangPreg=routeLangPreg.substr(0,routeLang.length-2)+'(?:\/(.*))?'+routeLangPreg.substr(routeLang.length-2);
 					
-					routes[url][lang]=[new RegExp(routeLangPreg.replace(/(\(\?)?\:([a-zA-Z_]+)/g,function(str,p1,p2){
+					routes[url][lang]=[new RegExp("^"+routeLangPreg.replace(/(\(\?)?\:([a-zA-Z_]+)/g,function(str,p1,p2){
 						if(p1) return str;
 						paramsNames.push(p2);
 						if(paramsDef && paramsDef[p2]) return paramsDef[p2]==='id' ? '([0-9]+)' : '('+paramsDef[p2]+')';
-						if(['id'].sbInArray(p2)) return '([0-9]+)';
+						if(['id'].sbInArray(p2) !== -1) return '([0-9]+)';
 						return '([^\/]+)';
-					}) + (routes[url].ext ? (routes[url].ext==='html' ? '(?:\.html)?':'\.'+routes[url].ext) : '')),
+					}) + (routes[url].ext ? (routes[url].ext==='html' ? '(?:\.html)?':'\.'+routes[url].ext) : '')+"$"),
 						routeLang.replace(/(\:[a-zA-Z_]+)/g,'%s').replace(/[\?\(\)]/g,'').replace('/*','%s').sbRtrim()];
 					if(paramsNames) routes[url][':']=paramsNames;
 				});
@@ -52,17 +53,36 @@
 		
 		find:function(all){
 			all=this.all='/'+all.sbTrim('/');
-			console.log('router: find: "'+all+'"');
-			var route=false,lang=S.langs.get(),m;
+			//console.log('router: find: "'+all+'"');
+			var t=this,route=false,lang=S.langs.get(),m;
 			$.each(routes,function(i,r){
-				console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all));
+				//console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all));
 				if(m=(r[lang]||r['en'])[0].exec(all)){
-					var c_a=r['_'].split('::');
+					//console.log('match : ',m,r);
+					var c_a=r['_'].split('::'),params={};
+					
+					if(r[':']){
+						m.shift(); // remove m[0];
+						var nbNamedParameters=r[':'].length,countMatches=m.length;
+						if(countMatches !== 0){
+							r[':'].sbEach(function(k,v){ params[v]=m.shift(); });
+						}
+						['controller','action'].sbEach(function(k,v){
+							if(c_a[k]==='!'){
+								if(params[v]){
+									c_a[k]=t.untranslate(params[v]).sbUcFirst();
+									delete params[v];
+								}else c_a[k]=t.DEFAULT[v];
+							}
+						});
+					}
+					
 					route=new S.Route({
 						all:all,
 						controller:c_a[0],
 						action:c_a[1],
-						params:m,
+						nParams:params,//named
+						sParams:m,//simple
 						ext:false
 					});
 					return false;

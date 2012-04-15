@@ -134,19 +134,19 @@ function handleError(e){
 //window.onerror = handleError;
 
 
-function extend(subclass,superclass,extendsPrototype){
-	var f=function (){},i;
+function extend(subclass,superclass,methods){
+	var f=function (){};
 	f.prototype=superclass.prototype;
 	subclass.prototype=new f();
 	subclass.prototype.constructor=subclass;
 	subclass.superconstructor=superclass;
 	subclass.superclass=superclass.prototype;
 	
-	extendPrototype(subclass,extendsPrototype);
+	extendPrototype(subclass,methods);
 }
-function extendPrototype(targetclass,p){
-	for(var i in p)
-		targetclass.prototype[i]=p[i];
+function extendPrototype(targetclass,methods){
+	for(var i in methods)
+		targetclass.prototype[i]=methods[i];
 	return targetclass;
 }
 

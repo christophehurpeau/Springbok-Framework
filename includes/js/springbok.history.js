@@ -96,7 +96,7 @@
 			
 			this.fragment=frag;
 			if(this._hasPushState){
-				if(console && console.log) console.log('push: '+loc.protocol + '//' + loc.host + basedir+frag);
+				//if(console && console.log) console.log('push: '+loc.protocol + '//' + loc.host + basedir+frag);
 				window.history[replace?'replaceState':'pushState']({},document.title, loc.protocol+'//'+loc.host + basedir+frag);
 			}else{
 				this._updateHash(loc,frag,replace);

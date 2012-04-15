@@ -65,7 +65,7 @@ class CRoute{
 							$params=array_combine(array_slice($route[':'],0,$countMatches),$matches);
 					}else $params=array();
 
-					if($controller=='!'){
+					if($controller==='!'){
 						if(isset($params['controller'])){
 							$controller=ucfirst(self::untranslate($params['controller'],$lang));
 							unset($params['controller']);
