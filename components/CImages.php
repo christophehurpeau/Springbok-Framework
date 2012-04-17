@@ -120,8 +120,8 @@ class CImages{
 		if($chunks==0 || $chunk+1==$chunks){
 			if($image===NULL) $image=static::createImage();
 			$image->name=trim($_REQUEST['name']);
-			if(in_array(substr($image->name,-4),array('.jpg','.png','.gif'))) $image->name=substr($image->name,0,-4);
-			elseif(substr($image->name,-5)==='.jpeg') $image->name=substr($image->name,0,-5);
+			if(in_array(strtolower(substr($image->name,-4)),array('.jpg','.png','.gif'))) $image->name=substr($image->name,0,-4);
+			elseif(strtolower(substr($image->name,-5))==='.jpeg') $image->name=substr($image->name,0,-5);
 			
 			$idImage=self::add($targetDir.DS.$fileName,$image,$toJpeg,$folderPrefix);
 			echo '{"jsonrpc" : "2.0", "result": '.($result===null?'null':$result($image)).', "id" :'.$idImage.'}';
