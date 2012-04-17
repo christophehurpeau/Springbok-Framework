@@ -7,7 +7,7 @@
 	};
 	var routes={},routesLangs={};
 	S.router={
-		DEFAULT:{controller:'Site',action:'index'},
+		DEFAULT:{controller:'Site',action:'Index'},
 		init:function(r,rl){
 			$.each(r,function(url,route){
 				routes[url]={_:route[0]};
@@ -22,7 +22,7 @@
 					else if(specialEnd2=routeLang.sbEndsWith('/*)?')) routeLangPreg=routeLang.substr(0,routeLang.length-4)+routeLang.substr(routeLang.length-2);
 					else routeLangPreg=routeLang;
 					
-					routeLangPreg.replace('/','\/').replace('-','\-').replace('*','(.*)').replace('(','(?:');
+					routeLangPreg=routeLangPreg.replace('/','\/').replace('-','\-').replace('*','(.*)').replace('(','(?:');
 					if(specialEnd) routeLangPreg+='(?:\/(.*))?';
 					else if(specialEnd2) routeLangPreg=routeLangPreg.substr(0,routeLang.length-2)+'(?:\/(.*))?'+routeLangPreg.substr(routeLang.length-2);
 					
@@ -53,10 +53,10 @@
 		
 		find:function(all){
 			all=this.all='/'+all.sbTrim('/');
-			//console.log('router: find: "'+all+'"');
+			console.log('router: find: "'+all+'"');
 			var t=this,route=false,lang=S.langs.get(),m;
 			$.each(routes,function(i,r){
-				//console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all));
+				console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all));
 				if(m=(r[lang]||r['en'])[0].exec(all)){
 					//console.log('match : ',m,r);
 					var c_a=r['_'].split('::'),params={};

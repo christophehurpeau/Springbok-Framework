@@ -6,7 +6,7 @@ S.Controller.prototype={
 		if(this.beforeDispatch) if(!this.beforeDispatch()) return;
 		route.sParams.unshift(route.nParams)
 		var m=this.methods[route.action];
-		/* DEV */ console.log('This action doesn\'t exists: '+route.action); /* /DEV */
+		/* DEV */ if(!m) console.log('This action doesn\'t exists: '+route.action); /* /DEV */
 		if(!m) notFound();
 		m.apply(this,route.sParams);
 	},

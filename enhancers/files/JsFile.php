@@ -4,8 +4,6 @@ class JsFile extends EnhancerFile{
 
 	public function loadContent($srcContent){
 		if($this->fileName()==='jsapp.js'){
-			$layout=file_get_contents($this->enhanced->getAppDir().'src/jsapp/layout.php');
-			preg_match('#<header>\s*(.*)\s*</header>.*<footer>\s*(.*)</footer>\s*#Us',$layout,$matchesLayout);
 			$srcContent="includeCore('springbok.jsapp');"
 				.'S.app.jsapp('.json_encode($this->enhanced->appConfig('projectName')).','.time().');' // force également à toujours refaire le fichier
 				.('S.router.init('.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1).','
@@ -21,6 +19,7 @@ class JsFile extends EnhancerFile{
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
 		$this->_srcContent=$srcContent;
+		//if($this->fileName()==='jsapp.js') debug($srcContent);
 		$jsFiles=array('global.js','jsapp.js');
 		if(!empty($this->enhanced->config['entrances'])) foreach(($entrances=$this->enhanced->config['entrances']) as $entrance) $jsFiles[]=$entrance.'.js';
 		else $entrances=array();
@@ -28,9 +27,10 @@ class JsFile extends EnhancerFile{
 			$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(in_array(substr($this->fileName(),0,-3),$entrances)?'/'.substr($this->fileName(),0,-3):'')."/'"
 				./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",webdir=basedir+'web/',staticUrl=webdir,imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
 	}
-	
+	/*
 	public function getMd5Content(){
 		$md5=$this->_srcContent;
+		debugVar($md5);
 		if($this->fileName()==='jsapp.js'){
 			$md5.=file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js')
 				.file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes-langs.js');
@@ -40,7 +40,7 @@ class JsFile extends EnhancerFile{
 				.file_get_contents($this->enhanced->getAppDir().'src/config/routes-langs'.$suffix.'.php');
 		}
 		return md5($md5);
-	}
+	}*/
 	
 	public function enhanceContent(){
 		$c=$this->_srcContent;

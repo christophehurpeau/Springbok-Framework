@@ -31,7 +31,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 			$.each(arguments,function(k,fileName){
 				if(!loadedRequired[fileName]){
 					loadedRequired[fileName]=true;
-					S.loadSyncScript(staticUrl+'js/app/'+fileName+'.js');
+					S.loadSyncScript(staticUrl+'js/app/'+fileName+'.js'/* DEV */+'?'+(new Date().getTime())/* /DEV */);
 				}
 			});
 		},
