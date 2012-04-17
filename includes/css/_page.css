@@ -189,6 +189,8 @@ footer{
 	
 	div.overflow{margin:0;padding:0;width:100%;overflow:auto;clear:both}
 	
+	div.newContext{ position:relative }
+	
 	#dynamictabsContent{
 		position:relative;
 	}

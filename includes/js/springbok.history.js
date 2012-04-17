@@ -42,7 +42,6 @@
 				window.history.replaceState({},document.title,loc.protocol + '//' + loc.host + basedir + this.fragment);
 				return false;
 			}
-			
 			return this._hasPushState || fragment===''?true:false;
 		},
 		
@@ -50,7 +49,6 @@
 			var match = (windowOverride ? windowOverride.location : window.location).href.match(/#\/(.*)$/);
 			return match ? match[1] : '';
 		},
-		
 		getFragment:function(fragment, forcePushState){
 			if(fragment == null){
 				if(this._hasPushState || forcePushState){

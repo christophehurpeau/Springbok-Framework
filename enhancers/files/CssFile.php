@@ -224,6 +224,9 @@ class CssFile extends EnhancerFile{
 			'BUTTON_FOCUS_BACKGROUND_TB'=>'#555555,#777777',
 			'BUTTON_FOCUS_COLOR'=>'#FFF',
 			'BUTTON_TEXTSHADOW'=>'#555',
+			
+			/* types.css */
+			'TYPES_BLOCK_BORDERRADIUS'=>'false'
 		);
 		for($i=1;$i<=10;$i++){
 			$constantes['TYPE'.$i.'_COLOR']='false';
@@ -245,6 +248,7 @@ class CssFile extends EnhancerFile{
 			$constantes['TYPE'.$i.'_BLOCK_BACKGROUND_TB']='false';
 			$constantes['TYPE'.$i.'_BLOCK_COLOR']='false';
 			$constantes['TYPE'.$i.'_BLOCK_BORDER']='false';
+			$constantes['TYPE'.$i.'_BLOCK_BORDERRADIUS']='false';
 			
 			$constantes['TYPE'.$i.'_BUTTON_COLOR']='false';
 			$constantes['TYPE'.$i.'_BUTTON_BACKGROUND']='false';

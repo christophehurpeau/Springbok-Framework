@@ -23,7 +23,6 @@ class EnhanceApp extends AEnhance{
 			$className::initFolder($dev,$this->enhanced->getConfig());
 		
 		$d=new Folder($dev->getPath().'logs',0777);
-		$d=new Folder($dev->getPath().'tmp',0777);
 	}
 	
 	public function initProd(&$prod){	
@@ -34,7 +33,6 @@ class EnhanceApp extends AEnhance{
 			$className::initFolder($prod,$this->enhanced->getConfig());
 		
 		$d=new Folder($prod->getPath().'logs',0777);
-		$d=new Folder($prod->getPath().'tmp',0777);
 	}
 	
 	public function afterInit(&$dev,&$prod){

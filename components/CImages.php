@@ -49,9 +49,9 @@ class CImages{
 	}
 	
 	
-	public static function plupload($image=null,$toJpeg=true,$folderPrefix=''){
+	public static function plupload($image=null,$toJpeg=true,$folderPrefix='',$result=null){
 		Controller::noCache();
-		$targetDir=APP.'tmp'.DS.'plupload'.DS;
+		$targetDir=DATA.'tmp/plupload/';
 		set_time_limit(5 * 60);
 		
 		// Get parameters
@@ -119,10 +119,13 @@ class CImages{
 		// Return JSON-RPC response
 		if($chunks==0 || $chunk+1==$chunks){
 			if($image===NULL) $image=static::createImage();
-			$image->name=$_REQUEST['name'];
+			$image->name=trim($_REQUEST['name']);
+			if(in_array(substr($image->name,-4),array('.jpg','.png','.gif'))) $image->name=substr($image->name,0,-4);
+			elseif(substr($image->name,-5)==='.jpeg') $image->name=substr($image->name,0,-5);
+			
 			$idImage=self::add($targetDir.DS.$fileName,$image,$toJpeg,$folderPrefix);
-			echo '{"jsonrpc" : "2.0", "result" : null, "id" :'.$idImage.'}';
-		}else echo '{"jsonrpc" : "2.0", "result" : null, "id": null}';
+			echo '{"jsonrpc" : "2.0", "result": '.($result===null?'null':$result($image)).', "id" :'.$idImage.'}';
+		}else echo '{"jsonrpc" : "2.0", "result": null, "id": null}';
 	}
 	
 	public static function importImage($url,$image,$toJpeg=true,$folderPrefix=''){

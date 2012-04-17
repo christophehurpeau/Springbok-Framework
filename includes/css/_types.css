@@ -1,4 +1,14 @@
 FOR(I=1;I<11;I+1)
+	IF(TYPE$I_BACKGROUND || TYPE$I_BACKGROUND_TB || TYPE$I_BLOCK_BACKGROUND || TYPE$I_BLOCK_BACKGROUND_TB || TYPE$I_BLOCK_COLOR)
+		.block$I,
+	ENDIF
+ENDFOR
+.block{
+	position:relative;
+	IF(TYPES_BLOCK_BORDERRADIUS) border-radius:TYPES_BLOCK_BORDERRADIUS; ENDIF
+}
+
+FOR(I=1;I<11;I+1)
 	IF(TYPE$I_COLOR)
 		.block$I,.block$I a,.block$I a:hover,#container #page .block$I,input.type$I.submit,button.type$I,.button.type$I{color:TYPE$I_COLOR}
 	ENDIF
@@ -35,6 +45,7 @@ FOR(I=1;I<11;I+1)
 			IF(TYPE$I_BLOCK_BACKGROUND_TB) bg-gradient-tb(TYPE$I_BLOCK_BACKGROUND_TB); ENDIF
 			IF(TYPE$I_BLOCK_COLOR) color:TYPE$I_BLOCK_COLOR; ENDIF
 			IF(TYPE$I_BLOCK_BORDER) border:TYPE$I_BLOCK_BORDER; ENDIF
+			IF(TYPE$I_BLOCK_BORDERRADIUS) border-radius:TYPE$I_BLOCK_BORDERRADIUS; ENDIF
 		}
 	ENDIF
 	

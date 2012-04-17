@@ -2,35 +2,76 @@
 /* http://phpfour.com/blog/2008/01/php-http-class/
  * https://github.com/shuber/curl/blob/master/lib/curl.php */
 class CHttpClient{
-	public static $MAX_REDIRECT=5,$TIMEOUT=25,$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
+	public static $MAX_REDIRECT=5,$TIMEOUT=25,$CONNECT_TIMEOUT=6,$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
 	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),
-		$cookies=array(),$_cookies=array(),$referer='',$cookiePath='default',$useCookies=false,$saveCookies=true,
-		$username=null,$password=null,
+		$cookies=array(),$_cookies=array(),$referer='',$cookiePath,$useCookies=false,//$saveCookies=true,
+		$username=null,$password=null,$proxy=null,
 		$result,$headers,$status=0,$redirect=true,$curRedirect=0,$error;
 
+	public static function randomUserAgent(){
+		// TODO update user agent list
+		$browsers = array(
+			"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092510 Ubuntu/8.04 (hardy) Firefox/3.0.3",
+			"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1) Gecko/20060918 Firefox/2.0",
+			"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3",
+			"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
+			"Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; en-US; rv:1.8.1a2) Gecko/20060512 BonEcho/2.0a2",
+			"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; it-it) AppleWebKit/412 (KHTML, like Gecko) Safari/412",
+			"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.2.149.27 Safari/525.13",
+			"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; GoogleT5; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506; .NET CLR 1.1.4322)",
+			"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)",
+			"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727)",
+			"Mozilla/5.0 (Windows; U; Windows NT 6.1; fr; rv:1.8.1.20) Gecko/20081217 Firefox/2.0.0.20",
+			"Mozilla/5.0 (Windows; U; Windows NT 5.1; fr; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1",
+			"Mozilla/5.0 (Windows; U; Windows NT 6.1; fr; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6"
+		);
+		self::$USER_AGENT=$browsers[array_rand($browsers)];
+	}
+
+	public function __construct(){
+		$this->cookiePath=uniqid();
+		$this->destroyCookieFile();
+	}
+	public function __destruct(){
+		$this->destroyCookieFile();
+	}
+	
+	
+	
 	public function &target($url){$this->target=&$url;return $this;}
 	public function &port($port){$this->port=&$port;return $this;}
 	//public function &setreferer($url){$this->referer=&$url;return $this;}
+	
 	public function &setCookiePath($path){$this->cookiePath=&$path;return $this;}
-	public function &params($params){$this->params=&$params;return $this;}
-	public function &addParam($name,$value){$this->params[$name]=&$value;return $this;}
+	public function &addCookie($name,$value){$this->cookies[$name]=&$value;return $this;}
+	public function &destroyCookieFile(){
+		if(file_exists(DATA.'tmp/curl/'.$this->cookiePath)) unlink(DATA.'tmp/curl/'.$this->cookiePath);
+		return $this;
+	}
+	
 	public function &auth($username,$password){$this->username=&$username;$this->password=&$password;return $this;}
 	
-	public function &addCookie($name,$value){$this->cookies[$name]=&$value;return $this;}
-	public function &saveCookies($val){$this->saveCookies=&$val;return $this;}
+	public function &params($params){$this->params=&$params;return $this;}
+	public function &addParam($name,$value){$this->params[$name]=&$value;return $this;}
+	
+	/*public function &saveCookies($val){$this->saveCookies=&$val;return $this;}*/
+	public function &useCookies($value=true){$this->useCookies=&$value;return $this;}
 	public function &followRedirects($value){$this->redirect=&$value;return $this;}
+	/** ip:port , username:password */
+	public function &proxy($proxy,$auth=false){$this->proxy=array(&$proxy,&$auth);return $this;}
+	
 	public function &getResult(){return $this->result;}
 	public function &getStatus(){return $this->status;}
 	public function &getError(){return $this->error;}
 	
 	public function get($target,$referer=null){
-		return $this->execute($target, $referer,'GET');
+		return $this->execute($target,$referer,'GET');
 	}
 	public function post($target,$referer=null){
-		return $this->execute($target, $referer,'POST');
+		return $this->execute($target,$referer,'POST');
 	}
 	
-	private function &execute($target,$referer,$method){
+	private function &execute(&$target,&$referer,$method){
 		if($referer!==null) $this->referer=$referer;
 		
 		$this->status=0;
@@ -39,7 +80,7 @@ class CHttpClient{
 			$queryString=http_build_query($this->params);
 			if($method==='GET') $target.='?'.$queryString;
 		}
-		$this->target=$target;
+		$this->target=&$target;
 		
 		$urlParsed = parse_url($target);
 		if ($urlParsed['scheme'] == 'https'){
@@ -51,7 +92,7 @@ class CHttpClient{
 		}
 		$this->path  = (isset($urlParsed['path']) ? $urlParsed['path'] : '/') . (isset($urlParsed['query']) ? '?' . $urlParsed['query'] : '');
 		$this->schema = $urlParsed['scheme'];
-		if($this->useCookies) $this->_passCookies();
+		/*if($this->useCookies) $this->_passCookies();*/
 		
 		$ch = curl_init();
 		if($method==='GET'){
@@ -62,13 +103,19 @@ class CHttpClient{
 			 curl_setopt($ch,CURLOPT_HTTPGET,false);
 			 curl_setopt($ch,CURLOPT_POST,true);
 		}
-		if($this->username===null)
+		if($this->username!==null)
 			curl_setopt($ch,CURLOPT_USERPWD,$this->username.':'.$this->password);
+		if($this->proxy!==null){
+			curl_setopt($ch,CURLOPT_PROXY,$this->proxy[0]);
+			if($this->proxy[1]) curl_setopt($ch,CURLOPT_PROXYUSERPWD,$this->proxy[1]);
+			curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL,1);
+			
+		}
 		
 		if($this->useCookies===true){
-			if(!empty($this->cookies))
-				curl_setopt ($ch,CURLOPT_COOKIE,http_build_query($this->cookies));
-			curl_setopt($ch,CURLOPT_COOKIEJAR,APP.'tmp/'.$this->cookiePath); // Cookie management.
+			if(!empty($this->cookies)) curl_setopt ($ch,CURLOPT_COOKIE,http_build_query($this->cookies));
+			curl_setopt($ch,CURLOPT_COOKIEJAR,$cookieFile=DATA.'tmp/curl/'.$this->cookiePath); // Cookie management.
+			curl_setopt($ch,CURLOPT_COOKIEFILE,$cookieFile);
 		}
 		
 		curl_setopt($ch,CURLOPT_HEADER,false);
@@ -81,7 +128,8 @@ class CHttpClient{
 		curl_setopt($ch,CURLOPT_VERBOSE,false); // Minimize logs
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,$this->redirect);
 		curl_setopt($ch,CURLOPT_MAXREDIRS,self::$MAX_REDIRECT); // Limit redirections
-		//curl_setopt($ch,CURLOPT_RETURNTRANSFER,0); // Return in string
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); // Return in string
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,self::$CONNECT_TIMEOUT); // Limit redirections
 		
 		$content=curl_exec($ch);//debug($content);exit;
 		//var_dump($target,$this->target,$content,curl_error($ch),curl_getinfo($ch));exit;
@@ -96,9 +144,11 @@ class CHttpClient{
 		//$this->_parseHeaders($contentArray[$cContentArray - 2]);
 		$this->error=curl_error($ch);//debug($this->error);
 		curl_close($ch);
+		
+		$this->referer=$this->target;
 		return $this->result;
 	}
-
+/*
 	private function _parseHeaders($responseHeader){
 		$headers=explode("\r\n",$responseHeader);
 		$this->headers=array();
@@ -263,7 +313,7 @@ function _encodeCookie($value, $name)
             $this->nextToken = '';
             return($string);
         }
-    }
+    }*/
 }
 
 // +----------------------------------------------------------------------+

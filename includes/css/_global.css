@@ -12,13 +12,12 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .float_right{float:right}
 .float_left{float:left}
 .fa_right{float:right;text-align:right}
-.pos_relative{position:relative}
+.context{ overflow:auto; overflow-x: hidden; position:relative }
 .nowrap{white-space:nowrap}
 .hidden{display:none}
 .hiddenText{text-indent:-9999px}
 .smallinfo{font-size:8pt}
 .biginfo{font-size:11pt}
-.margin-left{margin-left:20px}
 .aposTR{position:absolute;top:0;right:0}
 .aposR{position:absolute;right:0}
 

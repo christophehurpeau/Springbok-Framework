@@ -89,6 +89,8 @@ RegExp.sbEscape=function(value){
 };
 
 (function($){
+	$(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() });
+
 	/* https://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js */
 	$.fn.delayedBind=function(delay,eventType,eventData,handler,throttle){
 		if($.isFunction(eventData)){
