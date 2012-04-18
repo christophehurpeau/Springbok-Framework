@@ -40,7 +40,7 @@ div.input.select label,div.radio label{vertical-align:middle}
 div.input input{ width:250px; }
 */
 @includeCore '_buttons.css';
-input[type=submit],button{margin:5px 0 3px 10px;}
+input[type=submit],button{margin:5px 0 3px 1px;}
 
 input[type=radio],input[type=checkbox]{vertical-align:bottom; margin:0 3px;}
 input.wp100,div input.wp100,form textarea{
