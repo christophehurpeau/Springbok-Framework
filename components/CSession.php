@@ -42,6 +42,10 @@ class CSession{
 		return $res;
 	}
 	
+	public static function increment($name){
+		return isset(self::$_SESSION[$name]) ? ++self::$_SESSION[$name] : self::$_SESSION[$name]=1;
+	}
+	
 	public static function getOr($name,$orValue=null){
 		return self::exists($name) ? self::get($name) : $orValue;
 	}
