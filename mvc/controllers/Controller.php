@@ -153,10 +153,7 @@ class Controller{
 	}
 
 	public static function redirect($to,$permanent=false,$exit=true,$forbiddendForAjax=true){
-		if($permanent){
-			header('HTTP/1.1 301 Moved Permanently');
-			header('Status: 301 Moved Permanently',false,301);
-		}elseif(CHttpRequest::isAjax()){
+		if(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
 				self::renderHtml(HHtml::jsInline('S.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
 			else*/if(isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])){
@@ -165,6 +162,9 @@ class Controller{
 				return;
 			}
 			elseif($forbiddendForAjax) forbidden();
+		}elseif($permanent){
+			header('HTTP/1.1 301 Moved Permanently');
+			header('Status: 301 Moved Permanently',false,301);
 		}
 		header('Location: '.HHtml::url($to));
 		if($exit) exit;

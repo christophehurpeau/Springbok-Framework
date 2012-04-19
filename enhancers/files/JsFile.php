@@ -15,7 +15,8 @@ class JsFile extends EnhancerFile{
 		
 		
 		//$this->_realSrcContent=$srcContent;
-		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()));
+		$includes=array();
+		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$includes);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
 		$this->_srcContent=$srcContent;
@@ -156,12 +157,14 @@ class JsFile extends EnhancerFile{
 	
 	public function getEnhancedProdContent(){}
 
-	public static function includes($content,$currentPath){
-		$content=preg_replace_callback('/include(Core|Lib)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use($currentPath){
+	public static function includes($content,$currentPath,&$includes){
+		$content=preg_replace_callback('/include(Core|Lib)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$includes){
+			if(isset($includes[$matches[1]][$matches[2]])) return '';
+			$includes[$matches[1]][$matches[2]]=1;
 			return JsFile::includes(file_get_contents(
 					(empty($matches[1])?$currentPath:($matches[1]==='Lib'?dirname(CORE).(file_exists(dirname(CORE).'/includes/js/'.$matches[2].'.js')?'/includes/js':'/includes')
 							:CORE.(file_exists(CORE.'includes/js/'.$matches[2].'.js')?'includes/js':'includes')))
-				.DS.$matches[2].'.js'),$currentPath);
+				.DS.$matches[2].'.js'),$currentPath,$includes);
 		},$content);
 		return $content;
 	}

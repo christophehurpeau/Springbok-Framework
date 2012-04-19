@@ -1,5 +1,5 @@
 /* http://documentcloud.github.com/backbone/backbone.js */
-(function($){
+(function($,document,window){
 	var historyStarted=false,routeStripper=/^[#\/]*/,isIE=/msie [\w.]+/;
 	S.history={
 		options:{pushState:true},interval:50,
@@ -39,13 +39,13 @@
 			// in a browser where it could be `pushState`-based instead...
 			} else */if (this._wantsPushState && this._hasPushState && (hash=this.getHash())) {
 				this.fragment = hash.replace(routeStripper, '');
-				window.history.replaceState({},document.title,loc.protocol + '//' + loc.host + basedir + this.fragment);
+				window.history.replaceState({fragment:this.fragment},document.title,loc.protocol + '//' + loc.host + basedir + this.fragment);
 				return false;
 			}
 			return this._hasPushState || fragment===''?true:false;
 		},
 		
-		getHash: function(windowOverride) {
+		getHash:function(windowOverride){
 			var match = (windowOverride ? windowOverride.location : window.location).href.match(/#\/(.*)$/);
 			return match ? match[1] : '';
 		},
@@ -95,6 +95,7 @@
 			this.fragment=frag;
 			if(this._hasPushState){
 				//if(console && console.log) console.log('push: '+loc.protocol + '//' + loc.host + basedir+frag);
+				//var title=document.title;
 				window.history[replace?'replaceState':'pushState']({},document.title, loc.protocol+'//'+loc.host + basedir+frag);
 			}else{
 				this._updateHash(loc,frag,replace);
@@ -108,4 +109,4 @@
 			replace ? location.replace(location.toString().replace(/(javascript:|#).*$/, '') + '#/' + fragment) : location.hash = '/'+fragment; 
 		}
 	};
-})(jQuery);
+})(jQuery,document,window);

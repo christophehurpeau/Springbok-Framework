@@ -1,4 +1,5 @@
 includeCore('springbok.history');
+includeCore('ui/slideTo');
 (function($){
 	var lastConfirmResult=true;
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
@@ -59,7 +60,7 @@ includeCore('springbok.history');
 			});
 			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([action^="http://"])',function(){
 				var form=$(this);
-				S.ajax.load(form.attr('action'),form.serialize(),form.attr('method')==='get'?0:'post');
+				S.ajax.load(form.attr('action'),form.serialize(),form.attr('method')==='get'?0:'post',form.has('input[type="password"]'));
 				return false;
 			});
 		},
@@ -68,22 +69,21 @@ includeCore('springbok.history');
 			divVariable=divPage.find('div.variable:first');
 			divContent=divVariable.is('.content') && divVariable.has('h1').length===0 ? divVariable : divVariable.find('.content:first');
 		},
-		load:function(url,data,type){
+		load:function(url,data,type,forceNotAddDataToGet){
 			if(url.substr(0,1)==='?') url=location.pathname+url;
 			var ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
-			if(data) url+=(url.indexOf('?')==-1?'?':'&')+data;
+			if(data && !forceNotAddDataToGet) url+=(url.indexOf('?')==-1?'?':'&')+data;
 			
 			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname')||'0':'0';
 			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
 			if(S.breadcrumbs) headers.SpringbokBreadcrumbs='1';
 			
+			S.history.navigate(url);
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
 			$('body').addClass('cursorWait').append(divLoading);
 			if(normalFaviconHref) linkFavicon.attr('href',webdir+'img/ajax-roller.gif');
-			
-			S.history.navigate(url);
 			
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data, headers:headers,
@@ -114,8 +114,13 @@ includeCore('springbok.history');
 						//tinyMCE.execCommand('mceRemoveControl',false,this.id.substr(0,this.id.length-7))
 						tinyMCE.remove(this.id.substr(0,this.id.length-7));
 					});
-					div.html(jqXHR.responseText);//.fadeTo(0,1);
+					
 					$(window).scrollTop(0);
+					
+					if(to === 'content'){
+						divContent=div.sSlideTo(jqXHR.responseText);
+					}else div.html(jqXHR.responseText);//.fadeTo(0,1);
+					
 					if(normalFaviconHref) linkFavicon.attr('href',normalFaviconHref);
 					
 					if(to === 'base') divPage=$('#page');
