@@ -99,11 +99,11 @@ class CRoute{
 	
 	public static function getArrayLink(&$params){
 		$plus='';
-		if(isset($params['?'])){$plus='?'.$params['?']; unset($params['?']); }
 		$link=array_shift($params);
-		$route=&self::$_routes[$link];
+		$route=&self::$_routes[$link===true?'/:controller(/:action/*)?':$link];
 		if(isset($params['ext'])){ $plus.='.'.$params['ext']; unset($params['ext']); }
 		elseif(isset($route['ext'])){ $plus.= '.'.$route['ext']; }
+		if(isset($params['?'])){$plus='?'.$params['?']; unset($params['?']); }
 		if(isset($params['#'])){$plus.='#'.$params['#']; unset($params['#']); }
 		
 		if(empty($params)) return $route[CLang::get()][1].$plus;
