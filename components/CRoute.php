@@ -108,7 +108,7 @@ class CRoute{
 		
 		if(empty($params)) return $route[CLang::get()][1].$plus;
 		$url=vsprintf($route[CLang::get()][1],$params);
-		return /* DEV */self::$_prefix./* /DEV */$url==='/'?'/':rtrim($url,'/').$plus;
+		return /* DEV */self::$_prefix./* /DEV */($url==='/'?'/':rtrim($url,'/')).$plus;
 	}
 	
 	public static function getStringLink(&$params){
