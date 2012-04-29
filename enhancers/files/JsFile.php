@@ -6,7 +6,7 @@ class JsFile extends EnhancerFile{
 		if($this->fileName()==='jsapp.js'){
 			$srcContent="includeCore('springbok.jsapp');"
 				.'S.app.jsapp('.json_encode($this->enhanced->appConfig('projectName')).','.time().');' // force également à toujours refaire le fichier
-				.('S.router.init('.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1).','
+				.('S.router.init(includeJsAppConfig(\'routes\')'/*.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1)*/.','
 						.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes-langs.js'),6,-1).');')
 				.$srcContent
 				.'S.app.run();';
@@ -16,7 +16,7 @@ class JsFile extends EnhancerFile{
 		
 		//$this->_realSrcContent=$srcContent;
 		$includes=array();
-		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$includes);
+		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$includes);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
 		$this->_srcContent=$srcContent;
@@ -157,14 +157,18 @@ class JsFile extends EnhancerFile{
 	
 	public function getEnhancedProdContent(){}
 
-	public static function includes($content,$currentPath,&$includes){
-		$content=preg_replace_callback('/include(Core|Lib)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$includes){
+	public static function includes($content,$currentPath,$appPath,&$includes){
+		$content=preg_replace_callback('/include(Core|Lib|JsAppConfig)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes){
 			if(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
-			return JsFile::includes(file_get_contents(
-					(empty($matches[1])?$currentPath:($matches[1]==='Lib'?dirname(CORE).(file_exists(dirname(CORE).'/includes/js/'.$matches[2].'.js')?'/includes/js':'/includes')
-							:CORE.(file_exists(CORE.'includes/js/'.$matches[2].'.js')?'includes/js':'includes')))
-				.DS.$matches[2].'.js'),$currentPath,$includes);
+			
+			if($matches[1]==='JsAppConfig') $path=$appPath.'src/jsapp';
+			elseif($matches[1]==='Lib') $path=dirname(CORE).(file_exists(dirname(CORE).'/includes/js/'.$matches[2].'.js')?'/includes/js':'/includes');
+			else $path=CORE.(file_exists(CORE.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
+			
+			$fileContent=file_get_contents((empty($matches[1])?$currentPath:$path).DS.$matches[2].'.js');
+			
+			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes);
 		},$content);
 		return $content;
 	}

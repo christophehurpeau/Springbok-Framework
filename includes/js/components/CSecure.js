@@ -1,4 +1,4 @@
-S.CSecure={
+(S.CSecure={
 	connected:null,
 	
 	init:function(){
@@ -19,5 +19,4 @@ S.CSecure={
 		}
 		return true;
 	}
-};
-S.CSecure.init();
+}).init();

@@ -5,7 +5,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position: ['center',150],
+		    position:['center',150],
 		    width:450,
 		    modal:true,
 		    zIndex:2000 //fancybox : 1000
