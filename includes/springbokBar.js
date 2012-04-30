@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	
 	var checkedDivFixedPosition=false;
 	function checkDivFixedPosition(){
 		$('#container').addClass('devEnvironnement');
@@ -9,10 +10,10 @@ $(document).ready(function(){
 		}
 	}
 	checkDivFixedPosition();
-	
+	/*
 	function displaySpringbokBarPopup(content){
 		$('#springbok-bar-popup').fadeOut().find('> pre').text(content).end().show().fadeIn();
-	}
+	}*/
 	
 	var ajaxSpanCount=$('#springbok-bar a[rel=ajax] span');
 	$('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){

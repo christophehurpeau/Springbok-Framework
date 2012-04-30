@@ -52,7 +52,7 @@ header,div.header{
 	z-index:11;
 	
 	IF(PAGE_FIXED)
-	position:fixed;top:0;left:0;right:0;
+	position:fixed;_position:absolute;top:0;left:0;right:0;
 	ENDIF
 }
 IF(HEADER_BACKGROUND || HEADER_COLOR)
@@ -143,7 +143,7 @@ footer{
 		IF(FIXED_BACKGROUND) background:FIXED_BACKGROUND; ENDIF
 		IF(FIXED_BORDER) border:1px solid FIXED_BORDER; ENDIF
 		IF(PAGE_FIXED)
-		position:absolute;position:fixed; z-index:6;
+		position:fixed;_position:absolute; z-index:6;
 		top:40px;left:0;right:0;bottom:20px;
 		ENDIF
 	}
@@ -210,6 +210,10 @@ IFNOT(PAGE_FIXED)
 * html body #page div.variable{
 	float:left;
 	width:IE6_VARIABLE_WIDTH;
+}
+
+* html body #page > .content{
+	overflow:hidden;
 }
 ENDIF
 

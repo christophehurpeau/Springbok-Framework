@@ -22,7 +22,10 @@ class HDev{
 					.'<div id="SpringbokBarAjaxContent" style="margin-left:310px">';
 		echo '</div></div>';
 		
-		echo '<div id="springbok-bar-popup"><a href="javascript:;" onclick="$(\'#springbok-bar-popup\').fadeOut()">Close</a><pre></pre></div>';
+		echo '</div></div><div id="springbok-bar-console" class="springbok-bar-content"><div>';
+		echo '</div></div>';
+		
+		/*echo '<div id="springbok-bar-popup"><a href="javascript:;" onclick="$(\'#springbok-bar-popup\').fadeOut()">Close</a><pre></pre></div>';*/
 	}
 	
 	private static function springbokBarChanges(){

@@ -17,7 +17,7 @@ html body #springbok-bar{
 	border-bottom:1px solid #FFF;
 	color:#FFF;
 	display: block;
-    position: fixed;
+    position:fixed;_position:absolute;
     top:0; left:0; right:0;
     width: 100%;
 	z-index: 99999;
@@ -56,28 +56,29 @@ html body #springbok-bar b{
 	text-shadow:1px 1px #666;
 }
 
-html body .springbok-bar-content,#springbok-bar-popup{
-	position:fixed;
+html body .springbok-bar-content/*,#springbok-bar-popup*/{
+	position:fixed;_position:absolute;
 	top:28px; left:0; right:0; bottom:0;
+	width:100%;
     z-index:99999;
     display:none;
     color:#FFF;
     background:#555;
 }
-
+/*
 #springbok-bar-popup{
 	top:78px; left:50px; right:50px; bottom:50px;
 	box-shadow: 1px 1px 5px #CCC;
 }
+*/
 
-
-html body .springbok-bar-content > div,#springbok-bar-popup > pre{
+html body .springbok-bar-content > div/*,#springbok-bar-popup > pre*/{
 	position:absolute;
 	top:5px; left:5px; right:5px; bottom:5px;
     padding:8px 20px;
     background:#333;
     overflow:auto;
-}
+}/*
 #springbok-bar-popup > a{
 	display:block;
 	position:absolute;
@@ -87,11 +88,11 @@ html body .springbok-bar-content > div,#springbok-bar-popup > pre{
     padding:3px 4px;
     outline:none;
 }
-
-html body .springbok-bar-content a,#springbok-bar-popup a{
+*/
+html body .springbok-bar-content a/*,#springbok-bar-popup a*/{
 	color:#FFF;
 }
-html body .springbok-bar-content a:hover,#springbok-bar-popup a:hover{
+html body .springbok-bar-content a:hover/*,#springbok-bar-popup a:hover*/{
 	color:#FFF;
 	text-shadow:1px 1px 1px #000;
 }
