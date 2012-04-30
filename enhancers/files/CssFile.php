@@ -1,6 +1,6 @@
 <?php
 class CssFile extends EnhancerFile{
-	private $_devSrcContent,$_config=array('compress'=>true);
+	private $_devSrcContent,$_config=array('compress'=>true,'autoBrowsersCompatibility'=>true);
 
 	public function setConfig($name,$val){$this->_config[$name]=$val;}
 	
@@ -356,6 +356,7 @@ class CssFile extends EnhancerFile{
 	}
 	
 	public function browsersSupport($content){
+		if(!$this->_config['autoBrowsersCompatibility']) return $content;
 		$rules=array(
 			'transition'=>array('-moz-transition','-webkit-transition','-o-transition'),
 			'border-radius'=>array('-moz-border-radius','-webkit-border-radius','-ms-border-radius'),
