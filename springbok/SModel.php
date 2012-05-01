@@ -1,5 +1,22 @@
 <?php
 abstract class SModel implements Iterator{
+	public static $__dbName='default',$__modelDb,$__displayField='name',$__orderByField=null;
+	public static $__loadedModels=array();
+	
+	public static function init($modelName){
+		$modelName::$__modelDb=DB::init(static::$__dbName);
+		self::$__loadedModels[]=$modelName;
+		$modelName::$__modelInfos=include Config::$models_infos.$modelName;
+		$modelName::$_relations=&$modelName::$__modelInfos['relations'];
+		$modelName::$__PROP_DEF=&$modelName::$__modelInfos['props'];
+	}
+	public static function updateAllDB(){
+		foreach(self::$__loadedModels as $model) $model::updateDB();
+	}
+	public static function updateDB(){static::$__modelDb=DB::get(static::$__dbName);}
+	public static function &getDB(){return static::$__modelDb;}
+	
+	
 	/* Properties */
 	
 	protected $data=array();
@@ -61,6 +78,11 @@ abstract class SModel implements Iterator{
 	}
 	
 	
+	private function _getSaveData($args){
+		return !empty($args) ? array_intersect_key($this->_getData(),array_flip($args),static::$__PROP_DEF) : array_intersect_key($this->_getData(),static::$__PROP_DEF);
+	}
+	
+	
 	/* Iterator */
 	public function rewind(){
 		reset($this->data);
@@ -80,7 +102,7 @@ abstract class SModel implements Iterator{
 	}
 	
 	
-	
+	/* Export */
 	public function toArray(){
 		return $this->data;
 	}
@@ -112,4 +134,34 @@ abstract class SModel implements Iterator{
 	public function __toString(){
 		return UPhp::exportCode($this->data);
 	}
+	
+	/* Callbacks */
+
+	protected function _beforeInsert(){
+		return $this->beforeSave() && $this->beforeInsert();
+	}
+	
+	protected function _beforeUpdate(){
+		return $this->beforeSave() && $this->beforeUpdate();
+	}
+	protected function beforeSave(){return true;}
+	protected function beforeInsert(){return true;}
+	protected function beforeUpdate(){return true;}
+	protected function beforeDelete(){return true;}
+	
+	
+	protected function _afterInsert(&$data){
+		$this->afterSave($data);
+		$this->afterInsert($data);
+	}
+	protected function _afterUpdate(&$data){
+		$this->afterSave($data);
+		$this->afterUpdate($data);
+	}
+	
+	protected function afterSave(){}
+	protected function afterInsert(){}
+	protected function afterUpdate(){}
+	protected function afterDelete(){}
+	
 }

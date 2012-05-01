@@ -1,22 +1,5 @@
 <?php
 class SSqlModel extends SModel{
-	public static $__dbName='default',$__modelDb,$__displayField='name',$__orderByField=null;
-	public static $__loadedModels=array();
-	
-	public static function init($modelName){
-		$modelName::$__modelDb=DB::init(static::$__dbName);
-		self::$__loadedModels[]=$modelName;
-		$modelName::$__modelInfos=include Config::$models_infos.$modelName;
-		$modelName::$_relations=&$modelName::$__modelInfos['relations'];
-		$modelName::$__PROP_DEF=&$modelName::$__modelInfos['props'];
-	}
-	public static function updateAllDB(){
-		foreach(self::$__loadedModels as $model) $model::updateDB();
-	}
-	public static function updateDB(){static::$__modelDb=DB::get(static::$__dbName);}
-	public static function &getDB(){return static::$__modelDb;}
-	
-	
 	public static function _getPkName(){
 		/* DEV */if(empty(static::$__modelInfos['primaryKeys'])) throw new Exception(static::$__className.' does not have any primary keys');/* /DEV */
 		return static::$__modelInfos['primaryKeys'][0];
@@ -31,41 +14,8 @@ class SSqlModel extends SModel{
 	}
 	
 	
-	/* Callbacks */
-
-	protected function _beforeInsert(){
-		return $this->beforeSave() && $this->beforeInsert();
-	}
-	
-	protected function _beforeUpdate(){
-		return $this->beforeSave() && $this->beforeUpdate();
-	}
-	protected function beforeSave(){return true;}
-	protected function beforeInsert(){return true;}
-	protected function beforeUpdate(){return true;}
-	protected function beforeDelete(){return true;}
-	
-	
-	private function _afterInsert(&$data){
-		$this->afterSave($data);
-		$this->afterInsert($data);
-	}
-	private function _afterUpdate(&$data){
-		$this->afterSave($data);
-		$this->afterUpdate($data);
-	}
-	
-	protected function afterSave(){}
-	protected function afterInsert(){}
-	protected function afterUpdate(){}
-	protected function afterDelete(){}
-	
 	/* Queries */
 
-	private function _getSaveData($args){
-		return !empty($args) ? array_intersect_key($this->_getData(),array_flip($args),static::$__PROP_DEF) : array_intersect_key($this->_getData(),static::$__PROP_DEF);
-	}
-	
 	public function insert(){
 		if(!$this->_beforeInsert()) return false;
 		$data=$this->_getSaveData(func_get_args());

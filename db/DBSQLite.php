@@ -1,5 +1,5 @@
 <?php
-class DBSQLite extends DB{
+class DBSQLite extends DBSql{
 	public static $DEFAULT_FLAGS;
 	public function _getType(){return 'SQLite';}
 	

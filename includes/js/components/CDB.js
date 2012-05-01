@@ -14,7 +14,7 @@
 		if(this.dbs[dbName]) callback(this.dbs[dbName]);
 		else{
 			if(S.CSecure){
-				if(!S.CSecure.isConnected()) throw new FatalError('CDB.mustBeConnected');
+				if(!S.CSecure.isConnected()) throw new FatalError(i18nJsA['CDB.mustBeConnected']);
 				dbName+=S.CSecure.connected();
 			}
 			new Pouch('idb://'+dbName,{},function(err,db){

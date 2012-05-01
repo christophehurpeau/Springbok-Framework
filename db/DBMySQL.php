@@ -1,7 +1,7 @@
 <?php
 /* http://dev.mysql.com/doc/refman/5.6/en/integer-types.html */
 mysqli_report(MYSQLI_REPORT_STRICT);
-class DBMySQL extends DB{
+class DBMySQL extends DBSql{
 	public function _getType(){return 'MySQL';}
 	
 	public function connect(){
