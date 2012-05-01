@@ -77,7 +77,12 @@ var S={
 	
 	isString:function(varName){ return typeof(varName)==='string'; },
 	isArray:Array.isArray || $.isArray,
-	isObject:function(varName){ return typeof(varName)==='object' }
+	isObject:function(varName){ return typeof(varName)==='object' },
+	
+	clone:function(object){
+		// clone like _.clone : Shallow copy
+		return $.extend({},object);
+	}
 	
 };
 

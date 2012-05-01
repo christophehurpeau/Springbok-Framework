@@ -12,15 +12,14 @@ class SJsAppController extends Controller{
 		echo HHtml::jsInline(
 			'var i18n_lang="'.CLang::get().'";'
 			.'window.onload=function(){'
-				
-				.'var script=document.createElement("script");'
-				.'script.type="text/javascript";'
-				.'script.src="'.HHtml::staticUrl('/jsapp'.'.js','js').'";'
-				.'document.body.appendChild(script);'
+				.'var s=document.createElement("script");'
+				.'s.type="text/javascript";'
+				.'s.src="'.HHtml::staticUrl('/jsapp'.'.js','js').'";'
+				.'document.body.appendChild(s);'
 			.'};'
 		);
 		echo '</head><body>'
-			.'<div id="container"><div class="startloading"><b>'.Config::$projectName.'</b><br/>'.($loading).'</div></div>'
+			.'<div id="container"><div class="startloading"><b>'.Config::$projectName.'</b><div id="jsAppLoadingMessage">'.($loading).'</div></div></div>'
 			.'</body></html>';
 		exit;
 	}

@@ -344,21 +344,25 @@ html body .mb10{margin-bottom:10px}
 	background:rgba(77,77,77,0.25);
 }
 .message.error{
-	border:1px solid #B80000;	
-	background:#F5CCCC;
+	border:1px solid #B80000;
+	background:#efafaf;
+	color:#8A0000;
 }
 
 .message.success{
-	border: 1px solid #2EB82E;
+	border:1px solid #2EB82E;
 	background:#D6F5D6;
+	color:#001500
 }
 
 .message.warning{
-	border: 1px solid #E07308;
-	background: #FFDDAA;
+	border:1px solid #E07308;
+	background:#FFDDAA;
+	color:#ad2d00;
 }
 
 .message.info{
-	border: 1px solid #428aab;
-	background:#d9e8ee;
+	border:1px solid #428aab;
+	background:#bdc7da;
+	color:#000546;
 }

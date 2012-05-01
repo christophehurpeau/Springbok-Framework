@@ -61,6 +61,11 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 	S.ready=S.app.ready;
 }(jQuery));
 
+function FatalError(error){
+	alert(error);
+	$('#jsAppLoadingMessage').addClass('message error').text(error);
+}
+
 includeCore('jsapp/httpexceptions');
 includeCore('jsapp/langs');
 includeCore('jsapp/controller');
