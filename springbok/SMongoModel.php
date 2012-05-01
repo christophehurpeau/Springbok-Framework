@@ -16,9 +16,17 @@ class SMongoModel extends SModel{
 	}
 	
 	public function save(){
+		throw new Exception();
 		if(!$this->beforeSave()) return false;
 		$data=$this->_getData();
-		static::$__collection->save($data);
+		$data['created']=new MongoDate();
+		//static::$__collection->save($data);
+		if(isset($data['_id']))
+			static::$__collection->save(array('_id'=>$data['_id']),$data);
+		else{
+			$data['created']=new MongoDate();
+			static::$__collection->insert($data);
+		}
 		$this->afterSave($data);
 	}
 	
@@ -32,10 +40,10 @@ class SMongoModel extends SModel{
 	}
 	
 	public function remove(){
-		if(!$this->_beforeUpdate()) return false;
+		if(!$this->_beforeDelete()) return false;
 		$data=$this->_getData();
-		static::$__collection->remove(array('_id'=>$this->data['_id']),$data);
-		$this->_afterUpdate($data);
+		self::RemoveOne(array('_id'=>$this->data['_id']));
+		$this->_afterDelete($data);
 	}
 	
 	public function updateField($fieldName,$value){
@@ -54,11 +62,11 @@ class SMongoModel extends SModel{
 	}
 	
 	public static function FindOne($query=array(),$fields=array()){
-		return static::$__collection->findOne($keys,$initial,$reduce,$options);
+		return static::$__collection->findOne($query,$fields);
 	}
 	
 	public static function FindAll($query=array(),$fields=array()){
-		return static::$__collection->findOne($keys,$initial,$reduce,$options);
+		return static::$__collection->find($query,$fields);
 	}
 	
 	public static function RemoveOne($criteria){
