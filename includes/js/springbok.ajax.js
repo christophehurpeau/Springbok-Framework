@@ -69,11 +69,11 @@ includeCore('ui/slideTo');
 			divVariable=divPage.find('div.variable:first');
 			divContent=divVariable.is('.content') && divVariable.has('h1').length===0 ? divVariable : divVariable.find('.content:first');
 		},
-		load:function(url,data,type,forceNotAddDataToGet){
+		load:function(url,data,type,forceNotAddDataToGetORdoNotDoTheEffect){
 			if(url.substr(0,1)==='?') url=location.pathname+url;
 			var ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
-			if(data && !forceNotAddDataToGet) url+=(url.indexOf('?')==-1?'?':'&')+data;
+			if(data && !forceNotAddDataToGetORdoNotDoTheEffect) url+=(url.indexOf('?')==-1?'?':'&')+data;
 			
 			headers.SpringbokAjaxPage=divPage.length>0?divPage.data('layoutname')||'0':'0';
 			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
@@ -97,7 +97,7 @@ includeCore('ui/slideTo');
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
 						divLoading.remove();
-						S.ajax.load(h);
+						S.ajax.load(h,false,false,true);
 						return;
 					}
 					
@@ -117,7 +117,7 @@ includeCore('ui/slideTo');
 					
 					$(window).scrollTop(0);
 					
-					if(to === 'content'){
+					if(to === 'content' && !data && !forceNotAddDataToGetORdoNotDoTheEffect){
 						divContent=div.sSlideTo(jqXHR.responseText);
 					}else div.html(jqXHR.responseText);//.fadeTo(0,1);
 					
