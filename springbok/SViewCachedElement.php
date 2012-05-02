@@ -19,13 +19,18 @@ class SViewCachedElement extends SViewElement{
 	public function __construct($vars){
 		$this->calledClass=get_called_class();
 		$this->path=call_user_func_array($this->calledClass.'::path',$vars).'_';
-		if(!($this->exists=file_exists($this->path.'view'))) parent::__construct($vars);
+		if(!($this->exists=file_exists($this->path.'view'))){
+			parent::__construct($vars);
+			$this->generateAll();
+		}
+	}
+	public function generateAll(){
+		foreach(static::$views as $view) $this->write($view,parent::render($view));
 	}
 	
 	
 	public function render($view='view'){
-		if($this->exists) return $this->read($view);
-		return $this->write($view,parent::render($view));
+		return $this->read($view);
 	}
 	
 	protected function read($view){
