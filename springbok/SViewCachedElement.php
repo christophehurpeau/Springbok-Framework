@@ -10,7 +10,7 @@ class SViewCachedElement extends SViewElement{
 			file_put_contents($path.$view,render(APP.'viewsElements/'.substr($calledClass,1).'/'.$view.'.php',$vars,true));
 	}
 	public static function destroy(){
-		$path=call_user_func_array($calledClass.'::path',func_get_args()).'_';
+		$path=call_user_func_array(get_called_class().'::path',func_get_args()).'_';
 		foreach(static::$views as $view)
 			if(file_exists($path.$view)) unlink($path.$view);
 	}
