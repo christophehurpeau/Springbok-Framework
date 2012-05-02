@@ -1,5 +1,9 @@
 <?php
 class HHtml{
+	public static function doctype(){
+		return CHttpRequest::isIElt8() ? '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' : '<!DOCTYPE html>';
+	}
+	
 	public static function linkRSS($title,$url){
 		echo '<link rel="alternate" type="application/rss+xml" href="'.self::url($url).'" title="'.$title.'"/>';
 	}

@@ -1,0 +1,38 @@
+<?php
+class SViewCachedElement extends SViewElement{
+	protected static $views=array('view');
+	
+	public static function generate(){
+		$calledClass=get_called_class();
+		$path=call_user_func_array($calledClass.'::path',$vars=func_get_args()).'_';
+		$vars=call_user_func_array($calledClass.'::vars',$vars);
+		foreach(static::$views as $view)
+			file_put_contents($path.$view,render(APP.'viewsElements/'.substr($calledClass,1).'/'.$view.'.php',$vars,true));
+	}
+	public static function destroy(){
+		$path=call_user_func_array($calledClass.'::path',func_get_args()).'_';
+		foreach(static::$views as $view)
+			if(file_exists($path.$view)) unlink($path.$view);
+	}
+	
+	protected $path,$exists;
+	public function __construct($vars){
+		$this->calledClass=get_called_class();
+		$this->path=call_user_func_array($this->calledClass.'::path',$vars).'_';
+		if(!($this->exists=file_exists($this->path.'view'))) parent::__construct($vars);
+	}
+	
+	
+	public function render($view='view'){
+		if($this->exists) return $this->read($view);
+		return $this->write($view,parent::render($view));
+	}
+	
+	protected function read($view){
+		return file_get_contents($this->path.$view);
+	}
+	protected function &write($view,$content){
+		file_put_contents($this->path.$view,$content);
+		return $content;
+	}
+}

@@ -78,7 +78,7 @@ abstract class SModel implements Iterator{
 	}
 	
 	
-	private function _getSaveData($args){
+	protected function _getSaveData($args){
 		return !empty($args) ? array_intersect_key($this->_getData(),array_flip($args),static::$__PROP_DEF) : array_intersect_key($this->_getData(),static::$__PROP_DEF);
 	}
 	

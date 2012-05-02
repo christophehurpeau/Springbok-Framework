@@ -1,19 +1,16 @@
 <?php
 class SViewElement{
-	public static function generate(){
-		$vars=static::vars(func_get_args());
-		file_put_contents(static::path($vars),render(APP.'viewsElements/'.substr(get_called_class(),1).'/view.php',$vars,true));
+	public static function create(){
+		return new static(func_get_args());
 	}
 	
-	public static function render(){
-		$vars=static::vars(func_get_args());
-		render(APP.'viewsElements/'.substr(get_called_class(),1).'/view.php',$vars);
+	protected $vars,$calledClass;
+	public function __construct($vars){
+		$this->calledClass=get_called_class();
+		$this->vars=call_user_func_array($this->calledClass.'::vars',$vars);
 	}
 	
-	public static function vars(&$vars){ return $vars; }
-	
-	public static function destroy(){
-		$path=static::path(func_get_args());
-		if(file_exists($path)) unlink($path);
+	public function render($view='view'){
+		return render(APP.'viewsElements/'.substr(get_called_class(),1).'/'.$view.'.php',$this->vars,true);
 	}
 }

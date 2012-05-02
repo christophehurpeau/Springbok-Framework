@@ -108,6 +108,11 @@ class CHttpRequest{
 		))."'" /EVAL *//* HIDE */''/* /HIDE */.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 
+	public static function isIElt8(){
+		if(!isset($_SERVER['HTTP_USER_AGENT']) || !preg_match("#MSIE ([\d\.]+)#i",$_SERVER['HTTP_USER_AGENT'],$ua)) return false;
+		return $ua[1] < 8;
+	}
+
 	CONST P_WINDOWS=0,P_MAC=1,P_LINUX=2,P_FREE_BSD=3,P_IPOD=10,P_IPAD=11,P_IPHONE=12,P_ANDROID=13,P_SYMBIAN=14,P_P_IMODE=15,P_NINTENDO_WII=20,P_PLAYSTATION_PORTABLE=21;
 	CONST B_CRAWLER=0,B_OPERA_MINI=1,B_OPERA=2,B_IE=3,B_FIREFOX=4,B_CHROME=5,B_CHROMIUM=6,B_SAFARI=7,
 		B_EPIPHANY=10,B_FENNEC=11,B_ICEWEASEL=12,B_MINEFIELD=13,B_MINIMO=14,B_FLOCK=15,B_FIREBIRD=16,B_PHOENIX=17,B_CAMINO=18,B_CHIMERA=19,B_THUNDERBIRD=20,B_NETSCAPE=21,B_OMNIWEB=22,B_IRON=23,B_ICAB=24,B_KONQUEROR=25,B_MIDORI=26,B_DOCOMO=27,B_LYNX=28,B_LINKS=29,
@@ -132,26 +137,8 @@ class CHttpRequest{
 		elseif(preg_match('/FreeBSD/',$ua)) $browser['platform']=self::P_FREE_BSD;
 		elseif(preg_match('/DoCoMo/',$ua)) $browser['platform']=self::P_IMODE;
 		
-		if(preg_match('/charlotte/i',$ua)
-			|| preg_match('/crawl/i',$ua)
-			|| preg_match('/bot/i',$ua)
-			|| preg_match('/bloglines/i',$ua)
-			|| preg_match('/dtaagent/i',$ua)
-			|| preg_match('/feedfetcher/i',$ua)
-			|| preg_match('/ia_archiver/i',$ua)
-			|| preg_match('/ia_archiver/i',$ua)
-			|| preg_match('/larbin/i',$ua)
-			|| preg_match('/mediapartners/i',$ua)
-			|| preg_match('/metaspinner/i',$ua)
-			|| preg_match('/searchmonkey/i',$ua)
-			|| preg_match('/slurp/i',$ua)
-			|| preg_match('/spider/i',$ua)
-			|| preg_match('/teoma/i',$ua)
-			|| preg_match('/ultraseek/i',$ua)
-			|| preg_match('/waypath/i',$ua)
-			|| preg_match('/yacy/i',$ua)
-			|| preg_match('/yandex/i',$ua)
-		) $browser['platform']=self::B_CRAWLER;
+		if(preg_match('/(charlotte|crawl|bot|bloglines|dtaagent|feedfetcher|ia_archiver|larbin|mediapartners'
+			.'|metaspinner|searchmonkey|slurp|spider|teoma|ultraseek|waypath|yacy|yandex/i',$ua)) $browser['platform']=self::B_CRAWLER;
 		else{
 			$sniffs = array( // name regexp, name for display, version regexp, version match
 				array('Opera Mini',self::B_OPERA_MINI, "#Opera Mini( |/)([\d\.]+)#", 2 ),

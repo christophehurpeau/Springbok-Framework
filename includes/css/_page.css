@@ -116,6 +116,8 @@ footer{
 	IF(PAGE_FIXED)
 	margin:0 3px;padding-top:38px;
 	position:relative;
+	overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
+	overflow-x: hidden;
 	/*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
 	ENDIF
 	
@@ -137,14 +139,19 @@ footer{
 		IF(FIXED_VARIABLE_BORDER) border:FIXED_VARIABLE_BORDER; ENDIF
 	}
 	
+	IF(PAGE_FIXED)
+	div.fixed.right{float:left}
+	div.fixed.left{float:right}
+	ENDIF
 	IF(PAGE_FIXED || FIXED_BACKGROUND || FIXED_BORDER)
-	div.fixed{overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+	div.fixed{
+		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
 		overflow-x: hidden;
 		IF(FIXED_BACKGROUND) background:FIXED_BACKGROUND; ENDIF
 		IF(FIXED_BORDER) border:1px solid FIXED_BORDER; ENDIF
 		IF(PAGE_FIXED)
-		position:fixed;_position:absolute; z-index:6;
-		top:40px;left:0;right:0;bottom:20px;
+			position:fixed; _position:absolute; z-index:6;
+			top:40px; left:0; right:0; bottom:20px;
 		ENDIF
 	}
 	ENDIF
@@ -154,8 +161,8 @@ footer{
 	div.fixed.left{float:left;}
 	ENDIF
 	IF(PAGE_FIXED)
-	div.fixed.right{left:auto}
-	div.fixed.left{right:auto}
+	div.fixed.right{left:auto; *float:left;/* for ie7 */}
+	div.fixed.left{right:auto; *float:right;/* for ie7 */}
 	ENDIF
 	
 	div.fixed h2{ text-align:center;}
@@ -211,12 +218,11 @@ IFNOT(PAGE_FIXED)
 	float:left;
 	width:IE6_VARIABLE_WIDTH;
 }
-
+/*
 * html body #page > .content{
 	overflow:hidden;
-}
+}*/
 ENDIF
-
 
 div.shadowed-box{
 	padding:4px 6px; margin:0 5px 10px;
