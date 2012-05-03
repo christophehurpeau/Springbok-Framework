@@ -119,7 +119,7 @@ function debug($object,$flush=true){
 	prettyDebug(htmlentities(print_r($object,true),ENT_QUOTES,'UTF-8'),2,$flush);
 }
 function debugCode($code,$withBacktrace=true){
-	prettyDebug(htmlentities($code,ENT_QUOTES,'UTF-8'),$withBacktrace?2:false,true);
+	prettyDebug(htmlentities((string)$code,ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
 }
 function debugVar(){
 	ob_start();
