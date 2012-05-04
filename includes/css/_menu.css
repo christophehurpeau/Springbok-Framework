@@ -1,27 +1,29 @@
-menu{
-	list-style:none;
+nav{
 	margin:2px 0; padding:0;
 }
-menu li{margin:1px; padding:0}
-menu li a{text-decoration: none;text-shadow:none;}
-menu li a:focus{outline: none}
-menu li a:hover{text-decoration: underline;text-shadow:none;}
+nav ul{
+	list-style:none;
+	margin:0; padding:0;
+}
+nav li{margin:1px; padding:0}
+nav li a{text-decoration: none;text-shadow:none;}
+nav li a:focus{outline: none}
+nav li a:hover{text-decoration: underline;text-shadow:none;}
 
-menu.top{float:left}
-menu.top li{float:left;display:block;display:inline-block;}
-menu.top li a,menu.top li.separator{margin:0;padding:3px 6px;display:block;display:inline-block;}
+nav.top,nav.top ul{float:left}
+nav.top li{float:left;display:block;display:inline-block;}
+nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;display:inline-block;}
 /*menu.right li a, menu.left li a{padding:5px;}*/
-menu.right li,menu.left li{margin:2px 0}
-menu.right.nomarg li,menu.left.nomarg li{margin:0}
+nav.right li,nav.left li{margin:2px 0}
+nav.right.nomarg li,menu.left.nomarg li{margin:0}
 
-menu.left ul{
-	list-style: none;
-	margin-left:8px;padding-left:0;
+nav.left ul ul{
+	margin-left:8px;padding-left:1px;
 	border-left:1px dotted #BBB;
 }
 
 IF(HEADER_MENU_SHADOW || HEADER_MENU_BORDER_RADIUS || HEADER_MENU_BORDER || HEADER_MENU_BACKGROUND || HEADER_MENU_BACKGROUND_TB || HEADER_MENU_COLOR)
-header menu,div.header menu,ul.pager a,table.table tr.head{
+header nav,div.header nav,ul.pager a,table.table tr.head{
 	IF(HEADER_MENU_SHADOW) box-shadow(5px,HEADER_MENU_SHADOW); ENDIF
 	IF(HEADER_MENU_BORDER_RADIUS) border-radius-bottom(5px); ENDIF
 	IF(HEADER_MENU_BORDER) border:1px solid HEADER_MENU_BORDER; ENDIF
@@ -31,7 +33,7 @@ header menu,div.header menu,ul.pager a,table.table tr.head{
 }
 ENDIF
 
-header menu li a,div.header menu li a,ul.pager a{
+header nav li a,div.header nav li a,ul.pager a{
 	/*background-color: rgba(0,0,0,0.3);*/
 	IF(HEADER_MENU_A_BORDER) border:1px solid HEADER_MENU_A_BORDER; ENDIF
 	IF(HEADER_MENU_A_BORDER_BOTTOM) border-bottom:HEADER_MENU_A_BORDER_BOTTOM; ENDIF
@@ -45,15 +47,15 @@ header menu li a,div.header menu li a,ul.pager a{
 	IF(HEADER_MENU_A_TEXT_SHADOW) text-shadow:HEADER_MENU_A_TEXT_SHADOW; ENDIF
 	font-weight: bold;
 }
-header menu.top li.separator{
+header nav.top li.separator{
 	/* padding:3px 6px 4px + margin:1px 2px; + border */
 	IF(HEADER_MENU_A_BORDER) padding:5px 8px 6px ENDIF
 	IFNOT(HEADER_MENU_A_BORDER) padding:4px 6px 5px ENDIF
 }
 
 IF(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND || HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB || HEADER_MENU_A_CURRENT_HOVER_SHADOW || HEADER_MENU_A_CURRENT_HOVER_COLOR)
-header menu li a.current,header menu li a:hover,
-div.header menu li a.current,div.header menu li a:hover,
+header nav li a.current,header nav li a:hover,
+div.header nav li a.current,div.header nav li a:hover,
 ul.pager .selected a,ul.pager .page a:hover{
 	IF(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND) background:HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; ENDIF
 	IF(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_TB); ENDIF
@@ -62,8 +64,8 @@ ul.pager .selected a,ul.pager .page a:hover{
 }
 ENDIF
 IF(HEADER_MENU_A_CURRENT_BACKGROUND || HEADER_MENU_A_CURRENT_BACKGROUND_TB || HEADER_MENU_A_CURRENT_COLOR || HEADER_MENU_A_CURRENT_BORDER_BOTTOM)
-header menu li a.current,
-div.header menu li a.current,
+header nav li a.current,
+div.header nav li a.current,
 ul.pager .selected a{
 	IF(HEADER_MENU_A_CURRENT_BACKGROUND) background:HEADER_MENU_A_CURRENT_BACKGROUND; ENDIF
 	IF(HEADER_MENU_A_CURRENT_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_CURRENT_BACKGROUND_TB); ENDIF
@@ -72,8 +74,8 @@ ul.pager .selected a{
 }
 ENDIF
 
-header menu li a:hover,
-div.header menu li a:hover,
+header nav li a:hover,
+div.header nav li a:hover,
 ul.pager a:hover{
 	text-decoration: none;
 	IF(HEADER_MENU_A_HOVER_BACKGROUND) background:HEADER_MENU_A_HOVER_BACKGROUND; ENDIF
@@ -84,28 +86,28 @@ ul.pager a:hover{
 }
 
 IF(HEADER_MENU_A_CURRENTHOVER_COLOR || HEADER_MENU_A_CURRENTHOVER_BACKGROUND || HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB)
-header menu li a.current:hover,
-div.header menu li a.current:hover{
+header nav li a.current:hover,
+div.header nav li a.current:hover{
 	IF(HEADER_MENU_A_CURRENTHOVER_COLOR) color:HEADER_MENU_A_CURRENTHOVER_COLOR; ENDIF
 	IF(HEADER_MENU_A_CURRENTHOVER_BACKGROUND) background:HEADER_MENU_A_CURRENTHOVER_BACKGROUND; ENDIF
 	IF(HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB) bg-gradient-tb(HEADER_MENU_A_CURRENTHOVER_BACKGROUND_TB); ENDIF
 }
 ENDIF
 
-#page menu.top{padding-left:5px;}
-#page menu.top{margin-bottom:0}
-#page menu.top li{margin-bottom:0; IF(VARIABLE_MENU_COLOR) color:VARIABLE_MENU_COLOR; ENDIF}
-IF(VARIABLE_MENU_COLOR)#page menu.top li a:hover{color:VARIABLE_MENU_COLOR}ENDIF
-#page menu.top li a{
+#page nav.top{padding-left:5px;}
+#page nav.top{margin-bottom:0}
+#page nav.top li{margin-bottom:0; IF(VARIABLE_MENU_COLOR) color:VARIABLE_MENU_COLOR; ENDIF}
+IF(VARIABLE_MENU_COLOR)#page nav.top li a:hover{color:VARIABLE_MENU_COLOR}ENDIF
+#page nav.top li a{
 	padding:2px 6px 3px;
 	border-bottom-right-radius:10px 25px;
 	border-top-left-radius:10px 25px;
 	background:#CCC;
 }
-#page menu.top li a.current{
+#page nav.top li a.current{
 	position: relative; z-index: 2; /* couvre l'ombre, si existe, du div suivant */
 	IF(VARIABLE_MENU_CURRENT_BACKGROUND) background:VARIABLE_MENU_CURRENT_BACKGROUND; ENDIF
 	color:VARIABLE_MENU_CURRENT_COLOR;
 }
 
-#page .fixed menu{padding:5px 10px;}
+#page .fixed nav{padding:5px 10px;}

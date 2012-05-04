@@ -24,11 +24,11 @@ includeCore('ui/slideTo');
 				evt.preventDefault();
 				evt.stopPropagation();
 				var a=$(this),rel='content',menu,url=a.attr('href');
-				if(a.is('header menu.ajax a')){
-					menu=a.closest('menu');
+				if(a.is('header nav.ajax a')){
+					menu=a.closest('nav');
 					if(a.hasClass('current')) S.ajax.load(url);
 					else{
-						menu.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
+						nav.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
 						var newPageContent=a.data('pagecontent');
 						if(newPageContent){
 							divPage.html(newPageContent.html).attr('class',newPageContent['class']||"");
@@ -40,8 +40,8 @@ includeCore('ui/slideTo');
 					return false;
 				}
 				
-				var allMenuLinks=$('menu a[href="'+url+'"]');
-				menu=allMenuLinks.closest('menu');
+				var allMenuLinks=$('nav a[href="'+url+'"]');
+				menu=allMenuLinks.closest('nav');
 				
 				if(menu.size !== 0){
 					menu.find('a.current').removeClass('current');

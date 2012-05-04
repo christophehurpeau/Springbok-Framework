@@ -150,13 +150,13 @@ class EnhanceApp extends AEnhance{
 //			if($d->getPath()===$srcDir.'cache/' || $d->getPath()===$srcDir.'tmp/') continue;
 			
 			$newDevDir=$devDir.$dirname.DS; $newProdDir=$prodDir.$dirname.DS;
-			$excludeFiles=false; $excludeChild=$exclude===true?true:false;
+			$excludeFiles=$allowUnderscoredFiles=false; $excludeChild=$exclude===true?true:false;
 			
 			if(startsWith($dPath,$srcDir.'logs/')||startsWith($dPath,$srcDir.'tmp/')) $excludeChild=$excludeFiles=true;
 			if($defaultClass===false){
 				$class='PhpFile';
 				
-				if($dPath===$srcDir.'config/'){ $class='ConfigFile'; $excludeFiles=array('modules.php');}
+				if($dPath===$srcDir.'config/'){ $class='ConfigFile'; $excludeFiles=array('modules.php'); $allowUnderscoredFiles=true; }
 				elseif(startsWith($dPath,$srcDir.'controllers')){ $class='ControllerFile'; $excludeChild=array('methods'); }
 				elseif($dPath===$srcDir.'jobs/') $class='JobFile';
 				elseif($dPath===$srcDir.'daemons/') $class='DaemonFile';
@@ -171,7 +171,7 @@ class EnhanceApp extends AEnhance{
 			}else $class=$defaultClass;
 			
 			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
-			$folderEnhancer->process($class,$excludeFiles);
+			$folderEnhancer->process($class,$excludeFiles,$allowUnderscoredFiles);
 			
 			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$excludeChild,$class);
 			

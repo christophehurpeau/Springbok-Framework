@@ -24,7 +24,7 @@ abstract class AFolderEnhancer{
 	}
 	
 	
-	public function process($class='PhpFile',$exclude=false){
+	public function process($class='PhpFile',$exclude=false,$allowUnderscoredFiles=true){
 		$dir=&$this->dir;$devDir=&$this->devDir;$prodDir=&$this->prodDir;
 		
 		if(substr($dir->getName(),0,1)==='.') return;
@@ -50,7 +50,7 @@ abstract class AFolderEnhancer{
 			if($found===false){
 				$justSrc=$justDev=$destFilename=false;
 				$copy=$ext!=='php';
-				if($ext==='php' && $this->enhanced instanceof EnhancedApp) $justSrc=$filename[0]==='_';
+				if(!$allowUnderscoredFiles && $this->enhanced instanceof EnhancedApp) $justSrc=$filename[0]==='_';
 			}else{
 				$justDev=false;
 				list($class,$justSrc,$destFilename,$copy)=$found;

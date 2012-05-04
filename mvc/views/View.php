@@ -106,7 +106,7 @@ class AjaxPageDynamicTabsView extends AjaxPageView{
 	public function __construct($title=false,$class='ml200',$layout=null,$layoutNameOverride=null){
 		if($layout===null) $layout=Springbok::$prefix.'page';
 		parent::__construct($title,$class,$layout,$layoutNameOverride);
-		echo '<menu class="dynamictabs top"></menu><div id="dynamictabsContent" class="clear">';
+		echo '<nav class="dynamictabs top"><ul></ul></nav><div id="dynamictabsContent" class="clear">';
 	}
 	public function render(){
 		echo '</div>';

@@ -29,14 +29,14 @@ S.menu={
 			options={};
 		}
 		options=$.extend({},{menuAttributes:{'class':type},lioptions:{},linkoptions:{},startsWith:false},options);
-		var t=this,res=S.html.tag(this.tagName,options.menuAttributes);
+		var t=this,res=S.html.tag(this.tagName,options.menuAttributes),ul=this.tagName==='ul'?res:$('<ul/>').appendTo(res);
 		links.sbEach(function(k,item){
-			if(!item[0]){ res.append(S.html.tag('li',{'class':'separator'},this.separator,1)); return; }
+			if(!item[0]){ ul.append(S.html.tag('li',{'class':'separator'},this.separator,1)); return; }
 			var linkOptions=$.extend({},options.linkoptions,item[2]);
 			
 			if(linkOptions.visible===false) return;
 			delete linkOptions.visible;
-			res.append(t.link(item[0],item[1],linkOptions,{startsWith:options.startsWith},options.lioptions));
+			ul.append(t.link(item[0],item[1],linkOptions,{startsWith:options.startsWith},options.lioptions));
 		});
 		return res;
 		/*return $('<div/>').html(res).html(); //TODO à revoir*/
@@ -51,7 +51,7 @@ S.menu={
 			delete linkoptions.startsWith;
 		}
 		var res=S.html.link(title,url,linkoptions);
-		if(linkoptions) res=S.html.tag('li',lioptions,res,0);
+		if(linkoptions!=null) res=S.html.tag('li',lioptions,res,0);
 		return res;
 	}
 };
