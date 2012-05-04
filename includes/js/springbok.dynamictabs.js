@@ -28,7 +28,7 @@
 		});
 		oldFunctionInit();
 	};
-	S.setTitle=function(title){ oldFunctionSetTitle(title); $('menu.dynamictabs a.current').text(title); };
+	S.setTitle=function(title){ oldFunctionSetTitle(title); $('nav.dynamictabs a.current').text(title); };
 	S.ajax.updateVariable=function(divPage){ ajaxFunctionUpdateVariable(divPage); S.dynamictabs.prepare(); };
 	S.dynamictabs={
 		init:function(){
