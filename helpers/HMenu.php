@@ -1,6 +1,6 @@
 <?php
 class HMenu{
-	public static $tagName='menu',$separator='-';
+	public static $tagName='nav',$separator='-';
 	
 	
 	public static function top($links,$options=array()){
@@ -16,7 +16,7 @@ class HMenu{
 	public static function &ul($links,$options=array()){
 		self::$tagName='ul';
 		$res=self::create($links,$options,'');
-		self::$tagName='menu';
+		self::$tagName='nav';
 		return $res;
 	}
 	
@@ -24,6 +24,7 @@ class HMenu{
 		$options=$options+array('lioptions'=>array(),'linkoptions'=>array(),'startsWith'=>false);
 		if(!isset($options['menuAttributes']['class'])) $options['menuAttributes']['class']=$type;
 		$res=HHtml::openTag(self::$tagName,$options['menuAttributes']);
+		if(self::$tagName!=='ul') $res.=HHtml::openTag('ul',array());
 		foreach($links as $title=>$value){
 			if(is_int($title)){
 				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),self::$separator); continue; }
@@ -33,6 +34,7 @@ class HMenu{
 			if(is_array($value) && isset($value['visible'])){ if(!$value['visible']) continue; unset($value['visible']); }
 			$res.=self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
 		}
+		if(self::$tagName!=='ul') $res.=HHtml::closeTag('ul');
 		return $res.HHtml::closeTag(self::$tagName);
 	}
 	public static function link($title,$value,$linkoptions=array(),$options=array(),$lioptions=false){

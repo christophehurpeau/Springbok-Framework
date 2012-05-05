@@ -19,7 +19,7 @@
 				+'<div id="page"></div>'
 				+'<footer>'+S.app.footer+'</footer>'
 				+'</div>');
-			var menu=$('header menu');
+			var menu=$('header nav ul');
 			$.each(this.controllers,function(id,c){
 				menu.append('<li><a class="'+id+'" href="'+c.href+'" onclick="return S.app.load(this)">'+c.title+'</a></li>');
 			});

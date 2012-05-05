@@ -8,12 +8,12 @@
 		$(document).bind('click',function(e){
 			if(e.which==2){
 				var target=$(e.target);
-				if(target.is('menu.dynamictabs a')){
+				if(target.is('nav.dynamictabs a')){
 					S.dynamictabs.delTab(target);
 				}else if(target.is('a:not(header a)')){
 					var a=target,menu=false;
 					S.dynamictabs.addTab();
-					if(a.is('menu a')) menu=a.closest('menu');
+					if(a.is('nav a')) menu=a.closest('nav');
 					
 					if(menu){
 						menu.find('a.current').removeClass('current');
@@ -28,12 +28,12 @@
 		});
 		oldFunctionInit();
 	};
-	S.setTitle=function(title){ oldFunctionSetTitle(title); $('menu.dynamictabs a.current').text(title); };
+	S.setTitle=function(title){ oldFunctionSetTitle(title); $('nav.dynamictabs a.current').text(title); };
 	S.ajax.updateVariable=function(divPage){ ajaxFunctionUpdateVariable(divPage); S.dynamictabs.prepare(); };
 	S.dynamictabs={
 		init:function(){
 			this.prepare();
-			$('menu.dynamictabs > li > a').die('click').live('click', function(){
+			$('nav.dynamictabs > ul > li > a').die('click').live('click', function(){
 				var a=$(this);
 				// hide
 				dynamictabsContent.find('> div').hide();
@@ -45,7 +45,7 @@
 			});
 		},
 		prepare:function(){
-			dynamictabsMenu=$('menu.dynamictabs');
+			dynamictabsMenu=$('nav.dynamictabs');
 			dynamictabsContent=$(dynamictabsMenu.attr('rel')?dynamictabsMenu.attr('rel'):'#dynamictabsContent');
 			if(dynamictabsMenu.length!==1){ dynamictabsMenu=false;return; }
 			
@@ -54,7 +54,7 @@
 				var newContent=$('<div/>').attr('id','dynamictab'+(++dynamictabsId));
 				dynamictabsContent.html(newContent.html(dynamictabsContent.html()));
 				ajaxFunctionUpdateVariable(newContent);
-				dynamictabsMenu.html($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
+				dynamictabsMenu.find('ul').html($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
 			}else ajaxFunctionUpdateVariable(dynamictabsContent.find('> div:not(:hidden)'));
 		},
 		addTab:function(){
@@ -63,7 +63,7 @@
 			
 			var newContent=$('<div/>').attr('id','dynamictab'+(++dynamictabsId));
 			dynamictabsContent.append(newContent.html($('#'+current.attr('rel')).html()));
-			dynamictabsMenu.append($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
+			dynamictabsMenu.find('ul').append($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
 			
 			ajaxFunctionUpdateVariable(newContent);
 		},

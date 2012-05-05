@@ -9,7 +9,7 @@
 			result.append(li);
 		});
 	};
-	$.fn.ajaxSearch=function(url,minLength,destContent,display){
+	$.fn.sAjaxSearch=function(url,minLength,destContent,display){
 		var xhr,input=this,lastVal='',currentTimeout;
 		display=display||defaultDisplayList;
 		this.keyup(function(){
@@ -36,11 +36,4 @@
 		});
 		return this;
 	};
-	$.fn.autoComplete=function(url,minLength){
-		var divResult=$('<div class="divAutocomplete hidden"/>').appendTo($('body'));
-		this.ajaxSearch(url,minLength,divResult,function(data){
-			divResult.html('').sShow();
-			return defaultDisplayList(data,{'class':'clickable'});
-		});
-	}
 })(jQuery);
