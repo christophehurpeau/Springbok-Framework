@@ -48,11 +48,11 @@ class CRoute{
 				(?:\.(?<ext>[a-z]{2,4}))?
 				*/
 				
-				$ext=$route['ext']===NULL?NULL:$route['ext'];
+				$ext=$route['ext']===null?null:array_pop($matches);/*$route['ext'];*/
 				unset($matches[0]);
 				
 				list($controller,$action)=explode('::',$route['_'],2);
-
+				
 				if(isset($route[':'])){
 					$nbNamedParameters=count($route[':']);
 					$countMatches=count($matches);
@@ -77,7 +77,7 @@ class CRoute{
 						}else $controller=substr($controller,0,-1).self::DEFAULT_CONTROLLER;
 					}
 					if($action=='!'){
-						if(isset($params['action'])){
+						if($params['action']){
 							$action=self::untranslate($params['action'],$lang);
 							unset($params['action']);
 						}else $action=self::DEFAULT_ACTION;
