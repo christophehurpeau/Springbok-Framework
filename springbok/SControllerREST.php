@@ -30,20 +30,23 @@ class SControllerREST extends Controller{
 		else $source=CHttpRequest::accepts($allowedSource);
 		switch($source){
 			case 'xml':
-				header('Content-type: application/xml');
+				header('Content-type: application/xml; charset=UTF-8');
 				echo xmlrpc_encode($content);
 				break;
 			case 'php':
+				header('Content-type: text/plain; charset=UTF-8');
 				echo serialize($content);
 				break;
 			case 'phpsource':
+				header('Content-type: text/plain; charset=UTF-8');
 				echo UPhp::exportCode($content);
 				break;
 			case 'html':
+				header('Content-type: text/html; charset=UTF-8');
 				echo '<pre>'.print_r($content,true).'</pre>';
 				break;
 			default:
-				header('Content-type: application/json');
+				header('Content-type: application/json; charset=UTF-8');
 				echo json_encode($content);
 		}
 		if($exit) exit;
