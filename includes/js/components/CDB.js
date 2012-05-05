@@ -1,18 +1,22 @@
 (S.CDB={
-	indexedDB:window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB,
-	/*IDBTransaction:window.IDBTransaction || window.webkitIDBTransaction,
-	IDBKeyRange:window.IDBKeyRange || window.webkitIDBKeyRange,
-	*/
 	config:includeJsAppConfig('databases'),
-	dbs:{},
+	adapters:{}, dbs:{},
 	
 	init:function(){
-		if(!this.indexedDB) throw new FatalError('IndexedDB doesn\'t work on your browser. Please use Firefox or Chrome.');
+		var t=this;
+		$.each(t.adapters,function(adapterName,adapter){
+			if(adapter.isAvailable()){
+				t.adapter=adapterName;
+				return false;
+			}
+		});
+		if(!this.adapter) throw new FatalError('IndexedDB doesn\'t work on your browser. Please use Firefox or Chrome.');
 	},
 	
 	get:function(dbName,callback){
 		if(this.dbs[dbName]) callback(this.dbs[dbName]);
 		else{
+			if(!dbName.match(/\W/i)) throw new FatalError('dbname can only contain A-z, 0-9, and underscores.');
 			if(S.CSecure){
 				if(!S.CSecure.isConnected()) throw new FatalError(i18nJsA['CDB.mustBeConnected']);
 				dbName+=S.CSecure.connected();
@@ -26,6 +30,10 @@
 	},
 }).init();
 
+(function(adapters){
+	includeCore('components/CDB_websql');
+	includeCore('components/CDB_indexeddb');
+})(S.CDB.adapters);
 
 /*var r=this.request=indexedDB.open("MyTestDatabase",1);
 r.onblocked=function(){ throw new FatalError('Please close all other tabs with this site open!') };

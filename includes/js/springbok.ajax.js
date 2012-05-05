@@ -19,7 +19,10 @@ includeCore('ui/slideTo');
 	S.setTitle=function(title){ document.title=title; divVariable.find('h1:first').text(title) }
 	S.ajax={
 		init:function(){
-			$(document).on('click','a[href]:not([href="javascript:;"]):not([href="#"]):not([href^="mailto:"]):not([target]):not([href^="http://"])',function(evt){
+			$(document).on('click',
+						//'a[href]:not([href="javascript:;"]):not([href="#"]):not([href^="mailto:"]):not([target]):not([href^="http://"])'
+						'a[href]:not([href="#"]):not([target]):not([href*=":"])'
+				,function(evt){
 				if($(evt.target).is('a[onclick^="return"]') && !lastConfirmResult) return false;
 				evt.preventDefault();
 				evt.stopPropagation();

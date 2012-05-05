@@ -1,6 +1,12 @@
 extendPrototype(Array,{
-	sbInArray:function(val){
-		return $.inArray(val,this);
+	sInArray:function(searchElement,i){
+		if(this.indexOf) return this.indexOf(searchElement,i);
+		/* See jQuery.inArray */
+		var t=this,l=t.length;
+		fromIndex=i ? i < 0 ? Math.max( 0, l + i ) : i : 0;
+		for(; i < l; i++ )
+			if(i in t && array[i] === searchElement) return i;
+		return -1;
 	},
 	sbEach:function(callback){
 		return $.each(this,callback);

@@ -82,6 +82,13 @@ var S={
 	clone:function(object){
 		// clone like _.clone : Shallow copy
 		return $.extend({},object);
+	},
+	extendsClass:function(){
+		
+	},
+	extendsObj:function(target,object){
+		for(var i in object)
+			target[i]=object[i];
 	}
 	
 };
