@@ -212,34 +212,51 @@ class App{
 	 */
 	public static function displayException(&$exception,$forceDefault){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
-		$vars=array(
-			'e'=>&$exception,
-			'e_className'=>get_class($exception),
-			'e_message'=>$exception->getMessage(),
-			'e_file'=>$exception->getFile(),
-			'e_line'=>$exception->getLine(),
-			'e_trace'=>$exception->getTrace(),
-		);
-		if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/exception.php')){
-			include_once CORE.'mvc/views/View.php';
-			render(APP.'views'.Springbok::$suffix.'/exception.php',$vars);
-		}else render(CORE.'mvc/views/exception.php',$vars);
+		$type=CHttpRequest::acceptsByExtOrHttpAccept('html','json','xml');
+		if($type && $type!=='html'){
+			$content=array('error'=>array('type'=>'exception','class'=>get_class($exception)
+					/* DEV */,'message'=>$exception->getMessage()/* /DEV */));
+			if($type==='xml') displayXml($content);
+			else displayJson($content);
+		}else{
+			$vars=array(
+				'e'=>&$exception,
+				'e_className'=>get_class($exception),
+				'e_message'=>$exception->getMessage(),
+				'e_file'=>$exception->getFile(),
+				'e_line'=>$exception->getLine(),
+				'e_trace'=>$exception->getTrace(),
+			);
+			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/exception.php')){
+				include_once CORE.'mvc/views/View.php';
+				render(APP.'views'.Springbok::$suffix.'/exception.php',$vars);
+			}else render(CORE.'mvc/views/exception.php',$vars);
+		}
 	}
 	
 	public static function displayError($forceDefault,&$code,&$message,&$file,&$line,&$context=null,&$stack=null){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
-		$vars=array(
-			'e_name'=>Springbok::getErrorText($code),
-			'e_message'=>$message,
-			'e_file'=>$file,
-			'e_line'=>$line,
-			'e_context'=>$context
-		);
-		//debugVar($vars);
-		if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/error.php')){
-			include_once CORE.'mvc/views/View.php';
-			render(APP.'views'.Springbok::$suffix.'/error.php',$vars);
-		}else render(CORE.'mvc/views/error.php',$vars);
+		$type=CHttpRequest::acceptsByExtOrHttpAccept('html','json','xml');
+		if($type==='json'){
+			exit('{"error":{'
+				.'"type":"error",'
+				.'"type":'.json_encode(Springbok::getErrorText($code))/* DEV */.','
+				.'"message":'.json_encode($message) /* /DEV */
+			.'}}');
+		}else{
+			$vars=array(
+				'e_name'=>Springbok::getErrorText($code),
+				'e_message'=>$message,
+				'e_file'=>$file,
+				'e_line'=>$line,
+				'e_context'=>$context
+			);
+			//debugVar($vars);
+			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/error.php')){
+				include_once CORE.'mvc/views/View.php';
+				render(APP.'views'.Springbok::$suffix.'/error.php',$vars);
+			}else render(CORE.'mvc/views/error.php',$vars);
+		}
 	}
 }
 set_exception_handler('Springbok::handleException');

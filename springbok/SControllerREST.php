@@ -24,14 +24,9 @@ class SControllerREST extends Controller{
 	
 	protected static function render($content=null,$exit=true){
 		/*self::noCache();*/
-		$ext=CRoute::getExt();
-		$allowedSource=array('json','xml','php','phpsource','html');
-		if($ext && in_array($ext,$allowedSource)) $source=$ext;
-		else $source=CHttpRequest::accepts($allowedSource);
-		switch($source){
+		switch(CHttpRequest::acceptsByExtOrHttpAccept('json','xml','php','phpsource','html')){
 			case 'xml':
-				header('Content-type: application/xml; charset=UTF-8');
-				echo xmlrpc_encode($content);
+				displayXml($content);
 				break;
 			case 'php':
 				header('Content-type: text/plain; charset=UTF-8');
@@ -46,8 +41,7 @@ class SControllerREST extends Controller{
 				echo '<pre>'.print_r($content,true).'</pre>';
 				break;
 			default:
-				header('Content-type: application/json; charset=UTF-8');
-				echo json_encode($content);
+				displayJson($content);
 		}
 		if($exit) exit;
 	}

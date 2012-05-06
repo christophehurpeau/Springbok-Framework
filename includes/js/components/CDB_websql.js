@@ -36,7 +36,7 @@ adapters.webSQL.Collection.prototype={
 	},
 	init:function(callback){
 		var t=this;
-		t.exSQL('CREATE TABLE IF NOT EXISTS ' + t.name + ' (key TEXT, data TEXT)',
+		t.exSQL('CREATE TABLE IF NOT EXISTS ' + t.name + ' (key TEXT PRIMARY KEY,data TEXT) ',
 			function(){
 				callback && callback.call(t,'webSQL',true);
 			}

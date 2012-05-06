@@ -202,3 +202,13 @@ function render($file,&$vars,$return=false){
 	}else include $file;
 }
 function notFoundIfFalse(&$v){if($v===false)notFound();}
+
+
+function displayJson($content){
+	header('Content-type: application/json; charset=UTF-8');
+	echo json_encode($content);
+}
+function displayXml($content){
+	header('Content-type: application/xml; charset=UTF-8');
+	echo xmlrpc_encode($content);
+}

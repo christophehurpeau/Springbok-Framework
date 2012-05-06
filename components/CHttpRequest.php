@@ -292,19 +292,26 @@ class CHttpRequest{
 
 	public static function accepts($type=null){
 		$acceptTypes=explode(',',$_SERVER['HTTP_ACCEPT']);
-		foreach ($acceptTypes as $k => &$accept){
-			if (strpos($accept, ';') !== false){
+		foreach($acceptTypes as $k => &$accept){
+			if(strpos($accept, ';') !== false){
 				list($accept, $prefValue) = explode(';',$accept,2);
 				$acceptTypes[$k] = $accept;
 			}
 		}
-		if(is_string($type)) return in_array($type, $acceptTypes);
+		if(is_string($type)) return in_array($type,$acceptTypes);
 		elseif(is_array($type)){
 			foreach($type as $t)
 				if(in_array($t,$acceptTypes)) return $t;
 			return false;
 		}
 		return $acceptTypes;
+	}
+
+	public static function acceptsByExtOrHttpAccept(){
+		$acceptTypes=func_get_args();
+		$ext=CRoute::getExt();
+		if($ext && in_array($ext,$acceptTypes)) return $ext;
+		return CHttpRequest::accepts($acceptTypes);
 	}
 
 	public static function acceptLanguage($language=null){

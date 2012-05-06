@@ -81,7 +81,11 @@ var S={
 	
 	clone:function(object){
 		// clone like _.clone : Shallow copy
-		return $.extend({},object);
+		//return $.extend({},object);
+		return this.extendsObj({},object);
+	},
+	deepClone:function(object){
+		return $.extend(true,{},object);
 	},
 	extendsClass:function(){
 		
@@ -89,6 +93,7 @@ var S={
 	extendsObj:function(target,object){
 		for(var i in object)
 			target[i]=object[i];
+		return target;
 	}
 	
 };

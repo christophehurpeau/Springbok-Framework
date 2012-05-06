@@ -47,7 +47,6 @@ class CRoute{
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
 				*/
-				
 				$ext=$route['ext']===null?null:array_pop($matches);/*$route['ext'];*/
 				unset($matches[0]);
 				
@@ -56,17 +55,28 @@ class CRoute{
 				if(isset($route[':'])){
 					$nbNamedParameters=count($route[':']);
 					$countMatches=count($matches);
+					
+					if($ext!==null){
+						while($countMatches > 0){
+							$i=$countMatches-1;
+							if($matches[$i]===''){
+								unset($matches[$i]);
+								$countMatches=$i;
+							}else break;
+						}
+					}
+					
 					if($countMatches !== 0){
 						if($countMatches===$nbNamedParameters)
 							$params=array_combine($route[':'],$matches);
-						elseif($countMatches > $nbNamedParameters)
-							$params=array_combine($route[':'],array_slice($matches,0,$nbNamedParameters));
-						else
+						elseif($countMatches > $nbNamedParameters){
+							$params=array_slice($matches,0,array_combine($route[':'],$params));
+						}else
 							$params=array_combine(array_slice($route[':'],0,$countMatches),$matches);
 					}else $params=array();
 
 					if($controller==='!'){
-						if(isset($params['controller'])){
+						if(!empty($params['controller'])){
 							$controller=ucfirst(self::untranslate($params['controller'],$lang));
 							unset($params['controller']);
 						}else $controller=self::DEFAULT_CONTROLLER;
@@ -77,17 +87,18 @@ class CRoute{
 						}else $controller=substr($controller,0,-1).self::DEFAULT_CONTROLLER;
 					}
 					if($action=='!'){
-						if($params['action']){
+						if(!empty($params['action'])){
 							$action=self::untranslate($params['action'],$lang);
 							unset($params['action']);
 						}else $action=self::DEFAULT_ACTION;
 					}
+					
+					if(!empty($matches[$i=($nbNamedParameters+1)])) $params=$params+explode('/',$matches[$i]);
 				}else{
 					$params=array();
 					if($controller==='!') $controller=self::DEFAULT_CONTROLLER;
 					if($action==='!') $action=self::DEFAULT_ACTION;
 				}
-				if(isset($route[':']) && !empty($matches[$i=($nbNamedParameters+1)])) $params=$params+explode('/',$matches[$i]);
 				return array($controller,$action,$params,$ext);
 			}
 		}
