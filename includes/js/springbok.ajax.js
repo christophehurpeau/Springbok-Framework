@@ -31,7 +31,7 @@ includeCore('ui/slideTo');
 					menu=a.closest('nav');
 					if(a.hasClass('current')) S.ajax.load(url);
 					else{
-						nav.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
+						menu.find('a.current').removeClass('current').data('pagecontent',{html:divPage.html(),title:document.title,'class':divPage.attr('class')});
 						var newPageContent=a.data('pagecontent');
 						if(newPageContent){
 							divPage.html(newPageContent.html).attr('class',newPageContent['class']||"");
