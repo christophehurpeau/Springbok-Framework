@@ -59,7 +59,7 @@ class EnhanceApp extends AEnhance{
 		$srcMd5=md5_file($srcFile->getPath());
 		$dests=array_map(function(&$d) use(&$srcFile){return $d.$srcFile->getName();},$dests);
 		foreach($dests as $dest){
-			$dest.$srcFile->getName();
+			//$dest.$srcFile->getName();
 			if(!file_exists($dest) || $srcMd5 != md5_file($dest)){//debugVar(!file_exists($dest)/*,$srcMd5 != md5_file($dest)*/);
 				$srcFile->copyTo($dest);
 				$this->enhanced->newDef['changes']['all'][]=array('path'=>$srcFile->getPath());
@@ -73,6 +73,7 @@ class EnhanceApp extends AEnhance{
 		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
 		$this->enhanced->config['includes']['img'][]='ajax';
 		$this->enhanced->config['includes']['js'][]='ie-lt9.js';
+		$this->enhanced->config['includes']['css'][]='PIE.htc';
 			foreach($this->enhanced->config['includes'] as $type=>$includes){
 				if(is_string($includes)){ $includes=explode(',',$includes); $type=''; }
 				else $type=$type.DS;
@@ -81,6 +82,7 @@ class EnhanceApp extends AEnhance{
 					if(!file_exists($srcFile)) $srcFile=dirname(CORE).'/includes/'.$type.$filename;
 					
 					$dests=array($dev->getPath().'web/'.$type,$prod->getPath().'web/'.$type);
+					
 					if(is_dir($srcFile)){
 						//if(!file_exists($this->appDir.'src/web/'.$type.$filename)) throw new Exception('You should create the folder : web/'.$type.$filename);
 						

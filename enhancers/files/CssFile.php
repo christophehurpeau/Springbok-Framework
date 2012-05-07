@@ -370,9 +370,11 @@ class CssFile extends EnhancerFile{
 			'backface-visibility'=>array('-moz-backface-visibility','-webkit-backface-visibility')
 		);
 		foreach($rules as $rule=>$copyRules){
-			$content=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function(&$m) use(&$copyRules){
+			$content=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function(&$m) use(&$rule,&$copyRules){
 				$return='';
 				foreach($copyRules as $copyRule) $return.=$copyRule.':'.$m[1].';';
+				if(in_array($rule,array('border-radius','border-top-right-radius','border-top-left-radius','border-bottom-right-radius',
+					'border-bottom-left-radius','box-shadow'))) $return.='behavior:url(/web/css/PIE.htc);';
 				return $return.$m[0];
 			},$content);
 		}
