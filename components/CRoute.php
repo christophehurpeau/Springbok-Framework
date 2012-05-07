@@ -69,9 +69,9 @@ class CRoute{
 					if($countMatches !== 0){
 						if($countMatches===$nbNamedParameters)
 							$params=array_combine($route[':'],$matches);
-						elseif($countMatches > $nbNamedParameters){
-							$params=array_slice($matches,0,array_combine($route[':'],$params));
-						}else
+						elseif($countMatches > $nbNamedParameters)
+							$params=array_combine($route[':'],array_slice($matches,0,$nbNamedParameters));
+						else
 							$params=array_combine(array_slice($route[':'],0,$countMatches),$matches);
 					}else $params=array();
 
