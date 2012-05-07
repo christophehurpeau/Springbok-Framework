@@ -9,13 +9,17 @@
 			result.append(li);
 		});
 	};
-	$.fn.sAjaxSearch=function(url,minLength,destContent,display){
+	$.fn.sAjaxSearch=function(url,options,destContent,display){
 		var xhr,input=this,lastVal='',currentTimeout;
+		if(!S.isObject(options)) options={minLength:options==null?3:options};
+		else{
+			options=S.extendsObj({ navigate:true, minLength:3 },options);
+		}
 		display=display||defaultDisplayList;
 		this.keyup(function(){
 			var val=input.val();
-			if(val != '' && val.length >= minLength && val!=lastVal){
-				S.history.navigate(url+'/'+val);
+			if(val != '' && val.length >= options.minLength && val!=lastVal){
+				if(options.navigate) S.history.navigate(url+'/'+val);
 				lastVal=val;
 				if(xhr){xhr.abort(); xhr=null;}
 				if(currentTimeout) clearTimeout(currentTimeout);
@@ -24,10 +28,10 @@
 						url:url,
 						data:{term:val},
 						dataType: 'json',
-						success:function(data){
+						success:options.success||function(data){
 							destContent.html(display(data));
 						},
-						error:function(){
+						error:options.error||function(){
 							destContent.html('');
 						}
 					});
@@ -36,4 +40,17 @@
 		});
 		return this;
 	};
+	$.fn.sAutocomplete=function(url,options){
+		var divResult=$('<div class="divAutocomplete hidden"/>').appendTo($('body'));
+		options=S.extendsObj({
+			navigate:false,
+			success:function(data){
+				divResult.html(defaultDisplayList(data,{'class':'clickable'})).sShow();
+			},
+			error:function(data){
+				divResult.html('').sHide();
+			}
+		},options||{});
+		return this.sAjaxSearch(url,options);
+	}
 })(jQuery);
