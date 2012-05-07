@@ -10,8 +10,12 @@ class SControllerREST extends Controller{
 		if(!method_exists(get_called_class(),$methodName)) notFound();
 		self::$methodName=&$methodName;
 		$methodAnnotations=&$mdef['annotations'];
+		static::crossDomainHeaders();
 		return call_user_func_array(array('static',$methodName),$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations));
 	}
+	
+	
+	public static function crossDomainHeaders(){}
 	
 	
 	
