@@ -127,7 +127,7 @@ abstract class SModel implements Iterator{
 	public static function &mToArray($models){
 		if(empty($models)) return array();
 		$res=array();
-		foreach($models as $key=>&$model) $res[$key]=&$model->toArray();
+		foreach($models as $key=>&$model) $res[$key]=$model->toArray();
 		return $res;
 	}
 	
