@@ -57,7 +57,7 @@ class CRoute{
 					$countMatches=count($matches);
 					
 					if($ext!==null){
-						while($countMatches > 0){
+						while($countMatches > 1){
 							$i=$countMatches-1;
 							if($matches[$i]===''){
 								unset($matches[$i]);
