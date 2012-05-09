@@ -69,7 +69,7 @@ class ControllerFile extends PhpFile{
 		
 		$methodBody=$matches[4];
 		
-		$hasCheck=isset($mdef['annotations']['Check']) || isset($this->_classAnnotations['Check']);
+		$hasCheck=isset($mdef['annotations']['Check']) || (isset($this->_classAnnotations['Check']) && !isset($mdef['annotations']['NoCheck']));
 		/* Dernier à etre testé */
 		if(isset($mdef['annotations']['Acl']) || isset($this->_classAnnotations['Acl'])){
 			$aclAnnotation=isset($mdef['annotations']['Acl'])?$mdef['annotations']['Acl']:$this->_classAnnotations['Acl'];
