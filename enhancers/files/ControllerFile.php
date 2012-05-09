@@ -12,7 +12,7 @@ class ControllerFile extends PhpFile{
         $this->_classAnnotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1]);
 		
 		//$content=preg_replace_callback('/(?:\/\*\*(.*)\*\/)?[\s]+public[\s]+function[\s]+([a-zA-Z0-9_ \$]+)[\s]*\((.*)\)[\s]*{([^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{.*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*)}/Ums',array($this,'enhanceMethodParams'),$content);
-		$phpContent=preg_replace_callback('/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)[\s]*{\s*(.*)\s*\n\t}\n/Ums',
+		$phpContent=preg_replace_callback('/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)[\s]*{\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums',
 				array($this,'enhanceMethodParams'),$phpContent);
 		
 		$phpContent=preg_replace('/(self::|\s+)(mset|set|set_|setForLayout|setForLayout_|setForLayoutAndView|setForLayoutAndView_|'
