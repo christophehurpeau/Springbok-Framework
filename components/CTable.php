@@ -174,9 +174,10 @@ class CTable{
 	public function &getResults(){ return $this->results; }
 
 	public function &pagination(){ return $this->pagination; }
-	public function setActionsRUD(){
+	public function &setActionsRUD(){
 		$this->defaultAction='view';
 		$this->rowActions=array('view','edit','delete');
+		return $this;
 	}
 	public function callback($callback1,$callback2){
 		return $this->query->noCalcFoundRows()->callback($callback1,$callback2);
