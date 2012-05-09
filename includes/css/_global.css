@@ -119,18 +119,36 @@ ul.overflow-ellipsis{
 	text-overflow:ellipsis;
 }
 /* interactions */
-ul.clickable li{
-	background:INTERACTION_DEFAULT_COLOR;
-	color:#findBestFgColor(INTERACTION_DEFAULT_COLOR);
+ul.clickable li,ul.clickable li a{
+	IF(INTERACTION_DEFAULT_BACKGROUND_COLOR)
+		background:INTERACTION_DEFAULT_BACKGROUND_COLOR;
+		color:#findBestFgColor(INTERACTION_DEFAULT_BACKGROUND_COLOR);
+	ENDIF
+	IFNOT(INTERACTION_DEFAULT_BACKGROUND_COLOR)
+		background:INTERACTION_DEFAULT_COLOR;
+		color:#findBestFgColor(INTERACTION_DEFAULT_COLOR);
+	ENDIF
 	cursor:pointer;
 }
-ul.clickable li:hover{
-	background:INTERACTION_HOVER_COLOR;
-	color:#findBestFgColor(INTERACTION_HOVER_COLOR);
+ul.clickable li:hover,ul.clickable li:hover a{
+	IF(INTERACTION_HOVER_BACKGROUND_COLOR)
+		background:INTERACTION_HOVER_BACKGROUND_COLOR;
+		color:#findBestFgColor(INTERACTION_HOVER_BACKGROUND_COLOR);
+	ENDIF
+	IFNOT(INTERACTION_HOVER_BACKGROUND_COLOR)
+		background:INTERACTION_HOVER_COLOR;
+		color:#findBestFgColor(INTERACTION_HOVER_COLOR);
+	ENDIF
 }
-ul.clickable li.current{
-	background:INTERACTION_CURRENT_COLOR;
-	color:#findBestFgColor(INTERACTION_CURRENT_COLOR);
+ul.clickable li.current,ul.clickable li.current a{
+	IF(INTERACTION_CURRENT_BACKGROUND_COLOR)
+		background:INTERACTION_CURRENT_BACKGROUND_COLOR;
+		color:#findBestFgColor(INTERACTION_CURRENT_BACKGROUND_COLOR);
+	ENDIF
+	IFNOT(INTERACTION_CURRENT_BACKGROUND_COLOR)
+		background:INTERACTION_CURRENT_COLOR;
+		color:#findBestFgColor(INTERACTION_CURRENT_COLOR);
+	ENDIF
 }
 
 

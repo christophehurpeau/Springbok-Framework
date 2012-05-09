@@ -3,7 +3,7 @@ abstract class EnhancerFile{
 	private $srcFile,$fileName,$_isCore,$_isProd,$_config,$_isInLibDir;
 	public $currentDestFile;
 	
-	protected $enhanced,$_srcContent;
+	protected $enhanced,$_srcContent,$warnings,$errors;
 	
 	public function __construct(&$enhanced,$filename,$isCore=false,$isInLibDir=false){
 		$this->srcFile=new File($filename);
@@ -18,6 +18,11 @@ abstract class EnhancerFile{
 	public function getMd5Content(){
 		return md5($this->_srcContent);
 	}
+	
+	public function hasWarnings(){ return !empty($this->warnings); }
+	public function hasErrors(){ return !empty($this->errors); }
+	public function getWarnings(){ return $this->warnings; }
+	public function getErrors(){ return $this->errors; }
 	
 	public function processEhancing($devFile,$prodFile,$justDev=null){
 		//if($justDev===null) throw new Exception('just dev is deprecated');

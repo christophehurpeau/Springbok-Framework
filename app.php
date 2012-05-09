@@ -31,7 +31,7 @@ class App{
 	public static function run(){
 		/* DEV */
 		include CORE.'enhancers/EnhanceApp.php';
-		$shouldEnhance=!CHttpRequest::isAjax();
+		$shouldEnhance=!CHttpRequest::isAjax() && empty($_SERVER['HTTP_ORIGIN']);
 		if($shouldEnhance){
 			$pathInfo=CHttpRequest::getPathInfo();
 			$pathInfo=basename($pathInfo);
@@ -43,10 +43,11 @@ class App{
 		if($shouldEnhance){
 			$t=microtime(true);
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
-			$changes=$enhanceApp->process();
+			$process=$enhanceApp->process();
+			$changes=$process?$process->getChanges():false;
 			self::$enhancing=false;
 			if(!empty($changes)){
-				self::$changes[0]=array(microtime(true) - $t,$changes);
+				self::$changes[0]=array(microtime(true) - $t,$changes,$process->getErrors(),$process->getWarnings());
 			}
 			
 		}

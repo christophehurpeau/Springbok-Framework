@@ -1,5 +1,5 @@
 /* http://documentcloud.github.com/backbone/backbone.js */
-(function($,document,window){
+(function($){
 	var historyStarted=false,routeStripper=/^[#\/]*/,isIE=/msie [\w.]+/;
 	S.history={
 		options:{pushState:true},interval:50,
@@ -109,4 +109,4 @@
 			replace ? location.replace(location.toString().replace(/(javascript:|#).*$/, '') + '#/' + fragment) : location.hash = '/'+fragment; 
 		}
 	};
-})(jQuery,document,window);
+})(jQuery);

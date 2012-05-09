@@ -1,7 +1,7 @@
 <?php
 class Enhanced{
 	private $appDir;
-	public $config,$oldDef=array(),$newDef=array();
+	public $config,$oldDef=array(),$newDef=array(),$warnings=array(),$errors=array();
 	
 	public function __construct(&$dirname){
 		if(!substr($dirname,-(strlen(DS))) != DS) $dirname.=DS;
@@ -63,4 +63,12 @@ class Enhanced{
 	public function configEmpty($attr){ return empty($this->config[$attr]); }
 	public function configSet($attr,$value){ return $this->config[$attr]=&$value; }
 	public function configAdd($attr,$value){ return $this->config[$attr][]=&$value; }
+	
+	public function addWarnings($file,$value){ $this->warnings[$file]=&$value; }
+	public function addErrors($file,$value){ $this->errors[$file]=&$value; }
+	
+	public function hasWarnings(){ return !empty($this->warnings); }
+	public function hasErrors(){ return !empty($this->errors); }
+	public function getWarnings(){ return $this->warnings; }
+	public function getErrors(){ return $this->errors; }
 }

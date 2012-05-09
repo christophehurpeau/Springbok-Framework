@@ -165,7 +165,12 @@ class CssFile extends EnhancerFile{
 			'BREADCRUMBS_BACKGROUND'=>'false',
 			'BREADCRUMBS_FONTSIZE'=>'8pt',
 			
+			// Interactions
 			'INTERACTION_DEFAULT_TEXT_SHADOW'=>'false',
+			'INTERACTION_DEFAULT_BACKGROUND_COLOR'=>'false',
+			'INTERACTION_HOVER_BACKGROUND_COLOR'=>'false',
+			'INTERACTION_CURRENT_BACKGROUND_COLOR'=>'false',
+			
 			
 			/* _menu.css */
 			'HEADER_MENU_SHADOW'=>'false',

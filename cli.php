@@ -22,7 +22,7 @@ class App{
 		if(!empty($argv[1]) && $argv[1]!=='noenhance'){
 			include CORE.'enhancers/EnhanceApp.php';
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
-			$changes=$enhanceApp->process();
+			$enhanceApp->process();
 		}
 		/* /DEV */
 		include APP.'config/_'.ENV.'.php';

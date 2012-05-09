@@ -1,6 +1,6 @@
 /*! Springbok */
-'use strict';
-var S={
+/*'use strict';*/
+window.S={
 	ready:function(callback){ $(document).ready(callback); },
 	redirect:function(url){ window.location=url; },
 	setTitle:function(title){document.title=title;},

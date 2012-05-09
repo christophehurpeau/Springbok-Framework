@@ -29,8 +29,9 @@ class HDev{
 	}
 	
 	private static function springbokBarChanges(){
-		echo '<h2>Changes</h2>';
-		if(!empty(App::$changes)){
+		$changes=&App::$changes[0];
+		echo '<h2'.($changes?($changes[2]?' style="color:red"':($changes[3]?' style="color:orange"':'')):'').'>Changes</h2>';
+		if(!empty($changes)){
 			echo '<div class="italic">Enhancing took : <b>'.App::$changes[0][0].'</b> s</div>';
 			foreach(App::$changes[0][1] as $type=>$files){
 				echo '<h5 class="sepTop">'.$type.'</h5><ul class="compact">';

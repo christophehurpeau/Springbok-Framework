@@ -1,13 +1,16 @@
 /* https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.autocomplete.js */
 (function($){
-	var defaultDisplayList=function(data,ulAttrs){
-		var li; result=$('<ul/>').attr(ulAttrs);
+	var defaultDisplayList=function(data,ulAttrs,callback){
+		var li,result=$('<ul/>').attr(ulAttrs);
 		$.each(data,function(i,v){
 			li=$('<li/>');
-			if(typeof(v) ==='string') li.html(v);
-			else li.html($('<a/>').attr('href',v.url).text(v.text));
+			if(S.isString(v)) li.html(v);
+			else{
+				li.html(callback?callback(v,i):$('<a/>').attr('href',v.url).text(v.text));
+			}
 			result.append(li);
 		});
+		return result;
 	};
 	$.fn.sAjaxSearch=function(url,options,destContent,display){
 		var xhr,input=this,lastVal='',currentTimeout;
@@ -18,6 +21,7 @@
 		display=display||defaultDisplayList;
 		this.keyup(function(){
 			var val=input.val();
+			if(options.keyup) options.keyup(val);
 			if(val != '' && val.length >= options.minLength && val!=lastVal){
 				if(options.navigate) S.history.navigate(url+'/'+val);
 				lastVal=val;
@@ -28,8 +32,8 @@
 						url:url,
 						data:{term:val},
 						dataType: 'json',
-						success:options.success||function(data){
-							destContent.html(display(data));
+						success:function(data){
+							options.success?options.success.call(destContent,data):destContent.html(display(data));
 						},
 						error:options.error||function(){
 							destContent.html('');
@@ -40,17 +44,21 @@
 		});
 		return this;
 	};
-	$.fn.sAutocomplete=function(url,options){
-		var divResult=$('<div class="divAutocomplete hidden"/>').appendTo($('body'));
+	$.fn.sAutocomplete=function(url,options,displayResult){
+		var divResult=$('<div class="divAutocomplete hidden"/>').appendTo($('#page'));
+		if($.isFunction(options)){
+			displayResult=options;
+			options={};
+		}
 		options=S.extendsObj({
 			navigate:false,
 			success:function(data){
-				divResult.html(defaultDisplayList(data,{'class':'clickable'})).sShow();
+				divResult.html(defaultDisplayList(data,{'class':'clickable'},displayResult)).sShow();
 			},
 			error:function(data){
 				divResult.html('').sHide();
 			}
 		},options||{});
-		return this.sAjaxSearch(url,options);
+		return this.sAjaxSearch(url,options,divResult);
 	}
 })(jQuery);

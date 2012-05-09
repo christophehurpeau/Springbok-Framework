@@ -90,7 +90,7 @@ abstract class AEnhance{
 		//debug('export took : '.(microtime(true) - $t).' s');
 		
 		$f=new Folder($tmpDev); if($f->exists()) $f->delete();
-		return $this->enhanced->getChanges();
+		return $this->enhanced;
 	}
 
 
