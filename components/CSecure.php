@@ -36,7 +36,7 @@ class CSecure{
 	}
 	
 	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
-	protected static function &config($name){ return self::$_config[$name]; }
+	public static function &config($name){ return self::$_config[$name]; }
 	
 	public static function isConnected(){
 		return CSession::exists('user_'.static::config('id'));
