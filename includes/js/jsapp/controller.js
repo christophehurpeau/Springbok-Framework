@@ -19,7 +19,7 @@ S.Controller.prototype={
 };
 S.Controller.extend=function(name,methods,superclass){
 	S[name]=function(methods){ this.methods=methods; };
-	extend(S[name],superclass||S.Controller,methods);
+	S.extendsClass(S[name],superclass||S.Controller,methods);
 };
 
 S.DefaultController=new S.Controller({

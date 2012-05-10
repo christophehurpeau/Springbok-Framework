@@ -7,7 +7,7 @@
 	// Create a new model
 	S.Model=function(attributes,options){
 		this._changed=false;
-		this._previousAttributes=$.extend({},attributes);
+		this._previousAttributes=S.clone(attributes);
 	}
 	
 	function App(name,version){

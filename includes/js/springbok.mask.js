@@ -22,7 +22,7 @@
 		mask:false,
 		
 		load:function(options){
-			options=options?$.extend({},this.options,options):this.options;
+			options=options?S.extendsObj(this.options,options):this.options;
 			
 			var mask=$("#"+options.maskId),size=viewport();
 			if(mask.length===0){

@@ -1,4 +1,4 @@
-extendPrototype(Array,{
+S.extendsPrototype(Array,{
 	sInArray:function(searchElement,i){
 		if(this.indexOf) return this.indexOf(searchElement,i);
 		/* See jQuery.inArray */

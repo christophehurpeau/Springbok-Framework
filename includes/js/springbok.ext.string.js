@@ -1,4 +1,4 @@
-extendPrototype(String,{
+S.extendsPrototype(String,{
 	sbLcFirst:function(){return this.charAt(0).toLowerCase()+this.substr(1);},
 	sbUcFirst:function(){return this.charAt(0).toUpperCase()+this.substr(1);},
 	sbStartsWith:function(str){return this.indexOf(str)===0;},

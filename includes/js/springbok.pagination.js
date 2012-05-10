@@ -4,7 +4,7 @@ S.HPagination=function(url,content,pager,resultPerPage,options){
 	this.$pager=pager;
 	
 	this.totalPages=pager.find('li.page:last').text();
-	this.options=$.extend({},{nbBefore:3,nbAfter:3,hidden:true,withText:false},options);
+	this.options=S.extendsObj({nbBefore:3,nbAfter:3,hidden:true,withText:false},options);
 };
 
 S.HPagination.prototype.updatePager=function(page){

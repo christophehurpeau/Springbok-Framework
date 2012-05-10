@@ -7,7 +7,7 @@
 		start:function(){
 			if (historyStarted) throw new Error("history has already been started");
 			historyStarted = true;
-			this.options=$.extend({},{root:basedir.substr(1)},this.options);
+			this.options=S.extendsObj({root:basedir.substr(1)},this.options);
 			this._wantsPushState= !!this.options.pushState;
 			this._hasPushState= !!(this.options.pushState && window.history && window.history.pushState);
 			var fragment=this.getFragment(),docMode=document.documentMode,oldIE=(isIE.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));

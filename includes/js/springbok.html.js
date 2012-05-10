@@ -1,7 +1,7 @@
 S.html={
 	baseurl:basedir.substr(0,basedir.length-1),
 	link:function(title,url,options){
-		options=$.extend({},{escape:true},options);
+		options=S.extendsObj({escape:true},options);
 		
 		if(url===false) url=this.url(url,options.fullUrl);
 		else if(!url) title=url=this.url(title,options.fullUrl);
@@ -39,7 +39,7 @@ S.html={
 	},
 	
 	iconLink:function(icon,text,url,options){
-		options=$.extend({},{'class':'aicon'},options);
+		options=S.extendsObj({'class':'aicon'},options);
 		options.escape=false;
 		return this.link($('<span/>').attr('class','icon '+icon).afterText(' '+text),url,options);
 	},

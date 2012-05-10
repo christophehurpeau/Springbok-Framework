@@ -82,17 +82,31 @@ window.S={
 	clone:function(object){
 		// clone like _.clone : Shallow copy
 		//return $.extend({},object);
-		return this.extendsObj({},object);
+		return S.extendsObj({},object);
 	},
 	deepClone:function(object){
 		return $.extend(true,{},object);
 	},
-	extendsClass:function(){
+	extendsClass:function(subclass,superclass,methods){
+		var f=function (){};
+		f.prototype=superclass.prototype;
+		subclass.prototype=new f();
+		subclass.prototype.constructor=subclass;
+		subclass.superconstructor=superclass;
+		subclass.superclass=superclass.prototype;
 		
+		S.extendsPrototype(subclass,methods);
 	},
+	extendsPrototype:function(targetclass,methods){
+		for(var i in methods)
+			targetclass.prototype[i]=methods[i];
+		return targetclass;
+	},
+	
 	extendsObj:function(target,object){
-		for(var i in object)
-			target[i]=object[i];
+		if(object)
+			for(var i in object)
+				target[i]=object[i];
 		return target;
 	}
 	
@@ -151,23 +165,6 @@ function handleError(e){
 	return true;
 }
 //window.onerror = handleError;
-
-
-function extend(subclass,superclass,methods){
-	var f=function (){};
-	f.prototype=superclass.prototype;
-	subclass.prototype=new f();
-	subclass.prototype.constructor=subclass;
-	subclass.superconstructor=superclass;
-	subclass.superclass=superclass.prototype;
-	
-	extendPrototype(subclass,methods);
-}
-function extendPrototype(targetclass,methods){
-	for(var i in methods)
-		targetclass.prototype[i]=methods[i];
-	return targetclass;
-}
 
 /*function extendBasic(subclass,superclass,basicsuperclass,varName,extendsPrototype){
 	extend(subclass,superclass,extendsPrototype);

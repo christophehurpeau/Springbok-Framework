@@ -1,6 +1,6 @@
 (function(){
 	S.Route=function(attrs){
-		$.extend(this,attrs);
+		S.extendsObj(this,attrs);
 	};
 	S.Route.prototype={
 		

@@ -96,7 +96,7 @@
 
 
 S.HForm=function(modelName,formAttributes,tagContainer,options){
-	formAttributes=$.extend({},{action:'',method:'post'},formAttributes);
+	formAttributes=S.extendsObj({action:'',method:'post'},formAttributes);
 	this.$=$('<form/>').attr(formAttributes);
 	this.modelName=modelName||false;
 	this.name=modelName?modelName.sbLcFirst():false;
@@ -109,7 +109,7 @@ S.HForm.prototype={
 	},
 	_container:function(res,defaultClass,attributes,labelFor,label,appendLabel){
 		if(this.tagContainer && (attributes || attributes===undefined)){
-			attributes=$.extend({},{'class':defaultClass},attributes);
+			attributes=S.extendsObj({'class':defaultClass},attributes);
 			res=$('<'+this.tagContainer+'/>').html(res);
 			if(attributes.before){ res.prepend(attributes.before); delete attributes.before; }
 			if(attributes.after){ res.append(attributes.after); delete attributes.after; }
@@ -119,7 +119,7 @@ S.HForm.prototype={
 		return res;
 	},
 	_input:function(name,type,label,inputAttributes,containerAttributes){
-		inputAttributes=$.extend({},{
+		inputAttributes=S.extendsObj({
 			id:(this.modelName ? this.modelName : 'Input')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
@@ -172,8 +172,8 @@ S.HForm.prototype={
 
 
 	select:function(name,list,options,inputAttributes,containerAttributes){
-		options=$.extend({},{empty:undefined},options);
-		inputAttributes=$.extend({},{
+		options=S.extendsObj({empty:undefined},options);
+		inputAttributes=S.extendsObj({
 			id:(this.modelName ? this.modelName : 'Select')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
@@ -225,7 +225,7 @@ S.HForm.prototype={
 	
 	
 	textarea:function(name,label,inputAttributes,containerAttributes){
-		inputAttributes=$.extend({},{
+		inputAttributes=S.extendsObj({
 			id:(this.modelName ? this.modelName : 'Textarea')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
@@ -247,7 +247,7 @@ S.HForm.prototype={
 
 
 	checkbox:function(name,label,attributes,containerAttributes){
-		attributes=$.extend({},{
+		attributes=S.extendsObj({
 			type:'checkbox',
 			id:(this.modelName ? this.modelName : 'Checkbox')+name.sbUcFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
@@ -266,7 +266,7 @@ S.HForm.prototype={
 	
 	submit:function(title,attributes,containerAttributes){
 		if(title===undefined) title=i18nc.Save;
-		attributes=$.extend({},{'class':'submit'},attributes);
+		attributes=S.extendsObj({'class':'submit'},attributes);
 		var str=$('<input type="submit"/>').attr('value',title).attr(attributes);
 		if(this.tagContainer !== 'div' || containerAttributes!==undefined)
 			str=$('<'+this.tagContainer+' class="submit"/>').attr(containerAttributes||{}).html(str); 
