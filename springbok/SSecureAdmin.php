@@ -7,7 +7,7 @@ class SSecureAdmin extends CSecure{
 	}
 	
 	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
-	protected static function &config($name){ return self::$_config[$name]; }
+	public static function &config($name){ return self::$_config[$name]; }
 	
 	
 	public static function createCookie($user){

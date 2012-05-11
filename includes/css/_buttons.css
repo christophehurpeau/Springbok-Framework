@@ -22,3 +22,9 @@ body input.submit:focus,body button:focus,body .button:focus{
 }
 a.button,a.button:hover{text-decoration:none;display:inline-block;}
 button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
+
+/* IE */
+/*input.submit,button{
+	position:relative;
+	z-index: 0;
+}*/

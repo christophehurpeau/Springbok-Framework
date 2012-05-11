@@ -35,8 +35,8 @@ table th .order{
 	position:relative;
 }
 table .order .arrowUp{
-	IF(HEADER_COLOR) arrow-up(6px,HEADER_COLOR); ENDIF
-	IFNOT(HEADER_COLOR) arrow-up(6px,#000000); ENDIF
+	IF(HEADER_COLOR) arrow-up(6px,5px,HEADER_COLOR); ENDIF
+	IFNOT(HEADER_COLOR) arrow-up(6px,5px,#000000); ENDIF
 	position:absolute;
 	left:0; bottom:0;
 }
@@ -44,8 +44,8 @@ table .order .arrowUp:hover{
 	arrow-up-override(INTERACTION_HOVER_COLOR);
 }
 table .order .arrowDown{
-	IF(HEADER_COLOR) arrow-down(6px,HEADER_COLOR); ENDIF
-	IFNOT(HEADER_COLOR) arrow-down(6px,#000000); ENDIF
+	IF(HEADER_COLOR) arrow-down(6px,5px,HEADER_COLOR); ENDIF
+	IFNOT(HEADER_COLOR) arrow-down(6px,5px,#000000); ENDIF
 	position:absolute;
 	right:0; bottom:0;
 }

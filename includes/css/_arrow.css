@@ -5,8 +5,9 @@
 }
 a.arrow{outline:none}
 
-function arrow-left($size,$color){
-	border-width: $size $size $size 0;
+/* http://apps.eky.hk/css-triangle-generator/ */
+function arrow-left($halfheight,$width,$color){
+	border-width: $halfheight $width $halfheight 0;
 	border-color: transparent $color transparent transparent;
 	_border-color: pink $color pink pink;
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
@@ -17,8 +18,8 @@ function arrow-left-override($color){
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
 }
 
-function arrow-right($size,$color){
-	border-width: $size $size $size 0;
+function arrow-right($halfheight,$width,$color){
+	border-width: $halfheight 0 $halfheight $width;
 	border-color: transparent transparent transparent $color;
 	_border-color: pink pink pink $color;
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
@@ -29,8 +30,8 @@ function arrow-right-override($color){
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
 }
 
-function arrow-up($size,$color){
-	border-width: 0 $size $size $size;
+function arrow-up($height,$width,$color){
+	border-width: 0 $width $height $width;
 	border-color: transparent transparent $color transparent;
 	_border-color: pink pink $color pink;
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
@@ -41,8 +42,8 @@ function arrow-up-override($color){
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
 }
 
-function arrow-down($size,$color){
-	border-width: $size $size 0 $size;
+function arrow-down($height,$width,$color){
+	border-width: $height $width 0 $width;
 	border-color: $color transparent transparent transparent;
 	_border-color: $color pink pink pink;
 	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);

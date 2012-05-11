@@ -1,5 +1,8 @@
 /*! Springbok */
 /*'use strict';*/
+
+var arraySliceFunction=Array.prototype.slice;
+
 window.S={
 	ready:function(callback){ $(document).ready(callback); },
 	redirect:function(url){ window.location=url; },
@@ -95,7 +98,13 @@ window.S={
 		subclass.superconstructor=superclass;
 		subclass.superclass=superclass.prototype;
 		
-		S.extendsPrototype(subclass,methods);
+		if(methods) S.extendsPrototype(subclass,methods);
+	},
+	extendsMClass:function(subclass,superclass,methods){
+		superclass=arraySliceFunction.call(arguments,1,-1);
+		for(var i in superclass)
+			S.extendsClass(subclass,superclass[i]);
+		if(methods) S.extendsPrototype(subclass,methods);
 	},
 	extendsPrototype:function(targetclass,methods){
 		for(var i in methods)
