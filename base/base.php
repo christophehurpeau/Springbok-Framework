@@ -113,7 +113,10 @@ function prettyDebug($message,$skipLength=2,$flush=true){
 		echo $message;
 		if($skipLength!==false) echo PHP_EOL.prettyBackTrace($skipLength);
 	}
-	if($flush && ob_get_length()>0){ ob_flush(); flush(); }
+	if($flush){
+		if(ob_get_length()>0) ob_flush();
+		flush();
+	}
 }
 function debug($object,$flush=true){
 	prettyDebug(htmlentities(print_r($object,true),ENT_QUOTES,'UTF-8'),2,$flush);
