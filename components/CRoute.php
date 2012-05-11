@@ -47,7 +47,6 @@ class CRoute{
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
 				*/
-				debugVar($matches);
 				$ext=$route['ext']===null?null:substr(array_pop($matches),1);/*$route['ext'];*/
 				unset($matches[0]);
 				
