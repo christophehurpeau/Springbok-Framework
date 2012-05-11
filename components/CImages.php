@@ -14,7 +14,7 @@ class CImages{
 			move_uploaded_file($_FILES[$name]['tmp_name'], $tmpFile);
 			if($image===NULL) $image=static::createImage();
 			$image->name=$_FILES[$name]['name'];
-			self::add($tmpFile,$image);
+			self::add($tmpFile,$image,true,$folderPrefix);
 			return $image;
 		}
 		return false;
