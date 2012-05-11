@@ -17,7 +17,7 @@ require 'components/CRoute.php';
 require 'components/CHttpRequest.php';
 
 class App{
-	/* DEV */public static $enhancing=false,$changes=array();/* /DEV */
+	/* DEV */public static $enhancing=false,$currentFileEnhanced='',$changes=array();/* /DEV */
 	
 	public static function configArray($name,$withSuffix=false){
 		return include APP.'config/'.$name.($withSuffix ? '_'.ENV : '').'.php';
@@ -223,7 +223,7 @@ class App{
 			$vars=array(
 				'e'=>&$exception,
 				'e_className'=>get_class($exception),
-				'e_message'=>$exception->getMessage(),
+				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced.' || ':'')./* /DEV */$exception->getMessage(),
 				'e_file'=>$exception->getFile(),
 				'e_line'=>$exception->getLine(),
 				'e_trace'=>$exception->getTrace(),
@@ -247,7 +247,7 @@ class App{
 		}else{
 			$vars=array(
 				'e_name'=>Springbok::getErrorText($code),
-				'e_message'=>$message,
+				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced.' || ':'')./* /DEV */$message,
 				'e_file'=>$file,
 				'e_line'=>$line,
 				'e_context'=>$context
