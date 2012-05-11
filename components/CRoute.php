@@ -47,7 +47,8 @@ class CRoute{
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
 				*/
-				$ext=$route['ext']===null?null:array_pop($matches);/*$route['ext'];*/
+				debugVar($matches);
+				$ext=$route['ext']===null?null:substr(array_pop($matches),1);/*$route['ext'];*/
 				unset($matches[0]);
 				
 				list($controller,$action)=explode('::',$route['_'],2);
