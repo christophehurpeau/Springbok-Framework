@@ -46,7 +46,7 @@ input,textarea{
   body.mceContentBody{background:$FIXED_VARIABLE_BACKGROUND;}
 }
 
-@includeCore 'base/interactions.scss'
+@includeCore 'base/interactions.scss';
 
 #container pre,#container code{
 	font:normal 9.5pt 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;

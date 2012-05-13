@@ -1,4 +1,5 @@
 includeCore('ui/base');
+includeLib('jquery-ui-1.8.20.position');
 /* https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.autocomplete.js */
 (function($){
 	var defaultDisplayList=function(data,ulAttrs,callback){
@@ -65,8 +66,9 @@ includeCore('ui/base');
 			});
 		return this;
 	};
-	$.fn.sAutocomplete=function(url,options,displayResult){
-		var divResult=$('<div class="divAutocomplete hidden"/>').appendTo($('#page'));
+	
+	S.ui.Autocomplete=function(input,url,options,displayResult){
+		var divResult=this.el=$('<div class="divAutocomplete hidden"/>').appendTo($('#page'));
 		if($.isFunction(options)){
 			displayResult=options;
 			options={};
@@ -81,16 +83,20 @@ includeCore('ui/base');
 				
 			},
 			success:function(data){
-				divResult.html(defaultDisplayList(data,{'class':'clickable'},displayResult)).sShow();
+				divResult.html(defaultDisplayList(data,{'class':'clickable'},displayResult))
+					.css('width',input.width()).position({my:"left top",at:"left bottom",of:input}).sShow();
 			},
 			error:function(data){
 				divResult.html('').sHide();
 			}
 		},options||{});
-		return this.sAjaxSearch(url,options,divResult).focus(function(){
+		input.sAjaxSearch(url,options,divResult).focus(function(){
 			if(!divResult.is(':empty,:visible')) divResult.sShow();
 		}).blur(function(){
 			divResult.sHide();
 		});
-	}
+	};
+	S.extendsClass(S.ui.Autocomplete,S.ui.Widget);
+	
+	$.fn.sAutocomplete=function(url,options,displayResult){ return new S.ui.Autocomplete(this,url,options,displayResult); };
 })(jQuery);

@@ -1,7 +1,3 @@
 @function findBestFgColor($backgroundColor,$blackColor:#333,$whiteColor:#fafafa){
-  @if lightness($backgroundColor) > lightness(#aaaaaa){
-    @return $blackColor;
-  }@else{
-    @return $whiteColor;
-  }
+  @return if(lightness($backgroundColor) > lightness(#999999),$blackColor,$whiteColor);
 }

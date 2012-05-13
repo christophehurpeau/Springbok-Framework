@@ -22,6 +22,9 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .biginfo{font-size:11pt}
 .aposTR{position:absolute;top:0;right:0}
 .aposR{position:absolute;right:0}
+.iepie{
+  behavior:url(/web/css/PIE.htc);
+}
 
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
 h1{font-size:16pt;margin-bottom:15px;}
@@ -122,31 +125,25 @@ ul.overflow-ellipsis{
 }
 
 /* interactions */
+
 @includeCore 'base/interactions.scss';
-$InteractionDefaultBackgroundColor:$InteractionDefaultColor !default;
-ul.clickable li,ul.clickable li a{
+ul.clickable{
+  @extend ul.nobullets;
+}
+
+ul.clickable li,ul.clickable li a{color:findBestFgColor($InteractionDefaultBackgroundColor);}
+ul.clickable li{
   background:$InteractionDefaultBackgroundColor;
-  color:findBestFgColor($InteractionDefaultBackgroundColor);
   cursor:pointer;
 }
-ul.clickable li:hover,ul.clickable li:hover a{
-  @if($INTERACTION_HOVER_BACKGROUND_COLOR){
-    background:$INTERACTION_HOVER_BACKGROUND_COLOR;
-    color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR);
-  }@else{
-    background:$INTERACTION_HOVER_COLOR;
-    color:findBestFgColor($INTERACTION_HOVER_COLOR);
-  }
-}
-ul.clickable li.current,ul.clickable li.current a{
-  @if($INTERACTION_CURRENT_BACKGROUND_COLOR){
-    background:$INTERACTION_CURRENT_BACKGROUND_COLOR;
-    color:findBestFgColor($INTERACTION_CURRENT_BACKGROUND_COLOR);
-  }@else{
-    background:$INTERACTION_CURRENT_COLOR;
-    color:findBestFgColor($INTERACTION_CURRENT_COLOR);
-  }
+
+@if($INTERACTION_HOVER_BACKGROUND_COLOR){
+  ul.clickable li:hover,ul.clickable li:hover a{ color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
+  ul.clickable li:hover{ background:$INTERACTION_HOVER_BACKGROUND_COLOR; }
 }
 
-
+@if($INTERACTION_CURRENT_BACKGROUND_COLOR){
+  ul.clickable li.current,ul.clickable li.current a{ color:findBestFgColor($INTERACTION_CURRENT_BACKGROUND_COLOR); }
+  ul.clickable li.current{ background:$INTERACTION_CURRENT_BACKGROUND_COLOR; }
+}
 @includeCore 'base/types.scss';

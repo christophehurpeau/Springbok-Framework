@@ -1,11 +1,13 @@
-@mixin typeColor($i,$color){
-  .block#{$i},.block#{$i} a,.block#{$i} a:hover,#container #page .block#{$i},input.type#{$i}.submit,button.type#{$i},
-                        .button.type#{$i}{color:$color}
-}
-@mixin type($i,$background,$border:false){
+@mixin type($i,$background,$color:false,$border:false){
   .block#{$i}{
     @extend .block;
   }
+  .block#{$i},.block#{$i} a,ul.clickable .block#{$i} a,.block#{$i} a:hover,
+      #container #page .block#{$i},
+      input.type#{$i}.submit,button.type#{$i},.button.type#{$i}{
+        color:if($color,$color,$BODY_COLOR);
+  }
+  
   .block#{$i},#container #page .block#{$i},input.type#{$i}.submit,button.type#{$i},.button.type#{$i},.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);
     @if $border{ border:$border; }
@@ -18,6 +20,9 @@
     @if $color{ color:$color; }
     @if $border{ border:$border; }
   }
+  @if $color{
+    ul.clickable .block#{$i}:hover a,#container #page ul.clickable .block#{$i}:hover a{color:$color;}
+  }
 }
 
 @mixin typeFocus($i,$background,$color:false,$border:false){
@@ -25,6 +30,9 @@
     @include background($background);
     @if $color{ color:$color; }
     @if $border{ border:$border; }
+  }
+  @if $color{
+    ul.clickable .block#{$i}:focus a,#container #page ul.clickable .block#{$i}:focus a{color:$color;}
   }
 }
 

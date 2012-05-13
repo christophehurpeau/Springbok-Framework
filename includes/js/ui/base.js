@@ -1,5 +1,7 @@
+includeCore('base/listenable');
 /* http://code.jquery.com/ui/jquery-ui-git.js - http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes*/
 //var and not : S.ui.keyCodes : private.
+S.ui={};
 var keyCodes={
 	BACKSPACE: 8,
 	COMMA: 188,
@@ -31,5 +33,6 @@ var keyCodes={
 	UP: 38,
 	RIGHT: 39,
 	DOWN: 40,
-	
 };
+
+includeCore('ui/widget');

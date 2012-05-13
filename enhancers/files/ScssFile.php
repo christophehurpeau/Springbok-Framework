@@ -38,7 +38,29 @@ class ScssFile extends EnhancerFile{
 	}
 	
 	
-	public function enhanceContent(){}
+	public function enhanceContent(){
+		$rules=array(
+			'transition'=>array('-moz-transition','-webkit-transition','-o-transition'),
+			'border-radius'=>array('-moz-border-radius','-webkit-border-radius','-ms-border-radius'),
+			'border-top-right-radius'=>array('-moz-border-radius-topright','-webkit-border-top-right-radius'),
+			'border-top-left-radius'=>array('-moz-border-radius-topleft','-webkit-border-top-left-radius'),
+			'border-bottom-right-radius'=>array('-moz-border-radius-bottomright','-webkit-border-bottom-right-radius'),
+			'border-bottom-left-radius'=>array('-moz-border-radius-bottomleft','-webkit-border-bottom-left-radius'),
+			'box-shadow'=>array('-moz-box-shadow','-webkit-box-shadow'),
+			'box-sizing'=>array('-moz-box-sizing','-webkit-box-sizing','-ms-box-sizing'),
+			'appearance'=>array('-moz-appearance','-webkit-appearance'),
+			'backface-visibility'=>array('-moz-backface-visibility','-webkit-backface-visibility')
+		);
+		foreach($rules as $rule=>$copyRules){
+			$this->_srcContent=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function(&$m) use(&$rule,&$copyRules){
+				$return='';
+				foreach($copyRules as $copyRule) $return.=$copyRule.':'.$m[1].';';
+				if(in_array($rule,array('border-radius','border-top-right-radius','border-top-left-radius','border-bottom-right-radius',
+					'border-bottom-left-radius','box-shadow'))) $return.='@extend .iepie;';
+				return $return.$m[0];
+			},$this->_srcContent);
+		}
+	}
 	public function getEnhancedDevContent(){return $this->_srcContent; }
 	public function getEnhancedProdContent(){return $this->_srcContent; }
 	
@@ -69,8 +91,10 @@ class ScssFile extends EnhancerFile{
 		if(!empty($res)){
 			throw new Exception("Error in scss conversion to css : ".$this->fileName()."\n".$res);
 		}
-		//unlink($tmpfname);
-		//chmod($dest,0777);
+		unlink($tmpfname);
+		chmod($dest,0777);
+		CssFile::executeCompressor(file_get_contents($dest),$dest);
+		
 		if(!$destination){
 			$destination=file_get_contents($dest);
 			unlink($dest);
