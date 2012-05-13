@@ -1,0 +1,9 @@
+@includeCore 'base/icons';
+@include coreIcon('tel','telephone');
+@each $iconName in add,delete,edit,error,go,key,link {
+  @include coreIcon('tel_'+$iconName,'telephone_'+$iconName);
+}
+
+@each $iconName in email,email_add,email_attach,email_delete,email_edit,email_error,email_go,email_link,email_open,email_open_image {
+  @include coreIcon($iconName);
+}

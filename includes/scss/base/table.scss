@@ -1,0 +1,59 @@
+$COLOR_COMPARE_SAME:#464 !default;
+$COLOR_COMPARE_DIFF:#644 !default;
+
+table{
+	width:100%; padding:0;
+	border-spacing:0;
+}
+.legend table{width:auto}
+table th{
+	padding:1px 3px;
+}
+table td{
+	padding:1px 2px;
+	border-collapse:collapse;
+}
+table tr.alternate{
+	background:rgba(0,0,0,0.07);
+}
+
+table td.same{ background:$COLOR_COMPARE_SAME; }
+table td.different{ background:$COLOR_COMPARE_DIFF; }
+
+table.table{
+	clear:both;
+}
+
+table.table td{
+	border-right:1px solid #DDD;
+	border-right:1px solid rgba(0,0,0,0.15);
+}
+/*table.table tr:hover{
+	background:INTERACTION_HOVER_COLOR;
+}*/
+
+table th .order{
+	height:8px; width:30px;
+	margin:2px auto;
+	position:relative;
+}
+@includeCore 'base/arrow.scss';
+
+table .order .arrowUp{
+  @if $HEADER_COLOR{ @include arrowUp(6px,5px,$HEADER_COLOR); }
+  @else{ @include arrowUp(6px,5px,#000000); }
+	position:absolute;
+	left:0; bottom:0;
+}
+table .order .arrowUp:hover{
+	@include arrowUpOverride($INTERACTION_HOVER_COLOR);
+}
+table .order .arrowDown{
+	@if $HEADER_COLOR{ @include arrowDown(6px,5px,$HEADER_COLOR); }
+	@else{ @include arrowDown(6px,5px,#000000); }
+	position:absolute;
+	right:0; bottom:0;
+}
+table .order .arrowDown:hover{
+	@include arrowDownOverride($INTERACTION_HOVER_COLOR);
+}

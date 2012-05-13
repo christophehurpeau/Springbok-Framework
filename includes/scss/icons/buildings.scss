@@ -1,0 +1,4 @@
+@includeCore 'base/icons';
+@each $iconName in building,building_add,building_delete,building_edit,building_error,building_go,building_key,building_link {
+  @include coreIcon($iconName);
+}

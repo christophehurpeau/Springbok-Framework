@@ -1,0 +1,4 @@
+@includeCore 'base/icons';
+@each $iconName in time,time_add,time_delete,time_go {
+  @include coreIcon($iconName);
+}

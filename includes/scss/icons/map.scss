@@ -1,0 +1,4 @@
+@includeCore 'base/icons';
+@each $iconName in map,map_add,map_delete,map_edit,map_go,map_magnify {
+  @include coreIcon($iconName);
+}

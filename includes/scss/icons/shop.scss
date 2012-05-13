@@ -1,0 +1,5 @@
+@includeCore 'base/icons';
+@each $iconName in money,money_add,money_delete,money_dollar,money_euro,money_pound,money_yen
+    basket,basket_add,basket_delete,basket_edit,basket_error,basket_go,basket_put,basket_remove {
+  @include coreIcon($iconName);
+}

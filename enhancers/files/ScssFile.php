@@ -1,43 +1,84 @@
 <?php
-/* http://code.google.com/p/phamlp/ */
-include CLIBS.'phamlp'.DS.'sass'.DS.'SassParser.php';
 class ScssFile extends EnhancerFile{
-	public function enhanceContent(){}
 	
-	public function getEnhancedDevContent(){
-		$sass = new SassParser(array('cache'=>false,));
-		return $sass->toCss($this->getPath());
+	public function loadContent($srcContent){
+		if(!$this->isCore()){
+			if(file_exists($filename=dirname($this->srcFile()->getPath()).'/_mixins.scss'))
+				$srcContent=file_get_contents($filename).$srcContent;
+			$srcContent=file_get_contents(CORE.'includes/scss/mixins.scss').
+						file_get_contents(CORE.'includes/scss/functions.scss').$srcContent;
+		}
+		
+		$currentPath=dirname($this->srcFile()->getPath());
+		$includes=array();
+		$this->_srcContent=self::includes($srcContent,$currentPath,$includes);
 	}
 	
-	public function getEnhancedProdContent(){
-		$sass = new SassParser(array('cache'=>false,'style'=>'compressed'));
-		return $sass->toCss($this->getPath());
-		
-		// Strip // comments
-		$content=preg_replace('/\/\/(.*)?\n/','',$content);
-		// Strip /* */ comments
-		$content=preg_replace('/\/\*[\s\S]*?\*\//m','',$content);
-
-		$content=preg_replace('/\s*}/m','}',$content);
-		$content=preg_replace('/;\s*/m',';',$content);
-		$content=preg_replace('/\s*([{|,])\s*/m','$1',$content);
-		$content=preg_replace_callback('/\s*{(.*)}\s*/m',function($matches){
-			return '{'.preg_replace('/\s*:\s*/m',':',$matches[1]).'}';
+	
+	public static function &includes($content,$currentPath,&$includes){
+		$content=preg_replace_callback('/@include(Core|Lib)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,&$includes){
+			if(!endsWith($matches[2],'.css') && !endsWith($matches[2],'.scss')) $matches[2].='.scss';
+			if(isset($includes[$matches[1]][$matches[2]])) return '';
+			$includes[$matches[1]][$matches[2]]=1;
+			
+			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;
+			if(empty($matches[1])) $filename=$currentPath.'/';
+			else{
+				$filename=$matches[1]==='Lib' ? dirname($core).'/' : $core;
+				$filename.='includes/';
+				
+				$folderName=$matches[1]==='Lib'?'css/':'scss/';
+				if(file_exists($filename.$folderName.$matches[2])) $filename.=$folderName;
+			}
+			$filename.=$matches[2];
+			
+			return ScssFile::includes(file_get_contents($filename),$currentPath,$includes);
 		},$content);
-////                $content=preg_replace('/\s*({.*)\s*:\s*(.*})\s*/m','$1:$2',$content);
-
-		// reduce non-newline whitespace to one
-		$content=preg_replace('/[ \f]+/',' ',$content);
-		// newlines (preceded by any whitespace) to a whitespace (rare)
-		$content=preg_replace('/\s*\n+/m',' ',$content);
-		$content=str_replace(';}','}',$content);
-
-		$content=str_replace(':white;',':#FFF;',$content);
-		$content=str_replace('border:none','border:0',$content);
-//		$content=preg_replace('/([ |:]0)[px|pt|em]/im','$1',$content);
-
-		$content=$this->removeWS_B_E($content);
-		
 		return $content;
+	}
+	
+	
+	public function enhanceContent(){}
+	public function getEnhancedDevContent(){return $this->_srcContent; }
+	public function getEnhancedProdContent(){return $this->_srcContent; }
+	
+	public function writeDevFile($devFile){
+		$this->callSass($this->getEnhancedDevContent(),$devFile->getPath(),true);
+		if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore()){
+			if(!file_exists($appDir.'tmp/compiledcss/dev/')) mkdir($appDir.'tmp/compiledcss/dev/',0755,true);
+			$devFile->copyTo($appDir.'tmp/compiledcss/dev/'.$devFile->getName());
+		}
+	}
+	public function writeProdFile($prodFile){
+		$this->callSass($this->getEnhancedProdContent(),$prodFile->getPath());
+		if(($appDir=$this->enhanced->getAppDir())){
+			if(!file_exists($appDir.'tmp/compiledcss/prod/')) mkdir($appDir.'tmp/compiledcss/prod/',0755);
+			$prodFile->copyTo($appDir.'tmp/compiledcss/prod/'.$prodFile->getName());
+		}
+	}
+	
+	
+	public function callSass($content,$destination){
+		$dest=$destination?$destination:tempnam('/tmp','scssdest');
+		$sassExecutable = 'sass';
+		$tmpfname = tempnam('/tmp','scss');
+		$cmd = $sassExecutable.' --trace --compass --scss -t compressed -r '.escapeshellarg(CORE.'includes/scss/module.rb')
+										.' '.escapeshellarg($tmpfname).' '.escapeshellarg($dest);
+		file_put_contents($tmpfname,$content);
+		$res=shell_exec('cd / && '.$cmd.' 2>&1');
+		if(!empty($res)){
+			throw new Exception("Error in scss conversion to css : ".$this->fileName()."\n".$res);
+		}
+		//unlink($tmpfname);
+		//chmod($dest,0777);
+		if(!$destination){
+			$destination=file_get_contents($dest);
+			unlink($dest);
+			return $destination;
+		}
+	}
+	
+	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
+		CssFile::afterEnhanceApp($enhanced,$dev,$prod);
 	}
 }

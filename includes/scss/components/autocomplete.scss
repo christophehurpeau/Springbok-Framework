@@ -1,0 +1,6 @@
+.divAutocomplete{
+	position:absolute;
+	
+}
+
+* html .divAutocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */

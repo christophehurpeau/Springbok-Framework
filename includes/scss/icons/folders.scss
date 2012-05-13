@@ -1,0 +1,7 @@
+@includeCore 'base/icons';
+@each $iconName in folder,folder_add,folder_bell,folder_brick,folder_bug,folder_camera,folder_database,folder_delete,
+		folder_delete,folder_edit,folder_error,folder_explore,folder_feed,folder_find,folder_go,folder_heart,folder_image,
+		folder_key,folder_lightbulb,folder_link,folder_magnify,folder_page,folder_page_white,folder_palette,folder_picture,
+		folder_star,folder_table,folder_user,folder_wrench {
+  @include coreIcon($iconName);
+}

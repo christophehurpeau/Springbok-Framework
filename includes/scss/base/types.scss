@@ -1,0 +1,6 @@
+$TYPES_BLOCK_BORDERRADIUS:false !default;
+
+.block{
+  position:relative;
+  @if $TYPES_BLOCK_BORDERRADIUS{ border-radius:$TYPES_BLOCK_BORDERRADIUS; }
+}

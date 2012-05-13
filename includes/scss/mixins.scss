@@ -1,0 +1,93 @@
+@mixin boxShadow($color,$blur:false,$hOffset:0,$vOffset:0,$spread:false,$inset:false){
+  @if $color == none{ $color:0; }
+  @if $color == 0{
+    @include boxShadows(0);
+  }@else{
+    $full:$hOffset $vOffset;
+    @if $blur{ $full:$full $blur; }
+    @if $spread{ $full:$full $spread; }
+    $full:$full $color;
+    @if $inset{ $full:inset $full; }
+    @include boxShadows($full);
+  }
+}
+
+@mixin insetBoxShadow($color,$blur:false,$hOffset:0,$vOffset:0,$spread:false){
+  @include boxShadow($color,$blur,$hOffset,$vOffset,$spread,true);
+}
+
+@mixin boxShadows($shadow1,$shadow2:false,$shadow3:false,$shadow4:false,$shadow5:false,$shadow6:false,$shadow7:false,$shadow8:false,$shadow9:false,$shadow10:false){
+  $shadow:compact($shadow1,$shadow2,$shadow3,$shadow4,$shadow5,$shadow6,$shadow7,$shadow8,$shadow9,$shadow10);
+  -moz-box-shadow:$shadow;
+  -webkit-box-shadow:$shadow;
+  box-shadow:$shadow;
+}
+
+@mixin borderRadiusBottom($length){
+  border-bottom-right-radius: $length;
+  border-bottom-left-radius: $length;
+}
+@mixin borderRadiusTop($length){
+  border-top-right-radius: $length;
+  border-top-left-radius: $length;
+}
+@mixin borderRadiusRight($length){
+  border-top-right-radius: $length;
+  border-bottom-right-radius: $length;
+}
+@mixin borderRadiusLeft($length){
+  border-top-left-radius: $length;
+  border-bottom-left-radius: $length;
+}
+
+@mixin background($background){
+  @if type-of($background)=='list'{ @include bg-gradient-tb(nth($background,1),nth($background,2)); }
+  @else if $background{ background:$background; }
+}
+
+
+@mixin bg-gradient-tb($top,$bottom,$amount:10%){
+  @if $top==true{ $top:lighten($bottom,$amount) }
+  @else if $bottom==true{ $bottom:lighten($top,$amount) }
+  @if lightness($top) > lightness($bottom){ background:$top; } /* Old browsers */
+  @else{ background:$bottom; }
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$top}', endColorstr='#{$bottom}',GradientType=0 ); /* IE6-9 */
+  background: -moz-linear-gradient(top, $top 0%, $bottom 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$top), color-stop(100%,$bottom)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, $top 0%,$bottom 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, $top 0%,$bottom 100%); /* Opera11.10+ */
+  background: -ms-linear-gradient(top, $top 0%,$bottom 100%); /* IE10+ */
+  background: linear-gradient(top, $top 0%,$bottom 100%); /* W3C */
+}
+
+@mixin bg-gradient-lr($left,$right,$amount:10%){
+  @if $left==true{ $left:lighten($right,$amount) }
+  @else if $right==true{ $right:lighten($left,$amount) }
+  @if lightness($left) > lightness($right){ background:$left; } /* Old browsers */
+  @else{ background:$right; }
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$left}', endColorstr='#{$right}',GradientType=1 ); /* IE6-9 */
+  background: -moz-linear-gradient(left, $left 0%, $right 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,$left), color-stop(100%,$right)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(left, $left 0%,$right 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left, $left 0%,$right 100%); /* Opera11.10+ */
+  background: -ms-linear-gradient(left, $left 0%,$right 100%); /* IE10+ */
+  background: linear-gradient(left, $left 0%,$right 100%); /* W3C */
+}
+
+@mixin bg-gradient-tb-m($top_bottom,$middle){
+  background: $top_bottom; /* Old browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$top_bottom}', endColorstr='#{$middle}',GradientType=0 ); /* IE6-9 */
+  background: -moz-linear-gradient(top, $top_bottom 0%, $middle 50%, $top_bottom 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$top_bottom), color-stop(50%,$middle), color-stop(100%,$top_bottom)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, $top_bottom 0%,$middle 50%,$top_bottom 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, $top_bottom 0%,$middle 50%,$top_bottom 100%); /* Opera11.10+ */
+  background: -ms-linear-gradient(top, $top_bottom 0%,$middle 50%,$top_bottom 100%); /* IE10+ */
+  background: linear-gradient(top, $top_bottom 0%,$middle 50%,$top_bottom 100%); /* W3C */
+}
+
+@mixin webkitAntialiased{
+  -webkit-font-smoothing: subpixel-antialiased; /* or antialiased; */
+  -webkit-text-stroke: .04pt black;
+}
+
+@includeCore 'mixins/types.scss';

@@ -7,7 +7,7 @@ include CORE.'utils/UInflector.php';
 include CORE.'utils/UArray.php';
 
 global $enhancers;
-$enhancers=array('PhpFile','ConfigFile','ControllerFile','JobFile','DaemonFile','ModelFile','ModuleFile','ViewFile','ImgFile','CssFile','JsFile','UselessFile','JsAppFile');
+$enhancers=array('PhpFile','ConfigFile','ControllerFile','JobFile','DaemonFile','ModelFile','ModuleFile','ViewFile','ImgFile','CssFile','ScssFile','JsFile','UselessFile','JsAppFile');
 
 foreach($enhancers as $enhancer) include __DIR__.'/files/'.$enhancer.'.php';
 

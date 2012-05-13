@@ -24,7 +24,7 @@ class CssFile extends EnhancerFile{
 		else $devFile->write($this->getEnhancedDevContent());
 		if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore()){
 			if(!file_exists($appDir.'tmp/compiledcss/dev/')) mkdir($appDir.'tmp/compiledcss/dev/',0755,true);
-			$devFile->copyTo($appDir.'tmp/compiledcss/'.$devFile->getName());
+			$devFile->copyTo($appDir.'tmp/compiledcss/dev/'.$devFile->getName());
 		}
 	}
 	public function writeProdFile($prodFile){
@@ -49,7 +49,7 @@ class CssFile extends EnhancerFile{
 			if(preg_match('/^\s*\[ERROR\]\s+([0-9]+)\:([0-9]+)\:/',$res,$m)){
 				prettyDebug(HText::highlightLine($content,null,$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')));
 			}
-			exit;
+			throw new Exception('Error while executing css compressor');
 		}
 		unlink($tmpfname);
 		//chmod($dest,0777);
@@ -411,7 +411,7 @@ class CssFile extends EnhancerFile{
 	
 	private static $spriteGenDone=NULL;
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
-		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img'))){
+		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))){
 			self::$spriteGenDone=true;$cssImgs=array(); $spritename='img-sprite.png';
 			$compiledCssFolder=new Folder($enhanced->getAppDir().'tmp/compiledcss/prod/');
 			
@@ -420,7 +420,7 @@ class CssFile extends EnhancerFile{
 				$matches=array();
 				if(preg_match_all('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)/U',$fileContent,$matches)){
 					foreach($matches[3] as $i=>$url){
-						$url=trim($url,' \'');
+						$url=trim($url,' \'"');
 						if(substr($url,0,8)==='COREIMG/'){
 							$cssImgs[]=$url;
 						}else{
@@ -469,7 +469,7 @@ class CssFile extends EnhancerFile{
 								$key=substr($url,7);
 							}
 							if(!isset($cssRules[$key])){
-								debugVar($url);
+								throw new Exception('Sprite creator : Css Rule not found for : '.$url."\nCss Rules:\n".print_r($cssRules,true));
 								return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
 							}
 							$val=$cssRules[$key];

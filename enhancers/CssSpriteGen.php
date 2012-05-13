@@ -44,7 +44,7 @@ class CssSpriteGen {
             // check for GD, if it fails here there is no point continuing as the tool can't generate sprite images
             // without either library
             if (!extension_loaded('gd')) {
-               die('GD and Imagick extensions not loaded. This tool requires one of these to generate sprite graphics.');
+               throw new Exception('GD and Imagick extensions not loaded. This tool requires one of these to generate sprite graphics.');
             }
             
             $this->sImageLibrary = 'gd';

@@ -1,0 +1,50 @@
+.fb-button,.wlive-button,.google-button{
+	font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+	display: inline-block;
+	height:16px; line-height:16px;
+	padding:0 6px 0 20px;
+	font-size:10px; 
+	text-shadow: none;
+	text-decoration:none;
+}
+.fb-button:hover,.fb-button:focus,.wlive-button:hover,.wlive-button:focus,.google-button:hover,.google-button:focus{
+	text-decoration:none;outline:none;
+}
+
+.fb-button{
+	background:#627aac url('COREIMG/social/facebook_18.png') no-repeat;
+	color:#EFEFEF;
+	padding: 0 0 0 1px;
+	border:1px solid #29447e;
+	border-bottom:1px solid #1a356e;
+	border-right:1px solid #3B5998;
+}
+.fb-button span{
+	margin-left:17px;
+	padding:2px 6px 3px;
+	border-top: 1px solid #879AC0;
+	line-height:10px;
+	display: block;
+	text-shadow: none;
+}
+.fb-button:hover{
+	color:#FFF;
+}
+
+.wlive-button{
+	background:#eee url('COREIMG/social/wlive_16.png') no-repeat;
+	color:#333;
+	border:1px solid #777;
+}
+.wlive-button:hover{
+	color:#000;
+}
+
+.google-button{
+	background:#357AE8 url('COREIMG/social/google_16.png') no-repeat;
+	color:#EFEFEF;
+	border:1px solid #3079ED;
+}
+.google-button:hover{
+	color:#FFF;
+}

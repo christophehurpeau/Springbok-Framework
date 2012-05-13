@@ -1,0 +1,4 @@
+@includeCore 'base/icons';
+@each $iconName in images,image,image_add,image_delete,image_edit,image_link {
+  @include coreIcon($iconName);
+}

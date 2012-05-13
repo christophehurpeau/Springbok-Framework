@@ -1,0 +1,185 @@
+$FORM_LEGEND_COLOR:false !default;
+$FORM_SMALL_LABEL_WIDTH:60px !default;
+$FORM_MEDIUM_LABEL_WIDTH:90px !default;
+$FORM_LABEL_WIDTH:180px !default;
+$FORM_LARGE_LABEL_WIDTH:280px !default;
+
+form.centered{
+	width:480px;
+	margin:0 auto;
+}
+form.centered div.input label{width:120px}
+
+fieldset{
+	background:$FORM_FIELDSET_BACKGROUND;
+	border:$FORM_FIELDSET_BORDER;
+	padding:10px;
+}
+
+legend{
+	background:$FORM_LEGEND_BACKGROUND;
+	border:$FORM_LEGEND_BORDER;
+	@if $FORM_LEGEND_COLOR{ color:$FORM_LEGEND_COLOR; }
+	font-weight: bold;
+	padding:2px 6px;
+}
+
+div.input label,div.textarea label,div.checkboxes > label,form .radio .title{
+	display:block;display:inline-block;
+	width:$FORM_LABEL_WIDTH;
+	padding:1px 3px;
+	vertical-align:top;
+}
+div.input.select label,div.radio label{vertical-align:middle}
+.large-label div.input label,.large-label .radio .title{
+	width:$FORM_LARGE_LABEL_WIDTH;
+}
+.small-label div.input label,.small-label .radio .title{
+	width:$FORM_SMALL_LABEL_WIDTH;
+}
+.medium-label div.input label,.medium-label .radio .title{
+	width:$FORM_MEDIUM_LABEL_WIDTH;
+}
+
+
+/*
+div.input input{ width:250px; }
+*/
+@includeCore 'base/buttons.scss';
+input[type=submit],button{margin:5px 0 3px 1px;}
+
+input[type=radio],input[type=checkbox]{vertical-align:bottom; margin:0 3px;}
+input.wp100,div input.wp100,form textarea{
+	box-sizing: border-box;
+	width:100%
+}
+
+div input,div textarea{
+	background:#EDEDED;color:#4C4C4C;
+	border:1px solid #ccc;
+	@include boxShadow(#eee,10px);
+	transition:all .3s;
+}
+div input:hover, div textarea:hover{background-color:#FAFAFA}
+div input:focus, div textarea:focus{background-color:#FFF}
+
+div .input{ margin:1px 0; position:relative }
+div .textarea{ margin: 2px 0 }
+
+div .input.text input,div .textarea textarea{border:1px solid #B4B4B4; margin:0;}
+div .input.text input[disabled="disabled"],form .text input[readonly="readonly"]{color:#333; background-color:#D5D5D5;}
+
+.input.text input.default{color:#777;font-style:italic}
+
+form .checkbox{padding:2px 0}
+form div.input.checkbox label{width:auto}
+form .radio .yesDiv{padding-left:20px}
+
+form div.center,form div.italic{margin:7px 0 7px}
+
+body form div.submit{margin:7px 0 0}
+form div.submit input{margin:0}
+
+
+
+/* TABLE */
+
+table.form{width:100%;border-spacing:5px;}
+.form td.one input,.form td.one select{width:99%}
+.form td.submit{width:80px; margin:0}
+.form td.submit input,.form td input.submit{width:100%; padding:1px 0; margin:0;}
+tr.form td{border:1px solid #C4C4C4; padding:0}
+
+/* */
+
+.form input{
+	border:0;
+	margin:0;padding:2px 0;
+	width:100%;
+}
+.form select{
+	border:0;
+	margin:0;padding:2px 0;
+	width:100%;
+	
+	appearance:normal;
+	
+	@include bg-gradient-tb(#555555,#444444);
+	border-radius:2px;
+	color:#EEE;
+	text-shadow:#999 0 0 1px;
+	
+	outline:0;
+}
+.form select:focus{
+	@include bg-gradient-tb(#666666,#555555);
+	outline:0;border:0;
+}
+.form select option{
+	outline:0;
+	background:#666;
+	text-shadow:none;
+}
+.form select option:focus,.form select option:hover{
+	background:#777;
+}
+
+.checkboxes.mosaic{
+	float:left; width:100%; clear:both;
+	.checkbox,label{float:left;display:block;margin:0 5px 3px 2px;}
+}
+
+input.bigInput, form.big .text input{
+	font-size:11pt;
+	height:28px; line-height:28px; width:290px;
+	background:#F5F5F5;color:#4C4C4C;
+	border:1px solid #ccc;
+	box-shadow:0 0 10px #eee inset;
+	border-radius:6px;
+}
+form.big .text label{
+	height:30px; line-height:30px;
+}
+input.bigInput:hover, form.big .text input:hover{background:#FAFAFA}
+input.bigInput:focus, form.big .text input:focus{background:#FFF}
+input.submit.big, form.big input.submit{
+	padding:4px 15px;
+}
+
+/* VALIDATION */
+form .required {
+	font-weight: bold;
+}
+form .required label:after {
+	color: #e32;
+	content: '*';
+	display:inline;
+}
+
+form input.invalid, form textarea.invalid,
+form div.input.text input.invalid,
+form div.text.invalid input,
+form div.text.invalid textarea,
+form input.ht5ifv-show-invalid, form textarea.ht5ifv-show-invalid,
+form div.input input.ht5ifv-show-invalid, form div.input textarea.ht5ifv-show-invalid{
+	border: 1px solid #F33;
+	color : #000;
+}
+form input.ht5ifv-show-valid, form textarea.ht5ifv-show-valid,
+form div.input input.ht5ifv-show-valid, form div.input textarea.ht5ifv-show-valid{
+	border: 1px solid #2EB82E
+}
+.ht5ifv-show-required{background-color: #f1cccc}
+.ht5ifv-show-min{background-color: #FF9999}
+.ht5ifv-show-max{background-color: #FF99CC}
+.ht5ifv-show-pattern{background-color: #FFCCFF}
+.ht5ifv-show-type{background-color: #FFCC99}
+
+.validation-advice{
+	margin: 5px 0;
+	padding: 5px;
+	background-color: #F33;
+	color : #FFF;
+	font-weight: bold;
+}
+.validation-advice p{margin:0}

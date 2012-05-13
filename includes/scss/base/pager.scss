@@ -1,0 +1,61 @@
+/*div.totalResults{
+	float:left;
+	font-weight: bold;
+	font-style: italic;
+}
+form div.totalResults{
+	text-align:right;
+}*/
+div.totalResults{
+	font-size:8pt; font-style:italic;
+	text-align:center; clear:both;
+}
+
+div.filterHelp{
+	float:left;
+	font-size: 8pt;
+	padding:1px 5px;
+}
+.filterHelp input{margin:0 2px 0 0}
+
+span.exportLinks{
+	padding:1px 3px 2px;
+	display:inline-block;
+}
+span.exportLinks a{margin:0 1px}
+
+div.pager{
+	margin:5px 0 0;
+	text-align:right;
+	height:23px;
+}
+div.pager.absolute{
+	position:absolute;
+	top:2px;right:3px;
+}
+
+ul.pager{
+	border:0 none;
+	display:inline;
+	font-size:11px;
+	margin:0; padding:0;
+}
+ul.pager li{ display:inline; margin:0 2px; }
+ul.pager a, ul.pager a:visited{
+	margin:0 !important;
+	padding:1px 6px;
+	text-decoration:none;
+	cursor: pointer;
+}
+ul.pager .page a{font-weight:normal;}
+/*ul.pager .page a:hover{border:1px solid #FFF;background:#FFF;color:#000;}
+ul.pager .selected a {
+	background:#DDD;
+	color:#000;
+	font-weight:bold;
+}*/
+ul.pager .disabled a {
+	border:1px solid #DEDEDE;
+	background:#888;
+	cursor: default;
+}

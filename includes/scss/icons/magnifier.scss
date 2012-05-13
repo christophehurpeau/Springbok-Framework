@@ -1,0 +1,4 @@
+@includeCore 'base/icons';
+@each $iconName in magnifier {
+  @include coreIcon($iconName);
+}

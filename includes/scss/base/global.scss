@@ -1,0 +1,152 @@
+$SEP_BORDER:1px solid #BBB !default;
+
+.center{text-align:center}
+.clear{clear:both}
+.noclear{clear:none}
+br.clear{display:block;line-height:0;font-size:0;height:0}
+.pointer{cursor:pointer}
+.cursorWait,body.cursorWait *{cursor:wait !important}
+.bold{font-weight:bold}
+.italic{font-style:italic}
+.align_right{text-align:right}
+.align_left{text-align:left}
+.align_justify{text-align:justify}
+.float_right{float:right}
+.float_left{float:left}
+.fa_right{float:right;text-align:right}
+.context{ overflow:auto; overflow-x: hidden; position:relative }
+.nowrap{white-space:nowrap}
+.hidden{display:none}
+.hiddenText{text-indent:-9999px}
+.smallinfo{font-size:8pt}
+.biginfo{font-size:11pt}
+.aposTR{position:absolute;top:0;right:0}
+.aposR{position:absolute;right:0}
+
+h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
+h1{font-size:16pt;margin-bottom:15px;}
+h2{font-size:14pt;margin:4px 0 12px;}
+h3{font-size:12pt;margin-bottom:10px;}
+h4{font-size:11pt;margin-bottom:8px;}
+h5{font-size:10pt;margin-bottom:5px;}
+h6{font-size:9pt;margin-bottom:5px;}
+
+.sepTop{margin-top:8px;padding-top:8px;}
+.sepBottom{margin-bottom:8px;padding-bottom:8px;}
+.sepTop,.sepT{border-top:$SEP_BORDER;}
+.sepL{border-left:$SEP_BORDER;}
+.sepR{border-right:$SEP_BORDER;}
+.sepB{border-bottom:$SEP_BORDER;}
+
+.clearfix:after { 
+  clear: both; 
+  display: block; 
+  height: 0; 
+  font-size: 0; 
+  visibility: hidden; 
+  content: "."; 
+}
+* html .clearfix { zoom: 1 }
+*:first-child+html .clearfix { zoom: 1 }
+
+hr{
+  height:1px;
+  background:#BBB;
+  border:0;
+}
+img{border:0}
+
+span.right_val{
+    float: right;
+    text-align: right;
+}
+
+li a img{vertical-align:bottom}
+table img,img.icon,span.icon,.va-middle{vertical-align:middle}
+span.img,span.icon{display:block;display:inline-block}
+.icon_wrap{
+    position:relative;
+    overflow:hidden;
+}
+.icon_wrap .icon{
+  position:absolute;
+  top:0;left:0;
+}
+.icon_wrap div{
+  display: table-cell;
+    vertical-align: middle;
+}
+a.aicon{text-decoration:none}
+
+pre{
+  text-align:left;margin:0;overflow:auto;
+  -moz-tab-size:4; -o-tab-size:4; tab-size:4;
+}
+p{margin:8px 0}
+
+ul{margin:8px 0; padding-left:35px}/* firefox default : margin:12px 0; padding-left:40px */
+ul ul,ul ol,ol ul,ol ol{padding-left:20px}
+ul.mosaic{
+  float:left; width:100%; clear:both;
+  list-style: none;
+  margin:0;padding:0;
+  li{float:left;display:block;margin:0 5px 3px 2px;}
+  li > a{display:block; text-decoration: none;}
+  li img{display:block; margin:0 auto 0; border:0}
+}
+
+ul.spaced li{
+  padding:3px 0;
+}
+
+ul.nobullets{
+  list-style:none;
+  margin:0;padding:0;
+}
+
+ul.compact{
+  margin:5px 0;
+  padding:0 0 0 20px;
+}
+ul.icons{
+  list-style:none;
+  margin:5px 0;
+  padding:0 0 0 16px;
+}
+ul.compact ul,ul.icons ul{margin:1px 0}
+
+ul.overflow-ellipsis{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* interactions */
+@includeCore 'base/interactions.scss';
+$InteractionDefaultBackgroundColor:$InteractionDefaultColor !default;
+ul.clickable li,ul.clickable li a{
+  background:$InteractionDefaultBackgroundColor;
+  color:findBestFgColor($InteractionDefaultBackgroundColor);
+  cursor:pointer;
+}
+ul.clickable li:hover,ul.clickable li:hover a{
+  @if($INTERACTION_HOVER_BACKGROUND_COLOR){
+    background:$INTERACTION_HOVER_BACKGROUND_COLOR;
+    color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR);
+  }@else{
+    background:$INTERACTION_HOVER_COLOR;
+    color:findBestFgColor($INTERACTION_HOVER_COLOR);
+  }
+}
+ul.clickable li.current,ul.clickable li.current a{
+  @if($INTERACTION_CURRENT_BACKGROUND_COLOR){
+    background:$INTERACTION_CURRENT_BACKGROUND_COLOR;
+    color:findBestFgColor($INTERACTION_CURRENT_BACKGROUND_COLOR);
+  }@else{
+    background:$INTERACTION_CURRENT_COLOR;
+    color:findBestFgColor($INTERACTION_CURRENT_COLOR);
+  }
+}
+
+
+@includeCore 'base/types.scss';

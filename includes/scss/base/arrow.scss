@@ -1,0 +1,55 @@
+.arrow{
+	width:0; height:0; line-height:0;
+	border-style:solid;
+	display:block;
+}
+a.arrow{outline:none}
+
+/* http://apps.eky.hk/css-triangle-generator/ */
+@mixin arrowLeft($halfheight,$width,$color){
+	border-width: $halfheight $width $halfheight 0;
+	border-color: transparent $color transparent transparent;
+	_border-color: pink $color pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+@mixin arrowLeftOverride($color){
+	border-color: transparent $color transparent transparent;
+	_border-color: pink $color pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+
+@mixin arrowRight($halfheight,$width,$color){
+	border-width: $halfheight 0 $halfheight $width;
+	border-color: transparent transparent transparent $color;
+	_border-color: pink pink pink $color;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+@mixin arrowRightOverride($color){
+	border-color: transparent transparent transparent $color;
+	_border-color: pink pink pink $color;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+
+@mixin arrowUp($height,$width,$color){
+	border-width: 0 $width $height $width;
+	border-color: transparent transparent $color transparent;
+	_border-color: pink pink $color pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+@mixin arrowUpOverride($color){
+	border-color: transparent transparent $color transparent;
+	_border-color: pink pink $color pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+
+@mixin arrowDown($height,$width,$color){
+	border-width: $height $width 0 $width;
+	border-color: $color transparent transparent transparent;
+	_border-color: $color pink pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}
+@mixin arrowDownOverride($color){
+	border-color: $color transparent transparent transparent;
+	_border-color: $color pink pink pink;
+	_filter:progid:DXImageTransform.Microsoft.Chroma(color=pink);
+}

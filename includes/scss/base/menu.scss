@@ -1,0 +1,140 @@
+$HEADER_MENU_SHADOW:false !default;
+$HEADER_MENU_BORDER_RADIUS:false !default;
+$HEADER_MENU_BORDER:false !default;
+$HEADER_MENU_BACKGROUND:false !default;
+$HEADER_MENU_BACKGROUND_Top:false !default;
+$HEADER_MENU_COLOR:false !default;
+      
+$HEADER_MENU_A_BORDER:false !default;
+$HEADER_MENU_A_BORDER_BOTTOM:false !default;
+$HEADER_MENU_A_BACKGROUND:false !default;
+$HEADER_MENU_A_BACKGROUND_Top:false !default;
+$HEADER_MENU_A_BORDER_RADIUS:3px !default;
+$HEADER_MENU_A_SHADOW:FALSE !default;
+$HEADER_MENU_A_TEXT_SHADOW:FALSE !default;
+$HEADER_MENU_A_CURRENT_BACKGROUND:false !default;
+$HEADER_MENU_A_CURRENT_BACKGROUND_Top:false !default;
+$HEADER_MENU_A_CURRENT_COLOR:false !default;
+$HEADER_MENU_A_CURRENT_BORDER_BOTTOM:false !default;
+$HEADER_MENU_A_HOVER_BACKGROUND:false !default;
+$HEADER_MENU_A_HOVER_BACKGROUND_Top:false !default;
+$HEADER_MENU_A_HOVER_COLOR:false !default;
+$HEADER_MENU_A_HOVER_SHADOW:false !default;
+$HEADER_MENU_A_HOVER_BORDER_BOTTOM:false !default;
+$HEADER_MENU_A_CURRENTHOVER_COLOR:false !default;
+$HEADER_MENU_A_CURRENTHOVER_BACKGROUND:false !default;
+$HEADER_MENU_A_CURRENTHOVER_BACKGROUND_Top:false !default;
+$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND:false !default;
+$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top:false !default;
+$HEADER_MENU_A_CURRENT_HOVER_COLOR:false !default;
+$HEADER_MENU_A_CURRENT_HOVER_SHADOW:false !default;
+$VARIABLE_MENU_COLOR:false !default;
+$VARIABLE_MENU_CURRENT_BACKGROUND:false !default;
+
+nav{
+	margin:2px 0; padding:0;
+}
+nav ul{
+	list-style:none;
+	margin:0; padding:0;
+}
+nav li{margin:1px; padding:0}
+nav li a{text-decoration: none;text-shadow:none;}
+nav li a:focus{outline: none}
+nav li a:hover{text-decoration: underline;text-shadow:none;}
+
+nav.top,nav.top ul{float:left}
+nav.top li{float:left;display:block;display:inline-block;}
+nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;display:inline-block;}
+/*menu.right li a, menu.left li a{padding:5px;}*/
+nav.right li,nav.left li{margin:2px 0}
+nav.right.nomarg li,menu.left.nomarg li{margin:0}
+
+nav.left ul ul{
+	margin-left:8px;padding-left:1px;
+	border-left:1px dotted #BBB;
+}
+
+// the compiler automaticly remove empty
+header nav,div.header nav,ul.pager a,table.table tr.head{
+	@if $HEADER_MENU_SHADOW{ @include boxShadow($HEADER_MENU_SHADOW,5px); }
+	@if $HEADER_MENU_BORDER_RADIUS{ @include borderRadiusBottom(5px); }
+	@if $HEADER_MENU_BORDER{ border:1px solid $HEADER_MENU_BORDER; }
+	@if $HEADER_MENU_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_BACKGROUND_Top,$HEADER_MENU_BACKGROUND_Bottom); }
+	@else if $HEADER_MENU_BACKGROUND{ background:$HEADER_MENU_BACKGROUND; }
+	@if $HEADER_MENU_COLOR{ color:$HEADER_MENU_COLOR; }
+}
+
+header nav li a,div.header nav li a,ul.pager a{
+	/*background-color: rgba(0,0,0,0.3);*/
+	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
+	@if $HEADER_MENU_A_BORDER_BOTTOM{ border-bottom:$HEADER_MENU_A_BORDER_BOTTOM; }
+	@if $HEADER_MENU_A_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_BACKGROUND_Top,$HEADER_MENU_A_BACKGROUND_Bottom); }
+	@else if $HEADER_MENU_A_BACKGROUND{ background:$HEADER_MENU_A_BACKGROUND; }
+	@if $HEADER_MENU_A_COLOR{ color:$HEADER_MENU_A_COLOR; }
+	@if $HEADER_MENU_A_BORDER_RADIUS{ border-radius:$HEADER_MENU_A_BORDER_RADIUS; }
+	margin:1px 2px;
+	/*text-shadow:0 0 1px #EFEFEF;*/
+	@if $HEADER_MENU_A_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_SHADOW,0 1px 1px $HEADER_MENU_A_SHADOW,1px 0 1px $HEADER_MENU_A_SHADOW,0 -1px 1px $HEADER_MENU_A_SHADOW; }
+	@if $HEADER_MENU_A_TEXT_SHADOW{ text-shadow:$HEADER_MENU_A_TEXT_SHADOW; }
+	font-weight: bold;
+}
+header nav.top li.separator{
+	/* padding:3px 6px 4px + margin:1px 2px; + border */
+	@if $HEADER_MENU_A_BORDER{ padding:5px 8px 6px; }
+	@else{ padding:4px 6px 5px }
+}
+
+header nav li a.current,header nav li a:hover,
+div.header nav li a.current,div.header nav li a:hover,
+ul.pager .selected a,ul.pager .page a:hover{
+	@if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Bottom); }
+	@else if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; }
+	@if $HEADER_MENU_A_CURRENT_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW; }
+	@if $HEADER_MENU_A_CURRENT_HOVER_COLOR{ color:$HEADER_MENU_A_CURRENT_HOVER_COLOR; }
+}
+
+header nav li a.current,
+div.header nav li a.current,
+ul.pager .selected a{
+	@if $HEADER_MENU_A_CURRENT_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_BACKGROUND_Bottom); }
+	@else if $HEADER_MENU_A_CURRENT_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_BACKGROUND; }
+	@if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; }
+	@if $HEADER_MENU_A_CURRENT_BORDER_BOTTOM{ border-bottom:$HEADER_MENU_A_CURRENT_BORDER_BOTTOM; }
+}
+
+header nav li a:hover,
+div.header nav li a:hover,
+ul.pager a:hover{
+	text-decoration: none;
+	@if $HEADER_MENU_A_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_HOVER_BACKGROUND_Top,$HEADER_MENU_A_HOVER_BACKGROUND_Bottom); }
+	@else if $HEADER_MENU_A_HOVER_BACKGROUND{ background:$HEADER_MENU_A_HOVER_BACKGROUND; }
+	@if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; }
+	@if $HEADER_MENU_A_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_HOVER_SHADOW; }
+	@if $HEADER_MENU_A_HOVER_BORDER_BOTTOM{ border-bottom:$HEADER_MENU_A_HOVER_BORDER_BOTTOM; }
+}
+
+header nav li a.current:hover,
+div.header nav li a.current:hover{
+	@if $HEADER_MENU_A_CURRENTHOVER_COLOR{ color:$HEADER_MENU_A_CURRENTHOVER_COLOR; }
+	@if $HEADER_MENU_A_CURRENTHOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENTHOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENTHOVER_BACKGROUND_Bottom); }
+	@elseif $HEADER_MENU_A_CURRENTHOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENTHOVER_BACKGROUND; }
+}
+
+#page nav.top{padding-left:5px;}
+#page nav.top{margin-bottom:0}
+#page nav.top li{margin-bottom:0; @if $VARIABLE_MENU_COLOR{ color:$VARIABLE_MENU_COLOR; } }
+@if $VARIABLE_MENU_COLOR{ #page nav.top li a:hover{color:$VARIABLE_MENU_COLOR} }
+#page nav.top li a{
+	padding:2px 6px 3px;
+	border-bottom-right-radius:10px 25px;
+	border-top-left-radius:10px 25px;
+	background:#CCC;
+}
+#page nav.top li a.current{
+	position: relative; z-index: 2; /* couvre l'ombre, si existe, du div suivant */
+	@if $VARIABLE_MENU_CURRENT_BACKGROUND{ background:$VARIABLE_MENU_CURRENT_BACKGROUND; }
+	color:$VARIABLE_MENU_CURRENT_COLOR;
+}
+
+#page .fixed nav{padding:5px 10px;}

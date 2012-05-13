@@ -1,0 +1,24 @@
+.stars a,.stars span{
+	/*background: transparent url(sprite_rate.png) 0 0 no-repeat;*/
+	display: inline-block;
+	width:14px; height:14px;
+	margin:1px;
+	border-radius:4px;
+	@include bg-gradient-tb(#CCCCCC,#BBBBBB);
+	@include boxShadow(#999,1px,1px,1px);
+	text-indent:-9999px;
+	overflow:hidden;
+	outline:none;
+}
+.stars .rating{
+	background:#B80000;
+}
+.stars a.rating-over{
+	background:#E07308;
+}
+
+/*
+.stars a.rating-over { background-position: 0 -46px; }
+.stars a.rating-over.rating-right { background-position: 0 -69px; }
+.stars a.rating { background-position: 0 -92px; }
+.stars a.rating.rating-right { background-position: 0 -115px; }*/

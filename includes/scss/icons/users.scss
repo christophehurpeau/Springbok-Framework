@@ -1,0 +1,7 @@
+@includeCore 'base/icons';
+@each $iconName in user,user_add,user_edit,user_delete,user_go {
+  @include coreIcon($iconName);
+}
+@include coreIcon('user_enable','user_green');
+@include coreIcon('user_disable','user_red');
+@include coreIcon('user_special','user_orange');
