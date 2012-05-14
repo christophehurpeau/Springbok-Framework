@@ -25,7 +25,7 @@ class HText{
 		
 		if(($ok=($line <= count($content)))){
 			$start=array_slice($content,$firstline=max(0,($minmax?($line-1-$minmax):0)),$line-1-$firstline);
-			$lineContent=$content[$line-1];
+			$lineContent=$line==0?'':$content[$line-1];
 			$end=$minmax?array_slice($content,$line,$minmax):array_slice($content,$line);
 		}else $start=$content;
 		

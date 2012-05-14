@@ -63,15 +63,15 @@ class HForm{
 		foreach($modelName::$__PROP_DEF as $name=>&$def){
 			$infos=$modelName::$__modelInfos['columns'][$name];
 			if(! $infos['autoincrement'] && !in_array($name,array('created','updated','modified'))){
-				$this->autoField($name,$def);
+				$this->autoField($name,$attributes,$containerAttributes,$def);
 			}
 		}
 	}
-	public function autoFields($fields){
+	public function autoFields($fields,$attributes=array(),$containerAttributes=array()){
 		if(is_string($fields)) $fields=explode(',',$fields);
-		foreach($fields as &$field) $this->autoField($name);
+		foreach($fields as &$field) $this->autoField($name,$attributes,$containerAttributes);
 	}
-	public function autoField($name,$def=null){
+	public function autoField($name,$attributes=array(),$containerAttributes=array(),$def=null){
 		$modelName=&$this->modelName;
 		if($def===null) $def=&$modelName::$__PROP_DEF[$name];
 		/*if($infos['notnull']===false){

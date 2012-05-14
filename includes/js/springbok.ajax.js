@@ -1,7 +1,7 @@
 includeCore('springbok.history');
 includeCore('ui/slideTo');
 (function($){
-	var lastConfirmResult=true;
+	var lastConfirmResult=true,readyCallbacks=$.Callbacks();
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
 	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref;
 	S.ready(function(){
@@ -14,6 +14,8 @@ includeCore('ui/slideTo');
 		var mustLoad=!S.history.start();
 		S.ajax.init();
 		if(mustLoad) S.history.loadUrl();
+		
+		S.ready=function(callback){ readyCallbacks.add(callback); };
 	});
 	S.redirect=function(url){ S.ajax.load(url); }
 	S.setTitle=function(title){ document.title=title; divVariable.find('h1:first').text(title) }
@@ -121,8 +123,13 @@ includeCore('ui/slideTo');
 					$(window).scrollTop(0);
 					
 					if(to === 'content' && !data && !forceNotAddDataToGetORdoNotDoTheEffect){
-						divContent=div.sSlideTo(jqXHR.responseText);
-					}else div.html(jqXHR.responseText);//.fadeTo(0,1);
+						var OnReadyCallbacks=readyCallbacks;
+						divContent=div.sSlideTo(jqXHR.responseText,function(){OnReadyCallbacks.fire()});
+					}else{
+						div.html(jqXHR.responseText);//.fadeTo(0,1);
+						readyCallbacks.fire();
+					}
+					readyCallbacks=$.Callbacks();
 					
 					if(normalFaviconHref) linkFavicon.attr('href',normalFaviconHref);
 					
