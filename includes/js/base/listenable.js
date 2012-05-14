@@ -1,16 +1,21 @@
-S.Listenable=function(){this._events={};};
+S.Listenable=function(){ this._events={}; };
 S.Listenable.prototype={
 	on:function(event,fn){
-		this._events[event] ? this._events[event].push(fn) : this._events[event]=[fn];
+		var callbacks=this._events[event];
+		if(!callbacks) callbacks=this._events[event]=$.Callbacks();
+		callbacks.add(fn);
 	},
 	off:function(event,fn){
-		
+		var callbacks=this._events[event];
+		if(callbacks) callbacks.remove(fn);
 	},
-	trigger:function(event,args){
-		if(this._events[event]){
+	fire:function(event,args){
+		/*if(this._events[event]){
 			args = arraySliceFunction.call(arguments,1);
 			for(var i=0,events=this._events[event],l=events.length; i<l; i++)
 				events[i].apply(this,args);
-		}
+		}*/
+		var callbacks=this._events[event];
+		if(callbacks) callbacks.fire.apply(arraySliceFunction.call(arguments,1));
 	}
 };
