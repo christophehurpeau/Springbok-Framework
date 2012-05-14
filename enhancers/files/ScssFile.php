@@ -81,7 +81,7 @@ class ScssFile extends EnhancerFile{
 	
 	private static $sassExecutable='sass';
 	public static function findSassPath(){
-		if(file_exists('/var/lib/gems/1.8/bin/sass')) $sassExecutable='/var/lib/gems/1.8/bin/sass';
+		if(file_exists('/var/lib/gems/1.8/bin/sass')) self::$sassExecutable='/var/lib/gems/1.8/bin/sass';
 	}
 	public function callSass($content,$destination){
 		$dest=$destination?$destination:tempnam('/tmp','scssdest');
