@@ -79,12 +79,14 @@ class ScssFile extends EnhancerFile{
 		}
 	}
 	
-	
+	private static $sassExecutable='sass';
+	public static function findSassPath(){
+		if(file_exists('/var/lib/gems/1.8/bin/sass')) $sassExecutable='/var/lib/gems/1.8/bin/sass';
+	}
 	public function callSass($content,$destination){
 		$dest=$destination?$destination:tempnam('/tmp','scssdest');
-		$sassExecutable = 'sass';
 		$tmpfname = tempnam('/tmp','scss');
-		$cmd = $sassExecutable.' --trace --compass --scss -t compressed -r '.escapeshellarg(CORE.'includes/scss/module.rb')
+		$cmd = self::$sassExecutable.' --trace --compass --scss -t compressed -r '.escapeshellarg(CORE.'includes/scss/module.rb')
 										.' '.escapeshellarg($tmpfname).' '.escapeshellarg($dest);
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' 2>&1');
@@ -106,3 +108,4 @@ class ScssFile extends EnhancerFile{
 		CssFile::afterEnhanceApp($enhanced,$dev,$prod);
 	}
 }
+ScssFile::findSassPath();
