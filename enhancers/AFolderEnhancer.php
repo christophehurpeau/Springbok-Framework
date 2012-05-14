@@ -113,9 +113,9 @@ abstract class AFolderEnhancer{
 					&& isset($this->enhanced->oldDef['files'][$file->getPath()])
 					&& $this->enhanced->oldDef['files'][$file->getPath()]==$srcMD5)){
 				//debugVar('file changed :',$file->getPath(),file_exists($devDir.$destFilename),file_exists($prodDir.$destFilename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
-				App::$currentFileEnhanced=$file->getPath();
+				if($issetCurrentFileEnhanced=isset(App::$currentFileEnhanced)) App::$currentFileEnhanced=$file->getPath();
 				$nf->processEhancing($devDir.$destFilename,$prodDir.$destFilename,$justDev);
-				App::$currentFileEnhanced='';
+				if($issetCurrentFileEnhanced) App::$currentFileEnhanced='';
 				$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
 				$this->enhanced->newDef['changes'][substr($class,0,-4)][]=$file->getPath();
 				
