@@ -30,20 +30,27 @@ class CRUD{
 		if($renderView) $v->render();
 	}
 	
-	public static function edit($model,$id,$fields=null,$renderView=true){
-		$DATA=null;
-		if(!empty($_POST)) $DATA=&$_POST;
-		elseif(!empty($_GET)) $DATA=&$_GET;
-		if(!empty($DATA)){
-			$pName=lcfirst($model); $data=&$DATA[$pName];
-			foreach($data as $key=>&$val) if($val==='') $val=null;
-			$val=CBinder::_bindObject($model,$data,$pName,false);
-			$val->id=$id;
-			$val->update();
-			Controller::redirect('/'.lcfirst(CRoute::getController()));
+	private static function update($id,$val){
+		if(CValidation::hasErrors()) return;
+		$val->id=$id;
+		$val->update();
+		Controller::redirect('/'.lcfirst(CRoute::getController()));
+	}
+	public static function edit($model,$id,$fields=null,$val=null,$renderView=true){
+		if($val!==null) self::update($id,$val);
+		else{
+			$DATA=null;
+			if(!empty($_POST)) $DATA=&$_POST;
+			elseif(!empty($_GET)) $DATA=&$_GET;
+			if(!empty($DATA)){
+				$pName=lcfirst($model); $data=&$DATA[$pName];
+				foreach($data as $key=>&$val) if($val==='') $val=null;
+				$val=CBinder::_bindObject($model,$data,$pName,false);
+				self::update($id,$val);
+			}
 		}
-		if(($val=$model::findOneById($id))===false) notFound();
 		
+		if(($val=$model::findOneById($id))===false) notFound();
 		if($renderView){
 			$title=_tC('Edit:').' '.$id.' - '._tF($model,'');
 			include_once CORE.'mvc/views/View.php';
@@ -53,7 +60,7 @@ class CRUD{
 		$data=$val->_getData();
 		$_POST[lcfirst($model)]=&$data;
 		echo $form->fieldsetStart($title);
-		$form->all();
+		$fields===null ? $form->all() : $form->autoFields($fields);
 		echo $form->end();
 		echo HHtml::jsInline('$("#formCrud'.$model.'").ht5ifv();');
 		if($renderView) $v->render();
