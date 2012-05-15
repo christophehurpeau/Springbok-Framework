@@ -104,7 +104,8 @@ abstract class AFolderEnhancer{
 				$this->controllers[$key][]=substr($filename,0,-4);
 				if($filename[0]==='_') $justDev=true; 
 			}
-			
+
+			if($issetCurrentFileEnhanced=isset(App::$currentFileEnhanced)) App::$currentFileEnhanced=$file->getPath();
 			$nf=new $class($this->enhanced,$file->getPath());
 			$srcMD5=$nf->getMd5Content();
 			$in=false;
@@ -113,9 +114,8 @@ abstract class AFolderEnhancer{
 					&& isset($this->enhanced->oldDef['files'][$file->getPath()])
 					&& $this->enhanced->oldDef['files'][$file->getPath()]==$srcMD5)){
 				//debugVar('file changed :',$file->getPath(),file_exists($devDir.$destFilename),file_exists($prodDir.$destFilename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
-				if($issetCurrentFileEnhanced=isset(App::$currentFileEnhanced)) App::$currentFileEnhanced=$file->getPath();
+				
 				$nf->processEhancing($devDir.$destFilename,$prodDir.$destFilename,$justDev);
-				if($issetCurrentFileEnhanced) App::$currentFileEnhanced='';
 				$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
 				$this->enhanced->newDef['changes'][substr($class,0,-4)][]=$file->getPath();
 				
@@ -125,6 +125,8 @@ abstract class AFolderEnhancer{
 				$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>$class,'dev'=>$devDir.$destFilename,'prod'=>$justDev?false:$prodDir.$destFilename);
 			}
 			$this->enhanced->newDef['files'][$file->getPath()]=$srcMD5;
+			if($issetCurrentFileEnhanced) App::$currentFileEnhanced='';
+			
 			/*$t=(microtime(true) - $t);
 			if($t > 1) debugVar($file->getPath() .' : '.$t,$in,
 				!file_exists($devDir.$destFilename) || !($justDev || file_exists($prodDir.$destFilename))

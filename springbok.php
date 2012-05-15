@@ -29,7 +29,7 @@ class Springbok{
 	    		case 'T': include $path.'transformers/'.$class_name.'.php'; break;
 				case 'R': include $path.'ressources/'.$class_name.'.php'; break;
 				
-				case 'V': include APP.'viewsElements/'.substr($class_name,1).'/class.php'; break;
+				case 'V': include APP.'viewsElements/'.substr($class_name,1).'/'.$class_name.'.php'; break;
 	    		case 'E': include APP.'models/'.$class_name[1].DS.substr($class_name,2).'.php'; break; //Entity...
 				case 'M': include APP.'modules/'.$class_name.'.php'; break;
 				//case 'S': include APP.'services/'.$class_name.'.php'; break;

@@ -26,7 +26,11 @@ class ViewFile extends PhpFile{
 		//Exception à la règle
 		$content=preg_replace('/{=(\$[^}]+)\}/U','<?php echo $1 ?>',$content);
 		
+		$content=preg_replace('/{\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? $2 : $3 ?>',$content);
+		$content=preg_replace('/{=\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? h($2) : h($3) ?>',$content);
+		
 		$content=preg_replace('/{\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? $2 : $1 ?>',$content);
+		$content=preg_replace('/{=\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? h($2) : h($1) ?>',$content);
 		
 		$content=preg_replace('/{if\s+([^}]+?)\s*\}/','<?php if($1): ?>',$content);
 		$content=preg_replace('/{ife\s+([^}]+?)\s*\}/','<?php if(empty($1)): ?>',$content);
