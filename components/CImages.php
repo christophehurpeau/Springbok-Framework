@@ -3,6 +3,7 @@ class CImages{
 	private static $_config;
 	public static function init(){
 		self::$_config=&Config::$images;
+		if(!isset(self::$_config['thumbnails_background'])) self::$_config['thumbnails_background']=array(255,255,255);
 	}
 	
 	/**
@@ -224,8 +225,11 @@ class CImages{
 			$dst_y=floor(($new_height-$height)/2);
 			$dst_x=floor(($new_width-$width)/2);
 		}
-		if(!($tmp = imagecreatetruecolor($new_width, $new_height))) return false;
-		if($adjusted_width<$new_width || $adjusted_height<$new_height) imagefill($tmp,0,0,imagecolorallocate($tmp,255,255,255));
+		if(!($tmp = imagecreatetruecolor($new_width,$new_height))) return false;
+		if($adjusted_width<$new_width || $adjusted_height<$new_height){
+			$b=&self::$_config['thumbnails_background'];
+			imagefill($tmp,0,0,imagecolorallocate($tmp,$b[0],$b[0],$b[0]));
+		}
 		if(!imagecopyresampled($tmp,$rimage,$dst_x,$dst_y,0,0, $adjusted_width, $adjusted_height, $width, $height)) return false;
 		if(!($new_image = imagejpeg($tmp,$filename,100))) return false;
 		imagedestroy($tmp);
