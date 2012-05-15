@@ -1,3 +1,8 @@
+$__JQueryUI:true !default;
+@if($__JQueryUI == false){
+  @warn "You must add $__JQueryUI:true; in the top of your scss.";
+}
+
 .ui-autocomplete-input.ui-combobox{
 	margin: 0; padding:2px 1px;
 	font-size: 1em
@@ -49,6 +54,15 @@ button.ui-combobox .ui-button-text{
 /*.ui-widget { font-size: 1.1em; }*/
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-size: 1em; }
+
+$__uiWidgetContentBackground:if($FIXED_VARIABLE_BACKGROUND,$FIXED_VARIABLE_BACKGROUND,$BODY_COLOR);
+$__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightness(#999999),darken($__uiWidgetContentBackground,10%),lighten($__uiWidgetContentBackground,10%));
+.ui-widget-content {
+  border: 1px solid darken($__uiWidgetContentBackground,50%);
+  background:$__uiWidgetContentBackground;
+  color:findBestFgColor($__uiWidgetContentBackground);
+}
+.ui-widget-content a { color:findBestFgColor($__uiWidgetContentBackground); }
 /*.ui-widget-content { border: 1px solid #dddddd; background: #eeeeee; color: #333333; }
 .ui-widget-content a { color: #333333; }*/
 .ui-widget-header {
@@ -56,43 +70,74 @@ button.ui-combobox .ui-button-text{
 	@if $HEADER_COLOR{ color:$HEADER_COLOR; }
 	font-weight: bold;
 }
-.ui-widget-header a{ color:$HEADER_MENU_A_COLOR; }
 
 /* Interaction states
 ----------------------------------*/
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { 
-	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
-	@if $HEADER_MENU_A_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_BACKGROUND_Top,$HEADER_MENU_A_BACKGROUND_Bottom); }
-  @else if $HEADER_MENU_A_BACKGROUND{ background:$HEADER_MENU_A_BACKGROUND; }
-	color:$HEADER_MENU_A_COLOR;
-	font-weight: bold;
+/*.ui-state-default, .ui-widget-content .ui-state-default{ 
+  @extend .ui-state-default;
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { /*color: $HEADER_MENU_A_COLOR; text-decoration: none; }
+*/
+/*
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus,
+.ui-state-active, .ui-widget-content .ui-state-active {
+  /*@extend ul.clickable li:hover;*/
+  /*@if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Bottom); }
+  @else if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; }
+  @if $HEADER_MENU_A_CURRENT_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW; }
+  @if $HEADER_MENU_A_CURRENT_HOVER_COLOR{ color:$HEADER_MENU_A_CURRENT_HOVER_COLOR; }*//*
 }
 
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: $HEADER_MENU_A_COLOR; text-decoration: none; }
-
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus,
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-	@if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Bottom); }
-	@else if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; }
-	@if $HEADER_MENU_A_CURRENT_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW; }
-	@if $HEADER_MENU_A_CURRENT_HOVER_COLOR{ color:$HEADER_MENU_A_CURRENT_HOVER_COLOR; }
-}
-
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-	@if $HEADER_MENU_A_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_HOVER_BACKGROUND_Top,$HEADER_MENU_A_HOVER_BACKGROUND_Bottom); }
-	@else if $HEADER_MENU_A_HOVER_BACKGROUND{ background:$HEADER_MENU_A_HOVER_BACKGROUND; }
+/*.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus{
+  @if $HEADER_MENU_A_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_HOVER_BACKGROUND_Top,$HEADER_MENU_A_HOVER_BACKGROUND_Bottom); }
+  @else if $HEADER_MENU_A_HOVER_BACKGROUND{ background:$HEADER_MENU_A_HOVER_BACKGROUND; }
   @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; }
-}
-.ui-state-hover a, .ui-state-hover a:hover { @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; } text-decoration: none; }
+}*//*
+.ui-state-hover a, .ui-state-hover a:hover { /*@extend ul.clickable li:hover a;*//* text-decoration: none; }
 
 
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
-	@if $HEADER_MENU_A_CURRENT_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_BACKGROUND_Bottom); }
-  @else if $HEADER_MENU_A_CURRENT_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_BACKGROUND; }
-	@if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; }
+.ui-state-active, .ui-widget-content .ui-state-active{
+  /*@extend ul.clickable li.current;*//*
 }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
-  @if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; } text-decoration: none;
+  /*@extend ul.clickable li.current a;*//*
+}
+
+*/
+
+.ui-widget-header{
+  .ui-state-default{ 
+  	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
+  	@include background($HEADER_MENU_A_BACKGROUND);
+  	color:$HEADER_MENU_A_COLOR;
+  	font-weight: bold;
+  }
+  
+  .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: $HEADER_MENU_A_COLOR; }
+  
+  .ui-state-hover,.ui-state-focus,.ui-state-active{
+  	@if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Bottom); }
+  	@else if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; }
+  	@if $HEADER_MENU_A_CURRENT_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW; }
+  	@if $HEADER_MENU_A_CURRENT_HOVER_COLOR{ color:$HEADER_MENU_A_CURRENT_HOVER_COLOR; }
+  }
+  
+  .ui-state-hover,.ui-state-focus{
+  	@if $HEADER_MENU_A_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_HOVER_BACKGROUND_Top,$HEADER_MENU_A_HOVER_BACKGROUND_Bottom); }
+  	@else if $HEADER_MENU_A_HOVER_BACKGROUND{ background:$HEADER_MENU_A_HOVER_BACKGROUND; }
+    @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; }
+  }
+  .ui-state-hover a{ @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; } text-decoration: none; }
+  
+  
+  .ui-state-active{
+  	@if $HEADER_MENU_A_CURRENT_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_BACKGROUND_Bottom); }
+    @else if $HEADER_MENU_A_CURRENT_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_BACKGROUND; }
+  	@if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; }
+  }
+  .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+    @if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; } text-decoration: none;
+  }
 }
 .ui-widget :active { outline: none; }
 

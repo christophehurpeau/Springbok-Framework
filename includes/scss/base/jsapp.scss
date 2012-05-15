@@ -7,8 +7,7 @@ div.startloading{
 	margin-top:-200px;
 	margin-left:-250px;
 	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
-	@if $HEADER_MENU_A_BACKGROUND{ background:$HEADER_MENU_A_BACKGROUND; }
-	@if $HEADER_MENU_A_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_BACKGROUND_Top,$HEADER_MENU_A_BACKGROUND_Bottom); }
+	@include background($HEADER_MENU_A_BACKGROUND);
 	@if $FIXED_VARIABLE_SHADOW{ @include box-shadow($FIXED_VARIABLE_SHADOW,8px); }
 	border-radius:16px;
 	color:$HEADER_MENU_A_COLOR;
