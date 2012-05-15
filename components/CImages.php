@@ -228,7 +228,7 @@ class CImages{
 		if(!($tmp = imagecreatetruecolor($new_width,$new_height))) return false;
 		if($adjusted_width<$new_width || $adjusted_height<$new_height){
 			$b=&self::$_config['thumbnails_background'];
-			imagefill($tmp,0,0,imagecolorallocate($tmp,$b[0],$b[0],$b[0]));
+			imagefill($tmp,0,0,imagecolorallocate($tmp,$b[0],$b[1],$b[2]));
 		}
 		if(!imagecopyresampled($tmp,$rimage,$dst_x,$dst_y,0,0, $adjusted_width, $adjusted_height, $width, $height)) return false;
 		if(!($new_image = imagejpeg($tmp,$filename,100))) return false;
