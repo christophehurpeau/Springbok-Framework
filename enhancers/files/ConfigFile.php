@@ -124,7 +124,7 @@ class ConfigFile extends PhpFile{
 			//$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}elseif($configname[0]==='_'){
 			$configArray=include $this->srcFile()->getPath();
-			if(!empty($this->enhanced->appConfig)){ // if ! config plugin
+			if($this->enhanced->isApp()){
 				foreach(array('site_url') as $attr)
 					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
