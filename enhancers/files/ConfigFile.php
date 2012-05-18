@@ -11,7 +11,7 @@ class ConfigFile extends PhpFile{
 			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
 		}
 		
-		if(!$this->enhanced->appConfig && substr($this->fileName(),0,1) == '_'){
+		if($this->enhanced->isApp() && substr($this->fileName(),0,1) == '_'){
 			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
 			
 			if(!empty($this->enhanced->appConfig['plugins'])){
@@ -124,7 +124,10 @@ class ConfigFile extends PhpFile{
 			//$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}elseif($configname[0]==='_'){
 			$configArray=include $this->srcFile()->getPath();
-			if($this->enhanced->isApp()){
+			if($this->enhanced->isPlugin()){
+				$configArray=UArray::union_recursive($configArray,include dirname(APP).'src/config/'.$this->fileName());
+			}
+			if($this->enhanced->isPlugin() || $this->enhanced->isApp()){
 				foreach(array('site_url') as $attr)
 					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
