@@ -124,10 +124,7 @@ class ConfigFile extends PhpFile{
 			//$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}elseif($configname[0]==='_'){
 			$configArray=include $this->srcFile()->getPath();
-			if($this->enhanced->isPlugin()){
-				$configArray=UArray::union_recursive($configArray,include dirname(APP).'src/config/'.$this->fileName());
-			}
-			if($this->enhanced->isPlugin() || $this->enhanced->isApp()){
+			if($this->enhanced->isApp()){
 				foreach(array('site_url') as $attr)
 					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
@@ -153,6 +150,8 @@ class ConfigFile extends PhpFile{
 							$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
 					}
 				$configArray['models_infos']=$configArray['autoload_default'].'infos/';
+			}elseif($this->enhanced->isPlugin()){
+				return;
 			}else{
 				$configArray['autoload_default']=NULL;
 				$configArray['models_infos']=NULL;
