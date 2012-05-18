@@ -14,7 +14,7 @@ class EnhanceSpringbok{
 	protected $enhanced;
 
 	public function process($dirname,$inLibs=false){
-		$this->enhanced=new EnhancedCore($dirname);
+		$this->enhanced=new EnhancedCore('core',$dirname);
 		set_time_limit(0); ini_set('memory_limit', '512M');
 
 		$this->enhanced->loadFileDef($force=isset($_GET['force']));

@@ -137,7 +137,7 @@ class CHttpRequest{
 		elseif(preg_match('/FreeBSD/',$ua)) $browser['platform']=self::P_FREE_BSD;
 		elseif(preg_match('/DoCoMo/',$ua)) $browser['platform']=self::P_IMODE;
 		
-		if(preg_match('/(charlotte|crawl|bot|bloglines|dtaagent|feedfetcher|ia_archiver|larbin|mediapartners'
+		if(preg_match('/charlotte|crawl|bot|bloglines|dtaagent|feedfetcher|ia_archiver|larbin|mediapartners'
 			.'|metaspinner|searchmonkey|slurp|spider|teoma|ultraseek|waypath|yacy|yandex/i',$ua)) $browser['platform']=self::B_CRAWLER;
 		else{
 			$sniffs = array( // name regexp, name for display, version regexp, version match

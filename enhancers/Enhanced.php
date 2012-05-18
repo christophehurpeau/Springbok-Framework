@@ -1,14 +1,20 @@
 <?php
 class Enhanced{
-	private $appDir;
+	private $appDir,$type;
 	public $config,$oldDef=array(),$newDef=array(),$warnings=array(),$errors=array();
 	
-	public function __construct(&$dirname){
+	public function __construct($type,&$dirname){
+		$this->type=&$type;
 		if(!substr($dirname,-(strlen(DS))) != DS) $dirname.=DS;
 		$this->appDir=&$dirname;
 		if(file_exists($configname=$dirname.'src/config/enhance.php'))
 			$this->config=include $configname;
 	}
+	
+	public function isApp(){return $this->type==='app';}
+	public function isPlugin(){return $this->type==='plugin';}
+	public function isCore(){return $this->type==='core';}
+	public function isUnknown(){return $this->type==='?';}
 	
 	
 	private $fileDef;

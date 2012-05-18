@@ -4,7 +4,7 @@ include_once __DIR__.DS.'DefaultFolderEnhancer.php';
 
 class EnhancePlugin extends AEnhance{
 	public function __construct($dirname){
-		$this->enhanced=new EnhancedApp($dirname);
+		$this->enhanced=new EnhancedApp('plugin',$dirname);
 	}
 	
 	public function initDev(&$dev){

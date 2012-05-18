@@ -6,7 +6,7 @@ include_once __DIR__.'/../utils/UColors.php';
 
 class EnhanceApp extends AEnhance{
 	public function __construct($dirname){
-		$this->enhanced=new EnhancedApp($dirname);
+		$this->enhanced=new EnhancedApp('app',$dirname);
 	}
 	
 	public function init(){

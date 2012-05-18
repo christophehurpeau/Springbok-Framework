@@ -16,9 +16,11 @@ abstract class AEnhance{
 	protected $enhanced;
 	
 	public function __construct($dirname){
-		$this->enhanced=new Enhanced($dirname);
+		$this->enhanced=new Enhanced('?',$dirname);
 	}
 	
+	
+	protected abstract function getTypeEnhanceName();
 	
 	// force=true if called from enhance.php
 	public function process($force=false){
