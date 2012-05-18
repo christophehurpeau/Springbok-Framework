@@ -19,9 +19,6 @@ abstract class AEnhance{
 		$this->enhanced=new Enhanced('?',$dirname);
 	}
 	
-	
-	protected abstract function getTypeEnhanceName();
-	
 	// force=true if called from enhance.php
 	public function process($force=false){
 		global $enhancers;
