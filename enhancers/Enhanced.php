@@ -15,7 +15,8 @@ class Enhanced{
 	public function isPlugin(){return $this->type==='plugin';}
 	public function isCore(){return $this->type==='core';}
 	public function isUnknown(){return $this->type==='?';}
-	
+
+	public function setType($type){ $this->type=&$type; }
 	
 	private $fileDef;
 	public function loadFileDef($force){

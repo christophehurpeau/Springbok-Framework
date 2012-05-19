@@ -96,6 +96,7 @@ class EnhanceApp extends AEnhance{
 			}
 		//}
 		if($this->enhanced->configNotEmpty('plugins')){
+			$this->enhanced->setType('plugin');
 			$pluginsPaths=$this->enhanced->devConfig('pluginsPaths');
 			foreach($this->enhanced->config['plugins'] as &$plugin){
 				$pluginPath=$pluginsPaths[$plugin[0]].$plugin[1];

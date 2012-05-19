@@ -11,16 +11,20 @@ class ConfigFile extends PhpFile{
 			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
 		}
 		
-		if($this->enhanced->isApp() && $this->enhanced->appConfig && substr($this->fileName(),0,1) == '_'){
+		if($this->enhanced->isApp() && substr($this->fileName(),0,1) === '_'){
 			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
 			
-			if(!empty($this->enhanced->appConfig['plugins'])){
-				$configArray=include $this->srcFile()->getPath();
+			if(!empty($this->enhanced->appConfig['plugins']))
 				foreach($this->enhanced->appConfig['plugins'] as $key=>$plugin){
-					//$pluginPath=$configArray['pluginsPaths'][$plugin[0]].$plugin[1].DS.($this->fileName()==='_'.ENV.'.php'?'dev'.DS:'');
-					$devPluginPath=include dirname($this->srcFile()->getPath()).'/_'.ENV.'.php';
-					$devPluginPath=$devPluginPath['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
+					$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
 					if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$this->fileName())))
+						$md5.=file_get_contents($pluginConfigPath);
+				}
+				
+			if($this->enhanced->configNotEmpty('plugins')){
+				foreach($this->enhanced->config['plugins'] as $key=>$plugin){
+					$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1];
+					if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$this->fileName())))
 						$md5.=file_get_contents($pluginConfigPath);
 				}
 			}
@@ -144,11 +148,18 @@ class ConfigFile extends PhpFile{
 							$pluginPath=$configArray['pluginsPaths'][$plugin[0]].$plugin[1].DS.($configname==='_'.ENV?'dev/':'');
 							$configArray['autoload_default']=$pluginPath.'models/';
 						}
-						$devPluginPath=include dirname($this->srcFile()->getPath()).'/_'.ENV.'.php';
-						$devPluginPath=$devPluginPath['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
+						$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
 						if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$configname.'.php')))
 							$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
 					}
+				
+				if($this->enhanced->configNotEmpty('plugins'))
+					foreach($this->enhanced->config['plugins'] as $key=>$plugin){
+						$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1];
+						if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$configname.'.php')))
+							$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
+					}
+				
 				$configArray['models_infos']=$configArray['autoload_default'].'infos/';
 			}elseif($this->enhanced->isPlugin()){
 				return;
