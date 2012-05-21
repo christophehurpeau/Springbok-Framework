@@ -2,7 +2,7 @@
 
 (function($){
 	var oldFunctionInit=S.ajax.init,oldFunctionSetTitle=S.setTitle,ajaxFunctionUpdateVariable=S.ajax.updateVariable,
-		dynamictabsMenu,dynamictabsContent,dynamictabsId=0;
+		dynamictabsMenu,dynamictabsContent,dynamictabsId=1;
 	S.ajax.init=function(){
 		S.dynamictabs.init();
 		$(document).bind('click',function(e){
@@ -51,10 +51,12 @@
 			
 			var li=dynamictabsMenu.find('li');
 			if(li.length===0){
-				var newContent=$('<div/>').attr('id','dynamictab'+(++dynamictabsId));
+				/*var newContent=$('<div/>').attr('id','dynamictab'+(++dynamictabsId));
 				dynamictabsContent.html(newContent.html(dynamictabsContent.html()));
-				ajaxFunctionUpdateVariable(newContent);
-				dynamictabsMenu.find('ul').html($('<li/>').html($('<a/>').text(document.title).attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'javascript:;'})));
+				ajaxFunctionUpdateVariable(newContent);*/
+				ajaxFunctionUpdateVariable(dynamictabsContent.find('> div:first'));
+				dynamictabsMenu.find('ul').html($('<li/>').html($('<a/>').text(document.title)
+						.attr({'class':'current',rel:'dynamictab'+dynamictabsId,href:'#',onclick:'return false'})));
 			}else ajaxFunctionUpdateVariable(dynamictabsContent.find('> div:not(:hidden)'));
 		},
 		addTab:function(){

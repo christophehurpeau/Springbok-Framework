@@ -220,6 +220,7 @@ class App{
 			if($type==='xml') displayXml($content);
 			else displayJson($content);
 		}else{
+			if(!headers_sent()) header("Content-Type: text/html; charset=UTF-8",true);
 			$vars=array(
 				'e'=>&$exception,
 				'e_className'=>get_class($exception),
@@ -239,12 +240,14 @@ class App{
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
 		$type=CHttpRequest::acceptsByExtOrHttpAccept('html','json','xml');
 		if($type==='json'){
+			header('Content-type: application/json; charset=UTF-8');
 			exit('{"error":{'
 				.'"type":"error",'
 				.'"type":'.json_encode(Springbok::getErrorText($code))/* DEV */.','
 				.'"message":'.json_encode($message) /* /DEV */
 			.'}}');
 		}else{
+			if(!headers_sent()) header("Content-Type: text/html; charset=UTF-8",true);
 			$vars=array(
 				'e_name'=>Springbok::getErrorText($code),
 				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced.' || ':'')./* /DEV */$message,

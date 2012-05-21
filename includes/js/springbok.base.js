@@ -55,8 +55,6 @@ window.S={
 			}
 			return new_string;
 		},
-		nl2br:function(str){return str.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ '<br />' +'$2');},
-		br2nl:function(str){return str.replace(/<br\s*\/?>/mg,'\n');},
 		stripHTML:function(str){return str.replace(/<&#91;^>&#93;*>/g, '');},
 
 

@@ -83,7 +83,9 @@ class JsFile extends EnhancerFile{
 		else $entrances=array();
 		if(in_array($this->fileName(),$jsFiles)){
 			$this->_srcContent="(function(window,document,Object,Array,Math,undefined){window.basedir='".(defined('BASE_URL')?str_replace('/dev/','/prod/',BASE_URL.'/'):'/')
-				.(in_array(substr($this->fileName(),0,-3),$entrances)?substr($this->fileName(),0,-3).'/':'')."'"
+				.(in_array(substr($this->fileName(),0,-3),$entrances)
+							&&(!isset($this->enhanced->devConfig['dev_prefixed_routes'])||$this->enhanced->devConfig['dev_prefixed_routes']!==false)
+								?substr($this->fileName(),0,-3).'/':'')."'"
 				.substr($this->_srcContent,strpos($this->_srcContent,';',28));
 		}
 		//if($this->fileName()==='jsapp.js')
