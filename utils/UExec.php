@@ -80,6 +80,7 @@ class UExec{
 			
 			return self::execWithSshAgent($sshCommand,$ssh);
 		}
+		//CLogger::get('exec')->log($command);
 		return UEncoding::convertToUtf8(trim(shell_exec($command.' 2>&1')));
 	}
 	

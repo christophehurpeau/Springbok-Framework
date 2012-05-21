@@ -21,7 +21,7 @@ class CDaemons{
 	
 	public static function startIfNotAlive($daemon,$instance='default'){
 		if(self::isAlive($daemon,$instance)) return false;
-		return self::start($daemon);
+		return self::start($daemon,$instance);
 	}
 	
 	public static function startAll(){
