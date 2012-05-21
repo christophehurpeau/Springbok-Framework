@@ -13,6 +13,10 @@ class SSqlModel extends SModel{
 		return $this->data[self::_getPkName()];
 	}
 	
+	public function _pkExists(){
+		return isset($this->data[self::_getPkName()]);
+	}
+	
 	
 	/* Queries */
 

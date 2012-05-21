@@ -152,9 +152,13 @@ class CImages{
 		$image->width=$width;
 		$image->height=$height;
 		
-		$id=$image->insert();
 		
-		$filename=DATA.$folderPrefix.'images'.DS.$id;
+		if($image->_pkExists()){
+			$id=$image->_getPkValue();
+			$image->update();
+		}else $id=$image->insert();
+		
+		$filename=DATA.$folderPrefix.'images/'.$id;
 		rename($tmpFile,$filename.$ext);	
 		
 		if($toJpeg && $type != IMAGETYPE_JPEG){
