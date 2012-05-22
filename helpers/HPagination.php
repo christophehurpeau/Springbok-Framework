@@ -84,11 +84,11 @@ class HPagination{
 		return '';
 	}
 	
-	public static function simpleAjax($pagination,$callbackName){
+	public static function simpleAjax($pagination,$callbackName,$callbackPage='#'){
 		if($pagination->hasPager()) 
 			return $pager='<div class="pager">'.self::createPager($pagination->getPage(),$pagination->getTotalPages(),
-			function($page) use(&$callbackName){
-				return ' href="#" onclick="return '.$callbackName.'('.$page.')"';
+			function($page) use(&$callbackName,&$callbackPage){
+				return ' href="'.(is_string($callbackPage)?$callbackPage:$callbackPage($page)).'" onclick="return '.$callbackName.'('.$page.')"';
 			}).'</div>';
 		return '';
 	}
@@ -96,7 +96,11 @@ class HPagination{
 	public static function simpleLetters($pagination,$availableLetters=null){
 		if($availableLetters===null) $availableLetters=$pagination->getAvailableLetters();
 		return $pager='<div class="pager">'.self::createPagerLetters($pagination->getPage(),$availableLetters,function($page){
-			return ' href="'.HHtml::url(CRoute::getAll(),false,true).'?page='.$page.'"';
+			return ' href="'.self::callbackCreateUrl($page).'"';
 		}).'</div>';
+	}
+	
+	public static function callbackCreateUrl($page){
+		return HHtml::url(CRoute::getAll(),false,true).'?page='.$page;
 	}
 }
