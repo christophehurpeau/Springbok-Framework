@@ -29,6 +29,6 @@ class HMeta{
 	
 	public static function displayCanonical(){
 		/* DEV */ if(self::$canonical===null && !Springbok::$inError) throw new Exception("canonical is not defined"); /* /DEV */
-		return '<link rel="canonical" href="'.HHtml::url(self::$canonical).'"/>';
+		return self::$canonical===false?'':'<link rel="canonical" href="'.HHtml::url(self::$canonical).'"/>';
 	}
 }
