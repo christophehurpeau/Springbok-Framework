@@ -43,7 +43,7 @@ class HMenu{
 		if($isValueArray && isset($value['current'])){
 			$url=$value['url'];
 			if($value['current']){
-				$linkoptions['current']=1;
+				$value['current']=1;
 			}
 			if(!empty($value)) $linkoptions=$value+$linkoptions;
 		}else{
