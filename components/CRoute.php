@@ -114,7 +114,7 @@ class CRoute{
 		$route=&self::$_routes[$link===true?'/:controller(/:action/*)?':$link];
 		if(isset($params['ext'])){ $plus.='.'.$params['ext']; unset($params['ext']); }
 		elseif(isset($route['ext'])){ $plus.= '.'.$route['ext']; }
-		if(isset($params['?'])){$plus='?'.$params['?']; unset($params['?']); }
+		if(isset($params['?'])){$plus.='?'.$params['?']; unset($params['?']); }
 		if(isset($params['#'])){$plus.='#'.$params['#']; unset($params['#']); }
 		
 		if(empty($params)) return $route[CLang::get()][1].$plus;

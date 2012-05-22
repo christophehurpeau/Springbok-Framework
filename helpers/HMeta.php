@@ -17,16 +17,18 @@ class HMeta{
 		self::$metas['google']='notranslate';
 	}
 	
-	public static function canonical($url){
-		self::$canonical=$url;
-	}
+	public static function canonical($url){ self::$canonical=&$url; }
 	
 	public static function display(){
 		if(self::$metas===null)return'';
 		$res='';
 		foreach(self::$metas as $key=>&$content)
 			$res.= '<meta name="'.h($key).'" content="'.h($content).'"/>';
-		if(self::$canonical!==null) $res.='<link rel="canonical" href="'.HHtml::url(self::$canonical).'"/>';
 		return $res;
+	}
+	
+	public static function displayCanonical(){
+		/* DEV */ if(self::$canonical===null && !Springbok::$inError) throw new Exception("canonical is not defined"); /* /DEV */
+		return '<link rel="canonical" href="'.HHtml::url(self::$canonical).'"/>';
 	}
 }

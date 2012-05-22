@@ -43,7 +43,7 @@ class Springbok{
 		}else include $default_path.$class_name.'.php';
 	}
 
-	private static $inError;
+	public static $inError;
 
 	/** @param Exception $exception */
 	public static function handleException(&$exception){
