@@ -27,7 +27,7 @@ class DBMongo extends DB{
 		return $this->_connect->listDBs();
 	}
 	public function getTables(){
-		return $this->_db->listCollection();
+		return $this->_db->listCollections();
 	}
 	
 	
