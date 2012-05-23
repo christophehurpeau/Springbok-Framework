@@ -28,7 +28,7 @@ function geditURL($file,$line){
 }
 
 function &prettyHtmlBackTrace($skipLength=1,$trace=false){
-	if(!$trace) $trace=debug_backtrace();
+	if(!$trace) $trace=function_exists('xdebug_get_function_stack') ? xdebug_get_function_stack() : debug_backtrace();
 	$prettyMessage='';
 	// Skip the unecessary stack trace
 	if($skipLength && count($trace)>$skipLength)

@@ -236,7 +236,7 @@ class App{
 		}
 	}
 	
-	public static function displayError($forceDefault,&$code,&$message,&$file,&$line,&$context=null,&$stack=null){
+	public static function displayError($forceDefault,&$code,&$message,&$file,&$line,&$context=null){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
 		$type=CHttpRequest::acceptsByExtOrHttpAccept('html','json','xml');
 		if($type==='json'){
@@ -253,7 +253,7 @@ class App{
 				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced.' || ':'')./* /DEV */$message,
 				'e_file'=>$file,
 				'e_line'=>$line,
-				'e_context'=>$context
+				'e_context'=>$context,
 			);
 			//debugVar($vars);
 			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/error.php')){
