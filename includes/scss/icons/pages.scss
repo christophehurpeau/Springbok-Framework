@@ -4,4 +4,4 @@
     page_red,page_refresh,page_save,page_csv {
   @include coreIcon($iconName);
 }
-.icon.page_xls{ @include coreIcon('page_excel'); }
+@include coreIcon('page_xls','page_excel');

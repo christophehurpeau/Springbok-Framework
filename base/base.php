@@ -47,12 +47,13 @@ function &prettyHtmlBackTrace($skipLength=1,$trace=false){
 		if(isset($t['object']) && is_object($t['object']))
 			$prettyMessage.=get_class($t['object']).'->';
 		$prettyMessage.=$t['function']."()";
-		if($isGoodFile || !empty($t['args'])){
+		if($isGoodFile || !empty($t['args']) || !empty($t['params'])){
 			$prettyMessage.='</a></div><div id="'.$id.'" style="margin-top:5px;display:none">';
 			
-			if(!empty($t['args'])){
+			if(!empty($t['args']) || !empty($t['params'])){
 				$prettyMessage.='<b>Arguments :</b><br />';
-				foreach($t['args'] as $num=>$arg){ 
+				$args=empty($t['args']) ? $t['params'] : $t['args'];
+				foreach($args as $num=>$arg){ 
 					$prettyMessage.='<i style="color:#AAA;font-size:7pt;">Arg '.$num.'</i> ';
 					$prettyMessage.=short_debug_var($arg);
 					$prettyMessage.="\n";

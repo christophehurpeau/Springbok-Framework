@@ -1,12 +1,15 @@
 <?php
-include_once CLIBS.'PHPExcel.php';
 class TXls{
+	public static function init(){
+		include_once CLIBS.'PHPExcel.php';
+	}
 	public static function getContentType(){
 		return 'application/vnd.ms-excel';
 	}
 	
 	protected $objPHPExcel,$row=2;
 	public function __construct($title){
+		PHPExcel_Autoloader::Register();//Should NOT be THERE, a PHP 5.3.10 bug ?
 		PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp,array('memoryCacheSize'=>'512MB'));
 		
 		$this->objPHPExcel = new PHPExcel();
@@ -64,3 +67,4 @@ $currencyFormat = '#,#0.## \€;[Red]-#,#0.## \€';
 // number format, with thousands seperator and two decimal points.
 $numberFormat = '#,#0.##;[Red]-#,#0.##';*/
 }
+TXls::init();
