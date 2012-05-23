@@ -40,6 +40,10 @@ class HMenu{
 	public static function link($title,$value,$linkoptions=array(),$options=array(),$lioptions=false){
 		if(!isset($options['startsWith'])) $options['startsWith']=false;
 		$isValueArray=is_array($value);
+		if($isValueArray && isset($value['lioptions'])){
+			$lioptions=$value['lioptions']+$lioptions;
+			unset($value['lioptions']);
+		}
 		if($isValueArray && isset($value['current'])){
 			$url=$value['url'];
 			if($value['current']){
@@ -62,7 +66,7 @@ class HMenu{
 		}
 		//if($linkoptions['current']) $lioptions['class']="current";
 		$res=HHtml::link($title,$url?$url:'/',$linkoptions);
-		if($linkoptions!==false) $res=HHtml::tag('li',$lioptions,$res,false);
+		if($lioptions!==false) $res=HHtml::tag('li',$lioptions,$res,false);
 		return $res;
 	}
 	

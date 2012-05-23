@@ -86,7 +86,7 @@
 			var frag = (fragment || '').replace(routeStripper, ''),loc=window.location;
 			if(frag.substr(0,1)==='?') frag=loc.pathname+frag;
 			if(this.fragment == frag) return;
-			if(window._gaq!==undefined) _gaq.push(['_trackPageview',frag]);
+			if(window._gaq) _gaq.push(['_trackPageview',frag]);
 			
 			if(frag.sbStartsWith(basedir)) frag=frag.substr(basedir.length);
 			else if(frag.sbStartsWith(this.options.root)) frag=frag.substr(this.options.root.length);

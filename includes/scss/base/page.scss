@@ -35,7 +35,7 @@ $BREADCRUMBS_FONTSIZE:8pt !default;
 html,body{height:100%;}
 body{
 	font: normal 9.5pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
-	background:$BODY_BACKGROUND; color:$BODY_COLOR;
+	@include background($BODY_BACKGROUND); color:$BODY_COLOR;
 	margin:0;padding:0;
 	@include webkitAntialiased;
 }
