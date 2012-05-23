@@ -65,6 +65,7 @@ class App{
 		/* DEV */
 		//$t=microtime(true);
 		if($shouldEnhance){
+			$updateCookie=false;
 			$generateSchema=($changes && !empty($changes['Model'])) || CHttpRequest::_GETor('apply')==='springbokProcessSchema';
 			if(!$generateSchema){
 				$cookie=CCookie::get('springbok');
@@ -82,8 +83,7 @@ class App{
 				}
 				if($cookie->check && (empty($cookie->lastProcess) || $cookie->lastProcess<(time()-(60*60*10)))){
 					$cookie->lastProcess=time();
-					$cookie->write();
-					$generateSchema=true;
+					$updateCookie=$generateSchema=true;
 				}
 			}
 			if($generateSchema || $changes){
@@ -108,6 +108,7 @@ class App{
 					$schemaProcessing=new DBSchemaProcessing($modelFolder,new Folder($pluginFolder.'/dev/triggers/'),false,$generateSchema);
 				}
 			}
+			if($updateCookie) $cookie->write();
 		}
 		//debug('schema process took : '.(microtime(true) - $t).' s');
 		
