@@ -27,7 +27,7 @@ class TXls{
 		$col=0;
 		foreach($fields as $i=>$field){
 			$value=$tableClass::getValueFromModel($row,$field,$i);
-			$value=$tableClass::getDisplayableValue($field,$value,$model);
+			$value=$tableClass::getDisplayableValue($field,$value,$row);
 			if($field['type']==='string'){
 				$this->objPHPExcel->getActiveSheet()->setCellValueExplicitByColumnAndRow($col,$this->row,$value,PHPExcel_Cell_DataType::TYPE_STRING);
 				$this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($col,$this->row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
