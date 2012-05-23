@@ -105,7 +105,7 @@ abstract class AFolderEnhancer{
 				if($filename[0]==='_') $justDev=true; 
 			}
 
-			if($issetCurrentFileEnhanced=isset(App::$currentFileEnhanced)) App::$currentFileEnhanced=$file->getPath();
+			if($issetCurrentFileEnhanced=(class_exists('App',false) && isset(App::$currentFileEnhanced))) App::$currentFileEnhanced=$file->getPath();
 			$nf=new $class($this->enhanced,$file->getPath());
 			$srcMD5=$nf->getMd5Content();
 			$in=false;
