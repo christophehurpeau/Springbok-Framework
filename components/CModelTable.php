@@ -5,21 +5,25 @@ class CModelTable{
 		$this->query=&$query;
 	}
 	
-	private $actionClick,$rowActions,$export=false;
+	public $actionClick,$rowActions,$controller,
+		$export,$transformers=array('csv'=>'TCsv','xls'=>'TXls'),
+		$fields,$modelFields,$fieldsEditable,$translateField=true;
 	
-	public function actionClick($action='view'){$this->actionClick=&$action; return $this;}
-	public function rowActions($actions){$this->rowActions=&$actions; return $this;}
-	public function exports($exports){$this->exports=&$exports; return $this;}
+	public function &actionClick($action='view'){$this->actionClick=&$action; return $this; }
+	public function &actions($actions){$this->rowActions=&$actions; return $this; }
+	public function &controller($controller){$this->controller=&$controller; return $this; }
+	public function &fields($fields){$this->fields=&$fields; return $this; }
+	public function &doNotTranslateFields(){ $this->translateField=false; return $this; }
 	
 	public function render($title,$add=false,$layout=null){
 		include_once CORE.'mvc/views/View.php';
 		$v=new AjaxContentView($title,$layout);
-		self::_add($add);
-		self::display();
+		$this->_add($add);
+		$this->display();
 		$v->render();
 	}
 	
-	private static function _add($add){
+	private function _add($add){
 		if($add!==false){
 			if($add===true) $add=array('modelName'=>$this->query->getModelName());
 			elseif(is_string($add)) $add=array('modelName'=>$add);
@@ -33,9 +37,101 @@ class CModelTable{
 		}
 	}
 	
+	public function _setFields($export=false){
+		if($this->fields !== null){
+			$fields=&$this->fields;
+			$fromQuery=false;
+		}else{
+			$fields=$this->query->getFieldsForTable();
+			$fromQuery=true;
+		}
+		$this->modelFields=$this->query->getModelFields();
+		
+		$this->fields=array();
+		foreach($fields as $key=>&$val){
+			if($fromQuery || is_string($val)){ $key=$val; $val=array(); }
+			if(is_int($key)){
+			}else{
+				$val['key']=$key;
+				if($this->fieldsEditable !==null && isset($this->fieldsEditable[$key])) $val['editable']=$this->fieldsEditable[$key];
+	
+				$modelName=&$this->modelFields[$key];
+				if($modelName !== NULL){
+					$propDef=&$modelName::$__PROP_DEF[$key];
+					if($propDef===null){
+						$type=isset($val['type']) ? $val['type'] : 'string';
+					}else{
+						$type=$propDef['type'];
+						
+						if(isset($propDef['annotations']['Enum'])){
+							$val['tabResult']=call_user_func(array($modelName,$propDef['annotations']['Enum'].'List')); //TODO ou $modelName->{$propDef['annotations']['Enum'].'List'}() ?
+							$val['align']='center';
+						}elseif(!isset($val['callback'])){
+							if(isset($propDef['annotations']['Format'])) $val['callback']=array('HFormat',$propDef['annotations']['Format']);
+						}
+					}
+				}else $type='string';
+				
+				if(isset($this->belongsToFields[$key]) && is_array($this->belongsToFields[$key]))
+					$val['tabResult']=$val['filter']=$this->belongsToFields[$key];
+				
+				if(isset($val['tabResult']) || isset($val['callback'])) $type='string';
+				$val['type']=$type;
+				
+				if(!isset($val['title'])) $val['title']=$this->translateField?_tF(isset($this->belongsToFields[$key])?$this->modelName:$modelName,$key):$key;
+				if(!isset($val['align'])) switch($type){
+					case 'int'; case 'boolean':
+						$val['align']='center';
+						break;
+				}
+				if($export===false){
+					if($type==='int'){
+						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='60';
+					}elseif($type==='boolean'){
+						if(!isset($val['icons'])) $val['icons']=array(false=>'disabled',true=>'enabled',''=>'enabled');
+						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='25';
+						$val['filter']=array('1'=>_tC('Yes'),'0'=>_tC('No'));
+					}elseif($type==='float'){
+						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='130';
+					}elseif($modelName !== NULL && isset($modelName::$__modelInfos['columns'][$key])){
+						$infos=$modelName::$__modelInfos['columns'][$key];
+						if($infos['type']==='datetime'){
+							if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='160';
+						}
+					}
+					if(isset($val['icons']) && $val['icons']){
+						$tabResult=array();
+						foreach($val['icons'] as $key=>&$icon) $tabResult[$key]='<span class="icon '.$icon.'"></span>';
+						$val['tabResult']=$tabResult;
+						$val['escape']=false;
+					}
+				}
+	
+				
+				
+				/*
+				if(isset($field['icons']) && $field['icons'] && isset($field['icons'][$value]))
+					$value=HHtml::img($field['icons'][$value]);
+				//TODO : class instead
+				*/
+				
+				if(!isset($val['escape'])){
+					$val['escape']=$type==='string';
+				}
+			}
+			$this->fields[]=$val;
+		}
+	}
+	
 	public function display($displayTotalResults=true){
 		$pagination=$this->query->getPagination();
 		$results=$pagination->getResults();
+		
+		if($pagination->getTotalResults() !== 0 || $this->query->isFiltersAllowed()) $this->_setFields();
+		
+		if($this->controller===null && ($this->actionClick!==null || $this->rowActions!==null))
+			$this->controller=lcfirst(CRoute::getController());
+		
 		
 		if($this->query->isFiltersAllowed()){
 			$formId=uniqid();
@@ -43,9 +139,9 @@ class CModelTable{
 		}
 		
 		
-		if($this->export!==false){
+		if($this->query->isExportable()){
 			echo '<span class="exportLinks">'; 
-			foreach(explode(',',$component->export[0]) as $exportType)
+			foreach($this->query->getExportableTypes() as $exportType)
 				echo HHtml::iconAction('page_'.$exportType,'?export='.$exportType,array('target'=>'_blank'));//target : springbok.ajax
 			echo '</span>';
 		}
@@ -76,20 +172,51 @@ class CModelTable{
 		if(!empty($results) && $displayTotalResults===true)
 			echo '<div class="totalResults">'.$pagination->getTotalResults().' '.($pagination->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		
-		echo '<table class="table">';
-		if(!$this->query->isFiltersAllowed() && empty($results)) echo '<tr><td>'._tC('No result').'</td></td>';
-		else{
-			echo '<thead><tr>';
-			echo '</tr>';
-		
-			echo '</thead><tbody>';
-			
-			echo '</tbody>';
+		$transformer=new THtml($this);
+		if(!$this->query->isFiltersAllowed() && empty($results)){
+			$transformer->startBody();
+			$transformer->noResults();
+		}else{
+			$transformer->startHead();
+			$transformer->titles($this->fields,$this->query->getFields());
+			if($this->query->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters());
+			$transformer->endHead();
+			$transformer->startBody();
+			empty($results) ? $transformer->noResults(count($this->fields)) : $transformer->displayResults($results,$this->fields);
 		}
-		echo '</table>';
+		$transformer->end();
 		if($this->query->isFiltersAllowed()) $form->end(false);
 		echo $pager;
 	}
 	
 	
+	public function export($type,$fileName,$title,$exportOutput){
+		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache	
+		$transformerClass=$this->transformers[$type];
+		
+		if($exportOutput===null){
+			header('Content-Description: File Transfer');
+			header("Content-Disposition: attachment; filename=".date('Y-m-d')."_".$fileName.".".$type);
+			Controller::noCache();
+			header("Content-type: ".$transformerClass::getContentType());
+			while(ob_get_level()!==0) ob_end_clean();
+		}
+		
+		
+		$transformer=new $transformerClass($this);
+		$transformer->startHead();
+		
+		$component=&$this; $query=&$this->query->noCalcFoundRows();
+		$query->callback(function(&$f) use(&$component,&$transformer,&$query){
+			$component->_setFields(true);
+			$transformer->titles($component->fields,$query->getFields());
+			$transformer->endHead();
+			$transformer->startBody();
+		},function(&$row) use(&$component,&$transformer){
+			$transformer->row($row,$component->fields);
+		});
+		
+		if($exportOutput!==null) $transformer->toFile($exportOutput);
+		else $transformer->display();
+	}
 }

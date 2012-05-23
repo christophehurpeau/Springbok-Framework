@@ -33,7 +33,7 @@ $BREADCRUMBS_FONTSIZE:8pt !default;
 
 
 
-@if $PAGE_100{ html,body{height:100%;} }
+html,body{ @if $PAGE_100{ height:100%; } @else { min-height:100%; }}
 body{
 	font: normal 9.5pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 	@include background($BODY_BACKGROUND); color:$BODY_COLOR;

@@ -1,5 +1,5 @@
 <?php
-class TXls{
+class TXls extends STransformer{
 	public static function init(){
 		include_once CLIBS.'PHPExcel.php';
 	}
@@ -25,11 +25,11 @@ class TXls{
 		}
 	}
 	
-	public function row(&$row,&$fields,$tableClass){
+	public function row(&$row,&$fields){
 		$col=0;
 		foreach($fields as $i=>$field){
-			$value=$tableClass::getValueFromModel($row,$field,$i);
-			$value=$tableClass::getDisplayableValue($field,$value,$row);
+			$value=self::getValueFromModel($row,$field,$i);
+			$value=self::getDisplayableValue($field,$value,$row);
 			if($field['type']==='string'){
 				$this->objPHPExcel->getActiveSheet()->setCellValueExplicitByColumnAndRow($col,$this->row,$value,PHPExcel_Cell_DataType::TYPE_STRING);
 				$this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($col,$this->row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);

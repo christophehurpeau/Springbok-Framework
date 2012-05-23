@@ -6,7 +6,6 @@ class DBSchemaMongo extends DBSchema{
 	}
 	
 	public function tableExist(){
-		debugVar($this->db->getTables());exit;
 		return $this->db->getTables();
 	}
 	

@@ -122,7 +122,8 @@ includeCore('ui/slideTo');
 					
 					$(window).scrollTop(0);
 					
-					if(to === 'content' && !data && !forceNotAddDataToGetORdoNotDoTheEffect){
+					defineDefault('AJAX_CONTENT_EFFECT',true);
+					if(AJAX_CONTENT_EFFECT && to === 'content' && !data && !forceNotAddDataToGetORdoNotDoTheEffect){
 						var OnReadyCallbacks=readyCallbacks;
 						divContent=div.sSlideTo(jqXHR.responseText,function(){OnReadyCallbacks.fire()});
 					}else{

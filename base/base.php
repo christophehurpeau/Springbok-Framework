@@ -72,12 +72,15 @@ function &prettyHtmlBackTrace($skipLength=1,$trace=false){
 	return $prettyMessage;
 }
 
-function short_debug_var($var,$showFullContent=0){
+function short_debug_var($var,$MAX_DEPTH=3,$currentDepth=0){
 	if(is_object($var)){
-		$res="Object :".get_class($var);
-		if($showFullContent!==false){
+		$res="Object: ".get_class($var);
+		if($currentDepth<$MAX_DEPTH){
 			$objectVars = get_object_vars($var);
-			foreach ($objectVars as $key => $value) $res.=str_repeat("\t",$showFullContent+1).$key.'= '.short_debug_var($value,$showFullContent>2?false:$showFullContent+1).', ';
+			if($var instanceof SModel) $objectVars=array_merge($objectVars,$var->_getData());
+			if(!empty($objectVars)) $res.="\n";
+			foreach($objectVars as $key=>&$value)
+				$res.=str_repeat("\t",$currentDepth+1).$key.'= '.short_debug_var($value,$currentDepth+1)."\n";
 		}
 		return $res;
 	}elseif(is_resource($var)){
@@ -86,10 +89,10 @@ function short_debug_var($var,$showFullContent=0){
 		reset($var);
 		if(empty($var)) $res='empty';
 		elseif(count($var) > 100) $res=' > 100';
-		elseif($showFullContent!==false){
+		elseif($currentDepth<$MAX_DEPTH){
 			$res="\n";
 			foreach($var as $k=>&$v)
-				$res.=str_repeat("\t",$showFullContent+1).$k.'=>'.short_debug_var($v,$showFullContent>2?false:$showFullContent+1)."\n";
+				$res.=str_repeat("\t",$currentDepth+1).$k.'=>'.short_debug_var($v,$currentDepth+1)."\n";
 			$res=rtrim($res);
 		}else return 'Array';
 		return 'Array : '.$res;

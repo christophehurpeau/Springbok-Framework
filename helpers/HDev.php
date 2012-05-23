@@ -60,7 +60,7 @@ class HDev{
 					.'<td><div class="query"><a href="javascript:;" onclick="$(this).parent().parent().find(\'.result\').slideToggle()">'.h($query['query']).'</a></div>'
 						.'<div class="result"><pre>'.prettyBackTrace(0,$query['backtrace']).'</pre>';
 				if(!empty($query['result']))
-					echo '<pre>';var_dump($query['result']);echo '</pre>';
+					echo '<pre>'.h2(short_debug_var($query['result'])).'</pre>';
 				echo '</div></td><td class="time">'.number_format($query['time']*1000,0,'',' ').' ms</td></tr>';
 			}
 			echo '</table>';

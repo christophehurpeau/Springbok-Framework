@@ -1,5 +1,5 @@
 <?php
-class TCsv{
+class TCsv extends STransformer{
 	public static function getContentType(){
 		return 'text/csv';
 	}
@@ -21,10 +21,10 @@ class TCsv{
 		$this->content=substr($this->content,0,-1)."\n";
 	}
 	
-	public function row(&$row,&$fields,$tableClass){
+	public function row(&$row,&$fields){
 		foreach($fields as $i=>&$field){
-			$value=$tableClass::getValueFromModel($row,$field,$i);
-			$value=$tableClass::getDisplayableValue($field,$value,$row);
+			$value=self::getValueFromModel($row,$field,$i);
+			$value=self::getDisplayableValue($field,$value,$row);
 			$this->content.='"'.str_replace('"','\\"',is_string($value) ? UEncoding::fromUtf8($value) : $value).'";';
 		}
 		$this->content=substr($this->content,0,-1)."\n";
