@@ -4,7 +4,7 @@ class TXls{
 		return 'application/vnd.ms-excel';
 	}
 	
-	private $objPHPExcel,$row=2;
+	protected $objPHPExcel,$row=2;
 	public function __construct($title){
 		include_once CLIBS.'PHPExcel.php';
 				PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp,

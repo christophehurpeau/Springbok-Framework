@@ -11,7 +11,7 @@ class CTable{
 	
 	public $modelName,$fields,$modelFields,$queryFields,$fieldsEditable,$rowActions,$defaultAction,
 		$filter=false,$export=false,$translateField=true,$autoBelongsTo=true,$belongsToFields=array(),$controller,
-		$FILTERS;
+		$FILTERS,$transformers=array('csv'=>'TCsv','xls'=>'TXls');
 	protected $pagination,$query,$executed,$results,$totalResults;
 
 	public function __construct($query){
