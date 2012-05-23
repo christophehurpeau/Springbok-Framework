@@ -1,4 +1,5 @@
 <?php
+include_once CLIBS.'PHPExcel.php';
 class TXls{
 	public static function getContentType(){
 		return 'application/vnd.ms-excel';
@@ -6,9 +7,7 @@ class TXls{
 	
 	protected $objPHPExcel,$row=2;
 	public function __construct($title){
-		include_once CLIBS.'PHPExcel.php';
-				PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp,
-		array('memoryCacheSize'=>'512MB'));
+		PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp,array('memoryCacheSize'=>'512MB'));
 		
 		$this->objPHPExcel = new PHPExcel();
 		$this->objPHPExcel->getProperties()->setTitle($title);
