@@ -10,7 +10,7 @@
   
   .block#{$i},#container #page .block#{$i},input.type#{$i}.submit,button.type#{$i},.button.type#{$i},.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);
-    @if $border{ border:$border; }
+    @include border($border);
   }
 }
 
@@ -18,7 +18,7 @@
   .clickable .block#{$i}:hover,#container #page .clickable .block#{$i}:hover,input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);
     @if $color{ color:$color; }
-    @if $border{ border:$border; }
+    @include border($border);
   }
   @if $color{
     ul.clickable .block#{$i}:hover a,#container #page ul.clickable .block#{$i}:hover a{color:$color;}
@@ -29,7 +29,7 @@
   .clickable .block#{$i}:focus,#container #page .clickable .block#{$i}:focus,input.type#{$i}.submit:focus,button.type#{$i}:focus,.button.type#{$i}:focus{
     @include background($background);
     @if $color{ color:$color; }
-    @if $border{ border:$border; }
+    @include border($border);
   }
   @if $color{
     ul.clickable .block#{$i}:focus a,#container #page ul.clickable .block#{$i}:focus a{color:$color;}
@@ -40,7 +40,7 @@
   .block#{$i},#container #page .block#{$i}{
     @include background($background);
     @if $color{ color:$color; }
-    @if $border{ border:$border; }
+    @include border($border);
     @if $borderRadius{ border-radius:$borderRadius; }
   }
 }
@@ -49,7 +49,7 @@
   input.type#{$i}.submit,button.type#{$i},.button.type#{$i},input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);
     @if $color{ color:$color; }
-    @if $border{ border:$border; }
+    @include border($border);
     @if $textShadow{ text-shadow:$border; }
     @if $boxShadow{ box-shadow:$boxShadow; }
     @if $borderRadius{ border-radius:$borderRadius; }
@@ -59,7 +59,7 @@
   input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);
     @if $color{ color:$color; }
-    @if $border{ border:$border; }
+    @include border($border);
     @if $textShadow{ text-shadow:$border; }
     @if $boxShadow{ box-shadow:$boxShadow; }
     @if $borderRadius{ border-radius:$borderRadius; }

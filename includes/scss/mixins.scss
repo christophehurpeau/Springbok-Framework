@@ -45,6 +45,11 @@
   @else if $background{ background:$background; }
 }
 
+@mixin border($border){
+	@if type-of($border)=='color'{ border-color:$border; }
+	@else if $border{ border:$border; }
+}
+
 
 @mixin bg-gradient-tb($top,$bottom,$amount:10%){
   @if $top==true{ $top:lighten($bottom,$amount) }

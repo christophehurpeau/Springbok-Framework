@@ -1,5 +1,6 @@
 @includeCore 'base/html5.scss';
 
+$PAGE_100:true !default;
 $PAGE_FIXED:false !default;
 $HEADER_BACKGROUND:false !default;
 $HEADER_COLOR:false !default;
@@ -32,7 +33,7 @@ $BREADCRUMBS_FONTSIZE:8pt !default;
 
 
 
-html,body{height:100%;}
+@if $PAGE_100{ html,body{height:100%;} }
 body{
 	font: normal 9.5pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 	@include background($BODY_BACKGROUND); color:$BODY_COLOR;
@@ -54,7 +55,7 @@ input,textarea{
 
 body #container{
 	/*width:100%; */min-width:1000px;
-	position:relative;height:auto; min-height:100%;
+	@if $PAGE_100{ position:relative; height:auto; min-height:100%; }
 	/*position:absolute;top:0;left:0;right:0;bottom:0;*/
 	/*overflow-x:hidden;*/
 }
@@ -101,9 +102,11 @@ footer,div.footer{
 	clear:both;
 	a{text-decoration:none}
 }
-footer{
-	position:absolute;
-	bottom:0;
+@if $PAGE_100{
+	footer{
+		position:absolute;
+		bottom:0;
+	}
 }
 
 #breadcrumbs{

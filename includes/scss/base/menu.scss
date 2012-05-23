@@ -4,7 +4,8 @@ $HEADER_MENU_BORDER:false !default;
 $HEADER_MENU_BACKGROUND:false !default;
 $HEADER_MENU_BACKGROUND_Top:false !default;
 $HEADER_MENU_COLOR:false !default;
-      
+
+$HEADER_MENU_A_WIDTH:false !default;
 $HEADER_MENU_A_BORDER:false !default;
 $HEADER_MENU_A_BORDER_BOTTOM:false !default;
 $HEADER_MENU_A_BACKGROUND:false !default;
@@ -66,6 +67,7 @@ header nav,div.header nav,ul.pager a,table.table tr.head{
 
 header nav li a,div.header nav li a,ul.pager a{
 	/*background-color: rgba(0,0,0,0.3);*/
+	@if $HEADER_MENU_A_WIDTH{ width:$HEADER_MENU_A_WIDTH; }
 	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
 	@if $HEADER_MENU_A_BORDER_BOTTOM{ border-bottom:$HEADER_MENU_A_BORDER_BOTTOM; }
 	@include background($HEADER_MENU_A_BACKGROUND);
