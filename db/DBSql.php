@@ -126,18 +126,18 @@ abstract class DBSql extends DB{
 	/* QUERIES LOG */
 	
 	/* DEV */
-	private $_queries=array();
+	private $_nbQueries=0,$_queries=array();
 	
-	public function getQueries(){
-		return $this->_queries;
-	}
+	public function getQueries(){ return $this->_queries; }
+	public function getNbQueries(){ return $this->_nbQueries; }
 	
 	public function resetQueries(){
 		$this->_queries=array();
 	}
 	
 	private function _logQuery($qr){
-		if(count($this->_queries) < 5000){
+		$this->_nbQueries++;
+		if($this->_nbQueries < 3000){
 			$qr['backtrace']=array_slice(debug_backtrace(),1);
 			$this->_queries[]=$qr;
 			CLogger::get('queries-'.date('Y-m-d-H'))->log($qr['query']);
