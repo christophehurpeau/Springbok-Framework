@@ -152,6 +152,8 @@ class QTable extends QFindAll{
 	}
 
 	public function export($type,$fileName=null,$title=null,$exportPath=null,$transformerClass=null){
+		$this->process();
+		
 		ob_clean();
 		if(empty($fileName)) $fileName=$this->getModelName();
 		$table=new CModelTable($this);
