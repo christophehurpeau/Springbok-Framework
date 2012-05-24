@@ -77,7 +77,7 @@ class CHttpClient{
 		$this->status=0;
 		
 		if(!empty($this->params)){
-			$queryString=http_build_query($this->params);
+			$queryString=http_build_query($this->params,null,'&');
 			if($method==='GET') $target.='?'.$queryString;
 		}
 		$this->target=&$target;
