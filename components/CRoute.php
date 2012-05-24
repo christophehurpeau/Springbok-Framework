@@ -58,10 +58,10 @@ class CRoute{
 					
 					if($ext!==null){
 						while($countMatches > 1){
-							$i=$countMatches-1;
-							if($matches[$i]===''){
-								unset($matches[$i]);
-								$countMatches=$i;
+							//$i=$countMatches;debugVar($matches[$i]);
+							if($matches[$countMatches]===''){
+								unset($matches[$countMatches]);
+								$countMatches--;
 							}else break;
 						}
 					}
