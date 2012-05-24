@@ -16,6 +16,12 @@ class CModelTable{
 	public function &doNotTranslateFields(){ $this->translateField=false; return $this; }
 	public function &fieldsEditable($fields){ $this->fieldsEditable=&$fields; return $this; }
 	
+	public function &setActionsRUD(){
+		$this->actionClick='view';
+		$this->rowActions=array('view','edit','delete');
+		return $this;
+	}
+	
 	public function getModelName(){ return $this->query->getModelName(); }
 	
 	public function render($title,$add=false,$layout=null){
