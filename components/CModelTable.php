@@ -14,6 +14,9 @@ class CModelTable{
 	public function &controller($controller){$this->controller=&$controller; return $this; }
 	public function &fields($fields){$this->fields=&$fields; return $this; }
 	public function &doNotTranslateFields(){ $this->translateField=false; return $this; }
+	public function &fieldsEditable($fields){ $this->fieldsEditable=&$fields; return $this; }
+	
+	public function getModelName(){ return $this->query->getModelName(); }
 	
 	public function render($title,$add=false,$layout=null){
 		include_once CORE.'mvc/views/View.php';
@@ -23,9 +26,17 @@ class CModelTable{
 		$v->render();
 	}
 	
+	public function renderEditable($title,$pkField,$url,$add=false,$layout=null){
+		include_once CORE.'mvc/views/View.php';
+		$v=new AjaxContentView($title,$layout);
+		$this->_add($add);
+		$this->displayEditable($pkField,$url);
+		$v->render();
+	}
+	
 	private function _add($add){
 		if($add!==false){
-			if($add===true) $add=array('modelName'=>$this->query->getModelName());
+			if($add===true) $add=array('modelName'=>$this->getModelName());
 			elseif(is_string($add)) $add=array('modelName'=>$add);
 			if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
 			if(!isset($add['formContainer'])) $add['formContainer']=false;
@@ -39,7 +50,7 @@ class CModelTable{
 	
 	public function _setFields($export=false){
 		if($this->fields !== null){
-			$fields=&$this->fields;
+			$fields=$this->fields;
 			$fromQuery=false;
 		}else{
 			$fields=$this->query->getFieldsForTable();
@@ -122,8 +133,18 @@ class CModelTable{
 			$this->fields[]=$val;
 		}
 	}
+
+	public $editablePkField,$editableUrl;
+	public function displayEditable($pkField,$url,$displayTotalResults=true){
+		/* DEV */ if($this->query->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
+		/* DEV */ if($this->query->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
+		
+		$this->editablePkField=&$pkField;
+		$this->editableUrl=&$url;
+		$this->display($displayTotalResults,'THtmlEditable');
+	}
 	
-	public function display($displayTotalResults=true){
+	public function display($displayTotalResults=true,$transformerClass='THtml'){
 		$pagination=$this->query->getPagination();
 		$results=$pagination->getResults();
 		
@@ -172,7 +193,7 @@ class CModelTable{
 		if(!empty($results) && $displayTotalResults===true)
 			echo '<div class="totalResults">'.$pagination->getTotalResults().' '.($pagination->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		
-		$transformer=new THtml($this);
+		$transformer=new $transformerClass($this);
 		if(!$this->query->isFiltersAllowed() && empty($results)){
 			$transformer->startBody();
 			$transformer->noResults();

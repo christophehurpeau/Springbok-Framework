@@ -208,6 +208,7 @@ class Controller{
 	}
 	
 	protected static function renderEditableTable($title,&$table,$pkField,$url,$add=false,$layout=null){
+		/* DEV */ throw new Exception("Use Model::Table()->renderEditable() now."); /* /DEV */
 		include_once CORE.'mvc/views/View.php';
 		if(static::beforeRender()){
 			$v=new AjaxContentView($title,$layout);

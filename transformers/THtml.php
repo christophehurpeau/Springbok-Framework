@@ -1,7 +1,7 @@
 <?php
 class THtml extends STransformer{
 	private static $tAligns=array('center'=>'center','right'=>'align_right');
-	private $component;
+	protected $component;
 	
 	public function __construct(&$component){
 		echo '<table class="table">';
@@ -30,8 +30,6 @@ class THtml extends STransformer{
 					.'</div>';
 			echo '</th>';
 		}
-		echo '</tr>';
-		
 		
 		if($this->component->actionClick!==null && is_string($this->component->actionClick) && $this->component->actionClick[0]!=='/')
 			$this->component->actionClick='/'.$this->component->controller.'/'.$this->component->actionClick;
@@ -42,6 +40,7 @@ class THtml extends STransformer{
 				if($action['url'][0] !== '/') $this->component->rowActions[$k]['url']='/'.$this->component->controller.'/'.$action['url'];
 			}
 		}
+		echo '</tr>';
 	}
 
 	public function filters(&$form,&$fields,&$FILTERS){
@@ -118,7 +117,7 @@ class THtml extends STransformer{
 			if($class !== '') $attributes['class']=trim($class);
 		}
 		
-		echo HHtml::tag('td',$attributes,static::getDisplayableValue($field,$value,$obj),$field['escape']);
+		echo HHtml::tag('td',$attributes,$this->getDisplayableValue($field,$value,$obj),$field['escape']);
 	}
 	
 	//end

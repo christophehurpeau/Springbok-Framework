@@ -24,7 +24,7 @@ class TCsv extends STransformer{
 	public function row(&$row,&$fields){
 		foreach($fields as $i=>&$field){
 			$value=self::getValueFromModel($row,$field,$i);
-			$value=self::getDisplayableValue($field,$value,$row);
+			$value=$this->getDisplayableValue($field,$value,$row);
 			$this->content.='"'.str_replace('"','\\"',is_string($value) ? UEncoding::fromUtf8($value) : $value).'";';
 		}
 		$this->content=substr($this->content,0,-1)."\n";

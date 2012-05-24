@@ -29,7 +29,7 @@ class TXls extends STransformer{
 		$col=0;
 		foreach($fields as $i=>$field){
 			$value=self::getValueFromModel($row,$field,$i);
-			$value=self::getDisplayableValue($field,$value,$row);
+			$value=$this->getDisplayableValue($field,$value,$row);
 			if($field['type']==='string'){
 				$this->objPHPExcel->getActiveSheet()->setCellValueExplicitByColumnAndRow($col,$this->row,$value,PHPExcel_Cell_DataType::TYPE_STRING);
 				$this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($col,$this->row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);

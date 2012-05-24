@@ -1,7 +1,7 @@
 <?php
 class STransformer{
 	
-	public static function getDisplayableValue(&$field,&$value,&$obj){
+	public function getDisplayableValue(&$field,&$value,&$obj){
 		if(isset($field['callback'])){
 			if($value===null) $value=false;
 			return call_user_func($field['callback'],$value);
