@@ -1,6 +1,6 @@
 <?php
 class CModelTableExport extends CModelTableAbstract{
-	public $type,$fileName,$title,$transformerClass;
+	public $type,$fileName,$title,$transformerClass,$params;
 	
 	public function &init(&$type,&$fileName,&$title){
 		$this->type=&$type;
@@ -12,6 +12,7 @@ class CModelTableExport extends CModelTableAbstract{
 	public function &fileName($fileName){ $this->fileName=&$fileName; return $this; }
 	public function &title($title){ $this->title=&$title; return $this; }
 	public function &transformerClass($transformerClass){ $this->transformerClass=&$transformerClass; return $this; }
+	public function &params($params){ $this->params=&$params; return $this; }
 	
 	private function &process($setHeaders){
 		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache	
