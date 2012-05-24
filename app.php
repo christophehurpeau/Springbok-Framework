@@ -146,7 +146,7 @@ class App{
 			//TODO do some optimization with cache + langs
 			$filename=APP.'controllers'.Springbok::$suffix.'/methods/'.CRoute::getController().'-'.CRoute::getAction();
 			if(!file_exists($filename))
-				/* DEV */ throw new Exception('This route does not exists : '.Springbok::$prefix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')'); /* /DEV */
+				/* DEV */ throw new Exception('This action does not exists : '.Springbok::$prefix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')'); /* /DEV */
 				/* PROD */ notFound(); /* /PROD */
 			$mdef=include $filename;
 			

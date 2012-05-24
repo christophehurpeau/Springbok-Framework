@@ -22,7 +22,7 @@ class CRoute{
 		self::$all=&$all;
 
 		$route=CRoute::find($all);
-		if(!$route) notFound();
+		if(!$route) /* DEV */ throw new Exception('No route was found for the url : '.$all); /* /DEV */ notFound();
 		list(self::$controller,self::$action,self::$params,self::$ext)=$route;
 	}
 	
