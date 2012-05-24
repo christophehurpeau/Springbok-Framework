@@ -151,12 +151,12 @@ class QTable extends QFindAll{
 		}
 	}
 
-	public function export($type,$fileName=null,$title=null,$exportOutput=null){
+	public function export($type,$fileName=null,$title=null,$exportPath=null,$transformerClass=null){
 		ob_clean();
 		if(empty($fileName)) $fileName=$this->getModelName();
 		$table=new CModelTable($this);
-		$table->export($type,$fileName,$title,$exportOutput);
-		if($exportOutput!==null) return; else exit;
+		$table->export($type,$fileName,$title,$exportPath,$transformerClass);
+		if($exportPath!==null) return; else exit;
 	}
 	
 	public function &pagination(){

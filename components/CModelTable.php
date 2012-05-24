@@ -217,11 +217,11 @@ class CModelTable{
 	}
 	
 	
-	public function export($type,$fileName,$title,$exportOutput){
+	public function export($type,$fileName,$title,$exportPath,$transformerClass=null){
 		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache	
-		$transformerClass=$this->transformers[$type];
+		if($transformerClass===null) $transformerClass=$this->transformers[$type];
 		
-		if($exportOutput===null){
+		if($exportPath===null){
 			header('Content-Description: File Transfer');
 			header("Content-Disposition: attachment; filename=".date('Y-m-d')."_".$fileName.".".$type);
 			Controller::noCache();
@@ -244,7 +244,7 @@ class CModelTable{
 		});
 		$transformer->end();
 		
-		if($exportOutput!==null) $transformer->toFile($exportOutput);
+		if($exportPath!==null) $transformer->toFile($exportPath);
 		else $transformer->display();
 	}
 }
