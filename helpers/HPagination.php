@@ -96,7 +96,7 @@ class HPagination{
 	public static function simpleLetters($pagination,$availableLetters=null){
 		if($availableLetters===null) $availableLetters=$pagination->getAvailableLetters();
 		return $pager='<div class="pager">'.self::createPagerLetters($pagination->getPage(),$availableLetters,function($page){
-			return ' href="'.self::callbackCreateUrl($page).'"';
+			return ' href="'.HPagination::callbackCreateUrl($page).'"';
 		}).'</div>';
 	}
 	
