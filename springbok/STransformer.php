@@ -31,7 +31,7 @@ class STransformer{
 	
 	public function __get($name){
 		/* DEV */
-		if(empty($component->params) || !array_key_exists($name,$this->component->params)){//isset does'nt work if the value is null
+		if(empty($this->component->params) || !array_key_exists($name,$this->component->params)){//isset does'nt work if the value is null
 			throw new Exception($name.' IS NOT in the params : '.print_r($this->component->params,true));
 		}
 		/* /DEV */
