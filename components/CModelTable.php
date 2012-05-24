@@ -242,6 +242,7 @@ class CModelTable{
 		},function(&$row) use(&$component,&$transformer){
 			$transformer->row($row,$component->fields);
 		});
+		$transformer->end();
 		
 		if($exportOutput!==null) $transformer->toFile($exportOutput);
 		else $transformer->display();

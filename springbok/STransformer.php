@@ -22,4 +22,5 @@ class STransformer{
 	public function startHead(){}
 	public function endHead(){}
 	public function startBody(){}
+	public function end(){}
 }
