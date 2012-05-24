@@ -18,5 +18,10 @@ class CWikipedia{
 		});
 		return unserialize($data);
 	}
+	
+	public static function export($name){
+		'http://fr.wikipedia.org/wiki/Spécial:Exporter/';
+		return ;
+	}
 }
 CWikipedia::init();
