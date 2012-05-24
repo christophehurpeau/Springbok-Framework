@@ -1,16 +1,18 @@
 <?php
 class QTable extends QFindAll{
 	protected $pagination,
-		$allowFilters=false,$FILTERS,
+		$allowOrder=true,$allowFilters=false,$FILTERS,
 		$autoRelations=true,$belongsToFields=array(),
 		$exportable=false
 		;
 	
-	public function &allowFilters(){$this->allowFilters=true; return $this;}
+	public function &allowFilters(){$this->allowFilters=true; return $this; }
+	public function &disallowOrder(){$this->allowOrder=false; return $this; }
 	public function &noAutoRelations(){$this->autoRelations=false; return $this;}
 	public function &exportable($types,$fileName,$title=null){$this->exportable=array(&$types,&$fileName,&$title); return $this;}
 	
 	public function &isFiltersAllowed(){ return $this->allowFilters; }
+	public function &isOrderAllowed(){ return $this->allowOrder; }
 	public function &getPagination(){ return $this->pagination; }
 	public function &getFilters(){ return $this->FILTERS; }
 	public function isExportable(){ return $this->exportable!==false; }
@@ -42,20 +44,21 @@ class QTable extends QFindAll{
 		}
 		
 		$SESSION_SUFFIX=$this->modelName.CRoute::getAll();
-		if(isset($_GET['orderBy']) && in_array($_GET['orderBy'],$fields)){
-			CSession::set('CTableOrderBy'.$SESSION_SUFFIX,$orderByField=$_GET['orderBy']);
-			CSession::set('CTableOrderByWay'.$SESSION_SUFFIX,isset($_GET['orderByDesc'])?'DESC':'ASC');
-		}else $orderByField=CSession::getOr('CTableOrderBy'.$SESSION_SUFFIX);
-		
-		if($orderByField !==null){
-			if(isset($belongsToFields[$orderByField])){
-				$rel=$belongsToRel[$orderByField];
-				$relModelName=$rel['modelName'];
-				$orderByField=$rel['alias'].'.'.$relModelName::$__displayField;
+		if($this->isOrderAllowed()){
+			if(isset($_GET['orderBy']) && in_array($_GET['orderBy'],$fields)){
+				CSession::set('CTableOrderBy'.$SESSION_SUFFIX,$orderByField=$_GET['orderBy']);
+				CSession::set('CTableOrderByWay'.$SESSION_SUFFIX,isset($_GET['orderByDesc'])?'DESC':'ASC');
+			}else $orderByField=CSession::getOr('CTableOrderBy'.$SESSION_SUFFIX);
+			
+			if($orderByField !==null){
+				if(isset($belongsToFields[$orderByField])){
+					$rel=$belongsToRel[$orderByField];
+					$relModelName=$rel['modelName'];
+					$orderByField=$rel['alias'].'.'.$relModelName::$__displayField;
+				}
+				$this->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
 			}
-			$this->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
 		}
-		
 		
 		if($this->isFiltersAllowed()){
 			$filter=false;
