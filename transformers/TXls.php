@@ -8,12 +8,12 @@ class TXls extends STransformer{
 	}
 	
 	protected $objPHPExcel,$row=2;
-	public function __construct($title){
+	public function __construct(&$component){
 		PHPExcel_Autoloader::Register();//Should NOT be THERE, a PHP 5.3.10 bug ?
 		PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp,array('memoryCacheSize'=>'512MB'));
 		
 		$this->objPHPExcel = new PHPExcel();
-		$this->objPHPExcel->getProperties()->setTitle($title);
+		$this->objPHPExcel->getProperties()->setTitle($component->title);
 		$this->objPHPExcel->setActiveSheetIndex(0);
 	}
 	
