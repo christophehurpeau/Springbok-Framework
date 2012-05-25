@@ -1,12 +1,26 @@
 <?php
 /* http://phpfour.com/blog/2008/01/php-http-class/
  * https://github.com/shuber/curl/blob/master/lib/curl.php */
+
+class HttpClientError extends Exception{
+	private $status,$error,$content;
+	public function __construct(&$status,&$error,&$content){
+		parent::__construct($error,$status);
+		$this->status=&$status;
+		$this->error=&$error;
+		$this->content=&$content;
+	}
+	
+	public function getStatus(){ return $this->status; }
+	public function getError(){ return $this->error; }
+	public function getContent(){ return $this->content; }
+}
 class CHttpClient{
 	public static $MAX_REDIRECT=5,$TIMEOUT=25,$CONNECT_TIMEOUT=6,$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
 	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),
-		$cookies=array(),$_cookies=array(),$referer='',$cookiePath,$useCookies=false,//$saveCookies=true,
+		$cookies=array(),$_cookies=array(),$referer=false,$cookiePath,$useCookies=false,//$saveCookies=true,
 		$username=null,$password=null,$proxy=null,
-		$result,$headers,$status=0,$redirect=true,$curRedirect=0,$error;
+		$result,$headers,$status=0,$redirect=true,$curRedirect=0;
 
 	public static function randomUserAgent(){
 		// TODO update user agent list
@@ -56,13 +70,10 @@ class CHttpClient{
 	
 	/*public function &saveCookies($val){$this->saveCookies=&$val;return $this;}*/
 	public function &useCookies($value=true){$this->useCookies=&$value;return $this;}
+	public function &useReferer(){$this->referer='';return $this;}
 	public function &followRedirects($value){$this->redirect=&$value;return $this;}
 	/** ip:port , username:password */
 	public function &proxy($proxy,$auth=false){$this->proxy=array(&$proxy,&$auth);return $this;}
-	
-	public function &getResult(){return $this->result;}
-	public function &getStatus(){return $this->status;}
-	public function &getError(){return $this->error;}
 	
 	public function get($target,$referer=null){
 		return $this->execute($target,$referer,'GET');
@@ -74,32 +85,58 @@ class CHttpClient{
 	private function &execute(&$target,&$referer,$method){
 		if($referer!==null) $this->referer=$referer;
 		
-		$this->status=0;
-		
-		if(!empty($this->params)){
-			$queryString=http_build_query($this->params,null,'&');
-			if($method==='GET') $target.='?'.$queryString;
-		}
-		$this->target=&$target;
-		
+		/*
 		$urlParsed = parse_url($target);
 		if ($urlParsed['scheme'] == 'https'){
 			$this->host = 'ssl://' . $urlParsed['host'];
-			if($this->port !==0) $this->port =443;
+			if($this->port===0) $this->port =443;
 		}else{
 			$this->host = $urlParsed['host'];
-			if($this->port !==0) $this->port =80;
+			if($this->port===0) $this->port =80;
 		}
 		$this->path  = (isset($urlParsed['path']) ? $urlParsed['path'] : '/') . (isset($urlParsed['query']) ? '?' . $urlParsed['query'] : '');
-		$this->schema = $urlParsed['scheme'];
+		$this->schema = $urlParsed['scheme'];*/
 		/*if($this->useCookies) $this->_passCookies();*/
 		
+		$ch=$this->_curl_create($method,$target,$this->params);
+		
+		$content=curl_exec($ch);
+		$status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		$error=curl_error($ch);
+		
+		
+		//debug($content);exit;
+		//var_dump($target,$this->target,$content,curl_error($ch),curl_getinfo($ch));exit;
+		//$contentArray=explode("\r\n\r\n",$content);
+		//$cContentArray=count($contentArray);
+
+		
+		// Store the contents
+		//$this->result=$contentArray[$cContentArray-1];
+		//$this->_parseHeaders($contentArray[$cContentArray - 2]);
+		//debug($this->error);
+		curl_close($ch);
+		
+		if($this->referer!==false) $this->referer=$this->target;
+		
+		if($status!==200 || $error) throw new HttpClientError($status,$error,$content);
+		
+		return $content;
+	}
+
+
+	protected function &_curl_create(&$method,&$target,&$params){
+		if(!empty($params)){
+			$queryString=http_build_query($params,null,'&');
+			if($method==='GET') $target.='?'.$queryString;
+		}
+
 		$ch = curl_init();
 		if($method==='GET'){
 			curl_setopt($ch,CURLOPT_HTTPGET,true);
 			curl_setopt($ch,CURLOPT_POST,false);
 		}else{
-			if(isset($queryString)) curl_setopt($ch,CURLOPT_POSTFIELDS,$queryString);
+			if($queryString!==null) curl_setopt($ch,CURLOPT_POSTFIELDS,$queryString);
 			 curl_setopt($ch,CURLOPT_HTTPGET,false);
 			 curl_setopt($ch,CURLOPT_POST,true);
 		}
@@ -122,7 +159,7 @@ class CHttpClient{
 		//curl_setopt($ch,CURLOPT_NOBODY,false);
 		curl_setopt($ch,CURLOPT_TIMEOUT,self::$TIMEOUT);
 		curl_setopt($ch,CURLOPT_USERAGENT,self::$USER_AGENT); // Webbot name
-		curl_setopt($ch,CURLOPT_URL,$this->target); // Target site
+		curl_setopt($ch,CURLOPT_URL,$target); // Target site
 		if(!empty($this->referer)) curl_setopt($ch,CURLOPT_REFERER,$this->referer); // Referer value
 		
 		curl_setopt($ch,CURLOPT_VERBOSE,false); // Minimize logs
@@ -131,22 +168,7 @@ class CHttpClient{
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); // Return in string
 		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,self::$CONNECT_TIMEOUT); // Limit redirections
 		
-		$content=curl_exec($ch);//debug($content);exit;
-		//var_dump($target,$this->target,$content,curl_error($ch),curl_getinfo($ch));exit;
-		//$contentArray=explode("\r\n\r\n",$content);
-		//$cContentArray=count($contentArray);
-
-		$this->status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
-		
-		// Store the contents
-		//$this->result=$contentArray[$cContentArray-1];
-		$this->result=&$content;
-		//$this->_parseHeaders($contentArray[$cContentArray - 2]);
-		$this->error=curl_error($ch);//debug($this->error);
-		curl_close($ch);
-		
-		$this->referer=$this->target;
-		return $this->result;
+		return $ch;
 	}
 /*
 	private function _parseHeaders($responseHeader){
