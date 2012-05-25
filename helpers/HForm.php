@@ -1,5 +1,9 @@
 <?php
 class HForm{
+	public static function &basic(){ HElementForm::basic(); }
+	
+	
+	/* OLD WAY */
 	/**
 	 * @return HForm
 	 */

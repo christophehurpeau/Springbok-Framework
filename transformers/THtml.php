@@ -24,7 +24,7 @@ class THtml extends STransformer{
 			if(isset($field['widthPx'])) $th.=' style="width:'.$field['widthPx'].'px"';
 			elseif(isset($field['width%'])) $th.=' style="width:'.$field['width%'].'%"';
 			echo '<th'.$th.'>'.h2($field['title']);
-			if($queryFields!==null && isset($field['key']) && in_array($field['key'],$queryFields) && $field['type'] !=='boolean') echo '<div class="order">'
+			if($this->component->isOrderAllowed() && $queryFields!==null && isset($field['key']) && in_array($field['key'],$queryFields) && $field['type'] !=='boolean') echo '<div class="order">'
 						.'<a class="arrow arrowUp" href="?orderBy='.($hKey=h($field['key'])).'&orderByDesc"></a>'
 						.'<a class="arrow arrowDown" href="?orderBy='.($hKey=h($field['key'])).'"></a>'
 					.'</div>';

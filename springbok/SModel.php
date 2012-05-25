@@ -164,4 +164,10 @@ abstract class SModel implements Iterator{
 	protected function afterUpdate(){}
 	protected function afterDelete(){}
 	
+	
+	/* Helpers */
+	
+	public static function Form($name=null,$setValuesFromVar=true){
+		return HElementForm::forModel(static::$__className,$name,$setValuesFromVar);
+	}
 }

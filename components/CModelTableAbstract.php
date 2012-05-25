@@ -17,6 +17,7 @@ class CModelTableAbstract{
 	public function &controller($controller){ return $this; }
 	
 	public function getModelName(){ return $this->query->getModelName(); }
+	public function isOrderAllowed(){ return $this->query->isOrderAllowed(); }
 	
 	public function &displayIfExport(){ return $this; }
 	
