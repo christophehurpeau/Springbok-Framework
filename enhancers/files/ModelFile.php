@@ -55,7 +55,7 @@ class ModelFile extends PhpFile{
 							unset($field['Datetime']);
 							$field['Format']=$field['var']='datetime';
 						}elseif(isset($field['Price'])){
-							$column['type']='decimal('.$field['Price'][0].')';
+							$column['type']='decimal('.$field['Price'][0].','.$field['Price'][1].')';
 							unset($field['Price']);
 							$field['Format']='price';
 						}elseif(isset($field['SqlType'])) $column['type']=str_replace('"',"'",$field['SqlType'][0]);
