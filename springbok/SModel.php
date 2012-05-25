@@ -168,6 +168,6 @@ abstract class SModel implements Iterator{
 	/* Helpers */
 	
 	public static function Form($name=null,$setValuesFromVar=true){
-		return HElementForm::forModel(static::$__className,$name,$setValuesFromVar);
+		return HElementForm::ForModel(static::$__className,$name,$setValuesFromVar);
 	}
 }

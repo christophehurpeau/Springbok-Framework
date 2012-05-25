@@ -200,6 +200,11 @@ function urlenc($string){return urlencode(urlencode($string)); }
 function startsWith($haystack,$needle) {return substr($haystack,0,strlen($needle))===$needle;}
 function endsWith($haystack,$needle){return strrpos($haystack,$needle)===strlen($haystack)-strlen($needle);}
 
+function isE(&$var,$then,$else){ return empty($var) ? $then : $else; }
+function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
+function isTrue($cond,$then,$else=''){ return $cond===true ? $else : $then; }
+function isFalse($cond,$then,$else=''){ return $cond===true ? $else : $then; }
+
 function render($file,&$vars,$return=false){
 	extract($vars,EXTR_REFS);
 	if($return){

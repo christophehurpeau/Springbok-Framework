@@ -1,54 +1,37 @@
 <?php
-class HElementFormTextarea extends HElement{
-	private function &value(&$value){ $this->value=&$value; return $this; }
+class HElementFormTextarea extends HElementFormContainable{
+	private $value;
 	
-	public function toString($name){
-		if(is_string($attributes)){
-			$value=$attributes;
-			$attributes=array();
-		}
+	public function __construct(&$form,&$name){
+		parent::__construct($form,$name);
 		
-		if($this->modelName != NULL){
-			if(!isset($attributes['name'])) $attributes['name']=$this->name.'['.$name.']';
-			elseif($attributes['name']===false) unset($attributes['name']);
+		$this->attributes['rows']=7;
+		$this->attributes['cols']=100;
+		$this->attributes['id']=$this->form->modelName != null ? $this->form->modelName.ucfirst($name) : $name;
+		
+		if($this->form->modelName !== null){
+			$this->attributes['name']=$this->form->name.'['.$name.']';
 			
-			$modelName=$this->modelName;
+			$modelName=&$this->form->modelName;
 			if(isset($modelName::$__PROP_DEF[$name])){
-				$propDef=$modelName::$__PROP_DEF[$name];
-				if(isset($propDef['annotations']['Required'])) $attributes['required']=true;
+				$propDef=&$modelName::$__PROP_DEF[$name];
+				if(isset($propDef['annotations']['Required'])) $this->attributes['required']=true;
 				if(isset($propDef['annotations']['MaxLength'])){
-					$attributes['maxlength']=$propDef['annotations']['MaxLength'][0];
-					if(!isset($attributes['rows'])) $attributes['rows']=5;
+					$this->attributes['maxlength']=$propDef['annotations']['MaxLength'][0];
+					$this->attributes['rows']=5;
 				}
 			}
-		}elseif(!isset($attributes['name'])) $attributes['name']=$name;
-		elseif($attributes['name']===false) unset($attributes['name']);
+		}else $this->attributes['name']=$name;
 		
-		$attributes+=array('rows'=>7,'cols'=>100);
-		
-		if(!isset($value)){
-			$this->_setValue($name,$attributes);
-			if(isset($attributes['value'])){
-				$value=$attributes['value'];
-				unset($attributes['value']);
-			}else $value='';//close the 'textarea' tag
-		}
-		
-		if(!isset($attributes['id'])) $attributes['id']=$this->modelName != NULL ? $this->modelName.ucfirst($name) : $name;
-		$label=isset($attributes['label']) ? $attributes['label'] : ($this->defaultLabel ? ($this->modelName != NULL ? _tF($this->modelName,$name) : $name) : false); unset($attributes['label']);
-		
-		$content='';
-		if($label) $content.=HHtml::tag('label',array('for'=>$attributes['id']),$label);
-		if(isset($attributes['between'])){
-			$content.=$attributes['between'];
-			unset($attributes['between']);
-		}
-		$content.=HHtml::tag('textarea',$attributes,$value);
-		
-		if($hasError=(!isset($containerAttributes['error']) || $containerAttributes['error']) && CValidation::hasError($key=($this->modelName === NULL ? $name : $this->name.'.'.$name)))
-			$content.=HHtml::tag('div',array('class'=>'validation-advice'),isset($containerAttributes['error'])?$containerAttributes['error']:CValidation::getError($key));
-		unset($containerAttributes['error']);
-		
-		return $this->_inputContainer($content,'textarea'.($hasError?' invalid':''),$containerAttributes);
+		$this->value=$this->form->_getValue($name);
+	}
+	
+	public function &value($value){ $this->value=&$value; return $this; }
+	
+	public function container(){ return new HElementFormContainer($this->form,$this,'textarea'); }
+	
+	public function toString($name){
+		if(empty($this->value)) $this->value='';//close the 'textarea' tag
+		return $this->_labelToString().$this->between.HHtml::tag('textarea',$this->attributes,$value);
 	}
 }

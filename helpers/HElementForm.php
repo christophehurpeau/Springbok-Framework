@@ -1,12 +1,12 @@
 <?php
 class HElementForm extends HElement{
-	public static function &forModel($modelName,$name=null,$setValuesFromVar=true){
+	public static function &ForModel($modelName,$name=null,$setValuesFromVar=true){
 		$elt=new self;
 		$elt->setModelName($modelName,$name,$setValuesFromVar);
 		return $elt;
 	}
 	
-	public static function &basic(){
+	public static function &_Basic(){
 		$elt=new self;
 		//$elt->_basic();
 		return $elt;
@@ -50,8 +50,8 @@ class HElementForm extends HElement{
 				.' method="'.$this->method.'"'.$this->_attributes().'>';
 	}
 	
-	public function end($title=true,$options=array(),$containerAttributes=NULL){
-		if($title) $res=$this->submit($title,$options,$containerAttributes);
+	public function end($title=true){
+		if($title!==false) $res=$this->submit($title);
 		else $res='';
 		if($this->fieldsetStarted) $res.=$this->fieldsetStop();
 		return $res.'</form>';
@@ -111,7 +111,28 @@ class HElementForm extends HElement{
 		return $this->input($name);
 	}
 	
+	public function input($name,$largeSize=1){
+		return new HElementFormInput($this,$name,$largeSize);
+	}
+	public function textarea($name){
+		return new HElementFormTextarea($this,$name);
+	}
 	
+	public function hidden($name,$value=false){
+		return new HElementFormInputHidden($this,$name,$value);
+	}
+	
+	public function submit($title=true){
+		return new HElementFormInputSubmit($this,$title);
+	}
+	
+	public function checkbox($name){
+		return new HElementFormInputCheckbox($this,$name);
+	}
+	
+	public function select($name,$list=null,$selected=null){
+		return new HElementFormInputSelect($this,$name,$list,$selected);
+	}
 	
 	public function _getValue(&$name){
 		$TAB=NULL;

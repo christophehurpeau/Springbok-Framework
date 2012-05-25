@@ -6,28 +6,28 @@ class HElementFormInput extends HElementFormContainable{
 		parent::__construct($form,$name);
 		$this->type='text';
 		
-		$this->_setValueInAttrs();
-		$this->attributes['id']=$this->form->modelName != null ? $this->form->modelName.ucfirst($name) : $name;
+		$this->_setAttrValue();
+		$this->_setAttrId();
 		
 		if($this->form->modelName !== null){
 			$this->attributes['name']=$this->form->name.'['.$name.']';
 			
 			$modelName=&$this->form->modelName;
 			if(isset($modelName::$__PROP_DEF[$name])){
-				$propDef=$modelName::$__PROP_DEF[$name];
+				$propDef=&$modelName::$__PROP_DEF[$name];
 				switch($propDef['type']){
 					case 'int': $type='number'; break;
 					case 'string':
 						switch($name){
 							case 'pwd': case 'password':
-								$type='password';
+								$this->type='password';
 								$this->attributes['value']='';
 								break;
 							case 'email': case 'mail':
-								$type='email';
+								$this->type='email';
 								break;
 							case 'url': case 'site_web':
-								$type='url';
+								$this->type='url';
 								break;
 						} 
 						break;
@@ -51,20 +51,11 @@ class HElementFormInput extends HElementFormContainable{
 		}else $this->attributes['name']=$name;
 	}
 	
+	public function &value($value){ $this->attributes['value']=&$value; return $this; }
+	public function container(){ return new HElementFormContainer($this->form,$this,'input '.($this->type!=='text'?'text ':'').$this->type); }
 	
-	
-	public function &toString(){
-		$label=isset($attributes['label']) ? $attributes['label'] : ($this->defaultLabel ? ($this->modelName != NULL ? _tF($this->modelName,$name) : $name): false); unset($attributes['label']);
-		
-		if($label) $content=HHtml::tag('label',array('for'=>$attributes['id']),$label).' ';
-		else $content='';
-		if(isset($attributes['between'])){ $content.=$attributes['between']; unset($attributes['between']);}
-		$content.=HHtml::tag('input',$attributes);
-		
-		if($hasError=(!isset($containerAttributes['error']) || $containerAttributes['error']) && CValidation::hasError($key=($this->modelName === NULL ? $name : $this->name.'.'.$name)))
-			$content.=HHtml::tag('div',array('class'=>'validation-advice'),isset($containerAttributes['error'])?$containerAttributes['error']:CValidation::getError($key));
-		unset($containerAttributes['error']);
-		
-		return $this->_inputContainer($content,'input '.($type!=='text'?'text ':'').$type.($hasError?' invalid':''),$containerAttributes);
+	public function toString(){
+		$this->attributes['type']=&$this->type;
+		return $this->_labelToString().$this->between.HHtml::tag('input',$this->attributes);
 	}
 }

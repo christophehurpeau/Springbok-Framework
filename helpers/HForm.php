@@ -1,6 +1,6 @@
 <?php
 class HForm{
-	public static function &basic(){ HElementForm::basic(); }
+	public static function &Basic(){ HElementForm::_Basic(); }
 	
 	
 	/* OLD WAY */
