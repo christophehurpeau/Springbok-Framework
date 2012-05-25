@@ -5,6 +5,7 @@ $HEADER_MENU_BACKGROUND:false !default;
 $HEADER_MENU_BACKGROUND_Top:false !default;
 $HEADER_MENU_COLOR:false !default;
 
+$HEADER_MENU_A_MARGIN:1px 2px !default;
 $HEADER_MENU_A_WIDTH:false !default;
 $HEADER_MENU_A_BORDER:false !default;
 $HEADER_MENU_A_BORDER_BOTTOM:false !default;
@@ -73,7 +74,7 @@ header nav li a,div.header nav li a,ul.pager a{
 	@include background($HEADER_MENU_A_BACKGROUND);
 	@if $HEADER_MENU_A_COLOR{ color:$HEADER_MENU_A_COLOR; }
 	@if $HEADER_MENU_A_BORDER_RADIUS{ border-radius:$HEADER_MENU_A_BORDER_RADIUS; }
-	margin:1px 2px;
+	@if $HEADER_MENU_A_MARGIN{ margin:$HEADER_MENU_A_MARGIN; }
 	/*text-shadow:0 0 1px #EFEFEF;*/
 	@if $HEADER_MENU_A_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_SHADOW,0 1px 1px $HEADER_MENU_A_SHADOW,1px 0 1px $HEADER_MENU_A_SHADOW,0 -1px 1px $HEADER_MENU_A_SHADOW; }
 	@if $HEADER_MENU_A_TEXT_SHADOW{ text-shadow:$HEADER_MENU_A_TEXT_SHADOW; }
@@ -81,8 +82,14 @@ header nav li a,div.header nav li a,ul.pager a{
 }
 header nav.top li.separator{
 	/* padding:3px 6px 4px + margin:1px 2px; + border */
-	@if $HEADER_MENU_A_BORDER{ padding:5px 8px 6px; }
-	@else{ padding:4px 6px 5px }
+	$__padding:3px 6px 4px;
+	@if $HEADER_MENU_A_MARGIN{
+		$__padding:nth($__padding,1) + nth($HEADER_MENU_A_MARGIN,1) nth($__padding,2) + nth($HEADER_MENU_A_MARGIN,2) nth($__padding,3) + nth($HEADER_MENU_A_MARGIN,1);
+	}
+	@if $HEADER_MENU_A_BORDER{
+		$__padding:nth($__padding,1) + 1px nth($__padding,2) nth($__padding,3) + 1px;
+	}
+	padding:$__padding;
 }
 
 header nav li a.current,header nav li a:hover,
