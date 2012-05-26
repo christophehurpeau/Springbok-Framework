@@ -24,14 +24,14 @@ abstract class AEnhance{
 		global $enhancers;
 		
 		//$t=microtime(true);
-		$tmpDev=$this->enhanced->getAppDir().'tmp_dev'.DS;
-		if(file_exists($tmpDev)){
-			usleep(100);
-			if(file_exists($tmpDev)){
-				usleep(100);
-				if(file_exists($tmpDev)){
-					usleep(500);
-					if(file_exists($tmpDev)) die('tmp_dev already exists');
+		$blockEnhanceFile=$this->enhanced->getAppDir().'block_enhance';
+		if(file_exists($blockEnhanceFile)){
+			usleep(100000);
+			if(file_exists($blockEnhanceFile)){
+				usleep(100000);
+				if(file_exists($blockEnhanceFile)){
+					usleep(500000);
+					if(file_exists($blockEnhanceFile)) die('An enhancing is already in progress....');
 				}
 			}
 		}
@@ -39,7 +39,7 @@ abstract class AEnhance{
 		
 		if(!$this->enhanced->loadFileDef($force)) return false;
 
-		mkdir($tmpDev,0700);
+		file_put_contents($blockEnhanceFile,'');
 		
 		foreach($enhancers as $className)
 			$className::reset();
@@ -88,7 +88,7 @@ abstract class AEnhance{
 		$this->enhanced->writeFileDef($force);
 		//debug('export took : '.(microtime(true) - $t).' s');
 		
-		$f=new Folder($tmpDev); if($f->exists()) $f->delete();
+		if(file_exists($blockEnhanceFile)) unlink($blockEnhanceFile);
 		return $this->enhanced;
 	}
 
@@ -145,10 +145,10 @@ abstract class AEnhance{
 	
 	
 	public function onError(){
-		if(file_exists(($filename=$this->enhanced->getAppDir().'enhance_def.php')))
+		if(file_exists(($filename=$this->enhanced->getAppDir().'enhance_def.json')))
 			unlink($filename);
-		if(file_exists(($filename=$this->enhanced->getAppDir().'tmp_dev'.DS)))
-			{$f=new Folder($filename); $f->delete();}
+		if(file_exists(($filename=$this->enhanced->getAppDir().'block_enhance')))
+			unlink($filename);
 	}
 	
 	

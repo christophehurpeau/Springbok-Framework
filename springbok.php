@@ -126,6 +126,7 @@ function __autoload($className){ /* DEV */
 		eval('class Config{public static $autoload_default,$cookie_domain="",$models_infos,$db=array("default"=>array("dbname"=>"mysql","user"=>"mysql","password"=>"mysql"));}'
 			.'Config::$autoload_default=APP.\'models/\';Config::$models_infos=Config::$autoload_default."infos/";');
 		define("STATIC_URL",BASE_URL.'/web/'.WEB_FOLDER);
+		debug('Config is loaded');
 		return true;
 	}
 /* /DEV */ Springbok::load($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */); }

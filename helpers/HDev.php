@@ -4,8 +4,11 @@ class HDev{
 		if(CHttpRequest::isMobile()) return;
 		echo HHtml::cssInline(file_get_contents(CORE.'includes/springbokBar.css'));
 		echo HHtml::jsInline(file_get_contents(CORE.'includes/springbokBar.js'));
+		$changes=&App::$changes[0];
 		echo '<div id="springbok-bar"><b onclick="$(\'#springbok-bar\').fadeOut()">Springbok</b>'
-			.' | <a href="javascript:;" rel="changes">Changes ('.(empty(App::$changes) || empty(App::$changes[0][1]['all']) ?'0':count(App::$changes[0][1]['all'])).')</a>'
+			.' | <a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':
+									('<span'.($changes?($changes[2]?' style="color:red"':($changes[3]?' style="color:orange"':'')):'').'>'
+										.empty($changes) || empty($changes[0][1]['all']) ?'0':count($changes[0][1]['all']))).'</span>)</a>'
 			.' | <a href="javascript:;" rel="queries">Queries ('.(!class_exists('DB',false)?'0':(array_sum(array_map(function(&$db){return $db->getNbQueries();},DB::getAll())))).')</a>'
 			.' | <a href="javascript:;" rel="route">Route</a>'
 			.' | <a href="javascript:;" rel="ajax">Ajax (<span>0</span>)</a>'

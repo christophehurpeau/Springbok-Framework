@@ -87,7 +87,7 @@ define('APP', __DIR__.'/dev/');";
 	public function afterEnhance(&$dev,&$prod){
 		if(!file_exists($path=($dev->getPath().'daemons/'))) mkdir($path);
 		if(!file_exists($path=($dev->getPath().'daemons/delayedEnhanceDaemon.php'))/* || true*/) copy(CORE.'enhancers/daemon.php',$path);
-		//debug(UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default'));
+		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default');
 		//if(!empty($this->config['includes'])){
 		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
 		$this->enhanced->config['includes']['img'][]='ajax';

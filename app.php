@@ -30,8 +30,10 @@ class App{
 	
 	public static function run(){
 		/* DEV */
+		if(!file_exists(dirname(APP).'/src/config/_'.ENV.'.php')) exit('The config for your environnement: "'.ENV.'" does NOT exist !');
+		
 		include CORE.'enhancers/EnhanceApp.php';
-		$shouldEnhance=!CHttpRequest::isAjax() && empty($_SERVER['HTTP_ORIGIN']);
+		$shouldEnhance=!CHttpRequest::isAjax() && empty($_SERVER['HTTP_ORIGIN']) && !file_exists(dirname(APP).'/block_deploy');
 		if($shouldEnhance){
 			$pathInfo=CHttpRequest::getPathInfo();
 			$pathInfo=basename($pathInfo);
@@ -57,11 +59,10 @@ class App{
 		//$langDir=new Folder(APP.'models/infos'); $langDir->mkdirs();
 		
 		/* /DEV */
-		
+				
 		include APP.'config/_'.ENV.'.php';
-		if(!class_exists('Config',false)){
-			echo 'CONFIG does not exists';exit;
-		}
+		if(!class_exists('Config',false)) exit('CONFIG does not exists');
+		
 		/* DEV */
 		//$t=microtime(true);
 		if($shouldEnhance){
