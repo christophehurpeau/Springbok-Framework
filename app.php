@@ -67,8 +67,8 @@ class App{
 		if($shouldEnhance){
 			$updateCookie=false;
 			$generateSchema=($changes && !empty($changes['Model'])) || CHttpRequest::_GETor('apply')==='springbokProcessSchema';
+			$cookie=CCookie::get('springbok');
 			if(!$generateSchema){
-				$cookie=CCookie::get('springbok');
 				if(!CCookie::exists('springbok') || !isset($cookie->check)){
 					if(isset($_GET['check']) && ($_GET['check']==='springbokCheckFalse' || $_GET['check']==='springbokCheckTrue')){
 						if($_GET['check']==='springbokCheckFalse') $cookie->check=false;
@@ -85,7 +85,11 @@ class App{
 					$cookie->lastProcess=time();
 					$updateCookie=$generateSchema=true;
 				}
+			}else{
+				$cookie->lastProcess=time();
+				$updateCookie=true;
 			}
+			
 			if($generateSchema || $changes){
 				$modelFolder=new Folder(APP.'models');
 				/*if($changes && !empty($changes['Model'])){ */

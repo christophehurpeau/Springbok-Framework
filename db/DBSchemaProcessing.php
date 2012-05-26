@@ -36,16 +36,16 @@ class DBSchemaProcessing{
 		
 		//$this->compareIndexes();
 		//$this->compareForeignKeys();
-		if($generate && ($this->logs===NULL || $this->shouldApply())){
+		if($generate && ($this->logs===null || $this->shouldApply())){
 			foreach($schemas as $schema) $schema->compareIndexes();
 			foreach($schemas as $schema) $schema->compareForeignKeys();
 		}
 		
 		/* DEV */
 		//regenerate after modifs
-		if($generate) foreach($schemas as $schema) $schema->generatePropDefs();
+		if($this->generate) foreach($schemas as $schema) $schema->generatePropDefs();
 		
-		if($this->logs !==NULL && $generate && isset($_SERVER['REQUEST_URI'])){
+		if($this->logs !==null && $generate && isset($_SERVER['REQUEST_URI'])){
 			$vars=array('dbs'=>&$this->logs);
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
 			else render(CORE.'db/applied-view.php',$vars);
@@ -62,7 +62,7 @@ class DBSchemaProcessing{
 		foreach($schemas as $schema) $schema->addForeignKeysHasManyThroughRelations();
 		foreach($schemas as $schema) $schema->createRelations();
 		
-		if($generate && $triggersDir->exists()){
+		if($this->generate && $triggersDir->exists()){
 			foreach($triggersDir->listFiles() as $file){
 				$dbTrigger=new DBTrigger($schemas,include $file->getPath());
 			}
