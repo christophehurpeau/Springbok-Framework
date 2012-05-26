@@ -1,27 +1,47 @@
 <?php
 class CWikipedia{
-	private static $cache;
-	public static $context;
+	public static $cache,$httpClient,$lastContactTime;
 	
-	public static function init(){
-		self::$context=stream_context_create(array(
-				'http'=>array(
-					'user_agent'=>'Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0',
-				)
-			));
+	public static function init($httpClient,$sleep=true){
 		self::$cache=CCache::get('Wikipedia');
+		self::$httpClient=&$httpClient;
+		self::$lastContactTime=$sleep ? 0 : false;
+	}
+	
+	public static function sleep(){
+		if(self::$lastContactTime===false) return;
+		$lastContactTime=microtime(true);
+		$time=$lastContactTime-self::$lastContactTime;
+		if($time < 30) usleep((30-$time)*1000000);
+		self::$lastContactTime=microtime(true);
 	}
 	
 	public static function getPage($name){
 		$data=self::$cache->readOrWrite($name,function() use (&$name){
-			return file_get_contents('http://fr.wikipedia.org/w/api.php?action=parse&page='.$name.'&format=php',0,CWikipedia::$context);
+			CWikipedia::sleep();
+			return CWikipedia::$httpClient->get('http://fr.wikipedia.org/w/api.php?action=parse&page='.$name.'&format=php');
 		});
 		return unserialize($data);
 	}
 	
-	public static function export($name){
-		'http://fr.wikipedia.org/wiki/Spécial:Exporter/';
-		return ;
+	public static function getPageSource($name){
+		$data=self::$cache->readOrWrite($name,function() use (&$name){
+			CWikipedia::sleep();
+			return CWikipedia::$httpClient->get('http://fr.wikipedia.org/wiki/Spécial:Exporter/'.$name);
+		});
+		return simplexml_load_string($data);
+	}
+	
+	public static function urlFile($name){
+		CWikipedia::sleep();
+		return 'http://fr.wikipedia.org/wiki/Special:FilePath/'.str_replace(' ', '_',$name);
+		$filename=str_replace(' ', '_',$name);
+		$digest=md5($filename);
+		$folder=$digest[0].'/'.$digest[0].$digest[1].'/'.$filename;
+		return 'http://upload.wikimedia.org/wikipedia/commons/'.$folder;
+	}
+	
+	public static function getFile($name){
+		return CWikipedia::$httpClient->get(self::urlFile($name));
 	}
 }
-CWikipedia::init();

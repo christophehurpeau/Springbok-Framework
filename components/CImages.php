@@ -275,6 +275,14 @@ class CImages{
 		return $new_image;
 	}
 	
+	public static function convertSvg2Png($path,$newPath){
+		$im = new Imagick($path);
+		$im->setImageFormat("png32");
+		$im->writeImage($newPath);
+		$im->clear();
+		$im->destroy();
+	}
+	
 	
 	public static function addLogo(){
 // On charge d'abord les images

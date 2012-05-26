@@ -19,7 +19,7 @@ class App{
 	
 	public static function run($action,$argv){
 		/* DEV */
-		if(!empty($argv[1]) && $argv[1]!=='noenhance'){
+		if($shouldEnhance=(!empty($argv[1]) && $argv[1]!=='noenhance' && !file_exists(dirname(APP).'tmp_dev/') && $action!=='daemon')){
 			include CORE.'enhancers/EnhanceApp.php';
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
 			$enhanceApp->process();
@@ -27,10 +27,11 @@ class App{
 		/* /DEV */
 		include APP.'config/_'.ENV.'.php';
 		/* DEV */
-		if(!empty($argv[1]) && $argv[1]!=='noenhance'){
+		if($shouldEnhance){
 			$schemaProcessing=new DBSchemaProcessing(new Folder(APP.'models'),new Folder(APP.'triggers'),true,false);
 			self::$enhancing=false;
 		}
+		
 		//$logDir=new Folder(APP.'logs'); $logDir->mkdirs();
 		//$tmpDir=new Folder(APP.'tmp'); $tmpDir->mkdirs();
 		//$langDir=new Folder(APP.'models/infos'); $langDir->mkdirs();

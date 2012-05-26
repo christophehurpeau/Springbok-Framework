@@ -97,7 +97,8 @@ class DBSQLite extends DBSql{
 	public function &/* DEV */_/* /DEV */doSelectRow($query){
 		// TODO TESTER querySingle($query,true)
 		$r=$this->_query($query);
-		return $r->fetchArray(SQLITE3_ASSOC);
+		$res=$r->fetchArray(SQLITE3_ASSOC);
+		return $res;
 	}
 	public function &/* DEV */_/* /DEV */doSelectRow_($query){
 		$r=$this->_query($query);

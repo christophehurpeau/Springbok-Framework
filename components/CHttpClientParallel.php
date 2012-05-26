@@ -3,7 +3,7 @@ class CHttpClientParallel extends CHttpClient{
 	
 	public function &useReferer(){ throw new Exception('Referer cannot be used in parallel mode.');}
 	
-	public static $MAX_PARALLEL_REQUESTS=5;
+	public static $MAX_PARALLEL_REQUESTS=8;
 	private $master,$requests=array(),$i=0,$stop=false,$isCallback,$urls,$countUrls;
 	
 	private function initHandle(&$urls){

@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__.DS.'AEnhance.php';
 include_once __DIR__.DS.'DefaultFolderEnhancer.php';
+include_once __DIR__.DS.'DelayedEnhance.php';
 include_once __DIR__.DS.'EnhancedApp.php';
 include_once __DIR__.'/../utils/UColors.php';
 
@@ -37,14 +38,29 @@ class EnhanceApp extends AEnhance{
 	
 	public function afterInit(&$dev,&$prod){
 		$this->createIndexFile($dev,$prod);
+		
+		$base="<?php
+define('DS', DIRECTORY_SEPARATOR);
+define('CORE','".dirname(CORE).DS."dev".DS."');
+define('APP', __DIR__.'/dev/');";
+		file_put_contents($this->enhanced->getAppDir().'cli.php',$base.'unset($argv[0]);'."\n".'$action=array_shift($argv);'."\n"."include CORE.'cli.php';");
+		file_put_contents($this->enhanced->getAppDir().'daemon.php',$base.'$action="daemon";'."\n"."include CORE.'cli.php';");
 	}
 	
 	
 	private function recursiveCopyDir(&$srcDir,$dests,$recursiveMkdir=true){
 		$dests=array_map(function(&$d) use(&$srcDir){return $d.$srcDir->getName().'/';},$dests);
-		if(!file_exists($dests[0])) mkdir($dests[0],0775,$recursiveMkdir);
-		if(!file_exists($dests[1])) mkdir($dests[1],0775,$recursiveMkdir);
-		/*if(!file_exists($dests[0]) || !file_exists($dests[1])){
+		$isLink=is_link($srcDir->getPath());
+		
+		if($isLink) throw new Exception("IS link ; ".$srcDir->getPath() );
+		
+		
+		if(!file_exists($dests[0])) $isLink ? symlink($dests[0],$readLink=readlink($srcDir->getPath())) : mkdir($dests[0],0775,$recursiveMkdir);
+		if(!file_exists($dests[1])) $isLink ? symlink($dests[0],isset($readLink)?$readLink:readlink($srcDir->getPath())) : mkdir($dests[1],0775,$recursiveMkdir);
+		
+		if($isLink) return;
+		
+		 /*if(!file_exists($dests[0]) || !file_exists($dests[1])){
 			$this->newDef['changes']['all'][]=$srcDir->getPath();
 			$srcDir->copyTo($dests[0],0755);
 			$srcDir->copyTo($dests[1],0755);
@@ -69,6 +85,9 @@ class EnhanceApp extends AEnhance{
 	}
 	
 	public function afterEnhance(&$dev,&$prod){
+		if(!file_exists($path=($dev->getPath().'daemons/'))) mkdir($path);
+		if(!file_exists($path=($dev->getPath().'daemons/delayedEnhanceDaemon.php'))/* || true*/) copy(CORE.'enhancers/daemon.php',$path);
+		//debug(UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default'));
 		//if(!empty($this->config['includes'])){
 		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
 		$this->enhanced->config['includes']['img'][]='ajax';
