@@ -123,6 +123,7 @@ define('APP', __DIR__.'/dev/');";
 					$this->recursiveDir($pluginPath.'/',new Folder($pluginPath), $dev->getPath(), $prod->getPath(),true,false,false);
 			}
 		}
+		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default');
 		
 		/*$webFolder=date('mdH');
 		
@@ -188,18 +189,12 @@ define('APP', __DIR__.'/dev/');";
 				elseif($dPath===$srcDir.'web/img/') $excludeFiles=array('img-sprite.png');
 				elseif($dPath===$srcDir.'jsapp/') $class='UselessFile'; // ne concerne que les .php
 				
-				if($class !== 'PhpFile')
-					$class::startEnhanceApp();
 			}else $class=$defaultClass;
 			
 			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
 			$folderEnhancer->process($class,$excludeFiles,$allowUnderscoredFiles);
 			
 			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$excludeChild,$class);
-			
-			if($class !== 'PhpFile'){
-				$class::endEnhanceApp();
-			}
 			
 			//debugVar($d->getPath() .' : '.(microtime(true) - $t));
 		}

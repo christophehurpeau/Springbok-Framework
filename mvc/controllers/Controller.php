@@ -198,6 +198,7 @@ class Controller{
 	}
 	
 	protected static function renderTable($title,&$table,$add=false,$layout=null){
+		/* DEV */ throw new Exception("Use Model::Table()->render() now."); /* /DEV */
 		include_once CORE.'mvc/views/View.php';
 		if(static::beforeRender()){
 			$v=new AjaxContentView($title,$layout);

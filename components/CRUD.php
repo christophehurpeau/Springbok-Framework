@@ -7,9 +7,9 @@ class CRUD{
 			$v=new AjaxContentView($title);
 		}
 		
-		$table=CTableOne::create($model::ById($id),true);
+		$table=$model::TableOne()->byId($id);
 		foreach($tableOptions as $k=>&$val) $table->$k=$val;
-		HTable::table($table,false);
+		$table->display(false);
 		
 		$obj=$table->getResult();
 		if(!empty($relations)){
@@ -21,9 +21,9 @@ class CRUD{
 			
 			foreach($with as $key=>$w){
 				echo '<h5 class="sepTop">'.$w['title'].'</h5>';
-				$table=CTable::create(QFind::createWithQuery($obj,$w));
-				if(isset($w['table'])) foreach($w['table'] as $k=>&$val) $table->$k=$val;
-				HTable::table($table,false);
+				$table=QFind::createWithQuery($obj,$w,new QTable($w['modelName']))->paginate();
+				if(isset($w['table'])) foreach($w['table'] as $k=>&$val) $table->$k($val);
+				$table->display(false);
 			}
 		}
 		

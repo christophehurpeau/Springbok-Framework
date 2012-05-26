@@ -30,9 +30,6 @@ class EnhanceLibs extends AEnhance{
 			
 			$this->recursiveDir($d, $newDevDir,$newProdDir,$exclude,$class);
 			
-			if($class !== 'PhpFile'){
-				$class::endEnhanceApp();
-			}
 		}
 	}
 }

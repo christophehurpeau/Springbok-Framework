@@ -95,7 +95,5 @@ abstract class EnhancerFile{
 	public static function initFolder($folder,$config){}
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){}
 	public static function initEnhanceApp(){}
-	public static function startEnhanceApp(){}
 	public static function fileDeleted($file){}
-	public static function endEnhanceApp(){}
 }

@@ -5,6 +5,7 @@ class CModelTable extends CModelTableAbstract{
 	/* !!! => CModelTableAbstract */
 	public function &actionClick($action='view'){$this->actionClick=&$action; return $this; }
 	public function &actions($actions){$this->rowActions=&$actions; return $this; }
+	public function &addAction($action){$this->rowActions[]=&$action; return $this; }
 	public function &controller($controller){$this->controller=&$controller; return $this; }
 	
 	public function &setActionsRUD(){

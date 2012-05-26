@@ -1,4 +1,5 @@
 <?php
+throw new Exception('This component is now deprecated : use Model::Table()');
 class CTable{
 	
 	/**

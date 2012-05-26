@@ -55,8 +55,6 @@ class EnhancePlugin extends AEnhance{
 					case $srcDir.'web'.DS.'img'.DS: $excludeFiles=array('img-sprite.png'); break;
 				}
 				
-				if($class !== 'PhpFile')
-					$class::startEnhanceApp();
 			}else $class=$defaultClass;
 			
 			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
@@ -64,9 +62,6 @@ class EnhancePlugin extends AEnhance{
 			
 			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$exclude,$class);
 			
-			if($class !== 'PhpFile'){
-				$class::endEnhanceApp();
-			}
 		}
 	}
 }

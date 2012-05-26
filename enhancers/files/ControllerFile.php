@@ -226,8 +226,6 @@ class ControllerFile extends PhpFile{
 		self::$aclPermissionsConfig['permissions'][$permission]['controllers'][$controllerName]=true;
 	}
 	
-	public static function endEnhanceApp(){}
-	
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$aclPermissionsChanges){
 			$content='<?php return '.UPhp::exportCode(self::$aclPermissionsConfig).';';
