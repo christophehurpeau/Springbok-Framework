@@ -89,7 +89,7 @@ class JsFile extends EnhancerFile{
 			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			
 			self::executeCompressor($this->_srcContent,$devFile->getPath(),true);
-			$this->executeGoogleCompressor($devFile->getPath().'_googleclosure.js');
+			//$this->executeGoogleCompressor($devFile->getPath().'_googleclosure.js');
 			//self::uglify($this->_srcContent,$devFile->getPath().'_uglify.js');
 		}
 	}

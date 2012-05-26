@@ -38,7 +38,7 @@ class HDev{
 			echo '<div class="italic">Enhancing took : <b>'.App::$changes[0][0].'</b> s</div>';
 			foreach(App::$changes[0][1] as $type=>$files){
 				echo '<h5 class="sepTop">'.$type.'</h5><ul class="compact">';
-				foreach($files as $file) echo '<li>'.(is_array($file)?$file['path']:$file).'</li>';
+				foreach($files as $file) echo '<li>'.(is_array($file)?$file['path'].(!isset($file['time'])?'':' ('.$file['time'].')'):$file).'</li>';
 				echo '</ul>';
 			}
 		}
