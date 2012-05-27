@@ -410,7 +410,7 @@ abstract class QFind extends QSelect{
 				$objField =& $w['foreignKey'];
 				$resField =& $w['associationForeignKey'];
 				
-				return self::_createBelongsToAndHasOneQuery(null,$w['relations'][$w['types'][$type]],$obj->_get($objField),$resField);
+				return self::_createBelongsToAndHasOneQuery($query,$w['relations'][$w['types'][$type]],$obj->_get($objField),$resField);
 			default:
 				throw new Exception('Unknown relation; '.$w['reltype']);
 		}
@@ -454,7 +454,7 @@ abstract class QFind extends QSelect{
 					
 					$values=self::_getValues($objs,$objField);
 					if(!empty($values)){
-						$listRes = self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
+						$listRes = self::_createHasManyQuery($NULL,$w,$values,$resField,true)->execute();
 						
 						if($listRes) foreach($objs as &$obj){
 							foreach($listRes as &$res)
@@ -474,7 +474,7 @@ abstract class QFind extends QSelect{
 						$resField =& $w['associationForeignKey'];
 						
 						$oneField=count($w['fields'])===1?$w['fields'][0]:false;
-						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
+						$listRes=self::_createHasManyQuery($NULL,$w,$values,$resField,true)->execute();
 						if($listRes) foreach($objs as $key=>&$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
@@ -510,7 +510,7 @@ abstract class QFind extends QSelect{
 						
 						if(isset($w['groupBy'])) $w['groupBy']=$rel['alias'].'.'.$resField.','.$w['groupBy'];
 						
-						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,false,$withMore['with'],$rel['alias'])->execute();
+						$listRes=self::_createHasManyQuery($NULL,$w,$values,$resField,false,$withMore['with'],$rel['alias'])->execute();
 						if($listRes!==false){
 							foreach($objs as $k=>&$obj){
 								$listObjsRes=array();
