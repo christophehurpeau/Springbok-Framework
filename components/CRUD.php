@@ -54,7 +54,7 @@ class CRUD{
 		if($renderView){
 			$title=_tC('Edit:').' '.$id.' - '._tF($model,'');
 			include_once CORE.'mvc/views/View.php';
-			$v=new AjaxContentView($title);
+			$v=new AjaxContentView($title,$renderView===true?null:$renderView);
 		}
 		$form=HForm::create($model,array('id'=>'formCrud'.$model),'div',array('setValuesFromVar'=>false));
 		$data=$val->_getData();

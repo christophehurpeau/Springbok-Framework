@@ -12,7 +12,7 @@ define('APP_DATE',time());
 define('WEB_FOLDER','');
 /* /DEV */
 
-require 'mvc/controllers/Controller.php';
+require 'springbok/Controller.php';
 require 'components/CRoute.php';
 require 'components/CHttpRequest.php';
 

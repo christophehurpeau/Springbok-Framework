@@ -12,9 +12,15 @@ class ControllerFile extends PhpFile{
 			if(!isset($eval))
 				throw new Exception('Error eval : '.$m[1]);
 			$countEval=count($eval);
-			$controllerPath='controllers'.($countEval===3 ? '.'.$eval[0] : '').'/'.($eval[$countEval===3?1:0]).'Controller.php';
-			if(!isset($controllersSrc[$controllerPath]))
-				$controllersSrc[$controllerPath]=file_get_contents($enhanced->getAppDir().'src/'.$controllerPath);
+			if($countEval===3 && ($eval[0]==='core')||($eval[0]==='springbok')){
+				$controllerPath='controllers/'.$eval[1].'Controller.php';
+				if(!isset($controllersSrc[$controllerPath]))
+					$controllersSrc[$controllerPath]=file_get_contents(CORE.$controllerPath);
+			}else{
+				$controllerPath='controllers'.($countEval===3 ? '.'.$eval[0] : '').'/'.($eval[$countEval===3?1:0]).'Controller.php';
+				if(!isset($controllersSrc[$controllerPath]))
+					$controllersSrc[$controllerPath]=file_get_contents($enhanced->getAppDir().'src/'.$controllerPath);
+			}
 			if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('.preg_quote($eval[$countEval===3?2:1]).')',
 						ControllerFile::REGEXP_ACTION),$controllersSrc[$controllerPath],$mAction))
 				throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[$countEval===3?2:1]);

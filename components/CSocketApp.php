@@ -10,7 +10,7 @@ class BasicAppSocketUser extends BasicSocketUser{
 	}
 }
 
-include CORE.'mvc/controllers/Controller.php';
+include CORE.'springbok/Controller.php';
 class SocketController extends Controller{
 	public static $DATA;
 	protected static function &getParams(&$mdef,&$methodAnnotations){
