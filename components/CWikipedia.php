@@ -1,6 +1,6 @@
 <?php
 class CWikipedia{
-	public static $cache,$httpClient,$lastContactTime;
+	public static $WAIT_TIME=17,$cache,$httpClient,$lastContactTime;
 	
 	public static function init($httpClient,$sleep=true){
 		self::$cache=CCache::get('Wikipedia');
@@ -12,7 +12,7 @@ class CWikipedia{
 		if(self::$lastContactTime===false) return;
 		$lastContactTime=microtime(true);
 		$time=$lastContactTime-self::$lastContactTime;
-		if($time < 30) usleep((30-$time)*1000000);
+		if($time < self::$WAIT_TIME) usleep((self::$WAIT_TIME-$time)*1000000);
 		self::$lastContactTime=microtime(true);
 	}
 	
@@ -33,7 +33,6 @@ class CWikipedia{
 	}
 	
 	public static function urlFile($name){
-		CWikipedia::sleep();
 		return 'http://fr.wikipedia.org/wiki/Special:FilePath/'.str_replace(' ', '_',$name);
 		$filename=str_replace(' ', '_',$name);
 		$digest=md5($filename);

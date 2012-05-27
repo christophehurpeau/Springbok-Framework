@@ -1,8 +1,28 @@
 <?php
 class ControllerFile extends PhpFile{
+	const REGEXP_ACTION='/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)[\s]*{\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums';
+	
 	private $_className,$_annotations=array(),$_classAnnotations;
 	private $_methodDefFiles=array();//,$_methodAnnotations=array();
-
+	
+	protected function loadContent($srcContent){
+		$controllersSrc=array(); $enhanced=&$this->enhanced;
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportAction\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
+			eval('$eval=array('.$m[1].');');
+			if(!isset($eval))
+				throw new Exception('Error eval : '.$m[1]);
+			$countEval=count($eval);
+			$controllerPath='controllers'.($countEval===3 ? '.'.$eval[0] : '').'/'.($eval[$countEval===3?1:0]).'Controller.php';
+			if(!isset($controllersSrc[$controllerPath]))
+				$controllersSrc[$controllerPath]=file_get_contents($enhanced->getAppDir().'src/'.$controllerPath);
+			if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('.preg_quote($eval[$countEval===3?2:1]).')',
+						ControllerFile::REGEXP_ACTION),$controllersSrc[$controllerPath],$mAction))
+				throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[$countEval===3?2:1]);
+			return $mAction[0];
+		},$srcContent);
+		$this->_srcContent=$srcContent;
+	}
+	
 	protected function enhancePhpContent($phpContent,$false=false){
 		$matches=array();
 		preg_match('/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)Controller/U',$phpContent,$matches);//debug($matches);
@@ -12,8 +32,7 @@ class ControllerFile extends PhpFile{
         $this->_classAnnotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1]);
 		
 		//$content=preg_replace_callback('/(?:\/\*\*(.*)\*\/)?[\s]+public[\s]+function[\s]+([a-zA-Z0-9_ \$]+)[\s]*\((.*)\)[\s]*{([^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{.*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*)}/Ums',array($this,'enhanceMethodParams'),$content);
-		$phpContent=preg_replace_callback('/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)[\s]*{\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums',
-				array($this,'enhanceMethodParams'),$phpContent);
+		$phpContent=preg_replace_callback(self::REGEXP_ACTION,array($this,'enhanceMethodParams'),$phpContent);
 		
 		$phpContent=preg_replace('/(self::|\s+)(mset|set|set_|setForLayout|setForLayout_|setForLayoutAndView|setForLayoutAndView_|'
 				.'uploadedFiles|moveUploadedFile|redirect|redirectLast|'
@@ -137,7 +156,9 @@ class ControllerFile extends PhpFile{
 		$folderMethods=new Folder(dirname($dirname).DS.'methods');
 		$folderMethods->mkdirs();
 		$folderMethods=$folderMethods->getPath();
-		UExec::exec('rm -f '.escapeshellarg($folderMethods.$this->_className.'-*'));
+		
+		//UExec::exec('cd / && rm -f '.UExec::rmEscape($folderMethods.$this->_className).'-*');
+		UExec::exec('cd '.escapeshellarg($folderMethods).' && rm -f '.UExec::rmEscape($this->_className).'-*');
 		foreach($this->_methodDefFiles as $filename=>$content){
 			$file=new File($folderMethods.$filename);
 			$file->write($content);
@@ -238,7 +259,7 @@ class ControllerFile extends PhpFile{
 				foreach(self::$controllersDeleted as $key=>$controllers){
 					foreach($controllers as $controller)
 						foreach($paths as $path){
-							UExec::exec('rm -Rf '.escapeshellarg($path.'controllers'.$key.'/methods/'.$controller.'-').'*');
+							UExec::exec('cd / && rm -Rf '.escapeshellarg($path.'controllers'.$key.'/methods/'.$controller.'-').'*');
 						}
 				}
 			

@@ -59,7 +59,7 @@ class Folder extends AFile{
 		if(!$this->exists()) return true;
 		//foreach($this->listAll() as $file) $file->delete();
 		//return rmdir($this->name);
-		$res=UExec::exec('rm -Rf '.escapeshellarg($this->name));
+		$res=UExec::exec('cd / && rm -Rf '.escapeshellarg($this->name));
 		if($res) die($res);
 	}
 	

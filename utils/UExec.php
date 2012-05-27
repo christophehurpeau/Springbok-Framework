@@ -91,4 +91,8 @@ class UExec{
 		$archive=array_shift($files);
 		return self::exec('cd '.escapeshellarg($cd).' && tar'.$options.' -czf '.escapeshellarg($archive).' '.implode(' ',array_map('escapeshellarg',$files)));
 	}
+	
+	public static function rmEscape($path){
+		return preg_replace('/([\*\[\]\?\!])/','\\\$1',$path);
+	}
 }

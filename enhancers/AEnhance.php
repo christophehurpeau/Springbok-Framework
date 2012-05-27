@@ -26,14 +26,7 @@ abstract class AEnhance{
 		//$t=microtime(true);
 		$blockEnhanceFile=$this->enhanced->getAppDir().'block_enhance';
 		if(file_exists($blockEnhanceFile)){
-			usleep(100000);
-			if(file_exists($blockEnhanceFile)){
-				usleep(100000);
-				if(file_exists($blockEnhanceFile)){
-					usleep(500000);
-					if(file_exists($blockEnhanceFile)) die('An enhancing is already in progress....');
-				}
-			}
+			die('An enhancing is already in progress....');
 		}
 		//debug('wait took : '.(microtime(true) - $t).' s');
 		
@@ -119,8 +112,8 @@ abstract class AEnhance{
 		foreach($this->enhanced->getOldEnhancedFolders() as $enhancedFolder=>$devAndProd){
 			if(!file_exists($enhancedFolder)){
 				$this->enhanced->addDeleteChange($enhancedFolder);
-				if($devAndProd['dev'] && file_exists($devAndProd['dev'])) UExec::exec('rm -Rf '.escapeshellarg($devAndProd['dev']));
-				if($devAndProd['prod'] && file_exists($devAndProd['prod'])) UExec::exec('rm -Rf '.escapeshellarg($devAndProd['prod']));
+				if($devAndProd['dev'] && file_exists($devAndProd['dev'])) UExec::exec('cd / && rm -Rf '.escapeshellarg($devAndProd['dev']));
+				if($devAndProd['prod'] && file_exists($devAndProd['prod'])) UExec::exec('cd / && rm -Rf '.escapeshellarg($devAndProd['prod']));
 				$this->enhanced->removeOldEnhancedFolder($enhancedFolder);
 			}
 		}
