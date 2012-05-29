@@ -202,8 +202,8 @@ function endsWith($haystack,$needle){return strrpos($haystack,$needle)===strlen(
 
 function isE(&$var,$then,$else){ return empty($var) ? $then : $else; }
 function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
-function isTrue($cond,$then,$else=''){ return $cond===true ? $else : $then; }
-function isFalse($cond,$then,$else=''){ return $cond===true ? $else : $then; }
+function isTrue($cond,$then,$else=''){ return $cond===true ? $then : $else; }
+function isFalse($cond,$then,$else=''){ return $cond===false ? $then : $else; }
 
 function render($file,&$vars,$return=false){
 	extract($vars,EXTR_REFS);
