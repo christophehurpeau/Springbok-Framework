@@ -593,7 +593,7 @@ abstract class QFind extends QSelect{
 	}
 	
 	private static function &_createBelongsToAndHasOneQuery(&$query,&$w,$values,&$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
-		if($query===null) $query=new QFindOne($w['modelName']);
+		if(true||$query===null) $query=new QFindOne($w['modelName']);
 		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
 		if(isset($w['where'])) $where=&$w['where']; else $where=array();
 		if($fieldTableAlias !== NULL) $resField=$fieldTableAlias.'.'.$resField;
@@ -605,7 +605,7 @@ abstract class QFind extends QSelect{
 	}
 	
 	private static function &_createHasManyQuery(&$query,&$w,$values,$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
-		if($query===null){
+		if(true||$query===null){
 			if($addResField===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
 			else $query = new QFindAll($w['modelName']);
 		}
