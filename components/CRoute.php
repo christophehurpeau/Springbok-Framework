@@ -115,6 +115,9 @@ class CRoute{
 		$plus='';
 		$link=array_shift($params);
 		$route=&self::$_routes[$link===true?'/:controller(/:action/*)?':$link];
+		/* DEV */
+		if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
+		/* /DEV */
 		if(isset($params['ext'])){ $plus.='.'.$params['ext']; unset($params['ext']); }
 		elseif(isset($route['ext'])){ $plus.= '.'.$route['ext']; }
 		if(isset($params['?'])){$plus.='?'.$params['?']; unset($params['?']); }
