@@ -49,6 +49,7 @@ class HMenu{
 			if($value['current']){
 				$value['current']=1;
 			}
+			unset($value['url']);
 			if(!empty($value)) $linkoptions=$value+$linkoptions;
 		}else{
 			$startsWith=$options['startsWith'];
