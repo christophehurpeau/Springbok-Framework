@@ -454,7 +454,7 @@ abstract class QFind extends QSelect{
 					
 					$values=self::_getValues($objs,$objField);
 					if(!empty($values)){
-						$listRes = self::_createHasManyQuery($NULL,$w,$values,$resField,true)->execute();
+						$listRes = self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
 						
 						if($listRes) foreach($objs as &$obj){
 							foreach($listRes as &$res)
@@ -474,7 +474,7 @@ abstract class QFind extends QSelect{
 						$resField =& $w['associationForeignKey'];
 						
 						$oneField=count($w['fields'])===1?$w['fields'][0]:false;
-						$listRes=self::_createHasManyQuery($NULL,$w,$values,$resField,true)->execute();
+						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
 						if($listRes) foreach($objs as $key=>&$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
@@ -510,7 +510,7 @@ abstract class QFind extends QSelect{
 						
 						if(isset($w['groupBy'])) $w['groupBy']=$rel['alias'].'.'.$resField.','.$w['groupBy'];
 						
-						$listRes=self::_createHasManyQuery($NULL,$w,$values,$resField,false,$withMore['with'],$rel['alias'])->execute();
+						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,false,$withMore['with'],$rel['alias'])->execute();
 						if($listRes!==false){
 							foreach($objs as $k=>&$obj){
 								$listObjsRes=array();
@@ -592,8 +592,8 @@ abstract class QFind extends QSelect{
 		return array_unique($values);
 	}
 	
-	private static function &_createBelongsToAndHasOneQuery(&$query,&$w,$values,&$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
-		if(true||$query===null) $query=new QFindOne($w['modelName']);
+	private static function &_createBelongsToAndHasOneQuery($query,&$w,$values,&$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
+		if($query===null) $query=new QFindOne($w['modelName']);
 		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
 		if(isset($w['where'])) $where=&$w['where']; else $where=array();
 		if($fieldTableAlias !== NULL) $resField=$fieldTableAlias.'.'.$resField;
@@ -604,8 +604,8 @@ abstract class QFind extends QSelect{
 		return $query;
 	}
 	
-	private static function &_createHasManyQuery(&$query,&$w,$values,$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
-		if(true||$query===null){
+	private static function &_createHasManyQuery($query,&$w,$values,$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
+		if($query===null){
 			if($addResField===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
 			else $query = new QFindAll($w['modelName']);
 		}
