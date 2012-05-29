@@ -372,7 +372,7 @@ abstract class QFind extends QSelect{
 	}
 	
 	
-	public static function createWithQuery(&$obj,&$w,&$query){
+	public static function createWithQuery(&$obj,&$w,&$query=null){
 		switch($w['reltype']){
 			case 'belongsTo':
 			case 'hasOne':
