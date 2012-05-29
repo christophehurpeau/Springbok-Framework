@@ -15,15 +15,16 @@ class SViewCachedElement extends SViewElement{
 			if(file_exists($path.$view)) unlink($path.$view);
 	}
 	
-	protected $path,$exists;
+	protected $path;
 	public function __construct($vars){
 		$this->calledClass=get_called_class();
 		$this->path=call_user_func_array($this->calledClass.'::path',$vars).'_';
-		if(!($this->exists=file_exists($this->path.'view'))){
+		if(!$this->exists()){
 			parent::__construct($vars);
 			$this->generateAll();
 		}
 	}
+	public function exists(){ return file_exists($this->path.'view'); }
 	public function generateAll(){
 		foreach(static::$views as $view) $this->write($view,parent::render($view));
 	}
