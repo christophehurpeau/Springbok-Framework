@@ -173,6 +173,7 @@ class PhpFile extends EnhancerFile{
 			function($matches){$val='';eval('$val='.$matches[1].';');return $val;}
 			,$phpContent);
 		$phpContent=preg_replace('/\/\*\s+HIDE\s+\*\/.*\/\*\s+\/HIDE\s+\*\//Ums','',$phpContent);
+		$phpContent=preg_replace('/return !new [^;]+;/','',$phpContent);
 		
 		//autoexecute
 		$phpContent=$this->addExecuteToQueries($phpContent);
