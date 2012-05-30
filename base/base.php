@@ -88,8 +88,11 @@ function short_debug_var($var,$MAX_DEPTH=3,$currentDepth=0){
 	}elseif(is_array($var)){
 		reset($var);
 		if(empty($var)) $res='empty';
-		elseif(count($var) > 100) $res=' > 100';
-		elseif($currentDepth<$MAX_DEPTH){
+		elseif(count($var) > 100){
+			$res=' > 100';
+			$var=array_slice($var,0,100);
+		}
+		if($currentDepth<$MAX_DEPTH){
 			$res="\n";
 			foreach($var as $k=>&$v)
 				$res.=str_repeat("\t",$currentDepth+1).$k.'=>'.short_debug_var($v,$currentDepth+1)."\n";
