@@ -1,21 +1,32 @@
 <?php
 class HElementForm extends HElement{
 	public static function &ForModel($modelName,$name=null,$setValuesFromVar=true){
-		$elt=new self;
+		$elt=new static('post');
+		$elt->setModelName($modelName,$name,$setValuesFromVar);
+		return $elt;
+	}
+	public static function &ForModelGET($modelName,$name=null,$setValuesFromVar=true){
+		$elt=new static('get');
 		$elt->setModelName($modelName,$name,$setValuesFromVar);
 		return $elt;
 	}
 	
-	public static function &_Basic(){
-		$elt=new self;
-		//$elt->_basic();
+	public static function Post(){ return new static('post'); }
+	public static function Get(){ return new static('get'); }
+	public static function &File(){
+		$elt= new static('post');
+		$elt->attr('enctype','multipart/form-data');
 		return $elt;
 	}
 	
-	public $method='post',$urlfull=false,$action,
+	public $method,$action,$urlfull=false,
 			$defaultLabel=true,$setValuesFromVar=true,$name,$modelName,
 			$tagContainer='div',$fieldsetStarted=false;
 	
+	
+	public function __construct($method='post'){
+		$this->method=&$method;
+	}
 	
 	public function basic(){
 		$this->modelName=null;
@@ -36,8 +47,12 @@ class HElementForm extends HElement{
 		}
 	}
 	
-	public function &action($action){$this->action=&$action; return $this; }
-	public function &file(){ /* $this->method='post'; */ $this->attributes['enctype']='multipart/form-data'; return $this; }
+	/**
+	 * @return HElementForm
+	 */
+	public function action($action){$this->action=&$action; return $this; }
+	public function urlfull($urlfull){$this->urlfull=&$urlfull; return $this; }
+	//public function &file(){ /* $this->method='post'; */ $this->attributes['enctype']='multipart/form-data'; return $this; }
 	
 	public function isContainable(){ return $this->tagContainer!==false; }
 	public function getTagContainer(){ return $this->tagContainer; }

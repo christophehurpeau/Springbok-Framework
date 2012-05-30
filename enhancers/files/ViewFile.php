@@ -24,7 +24,8 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/<\?\s+(.+)\s*;?\s+\?>/Us','<?php echo $1 ?>',$content);
 		
 		//Exception à la règle
-		$content=preg_replace('/{=(\$[^}]+)\}/U','<?php echo $1 ?>',$content);
+		$jusqualafin='\$[^}]+(?:{[^}]+}[^}]*)?';
+		$content=preg_replace('/{=('.$jusqualafin.')\}/U','<?php echo $1 ?>',$content);
 		
 		$content=preg_replace('/{\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? $2 : $3 ?>',$content);
 		$content=preg_replace('/{=\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? h($2) : h($3) ?>',$content);
