@@ -62,7 +62,7 @@ class CModelTableAbstract{
 				if(isset($val['tabResult']) || isset($val['callback'])) $type='string';
 				$val['type']=$type;
 				
-				if(!isset($val['title'])) $val['title']=$this->translateField?_tF(isset($this->belongsToFields[$key])?$this->modelName:$modelName,$key):$key;
+				if(!isset($val['title'])) $val['title']=$this->translateField?_tF(isset($this->belongsToFields[$key])?$this->getModelName():$modelName,$key):$key;
 				if(!isset($val['align'])) switch($type){
 					case 'int'; case 'boolean':
 						$val['align']='center';
