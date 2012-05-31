@@ -18,6 +18,7 @@ class QTable extends QFindAll{
 	public function &getFilters(){ return $this->FILTERS; }
 	public function isExportable(){ return $this->exportable!==false; }
 	public function getExportableTypes(){ return explode(',',$this->exportable[0]); }
+	public function getBelongsToFields(){ return $this->belongsToFields; }
 	
 	private $_fieldsForTable;
 	public function getFieldsForTable(){ return $this->_fieldsForTable; }

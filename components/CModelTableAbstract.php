@@ -31,7 +31,7 @@ class CModelTableAbstract{
 		}
 		$this->modelFields=$this->query->getModelFields();
 		
-		$this->fields=array();
+		$this->fields=array(); $belongsToFields=$this->query->getBelongsToFields();
 		foreach($fields as $key=>&$val){
 			if($fromQuery || is_string($val)){ $key=$val; $val=array(); }
 			if(is_int($key)){
@@ -56,13 +56,13 @@ class CModelTableAbstract{
 					}
 				}else $type='string';
 				
-				if(isset($this->belongsToFields[$key]) && is_array($this->belongsToFields[$key]))
-					$val['tabResult']=$val['filter']=$this->belongsToFields[$key];
+				if(isset($belongsToFields[$key]) && is_array($belongsToFields[$key]))
+					$val['tabResult']=$val['filter']=$belongsToFields[$key];
 				
 				if(isset($val['tabResult']) || isset($val['callback'])) $type='string';
 				$val['type']=$type;
 				
-				if(!isset($val['title'])) $val['title']=$this->translateField?_tF(isset($this->belongsToFields[$key])?$this->getModelName():$modelName,$key):$key;
+				if(!isset($val['title'])) $val['title']=($this->translateField?_tF(isset($belongsToFields[$key])?$this->getModelName():$modelName,$key):$key);
 				if(!isset($val['align'])) switch($type){
 					case 'int'; case 'boolean':
 						$val['align']='center';
