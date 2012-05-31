@@ -85,6 +85,7 @@ class ConfigFile extends PhpFile{
 					$finalRoutes[$url][$lang]=$routeLang;
 					if(!empty($paramsNames)) $finalRoutes[$url][':']=$paramsNames;
 				}
+				$finalRoutes[$url]['paramsCount']=substr_count($finalRoutes[$url]['en'][1],'%s');
 			}
 		
 			/* LANGS */

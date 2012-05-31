@@ -9,6 +9,10 @@ class EnhancedApp extends Enhanced{
 		if(file_exists($this->getAppDir().'src/config/_'.ENV.'.php')) $this->devConfig=include $this->getAppDir().'src/config/_'.ENV.'.php';
 	}
 	
+	public function getTmpDir(){
+		return $this->getAppDir().'tmp/';
+	}
+	
 	public function &appConfig($attr){ return $this->appConfig[$attr]; }
 	public function appConfigExist($attr){ return isset($this->appConfig[$attr]); }
 	

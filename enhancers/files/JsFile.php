@@ -88,7 +88,7 @@ class JsFile extends EnhancerFile{
 			$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
 			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			
-			self::executeCompressor($this->_srcContent,$devFile->getPath(),true);
+			self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
 			//$this->executeGoogleCompressor($devFile->getPath().'_googleclosure.js');
 			//self::uglify($this->_srcContent,$devFile->getPath().'_uglify.js');
 		}
@@ -115,18 +115,18 @@ class JsFile extends EnhancerFile{
 			$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
 			$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
 			
-			self::executeCompressor($this->_srcContent,$prodFile->getPath());
+			self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$prodFile->getPath());
 			//self::executeGoogleCompressor($this->_srcContent,$prodFile->getPath().'_googleclosure.js');
 			//self::uglify($this->_srcContent,$prodFile->getPath().'_uglify.js');
 		}
 	}
 	
-	public static function executeCompressor(&$content,$destination,$nomunge=false){
-		$dest=$destination?$destination:tempnam('/tmp','yuidest');
+	public static function executeCompressor($tmpDir,&$content,$destination,$nomunge=false){
+		$dest=$destination?$destination:tempnam($tmpDir,'yuidest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'_yuicompressor-2.4.7.jar';
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --type js'./*($nomunge?' --nomunge':'').*/' --line-break 8000 -o '.escapeshellarg($dest);
-		$tmpfname = tempnam('/tmp','yui');
+		$tmpfname = tempnam($tmpDir,'yui');
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
 		//debugVar('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1',$destination,$nomunge,$tmpfname);
@@ -147,11 +147,11 @@ class JsFile extends EnhancerFile{
 	
 	public function executeGoogleCompressor($destination){
 		$content=&$this->_srcContent;
-		$dest=$destination?$destination:tempnam('/tmp','gclosuredest');
+		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'gclosuredest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' --js ';
-		$tmpfname = tempnam('/tmp','gclosure');
+		$tmpfname = tempnam($this->enhanced->getTmpDir(),'gclosure');
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
 		if(!empty($res)){
@@ -173,7 +173,7 @@ class JsFile extends EnhancerFile{
 	}
 	
 	public static function uglify(&$content,$dest,$beautify=false){
-		$tmpfname = tempnam('/tmp','uglify');
+		$tmpfname = tempnam($this->enhanced->getTmpDir(),'uglify');
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && uglifyjs --lift-vars'.($beautify?' -b':'').' -o '.escapeshellarg($dest).' '.escapeshellarg($tmpfname).' 2>&1');
 		debugCode($dest."\n".$res,false);

@@ -20,7 +20,7 @@ class CssFile extends EnhancerFile{
 	}
 
 	public function writeDevFile($devFile){
-		if($this->_config['compress']) self::executeCompressor($this->getEnhancedDevContent(),$devFile->getPath(),true);
+		if($this->_config['compress']) self::executeCompressor($this->enhanced->getTmpDir(),$this->getEnhancedDevContent(),$devFile->getPath(),true);
 		else $devFile->write($this->getEnhancedDevContent());
 		if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore()){
 			if(!file_exists($appDir.'tmp/compiledcss/dev/')) mkdir($appDir.'tmp/compiledcss/dev/',0755,true);
@@ -28,7 +28,7 @@ class CssFile extends EnhancerFile{
 		}
 	}
 	public function writeProdFile($prodFile){
-		if($this->_config['compress']) self::executeCompressor($this->getEnhancedProdContent(),$prodFile->getPath());
+		if($this->_config['compress']) self::executeCompressor($this->enhanced->getTmpDir(),$this->getEnhancedProdContent(),$prodFile->getPath());
 		else $prodFile->write($this->getEnhancedProdContent());
 		if(($appDir=$this->enhanced->getAppDir())){
 			if(!file_exists($appDir.'tmp/compiledcss/prod/')) mkdir($appDir.'tmp/compiledcss/prod/',0755);
@@ -36,12 +36,12 @@ class CssFile extends EnhancerFile{
 		}
 	}
 	
-	public static function executeCompressor($content,$destination,$nomunge=false){
-		$dest=$destination?$destination:tempnam('/tmp','yuidest');
+	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
+		$dest=$destination?$destination:tempnam($tmpDir,'yuidest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'_yuicompressor-2.4.7.jar';
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --type css'.($nomunge?' --nomunge':'').' --line-break 8000 -o '.escapeshellarg($dest);
-		$tmpfname = tempnam('/tmp','yui');
+		$tmpfname = tempnam($tmpDir,'yui');
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
 		if(!empty($res)){
