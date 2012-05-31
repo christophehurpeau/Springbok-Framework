@@ -63,7 +63,7 @@ includeCore('ui/slideTo');
 				S.ajax.load(li.attr('rel'));
 				return false;
 			});
-			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([action^="http://"])',function(){
+			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([enctype]):not([action^="http://"])',function(){
 				var form=$(this);
 				S.ajax.load(form.attr('action'),form.serialize(),form.attr('method')==='get'?0:'post',form.has('input[type="password"]'));
 				return false;
