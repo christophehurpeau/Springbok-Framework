@@ -125,7 +125,10 @@ class CRoute{
 		if(isset($params['?'])){$plus.='?'.$params['?']; unset($params['?']); }
 		if(isset($params['#'])){$plus.='#'.$params['#']; unset($params['#']); }
 		
-		if(empty($params)) return $route[CLang::get()][1].$plus;
+		if(isset($params['lang'])){ $lang=$params['lang']; unset($params['lang']); }
+		else $lang=CLang::get();
+		
+		if(empty($params)) return $route[$lang][1].$plus;
 		$url=($link===true?self::getStringLink($params[0]):vsprintf($route[CLang::get()][1],$params));
 		return /* DEV */self::$_prefix./* /DEV */($url==='/'?'/':rtrim($url,'/')).$plus;
 	}
