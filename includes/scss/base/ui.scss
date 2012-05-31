@@ -1,6 +1,6 @@
 $JQueryUI:true !default;
 @if($JQueryUI == false){
-  @warn "You must add $JQueryUI:true; in the top of your scss.";
+  @warn "You must add $JQueryUI:true; in the top of your scss file.";
 }
 
 .ui-autocomplete-input.ui-combobox{
