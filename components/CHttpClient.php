@@ -5,7 +5,7 @@
 class HttpClientError extends Exception{
 	private $status,$error,$content;
 	public function __construct(&$status,&$error,&$content){
-		parent::__construct($error,$status);
+		parent::__construct($status.' '.$error."\n".$content,$status);
 		$this->status=&$status;
 		$this->error=&$error;
 		$this->content=&$content;
@@ -14,6 +14,7 @@ class HttpClientError extends Exception{
 	public function getStatus(){ return $this->status; }
 	public function getError(){ return $this->error; }
 	public function getContent(){ return $this->content; }
+	
 }
 class CHttpClient{
 	public static $MAX_REDIRECT=5,$TIMEOUT=25,$CONNECT_TIMEOUT=6,$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
