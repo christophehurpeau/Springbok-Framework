@@ -114,17 +114,19 @@ class CRoute{
 	public static function getArrayLink(&$params){
 		$plus='';
 		$link=array_shift($params);
-		$route=&self::$_routes[$link===true?'/:controller(/:action/*)?':$link];
-		/* DEV */
-		if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
-		/* /DEV */
+		if($link !==true){
+			$route=&self::$_routes[$link];
+			/* DEV */
+			if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
+			/* /DEV */
+		}
 		if(isset($params['ext'])){ $plus.='.'.$params['ext']; unset($params['ext']); }
 		elseif(isset($route['ext'])){ $plus.= '.'.$route['ext']; }
 		if(isset($params['?'])){$plus.='?'.$params['?']; unset($params['?']); }
 		if(isset($params['#'])){$plus.='#'.$params['#']; unset($params['#']); }
 		
 		if(empty($params)) return $route[CLang::get()][1].$plus;
-		$url=vsprintf($route[CLang::get()][1],$params);
+		$url=($link===true?self::getStringLink($params[0]):vsprintf($route[CLang::get()][1],$params));
 		return /* DEV */self::$_prefix./* /DEV */($url==='/'?'/':rtrim($url,'/')).$plus;
 	}
 	
