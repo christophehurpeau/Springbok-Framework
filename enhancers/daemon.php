@@ -31,7 +31,7 @@ class DelayedEnhanceDaemon extends Daemon{
 					$optimizedImgPaths=array();
 					
 					$logger=CLogger::get('opti_img');
-					$logger->log('IMAGE : '.$filename);
+					$logger->log('IMAGE: '.$srcPath.' '.$filename);
 					if($ext==='png'){
 						//$t=microtime(true);
 						//UExec::exec('optipng -o7 -force -full -quiet '.escapeshellarg($srcPath).' -out '.escapeshellarg($optimizedImgPaths[]=$tmpFolder.'optipng_1_'.$filename));

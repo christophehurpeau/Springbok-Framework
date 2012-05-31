@@ -7,9 +7,9 @@ class ImgFile extends EnhancerFile{
 	
 	private $_smallerTmpImgPath;
 	public function writeDevFile($devFile){
-		if($this->enhanced->getAppDir() && !$this->isCore()){
+		if($this->enhanced->getAppDir() && !$this->isCore())
 			DelayedEnhance::get($this->enhanced)->add(substr($this->srcFile()->getPath(),strlen($this->enhanced->getAppDir().'src/')),'Img');
-		}else $this->srcFile()->copyTo($devFile->getPath());
+		$this->srcFile()->copyTo($devFile->getPath());
 	}
 	public function writeProdFile($prodFile){
 		$this->srcFile()->copyTo($prodFile->getPath());
