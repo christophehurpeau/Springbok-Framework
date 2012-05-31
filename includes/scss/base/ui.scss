@@ -158,14 +158,22 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
 ----------------------------------*/
 
 /* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url(../img/jquery-ui/icons_222222_256x240.png); }
-.ui-widget-content .ui-icon {background-image: url(../img/jquery-ui/icons_222222_256x240.png); }
-.ui-widget-header .ui-icon {background-image: url(../img/jquery-ui/icons_ffffff_256x240.png); }
-.ui-state-default .ui-icon { background-image: url(../img/jquery-ui/icons_cccccc_256x240.png); }
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../img/jquery-ui/icons_ef8c08_256x240.png); }
-.ui-state-active .ui-icon {background-image: url(../img/jquery-ui/icons_ef8c08_256x240.png); }
-.ui-state-highlight .ui-icon {background-image: url(../img/jquery-ui/icons_228ef1_256x240.png); }
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(../img/jquery-ui/icons_ffd27a_256x240.png); }
+$JQueryUI_icons_content:'222222' !default;
+$JQueryUI_icons_header:'cccccc' !default;
+$JQueryUI_icons_default:'ffffff' !default;
+$JQueryUI_icons_hover:'ef8c08' !default;
+$JQueryUI_icons_active:'ef8c08' !default;
+$JQueryUI_icons_highlight:'228ef1' !default;
+$JQueryUI_icons_error:'ffd27a' !default;
+
+.ui-icon { width: 16px; height: 16px; background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_content}_256x240.png); }
+.ui-widget-content .ui-icon {background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_content}_256x240.png); }
+.ui-widget-header .ui-icon {background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_header}_256x240.png); }
+.ui-state-default .ui-icon { background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_default}_256x240.png); }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_default}_256x240.png); }
+.ui-state-active .ui-icon {background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_active}_256x240.png); }
+.ui-state-highlight .ui-icon {background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_highlight}_256x240.png); }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(../img/jquery-ui/icons_#{$JQueryUI_icons_error}_256x240.png); }
 
 /* positioning */
 .ui-icon-carat-1-n { background-position: 0 0; }
