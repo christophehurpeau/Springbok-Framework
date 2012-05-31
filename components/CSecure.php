@@ -145,7 +145,7 @@ class CSecure{
 		if($className){
 			$where=static::config('authConditions');
 			$where[$login]=$user->$login;
-			$where[$password]=USecure::hashWithSalt(trim($user->$password,static::config('trim')));
+			$where[$password]=static::hashPassword($user->$password);
 			
 			$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
 			
@@ -219,6 +219,10 @@ class CSecure{
 				CLogger::get('connections')->log($type.': '.($succeed?'SUCCEED':'FAILED').' - '.$login.($connected!==NULL?(' => '.$connected):''));
 				break;
 		}
+	}
+
+	public static function hashPassword($pwd){
+		return USecure::hashWithSalt(trim($pwd,static::config('trim')));
 	}
 }
 CSecure::init();
