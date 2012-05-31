@@ -27,6 +27,7 @@ class HElementFormTextarea extends HElementFormContainable{
 	}
 	
 	public function &value($value){ $this->value=&$value; return $this; }
+	public function &value_(&$value){ $this->value=$value; return $this; }
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'textarea'); }
 	

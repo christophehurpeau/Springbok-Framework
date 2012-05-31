@@ -52,6 +52,7 @@ class HElementFormInput extends HElementFormContainable{
 	}
 	
 	public function &value($value){ $this->attributes['value']=&$value; return $this; }
+	public function &value_(&$value){ $this->attributes['value']=$value; return $this; }
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.($this->type!=='text'?'text ':'').$this->type); }
 	
 	public function toString(){
