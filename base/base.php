@@ -227,3 +227,35 @@ function displayXml($content){
 	header('Content-type: application/xml; charset=UTF-8');
 	echo xmlrpc_encode($content);
 }
+
+
+
+/* http://kevin.vanzonneveld.net/techblog/article/create_short_ids_with_php_like_youtube_or_tinyurl/ */
+function shortAlphaNumber_enc($number){
+	$index="abcdfghjklmnpqrstvwxyz_012345-ABCDFGHJKLMNPQRSTVWXYZ~6789";
+	$base=strlen($index);
+	
+	$result = "";
+	for ($t = floor(log($number, $base)); $t >= 0; $t--) {
+		$bcp = bcpow($base, $t);
+		$a   = floor($number / $bcp) % $base;
+		$result = $result . substr($index, $a, 1);
+		$number  = $number - ($a * $bcp);
+	}
+	return strrev($result); // reverse
+}
+function shortAlphaNumber_dec($string){
+	$index="abcdfghjklmnpqrstvwxyz_012345-ABCDFGHJKLMNPQRSTVWXYZ~6789";
+	$base=strlen($index);
+	
+	$number  = strrev($string);
+	$result = 0;
+	$len = strlen($string) - 1;
+	for ($t = 0; $t <= $len; $t++) {
+		$bcpow = bcpow($base, $len - $t);
+		$result   = $result + strpos($index, substr($number, $t, 1)) * $bcpow;
+	}
+
+	$result = sprintf('%F', $result);
+	return substr($result, 0, strpos($result, '.'));
+}
