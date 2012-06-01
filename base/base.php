@@ -232,7 +232,7 @@ function displayXml($content){
 
 /* http://kevin.vanzonneveld.net/techblog/article/create_short_ids_with_php_like_youtube_or_tinyurl/ */
 function shortAlphaNumber_enc($number){
-	$index="abcdfghjklmnpqrstvwxyz_012345-ABCDFGHJKLMNPQRSTVWXYZ~6789";
+	$index="abcdfghjklmnopqrstvwxyz_012345-ABCDFGHJKLMNOPQRSTVWXYZ~6789";
 	$base=strlen($index);
 	
 	$result = "";
@@ -245,7 +245,7 @@ function shortAlphaNumber_enc($number){
 	return strrev($result); // reverse
 }
 function shortAlphaNumber_dec($string){
-	$index="abcdfghjklmnpqrstvwxyz_012345-ABCDFGHJKLMNPQRSTVWXYZ~6789";
+	$index="abcdfghjklmonpqrstvwxyz_012345-ABCDFGHJKLMNOPQRSTVWXYZ~6789";
 	$base=strlen($index);
 	
 	$number  = strrev($string);

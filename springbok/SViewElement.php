@@ -11,6 +11,6 @@ class SViewElement{
 	}
 	
 	public function render($view='view'){
-		return render(APP.'viewsElements/'.substr(get_called_class(),1).'/'.$view.'.php',$this->vars,true);
+		return render(APP.'viewsElements/'.substr($this->calledClass,1).'/'.$view.'.php',$this->vars,true);
 	}
 }

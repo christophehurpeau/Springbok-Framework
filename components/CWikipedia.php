@@ -17,6 +17,7 @@ class CWikipedia{
 	}
 	
 	public static function getPage($name){
+		$name=str_replace(' ','_',$name);
 		$data=self::$cache->readOrWrite($name,function() use (&$name){
 			CWikipedia::sleep();
 			return CWikipedia::$httpClient->get('http://fr.wikipedia.org/w/api.php?action=parse&page='.$name.'&format=php');
@@ -25,6 +26,7 @@ class CWikipedia{
 	}
 	
 	public static function getPageSource($name){
+		$name=str_replace(' ','_',$name);
 		$data=self::$cache->readOrWrite($name,function() use (&$name){
 			CWikipedia::sleep();
 			return CWikipedia::$httpClient->get('http://fr.wikipedia.org/wiki/Spécial:Exporter/'.$name);

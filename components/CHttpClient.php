@@ -4,8 +4,8 @@
 
 class HttpClientError extends Exception{
 	private $status,$error,$content;
-	public function __construct(&$status,&$error,&$content){
-		parent::__construct($status.' '.$error."\n".$content,$status);
+	public function __construct($url,&$status,&$error,&$content){
+		parent::__construct($url.': '.$status.' '.$error."\n".$content,$status);
 		$this->status=&$status;
 		$this->error=&$error;
 		$this->content=&$content;
@@ -120,7 +120,7 @@ class CHttpClient{
 		
 		if($this->referer!==false) $this->referer=$this->target;
 		
-		if($status!==200 || $error) throw new HttpClientError($status,$error,$content);
+		if($status!==200 || $error) throw new HttpClientError($target,$status,$error,$content);
 		
 		return $content;
 	}
