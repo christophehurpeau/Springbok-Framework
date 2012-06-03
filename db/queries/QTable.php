@@ -7,12 +7,14 @@ class QTable extends QFindAll{
 		;
 	
 	public function &allowFilters(){$this->allowFilters=true; return $this; }
+	public function &allowAdvancedFilters(){$this->allowFilters='advanced'; return $this; }
 	public function &disallowOrder(){$this->allowOrder=false; return $this; }
 	public function &noAutoRelations(){$this->autoRelations=false; return $this;}
 	public function &belongsToFields($params){$this->belongsToFields=&$params; return $this; }
 	public function &exportable($types,$fileName,$title=null){$this->exportable=array(&$types,&$fileName,&$title); return $this;}
 	
-	public function &isFiltersAllowed(){ return $this->allowFilters; }
+	public function isFiltersAllowed(){ return $this->allowFilters!==false; }
+	public function isFilterAdvancable(){ return $this->allowFilters==='advanced'; }
 	public function &isOrderAllowed(){ return $this->allowOrder; }
 	public function &getPagination(){ return $this->pagination; }
 	public function &getFilters(){ return $this->FILTERS; }

@@ -110,7 +110,7 @@ class CModelTable extends CModelTableAbstract{
 		}else{
 			$transformer->startHead();
 			$transformer->titles($this->fields,$this->query->getFields());
-			if($this->query->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters());
+			if($this->query->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters(),$this->query->isFilterAdvancable());
 			$transformer->endHead();
 			$transformer->startBody();
 			empty($results) ? $transformer->noResults(count($this->fields)) : $transformer->displayResults($results,$this->fields);
