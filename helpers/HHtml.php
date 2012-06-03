@@ -105,6 +105,10 @@ class HHtml{
 		return self::jsInline(ob_get_clean());
 	}
 	
+	public static function jsEscape($string){
+		return json_encode($string/*,JSON_UNESCAPED_UNICODE*/);
+	}
+	
 	public static function addJS4IE($url,$for){
 		self::$_JS['ie'][$for][]=$url;
 	}
