@@ -232,6 +232,7 @@ abstract class DB{
 	/* DEV */
 	public function resetQueries(){}
 	public function getQueries(){ return array(); }
+	public function getNbQueries(){ return 0; }
 	/* /DEV */
 	
 	public abstract function getDatabases();
