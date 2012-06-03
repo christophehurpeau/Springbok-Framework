@@ -1,6 +1,6 @@
 <?php
 class THtml extends STransformer{
-	private static $tAligns=array('center'=>'center','right'=>'align_right');
+	private static $tAligns=array('center'=>'center','right'=>'alignRight');
 	protected $component;
 	
 	public function __construct(&$component){

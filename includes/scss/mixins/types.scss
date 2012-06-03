@@ -15,7 +15,7 @@
 }
 
 @mixin typeHover($i,$background,$color:false,$border:false){
-  .clickable .block#{$i}:hover,#container #page .clickable .block#{$i}:hover,input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
+  .clickable .block#{$i}:hover,div .clickable .block#{$i}:hover,input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);
     @if $color{ color:$color; }
     @include border($border);
@@ -26,7 +26,7 @@
 }
 
 @mixin typeFocus($i,$background,$color:false,$border:false){
-  .clickable .block#{$i}:focus,#container #page .clickable .block#{$i}:focus,input.type#{$i}.submit:focus,button.type#{$i}:focus,.button.type#{$i}:focus{
+  .clickable .block#{$i}:focus,div .clickable .block#{$i}:focus,input.type#{$i}.submit:focus,button.type#{$i}:focus,.button.type#{$i}:focus{
     @include background($background);
     @if $color{ color:$color; }
     @include border($border);
@@ -37,7 +37,7 @@
 }
 
 @mixin typeBlock($i,$background,$color:false,$border:false,$borderRadius:false){
-  .block#{$i},#container #page .block#{$i}{
+  .block#{$i},div .block#{$i}{
     @include background($background);
     @if $color{ color:$color; }
     @include border($border);

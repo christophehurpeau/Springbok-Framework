@@ -1,7 +1,12 @@
 $TYPES_BLOCK_BORDERRADIUS:false !default;
-$TYPES_BLOCK_BORDERRADIUS:false !default;
+$TYPES_BLOCK_BORDERTOP:false !default;
+$TYPES_BLOCK_BORDERBOTTOM:false !default;
+$TYPES_BLOCK_PADDING:false !default;
 
 .block{
   position:relative;
   @if $TYPES_BLOCK_BORDERRADIUS{ border-radius:$TYPES_BLOCK_BORDERRADIUS; }
+  @if $TYPES_BLOCK_BORDERTOP{ border-top:$TYPES_BLOCK_BORDERTOP; }
+  @if $TYPES_BLOCK_BORDERBOTTOM{ border-bottom:$TYPES_BLOCK_BORDERBOTTOM; }
+  @if $TYPES_BLOCK_PADDING{ padding:$TYPES_BLOCK_PADDING; }
 }

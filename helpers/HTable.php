@@ -1,7 +1,7 @@
 <?php
 throw new Exception('This helper is now deprecated : use Model::Table()');
 class HTable{
-	private static $tAligns=array('center'=>'center','right'=>'align_right');
+	private static $tAligns=array('center'=>'center','right'=>'alignRight');
 	
 	public static function table($component,$displayTotalResults=true){
 		/* DEV */if(!($component instanceof CTable)) throw new Exception('Your component must be an instance of CTable'); /* /DEV */
