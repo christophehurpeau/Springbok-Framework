@@ -18,8 +18,8 @@
 
 @mixin boxShadows($shadow1,$shadow2:false,$shadow3:false,$shadow4:false,$shadow5:false,$shadow6:false,$shadow7:false,$shadow8:false,$shadow9:false,$shadow10:false){
   $shadow:compact($shadow1,$shadow2,$shadow3,$shadow4,$shadow5,$shadow6,$shadow7,$shadow8,$shadow9,$shadow10);
-  -moz-box-shadow:$shadow;
-  -webkit-box-shadow:$shadow;
+ /* -moz-box-shadow:$shadow;
+  -webkit-box-shadow:$shadow;*/
   box-shadow:$shadow;
 }
 
