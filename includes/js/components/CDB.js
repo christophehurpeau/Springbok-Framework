@@ -27,7 +27,7 @@
 				callback((this.dbs[dbName]=db));
 			});
 		}
-	},
+	}
 }).init();
 
 (function(adapters){

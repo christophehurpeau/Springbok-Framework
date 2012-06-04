@@ -77,6 +77,6 @@ S.extendsPrototype(String,{
 		return this.replace(/%s/g,function(match){ return args[number++] || ''; });
 	},
 	sNl2br:function(){return this.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ '<br />' +'$2');},
-	sBr2nl:function(){return this.replace(/<br\s*\/?>/mg,'\n');},
+	sBr2nl:function(){return this.replace(/<br\s*\/?>/mg,'\n');}
 	
 });

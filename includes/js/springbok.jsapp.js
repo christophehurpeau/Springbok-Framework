@@ -55,7 +55,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 			//Replace
 			put:function(){},
 			//Delete
-			del:function(){},
+			del:function(){}
 		}
 	};
 	S.ready=S.app.ready;
