@@ -68,7 +68,7 @@ class CSession{
 		$params+=$flash['params'];
 		if(!isset($params['class'])) $params['class']='flashMessage';
 		if(!isset($params['id'])) $params['id']=uniqid('f_');
-		return HHtml::tag($element,$params,(empty($params['icon'])?'<span class="icon '.h($params['icon']).'"></span>':'')
+		return HHtml::tag($element,$params,(empty($params['icon'])?'':'<span class="icon '.h($params['icon']).'"></span>')
 				.(empty($flash['notEscape'])?h($flash['message']):$flash['message']),false)
 			.HHtml::jsInline('$("#'.$params['id'].'").delay(5500).fadeOut(800)');
 	}
