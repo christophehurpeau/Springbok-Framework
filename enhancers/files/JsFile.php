@@ -47,30 +47,29 @@ class JsFile extends EnhancerFile{
 		$c=$this->_srcContent;
 		$appDir=$this->enhanced->getAppDir();
 		
-		
-		
-		$c=preg_replace_callback('/initSpringbokRoutes\(([^)]+)?\)/',function(&$m) use(&$appDir){
-			$suffix=(empty($m[1])?'':'_'.substr($m[1],1,-1));
-			return 'S.router.init('.json_encode(include $appDir.'src/config/routes'.$suffix.'.php').','.json_encode(include $appDir.'src/config/routes-langs'.$suffix.'.php').');';
-		},$c);
-		
-		$constantes=array();
-		$c=preg_replace_callback('/\bdefineDefault\(\'([0-9\w_-]+)\',\'?([0-9\w\s\._\-\#\,]+)\'?\);/Ui',function($matches) use(&$constantes){
-			$constantes[$matches[1]]=$matches[2];
-			return '';
-		},$c);
-		$c=preg_replace_callback('/\bdefine\(\'([0-9\w_-]+)\',\'?([0-9\w\s\._\-\#\,]+)\'?\);/Ui',function($matches) use(&$constantes){
-			$constantes[$matches[1]]=$matches[2];
-			return '';
-		},$c);
-		uksort($constantes,function(&$k1,&$k2){return strlen($k1)<strlen($k2);}); // trie les constantes du plus grd au moins grd pour éviter de remplacer des bouts de constantes
-		
-		foreach($constantes as $const=>$replacement)
-			$c=str_replace($const,$replacement,$c);
-		
-		
-		
-		$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
+		if(substr($this->fileName(),-7,-3)!=='.min'){
+			$c=preg_replace_callback('/initSpringbokRoutes\(([^)]+)?\)/',function(&$m) use(&$appDir){
+				$suffix=(empty($m[1])?'':'_'.substr($m[1],1,-1));
+				return 'S.router.init('.json_encode(include $appDir.'src/config/routes'.$suffix.'.php').','.json_encode(include $appDir.'src/config/routes-langs'.$suffix.'.php').');';
+			},$c);
+			
+			$constantes=array();
+			$c=preg_replace_callback('/\bdefineDefault\(\'([0-9\w_-]+)\',\'?([0-9\w\s\._\-\#\,]+)\'?\);/Ui',function($matches) use(&$constantes){
+				$constantes[$matches[1]]=$matches[2];
+				return '';
+			},$c);
+			$c=preg_replace_callback('/\bdefine\(\'([0-9\w_-]+)\',\'?([0-9\w\s\._\-\#\,]+)\'?\);/Ui',function($matches) use(&$constantes){
+				$constantes[$matches[1]]=$matches[2];
+				return '';
+			},$c);
+			uksort($constantes,function(&$k1,&$k2){return strlen($k1)<strlen($k2);}); // trie les constantes du plus grd au moins grd pour éviter de remplacer des bouts de constantes
+			
+			foreach($constantes as $const=>$replacement)
+				$c=str_replace($const,$replacement,$c);
+			
+			
+			$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
+		}
 	}
 	
 	public function getEnhancedDevContent(){
