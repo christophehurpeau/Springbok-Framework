@@ -13,7 +13,7 @@ class CModelTableAbstract{
 	public function &fieldsEditable($fields){ $this->fieldsEditable=&$fields; return $this; }
 	
 	public function &actionClick($action='view'){ return $this; }
-	public function &actions($actions){ return $this; }
+	public function &actions(){ return $this; }
 	public function &controller($controller){ return $this; }
 	
 	public function getModelName(){ return $this->query->getModelName(); }
