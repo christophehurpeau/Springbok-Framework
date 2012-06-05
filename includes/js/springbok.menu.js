@@ -1,5 +1,5 @@
 S.menu={
-	tagName:'menu',separator:'-',
+	tagName:'nav',separator:'-',
 	top:function(options,links){
 		return this.create(options,links,'top');
 	},
@@ -12,7 +12,7 @@ S.menu={
 	ul:function(options,links){
 		this.tagname='ul';
 		var res=this.create(options,links,'');
-		this.tagname='menu';
+		this.tagname='nav';
 		return res;
 	},
 	
