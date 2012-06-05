@@ -180,7 +180,7 @@ s.parentNode.insertBefore(g,s);
 	public static function iconBlockLink($icon,$text,$url,$optionsLink=array()){
 		$optionsLink['escape']=false;
 		if(!isset($optionsLink['class'])) $optionsLink['class']='aicon';
-		return self::link('<div class="icon_wrap"><span class="icon '.h($icon).'"></span><div>'.h($text).'</div></div>',$url,$optionsLink);
+		return self::link('<div class="iconWrap"><span class="icon '.h($icon).'"></span><div>'.h($text).'</div></div>',$url,$optionsLink);
 	}
 	
 	public static function iconAction($icon,$url,$optionsLink=array()){
