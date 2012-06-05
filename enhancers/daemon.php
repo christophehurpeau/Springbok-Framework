@@ -4,6 +4,8 @@ class DelayedEnhanceDaemon extends Daemon{
 		class_exists("UFile");
 		$baseApp=dirname(APP).'/';
 		file_put_contents($baseApp.'block_delayedEnhanceDaemon','');
+		sleep(2);
+		while(file_exists($baseApp.'block_enhance')) sleep(2);
 		$srcDir=$baseApp.'src/';
 		$db=DB::init('_enhancedDelayed',array(
 			'type'=>'SQLite',

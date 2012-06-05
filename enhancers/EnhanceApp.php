@@ -86,8 +86,8 @@ define('APP', __DIR__.'/dev/');";
 	
 	public function afterEnhance(&$dev,&$prod){
 		if(!file_exists($path=($dev->getPath().'daemons/'))) mkdir($path);
-		if(!file_exists($path=($dev->getPath().'daemons/delayedEnhanceDaemon.php'))/* || true*/) copy(CORE.'enhancers/daemon.php',$path);
-		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default');
+		if(!file_exists($path=($dev->getPath().'daemons/delayedEnhanceDaemon.php')) || true) copy(CORE.'enhancers/daemon.php',$path);
+		//UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default');
 		//if(!empty($this->config['includes'])){
 		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
 		$this->enhanced->config['includes']['img'][]='ajax';
@@ -123,7 +123,7 @@ define('APP', __DIR__.'/dev/');";
 					$this->recursiveDir($pluginPath.'/',new Folder($pluginPath), $dev->getPath(), $prod->getPath(),true,false,false);
 			}
 		}
-		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default');
+		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default',false,false);
 		
 		/*$webFolder=date('mdH');
 		

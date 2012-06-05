@@ -32,3 +32,36 @@ end
 module Sass::Script::Functions
   include SpringbokFunctions
 end
+
+
+
+=begin
+
+module Sass
+  module Importers
+    class SpringbokCore < Filesystem
+      
+      # @see Base#find_relative
+      def find_relative(name, base, options)
+        return _find("/var/www/springbok/core/includes/scss", name, options) if(name[0,5] == "CORE/")
+      end 
+
+      # @see Base#find
+      def find(name, options)
+        return nil;
+      end
+
+      # @see Base#key
+      def key(name, options)
+        [self.class.name + ":" + File.dirname(File.expand_path(name)),
+          File.basename(name)]
+      end
+    end
+  end
+end
+
+module Sass::Plugin
+  Sass::Plugin.options[load_paths] << Sass::Importers::SpringbokCore.new
+end
+
+=end

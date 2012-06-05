@@ -432,7 +432,12 @@ class CssFile extends EnhancerFile{
 					}
 				}
 			}
-			$cssImgs=array_unique($cssImgs);
+			$cssImgs=array_unique($cssImgs); $md5CssImgs=md5(implode('#',$cssImgs));
+			if(file_exists($enhanced->getAppDir().'imgSprite_md5')){
+				$md5=file_get_contents($enhanced->getAppDir().'imgSprite_md5');
+				if($md5===$md5CssImgs) return;
+			}
+			file_put_contents($enhanced->getAppDir().'imgSprite_md5',$md5CssImgs);
 			
 			if(!empty($cssImgs)){
 				$imgDir=$prod->getPath().'web/img/';

@@ -72,7 +72,7 @@ class UExec{
 		return $sshCommand;
 	}
 	
-	public static function exec($command,$ssh=false){
+	public static function exec($command,$ssh=false,$waiting=true){
 		if($ssh){
 			$sshCommand=self::_sshCommand($ssh);
 			if(!empty($ssh['user'])) $sshCommand.=$ssh['user'].'@';
@@ -81,7 +81,7 @@ class UExec{
 			return self::execWithSshAgent($sshCommand,$ssh);
 		}
 		//CLogger::get('exec')->log($command);
-		return UEncoding::convertToUtf8(trim(shell_exec($command.' 2>&1')));
+		return UEncoding::convertToUtf8(trim(shell_exec($command.($waiting?' 2>&1':' > /dev/null 2>/dev/null &'))));
 	}
 	
 	public static function createTarGz(/* HIDE */$cd,$options,$archive,$files/* /HIDE */){

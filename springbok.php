@@ -65,6 +65,8 @@ class Springbok{
 		}
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
 		/* DEV */elseif(App::$enhancing){debug($log); exit;}else die($log);/* /DEV */
+		
+		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
 		App::displayException($exception,$forceDefault);
 		exit(1);
 	}
@@ -88,6 +90,7 @@ class Springbok{
 		
 		if(ob_get_length()>0) ob_end_clean();
 		
+		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
 		App::displayError($forceDefault,$code, $message, $file, $line,$context);
 		exit(1);
 	}
