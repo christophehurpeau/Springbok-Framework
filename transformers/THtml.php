@@ -34,10 +34,15 @@ class THtml extends STransformer{
 		if($this->component->actionClick!==null && is_string($this->component->actionClick) && $this->component->actionClick[0]!=='/')
 			$this->component->actionClick='/'.$this->component->controller.'/'.$this->component->actionClick;
 		if($this->component->rowActions!==null){
-			echo '<th style="width:'.(count($this->component->rowActions)*16).'px">'.h2(_tC('Actions')).'</th>';
+			echo '<th style="width:'.(1+ count($this->component->rowActions)*17).'px">'.h2(_tC('Actions')).'</th>';
 			foreach($this->component->rowActions as $k=>&$action){
-				if(is_string($action)) $action=array('url'=>$action,'icon'=>$action);
-				if($action['url'][0] !== '/') $this->component->rowActions[$k]['url']='/'.$this->component->controller.'/'.$action['url'];
+				if(is_string($action)) $action=array(array('class'=>'action '.$action),$action);
+				else{
+					$attrs=$action; unset($attrs[0],$attrs[1]);
+					$attrs['class']='action '.$action[0];
+					$action=array($attrs,isset($action[1]) ? $action[1] : $action[0]);
+				}
+				if($action[1] !== '/') $action[1]='/'.$this->component->controller.'/'.$action[1];
 			}
 		}
 		echo '</tr>';
@@ -101,7 +106,7 @@ class THtml extends STransformer{
 			if($this->component->rowActions !==null){
 				echo '<td>';
 				foreach($this->component->rowActions as &$action)
-					echo HHtml::link('',$action['url'].'/'.$pkValue,array('class'=>'action '.$action['icon']));
+					echo HHtml::link('',$action[1].'/'.$pkValue,$action[0]);
 				echo '</td>';
 			}
 			echo '</tr>';
