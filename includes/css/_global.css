@@ -62,15 +62,15 @@ span.right_val{
 li a img{vertical-align:bottom}
 table img,img.icon,span.icon,.va-middle{vertical-align:middle}
 span.img,span.icon{display:block;display:inline-block}
-.icon_wrap{
+.iconWrap{
     position:relative;
     overflow:hidden;
 }
-.icon_wrap .icon{
+.iconWrap .icon{
 	position:absolute;
 	top:0;left:0;
 }
-.icon_wrap div{
+.iconWrap div{
 	display: table-cell;
     vertical-align: middle;
 }
