@@ -9,8 +9,12 @@ class DBSQLite extends DBSql{
 	}
 	
 	public function connect(){
+		/* DEV */try{ /* /DEV */
 		$this->_connect=new SQLite3($this->_config['file'],$this->_config['flags']);
-		if(!$this->_connect) throw new DBException('Unable to connect',null);
+		/* DEV */}catch(Exception $e){
+			throw new Exception('Unable to connect: '.$this->_config['file'].' '.$e->getMessage());
+		}/* /DEV */
+		/*if(!$this->_connect) throw new DBException('Unable to connect',null);*/
 	}
 	
 	public function getVersion(){return $this->_conect->version();}
