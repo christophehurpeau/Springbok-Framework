@@ -424,7 +424,7 @@ class CssFile extends EnhancerFile{
 						if(substr($url,0,8)==='COREIMG/'){
 							$cssImgs[]=$url;
 						}else{
-							if((!empty($matches[2][$i]) && ($trimMatches2=trim($matches[2])) && ($trimMatches2==='transparent' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
+							if((!empty($matches[2][$i]) && ($trimMatches2=trim($matches[2][$i])) && ($trimMatches2==='transparent' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
 										|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || $url=='../img/'.$spritename
 										|| substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
 										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery') continue;
@@ -434,7 +434,7 @@ class CssFile extends EnhancerFile{
 				}
 			}
 			$cssImgs=array_unique($cssImgs); $md5CssImgs=md5(implode('#',$cssImgs));
-			if(file_exists($enhanced->getAppDir().'imgSprite_md5')){
+			if(file_exists($enhanced->getAppDir().'imgSprite_md5') && file_exists($prod->getPath().'web/img/img-sprite.png')){
 				$md5=file_get_contents($enhanced->getAppDir().'imgSprite_md5');
 				if($md5===$md5CssImgs) return;
 			}
