@@ -9,7 +9,7 @@ $HEADER_BORDER_RADIUS:false !default;
 $FIXED_VARIABLE_SHADOW:false !default;
 $FIXED_BACKGROUND:false !default;
 $FIXED_BORDER:false !default;
-$FIXED_VARIABLE_MARGIN:false !default;
+$FIXED_VARIABLE_MARGIN:$FIXED_VARIABLE_SHADOW !default;
 $VARIABLE_BACKGROUND:false !default;
 $VARIABLE_BORDER:false !default;
 $VARIABLE_SHADOW:false !default;
