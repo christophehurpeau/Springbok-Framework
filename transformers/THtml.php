@@ -4,7 +4,7 @@ class THtml extends STransformer{
 	protected $component;
 	
 	public function __construct(&$component){
-		echo '<table class="table">';
+		echo '<table class="table'.($component->actionClick!==null?' pointer':'').'">';
 		$this->component=&$component;
 	}
 	
@@ -83,8 +83,8 @@ class THtml extends STransformer{
 		$iRow=0;
 		foreach($results as $key=>&$model){
 			if(isset($this->component->rowActions) || $this->component->actionClick) $pkValue=$model->_getPkValue();
-			$class=$iRow++%2 ? 'alternate' : '';
 			echo '<tr';
+			if($iRow++%2) echo ' class="alternate"';
 			if($this->component->actionClick !==null){
 				if(is_array($this->component->actionClick)){
 					$defaultActionUrl=$this->component->actionClick;
@@ -94,10 +94,10 @@ class THtml extends STransformer{
 					$callback=&$this->component->actionClick;
 					$defaultActionUrl=$callback($pkValue,$model);
 				}
-				$class.=' pointer';
-				echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
+				//echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
+				echo ' rel="'.HHtml::url($defaultActionUrl,false,true).'"'; //event.target.nodeName
 			}
-			echo (empty($class)?'':' class="'.trim($class).'"').'>';
+			echo '>';
 			foreach($fields as $i=>&$field){
 				$value=static::getValueFromModel($model,$field,$i);
 				$this->displayValue($field,$value,$model);
@@ -128,5 +128,6 @@ class THtml extends STransformer{
 	//end
 	public function end(){
 		echo '</tbody></table>';
+		if($this->component->actionClick!==null) echo HHtml::jsInline('S.ready(S.tableClick)');
 	}
 }
