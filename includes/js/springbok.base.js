@@ -121,8 +121,9 @@ window.S={
 		$('table.pointer tr').off('click').each(function(i,elt){
 			elt=$(elt);
 			var trTimeout,href=elt.attr('rel');
-			elt.on('click',function(){trTimeout=setTimeout(function(){console.log('redirect TR');S.redirect(href)},250);});
-			elt.find('a').off('click').on('click',function(e){ console.log('redirect A'); clearTimeout(trTimeout); e.stopPropagation(); e.preventDefault(); S.redirect($(this).attr('href')); })
+			elt.on('click',function(){trTimeout=setTimeout(function(){S.redirect(href)},250);});
+			elt.find('a').off('click').on('click',function(e){ clearTimeout(trTimeout); e.stopPropagation(); e.preventDefault();
+					var a=$(this),confirmMessage=a.data('confirm'); if(!confirmMessage || confirm(confirmMessage=='1' ? i18nc['Are you sure ?'] : confirmMessage)) S.redirect(a.attr('href')); })
 		});
 		
 	}

@@ -9,40 +9,34 @@ class CModelTable extends CModelTableAbstract{
 	public function &addAction($action){$this->rowActions[]=&$action; return $this; }
 	public function &controller($controller){$this->controller=&$controller; return $this; }
 	
-	public function &setActionsRUD($iconPrefix=''){
+	public function &setActionsRUD($iconPrefix='',$confirm=true){
 		$this->actionClick='view';
-		$this->rowActions=array(
-			array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')),
-			array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')),
-			array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete')),
-		);
+		$this->rowActions=array( self::actionView($iconPrefix), self::actionEdit($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
 		return $this;
 	}
 	public function &setActionsRU($iconPrefix=''){
 		$this->actionClick='view';
-		$this->rowActions=array(
-			array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')),
-			array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')),
-		);
+		$this->rowActions=array( self::actionView($iconPrefix), self::actionEdit($iconPrefix) );
 		return $this;
 	}
-	public function &setActionsUD($iconPrefix=''){
+	public function &setActionsUD($iconPrefix='',$confirm=true){
 		$this->actionClick='edit';
-		$this->rowActions=array(
-			array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')),
-			array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete')),
-		);
+		$this->rowActions=array( self::actionEdit($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
 		return $this;
 	}
-	public function &setActionsRD($iconPrefix=''){
+	public function &setActionsRD($iconPrefix='',$confirm=true){
 		$this->actionClick='view';
-		$this->rowActions=array(
-			array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')),
-			array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete')),
-		);
+		$this->rowActions=array( self::actionView($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
 		return $this;
 	}
-	
+	private function actionView($iconPrefix){ return array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')); }
+	private function actionEdit($iconPrefix){ return array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')); }
+	private function &actionDelete($iconPrefix,$confirm){
+		$options=array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete'));
+		if($confirm===true) $options['data-confirm']="1";
+		elseif($confirm) $options['data-confirm']=$confirm;
+		return $options;
+	}
 	
 	public function render($title,$add=false,$layout=null){
 		include_once CORE.'mvc/views/View.php';

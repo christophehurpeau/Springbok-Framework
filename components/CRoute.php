@@ -120,13 +120,14 @@ class CRoute{
 			if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
 			/* /DEV */
 		}
-		if(isset($params['ext'])){ $plus.='.'.$params['ext']; unset($params['ext']); }
-		elseif(isset($route['ext'])){ $plus.= '.'.$route['ext']; }
-		if(isset($params['?'])){$plus.='?'.$params['?']; unset($params['?']); }
-		if(isset($params['#'])){$plus.='#'.$params['#']; unset($params['#']); }
+		if(isset($params['ext'])) $plus.='.'.$params['ext'];
+		elseif(isset($route['ext'])) $plus.= '.'.$route['ext'];
+		if(isset($params['?'])) $plus.='?'.$params['?'];
+		if(isset($params['#'])) $plus.='#'.$params['#'];
 		
-		if(isset($params['lang'])){ $lang=$params['lang']; unset($params['lang']); }
-		else $lang=CLang::get();
+		if(isset($params['lang'])) $lang=$params['lang']; else $lang=CLang::get();
+		
+		unset($params['ext'],$params['?'],$params['#'],$params['lang']);
 		
 		if(empty($params)) return $route[$lang][1].$plus;
 		$url=($link===true?self::getStringLink($params[0]):vsprintf($route[CLang::get()][1],$params));
