@@ -9,9 +9,29 @@ class CModelTable extends CModelTableAbstract{
 	public function &addAction($action){$this->rowActions[]=&$action; return $this; }
 	public function &controller($controller){$this->controller=&$controller; return $this; }
 	
-	public function &setActionsRUD(){
+	public function &setActionsRUD($iconPrefix=''){
 		$this->actionClick='view';
-		$this->rowActions=array('view','edit','delete');
+		$this->rowActions=array(
+			array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')),
+			array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')),
+			array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete')),
+		);
+		return $this;
+	}
+	public function &setActionsRU($iconPrefix=''){
+		$this->actionClick='view';
+		$this->rowActions=array(
+			array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')),
+			array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')),
+		);
+		return $this;
+	}
+	public function &setActionsUD($iconPrefix=''){
+		$this->actionClick='edit';
+		$this->rowActions=array(
+			array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')),
+			array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete')),
+		);
 		return $this;
 	}
 	
@@ -74,7 +94,7 @@ class CModelTable extends CModelTableAbstract{
 		if($this->query->isExportable()){
 			echo '<span class="exportLinks">'; 
 			foreach($this->query->getExportableTypes() as $exportType)
-				echo HHtml::iconAction('page_'.$exportType,'?export='.$exportType,array('target'=>'_blank'));//target : springbok.ajax
+				echo HHtml::iconAction('file'.ucfirst($exportType),'?export='.$exportType,array('target'=>'_blank'));//target : springbok.ajax
 			echo '</span>';
 		}
 		

@@ -2,10 +2,17 @@
   .block#{$i}{
     @extend .block;
   }
-  .block#{$i},.block#{$i} a,#page .clickable .block#{$i},ul.clickable .block#{$i} a,.block#{$i} a:hover,
+  //.block#{$i},.block#{$i} a,#page .clickable .block#{$i},ul.clickable .block#{$i} a,.block#{$i} a:hover,
+  //     input.type#{$i}.submit,button.type#{$i},.button.type#{$i}{
+  //      color:if($color,$color,$BODY_COLOR);
+  //}
+
+	@if $color{
+		.block#{$i},.block#{$i} a,#page .clickable .block#{$i},ul.clickable .block#{$i} a,.block#{$i} a:hover,
        input.type#{$i}.submit,button.type#{$i},.button.type#{$i}{
-        color:if($color,$color,$BODY_COLOR);
-  }
+        color:$color;
+  	}
+	}
   
   .block#{$i},#page .block#{$i},input.type#{$i}.submit,button.type#{$i},.button.type#{$i},.button.type#{$i}:hover,.button.type#{$i}:focus{
     @include background($background);

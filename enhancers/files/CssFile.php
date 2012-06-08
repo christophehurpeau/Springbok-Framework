@@ -461,7 +461,8 @@ class CssFile extends EnhancerFile{
 				 */
 				foreach(array(new Folder($prod->getPath().'web/css'),new Folder($dev->getPath().'web/css')) as $cssFolder){
 					foreach($cssFolder->listFiles() as $file){
-						$content=$file->read();
+						if(substr($file->getName(),-4)!=='.css') continue;
+						$content=file_get_contents($compiledCssFolder->getPath().$file->getName());
 						$content=preg_replace_callback('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)([^;}{]*[;|}])?/U',function(&$matches) use(&$cssRules,&$spritename){
 							$url=trim($matches[3],' \'"');
 							if(substr($url,0,8)==='COREIMG/'){

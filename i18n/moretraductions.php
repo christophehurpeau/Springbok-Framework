@@ -13,10 +13,12 @@ _tC('Error:');
 
 _tC('Add');
 _tC('Update');
+_tC('Edit');
 _tC('Delete');
 _tC('Create');
 _tC('Modify');
 _tC('Rename');
+_tC('View');
 
 _tC('Date');
 _tC('Name');

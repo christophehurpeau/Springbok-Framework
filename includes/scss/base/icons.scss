@@ -2,37 +2,40 @@
   @if $iconName==''{ $iconName:$name; }
   .icon.#{$name}{background:url('COREIMG/silk_icon_set/#{$iconName}.png');}
 }
+@mixin coreIcon16($name,$iconName){
+  .icon.#{$name}{background:url('COREIMG/fatcowIcons_16/#{$iconName}.png');}
+}
 
 .iconWrap div{height:30px;padding-left:28px}
 .icon{width:16px;height:16px;margin:2px 3px 2px 0;text-indent: -99999px;}/* pourquoi pas en display inline-block ? */
 li .icon,.button .icon{margin:0 2px 0 0}
 
-@include coreIcon('page_add','page_white_add');
-@include coreIcon('page_delete','page_white_delete');
-@include coreIcon('page_edit','page_white_edit');
-@include coreIcon('add','add');
-@include coreIcon('edit','pencil');
-@include coreIcon('editText','page_white_text');
-@include coreIcon('delete','delete');
-@include coreIcon('refresh','arrow_refresh');
-@include coreIcon('reload','arrow_rotate_clockwise');
-@include coreIcon('select','page_go');
-@include coreIcon('view','page_white_go');
-@include coreIcon('merge','arrow_merge');
-@include coreIcon('back','arrow_left');
-@include coreIcon('rename','textfield_rename');
+@include coreIcon16('pageAdd','page_white_add');
+@include coreIcon16('pageEdit','page_white_edit');
+@include coreIcon16('pageDelete','page_white_delete');
+@include coreIcon16('add','add');
+@include coreIcon16('edit','pencil');
+@include coreIcon16('delete','delete');
+@include coreIcon16('editText','page_white_text');
+@include coreIcon16('refresh','arrow_refresh');
+@include coreIcon16('reload','arrow_rotate_clockwise');
+@include coreIcon16('select','shape_square_go');
+@include coreIcon16('view','zoom_layer');
+@include coreIcon16('merge','arrow_merge');
+@include coreIcon16('back','arrow_left');
+@include coreIcon16('rename','textfield_rename');
 
 /* messages */
-@include coreIcon('info','information');
-@include coreIcon('help','help');
-@include coreIcon('warning','error');
-@include coreIcon('error','exclamation');
+@include coreIcon16('info','information');
+@include coreIcon16('help','help');
+@include coreIcon16('warning','error');
+@include coreIcon16('error','exclamation');
 
 /* booleans */
-@include coreIcon('enabled','bullet_green');
-@include coreIcon('disabled','bullet_red');
-@include coreIcon('tick','tick');
-@include coreIcon('cross','cross');
+@include coreIcon16('enabled','bullet_green');
+@include coreIcon16('disabled','bullet_red');
+@include coreIcon16('tick','tick');
+@include coreIcon16('cross','cross');
 
 /* toggle */
 @include coreIcon('toggle_plus','bullet_toggle_plus');

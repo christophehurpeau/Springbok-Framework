@@ -1,11 +1,44 @@
-@includeCore 'base/icons';
-@each $iconName in page,page_add,page_attach,page_code,page_copy,page_delete,page_edit,page_error,page_excel,
-    page_find,page_gear,page_go,page_green,page_key,page_lightning,page_link,page_paintbrush,page_paste,
-    page_red,page_refresh,page_save,page_csv {
-  @include coreIcon($iconName);
-}/*
-@include coreIcon('page_xls','file_extension_xls');
-@include coreIcon('page_pdf','file_extension_pdf');*/
-
-@include coreIcon('page_xls','page_excel');
-@include coreIcon('page_pdf','page_white_acrobat');
+@include coreIcon16('pagePdf','page_white_acrobat');
+@include coreIcon16('pageActionScript','page_white_actionscript');
+@include coreIcon16('pageC','page_white_c');
+@include coreIcon16('pageCamera','page_white_camera');
+@include coreIcon16('pageCd','page_white_cd');
+@include coreIcon16('pageCode','page_white_code');
+@include coreIcon16('pageCodeRed','page_white_code_red');
+@include coreIcon16('pageCompress','page_white_compress');
+@include coreIcon16('pageCopy','page_white_copy');
+@include coreIcon16('pageCpp','page_white_cplusplus');
+@include coreIcon16('pageCsharp','page_white_csharp');
+@include coreIcon16('pageDvd','page_white_dvd');
+@include coreIcon16('pageError','page_white_error');
+@include coreIcon16('pageXls','page_white_excel');
+@include coreIcon16('pageFind','page_white_find');
+@include coreIcon16('pageFlash','page_white_flash');
+@include coreIcon16('pageGear','page_white_gear');
+@include coreIcon16('pageGet','page_white_get');
+@include coreIcon16('pageGo','page_white_go');
+@include coreIcon16('pageH','page_white_h');
+@include coreIcon16('pageKey','page_white_key');
+@include coreIcon16('pageLightning','page_white_lightning');
+@include coreIcon16('pageLink','page_white_link');
+@include coreIcon16('pageMagnify','page_white_magnify');
+@include coreIcon16('pageMedal','page_white_medal');
+@include coreIcon16('pageOffice','page_white_office');
+@include coreIcon16('pagePaint','page_white_paint');
+@include coreIcon16('pagePaintbrush','page_white_paintbrush');
+@include coreIcon16('pagePaste','page_white_paste');
+@include coreIcon16('pagePhp','page_white_php');
+@include coreIcon16('pagePic','page_white_picture');
+@include coreIcon16('pagePpt','page_white_powerpoint');
+@include coreIcon16('pagePut','page_white_put');
+@include coreIcon16('pageRuby','page_white_ruby');
+@include coreIcon16('pageStack','page_white_stack');
+@include coreIcon16('pageStar','page_white_star');
+@include coreIcon16('pageText','page_white_text');
+@include coreIcon16('pageVector','page_white_vector');
+@include coreIcon16('pageVisualStudio','page_white_visualstudio');
+@include coreIcon16('pageWord','page_white_word');
+@include coreIcon16('pageWorld','page_white_world');
+@include coreIcon16('pageWrench','page_white_wrench');
+@include coreIcon16('pageZip','page_white_zip');
+@include coreIcon16('pageWww','www_page');

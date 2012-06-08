@@ -1,0 +1,11 @@
+@includeCore 'base/icons';
+@each $iconName in page,page_add,page_attach,page_code,page_copy,page_delete,page_edit,page_error,page_excel,
+    page_find,page_gear,page_go,page_green,page_key,page_lightning,page_link,page_paintbrush,page_paste,
+    page_red,page_refresh,page_save,page_csv {
+  @include coreIcon($iconName);
+}/*
+@include coreIcon('page_xls','file_extension_xls');
+@include coreIcon('page_pdf','file_extension_pdf');*/
+
+@include coreIcon('page_xls','page_excel');
+@include coreIcon('page_pdf','page_white_acrobat');

@@ -36,10 +36,10 @@ class THtml extends STransformer{
 		if($this->component->rowActions!==null){
 			echo '<th style="width:'.(1+ count($this->component->rowActions)*17).'px">'.h2(_tC('Actions')).'</th>';
 			foreach($this->component->rowActions as $k=>&$action){
-				if(is_string($action)) $action=array(array('class'=>'action '.$action),$action);
+				if(is_string($action)) $action=array(array('class'=>'action icon '.$action),$action);
 				else{
 					$attrs=$action; unset($attrs[0],$attrs[1]);
-					$attrs['class']='action '.$action[0];
+					$attrs['class']='action icon '.$action[0];
 					$action=array($attrs,isset($action[1]) ? $action[1] : $action[0]);
 				}
 				if($action[1] !== '/') $action[1]='/'.$this->component->controller.'/'.$action[1];
