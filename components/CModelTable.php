@@ -35,7 +35,7 @@ class CModelTable extends CModelTableAbstract{
 		return $this;
 	}
 	public function &setActionsRD($iconPrefix=''){
-		$this->actionClick='edit';
+		$this->actionClick='view';
 		$this->rowActions=array(
 			array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')),
 			array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete')),
