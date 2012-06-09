@@ -1,6 +1,7 @@
+window.L={};
 S.Layout=function(name,methods,init){
 	var t=this;
-	S.app.layouts[t.name=name]=t;
+	L[t.name=name]=t;
 	t.page=S.app.page;
 	t.init=init;
 	$.each(methods,function(i,v){

@@ -17,7 +17,7 @@ class CLang{
 			}
 		}
 		if($lang===false) $lang=/* DEV */isset(App::$enhancing)&&App::$enhancing?'fr':/* /DEV */Config::$default_lang;
-		self::$lang=&$lang;
+		self::$lang=$lang;
 		self::$db=DB::init('_lang',array(
 			'type'=>'SQLite',
 			'file'=>DB::langDir().$lang.'.db',

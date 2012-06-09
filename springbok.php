@@ -6,6 +6,7 @@ define('ALIBS',APP.'libs/');
 //define('CLIBS',CORE.'libs'.DS);
 define('CLIBS',$parentCore.'libs//* DEV */dev/* /DEV *//* PROD */prod/* /PROD *//');
 
+date_default_timezone_set('Europe/Paris');
 ob_start();
 
 //Exceptions

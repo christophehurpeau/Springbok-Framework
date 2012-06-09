@@ -437,9 +437,9 @@ class CssFile extends EnhancerFile{
 			/*if(file_exists($enhanced->getAppDir().'imgSprite_md5') && file_exists($prod->getPath().'web/img/img-sprite.png')){
 				$md5=file_get_contents($enhanced->getAppDir().'imgSprite_md5');
 				if($md5===$md5CssImgs) return;
-			}*/
+			}
 			file_put_contents($enhanced->getAppDir().'imgSprite_md5',$md5CssImgs);
-			
+			*/
 			if(!empty($cssImgs)){
 				$imgDir=$prod->getPath().'web/img/';
 				/*foreach($cssImgs as $imgKey=>&$cssImg)

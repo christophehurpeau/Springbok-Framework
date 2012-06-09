@@ -19,7 +19,7 @@ class SMongoModel extends SModel{
 		throw new Exception();
 		if(!$this->beforeSave()) return false;
 		$data=$this->_getData();
-		$data['created']=new MongoDate();
+		//$data['created']=new MongoDate();
 		//static::$__collection->save($data);
 		if(isset($data['_id']))
 			static::$__collection->save(array('_id'=>$data['_id']),$data);

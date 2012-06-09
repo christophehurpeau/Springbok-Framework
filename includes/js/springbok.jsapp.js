@@ -8,7 +8,6 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 	S.app={
 		name:'',version:1,
 		header:'',footer:true,page:0,
-		controllers:{},layouts:{},
 		
 		jsapp:function(name,version){this.name=name;this.version=version;},
 		
@@ -70,6 +69,7 @@ includeCore('jsapp/httpexceptions');
 includeCore('jsapp/langs');
 includeCore('jsapp/controller');
 includeCore('jsapp/layout');
+includeCore('helpers/form');
 includeCore('springbok.router');
 includeCore('springbok.html');
 includeCore('springbok.menu');
@@ -85,8 +85,9 @@ S.app.load=S.ajax.load=function(url){
 		//console.log(route);
 		S.history.navigate(url);
 		S.app.require('c/'+route.controller);
-		S.app.controllers[route.controller].dispatch(route);
+		C[route.controller].dispatch(route);
 	}catch(err){
+		if(err instanceof S.Controller.Stop) return;
 		if(err instanceof HttpException){
 			
 		}

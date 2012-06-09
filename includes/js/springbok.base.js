@@ -93,21 +93,28 @@ window.S={
 		f.prototype=superclass.prototype;
 		subclass.prototype=new f();
 		subclass.prototype.constructor=subclass;
-		subclass.superconstructor=superclass;
+		subclass.superctor=superclass;
 		subclass.superclass=superclass.prototype;
 		
 		if(methods) S.extendsPrototype(subclass,methods);
 	},
-	extendsMClass:function(subclass,superclass,methods){
+	/*extendsMClass:function(subclass,superclass,methods){
 		superclass=arraySliceFunction.call(arguments,1,-1);
-		for(var i in superclass)
-			S.extendsClass(subclass,superclass[i]);
+		for(var i in superclass){
+			
+		}
 		if(methods) S.extendsPrototype(subclass,methods);
-	},
+	},*/
 	extendsPrototype:function(targetclass,methods){
 		for(var i in methods)
 			targetclass.prototype[i]=methods[i];
 		return targetclass;
+	},
+	addSetMethods:function(targetclass,methods){
+		for(var i in methods.split(',')){
+			var methodName=methods[i];
+			targetclass.prototype[methodName]=function(val){ this['_'+methodName]=val; return this; };
+		}
 	},
 	
 	extendsObj:function(target,object){

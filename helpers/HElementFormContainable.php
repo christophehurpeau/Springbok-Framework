@@ -43,7 +43,7 @@ abstract class HElementFormContainable extends HElement{
 	}
 	
 	protected function _setAttrName(){
-		$this->attributes['id']=$this->_name();
+		$this->attributes['name']=$this->_name();
 	}
 	
 	

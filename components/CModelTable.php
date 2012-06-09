@@ -73,8 +73,8 @@ class CModelTable extends CModelTableAbstract{
 		/* DEV */ if($this->query->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
 		/* DEV */ if($this->query->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
 		
-		$this->editablePkField=&$pkField;
-		$this->editableUrl=&$url;
+		$this->editablePkField=$pkField;
+		$this->editableUrl=$url;
 		$this->display($displayTotalResults,'THtmlEditable');
 	}
 	

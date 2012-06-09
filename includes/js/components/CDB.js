@@ -1,4 +1,4 @@
-(S.CDB={
+S.CDB={
 	config:includeJsAppConfig('databases'),
 	adapters:{}, dbs:{},
 	
@@ -10,7 +10,7 @@
 				return false;
 			}
 		});
-		if(!this.adapter) throw new FatalError('IndexedDB doesn\'t work on your browser. Please use Firefox or Chrome.');
+		if(!t.adapter) throw new FatalError('IndexedDB doesn\'t work on your browser. Please use Firefox or Chrome.');
 	},
 	
 	get:function(dbName,callback){
@@ -28,12 +28,14 @@
 			});
 		}
 	}
-}).init();
+};
 
 (function(adapters){
 	includeCore('components/CDB_websql');
 	includeCore('components/CDB_indexeddb');
 })(S.CDB.adapters);
+
+S.CDB.init();
 
 /*var r=this.request=indexedDB.open("MyTestDatabase",1);
 r.onblocked=function(){ throw new FatalError('Please close all other tabs with this site open!') };

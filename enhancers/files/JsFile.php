@@ -68,7 +68,8 @@ class JsFile extends EnhancerFile{
 				$c=str_replace($const,$replacement,$c);
 			
 			
-			$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
+			if(strpos(dirname($this->srcFile()->getPath()),'app')===false)
+				$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
 		}
 	}
 	

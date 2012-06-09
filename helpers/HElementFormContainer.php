@@ -17,7 +17,7 @@ class HElementFormContainer extends HElement{
 	
 	public function __toString(){
 		if($hasError=$this->error!==false && CValidation::hasError($key=($this->form->modelName === NULL ? $this->contained->name : $this->form->name.'.'.$this->contained->name)))
-			$this->attrAddClass('invalid');
+			$this->addClass('invalid');
 		return HHtml::tag($this->tagContainer,$this->attributes,
 				($this->before!==null ? $this->before : '')
 				.$this->contained->toString()

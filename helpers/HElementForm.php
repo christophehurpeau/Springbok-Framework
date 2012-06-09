@@ -20,7 +20,7 @@ class HElementForm extends HElement{
 	}
 	
 	public $method,$action,$urlfull=false,
-			$defaultLabel=true,$setValuesFromVar=true,$name,$modelName,
+			$defaultLabel=true,$name,$modelName,
 			$tagContainer='div',$fieldsetStarted=false;
 	
 	
@@ -35,7 +35,7 @@ class HElementForm extends HElement{
 	
 	public function setModelName($modelName=null,$name=null,$setValuesFromVar=true){
 		if($name===null && $modelName !== null) $name=lcfirst($modelName);
-		$this->modelName=&$modelName; $this->name=&$name;
+		$this->modelName=$modelName; $this->name=$name;
 
 		if($setValuesFromVar && $name && Controller::_isset($name)){
 			$val=&Controller::get($name);
@@ -50,8 +50,8 @@ class HElementForm extends HElement{
 	/**
 	 * @return HElementForm
 	 */
-	public function action($action){$this->action=&$action; return $this; }
-	public function urlfull($urlfull){$this->urlfull=&$urlfull; return $this; }
+	public function action($action){$this->action=$action; return $this; }
+	public function urlfull($urlfull){$this->urlfull=$urlfull; return $this; }
 	//public function &file(){ /* $this->method='post'; */ $this->attributes['enctype']='multipart/form-data'; return $this; }
 	
 	public function isContainable(){ return $this->tagContainer!==false; }

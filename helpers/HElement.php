@@ -6,7 +6,7 @@ abstract class HElement{
 	public function &attr($attrName,$value){ $this->attributes[$attrName]=&$value; return $this; }
 	public function &id($id){ $this->attributes['id']=&$id; return $this; }
 	public function &attrClass($class){ $this->attributes['class']=&$class; return $this; }
-	public function &AddClass($class){ $this->attributes['class'].=' '.$class; return $this; }
+	public function &addClass($class){ $this->attributes['class'].=' '.$class; return $this; }
 	public function &style($style){ $this->attributes['style']=&$style; return $this; }
 	public function &onClick($onClick){ $this->attributes['onclick']=&$onClick; return $this; }
 	public function &unsetAttr($attrName){ unset($this->attributes[$attrName]); return $this; }

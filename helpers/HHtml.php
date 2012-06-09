@@ -54,8 +54,7 @@ class HHtml{
 	}
 
 	public static function jsInline($content){
-		return '<script type="text/javascript">
-//<![CDATA[
+		return '<script type="text/javascript">//<![CDATA[
 '.trim($content).'
 //]]>
 </script>';

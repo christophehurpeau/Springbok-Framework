@@ -1,6 +1,8 @@
+window.C={};
 S.Controller=function(methods){
 	this.methods=methods;
 }
+S.Controller.Stop=function(){};
 S.Controller.prototype={
 	dispatch:function(route){
 		if(this.beforeDispatch) if(!this.beforeDispatch()) return;
@@ -11,17 +13,20 @@ S.Controller.prototype={
 		m.apply(this,route.sParams);
 	},
 	check:function(){
-		return S.CSecure.checkAccess();
+		S.CSecure.checkAccess();
+		throw new S.Controller.Stop();
 	},
 	layout:function(name){
-		return S.app.layouts[name].render();
+		return L[name].render();
+	},
+	redirect:function(to,exit){
+		S.app.load(to);
+		if(exit) throw new S.Controller.Stop();
 	}
 };
 S.Controller.extend=function(name,methods,superclass){
-	S[name]=function(methods){ this.methods=methods; };
-	S.extendsClass(S[name],superclass||S.Controller,methods);
+	var target=S.app[name+"Controller"]=function(methods){ this.methods=methods; };
+	S.extendsClass(target,superclass||S.Controller,methods);
+	target.add=function(name,methods){ C[name]=new target(methods) };
 };
-
-S.DefaultController=new S.Controller({
-	
-});
+S.Controller.add=function(name,methods){ C[name]= new S.Controller(methods); }

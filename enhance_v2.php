@@ -3,6 +3,7 @@ ini_set('display_errors',1);
 error_reporting(E_ALL | E_STRICT);
 define('DS',DIRECTORY_SEPARATOR);
 set_time_limit(0);
+date_default_timezone_set('Europe/Paris');
 
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);

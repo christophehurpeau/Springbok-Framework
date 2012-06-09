@@ -8,7 +8,7 @@ div.startloading{
 	margin-left:-250px;
 	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
 	@include background($HEADER_MENU_A_BACKGROUND);
-	@if $FIXED_VARIABLE_SHADOW{ @include box-shadow($FIXED_VARIABLE_SHADOW,8px); }
+	@if $FIXED_VARIABLE_SHADOW{ @include boxShadow($FIXED_VARIABLE_SHADOW,8px); }
 	border-radius:16px;
 	color:$HEADER_MENU_A_COLOR;
 	text-align:center;
