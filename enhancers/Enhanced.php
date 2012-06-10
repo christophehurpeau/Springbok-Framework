@@ -78,4 +78,6 @@ class Enhanced{
 	public function hasErrors(){ return !empty($this->errors); }
 	public function getWarnings(){ return $this->warnings; }
 	public function getErrors(){ return $this->errors; }
+	
+	public function md5EnhanceConfig(){ return ''; }
 }

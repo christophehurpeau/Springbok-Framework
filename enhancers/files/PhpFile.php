@@ -40,12 +40,16 @@ class PhpFile extends EnhancerFile{
 			$this->_srcContent=$finalSrcContent;
 		}else $this->_srcContent=$srcContent;
 	}
-	
+
+	public function getMd5Content(){
+		return md5($this->_srcContent).$this->enhanced->md5EnhanceConfig();
+	}
 	
 	public function enhanceContent(){
 		/*$content=preg_replace_callback('/(<\?php[ |\n](?:.*)(?:[ |\n])?\?>)/Ums', array($this,'enhancePhpContent'.$suffix),$content);
 		$content=preg_replace_callback('/(<\?php[ |\n](?:.*))$/ms', array($this,'enhancePhpContent'.$suffix),$content);*/
 		//ini_set('memory_limit', '512M');
+		$this->_srcContent=$this->hardConfig($this->_srcContent);
 		$tokens=token_get_all($this->_srcContent); $isPhp=false; $phpContent=$finalDevContent=$finalProdContent=$finalContent=''; 
 		foreach($tokens as $token){
 			if(is_array($token)){
@@ -79,6 +83,14 @@ class PhpFile extends EnhancerFile{
 		}
 		$this->_devContent=$this->enhanceFinalContent($finalDevContent);
 		$this->_prodContent=$this->enhanceFinalContent($finalProdContent);
+	}
+
+	public function hardConfig($content){
+		$enhanced=&$this->enhanced;
+		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*/\*\s+/IF\s+\*/#Us',function(&$m) use(&$enhanced){
+			return $enhanced->config['config'][$m[1]] ? $m[2] : '';
+		},$content);
+		return $content;
 	}
 
 	public function enhanceFinalContent($finalContent){
