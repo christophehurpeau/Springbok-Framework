@@ -84,9 +84,7 @@ class CModelTable extends CModelTableAbstract{
 		
 		if($pagination->getTotalResults() !== 0 || $this->query->isFiltersAllowed()) $this->_setFields();
 		
-		if($this->controller===null && ($this->actionClick!==null || $this->rowActions!==null))
-			$this->controller=lcfirst(CRoute::getController());
-		
+		$this->initController();
 		
 		if($this->query->isFiltersAllowed()){
 			$formId=uniqid();
@@ -127,6 +125,16 @@ class CModelTable extends CModelTableAbstract{
 		if(!empty($results) && $displayTotalResults===true)
 			echo '<div class="totalResults">'.$pagination->getTotalResults().' '.($pagination->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		
+		$this->callTransformer($transformerClass,$results,$form);
+		if($this->query->isFiltersAllowed()) $form->end(false);
+		echo $pager;
+	}
+	protected function initController(){
+		if($this->controller===null && ($this->actionClick!==null || $this->rowActions!==null))
+			$this->controller=lcfirst(CRoute::getController());
+	}
+
+	protected function callTransformer($transformerClass,&$results,&$form=null){
 		$transformer=new $transformerClass($this);
 		if(!$this->query->isFiltersAllowed() && empty($results)){
 			$transformer->startBody();
@@ -140,7 +148,5 @@ class CModelTable extends CModelTableAbstract{
 			empty($results) ? $transformer->noResults(count($this->fields)) : $transformer->displayResults($results,$this->fields);
 		}
 		$transformer->end();
-		if($this->query->isFiltersAllowed()) $form->end(false);
-		echo $pager;
 	}
 }

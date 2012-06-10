@@ -25,7 +25,7 @@ class QTable extends QFindAll{
 	private $_fieldsForTable;
 	public function getFieldsForTable(){ return $this->_fieldsForTable; }
 	
-	private function process(){
+	protected function process(){
 		$modelName=&$this->modelName;
 		$fields=$this->getFields();
 		if($fields===null) $fields=$modelName::$__modelInfos['colsName'];

@@ -16,7 +16,7 @@ class JsFile extends EnhancerFile{
 		
 		//$this->_realSrcContent=$srcContent;
 		$includes=array();
-		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$includes);
+		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$includes,$this->enhanced);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
 		$this->_srcContent=$srcContent;
@@ -66,7 +66,7 @@ class JsFile extends EnhancerFile{
 			
 			foreach($constantes as $const=>$replacement)
 				$c=str_replace($const,$replacement,$c);
-			
+			$c=$this->hardConfig($c);
 			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false)
 				$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
@@ -182,18 +182,23 @@ class JsFile extends EnhancerFile{
 	
 	public function getEnhancedProdContent(){}
 
-	public static function includes($content,$currentPath,$appPath,&$includes){
-		$content=preg_replace_callback('/include(Core|Lib|JsAppConfig)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes){
+	public static function includes($content,$currentPath,$appPath,&$includes,&$enhanced){
+		$content=preg_replace_callback('/include(Core|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
 			if(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
 			
 			if($matches[1]==='JsAppConfig') $path=$appPath.'src/jsapp';
 			elseif($matches[1]==='Lib') $path=dirname(CORE).(file_exists(dirname(CORE).'/includes/js/'.$matches[2].'.js')?'/includes/js':'/includes');
-			else $path=CORE.(file_exists(CORE.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
+			elseif($matches[1]==='Plugin'){
+				list($pluginKey,$fileName)=explode('/',$matches[2],2);
+				$plugin=$enhanced->config['plugins'][$pluginKey];
+				$path=$enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/web/js';
+				$matches[2]=$fileName;
+			}else $path=CORE.(file_exists(CORE.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
 			
 			$fileContent=file_get_contents((empty($matches[1])?$currentPath:$path).DS.$matches[2].'.js');
 			
-			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes);
+			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced);
 		},$content);
 		return $content;
 	}

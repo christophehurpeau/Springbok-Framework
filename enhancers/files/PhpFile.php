@@ -47,9 +47,13 @@ class PhpFile extends EnhancerFile{
 	
 	public function enhanceContent(){
 		/*$content=preg_replace_callback('/(<\?php[ |\n](?:.*)(?:[ |\n])?\?>)/Ums', array($this,'enhancePhpContent'.$suffix),$content);
-		$content=preg_replace_callback('/(<\?php[ |\n](?:.*))$/ms', array($this,'enhancePhpContent'.$suffix),$content);*/
-		//ini_set('memory_limit', '512M');
+		$content=preg_replace_callback('/(<\?php[ |\n](?:.*))$/ms', array($this,'enhancePhpContent'.$suffix),$content);
+		//ini_set('memory_limit', '512M');*/
 		$this->_srcContent=$this->hardConfig($this->_srcContent);
+		if(empty($this->_srcContent) || trim($this->_srcContent)==='<?php'){
+			$this->_devContent=$this->_prodContent=false;
+			return;
+		}
 		$tokens=token_get_all($this->_srcContent); $isPhp=false; $phpContent=$finalDevContent=$finalProdContent=$finalContent=''; 
 		foreach($tokens as $token){
 			if(is_array($token)){
@@ -85,14 +89,6 @@ class PhpFile extends EnhancerFile{
 		$this->_prodContent=$this->enhanceFinalContent($finalProdContent);
 	}
 
-	public function hardConfig($content){
-		$enhanced=&$this->enhanced;
-		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*/\*\s+/IF\s+\*/#Us',function(&$m) use(&$enhanced){
-			return $enhanced->config['config'][$m[1]] ? $m[2] : '';
-		},$content);
-		return $content;
-	}
-
 	public function enhanceFinalContent($finalContent){
 		/* $finalContent=preg_replace_callback('/(;)?\s*\?><\?php\s* /',function(&$matches){return empty($matches[1])?';':'';},$finalContent); */
 		//$finalContent=$this->optimiseFinalContentPlace($finalContent);
@@ -101,6 +97,7 @@ class PhpFile extends EnhancerFile{
 	
 	public function getEnhancedDevContent(){
 		$content=$this->_devContent;
+		if($content===false) return false;
 		
 		if((!$this->isCore() || ($this->fileName()!=='base.php' && $this->fileName()!=='springbok.php' && substr($this->srcFile()->getPath(),0,strlen(CORE_SRC.'includes'.DS))!==CORE_SRC.'includes'.DS))){
 			//([\s+|=|\.|\(|\|\||\&\&])
@@ -115,6 +112,7 @@ class PhpFile extends EnhancerFile{
 		return $content;
 	}
 	public function getEnhancedProdContent(){
+		if($this->_prodContent===false) return false;
 		$content=EnhancerFile::removeWS_B_E($this->_prodContent);
 
 		$content=preg_replace_callback('/<pre(.*)<\/pre>/Us',function(&$matches){

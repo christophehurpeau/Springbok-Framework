@@ -1,3 +1,5 @@
+includeCore('springbok.storage');
+
 function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	var t=this;
 	t.$=to;

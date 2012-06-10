@@ -6,7 +6,7 @@ S.tinymce={
 			S.loadSyncScript(webdir+'js/tinymce.js');
 			S.loadSyncScript(webdir+'js/tinymce.'+i18n_lang+'.js');
 			// bug for ajax partial load - document.ready should not be necessary, but we never know !
-			S.ready(function(){tinymce.dom.Event._pageInit(window)});
+			/*S.ready(function(){tinymce.dom.Event._pageInit(window)});*/
 		}
 		return this;
 	},
@@ -26,7 +26,20 @@ S.tinymce={
 			
 			entity_encoding:'raw',
 			convert_fonts_to_spans:true,
-			formats:{bold:{inline:'strong'},italic:{inline:'i'}},
+			
+			style_formats:[
+				{title:'Bold text',selector:'span,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'bold'},
+				{title:'Italic text',selector:'span,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'italic'},
+				{title:'Clear',selector:'span,p,h1,h2,h3,h4,h5,h6,div,ul,table,img', classes:'clear'},
+				{title:'Clearfix',selector:'div', classes:'clearfix'},
+			],
+			formats:{
+				alignleft:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignLeft'},
+				bold:{inline:'strong'},italic:{inline:'i'},
+				alignleft:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignLeft'},
+				aligncenter:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'center'},
+				alignright:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignRight'},
+			},
 			
 			doctype : '<!DOCTYPE html>',
 			verify_css_classes:true, apply_source_formatting:false,

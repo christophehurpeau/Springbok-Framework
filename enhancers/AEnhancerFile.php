@@ -49,14 +49,27 @@ abstract class EnhancerFile{
 	public abstract function enhanceContent();
 	
 	public function writeDevFile($devFile){
-		$devFile->write($this->getEnhancedDevContent());
+		$content=$this->getEnhancedDevContent();
+		if($content!==false) $devFile->write($content);
 	}
 	public function writeProdFile($prodFile){
-		$prodFile->write($this->getEnhancedProdContent());
+		$content=$this->getEnhancedProdContent();
+		if($content!==false) $prodFile->write($content);
 	}
 	
 	public abstract function getEnhancedDevContent();
 	public abstract function getEnhancedProdContent();
+	
+	public function hardConfig($content){
+		$enhanced=&$this->enhanced;
+		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*/\*\s+/IF\s+\*/#Us',function(&$m) use(&$enhanced){
+			return $enhanced->config['config'][$m[1]] ? $m[2] : '';
+		},$content);
+		$content=preg_replace_callback('#/\*\s+VALUE\(([A-Za-z0-9_\-]+)\)\s+\*/#Us',function(&$m) use(&$enhanced){
+			return $enhanced->config['config'][$m[1]];
+		},$content);
+		return $content;
+	}
 	
 	/* getters */
 	

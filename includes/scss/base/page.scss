@@ -77,7 +77,7 @@ header,div.header{
 	 position:fixed;_position:absolute;top:0;left:0;right:0;
 	}
 }
-header,div.header,table th,.flashMessage{
+header,div.header,table tr.head th,table thead th,.flashMessage{
 	@if $HEADER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_BACKGROUND_Top,$HEADER_BACKGROUND_Bottom); }
 	@if $HEADER_COLOR{ color:$HEADER_COLOR; }
 }

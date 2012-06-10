@@ -186,6 +186,7 @@ class SSqlModel extends SModel{
 	public static function findOne(){return self::QOne()->execute();}
 	
 	public static function Table(){return new QTable(static::$__className);}
+	public static function TableOne(){return new QTableOne(static::$__className);}
 	
 	public static function QListName(){
 		$orderByField=&static::$__orderByField;

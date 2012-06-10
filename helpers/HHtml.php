@@ -301,13 +301,13 @@ s.parentNode.insertBefore(g,s);
 			
 			$res.=HHtml::tag('option',$attributes,$name);
 		}
-		$res.=HHtml::closeTag('select').' '.self::iconAction('add','#');
+		$res.=HHtml::closeTag('select').' '.self::iconAction('add vaMid','#');
 		$res.='<ul class="compact">';
 		foreach($addedItems as $id=>&$name){
 			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,true).' '.self::iconAction('delete','#'),false);
 		}
 		$res.='</ul>';
 		unset($options['selectAttributes']);
-		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('$(document).ready(function(){$(\'#'.$divid.'\').ajaxCRDSelectFiltrable('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')})');
+		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('S.ready(function(){$(\'#'.$divid.'\').ajaxCRDSelectFiltrable('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')})');
 	}
 }

@@ -112,7 +112,7 @@ includeCore('ui/slideTo');
 					if(!(to=jqXHR.getResponseHeader('SpringbokAjaxTo'))) to='base';
 					
 					if(to === 'content') div=divContent;
-					else if(to === 'page') div=divPage;
+					else if(to === 'page') div=divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass'));
 					else if(to === 'base') div=divContainer;
 					
 					div.find('span.mceEditor').each(function(){
@@ -134,8 +134,7 @@ includeCore('ui/slideTo');
 					
 					if(normalFaviconHref) linkFavicon.attr('href',normalFaviconHref);
 					
-					if(to === 'base') divPage=$('#page');
-					else if(to==='page') divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass')); // 
+					if(to === 'base') divPage=$('#page'); 
 					if(to === 'base' || to === 'page') S.ajax.updateVariable(divPage);
 					
 					$('body').removeClass('cursorWait');

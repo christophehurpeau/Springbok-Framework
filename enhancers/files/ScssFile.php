@@ -11,12 +11,12 @@ class ScssFile extends EnhancerFile{
 		
 		$currentPath=dirname($this->srcFile()->getPath());
 		$includes=array();
-		$this->_srcContent=self::includes($srcContent,$currentPath,$includes);
+		$this->_srcContent=self::includes($srcContent,$currentPath,$includes,$this->enhanced);
 	}
 	
 	
-	public static function &includes($content,$currentPath,&$includes){
-		$content=preg_replace_callback('/@include(Core|Lib)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,&$includes){
+	public static function &includes($content,$currentPath,&$includes,&$enhanced){
+		$content=preg_replace_callback('/@include(Core|Lib|Plugin)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,&$includes,&$enhanced){
 			if(!endsWith($matches[2],'.css') && !endsWith($matches[2],'.scss')) $matches[2].='.scss';
 			if(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
@@ -24,15 +24,22 @@ class ScssFile extends EnhancerFile{
 			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;
 			if(empty($matches[1])) $filename=$currentPath.'/';
 			else{
-				$filename=$matches[1]==='Lib' ? dirname($core).'/' : $core;
-				$filename.='includes/';
-				
-				$folderName=$matches[1]==='Lib'?'css/':'scss/';
-				if(file_exists($filename.$folderName.$matches[2])) $filename.=$folderName;
+				if($matches[1]==='Plugin'){
+					list($pluginKey,$fileName)=explode('/',$matches[2],2);
+					$plugin=$enhanced->config['plugins'][$pluginKey];
+					$filename=$enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/web/css/';
+					$matches[2]=$fileName;
+				}else{
+					$filename=$matches[1]==='Lib' ? dirname($core).'/' : $core;
+					$filename.='includes/';
+					
+					$folderName=$matches[1]==='Lib'?'css/':'scss/';
+					if(file_exists($filename.$folderName.$matches[2])) $filename.=$folderName;
+				}
 			}
 			$filename.=$matches[2];
 			
-			return ScssFile::includes(file_get_contents($filename),$currentPath,$includes);
+			return ScssFile::includes(file_get_contents($filename),$currentPath,$includes,$enhanced);
 		},$content);
 		return $content;
 	}

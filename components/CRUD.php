@@ -7,8 +7,8 @@ class CRUD{
 			$v=new AjaxContentView($title);
 		}
 		
-		$table=$model::TableOne()->byId($id);
-		foreach($tableOptions as $k=>&$val) $table->$k=$val;
+		$table=$model::TableOne()->byId($id)->end();
+		foreach($tableOptions as $k=>&$val) $table->$k($val);
 		$table->display(false);
 		
 		$obj=$table->getResult();
