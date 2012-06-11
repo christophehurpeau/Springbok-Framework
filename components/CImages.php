@@ -10,21 +10,23 @@ class CImages{
 	 * @throw Exception
 	 */
 	public static function upload($name,$image=NULL,$toJpeg=true,$folderPrefix=''){
-		if($_FILES[$name]['error'] == UPLOAD_ERR_OK){
+		$errorMessage=self::fileErrorMessage($_FILES[$name]['error']);
+		if($errorMessage===true){
 			$tmpFile=tempnam('/tmp','img');
 			move_uploaded_file($_FILES[$name]['tmp_name'], $tmpFile);
 			if($image===NULL) $image=static::createImage();
 			$image->name=$_FILES[$name]['name'];
 			self::add($tmpFile,$image,true,$folderPrefix);
 			return $image;
-		}
+		}else throw new Exception($errorMessage);
 		return false;
 	}
 	
 	public static function uploadM($name,$toJpeg=true,$folderPrefix=''){
 		$images=$errors=array();
 		foreach($_FILES[$name]['error'] as $key => $error){
-			if($error == UPLOAD_ERR_OK){
+			$errorMessage=self::fileErrorMessage($error);
+			if($errorMessage===true){
 				$tmpFile=tempnam('/tmp','img');
 				move_uploaded_file($_FILES[$name]['tmp_name'][$key], $tmpFile);
 				$image=static::createImage();
@@ -35,14 +37,16 @@ class CImages{
 				}catch(Exception $ex){
 					$errors[$_FILES[$name]['name'][$key]]=$ex->getMessage();
 				}
-			}elseif($error===UPLOAD_ERR_INI_SIZE)
-				$errors[$_FILES[$name]['name'][$key]]=_tC('The uploaded file exceeds the maximum size allowed by the configuration.');
-			elseif($error===UPLOAD_ERR_FORM_SIZE)
-				$errors[$_FILES[$name]['name'][$key]]=_tC('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.');
-			elseif($error===UPLOAD_ERR_PARTIAL)
-				$errors[$_FILES[$name]['name'][$key]]=_tC('The uploaded file was only partially uploaded.');
+			}else $errors[$_FILES[$name]['name'][$key]]=$errorMessage;
 		}
 		return array($images,$errors);
+	}
+
+	private static function fileErrorMessage($error){
+		if($error == UPLOAD_ERR_OK) return true;
+		elseif($error===UPLOAD_ERR_INI_SIZE) return _tC('The uploaded file exceeds the maximum size allowed by the configuration.');
+		elseif($error===UPLOAD_ERR_FORM_SIZE) return _tC('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.');
+		elseif($error===UPLOAD_ERR_PARTIAL) return _tC('The uploaded file was only partially uploaded.');
 	}
 	
 	protected static function createImage(){
