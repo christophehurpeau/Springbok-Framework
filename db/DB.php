@@ -4,10 +4,10 @@ abstract class DB{
 	
 	private static $_allConfigs;
 	public static function loadConfig(/* DEV */$force=false/* /DEV */){
-		/* DEV */ if($force || !App::$enhancing) /* /DEV */ self::$_allConfigs=&Config::$db;
+		/* DEV */ if($force || !App::$enhancing) /* /DEV */ self::$_allConfigs=Config::$db;
 	}
-	public static function &langDir(){
-		return self::$_allConfigs['_lang'];
+	public static function langDir(){
+		return /* DEV */empty(self::$_allConfigs['_lang'])?dirname(APP).'/db/':/* /DEV */self::$_allConfigs['_lang'];
 	}
 	
 	/** @return DB */

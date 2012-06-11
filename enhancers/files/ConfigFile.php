@@ -223,7 +223,7 @@ class ConfigFile extends PhpFile{
 		}
 		$content=substr($content,0,-1).';}'.$afterContent;
 		$contentProd=$contentDev=$content;
-		$contentDev.='if(class_exists("DB",false)) DB::loadConfig(true);';
+		$contentDev.='/*if(class_exists("DB",false))*/ DB::loadConfig(true);';
 		foreach($this->enhanced->config['base'] as $name){
 			$content='include CORE.\'base/'.$name.'.php\';';
 			$contentDev.=$content; $contentProd.=$content;

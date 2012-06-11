@@ -19,7 +19,7 @@ class App{
 	
 	public static function run($action,$argv){
 		/* DEV */
-		if($shouldEnhance=(!empty($argv[1]) && $argv[1]!=='noenhance' && !file_exists(dirname(APP).'block_enhance') && $action!=='daemon')){
+		if($shouldEnhance=((empty($argv[1]) || $argv[1]!=='noenhance') && !file_exists(dirname(APP).'block_enhance') && $action!=='daemon')){
 			include CORE.'enhancers/EnhanceApp.php';
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
 			$enhanceApp->process();

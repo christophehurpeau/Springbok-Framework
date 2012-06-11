@@ -238,7 +238,7 @@ include CORE.'app.php';";
 			$indexProdContent="<?"."php
 header('HTTP/1.1 503 Service Temporarily Unavailable',true,503);
 define('DS', DIRECTORY_SEPARATOR);
-define('CORE','".dirname(CORE).DS."prod".DS."');
+define('CORE','".dirname(CORE)."/prod/');
 define('APP', __DIR__.DS);
 define('APP_DATE',".time()."); define('WEB_FOLDER','');
 if(file_exists((".'$filename'."=CORE.'maintenance.php'))) include ".'$filename'.";
