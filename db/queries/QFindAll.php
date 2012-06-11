@@ -49,8 +49,8 @@ class QFindAll extends QFind{
 				//->_setWith($with);
 		}
 		$countQuery->having($this->having);
-		if($this->groupBy) $countQuery->setCountField('DISTINCT '.(!empty($this->where)&&($join/*||$with*/)
-					 && strpos($this->groupBy[0],'.')===false?$modelName::$__alias.'.':'').$this->groupBy[0]);
+		if($this->groupBy) $countQuery->setCountField((!empty($this->where)&&($join/*||$with*/)
+					 && strpos($this->groupBy[0],'.')===false?$modelName::$__alias.'.':'').$this->groupBy[0],true);
 		return $countQuery;
 	}
 	
