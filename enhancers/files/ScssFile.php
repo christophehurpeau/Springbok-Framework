@@ -46,6 +46,7 @@ class ScssFile extends EnhancerFile{
 	
 	
 	public function enhanceContent(){
+		$this->_srcContent=$this->hardConfig($this->_srcContent);
 		$rules=array(
 			'transition'=>array('-moz-transition','-webkit-transition','-o-transition'),
 			'border-radius'=>array('-moz-border-radius','-webkit-border-radius','-ms-border-radius'),
