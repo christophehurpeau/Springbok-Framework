@@ -34,7 +34,9 @@ $InteractionDefaultColor:#20718d;
 $INTERACTION_CURRENT_COLOR:#8d203a;
 $INTERACTION_HOVER_COLOR:#8d203a;
 
-@include type(1,#133f4f,#fff);
-.block1 a:hover{background:#444}
+@include type(1,#D9E1E9);
 
-@include type(2,#b5c5d5);
+@include type(2,#133f4f,#fff);
+.block2 a:hover{background:#444}
+
+@include type(3,#b5c5d5);
