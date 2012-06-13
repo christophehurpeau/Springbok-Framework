@@ -13,9 +13,9 @@ class ControllerFile extends PhpFile{
 				throw new Exception('Error eval : '.$m[1]);
 			$countEval=count($eval);
 			if($countEval===3 && ($eval[0]==='core')||($eval[0]==='springbok')){
-				$controllerPath='controllers/'.$eval[1].'Controller.php';
+				$controllerPath=CORE.'controllers/'.$eval[1].'Controller.php';
 				if(!isset($controllersSrc[$controllerPath]))
-					$controllersSrc[$controllerPath]=file_get_contents(CORE.$controllerPath);
+					$controllersSrc[$controllerPath]=file_get_contents($controllerPath);
 			}else{
 				$controllerPath='controllers'.($countEval===3 ? '.'.$eval[0] : '').'/'.($eval[$countEval===3?1:0]).'Controller.php';
 				if(!isset($controllersSrc[$controllerPath]))
