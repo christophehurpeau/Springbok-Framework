@@ -50,7 +50,7 @@ class HElementForm extends HElement{
 	/**
 	 * @return HElementForm
 	 */
-	public function action($action){$this->action=$action; return $this; }
+	public function action($action,$urlfull=null){$this->action=$action; $this->urlfull=$urlfull; return $this; }
 	public function urlfull($urlfull){$this->urlfull=$urlfull; return $this; }
 	//public function &file(){ /* $this->method='post'; */ $this->attributes['enctype']='multipart/form-data'; return $this; }
 	
