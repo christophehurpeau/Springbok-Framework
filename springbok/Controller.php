@@ -50,7 +50,10 @@ class Controller{
 		if(isset($methodAnnotations['ValidParams']) && CValidation::hasErrors()){
 			if($methodAnnotations['ValidParams']===false) /* PROD */notFound();/* /PROD */
 			/* HIDE */elseif(true)/* /HIDE *//* DEV */throw new Exception('Not valid params : '.print_r(CValidation::errors(),true));/* /DEV */
-			else self::redirect($methodAnnotations['ValidParams'][0]);
+			else{
+				self::header404();
+				self::redirect($methodAnnotations['ValidParams'][0]);
+			}
 		}
 		
 		return $params;
