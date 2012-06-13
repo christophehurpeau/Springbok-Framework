@@ -101,20 +101,17 @@ $.widget( "ui.combobox", {
 	}
 });
 
-
-$.fn.ajaxCRDSelectFiltrable=function(url,options){
+var ajaxCRDCommonFunction=function(elt,url,options,prepare,onDelete,onAdd){
 	url+='/'; options=options || {}; options.url=options.url || '';
-	$.each(this,function(i,div){
+	$.each(elt,function(i,div){
 		div=$(div);
-		var select=div.find('select:first').combobox(), val, t, o,
-			input=div.find('input'),
+		var select=prepare(div,options), t, o, input=div.find('input'),
 			ul=div.find('ul').on('click','a',function(e){
 				e.preventDefault();
-				var li=$(this).closest('li');
-				val=li.attr('rel');
+				var li=$(this).closest('li'),val=li.attr('rel');
 				$.get(url+'del/'+val+options.url,function(d){
 					if(d=='1'){
-						select.append($('<option/>').attr('value',val).text(li.find('span:first').text()));
+						onDelete(select,li,val)
 						li.animate({opacity:0,height:'toggle'},'slow',function(){li.remove();ul.change();});
 					}
 				});
@@ -123,8 +120,7 @@ $.fn.ajaxCRDSelectFiltrable=function(url,options){
 		
 		div.find('a.action.add').click(function(e){
 			e.preventDefault();
-			val=select.val();
-			var action,data={};
+			var val=select.val(),action,data={};
 			if(!val){
 				if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
 				action='create';
@@ -137,9 +133,7 @@ $.fn.ajaxCRDSelectFiltrable=function(url,options){
 						t=data.val;
 						val=d
 					}else{
-						o=select.find('option[value="'+val+'"]');
-						t=o.text();
-						o.remove();
+						t=onAdd(select,val);
 					}
 					$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t)).append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
 					input.val('');
@@ -157,6 +151,40 @@ $.fn.ajaxCRDSelectFiltrable=function(url,options){
 			}
 		});
 	});
+};
+
+
+$.fn.ajaxCRDSelectFiltrable=function(url,options){
+	ajaxCRDCommonFunction(this,url,options,function(div){
+		return div.find('select:first').combobox();
+	},function(select,li,val){
+		select.append($('<option/>').attr('value',val).text(li.find('span:first').text()));
+	},function(select,val){
+		o=select.find('option[value="'+val+'"]');
+		var t=o.text();
+		o.remove();
+		return t;
+	})
+};
+
+$.fn.ajaxCRDInputAutocomplete=function(url,options){
+	ajaxCRDCommonFunction(this,url,options,function(div,options){
+		var input=div.find('input'),hidden=$('<input type="hidden"/>').appendTo(input);
+		input.autocomplete({
+			source:url+'/autocomplete'+options.url,
+			minLength:1,
+			select:function(event,ui){ hidden.val(ui.item.id).data('name',ui.item.name); input.val(ui.item.name); return false; }
+		}).data( "autocomplete" )._renderItem = function(ul,item){
+			return $( "<li/>" ).data( "item.autocomplete", item )
+				.append( $('<a/>').text(item.name) )
+				.appendTo( ul );
+		};
+		return hidden;
+	},function(select,li,val){
+		select.val('');
+	},function(select,val){
+		return select.data('name');
+	})
 };
 
 $.fn.toggleLink=function(dest){

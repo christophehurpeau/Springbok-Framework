@@ -310,4 +310,20 @@ s.parentNode.insertBefore(g,s);
 		unset($options['selectAttributes']);
 		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('S.ready(function(){$(\'#'.$divid.'\').ajaxCRDSelectFiltrable('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')})');
 	}
+
+	public static function ajaxCRDInputAutocomplete($url,$items,$options=array()){
+		$divid=uniqid('ajaxCRDInputAutocomplete_');
+		$options+=array('inputAttributes'=>array());
+		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
+		if(is_object(current($items))){
+			$list=$items; $items=array();
+			foreach($list as $model) $items[$model->_getPkValue()]=$model->name();
+		}	
+		$res.='<ul class="compact">';
+		foreach($items as $id=>&$name)
+			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,true).' '.self::iconAction('delete','#'),false);
+		$res.='</ul>';
+		unset($options['inputAttributes']);
+		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('S.ready(function(){$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')})');
+	}
 }
