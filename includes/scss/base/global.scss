@@ -118,10 +118,11 @@ ul.icons{
 }
 ul.compact ul,ul.icons ul{margin:1px 0}
 
-ul.overflow-ellipsis{
-  white-space:nowrap;
+ul.overflow-ellipsis li{
   overflow:hidden;
   text-overflow:ellipsis;
+  white-space:nowrap;
+  display:block;
 }
 ul.cMt10 li{margin-top:10px}
 ul.cMt10 li:first-child{margin-top:0}
