@@ -87,6 +87,17 @@ abstract class QFind extends QSelect{
 		$this->_addWithToQuery($mL,$options);
 		return $this;
 	}
+
+	public function &withForce($with,$options=array()){
+		if(is_string($options)) $options=array('fields'=>$options);
+		elseif(!isset($options['fields'])) $options['fields']=false;
+		$options['forceJoin']=true;
+		$this->_addWithToQuery($with,$options);
+		return $this;
+	}
+	public function &withParent($options=array()){
+		return $this->with('Parent',$options);
+	}
 	
 	protected function _addWithToQuery($key,$options){
 		$foptions=self::_addWith($this->with,$key,$options,$this->modelName);
