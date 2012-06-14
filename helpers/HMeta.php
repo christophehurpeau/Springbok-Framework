@@ -3,6 +3,9 @@
 class HMeta{
 	private static $metas,$canonical;
 	
+	public static function keywords($keywords){
+		self::$metas['keywords']=$keywords;
+	}
 	public static function description($description){
 		self::$metas['description']=$description;
 	}
