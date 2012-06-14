@@ -98,13 +98,15 @@ ul.mosaic{
   li img{display:block; margin:0 auto 0; border:0}
 }
 
-ul.spaced li{
-  padding:3px 0;
-}
-
-ul.nobullets{
+ul.inline,ul.nobullets{
   list-style:none;
   margin:0;padding:0;
+}
+ul.inline{ display:block; }
+ul.inline li{ padding:2px 3px; display:inline; }
+
+ul.spaced li{
+  padding:3px 0;
 }
 
 ul.compact{
