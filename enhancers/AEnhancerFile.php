@@ -65,7 +65,7 @@ abstract class EnhancerFile{
 		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*/\*\s+/IF\s+\*/#Us',function(&$m) use(&$enhanced){
 			return $enhanced->config['config'][$m[1]] ? $m[2] : '';
 		},$content);
-		$content=preg_replace_callback('#/\*\s+VALUE\(([A-Za-z0-9_\-]+)\)\s+\*/#Us',function(&$m) use(&$enhanced){
+		$content=preg_replace_callback('#/\*\s+VALUE\(([A-Za-z0-9_\-]+)\)\s+\*\\\\?/#Us',function(&$m) use(&$enhanced){
 			return $enhanced->config['config'][$m[1]];
 		},$content);
 		return $content;

@@ -16,17 +16,21 @@ class ModelFile extends PhpFile{
 			$content=preg_replace_callback('/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums',array($this,'mfields'),$content);
 
 			$contentInfos=array('primaryKeys'=>array(),'columns'=>array(),'isAI'=>false,'indexes'=>array(),'relations'=>array(),'generate'=>'default');
-			$modelFile=$this;
-			$content=preg_replace_callback('/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)([^{]*){/s',function($matches) use(&$modelFile,&$content,&$contentInfos){
+			$modelFile=$this; $enhanceConfig=&$this->enhanced->config;
+			$content=preg_replace_callback('/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)([^{]*){/s',function($matches) use(&$modelFile,&$content,&$contentInfos,&$enhanceConfig){
 				$annotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1],true);
-				if(!isset($annotations['TableName'])) $annotations['TableName'][0]=array(UInflector::pluralizeUnderscoredWords(UInflector::underscore(substr($matches[2],0,2)===strtoupper(substr($matches[2],0,2))?substr($matches[2],isset($annotations['Db'])?2:1):$matches[2])));
-				if(!isset($annotations['TableAlias'])) throw new Exception('Table Alias is missing for : '.$matches[2]);
+				$modelFile->_className=$matches[2];
+				$classBeforeContent='';
+				
+				if(!isset($annotations['TableName'])) $annotations['TableName'][0]=array(UInflector::pluralizeUnderscoredWords(UInflector::underscore(substr($modelFile->_className,0,2)===strtoupper(substr($matches[2],0,2))?substr($matches[2],isset($annotations['Db'])?2:1):$matches[2])));
+				if(!isset($annotations['TableAlias'])) throw new Exception('Table Alias is missing for : '.$modelFile->_className);
 				$dbName=isset($annotations['Db'])?$annotations['Db'][0][0]:false;
 				if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
 				$createdField=isset($annotations['CreatedField'])?$annotations['CreatedField'][0][0]:false;
 				$updatedField=isset($annotations['UpdatedField'])?$annotations['UpdatedField'][0][0]:false;
 				$orderByField=isset($annotations['OrderByField'])?$annotations['PositionField'][0][0]:false;
 				$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
+				
 				
 				$indexes=&$contentInfos['indexes'];
 				if(isset($annotations['Index'])){
@@ -37,31 +41,43 @@ class ModelFile extends PhpFile{
 				}
 				
 				if(isset($annotations['Created'])){
-					if(isset($modelFile->_fields['created'])) throw new Exception('already contains a field "created"');
+					if(isset($modelFile->_fields['created'])) throw new Exception($modelFile->_className.' already contains a field "created"');
 					$modelFile->_fields['created']=array('SqlType'=>array('datetime'),'NotNull'=>false,'NotBindable'=>false);
 				}
 				if(isset($annotations['Updated'])){
-					if(isset($modelFile->_fields['updated'])) throw new Exception('already contains a field "updated"');
-					$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>NULL);
+					if(isset($modelFile->_fields['updated'])) throw new Exception($modelFile->_className.' already contains a field "updated"');
+					$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL));
 				}
 				
 				
 				if(isset($annotations['Parent'])){
-					if(isset($modelFile->_fields['type'])) throw new Exception('already contains a field "type"');
-					$modelFile->_fields['type']=array('SqlType'=>array('tinyint(1) unsigned'),'NotNull'=>true, 'NotBindable'=>false, 'Index'=>false );
+					if(isset($modelFile->_fields['_type'])) throw new Exception($modelFile->_className.' already contains a field "_type"');
+					$modelFile->_fields['_type']=array('SqlType'=>array('tinyint(1) unsigned'),'NotNull'=>false, 'NotBindable'=>false, 'Index'=>false );
+					$children=$enhanceConfig['modelParents'][$modelFile->_className];
+					$_typeRelations=array(); foreach($children as $child) $_typeRelations[$child]=array('foreignKey'=>'p_id');
+					$contentInfos['relations']['_type']=array('reltype'=>'belongsToType', 'dataName'=>'child','types'=>$children,'relations'=>$_typeRelations );
 				}
 				if(isset($annotations['Child'])){
-					if(isset($modelFile->_fields['parent_id'])) throw new Exception('already contains a field "parent_id"');
-					$modelFile->_fields['parent_id']=array( 'SqlType'=>array('int(10) unsigned'), 'NotNull'=>true, 'NotBindable'=>false,
+					$idField=isset($modelFile->_fields['id']) ? 'p_id' : 'id';
+					$modelFile->_fields[$idField]=array( 'SqlType'=>array('int(10) unsigned'), 'NotNull'=>false, 'NotBindable'=>false,
 										'ForeignKey'=>array($annotations['Child'][0][0],'id','onDelete'=>'CASCADE'));
-					$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$annotations['Child'][0][0],'foreignKey'=>'parent_id','fieldsInModel'=>true);
+					$idField==='id' ? $modelFile->_fields[$idField]['Pk']=false : $modelFile->_fields[$idField]['Unique']=false;
+					$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$annotations['Child'][0][0],'foreignKey'=>$idField,
+									'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
+					$classBeforeContent.='public function insert(){ $this->'.$idField.'=$this->insertParent(); return parent::insert(); }';
+					$classBeforeContent.='public function insertParent(){ $parent=new '.$annotations['Child'][0][0].'; $parent->_copyData($this->data); return $parent->insert(); }';
 				}
 				
 				$pkAutoGenerated=false;$enums=$specialFields=array();
 				foreach($modelFile->_fields as $name=>$field)
 					if(isset($field['Pk'])){
 						$contentInfos['primaryKeys'][]=$name;
-						if(isset($field['Pk'][0])) $pkAutoGenerated=$field['Pk'][0];
+						if(isset($field['Pk'][0])){
+							if($pkAutoGenerated=$field['Pk'][0])
+								$classBeforeContent.='protected function _beforeInsert(){$this->'.$contentInfos['primaryKeys'][0].'='.($pkAutoGenerated=='UUID'?'UGenerator::uuid()':'')
+												.';return parent::_beforeInsert();}';
+						}
+					
 					}
 				foreach($modelFile->_fields as $name=>&$field){
 					$column=array();
@@ -137,10 +153,9 @@ class ModelFile extends PhpFile{
 							$res.='public function is'.ucfirst($fieldName).'{return $this->'.$fieldName.'==='.$key.'}';
 						}*/
 					}
-					$enums=$res;
+					$classBeforeContent.=$res;
 				}
 				
-				$modelFile->_className=$matches[2];
 				
 				$specialFieldsSetData=$specialFieldsGetData=$specialFieldsBefore='';
 				foreach($specialFields as $name=>$type){
@@ -162,14 +177,12 @@ class ModelFile extends PhpFile{
 					.(isset($annotations['DisplayField'][0][0])?',$__displayField=\''.$annotations['DisplayField'][0][0].'\'':'')
 					.($orderByField?',$__orderByField=\''.$orderByField.'\'':'')
 					.',$__cacheable='.($cacheable?'true':'false')
-					.(isset($annotations['Child'])?',$__parent='.UPhp::exportString($annotations['Child'][0][0]):'')
 					.';'
 					.(empty($specialFields)?'':
 						$specialFieldsBefore
 						.(empty($specialFieldsSetData)?'':'public function _setData(&$data){'.$specialFieldsSetData.'parent::_setData($data);}')
 						.(empty($specialFieldsGetData)?'':'public function &_getData(){$data=parent::_getData();$d=$data;'.$specialFieldsGetData.'return $d;}')
 					)
-					.($pkAutoGenerated?'protected function _beforeInsert(){$this->'.$contentInfos['primaryKeys'][0].'='.($pkAutoGenerated=='UUID'?'UGenerator::uuid()':'').';return parent::_beforeInsert();}':'')
 					.($createdField?'public static function QInsert(){return new QInsert(self::$__className,'.UPhp::exportString($createdField).');}'
 						.'public static function QInsertSelect(){return new QInsertSelect(self::$__className,'.UPhp::exportString($createdField).');}'
 						.'public static function QReplace(){return new QReplace(self::$__className,'.UPhp::exportString($createdField).');}'
@@ -178,8 +191,9 @@ class ModelFile extends PhpFile{
 					'public static function QUpdate(){return new QUpdate(self::$__className,'.UPhp::exportString($updatedField).');}'
 					.'public static function QUpdateOne(){return new QUpdateOne(self::$__className,'.UPhp::exportString($updatedField).');}'
 					:'')
+					.$classBeforeContent;
 					//.implode('',array_map(function(&$field){return 'public function &'.UInflector::camelize($field,false).'($v){$this->_set('.UPhp::exportString($field).',$v);return $this;}';},array_keys($modelFile->_fields)))
-					.$enums;
+					
 			},$content,1);
 			
 			$contentInfos['colsName']=array_keys($contentInfos['columns']);
