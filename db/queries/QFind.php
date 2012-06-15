@@ -354,7 +354,11 @@ abstract class QFind extends QSelect{
 		if($this->joinData !== NULL) foreach($this->joinData as $alias=>&$joinData){
 			$join=&$this->joins[$alias];
 			if($join['fieldsInModel']){
-				foreach($joinData as $key=>$val) $obj->_set($key,$val);//copy
+				if($join['fieldsInModel']===true || !isset($this->joins[$join['fieldsInModel']])) foreach($joinData as $key=>$val) $obj->_set($key,$val);//copy
+				else{
+					$objJoined=$obj->_get($this->joins[$join['fieldsInModel']]['dataName']);
+					foreach($joinData as $key=>$val) $objJoined->_set($key,$val);//copy
+				}
 			}else{
 				$type=&$join['modelName'];
 				/* DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.short_debug_var($type)); /* /DEV */
