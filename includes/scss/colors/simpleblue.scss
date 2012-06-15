@@ -41,7 +41,7 @@ $INTERACTION_HOVER_COLOR:#8d203a;
 
 @include type(3,#b5c5d5);
 
-body #page div.article h1{
+#page div.variable article h1{
   background:none; color:$BODY_COLOR;
   padding:0; font-size:14pt;
 }

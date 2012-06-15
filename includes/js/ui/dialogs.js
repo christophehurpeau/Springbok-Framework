@@ -8,7 +8,7 @@ S.dialogs={
 		    position:['center',150],
 		    width:450,
 		    modal:true,
-		    zIndex:2000 //fancybox : 1000
+		    zIndex:9000 //fancybox : 8030
 		});
 	},
 	
@@ -42,7 +42,7 @@ S.dialogs={
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
-		    zIndex:2000 //fancybox : 1000
+		    zIndex:9000 //fancybox : 8030
 		});
 	},
 	
@@ -63,7 +63,7 @@ S.dialogs={
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
-		    zIndex:2000 //fancybox : 1000
+		    zIndex:9000 //fancybox : 8030
 		});
 	}
 };

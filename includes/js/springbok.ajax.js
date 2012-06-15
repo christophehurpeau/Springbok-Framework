@@ -125,10 +125,11 @@ includeCore('ui/slideTo');
 					defineDefault('AJAX_CONTENT_EFFECT',true);
 					if(AJAX_CONTENT_EFFECT && to === 'content' && !data && !forceNotAddDataToGetORdoNotDoTheEffect){
 						var OnReadyCallbacks=readyCallbacks;
-						divContent=div.sSlideTo(jqXHR.responseText,function(){OnReadyCallbacks.fire()});
+						divContent=div.sSlideTo(jqXHR.responseText,function(){OnReadyCallbacks.fire();$(document).trigger('springbokAjaxPageLoaded',div);});
 					}else{
 						div.html(jqXHR.responseText);//.fadeTo(0,1);
 						readyCallbacks.fire();
+						$(document).trigger('springbokAjaxPageLoaded',div);
 					}
 					readyCallbacks=$.Callbacks();
 					

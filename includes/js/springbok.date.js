@@ -77,7 +77,7 @@ S.dates={
 		return S.i18n.date.formats.datetime.complete(date);
 	}
 };
-Date.prototype.toSqlDate=function(justDate){
+Date.prototype.sToSqlDate=function(justDate){
 	var day=this.getDate(),month=this.getMonth(),
 		str=this.getFullYear()+'-'+(day<10?'0':'')+day+'-'+ (month<9?'0':'')+(month+1);
 	if(justDate) return str;

@@ -32,6 +32,10 @@ table.table td{
 	background:INTERACTION_HOVER_COLOR;
 }*/
 
+table.layout td{
+  vertical-align:top;
+}
+
 table th .order{
 	height:8px; width:30px;
 	margin:2px auto;
