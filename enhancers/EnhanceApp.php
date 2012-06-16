@@ -120,7 +120,7 @@ define('APP', __DIR__.'/dev/');";
 			foreach($this->enhanced->config['plugins'] as &$plugin){
 				$pluginPath=$pluginsPaths[$plugin[0]].$plugin[1];
 				if(!isset($plugin[2]))
-					$this->recursiveDir($pluginPath.'/',new Folder($pluginPath), $dev->getPath(), $prod->getPath(),true,false,false);
+					$this->recursiveDir($pluginPath.'/',new Folder($pluginPath), $dev->getPath(), $prod->getPath(),$this->enhanced->getAppDir().'src/');
 			}
 		}
 		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default',false,false);
@@ -145,14 +145,9 @@ define('APP', __DIR__.'/dev/');";
 	/**
 	 * @param Folder $dir
 	 */
-	public function recursiveDir($srcDir,Folder $dir,$devDir,$prodDir,$exclude=false,$class=false){
+	public function recursiveDir($srcDir,Folder $dir,$devDir,$prodDir,$override=true,$class=false){
 		$dirs=$dir->listDirs(false);
 		$devFolder=new Folder($devDir); $prodFolder=new Folder($prodDir);
-		
-		/*if($exclude!==true){
-			foreach(array_diff_key($devFolder->listDirs(false),$dirs) as $d) if(!$exclude || !in_array($d->getName(),$exclude)) $d->delete();
-			foreach(array_diff_key($prodFolder->listDirs(false),$dirs) as $d) if(!$exclude || !in_array($d->getName(),$exclude)) $d->delete();
-		}*/
 		
 		$this->enhanced->newDef['enhancedFolders'][$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
 		
@@ -170,33 +165,27 @@ define('APP', __DIR__.'/dev/');";
 				continue;
 			}
 			
-//			if($d->getPath()===$srcDir.'cache/' || $d->getPath()===$srcDir.'tmp/') continue;
+			$newDevDir=$devDir.$dirname.DS; $newProdDir=$prodDir.$dirname.DS; $newOverride=$override===true ? true : $override.$dirname.DS;
+			$allowUnderscoredFiles=false;
 			
-			$newDevDir=$devDir.$dirname.DS; $newProdDir=$prodDir.$dirname.DS;
-			$excludeFiles=$allowUnderscoredFiles=false; $excludeChild=$exclude===true?true:false;
-			
-			if(startsWith($dPath,$srcDir.'logs/')||startsWith($dPath,$srcDir.'tmp/')) $excludeChild=$excludeFiles=true;
 			if($defaultClass===false){
 				$class='PhpFile';
 				
-				if($dPath===$srcDir.'config/'){ $class='ConfigFile'; $excludeFiles=array('modules.php'); $allowUnderscoredFiles=true; }
-				elseif(startsWith($dPath,$srcDir.'controllers')){ $class='ControllerFile'; $excludeChild=array('methods'); }
+				if($dPath===$srcDir.'config/'){ $class='ConfigFile'; $allowUnderscoredFiles=true; }
+				elseif(startsWith($dPath,$srcDir.'controllers')){ $class='ControllerFile'; }
 				elseif($dPath===$srcDir.'jobs/') $class='JobFile';
 				elseif($dPath===$srcDir.'daemons/') $class='DaemonFile';
-				elseif($dPath===$srcDir.'models/'){ $class='ModelFile'; $excludeChild=array('infos'); }
+				elseif($dPath===$srcDir.'models/'){ $class='ModelFile'; }
 				elseif($dPath===$srcDir.'modules/') $class='ModuleFile';
 				elseif(startsWith($dPath,$srcDir.'views')) $class='ViewFile';
-				elseif($dPath===$srcDir.'web/img/') $excludeFiles=array('img-sprite.png');
 				elseif($dPath===$srcDir.'jsapp/') $class='UselessFile'; // ne concerne que les .php
 				
 			}else $class=$defaultClass;
 			
 			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
-			$folderEnhancer->process($class,$excludeFiles,$allowUnderscoredFiles);
+			$folderEnhancer->process($class,$allowUnderscoredFiles,$newOverride);
 			
-			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$excludeChild,$class);
-			
-			//debugVar($d->getPath() .' : '.(microtime(true) - $t));
+			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$newOverride,$class);
 		}
 	}
 	

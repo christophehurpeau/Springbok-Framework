@@ -24,7 +24,7 @@ abstract class AFolderEnhancer{
 	}
 	
 	
-	public function process($class='PhpFile',$exclude=false,$allowUnderscoredFiles=true){
+	public function process($class='PhpFile',$allowUnderscoredFiles=true,$override=true){
 		$dir=&$this->dir;$devDir=&$this->devDir;$prodDir=&$this->prodDir;
 		
 		if(substr($dir->getName(),0,1)==='.') return;
@@ -32,18 +32,10 @@ abstract class AFolderEnhancer{
 		$prodFolder=new Folder($prodDir,0775);
 		
 		$files=$dir->listFiles(false);
-/*
-		if($exclude!==true){
-			foreach(array_diff_key($devFolder->listFiles(false),$files) as $f){
-				if($exclude && in_array($f->getName(),$exclude)) continue;
-				$f->delete();
-				if($class !== 'PhpFile') $class::fileDeleted($f);
-			}
-			foreach(array_diff_key($prodFolder->listFiles(false),$files) as $f) if(!$exclude || !in_array($f->getName(),$exclude)) $f->delete();
-		}*/
-
+		
 		foreach($files as $file){
 			$filename=$file->getName();
+			if($override!==true && file_exists($override.$filename)) continue;
 			$ext=$file->getExt();
 			
 			$found=$this->findEnhancer($filename,$ext);

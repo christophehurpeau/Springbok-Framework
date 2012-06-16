@@ -25,7 +25,7 @@ class EnhancePlugin extends AEnhance{
 	/**
 	 * @param Folder $dir
 	 */
-	public function recursiveDir($srcDir,Folder $dir,$devDir,$prodDir,$exclude=false,$class=false){
+	public function recursiveDir($srcDir,Folder $dir,$devDir,$prodDir,$class=false){
 		$dirs=$dir->listDirs(false);
 		$devFolder=new Folder($devDir); $prodFolder=new Folder($prodDir);
 		/*
@@ -42,25 +42,24 @@ class EnhancePlugin extends AEnhance{
 			
 			$newDevDir=$devDir.$dirname.DS; $newProdDir=$prodDir.$dirname.DS;
 			
-			$excludeFiles=false;
 			if($defaultClass===false){
 				$class='PhpFile';
 				switch($d->getPath()){
-					case $srcDir.'config'.DS: $class='ConfigFile'; $excludeFiles=array('modules.php'); break;
-					case $srcDir.'controllers'.DS: $class='ControllerFile'; $exclude=array('methods'); break;
+					case $srcDir.'config'.DS: $class='ConfigFile'; break;
+					case $srcDir.'controllers'.DS: $class='ControllerFile'; break;
 					case $srcDir.'jobs'.DS: $class='JobFile'; break;
-					case $srcDir.'models'.DS: $class='ModelFile'; $exclude=array('infos'); break;
+					case $srcDir.'models'.DS: $class='ModelFile'; break;
 					case $srcDir.'modules'.DS: $class='ModuleFile'; break;
 					case $srcDir.'views'.DS: $class='ViewFile'; break;
-					case $srcDir.'web'.DS.'img'.DS: $excludeFiles=array('img-sprite.png'); break;
+					case $srcDir.'web'.DS.'img'.DS: break;
 				}
 				
 			}else $class=$defaultClass;
 			
 			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
-			$folderEnhancer->process($class,$excludeFiles);
+			$folderEnhancer->process($class);
 			
-			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$exclude,$class);
+			$this->recursiveDir($srcDir,$d, $newDevDir,$newProdDir,$class);
 			
 		}
 	}
