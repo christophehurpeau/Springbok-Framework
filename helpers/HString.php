@@ -16,7 +16,7 @@ class HString{
 		'/ç|ć|ĉ|ċ|č/' => 'c',
 		'/Ð|Ď|Đ/' => 'D',
 		'/ð|ď|đ/' => 'd',
-		'/È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě/' => 'E',
+		'/È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě|€/' => 'E',
 		'/è|é|ê|ë|ē|ĕ|ė|ę|ě/' => 'e',
 		'/Ĝ|Ğ|Ġ|Ģ/' => 'G',
 		'/ĝ|ğ|ġ|ģ/' => 'g',
@@ -33,7 +33,7 @@ class HString{
 		'/Ñ|Ń|Ņ|Ň/' => 'N',
 		'/ñ|ń|ņ|ň|ŉ/' => 'n',
 		'/Ö|Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ/' => 'O',
-		'/ö|ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º/' => 'o',
+		'/ö|ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|°/' => 'o',
 		'/Ŕ|Ŗ|Ř/' => 'R',
 		'/ŕ|ŗ|ř/' => 'r',
 		'/Ś|Ŝ|Ş|Š/' => 'S',
@@ -55,6 +55,11 @@ class HString{
 		'/Œ/' => 'OE',
 		'/ƒ/' => 'f',
 		'/&/' => 'et',
+		
+		'/þ/'=>'th',
+		'/Þ/'=>'TH',
+		
+		//'/┐|└|┴|┬|├|─|┼|�/'=>''
 	);
 	
 	/**
@@ -83,7 +88,7 @@ class HString{
 		//return preg_replace(array_keys(self::$_transliteration), array_values(self::$_transliteration), $string);
 		foreach(self::$_transliteration as $pattern=>$replacement)
 			$string=preg_replace($pattern, $replacement, $string);
-		return $string;
+		return trim(preg_replace('/[^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+/mu',' ',$string));
 	}
 	
 	/** http://tonyarchambeau.com/blog/developpement/php/php-coefficient-de-dice-400/ */
