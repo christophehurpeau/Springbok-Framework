@@ -21,7 +21,9 @@ class CRUD{
 			
 			foreach($with as $key=>$w){
 				echo '<h5 class="sepTop">'.$w['title'].'</h5>';
-				$table=QFind::createWithQuery($obj,$w,new QTable($w['modelName']))->paginate();
+				$table=QFind::createWithQuery($obj,$w,new QTable($w['modelName']));
+				if(isset($w['query'])) foreach($w['query'] as $k=>&$val) $table->$k($val);
+				$table=$table->paginate();
 				if(isset($w['table'])) foreach($w['table'] as $k=>&$val) $table->$k($val);
 				$table->display(false);
 			}
