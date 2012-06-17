@@ -7,13 +7,18 @@ class ImgFile extends EnhancerFile{
 	
 	private $_smallerTmpImgPath;
 	public function writeDevFile($devFile){
-		if($this->enhanced->getAppDir() && !$this->isCore())
-			if($this->fileName() !== 'img-sprite.png')
-				DelayedEnhance::get($this->enhanced)->add(substr($this->srcFile()->getPath(),strlen($this->enhanced->getAppDir().'src/')),'Img');
-		$this->srcFile()->copyTo($devFile->getPath());
+		$filename=$this->fileName();
+		if($filename[0]!=='_'){
+			if($this->enhanced->getAppDir() && !$this->isCore())
+				if($this->fileName() !== 'img-sprite.png')
+					DelayedEnhance::get($this->enhanced)->add(substr($this->srcFile()->getPath(),strlen($this->enhanced->getAppDir().'src/')),'Img');
+			$this->srcFile()->copyTo($devFile->getPath());
+		}
 	}
 	public function writeProdFile($prodFile){
-		$this->srcFile()->copyTo($prodFile->getPath());
+		$filename=$this->fileName();
+		if($filename[0]!=='_')
+			$this->srcFile()->copyTo($prodFile->getPath());
 	}
 	
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){

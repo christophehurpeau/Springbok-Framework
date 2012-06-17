@@ -441,7 +441,7 @@ class CssFile extends EnhancerFile{
 			file_put_contents($enhanced->getAppDir().'imgSprite_md5',$md5CssImgs);
 			*/
 			if(!empty($cssImgs)){
-				$imgDir=$prod->getPath().'web/img/';
+				$imgDir=$enhanced->getAppDir().'src/web/img/';
 				/*foreach($cssImgs as $imgKey=>&$cssImg)
 					if(!file_exists($imgDir.$cssImg)){
 						throw new Exception('Img does NOT exist : '.$cssImg);
@@ -453,7 +453,7 @@ class CssFile extends EnhancerFile{
 				$cssSpriteGen=new CssSpriteGen();
 				$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritename);
 				/*if(file_exists($imgDir.$spritename)) */copy($imgDir.$spritename,$dev->getPath().'web/img/'.$spritename);
-				copy($imgDir.$spritename,$enhanced->getAppDir().'src/web/img/'.$spritename);
+				copy($imgDir.$spritename,$prod->getPath().'web/img/'.$spritename);
 				//debug($cssRules);
 				
 				/* background: background-color background-image background-repeat background-attachment background-position
