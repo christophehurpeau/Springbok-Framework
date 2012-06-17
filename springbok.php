@@ -53,6 +53,7 @@ class Springbok{
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		if(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
+		//echo $log; ob_flush();
 		if(isset($_SERVER['REQUEST_URI'])){
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
 			if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
@@ -78,6 +79,7 @@ class Springbok{
 		self::$inError=true;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		$log=self::getErrorText($code)." : $message ($file:$line)\n";
+		//echo $log; ob_flush();
 		if(isset($_SERVER['REQUEST_URI'])){
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
 			if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
@@ -132,5 +134,9 @@ function __autoload($className){ /* DEV */
 		define("STATIC_URL",BASE_URL.'/web/'.WEB_FOLDER);
 		debug('Config is loaded');
 		return true;
-	}
+	}/*elseif($className=='CSecure'){
+		eval('class CSecure{public static function isConnected_Safe(){return false;}}');
+		debug('CSecure is loaded');
+		return true;
+	}*/
 /* /DEV */ Springbok::load($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */); }
