@@ -12,21 +12,20 @@ class HDev{
 			.' | <a href="javascript:;" rel="queries">Queries ('.(!class_exists('DB',false)?'0':(array_sum(array_map(function(&$db){return $db->getNbQueries();},DB::getAll())))).')</a>'
 			.' | <a href="javascript:;" rel="route">Route</a>'
 			.' | <a href="javascript:;" rel="ajax">Ajax (<span>0</span>)</a>'
+			.' | <a href="javascript:;" rel="session">Session</a>'
 			.'</div>';
 		
-		echo '<div id="springbok-bar-changes" class="springbok-bar-content"><div>';
-		self::springbokBarChanges();
-		echo '</div></div><div id="springbok-bar-queries" class="springbok-bar-content"><div>';
-		self::springbokBarQueries();
-		echo '</div></div><div id="springbok-bar-route" class="springbok-bar-content"><div>';
-		self::springbokBarRoute();
-		echo '</div></div><div id="springbok-bar-ajax" class="springbok-bar-content"><div>';
+		echo '<div id="springbok-bar-changes" class="springbok-bar-content"><div>'; self::springbokBarChanges(); echo '</div></div>';
+		echo '<div id="springbok-bar-queries" class="springbok-bar-content"><div>'; self::springbokBarQueries(); echo '</div></div>';
+		echo '<div id="springbok-bar-route" class="springbok-bar-content"><div>'; self::springbokBarRoute(); echo '</div></div>';
+		echo '<div id="springbok-bar-session" class="springbok-bar-content"><div>'; self::springbokBarSession(); echo '</div></div>';
+		
+		echo '<div id="springbok-bar-ajax" class="springbok-bar-content"><div>';
 			echo '<div style="float:left;width:300px"><ul class="clickable nobullets spaced"></ul></div>'
-					.'<div id="SpringbokBarAjaxContent" style="margin-left:310px">';
+					.'<div id="SpringbokBarAjaxContent" style="margin-left:310px"></div>';
 		echo '</div></div>';
 		
-		echo '</div></div><div id="springbok-bar-console" class="springbok-bar-content"><div>';
-		echo '</div></div>';
+		echo '<div id="springbok-bar-console" class="springbok-bar-content"><div>'; echo '</div></div>';
 		
 		/*echo '<div id="springbok-bar-popup"><a href="javascript:;" onclick="$(\'#springbok-bar-popup\').fadeOut()">Close</a><pre></pre></div>';*/
 	}
@@ -80,7 +79,16 @@ class HDev{
 			.implode("\n\t",CRoute::$TESTED_ROUTES)
 			.'</pre></div>';
 	}
-
+	
+	private static function springbokBarSession(){
+		echo '<h2>Session</h2>';
+		if(!class_exists('CSession',false)) echo "not started";
+		else{
+			echo short_debug_var($_SESSION);
+		}
+	}
+	
+	
 	public static function error(&$e_message,&$e_file,&$e_line,&$e_context){
 		echo '<pre style="white-space:pre-wrap; word-wrap:break-word">'.h($e_message).' ('.geditURL($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown'){
