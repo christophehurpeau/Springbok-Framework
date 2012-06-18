@@ -116,8 +116,9 @@ includeCore('ui/slideTo');
 					else if(to === 'base') div=divContainer;
 					
 					div.find('span.mceEditor').each(function(){
-						//tinyMCE.execCommand('mceRemoveControl',false,this.id.substr(0,this.id.length-7))
-						tinyMCE.remove(this.id.substr(0,this.id.length-7));
+						var ed=tinymce.get(this.id.substr(0,this.id.length-7));
+						ed.focus(); ed.remove();
+						/* if(tinymce.isGecko) */
 					});
 					
 					$(window).scrollTop(0);

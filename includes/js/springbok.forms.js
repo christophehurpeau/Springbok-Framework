@@ -75,7 +75,7 @@
 		this.unbind('change').change(function(){
 			form.fadeTo(180,0.4);
 			if(beforeSubmit) beforeSubmit();
-			if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
+			if(window.tinymce) tinymce.triggerSave();
 			if(form.data('ht5ifv')!==undefined && !form.ht5ifv('valid')){
 				form.fadeTo(0,1)
 				return false;

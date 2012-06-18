@@ -22,7 +22,7 @@ S.extendsPrototype(String,{
 			[/Ĵ/g,'J'],[/ĵ/g,'j'],[/Ķ/g,'K'],[/ķ/g,'k'],
 			[/Ĺ|Ļ|Ľ|Ŀ|Ł/g,'L'],[/ĺ|ļ|ľ|ŀ|ł/g,'l'],
 			[/Ñ|Ń|Ņ|Ň/g,'N'],[/ñ|ń|ņ|ň|ŉ/g,'n'],
-			[/Ö|Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ/g,'O'],[/ö|ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º/g,'o'],
+			[/Ö|Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ/g,'O'],[/ö|ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|°/g,'o'],
 			[/Ŕ|Ŗ|Ř/g,'R'],[/ŕ|ŗ|ř/g,'r'],
 			[/Ś|Ŝ|Ş|Š/g,'S'],[/ś|ŝ|ş|š|ſ/g,'s'],
 			[/Ţ|Ť|Ŧ/g,'T'],[/ţ|ť|ŧ/g,'t'],
@@ -30,7 +30,7 @@ S.extendsPrototype(String,{
 			[/Ý|Ÿ|Ŷ/g,'Y'],[/ý|ÿ|ŷ/g,'y'],
 			[/Ŵ/g,'W'],[/ŵ/g,'w'],
 			[/Ź|Ż|Ž/g,'Z'],[/ź|ż|ž/g,'z'],
-			[/Æ|Ǽ/g,'AE'],[/ß/g,'ss'],[/Ĳ/g,'IJ'],[/ĳ/g,'ij'],[/Œ/g,'OE'],[/ƒ/g,'f'],[/&/g,'et']
+			[/Æ|Ǽ/g,'AE'],[/ß/g,'ss'],[/Ĳ/g,'IJ'],[/ĳ/g,'ij'],[/Œ/g,'OE'],[/ƒ/g,'f'],[/&/g,'et'],[/þ/,'th'],[/Þ/,'TH']
 		].sbEach(function(i,pattern){
 			t=t.replace(pattern[0],pattern[1]);
 		});
@@ -52,10 +52,13 @@ S.extendsPrototype(String,{
 		var input=this;
 		allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
 		var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-	    	commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+	    	commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi,
+	    	/*  http://www.tutorialchip.com/tutorials/html5-block-level-elements-complete-list/ */
+	    	blockTags='article,aside,blockquote,br,dd,div,dl,dt,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,li,menu,nav,ol,output,p,pre,section,table,tbody,textarea,tfoot,th,thead,tr,ul'.split(',');
 		return input.replace(commentsAndPhpTags, '').replace(tags,function($0,$1){
-			return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-		});
+			var tag=$1.toLowerCase();
+			return allowed.indexOf('<' + tag + '>') > -1 ? $0 : blockTags.sInArray(tag) ? "\n":'';
+		}).replace(/\n+\s*\n*/,"\n");
 	},
 	sbWordsCount:function(){
 		var t=this.replace(/\.\.\./g, ' ') // convert ellipses to spaces

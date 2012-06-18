@@ -281,6 +281,13 @@ S.tinymce={
 	},
 	
 	
+	createForId:function(id){
+		this.attrs.mode='none';
+		this.attrs.elements=id;
+		tinymce.init(this.attrs);
+		tinymce.execCommand('mceAddControl',false,id);
+	},
+	
 	ajaxSave:function(name,url){
 		var ed=tinymce.get(name);
 		ed.setProgressState(1);
