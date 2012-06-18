@@ -84,9 +84,10 @@ class CSecure{
 	}
 	
 	public static function connect($redirect=true){
-		if($redirect && !CSession::exists(self::BACK_URL)) self::setBackUrl();
-		if($redirect) static::redirectIfConnected();
-		elseif(static::isConnected()) return true;
+		if($redirect){
+			if(!CSession::exists(self::BACK_URL)) self::setBackUrl();
+			static::redirectIfConnected();
+		}elseif(static::isConnected()) return true;
 		// look cookie
 		self::loadCookie();
 		if(!empty(self::$_cookie->user) && !empty($_SERVER['HTTP_USER_AGENT'])){
