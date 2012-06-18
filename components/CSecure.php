@@ -108,7 +108,11 @@ class CSecure{
 			if(static::config('logConnections')) self::logConnection(self::CONNECTION_COOKIE,false,self::$_cookie->user);
 			self::$_cookie->destroy();
 		}
+		if(!CSession::exists(self::BACK_URL)) self::setBackUrl();
 		return false;
+	}
+	public static function setBackUrl($url=null){
+		CSession::set(self::BACK_URL,$url===null?CHttpRequest::referer(true):$url);
 	}
 	public static function redirectIfConnected(){
 		if(static::isConnected()) static::redirectAfterConnection();
