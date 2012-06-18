@@ -80,7 +80,7 @@ function short_debug_var($var,$MAX_DEPTH=3,$currentDepth=0){
 			if($var instanceof SModel) $objectVars=array_merge($objectVars,$var->_getData());
 			if(!empty($objectVars)) $res.="\n";
 			foreach($objectVars as $key=>&$value)
-				$res.=str_repeat("\t",$currentDepth+1).$key.'= '.short_debug_var($value,$currentDepth+1)."\n";
+				$res.=str_repeat("\t",$currentDepth+1).$key.'= '.short_debug_var($value,$MAX_DEPTH,$currentDepth+1)."\n";
 		}
 		return $res;
 	}elseif(is_resource($var)){
@@ -95,7 +95,7 @@ function short_debug_var($var,$MAX_DEPTH=3,$currentDepth=0){
 		if($currentDepth<$MAX_DEPTH){
 			$res="\n";
 			foreach($var as $k=>&$v)
-				$res.=str_repeat("\t",$currentDepth+1).$k.'=>'.short_debug_var($v,$currentDepth+1)."\n";
+				$res.=str_repeat("\t",$currentDepth+1).$k.'=>'.short_debug_var($v,$MAX_DEPTH,$currentDepth+1)."\n";
 			$res=rtrim($res);
 		}else return 'Array';
 		return 'Array : '.$res;
