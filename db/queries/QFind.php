@@ -518,7 +518,7 @@ abstract class QFind extends QSelect{
 						self::_recursiveThroughWith($withMore,$w['joins'],$obj::$__className);
 						
 						$resField =& $rel['associationForeignKey'];
-						$oneField=count($w['fields'])===1?$w['fields'][0]:false;
+						$oneField=count($w['fields'])===1 && !isset($w['with'])?$w['fields'][0]:false;
 						
 						/* DEV */if(empty($w['fields'])) throw new Exception('You must specify fields...');/* /DEV */
 						$w['fields']['('.$rel['alias'].'.`'.$resField.'`)']=$resField;
