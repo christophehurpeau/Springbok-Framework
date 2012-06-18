@@ -120,6 +120,15 @@ class ControllerFile extends PhpFile{
 			unset($mdef['annotations']['Required']);
 		}
 		
+		foreach(array('NotEmpty','Id') as $annotationName)
+			if(isset($mdef['annotations'][$annotationName])){
+				foreach($mdef['annotations'][$annotationName] as $fieldName){
+					$mdef['params'][$fieldName]['annotations']['Required']=false;
+					$mdef['params'][$fieldName]['annotations'][$annotationName]=0;
+				}
+				unset($mdef['annotations']['NotEmpty']);
+			}
+		
 		if(isset($mdef['annotations']['Valid'])){
 			foreach($mdef['annotations']['Valid'] as $valid)
 				$mdef['params'][$valid]['annotations']['Valid']=0;

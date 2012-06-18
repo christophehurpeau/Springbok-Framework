@@ -90,7 +90,7 @@ class ConfigFile extends PhpFile{
 						function($m) use(&$paramsDef,&$paramsNames){
 							if(!empty($m[1])) return $m[0];
 							$paramsNames[]=$m[2];
-							if(isset($paramsDef[$m[2]])) return $paramsDef[$m[2]]=='id' ? '([0-9]+)' : '('.$paramsDef[$m[2]].')';
+							if(isset($paramsDef[$m[2]])) return $paramsDef[$m[2]]=='id' ? '([0-9]+)' : '('.$paramsDef[$m[2]].')'; /* can have 0 before : 001-Slug */
 							if(in_array($m[2],array('id'))) return '([0-9]+)';
 							return '([^\/]+)';
 						},$routeLangPreg).($finalRoutes[$url]['ext']===null?'':($finalRoutes[$url]['ext']==='html'?'(\.html|)':'(\.'.$finalRoutes[$url]['ext'].')')),
