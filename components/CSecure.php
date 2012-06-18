@@ -84,6 +84,7 @@ class CSecure{
 	}
 	
 	public static function connect($redirect=true){
+		if($redirect && !CSession::exists(self::BACK_URL)) self::setBackUrl();
 		if($redirect) static::redirectIfConnected();
 		elseif(static::isConnected()) return true;
 		// look cookie
@@ -108,11 +109,11 @@ class CSecure{
 			if(static::config('logConnections')) self::logConnection(self::CONNECTION_COOKIE,false,self::$_cookie->user);
 			self::$_cookie->destroy();
 		}
-		if(!CSession::exists(self::BACK_URL)) self::setBackUrl();
 		return false;
 	}
 	public static function setBackUrl($url=null){
-		CSession::set(self::BACK_URL,$url===null?CHttpRequest::referer(true):$url);
+		if($url===null) $url=CHttpRequest::referer(true);
+		if($url!==static::config('url_login')) CSession::set(self::BACK_URL,$url);
 	}
 	public static function redirectIfConnected(){
 		if(static::isConnected()) static::redirectAfterConnection();
