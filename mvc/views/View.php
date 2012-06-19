@@ -113,6 +113,11 @@ class AjaxPageDynamicTabsView extends AjaxPageView{
 		parent::render();
 	}
 }
+class AjaxContentPageView extends AjaxPageView{
+	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
+		parent::__construct($title,'',$layout,$layoutNameOverride);
+	}
+}
 
 class AjaxContentView extends AbstractAjaxView{
 	private $title;
