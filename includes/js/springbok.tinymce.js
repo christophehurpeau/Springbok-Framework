@@ -285,7 +285,7 @@ S.tinymce={
 		this.attrs.mode='none';
 		this.attrs.elements=id;
 		tinymce.init(this.attrs);
-		tinymce.execCommand('mceAddControl',false,id);
+		setTimeout(function(){tinymce.execCommand('mceAddControl',false,id)},600);
 	},
 	
 	ajaxSave:function(name,url){
