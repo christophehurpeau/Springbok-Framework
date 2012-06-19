@@ -157,7 +157,7 @@ define('APP', __DIR__.'/dev/');";
 			//$t=microtime(true);
 			if(is_link($dPath)) continue;
 			$dirname=$d->getName();
-			if($dirname[0]==='.' || $dPath===$srcDir.'web/tinymce/') continue;
+			if($dirname[0]==='.' || $dPath===$srcDir.'web/tinymce/' || $dPath===$srcDir.'db/') continue;
 			
 			
 			if($dPath===$srcDir.'web/files/' || $dPath===$srcDir.'web/img/icons/'){
