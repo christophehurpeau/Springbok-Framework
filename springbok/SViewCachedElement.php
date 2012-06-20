@@ -6,6 +6,7 @@ class SViewCachedElement extends SViewElement{
 		$calledClass=get_called_class();
 		$path=call_user_func_array($calledClass.'::path',$vars=func_get_args()).'_';
 		$vars=call_user_func_array($calledClass.'::vars',$vars);
+		include_once CORE.'mvc/views/View.php';
 		foreach(static::$views as $view)
 			file_put_contents($path.$view,render(APP.'viewsElements/'.substr($calledClass,1).'/'.$view.'.php',$vars,true));
 	}
