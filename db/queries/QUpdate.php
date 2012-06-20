@@ -49,6 +49,10 @@ class QUpdate extends AQuery{
 		$modelName=$this->modelName;
 		$sql='UPDATE '.$modelName::_fullTableName().' SET ';
 		if(!empty($this->values)) foreach($this->values as $key=>$value){
+			if($key===$this->updatedField){
+				if($value===false) $this->updatedField=null;
+				continue;
+			}
 			$sql.=$this->_db->formatField($key).'=';
 			if($value===null) $sql.='NULL,';
 			elseif(is_array($value)) $sql.=$value[0].',';
