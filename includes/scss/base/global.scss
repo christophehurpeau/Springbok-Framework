@@ -34,9 +34,9 @@ h4{font-size:11pt;margin-bottom:8px;}
 h5{font-size:10pt;margin-bottom:5px;}
 h6{font-size:9pt;margin-bottom:5px;}
 
-.sepTop{margin-top:8px;padding-top:8px;}
+.sepTop,ul.cSepTop li{margin-top:8px;padding-top:8px;}
 .sepBottom{margin-bottom:8px;padding-bottom:8px;}
-.sepTop,.sepT{border-top:$SEP_BORDER;}
+.sepTop,.sepT,ul.cSepTop li{border-top:$SEP_BORDER;}
 .sepL{border-left:$SEP_BORDER;}
 .sepR{border-right:$SEP_BORDER;}
 .sepB{border-bottom:$SEP_BORDER;}
@@ -128,6 +128,8 @@ ul.overflow-ellipsis li{
 }
 ul.cMt10 li{margin-top:10px}
 ul.cMt10 li:first-child{margin-top:0}
+
+ul.cSepTop li:first-child{margin-top:0;padding-top:0;border-top:0;}
 
 /* interactions */
 
