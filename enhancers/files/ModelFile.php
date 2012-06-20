@@ -188,13 +188,13 @@ class ModelFile extends PhpFile{
 						.(empty($specialFieldsSetData)?'':'public function _setData(&$data){'.$specialFieldsSetData.'parent::_setData($data);}')
 						.(empty($specialFieldsGetData)?'':'public function &_getData(){$data=parent::_getData();$d=$data;'.$specialFieldsGetData.'return $d;}')
 					)
-					.($createdField?'public static function QInsert(){return new QInsert(self::$__className,'.UPhp::exportString($createdField).');}'
-						.'public static function QInsertSelect(){return new QInsertSelect(self::$__className,'.UPhp::exportString($createdField).');}'
-						.'public static function QReplace(){return new QReplace(self::$__className,'.UPhp::exportString($createdField).');}'
+					.($createdField||isset($annotations['Child'])?'public static function QInsert(){return new QInsert(self::$__className,'.($stringCreatedField=($createdField?UPhp::exportString($createdField):'null')).');}'
+						.'public static function QInsertSelect(){return new QInsertSelect(self::$__className,'.$stringCreatedField.');}'
+						.'public static function QReplace(){return new QReplace(self::$__className,'.$stringCreatedField.');}'
 					:'')
-					.($updatedField?/*'protected function _beforeUpdate(){if(!isset($this->'.$updatedField.')) $this->'.$updatedField.'=date(\'Y-m-d H:i:s\');return parent::_beforeUpdate();}'*/
-					'public static function QUpdate(){return new QUpdate(self::$__className,'.UPhp::exportString($updatedField).');}'
-					.'public static function QUpdateOne(){return new QUpdateOne(self::$__className,'.UPhp::exportString($updatedField).');}'
+					.($updatedField||isset($annotations['Child'])?/*'protected function _beforeUpdate(){if(!isset($this->'.$updatedField.')) $this->'.$updatedField.'=date(\'Y-m-d H:i:s\');return parent::_beforeUpdate();}'*/
+					'public static function QUpdate(){return new QUpdate(self::$__className,'.($stringUpdatedField=($updatedField?UPhp::exportString($updatedField):'null')).');}'
+					.'public static function QUpdateOne(){return new QUpdateOne(self::$__className,'.$stringUpdatedField.');}'
 					:'')
 					.$classBeforeContent;
 					//.implode('',array_map(function(&$field){return 'public function &'.UInflector::camelize($field,false).'($v){$this->_set('.UPhp::exportString($field).',$v);return $this;}';},array_keys($modelFile->_fields)))
