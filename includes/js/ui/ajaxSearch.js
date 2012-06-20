@@ -18,9 +18,7 @@ includeLib('jquery-ui-1.8.20.position');
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
 		if(!S.isObject(options)) options={minLength:options==null?3:options};
-		else{
-			options=S.extendsObj({ navigate:true, minLength:3 },options);
-		}
+		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json' },options);
 		display=display||defaultDisplayList;
 		$(window).on('beforeunload',function(){
 			
@@ -43,8 +41,9 @@ includeLib('jquery-ui-1.8.20.position');
 				var val=input.val();
 				if(options.keyup && options.keyup(val,eKeyCode)===false) return;
 				
-				if(val != '' && val.length >= options.minLength && val!=lastVal){
-					if(options.navigate) S.history.navigate(url+'/'+val);
+				if(options.navigate) S.history.navigate(url+'/'+val);
+				if(val == '' || val.length < options.minLength) options.reset ? options.reset() : destContent.empty();
+				else if(val!=lastVal){
 					lastVal=val;
 					if(xhr){xhr.abort(); xhr=null;}
 					if(currentTimeout) clearTimeout(currentTimeout);
@@ -53,12 +52,12 @@ includeLib('jquery-ui-1.8.20.position');
 						xhr=$.ajax({
 							url:url,
 							data:{term:val},
-							dataType: 'json',
+							dataType:options.dataType,
 							success:function(data){
 								options.success?options.success.call(destContent,data):destContent.html(display(data));
 							},
-							error:options.error||function(){
-								destContent.html('');
+							error:options.error||options.reset||function(){
+								destContent.empty();
 							}
 						});
 					},160);
