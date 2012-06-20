@@ -157,7 +157,7 @@ abstract class QFind extends QSelect{
 			
 			$options=$join+$lastModelName::$_relations[$key];
 			$onConditions=array($lastAlias.'.'.$options['foreignKey'].'='.$options['alias'].'.'.$options['associationForeignKey']);
-			if(isset($options['onConditions'])) $join['onConditions']=array_merge($options['onConditions'],$onConditions);
+			if(isset($options['onConditions'])) $options['onConditions']=array_merge($options['onConditions'],$onConditions);
 			else $options['onConditions']=$onConditions;
 			$options['reltype']=substr($join['reltype'],0,-7);
 			unset($options['joins']);
