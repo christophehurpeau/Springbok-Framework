@@ -79,7 +79,7 @@ span.img,span.icon{display:block;display:inline-block}
   display: table-cell;
   vertical-align: middle;
 }
-a.aicon{text-decoration:none}
+a.aicon{display: inline-block;text-decoration:none;}
 
 pre{
   text-align:left;margin:0;overflow:auto;
