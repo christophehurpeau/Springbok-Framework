@@ -31,6 +31,8 @@ class ModelFile extends PhpFile{
 				$orderByField=isset($annotations['OrderByField'])?$annotations['PositionField'][0][0]:false;
 				$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
 				
+				if(isset($annotations['Comment'])) $contentInfos['comment']=$annotations['Comment'][0][0];
+				
 				
 				$indexes=&$contentInfos['indexes'];
 				if(isset($annotations['Index'])){

@@ -39,11 +39,14 @@ class DBSchemaMySQL extends DBSchema{
 	
 	public function checkTable(){
 		$status=$this->db->doSelectRow('SHOW TABLE STATUS LIKE '.$this->db->escape($this->tableName));
-		return $status['Engine']==='InnoDB' && $status['Collation']==='utf8_general_ci';
+		return $status['Engine']==='InnoDB' && $status['Collation']==='utf8_general_ci'
+			&& ((empty($this->modelInfos['comment']) && empty($status['Comment'])) || (!empty($this->modelInfos['comment']) && $this->modelInfos['comment']===$status['Comment']));
 	}
 	
 	public function correctTable(){
-		$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+		$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName)
+					.' COMMENT='.(empty($this->modelInfos['comment'])?'""':$this->db->escape($this->modelInfos['comment']))
+					.' ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
 	}
 	
 	
