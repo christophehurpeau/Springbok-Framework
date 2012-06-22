@@ -13,17 +13,20 @@ class ControllerFile extends PhpFile{
 				throw new Exception('Error eval : '.$m[1]);
 			$countEval=count($eval);
 			if($countEval===3 && ($eval[0]==='core')||($eval[0]==='springbok')){
-				$controllerPath=CORE.'controllers/'.$eval[1].'Controller.php';
-				if(!isset($controllersSrc[$controllerPath]))
-					$controllersSrc[$controllerPath]=file_get_contents($controllerPath);
+				array_shift($eval);
+				$controllerPath=CORE.'controllers/'.$eval[0].'Controller.php';
+				if(!isset($controllersSrc[$countEval.$controllerPath]))
+					$controllersSrc[$countEval.$controllerPath]=file_get_contents($controllerPath);
 			}else{
-				$controllerPath='controllers'.($countEval===3 ? '.'.$eval[0] : '').'/'.($eval[$countEval===3?1:0]).'Controller.php';
-				if(!isset($controllersSrc[$controllerPath]))
-					$controllersSrc[$controllerPath]=file_get_contents($enhanced->getAppDir().'src/'.$controllerPath);
+				$parentPath=$countEval===4 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
+				$suffix=$countEval===3||$countEval===4 ? '.'.array_shift($eval):''; if($suffix==='.') $suffix='';
+				$controllerPath='controllers'.$suffix.'/'.($eval[0]).'Controller.php';
+				if(!isset($controllersSrc[$countEval.$controllerPath]))
+					$controllersSrc[$countEval.$controllerPath]=file_get_contents($parentPath.$controllerPath);
 			}
-			if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('.preg_quote($eval[$countEval===3?2:1]).')',
-						ControllerFile::REGEXP_ACTION),$controllersSrc[$controllerPath],$mAction))
-				throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[$countEval===3?2:1]);
+			if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('.preg_quote($eval[1]).')',
+						ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
+				throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 			return $mAction[0];
 		},$srcContent);
 		$this->_srcContent=$srcContent;

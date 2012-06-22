@@ -191,8 +191,7 @@ class JsFile extends EnhancerFile{
 			elseif($matches[1]==='Lib') $path=dirname(CORE).(file_exists(dirname(CORE).'/includes/js/'.$matches[2].'.js')?'/includes/js':'/includes');
 			elseif($matches[1]==='Plugin'){
 				list($pluginKey,$fileName)=explode('/',$matches[2],2);
-				$plugin=$enhanced->config['plugins'][$pluginKey];
-				$path=$enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/web/js';
+				$path=$enhanced->pluginPathFromKey($pluginKey).'/web/js';
 				$matches[2]=$fileName;
 			}else $path=CORE.(file_exists(CORE.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
 			

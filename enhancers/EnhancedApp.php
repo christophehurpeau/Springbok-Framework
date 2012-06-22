@@ -21,4 +21,16 @@ class EnhancedApp extends Enhanced{
 	public function devConfigExist($attr){ return isset($this->devConfig[$attr]); }
 	
 	public function md5EnhanceConfig(){ return $this->md5EnhanceConfig; }
+	
+	
+	public function pluginPath($plugin){
+		$pluginsPaths=$this->devConfig('pluginsPaths');
+		return $pluginsPaths[$plugin[0]].$plugin[1];
+	}
+	
+	public function pluginPathFromKey($key){
+		$pluginsPaths=$this->devConfig('pluginsPaths');
+		$plugin=$this->config['plugins'][$key];
+		return $pluginsPaths[$plugin[0]].$plugin[1].'/';
+	}
 }
