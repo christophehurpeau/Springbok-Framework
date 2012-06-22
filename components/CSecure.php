@@ -11,7 +11,7 @@ class CSecure{
 	
 	protected static function &loadConfig($configName='secure'){
 		$config=App::configArray($configName)
-			+array('className'=>'User','login'=>'login','password'=>'pwd','auth'=>'','authConditions'=>array(),
+			+array('className'=>'User','login'=>'login','password'=>'pwd','auth'=>'','authConditions'=>array(),'blacklist_back_url'=>array(),
 				'trim'=>". \t\n\r\0\x0B",'logConnections'=>false,'userHistory'=>false);
 		if(!isset($config['cookiename'])) $config['cookiename']=$config['className'];
 		if(!isset($config['id'])) $config['id']=$config['login'];
@@ -114,7 +114,7 @@ class CSecure{
 	}
 	public static function setBackUrl($url=null){
 		if($url===null) $url=CHttpRequest::referer(true);
-		if($url!==static::config('url_login')) CSession::set(self::BACK_URL,$url);
+		if($url!==static::config('url_login') && !in_array($url,static::config('blacklist_back_url'))) CSession::set(self::BACK_URL,$url);
 	}
 	public static function redirectIfConnected(){
 		if(static::isConnected()) static::redirectAfterConnection();
