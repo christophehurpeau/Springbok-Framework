@@ -7,7 +7,7 @@
 }
 
 .iconWrap div{height:30px;padding-left:28px}
-.icon{width:16px;height:16px;margin:2px 3px 2px 0;text-indent: -99999px;}/* pourquoi pas en display inline-block ? */
+.icon{width:16px;height:16px;margin:2px 3px 2px 0;@extend .hiddenText;}/* pourquoi pas en display inline-block ? */
 li .icon,.button .icon{margin:0 2px 0 0}
 
 @include coreIcon16('pageAdd','page_white_add');
