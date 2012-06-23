@@ -3,13 +3,13 @@ class HSitemaps{
 	private $prefix,$count=0,$sitemap,$sitemapNum=2;
 	public function __construct($prefix=''){
 		$this->prefix=$prefix;
-		$this->sitemap=new HSitemap($prefix.'sitemaps/1.xml');
+		$this->sitemap=new HSitemap('sitemaps/'.$prefix.'1.xml');
 	}
 	public function add($url,$options=array()){
 		if(++$this->count >49995){
 			$this->count=0;
 			$this->sitemap->end();
-			$this->sitemap=new HSitemap('sitemaps/'.($this->sitemapNum++).'.xml');
+			$this->sitemap=new HSitemap('sitemaps/'.$this->prefix.($this->sitemapNum++).'.xml');
 		}
 		$this->sitemap->add($url,$options);
 	}
