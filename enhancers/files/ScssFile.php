@@ -26,7 +26,7 @@ class ScssFile extends EnhancerFile{
 			else{
 				if($matches[1]==='Plugin'){
 					list($pluginKey,$fileName)=explode('/',$matches[2],2);
-					$filename=$enhanced->pluginPathFromKey($pluginKey).'/web/css/';
+					$filename=$enhanced->pluginPathFromKey($pluginKey).'web/css/';
 					$matches[2]=$fileName;
 				}else{
 					$filename=$matches[1]==='Lib' ? dirname($core).'/' : $core;

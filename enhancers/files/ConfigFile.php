@@ -16,7 +16,7 @@ class ConfigFile extends PhpFile{
 			
 			if(!empty($this->enhanced->appConfig['plugins']))
 				foreach($this->enhanced->appConfig['plugins'] as $key=>$plugin){
-					$devPluginPath=$this->enhanced->pluginPath($plugin).'/src/';
+					$devPluginPath=$this->enhanced->pluginPath($plugin).'src/';
 					if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$this->fileName())))
 						$md5.=file_get_contents($pluginConfigPath);
 				}
@@ -24,7 +24,7 @@ class ConfigFile extends PhpFile{
 			if($this->enhanced->configNotEmpty('plugins')){
 				foreach($this->enhanced->config['plugins'] as $key=>$plugin){
 					$devPluginPath=$this->enhanced->pluginPath($plugin);
-					if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$this->fileName())))
+					if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$this->fileName())))
 						$md5.=file_get_contents($pluginConfigPath);
 				}
 			}

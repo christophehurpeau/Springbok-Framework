@@ -25,7 +25,7 @@ class EnhancedApp extends Enhanced{
 	
 	public function pluginPath($plugin){
 		$pluginsPaths=$this->devConfig('pluginsPaths');
-		return $pluginsPaths[$plugin[0]].$plugin[1];
+		return $pluginsPaths[$plugin[0]].$plugin[1].'/';
 	}
 	
 	public function pluginPathFromKey($key){
