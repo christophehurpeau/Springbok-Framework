@@ -6,13 +6,40 @@ class ViewFile extends PhpFile{
 		$content=$this->_srcContent;
 		$content=preg_replace('/{include\s+(APP\.[^}]+)\s*\}/','<?php include $1; ?>',$content);
 		
+		/*
 		$parentFolder=dirname($this->srcFile()->getPath()); $viewsFolder=$this->enhanced->getAppDir().'src/views/';
 		for($i=0;$i++<2;)
 			$content=preg_replace_callback('/{include\s+([^}]+)\s*\}/',function(&$matches) use(&$parentFolder,&$viewsFolder){
 					return file_get_contents(substr($matches[1],0,6)==='VIEWS/'?$viewsFolder.substr($matches[1],6):$parentFolder.DS.$matches[1]);
-			},$content);
+			},$content);*/
+		$content=self::includes($content,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir().'src/views/',$this->enhanced);
 		$this->_srcContent=$content;
 	}
+	
+	public static function &includes($content,$currentPath,$viewsFolder,&$enhanced){
+		$content=preg_replace_callback('/{include(Core|Plugin)?\s+([^}]+)\s*\}/i',function($matches) use($currentPath,&$enhanced,&$viewsFolder){
+			if(!endsWith($matches[2],'.php')) $matches[2].='.php';
+			if(empty($matches[1])){
+				if(substr($matches[2],0,6)==='VIEWS/') $filename=$viewsFolder.substr($matches[2],6);
+				elseif($matches[2][0]==='/') $filename=$enhanced->getAppDir().substr($matches[2],1);
+				else $filename=$currentPath.'/'.$matches[2];
+			}else{
+				if($matches[1]==='Plugin'){
+					list($pluginKey,$fileName)=explode('/',$matches[2],2);
+					$filename=$enhanced->pluginPathFromKey($pluginKey);
+					$matches[2]=$fileName;
+				}else{
+					$filename=$core.'includes/views/';
+					if(file_exists($filename.$folderName.$matches[2])) $filename.=$folderName;
+				}
+				$filename.=$matches[2];
+			}
+			
+			return ViewFile::includes(file_get_contents($filename),$currentPath,$viewsFolder,$enhanced);
+		},$content);
+		return $content;
+	}
+	
 	
 	public function enhanceFinalContent($content){
 		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
