@@ -36,6 +36,21 @@ class SSqlModel extends SModel{
 		$this->_afterInsert($data);
 		return $id;
 	}
+	public function findIdOrInsert(){
+		$args=func_get_args();
+		$UniqueField=array_shift($args);
+		if(!$this->_beforeInsert()) return false;
+		$data=$this->_getSaveData($args);
+		$id=static::QValue()->field('id')->where(array($UniqueField=>$data[$UniqueField]))->execute();
+		if($id){
+			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
+		}else{
+			$id=static::QInsert()->data($data)->execute();
+			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
+			$this->_afterInsert($data);
+		} 
+		return $id;
+	}
 	
 	public function replace(){
 		if(!$this->beforeSave()) return false;
