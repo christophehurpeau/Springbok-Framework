@@ -17,6 +17,12 @@ class App{
 		return include APP.'config'.DS.$name.($withSuffix ? '_'.ENV : '').'.php';
 	}
 	
+	/** @return CLocale */
+	public static function getLocale(){
+		return CLocale::get('fr');
+	}
+	
+	
 	public static function run($action,$argv){
 		/* DEV */
 		if($shouldEnhance=((empty($argv[1]) || $argv[1]!=='noenhance') && !file_exists(dirname(APP).'block_enhance') && $action!=='daemon')){
