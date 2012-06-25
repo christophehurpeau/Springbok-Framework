@@ -230,7 +230,7 @@ class App{
 			$vars=array(
 				'e'=>&$exception,
 				'e_className'=>get_class($exception),
-				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced.' || ':'')./* /DEV */$exception->getMessage(),
+				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced."\n":'')./* /DEV */$exception->getMessage(),
 				'e_file'=>$exception->getFile(),
 				'e_line'=>$exception->getLine(),
 				'e_trace'=>$exception->getTrace(),
@@ -242,7 +242,7 @@ class App{
 		}
 	}
 	
-	public static function displayError($forceDefault,&$code,&$message,&$file,&$line,&$context=null){
+	public static function displayError($forceDefault,$code,$message,$file,$line,&$context=null){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
 		$type=CHttpRequest::acceptsByExtOrHttpAccept('html','json','xml');
 		if($type==='json'){
@@ -256,7 +256,7 @@ class App{
 			if(!headers_sent()) header("Content-Type: text/html; charset=UTF-8",true);
 			$vars=array(
 				'e_name'=>Springbok::getErrorText($code),
-				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced.' || ':'')./* /DEV */$message,
+				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced."\n":'')./* /DEV */$message,
 				'e_file'=>$file,
 				'e_line'=>$line,
 				'e_context'=>$context,

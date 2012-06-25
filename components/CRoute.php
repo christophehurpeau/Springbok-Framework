@@ -39,6 +39,8 @@ class CRoute{
 	public static function &getAll(){return self::$all;}
 	public static function &getController(){return self::$controller;}
 	public static function &getAction(){return self::$action;}
+	public static function getControllerActionRoute(){return '/'.self::$controller.(self::$action!==self::DEFAULT_ACTION?'/'.self::$action:''); }
+	public static function getRoute(){return array(true,'/'.self::getControllerActionRoute());}
 	public static function &getParams(){return self::$params;}
 	public static function &getExt(){return self::$ext;}
 

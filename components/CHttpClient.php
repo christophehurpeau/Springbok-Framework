@@ -5,7 +5,7 @@
 class HttpClientError extends Exception{
 	private $status,$error,$content;
 	public function __construct($url,&$status,&$error,&$content){
-		parent::__construct($url.': '.$status.' '.$error."\n".$content,$status);
+		parent::__construct($url.': "'.$status.'" '.$error."\n".$content,$status);
 		$this->status=&$status;
 		$this->error=&$error;
 		$this->content=&$content;
