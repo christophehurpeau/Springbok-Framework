@@ -1,4 +1,4 @@
-html body header{
+html body header,html body .sticky,html body #container #page .sticky{
 	top:28px;
 }
 html body #container{
