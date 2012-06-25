@@ -84,6 +84,7 @@ class CHttpRequest{
 			'bot',
 			//'Googlebot',
 			'Google Web Preview', // Google - www.google.com
+			'Bing Preview', // Bing
 			//'msnbot',
 			'Yahoo',
 			//'VoilaBot',
