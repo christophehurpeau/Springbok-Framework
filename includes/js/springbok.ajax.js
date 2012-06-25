@@ -84,7 +84,6 @@ includeCore('ui/slideTo');
 			headers.SpringbokAjaxContent=divContent.length>0?divContent.data('layoutname'):'';
 			if(S.breadcrumbs) headers.SpringbokBreadcrumbs='1';
 			
-			S.history.navigate(url);
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
 			$('body').addClass('cursorWait').append(divLoading);
@@ -94,6 +93,8 @@ includeCore('ui/slideTo');
 				type:type?type:'GET', data:data, headers:headers,
 				async:false,
 				complete:function(jqXHR){
+					S.history.navigate(url);
+					
 				/*	$('body').removeClass('cursorWait');
 					divLoading.remove();
 				},

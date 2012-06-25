@@ -114,7 +114,12 @@ class CSecure{
 	}
 	public static function setBackUrl($url=null){
 		if($url===null) $url=CHttpRequest::referer(true);
-		if($url!==static::config('url_login') && !in_array($url,static::config('blacklist_back_url'))) CSession::set(self::BACK_URL,$url);
+		/* DEV */if(startsWith($url,'/'.Springbok::$scriptname.'/')) $url=substr($url,strlen(Springbok::$scriptname)+1);
+		if($url===null) return;
+		if($url===HHtml::url(static::config('url_login'))) return;
+		foreach(static::config('blacklist_back_url') as $blacklistedUrl)
+			if($url===HHtml::url($blacklistedUrl)) return;
+		CSession::set(self::BACK_URL,$url);
 	}
 	public static function redirectIfConnected(){
 		if(static::isConnected()) static::redirectAfterConnection();
