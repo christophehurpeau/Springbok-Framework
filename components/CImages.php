@@ -286,6 +286,13 @@ class CImages{
 		$im->clear();
 		$im->destroy();
 	}
+	public static function convert2Jpeg($path,$newPath){
+		$im = new Imagick($path);
+		$im->setImageFormat("jpeg");
+		$im->writeImage($newPath);
+		$im->clear();
+		$im->destroy();
+	}
 	
 	
 	public static function addLogo(){
