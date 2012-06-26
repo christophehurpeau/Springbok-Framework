@@ -11,8 +11,8 @@ class HPagination{
 		(isset($_GET['b']) && $p<1000?($_GET['b']>$p?3:2):2)+($p<=20?1:0),(isset($_GET['b']) && $p<1000?($_GET['b']<$p?3:2):2)+($p<=20?1:0)).'</div>';
 	 */
 	public static function createPager($page,$totalPages,$callback,$nbBefore=3,$nbAfter=3,$disabled=true,$withText=null,$tiny=false){
-		if($page>1) HMeta::prev($callback($page-1));
-		if($page<$totalPages) HMeta::next($callback($page+1));
+		//if($page>1) HMeta::prev($callback($page-1));
+		//if($page<$totalPages) HMeta::next($callback($page+1));
 		
 		$str='<ul class="pager">';
 		if($withText!==null){
