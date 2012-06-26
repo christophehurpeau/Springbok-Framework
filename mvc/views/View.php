@@ -70,13 +70,13 @@ class AbstractAjaxView extends View{
 }
 
 class AjaxBaseView extends AbstractAjaxView{
-	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
+	public function __construct($title=false,$layout=null,$layoutNameOverride=null,$attrs=array()){
 		if($layout===null) $layout=Springbok::$prefix.'base';
 		if($layoutNameOverride===null) $layoutNameOverride=$layout;
 		if(CSecure::isConnected()) $layoutNameOverride.=CSecure::connected();
 		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE']))===true){
 			parent::__construct($title,$layout);
-			echo '<div id="container" data-layoutname="'.$layoutNameOverride.'">';
+			echo '<div id="container" data-layoutname="'.$layoutNameOverride.'"'.HHtml::_attributes($attrs).'>';
 		}else $this->ajaxHeaders($title,'base');
 	}
 }
