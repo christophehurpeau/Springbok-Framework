@@ -25,7 +25,9 @@ class CSecure{
 			$query=$className::QOne()->where(array(static::config('id')=>$user));
 			if(static::issetConfig('fields')) $query->setFields(static::config('fields'));
 			if(static::issetConfig('with')) $query->setAllWith(static::config('with'));
-			return $query->execute();
+			$res=$query->execute();
+			if($res===false) self::logout();
+			return $res;
 		}
 		return false;
 	}
@@ -85,7 +87,7 @@ class CSecure{
 	
 	public static function connect($redirect=true){
 		if($redirect){
-			if(!CSession::exists(self::BACK_URL)) self::setBackUrl();
+			/*if(!CSession::exists(self::BACK_URL)) */self::setBackUrl();
 			static::redirectIfConnected();
 		}elseif(static::isConnected()) return true;
 		// look cookie
