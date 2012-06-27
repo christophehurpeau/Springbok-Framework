@@ -50,7 +50,7 @@ class CBinder{
 	public static function bindInt($val){ return (int)$val; }
 	public static function bindFloat($val){ $val=self::parseDecimalFormat($val); return (float)$val; }
 	public static function bindDouble($val){ $val=self::parseDecimalFormat($val); return (double)$val; }
-	public static function parseDecimalFormat(&$val){
+	public static function parseDecimalFormat($val){
 		$config=App::getLocale()->data('decimalFormat');
 		if($config['thousands_sep'] !== '') $val=str_replace($config['thousands_sep'],'',$val);
 		if($config['decimal_sep'] !== '.') $val=str_replace($config['decimal_sep'],'.',$val);

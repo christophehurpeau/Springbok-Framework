@@ -19,7 +19,7 @@ class CRoute{
 	
 	public static function initRoute($all){
 		$all='/'.trim($all,'/');
-		self::$all=&$all;
+		self::$all=$all;
 
 		$route=CRoute::find($all);
 		if(!$route){
@@ -36,13 +36,13 @@ class CRoute{
 		/* DEV */self::$_prefix=$prefix;/* /DEV */
 	}
 	
-	public static function &getAll(){return self::$all;}
-	public static function &getController(){return self::$controller;}
-	public static function &getAction(){return self::$action;}
+	public static function getAll(){return self::$all;}
+	public static function getController(){return self::$controller;}
+	public static function getAction(){return self::$action;}
 	public static function getControllerActionRoute(){return '/'.self::$controller.(self::$action!==self::DEFAULT_ACTION?'/'.self::$action:''); }
 	public static function getRoute(){return array(true,'/'.self::getControllerActionRoute());}
-	public static function &getParams(){return self::$params;}
-	public static function &getExt(){return self::$ext;}
+	public static function getParams(){return self::$params;}
+	public static function getExt(){return self::$ext;}
 
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
@@ -117,7 +117,7 @@ class CRoute{
 		$plus='';
 		$link=array_shift($params);
 		if($link !==true){
-			$route=&self::$_routes[$link];
+			$route=self::$_routes[$link];
 			/* DEV */
 			if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
 			/* /DEV */
