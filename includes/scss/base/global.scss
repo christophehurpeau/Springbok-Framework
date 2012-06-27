@@ -35,11 +35,11 @@ h5{font-size:10pt;margin-bottom:5px;}
 h6{font-size:9pt;margin-bottom:5px;}
 
 .sepTop,ul.cSepTop li{margin-top:8px;padding-top:8px;}
-.sepBottom{margin-bottom:8px;padding-bottom:8px;}
+.sepBot{margin-bottom:8px;padding-bottom:8px;}
 .sepTop,.sepT,ul.cSepTop li{border-top:$SEP_BORDER;}
 .sepL{border-left:$SEP_BORDER;}
 .sepR{border-right:$SEP_BORDER;}
-.sepB{border-bottom:$SEP_BORDER;}
+.sepBot,.sepB{border-bottom:$SEP_BORDER;}
 
 .clearfix:after { 
   clear: both; 
