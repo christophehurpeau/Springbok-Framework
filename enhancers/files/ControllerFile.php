@@ -125,6 +125,7 @@ class ControllerFile extends PhpFile{
 		
 		foreach(array('NotEmpty','Id') as $annotationName)
 			if(isset($mdef['annotations'][$annotationName])){
+				if($annotationName==='Id' && empty($mdef['annotations'][$annotationName])) $mdef['annotations'][$annotationName]=array('id');
 				foreach($mdef['annotations'][$annotationName] as $fieldName){
 					$mdef['params'][$fieldName]['annotations']['Required']=false;
 					$mdef['params'][$fieldName]['annotations'][$annotationName]=0;
