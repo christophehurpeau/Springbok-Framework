@@ -101,55 +101,61 @@ $.widget( "ui.combobox", {
 	}
 });
 
-var ajaxCRDCommonFunction=function(elt,url,options,prepare,onDelete,onAdd){
+var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 	url+='/'; options=options || {}; options.url=options.url || '';
-	$.each(elt,function(i,div){
-		div=$(div);
-		var select=prepare(div,options), t, o, input=div.find('input'),
-			ul=div.find('ul').on('click','a',function(e){
-				e.preventDefault();
-				var li=$(this).closest('li'),val=li.attr('rel');
-				$.get(url+'del/'+val+options.url,function(d){
-					if(d=='1'){
-						onDelete(select,li,val)
-						li.animate({opacity:0,height:'toggle'},'slow',function(){li.remove();ul.change();});
-					}
-				});
-				return false;
-			});
+	var select=prepare(div,options), t, o, input=div.find('input');
+	
+	div.find('a.action.add').click(function(e){
+		e.preventDefault();
+		var val=select&&select.val(),action,data={};
+		if(!val){
+			if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
+			action='create';
+			data={val:input.val()};
+		}else action='add/'+val;
 		
-		div.find('a.action.add').click(function(e){
-			e.preventDefault();
-			var val=select.val(),action,data={};
-			if(!val){
-				if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
-				action='create';
-				data={val:input.val()};
-			}else action='add/'+val;
-			
-			$.get(url+action+options.url,data,function(d){
-				if(d=='1' || (action=='create' && $.isNumeric(d))){
-					if(action=='create'){
-						t=data.val;
-						val=d
-					}else{
-						t=onAdd(select,val);
-					}
-					$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t)).append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
-					input.val('');
-					ul.change();
-				}
-			});
-			return false;
-		});
-		input.keydown(function(e){
-			if(e.keyCode == '13'){
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				div.find('a.action.add').click();
-				return false;
+		$.get(url+action+options.url,data,function(d){
+			if(d=='1' || (action=='create' && $.isNumeric(d))){
+				onAdd(select,action,data,d,val);
+				input.val('');
 			}
 		});
+		return false;
+	});
+	input.keydown(function(e){
+		if(e.keyCode == '13'){
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			div.find('a.action.add').click();
+			return false;
+		}
+	});
+	return select;
+};
+
+
+var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
+	options=options || {}; options.url=options.url || '';
+	var ul=div.find('ul'),select=ajaxC_CommonFunction(div,url,options,prepare,function(select,action,data,d,val){
+		if(action=='create'){
+			t=data.val;
+			val=d
+		}else{
+			t=onAdd(select,val);
+		}
+		$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t)).append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
+		ul.change();
+	});
+	ul.on('click','a',function(e){
+		e.preventDefault();
+		var li=$(this).closest('li'),val=li.attr('rel');
+		$.get(url+'/del/'+val+options.url,function(d){
+			if(d=='1'){
+				onDelete(select,li,val)
+				li.animate({opacity:0,height:'toggle'},'slow',function(){li.remove();ul.change();});
+			}
+		});
+		return false;
 	});
 };
 
@@ -184,8 +190,29 @@ $.fn.ajaxCRDInputAutocomplete=function(url,options){
 		select.val('');
 	},function(select,val){
 		return select.data('name');
-	})
+	});
 };
+
+/* Create - Select */
+$.fn.ajaxCSInputAutocomplete=function(url,options,redirect){
+	ajaxC_CommonFunction(this,url,options,function(div,options){
+		var input=div.find('input'),hidden=$('<input type="hidden"/>').appendTo(input);
+		input.autocomplete({
+			source:url+'/autocomplete'+options.url,
+			minLength:1,
+			select:function(event,ui){ S.redirect(redirect?redirect(ui.item):ui.item.url); return false; }
+		}).data( "autocomplete" )._renderItem = function(ul,item){
+			return $( "<li/>" ).data( "item.autocomplete", item )
+				.append( $('<a/>').text(item.name) )
+				.appendTo( ul );
+		};
+	},function(select,action,data,d,val){
+		if(action=='create'){
+			S.redirect(redirect?redirect({id:d}):url+'/view/'+d);
+		}
+	});
+};
+
 
 $.fn.toggleLink=function(dest){
 	if(S.isString(dest)) dest=$(dest);
