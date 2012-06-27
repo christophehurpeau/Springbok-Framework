@@ -34,10 +34,12 @@ class QTable extends QFindAll{
 		$belongsToFields=&$this->belongsToFields; $belongsToRel=array();
 		if($this->autoRelations!==false){
 			if($belongsToFields!==false && empty($this->belongsToFields)){
-				foreach($modelName::$__modelInfos['relations'] as $relKey=>&$rel)
-					if($rel['reltype']==='belongsTo' && in_array($rel['foreignKey'],$fields)) $belongsToFields[$rel['foreignKey']]=$relKey;
+				$modelRelations=$modelName::$__modelInfos['relations'];
+				$parentRelModelName=isset($modelRelations['Parent'])?$modelRelations['Parent']['modelName']:false;
+				foreach($modelRelations as $relKey=>&$rel){
+					if($rel['reltype']==='belongsTo' && $rel['modelName']!==$parentRelModelName && in_array($rel['foreignKey'],$fields)) $belongsToFields[$rel['foreignKey']]=$relKey;}
 			}
-			foreach($belongsToFields as $field=>$relKey){
+			foreach($belongsToFields as $field=>$relKey){debugVar($field,$relKey);
 				$belongsToRel[$field]=$modelName::$_relations[$relKey];
 				$relModelName=$belongsToRel[$field]['modelName'];
 				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
