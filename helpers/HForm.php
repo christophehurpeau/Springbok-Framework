@@ -19,7 +19,7 @@ class HForm{
 			if(!isset($formOptions['name'])){
 				if($modelName===NULL) $name=NULL;
 				else $name=lcfirst($modelName);
-			}else $name=&$formOptions['name'];
+			}else $name=$formOptions['name'];
 			if($formOptions['method']==='file'){
 				$formOptions['enctype']='multipart/form-data';
 				$formOptions['method']='post';
@@ -50,7 +50,7 @@ class HForm{
 		$this->modelName=&$modelName;$this->name=&$name;
 
 		if($setValuesFromVar && $name && Controller::_isset($name)){
-			$val=&Controller::get($name);
+			$val=Controller::get($name);
 
 			if($val && $val!==false){
 				if($this->method=='post'){ if(empty($_POST[$name])) $_POST[$name]=&$val->_getData(); }

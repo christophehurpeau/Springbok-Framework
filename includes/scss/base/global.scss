@@ -15,16 +15,15 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .float_left{float:left}
 .fa_right{float:right;text-align:right}
 .context{ overflow:auto; overflow-x: hidden; position:relative }
-.nowrap{white-space:nowrap}
+.nowrap,.w1{white-space:nowrap}
 .hidden{display:none}
 .hiddenText{text-indent:-99999px}
 .smallinfo{font-size:8pt}
 .biginfo{font-size:11pt}
 .aposTR{position:absolute;top:0;right:0}
 .aposR{position:absolute;right:0}
-.iepie{
-  behavior:url(/web/css/PIE.htc);
-}
+.iepie{behavior:url(/web/css/PIE.htc);}
+.w1{width:1px}
 
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
 h1{font-size:16pt;margin-bottom:15px;}

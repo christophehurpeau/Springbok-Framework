@@ -68,8 +68,12 @@ class ModelFile extends PhpFile{
 									'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
 					$classBeforeContent.='public function insert(){ $this->'.$idField.'=$this->insertParent(); return parent::insert(); }';
 					$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->'.$idField.'=$idParent; return parent::insert();} }';
+					$typesParent=$enhanceConfig['modelParents'][$annotations['Child'][0][0]];
+					$typeForParent=array_search($modelFile->_className,$typesParent);
+					if($typeForParent===false) throw new Exception("Type parent not found: ".print_r($typesParent,true).' ('.$modelFile->_className.')');
+					
 					$classBeforeContent.='public function insertParent(){ $parent=new '.$annotations['Child'][0][0].';'
-												.($idField==='id' ? ' $parent->_copyData($this->data); ' : '$data=$this->data; unset($data["id"]); $parent->_copyData($data);')
+												.'$data=$this->data;'.($idField==='id' ? '' : 'unset($data["id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
 												.' return $parent->'.($annotations['Child'][0][0]==='SearchablesKeyword'?'findIdOrInsert(\'slug\')':'insert()').'; }';
 					$classBeforeContent.='public function insertIgnoreParent(){ $parent=new '.$annotations['Child'][0][0].'; $parent->_copyData($this->data); return $parent->insertIgnore(); }';
 					$classBeforeContent.='public function updateParent(){ $parent=new '.$annotations['Child'][0][0].'; $parent->_copyData($this->data); return call_user_func_array(array($parent,"update"),func_get_args()); }';

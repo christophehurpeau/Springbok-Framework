@@ -231,7 +231,7 @@ class DBMySQL extends DBSql{
 	public function /* DEV */_/* /DEV */doSelectAssocObjects($query,$queryObj,$fields,$tabResKey){
 		$r=$this->_query_($query,$fields); $res=array();
 		while($r->fetch()){
-			$obj=&$queryObj->_createObj();
+			$obj=$queryObj->_createObj();
 			$res[$obj->$tabResKey]=$obj;
 		}
 		$r->close();

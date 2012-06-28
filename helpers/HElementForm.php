@@ -38,7 +38,7 @@ class HElementForm extends HElement{
 		$this->modelName=$modelName; $this->name=$name;
 
 		if($setValuesFromVar && $name && Controller::_isset($name)){
-			$val=&Controller::get($name);
+			$val=Controller::get($name);
 
 			if($val && $val!==false){///TODO : to do after method can be changeable
 				if($this->method==='post'){ if(empty($_POST[$name])) $_POST[$name]=&$val->_getData(); }
