@@ -175,7 +175,7 @@ class DBMySQL extends DBSql{
 		while($row=$r->fetch_row()) $callback($row[$numCol]);
 		$r->close();*/
 		$value=false; $res=array();
-		$fields=array($value);
+		$fields=array(&$value);
 		$r=$this->_query_($query,$fields);
 		while($r->fetch()) $callback($value);
 		$r->close();
@@ -208,7 +208,7 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectListValue($query){
 		$key;$value;
-		$fields=array($key,$value);
+		$fields=array(&$key,&$value);
 		$r=$this->_query_($query,$fields); $res=array();
 		while($row=$r->fetch()) $res[$key]=$value;
 		$r->close(); return $res;
