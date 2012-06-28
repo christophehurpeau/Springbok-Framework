@@ -40,7 +40,7 @@ class HText{
 		return HHtml::tag('pre',$preAttrs,$content,false);
 	}
 	
-	private static function &lines($withLineNumbers,$startNumLine,$lines){
+	private static function lines($withLineNumbers,$startNumLine,$lines){
 		$content='';
 		foreach($lines as &$line) $content.=self::line($withLineNumbers,$startNumLine++,array(),$line);
 		return $content;

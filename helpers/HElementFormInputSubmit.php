@@ -1,7 +1,7 @@
 <?php
 class HElementFormInputSubmit extends HElementFormContainable{
-	public function __construct(&$form,&$title){
-		$this->form=&$form;
+	public function __construct($form,$title){
+		$this->form=$form;
 		$this->error=false;
 		if($title===true) $title=_tC('Save');
 		$this->attributes['value']=$title;

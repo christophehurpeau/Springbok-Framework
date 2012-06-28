@@ -15,7 +15,7 @@ class CSimpleCachedHttpClient{
 	}
 	
 	public static function getPage($url,$sleep=false){
-		return self::$cache->readOrWrite(urlencode($url),function() use (&$url,&$sleep){
+		return self::$cache->readOrWrite(urlencode($url),function() use($url,$sleep){
 			if($sleep!==false) sleep($sleep);
 			return file_get_contents($url,0,CSImpleCachedHttpClient::$context);
 		});

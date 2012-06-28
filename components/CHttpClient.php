@@ -4,11 +4,11 @@
 
 class HttpClientError extends Exception{
 	private $status,$error,$content;
-	public function __construct($url,&$status,&$error,&$content){
+	public function __construct($url,$status,$error,$content){
 		parent::__construct($url.': "'.$status.'" '.$error."\n".$content,$status);
-		$this->status=&$status;
-		$this->error=&$error;
-		$this->content=&$content;
+		$this->status=$status;
+		$this->error=$error;
+		$this->content=$content;
 	}
 	
 	public function getStatus(){ return $this->status; }
@@ -53,28 +53,28 @@ class CHttpClient{
 	
 	
 	
-	public function &target($url){$this->target=&$url;return $this;}
-	public function &port($port){$this->port=&$port;return $this;}
+	public function target($url){$this->target=$url;return $this;}
+	public function port($port){$this->port=$port;return $this;}
 	//public function &setreferer($url){$this->referer=&$url;return $this;}
 	
-	public function &setCookiePath($path){$this->cookiePath=&$path;return $this;}
-	public function &addCookie($name,$value){$this->cookies[$name]=&$value;return $this;}
-	public function &destroyCookieFile(){
+	public function setCookiePath($path){$this->cookiePath=$path;return $this;}
+	public function addCookie($name,$value){$this->cookies[$name]=$value;return $this;}
+	public function destroyCookieFile(){
 		if(file_exists(DATA.'tmp/curl/'.$this->cookiePath)) unlink(DATA.'tmp/curl/'.$this->cookiePath);
 		return $this;
 	}
 	
-	public function &auth($username,$password){$this->username=&$username;$this->password=&$password;return $this;}
+	public function auth($username,$password){$this->username=$username;$this->password=$password;return $this;}
 	
-	public function &params($params){$this->params=&$params;return $this;}
-	public function &addParam($name,$value){$this->params[$name]=&$value;return $this;}
+	public function params($params){$this->params=$params;return $this;}
+	public function addParam($name,$value){$this->params[$name]=$value;return $this;}
 	
 	/*public function &saveCookies($val){$this->saveCookies=&$val;return $this;}*/
-	public function &useCookies($value=true){$this->useCookies=&$value;return $this;}
-	public function &useReferer(){$this->referer='';return $this;}
-	public function &followRedirects($value){$this->redirect=&$value;return $this;}
+	public function useCookies($value=true){$this->useCookies=$value;return $this;}
+	public function useReferer(){$this->referer='';return $this;}
+	public function followRedirects($value){$this->redirect=$value;return $this;}
 	/** ip:port , username:password */
-	public function &proxy($proxy,$auth=false){$this->proxy=array(&$proxy,&$auth);return $this;}
+	public function proxy($proxy,$auth=false){$this->proxy=array($proxy,$auth);return $this;}
 	
 	public function get($target,$referer=null){
 		return $this->execute($target,$referer,'GET');
@@ -83,7 +83,7 @@ class CHttpClient{
 		return $this->execute($target,$referer,'POST');
 	}
 	
-	private function &execute(&$target,&$referer,$method){
+	private function execute($target,$referer,$method){
 		if($referer!==null) $this->referer=$referer;
 		
 		/*
@@ -126,7 +126,7 @@ class CHttpClient{
 	}
 
 
-	protected function &_curl_create(&$method,&$target,&$params){
+	protected function _curl_create($method,$target,$params){
 		if(!empty($params)){
 			$queryString=http_build_query($params,null,'&');
 			if($method==='GET') $target.='?'.$queryString;

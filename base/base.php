@@ -1,9 +1,9 @@
 <?php
-function replaceAppAndCoreInFile(&$file){
+function replaceAppAndCoreInFile($file){
 	return str_replace(array(APP,CORE),array('APP/','CORE/'),$file);
 }
 
-function &prettyBackTrace($skipLength=1,$trace=false){
+function prettyBackTrace($skipLength=1,$trace=false){
 	if(!$trace) $trace=debug_backtrace();
 	$prettyMessage='';
 	// Skip the unecessary stack trace
@@ -27,7 +27,7 @@ function geditURL($file,$line){
 	return '<a href="gedit://'.h($file).'?'.$line.'">';
 }
 
-function &prettyHtmlBackTrace($skipLength=1,$trace=false){
+function prettyHtmlBackTrace($skipLength=1,$trace=false){
 	if(!$trace) $trace=function_exists('xdebug_get_function_stack') ? xdebug_get_function_stack() : debug_backtrace();
 	$prettyMessage='';
 	// Skip the unecessary stack trace
@@ -152,37 +152,37 @@ function dev_test_preg_error(){
 		throw new Exception('preg error : '.$strError);
 	}
 }
-function &dev_preg_replace($pattern,$replacement,$subject,$limit=-1,&$count=NULL){
+function dev_preg_replace($pattern,$replacement,$subject,$limit=-1,&$count=NULL){
 	$res=preg_replace($pattern,$replacement,$subject,$limit,$count);
 	dev_test_preg_error();
 	return $res;
 }
-function &dev_preg_filter($pattern,$replacement,$subject,$limit=-1,&$count=NULL){
+function dev_preg_filter($pattern,$replacement,$subject,$limit=-1,&$count=NULL){
 	$res=preg_filter($pattern,$replacement,$subject,$limit,$count);
 	dev_test_preg_error();
 	return $res;
 }
-function &dev_preg_grep($pattern,$input,$flags=0){
+function dev_preg_grep($pattern,$input,$flags=0){
 	$res=preg_grep($pattern,$input,$flags);
 	dev_test_preg_error();
 	return $res;
 }
-function &dev_preg_match_all($pattern,$subject,&$matches=NULL,$flags=PREG_PATTERN_ORDER,$offset=0){
+function dev_preg_match_all($pattern,$subject,&$matches=NULL,$flags=PREG_PATTERN_ORDER,$offset=0){
 	$res=preg_match_all($pattern,$subject,$matches,$flags,$offset);
 	dev_test_preg_error();
 	return $res;
 }
-function &dev_preg_match($pattern,$subject,&$matches=NULL,$flags=0,$offset=0){
+function dev_preg_match($pattern,$subject,&$matches=NULL,$flags=0,$offset=0){
 	$res=preg_match($pattern,$subject,$matches,$flags,$offset);
 	dev_test_preg_error();
 	return $res;
 }
-function &dev_preg_replace_callback($pattern,$callback,$subject,$limit=-1,&$count=NULL){
+function dev_preg_replace_callback($pattern,$callback,$subject,$limit=-1,&$count=NULL){
 	$res=preg_replace_callback($pattern,$callback,$subject,$limit,$count);
 	dev_test_preg_error();
 	return $res;
 }
-function &dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
+function dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
 	$res=preg_split($pattern,$subject,$limit,$flags);
 	dev_test_preg_error();
 	return $res;
@@ -197,27 +197,32 @@ function debugCode($code){}
 function debugVar($var){}
 /* /PROD */
 
-function h(&$data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
+function h($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
+/* PROD */
 function h2($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
+/* /PROD */
 function urlenc($string){return urlencode(urlencode($string)); }
 function startsWith($haystack,$needle) {return substr($haystack,0,strlen($needle))===$needle;}
 function endsWith($haystack,$needle){return strrpos($haystack,$needle)===strlen($haystack)-strlen($needle);}
 
+//TODO PhpFileEnhancer
 function isE(&$var,$then,$else){ return empty($var) ? $then : $else; }
 function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
 function isTrue($cond,$then,$else=''){ return $cond===true ? $then : $else; }
 function isFalse($cond,$then,$else=''){ return $cond===false ? $then : $else; }
 
-function render($file,&$vars,$return=false){
-	extract($vars,EXTR_REFS);
+function render($file,$vars,$return=false){
+	extract($vars);
 	if($return){
 		ob_start();// ob_implicit_flush(false);
 		include $file;
 		return ob_get_clean();
 	}else include $file;
 }
-function notFoundIfFalse(&$v){if($v===false)notFound();}
-
+/* PROD */
+//backward compatibility
+function notFoundIfFalse($v){if($v===false)notFound();}
+/* /PROD */
 
 function displayJson($content){
 	header('Content-type: application/json; charset=UTF-8');

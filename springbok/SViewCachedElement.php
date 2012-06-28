@@ -38,8 +38,7 @@ class SViewCachedElement extends SViewElement{
 	protected function read($view){
 		return file_get_contents($this->path.$view);
 	}
-	protected function &write($view,$content){
-		file_put_contents($this->path.$view,$content);
-		return $content;
+	protected function write($view,$content){
+		return file_put_contents($this->path.$view,$content);
 	}
 }

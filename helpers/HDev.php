@@ -62,7 +62,7 @@ class HDev{
 					.'<td><div class="query"><a href="javascript:;" onclick="$(this).parent().parent().find(\'.result\').slideToggle()">'.h($query['query']).'</a></div>'
 						.'<div class="result"><pre>'.prettyBackTrace(0,$query['backtrace']).'</pre>';
 				if(!empty($query['result']))
-					echo '<pre>'.h2(short_debug_var($query['result'])).'</pre>';
+					echo '<pre>'.h(short_debug_var($query['result'])).'</pre>';
 				echo '</div></td><td class="time">'.number_format($query['time']*1000,0,'',' ').' ms</td></tr>';
 			}
 			echo '</table>';
@@ -97,7 +97,7 @@ class HDev{
 		}
 		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre>'.prettyHtmlBackTrace(3).'</pre>';
 		
-		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre>'.h2(short_debug_var($e_context)).'</pre>';
+		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre>'.h(short_debug_var($e_context)).'</pre>';
 	}
 	
 	public static function exception(&$e_message,&$e_file,&$e_line,&$e_trace){

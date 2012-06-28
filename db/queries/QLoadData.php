@@ -20,40 +20,40 @@ include_once __DIR__.DS.'AQuery.php';
 class QLoadData extends AQuery{
 	protected $fileName,$replace=false,$ignore=false,$characterSet,$fieldsTerminatedBy,$fieldsEnclosedBy,$fieldsEscapedBy,$linesStatingBy,$linesTerminatedBy,$ignoreLines;
 	
-	public function &fileName($fileName){
-		$this->fileName=&$fileName;
+	public function fileName($fileName){
+		$this->fileName=$fileName;
 		return $this;
 	}
 	public function replace(){
 		$this->replace=true;
 		return $this;
 	}
-	public function &characterSet($characterSet){
-		$this->characterSet=&$characterSet;
+	public function characterSet($characterSet){
+		$this->characterSet=$characterSet;
 		return $this;
 	}
-	public function &fieldsTerminatedBy($terminatedBy){
-		$this->fieldsTerminatedBy=&$terminatedBy;
+	public function fieldsTerminatedBy($terminatedBy){
+		$this->fieldsTerminatedBy=$terminatedBy;
 		return $this;
 	}
-	public function &fieldsEnclosedBy($enclosedBy){
-		$this->fieldsEnclosedBy=&$enclosedBy;
+	public function fieldsEnclosedBy($enclosedBy){
+		$this->fieldsEnclosedBy=$enclosedBy;
 		return $this;
 	}
-	public function &fieldsEscapedBy($escapedBy){
-		$this->escapedBy=&$escapedBy;
+	public function fieldsEscapedBy($escapedBy){
+		$this->escapedBy=$escapedBy;
 		return $this;
 	}
-	public function &linesStatingBy($statingBy){
-		$this->linesStatingBy=&$statingBy;
+	public function linesStatingBy($statingBy){
+		$this->linesStatingBy=$statingBy;
 		return $this;
 	}
-	public function &linesTerminatedBy($terminatedBy){
-		$this->linesTerminatedBy=&$terminatedBy;
+	public function linesTerminatedBy($terminatedBy){
+		$this->linesTerminatedBy=$terminatedBy;
 		return $this;
 	}
 	
-	public function &ignoreFirstLine(){
+	public function ignoreFirstLine(){
 		$this->ignoreLines=1;
 		return $this;
 	}
@@ -81,7 +81,7 @@ class QLoadData extends AQuery{
 		return $sql;
 	}
 
-	public function &execute(){
+	public function execute(){
 		$modelName=$this->modelName;
 		$res=$this->_db->doUpdate($this->_toSQL());
 		return $res;

@@ -7,12 +7,12 @@ class Controller{
 
 	protected static function beforeDispatch(){}
 
-	public static function dispatch(&$suffix,&$mdef){
-		self::$suffix=&$suffix;
+	public static function dispatch($suffix,$mdef){
+		self::$suffix=$suffix;
 		static::beforeDispatch();
 		if(!method_exists(get_called_class(),$methodName=CRoute::getAction())) notFound();
-		self::$methodName=&$methodName;
-		$methodAnnotations=&$mdef['annotations'];
+		self::$methodName=$methodName;
+		$methodAnnotations=$mdef['annotations'];
 		//if(isset(static::$_classAnnotations))
 		//	$methodAnnotations += static::$_classAnnotations;
 		/* 
@@ -27,13 +27,13 @@ class Controller{
 		ACSecure::checkAccess($checkAnnotation);
 	}
 
-	protected static function &getParams(&$mdef,&$methodAnnotations){
+	protected static function getParams($mdef,$methodAnnotations){
 		/* DONT FORGET TO CHANGE RESTCONTROLLER AND SOCKETCONTROLLER */
 		$params=array();
 		
 		$method=CHttpRequest::getMethod();
-		if($method==='GET') $DATA=&$_GET;
-		elseif($method==='POST') $DATA=&$_POST;
+		if($method==='GET') $DATA=$_GET;
+		elseif($method==='POST') $DATA=$_POST;
 		
 		$rParams=CRoute::getParams();
 		$num=0;
@@ -67,7 +67,7 @@ class Controller{
 		if(is_array($name))
 			throw new Exception('Controller::set array => use mset');
 		/* /DEV */
-		self::$viewVars[$name]=&$value;
+		self::$viewVars[$name]=$value;
 	}
 	protected static function set_($name,&$value){
 		self::$viewVars[$name]=&$value;
@@ -77,11 +77,7 @@ class Controller{
 	}
 	
 	public static function setForView($name,$value){
-		self::$viewVars[$name]=&$value;
-	}
-	
-	public static function setForView_($name,&$value){
-		self::$viewVars[$name]=&$value;
+		self::$viewVars[$name]=$value;
 	}
 	
 	public static function setForLayout($name,$value=null){
@@ -89,36 +85,32 @@ class Controller{
 		if(is_array($name))
 			throw new Exception('Controller::setForLayout array => use msetForLayout');
 		/* /DEV */
-		if(is_array($name)) self::$layoutVars=$name+self::$layoutVars;
-		else self::$layoutVars[$name]=&$value;
-	}
-	public static function setForLayout_($name,&$value){
-		self::$layoutVars[$name]=&$value;
+		self::$layoutVars[$name]=$value;
 	}
 	
 	public static function setForLayoutAndView($name,$value){
+		/* DEV */
+		if(is_array($name))
+			throw new Exception('Controller::setForLayout array => use msetForLayoutAndView');
+		/* /DEV */
 		if(is_array($name)){
 			self::$viewVars=$name+self::$viewVars;
 			self::$layoutVars=$name+self::$layoutVars;
-		}else self::$layoutVars[$name]=self::$viewVars[$name]=&$value;
-	}
-	public static function setForLayoutAndView_($name,&$value){
-		self::$layoutVars[$name]=&$value;
-		self::$viewVars[$name]=&$value;
+		}else self::$layoutVars[$name]=self::$viewVars[$name]=$value;
 	}
 	
 	public static function _isset($name){
 		return isset(self::$viewVars[$name]);
 	}
 	
-	public static function &get($name){
+	public static function get($name){
 		return self::$viewVars[$name];
 	}
 	
-	public static function &getLayoutVars(){
+	public static function getLayoutVars(){
 		return self::$layoutVars;
 	}
-	public static function &getLayoutVar($name){
+	public static function getLayoutVar($name){
 		return self::$layoutVars[$name];
 	}
 	
@@ -199,42 +191,16 @@ class Controller{
 			render($file,self::$viewVars);
 		}
 	}
-	
+
+	/* DEV */
 	protected static function renderTable($title,&$table,$add=false,$layout=null){
-		/* DEV */ throw new Exception("Use Model::Table()->render() now."); /* /DEV */
-		include_once CORE.'mvc/views/View.php';
-		if(static::beforeRender()){
-			$v=new AjaxContentView($title,$layout);
-			self::_add($add);
-			HTable::table($table);
-			$v->render();
-		}
+		throw new Exception("Use Model::Table()->render() now.");
 	}
 	
 	protected static function renderEditableTable($title,&$table,$pkField,$url,$add=false,$layout=null){
-		/* DEV */ throw new Exception("Use Model::Table()->renderEditable() now."); /* /DEV */
-		include_once CORE.'mvc/views/View.php';
-		if(static::beforeRender()){
-			$v=new AjaxContentView($title,$layout);
-			self::_add($add);
-			HTableEditable::table($table,$pkField,$url);
-			$v->render();
-		}
-		
+		throw new Exception("Use Model::Table()->renderEditable() now.");
 	}
-	
-	private static function _add($add){
-		if($add!==false){
-			if(is_string($add)) $add=array('modelName'=>$add);
-			if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
-			if(!isset($add['formContainer'])) $add['formContainer']=false;
-			if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
-			$form=HForm::create($add['modelName'],$add['form'],$add['formContainer']);
-			foreach($add['fields'] as $field=>$label)
-				echo $form->input($field,array('label'=>$label));
-			echo $form->end(_tC('Add'));
-		}
-	}
+	/* /DEV */
 	
 	public static function cacheFor($time){
 		$maxAge=strtotime($time,0);

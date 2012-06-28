@@ -2,7 +2,7 @@
 abstract class BasicSocketUser{
 	private static $userCount=0;
 	private $id,$socket;
-	public function __construct(&$socket){
+	public function __construct($socket){
 		$this->socket=$socket;
 		$this->id=++self::$userCount;
 	}
@@ -18,18 +18,18 @@ class CSocket{
 	/** Holds all connected sockets */
 	protected $allsockets=array(),$users=array();
 	
-	public function __construct($appName,&$logger,$host='localhost',$port=8000,$max=100){
+	public function __construct($appName,$logger,$host='localhost',$port=8000,$max=100){
 		$this->logger=$logger;
 		$this->createSocket($host,$port);
 		$this->createApp($appName);
 	}
 	
-	protected function createApp(&$appName){
+	protected function createApp($appName){
 		$this->app=new CSocketApp($this);
 		$this->app->run($appName);
 	}
 	
-	protected function doAction(&$user,&$socket,&$buffer){
+	protected function doAction($user,$socket,$buffer){
 		$action_params=explode(' ',$buffer,2);
 		if(!isset($action_params[1])) $action_params[1]=null;
 		$res=$this->app->action($user,$action_params[0],$action_params[1]);
@@ -113,14 +113,14 @@ class CSocket{
 	}
 
 
-	protected function connect(&$socket){
+	protected function connect($socket){
 		$user = new SocketUser($socket);
-		$this->users[$user->getId()]=&$user;
-		$this->allsockets[$user->getId()]=&$socket;
+		$this->users[$user->getId()]=$user;
+		$this->allsockets[$user->getId()]=$socket;
 		$this->log($socket . ' CONNECTED!');
 		
 	}
-	protected function received(&$user,&$buffer,&$socket,&$bytes){
+	protected function received($user,$buffer,$socket,$bytes){
 		$this->doAction($user,$socket,$buffer);
 	}
 	
@@ -130,7 +130,7 @@ class CSocket{
 	 * @param socket $client The destination socket
 	 * @param string $msg The message
 	 */
-	protected function send(&$socket,$msg){
+	protected function send($socket,$msg){
 		socket_write($socket,$msg,strlen($msg));
 	}
 	
@@ -139,7 +139,7 @@ class CSocket{
 	protected function unwrap($msg,$bytes){ return rtrim($msg); }
 	
 	
-	protected function close(&$userId,&$socket){
+	protected function close($userId,$socket){
 		if($userId > 0){
 			unset($this->allsockets[$userId]);
 			unset($this->users[$userId]);

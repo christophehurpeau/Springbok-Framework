@@ -7,7 +7,7 @@ abstract class WebSocketUser extends BasicSocketUser{
 	public function setHandshake(){$this->handshake=true;}
 }
 class CWebSocket extends CSocket{
-	protected function received(&$user,&$buffer,&$socket,&$bytes){
+	protected function received($user,$buffer,$socket,$bytes){
 		# this is a new connection, no handshake yet
 		if(!$user->hadHandshake()){
 			$this->doHandshake($user,$buffer,$socket);
@@ -34,7 +34,7 @@ class CWebSocket extends CSocket{
 	 * @param string $buffer The received stream to init the handshake
 	 * @param socket $socket The socket from which the data came
 	 */
-	private function doHandshake(&$user,&$buffer,&$socket){
+	private function doHandshake($user,$buffer,$socket){
 		$this->log('Requesting handshake...');
 		$this->log($buffer);
 		
@@ -69,7 +69,7 @@ class CWebSocket extends CSocket{
 		return array($r,$h,$o,$sk1,$sk2,$l8b);
 	}
 	
-	private function calcKey(&$key1,&$key2,&$l8b){
+	private function calcKey($key1,$key2,$l8b){
 		//Get the numbers
 		preg_match_all('/([\d]+)/', $key1, $key1_num);
 		preg_match_all('/([\d]+)/', $key2, $key2_num);

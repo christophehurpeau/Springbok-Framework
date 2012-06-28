@@ -2,24 +2,24 @@
 class CSearchResult{
 	public $pagination,$totalResults,$query;
 	
-	public function __construct(&$search,$query){
+	public function __construct($search,$query){
 		$this->query=self::trim($query);
 		
 		$page=1;
 		CSession::set('search',array('query'=>&$query,'page'=>&$page));
 		$search->set($query);
 		
-		Controller::setForView_('search',$search);
-		Controller::setForView_('result',$this);
+		Controller::setForView('search',$search);
+		Controller::setForView('result',$this);
 		$this->pagination=$search->createPagination()->execute();
 		$page=$this->pagination->getPage();
 		
-		Controller::setForView_('hSearch',new AHSearch($search,$this));
+		Controller::setForView('hSearch',new AHSearch($search,$this));
 		
 		$this->afterSearch($search);
 	}
 	
-	public function afterSearch(&$search){
+	public function afterSearch($search){
 		if(($this->totalResults=$this->pagination->getTotalResults())===0)
 			throw new SearchException;
 	}

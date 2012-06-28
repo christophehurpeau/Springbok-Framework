@@ -9,8 +9,8 @@ class CRoute{
 
 	public static function init($prefix,$suffix){
 		$routes=App::configArray('routes'.$suffix);
-		self::$_routes=&$routes['routes'];
-		self::$_langs=&$routes['langs'];
+		self::$_routes=$routes['routes'];
+		self::$_langs=$routes['langs'];
 		/* DEV */self::$_prefix=$prefix;/* /DEV */
 		
 		$all=CHttpRequest::getPathInfo();
@@ -31,8 +31,8 @@ class CRoute{
 	
 	public static function cliinit($prefix,$suffix){
 		$routes=App::configArray('routes'.$suffix);
-		self::$_routes=&$routes['routes'];
-		self::$_langs=&$routes['langs'];
+		self::$_routes=$routes['routes'];
+		self::$_langs=$routes['langs'];
 		/* DEV */self::$_prefix=$prefix;/* /DEV */
 	}
 	

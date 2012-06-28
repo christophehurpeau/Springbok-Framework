@@ -17,7 +17,7 @@ class HTableEditable extends HTable{
 	public static function getDisplayableValue(&$field,&$value,&$obj){
 		if(isset($field['editable']) && $field['editable']){
 			$modelName=&self::$modelName;
-			$jsonPkValue=h2(json_encode(self::$pkValue));
+			$jsonPkValue=h(json_encode(self::$pkValue));
 			
 			//<input type="text" value="'.h($value).'" style="width:98%" onchange=""/>
 			$def=$modelName::$__PROP_DEF[$name=$field['key']];

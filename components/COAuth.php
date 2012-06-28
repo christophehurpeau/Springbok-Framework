@@ -23,7 +23,7 @@ class COAuth{
 		return $this->doRequest($request);
 	}
 	
-	public function &getFullResponse(){
+	public function getFullResponse(){
 		return $this->fullResponse;
 	}
 	

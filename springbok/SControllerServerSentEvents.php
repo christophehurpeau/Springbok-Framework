@@ -3,15 +3,15 @@
 class SControllerServerSentEvents extends Controller{
 	protected static $resp;
 	
-	public static function dispatch(&$suffix,&$mdef){
-		self::$suffix=&$suffix;
+	public static function dispatch($suffix,$mdef){
+		self::$suffix=$suffix;
 		static::beforeDispatch();
 		$method=CHttpRequest::getMethod(); $methodName=CRoute::getAction();
 		if($method !=='GET') $methodName.=$method;
 		
 		if(!method_exists(get_called_class(),$methodName)) notFound();
-		self::$methodName=&$methodName;
-		$methodAnnotations=&$mdef['annotations'];
+		self::$methodName=$methodName;
+		$methodAnnotations=$mdef['annotations'];
 		$params=$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations);
 		self::$resp=new ServerSentEventsResponse();
 		header("Content-Type: text/event-stream");

@@ -25,7 +25,7 @@ abstract class QSelect extends AQuery{
 	protected $where,$groupBy,$having,$orderBy,$limit;//,$calcFoundRows=false;
 	protected $calcFoundRows=false,$addByConditions=false;
 	
-	public function &by($query,$values){
+	public function by($query,$values){
 		$fields=explode('And',$query);
 		$fields=array_map('lcfirst',$fields);
 		$conds=array(); $length=count($fields); $i=-1;
@@ -35,48 +35,48 @@ abstract class QSelect extends AQuery{
 		$this->addByConditions=&$conds;
 		return $this;
 	}
-	public function &where($where){$this->where=&$where;return $this;}
-	public function &addCondition($key,$value){$this->where[$key]=&$value;return $this;}
-	public function &addCond($key,$value){$this->where[$key]=&$value;return $this;}
-	public function &orderBy($orderBy){$this->orderBy=&$orderBy;return $this;}
-	public function &orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
+	public function where($where){$this->where=$where;return $this;}
+	public function addCondition($key,$value){$this->where[$key]=$value;return $this;}
+	public function addCond($key,$value){$this->where[$key]=$value;return $this;}
+	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
+	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
 	public function getOrderBy(){
 		if(is_string($this->orderBy)) return $this->orderBy;
 		foreach($this->orderBy as $k=>$v)
 			return is_int($k) ? $v : $k;
 	}
 	
-	public function &groupBy($groupBy){
+	public function groupBy($groupBy){
 		if(is_string($groupBy)) $groupBy=explode(',',$groupBy);
 		$this->groupBy=&$groupBy;
 		return $this;
 	}
-	public function &having($having){$this->having=&$having;return $this;}
-	public function &addHavingCondition($key,$value){$this->having[$key]=$value;return $this;}
+	public function having($having){$this->having=$having;return $this;}
+	public function addHavingCondition($key,$value){$this->having[$key]=$value;return $this;}
 	
 	/** (limit) or ($limit, down) */
-	public function &limit($limit,$down=0){
+	public function limit($limit,$down=0){
 		if($down>0) $this->limit=((int)$down).','.((int)$limit);
-		else $this->limit=&$limit;
+		else $this->limit=$limit;
 		return $this;
 	}
-	public function &limit1(){$this->limit=1;return $this;}
+	public function limit1(){$this->limit=1;return $this;}
 	
 	
-	public function &__call($method, $params){
+	public function __call($method, $params){
         if (!preg_match('/^by(\w+)$/',$method,$matches))
             throw new \Exception("Call to undefined method {$method}");
         $this->by($matches[1],$params);
         return $this;
     }
 	
-	protected function &_SqlStart(){
+	protected function _SqlStart(){
 		$sql='SELECT ';
 		if($this->calcFoundRows) $sql.='SQL_CALC_FOUND_ROWS ';
 		return $sql;
 	}
 	
-	protected function &_afterWhere(&$sql,&$fieldPrefix=''){
+	protected function _afterWhere(&$sql,&$fieldPrefix=''){
 		if(isset($this->groupBy)){
 			$sql.=' GROUP BY ';
 			foreach($this->groupBy as $field)

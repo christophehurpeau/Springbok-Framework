@@ -15,22 +15,22 @@ class QUpdate extends AQuery{
 		$this->updatedField=$updatedField;
 	}
 	
-	public function &values($values){$this->values=&$values;return $this;}
-	public function &where($conditions){$this->where=&$conditions;return $this;}
+	public function values($values){$this->values=$values;return $this;}
+	public function where($conditions){$this->where=$conditions;return $this;}
 	
-	public function &updatedField($field){$this->updatedField=$field;return $this;}
+	public function updatedField($field){$this->updatedField=$field;return $this;}
 	
-	public function &by($query,$values){
+	public function by($query,$values){
 		$fields=explode('And',$query);
 		$fields=array_map('lcfirst',$fields);
 		$conds=array(); $length=count($fields); $i=-1;
 		while(++$i<$length)
 			$conds[lcfirst($fields[$i])]=$values[$i];
-		$this->where=&$conds;
+		$this->where=$conds;
 		return $this;
 	}
 	
-	public function &__call($method, $params){
+	public function __call($method, $params){
         if (!preg_match('/^by(\w+)$/',$method,$matches))
             throw new \Exception("Call to undefined method {$method}");
         $this->by($matches[1],$params);
@@ -72,7 +72,7 @@ class QUpdate extends AQuery{
 		return $sql;
 	}
 
-	public function &execute(){
+	public function execute(){
 		$res=$this->_db->doUpdate($this->_toSQL());
 		return $res;
 	}

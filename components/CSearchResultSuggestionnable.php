@@ -2,7 +2,7 @@
 class CSearchResultSuggestionnable extends CSearchResult{
 	public $suggestion,$suggestions;
 	
-	public function afterSearch(&$search){
+	public function afterSearch($search){
 		if(($this->totalResults=$this->pagination->getTotalResults())===0){
 			if(($changes=$search->findSimilarWords())!==null){
 				if(count($changes)===1){

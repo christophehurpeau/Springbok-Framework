@@ -8,18 +8,18 @@ SELECT ...
 abstract class QUnion extends QSelect{
 	protected $queries=array(),$all,$distinct;
 	
-	public function &all(){
+	public function all(){
 		$this->all=true;
 		return $this;
 	}
 	
-	public function &distinct(){
+	public function distinct(){
 		$this->distinct=true;
 		return $this;
 	}
 	
-	public function &addQuery($query){
-		$this->queries[]=&$query;
+	public function addQuery($query){
+		$this->queries[]=$query;
 		return $this;
 	}
 	

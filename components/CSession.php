@@ -32,12 +32,12 @@ class CSession{
 		unset($_SESSION[$name]);
 	}
 	
-	public static function &get($name){
+	public static function get($name){
 		return self::$_SESSION[$name];
 	}
 	
-	public static function &getAndRemove($name){
-		$res=&self::$_SESSION[$name];
+	public static function getAndRemove($name){
+		$res=self::$_SESSION[$name];
 		unset($_SESSION[$name]);
 		return $res;
 	}

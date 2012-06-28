@@ -13,7 +13,7 @@ class HMenu{
 	public static function left($links,$options=array()){
 		return self::create($links,$options,'left');
 	}
-	public static function &ul($links,$options=array()){
+	public static function ul($links,$options=array()){
 		self::$tagName='ul';
 		$res=self::create($links,$options,'');
 		self::$tagName='nav';

@@ -2,7 +2,7 @@
 class HElementFormInput extends HElementFormContainable{
 	private $type;
 	
-	public function __construct(&$form,&$name,$largeSize=1){
+	public function __construct($form,$name,$largeSize=1){
 		parent::__construct($form,$name);
 		$this->type='text';
 		
@@ -12,9 +12,9 @@ class HElementFormInput extends HElementFormContainable{
 		if($this->form->modelName !== null){
 			$this->attributes['name']=$this->form->name.'['.$name.']';
 			
-			$modelName=&$this->form->modelName;
+			$modelName=$this->form->modelName;
 			if(isset($modelName::$__PROP_DEF[$name])){
-				$propDef=&$modelName::$__PROP_DEF[$name];
+				$propDef=$modelName::$__PROP_DEF[$name];
 				switch($propDef['type']){
 					case 'int': $type='number'; break;
 					case 'string':
@@ -51,12 +51,12 @@ class HElementFormInput extends HElementFormContainable{
 		}else $this->attributes['name']=$name;
 	}
 	
-	public function &value($value){ $this->attributes['value']=&$value; return $this; }
-	public function &value_(&$value){ $this->attributes['value']=$value; return $this; }
+	public function value($value){ $this->attributes['value']=$value; return $this; }
+	public function value_(&$value){ $this->attributes['value']=$value; return $this; }
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.($this->type!=='text'?'text ':'').$this->type); }
 	
 	public function toString(){
-		$this->attributes['type']=&$this->type;
+		$this->attributes['type']=$this->type;
 		return $this->_labelToString().$this->between.HHtml::tag('input',$this->attributes);
 	}
 }

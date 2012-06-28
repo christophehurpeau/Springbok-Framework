@@ -13,7 +13,7 @@ class BasicAppSocketUser extends BasicSocketUser{
 include CORE.'springbok/Controller.php';
 class SocketController extends Controller{
 	public static $DATA;
-	protected static function &getParams(&$mdef,&$methodAnnotations){
+	protected static function getParams($mdef,$methodAnnotations){
 		$params=array();
 		
 		$rParams=CRoute::getParams();
@@ -72,8 +72,8 @@ class CSocketSecure extends CSecure{
 class CSocketApp{
 	private $socket,$prefix;
 	
-	public function __construct(&$socket){
-		$this->socket=&$socket;
+	public function __construct($socket){
+		$this->socket=$socket;
 	}
 	
 	public function run($name){

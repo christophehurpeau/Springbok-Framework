@@ -5,7 +5,7 @@ class CLangCore{
 		self::$translations=include CORE.'i18n/langs/'.CLang::get().'.php';
 	}
 	
-	public static function &translate($string){
+	public static function translate($string){
 		return self::$translations[$string];
 	}
 }

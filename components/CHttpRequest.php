@@ -119,7 +119,7 @@ class CHttpRequest{
 		B_EPIPHANY=10,B_FENNEC=11,B_ICEWEASEL=12,B_MINEFIELD=13,B_MINIMO=14,B_FLOCK=15,B_FIREBIRD=16,B_PHOENIX=17,B_CAMINO=18,B_CHIMERA=19,B_THUNDERBIRD=20,B_NETSCAPE=21,B_OMNIWEB=22,B_IRON=23,B_ICAB=24,B_KONQUEROR=25,B_MIDORI=26,B_DOCOMO=27,B_LYNX=28,B_LINKS=29,
 		B_W3C_VALIDATOR=30,B_APACHE_BENCH=31,B_LIBWWW_PERL_LIB=32,B_W3M=33,B_WGET=34;
 		
-	public static function &parseUserAgent(){
+	public static function parseUserAgent(){
 		$ua=isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
 		$browser = array('user_agent'=>&$ua,'platform'=>null,'browser'=>null,'version'=>null);
 		if(empty($ua)) return $browser;
@@ -231,7 +231,7 @@ class CHttpRequest{
 		return array('referer'=>$r,'referer_domain'=>empty($url['domain'])?null:preg_replace('#^www\.#','',$url['host']),'searchTerms'=>self::getSearchTerms($url));
 	}
 
-	public static function getSearchTerms(&$url){
+	public static function getSearchTerms($url){
 		$searchTerms = '';
 		
 		if(isset($url['host'] ) && isset($url['query'] ) ) {
@@ -258,7 +258,7 @@ class CHttpRequest{
 				array( "/.*/", 'q' )
 			);
 			
-			foreach($sniffs as &$sniff) {
+			foreach($sniffs as $sniff) {
 				if( preg_match( $sniff[0], $url['host'] ) ) {
 					parse_str( $url['query'], $q );
 					
@@ -317,7 +317,7 @@ class CHttpRequest{
 
 	public static function acceptLanguage($language=null){
 		$accepts = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		foreach ($accepts as $k => &$accept){
+		foreach($accepts as $k => &$accept){
 			$accept = strtolower($accept);
 			if (strpos($accept, ';') !== false){
 				list($accept, $prefValue) = explode(';',$accept,2);

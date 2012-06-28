@@ -5,16 +5,16 @@ class CValidation{
 	private static $_hasErrors=false;
 	private static $_errors=array();
 
-	public static function &hasErrors(){return self::$_hasErrors;}
-	public static function &getErrors(){return self::$_errors;}
+	public static function hasErrors(){return self::$_hasErrors;}
+	public static function getErrors(){return self::$_errors;}
 	public static function hasError($key){return isset(self::$_errors[$key]);}
-	public static function &getError($key){return self::$_errors[$key];}
+	public static function getError($key){return self::$_errors[$key];}
 	public static function reset(){
 		self::$_errors=array();
 		self::$_hasErrors=false;
 	}
 	
-	public static function &valid($key,&$annotations,$val){
+	public static function valid($key,$annotations,$val){
 		foreach($annotations as $name=>$params){
 			if(!method_exists(get_called_class(),'valid'.$name)) continue;
 			if($params) array_unshift($params,$val);
@@ -36,7 +36,7 @@ class CValidation{
 		return self::_addError($key,$error);
 	}
 	
-	private static function _addError(&$key,$error){
+	private static function _addError($key,$error){
 		if(!$error) return false;
 		self::$_hasErrors=true;
 		self::$_errors[$key]=$error;

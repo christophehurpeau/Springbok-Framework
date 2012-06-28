@@ -15,47 +15,47 @@ class QInsert extends AQuery{
 		$this->createdField=$createdField;
 	}
 	
-	public function &cols($cols){
+	public function cols($cols){
 		$this->cols=is_string($cols)?explode(',',$cols):$cols;
 		return $this;
 	}
-	public function &set($data){
+	public function set($data){
 		$this->data($data);
 		return $this;
 	}
-	public function &data(&$data){
+	public function data($data){
 		$this->cols=array_keys($data);
 		$this->values=array($data);
 		return $this;
 	}
-	public function &datas(&$datas){
+	public function datas($datas){
 		reset($datas);
 		$this->cols=array_keys(current($datas));
 		$this->values=$datas;
 		return $this;
 	}
 	
-	public function &values($values){
-		$this->values=array(&$values);
+	public function values($values){
+		$this->values=array($values);
 		return $this;
 	}
 	
-	public function &mvalues($values){
-		$this->values=&$values;
+	public function mvalues($values){
+		$this->values=$values;
 		return $this;
 	}
 	
-	public function &ignore(){
+	public function ignore(){
 		$this->ignore=true;
 		return $this;
 	}
 	
-	public function &orUpdate($onDuplicateKeyUpdate){
-		$this->onDuplicateKeyUpdate=&$onDuplicateKeyUpdate;
+	public function orUpdate($onDuplicateKeyUpdate){
+		$this->onDuplicateKeyUpdate=$onDuplicateKeyUpdate;
 		return $this;
 	}
 	
-	public function &_toSQL(){
+	public function _toSQL(){
 		$modelName=$this->modelName;
 		$sql=$this->keyword.' '; $hasCreatedField=$this->createdField!==null && $this->cols!==false && !in_array($this->createdField,$this->cols);
 		if($this->ignore!==false) $sql.='IGNORE ';
@@ -93,7 +93,7 @@ class QInsert extends AQuery{
 		return $sql;
 	}
 
-	public function &execute(){
+	public function execute(){
 		if(empty($this->values)) return false;
 		$modelName=$this->modelName;
 		$res=$this->_db->doUpdate($this->_toSQL());

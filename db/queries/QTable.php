@@ -6,18 +6,18 @@ class QTable extends QFindAll{
 		$exportable=false
 		;
 	
-	public function &allowFilters(){$this->allowFilters=true; return $this; }
-	public function &allowAdvancedFilters(){$this->allowFilters='advanced'; return $this; }
-	public function &disallowOrder(){$this->allowOrder=false; return $this; }
-	public function &noAutoRelations(){$this->autoRelations=false; return $this;}
-	public function &belongsToFields($params){$this->belongsToFields=&$params; return $this; }
-	public function &exportable($types,$fileName,$title=null){$this->exportable=array(&$types,&$fileName,&$title); return $this;}
+	public function allowFilters(){$this->allowFilters=true; return $this; }
+	public function allowAdvancedFilters(){$this->allowFilters='advanced'; return $this; }
+	public function disallowOrder(){$this->allowOrder=false; return $this; }
+	public function noAutoRelations(){$this->autoRelations=false; return $this;}
+	public function belongsToFields($params){$this->belongsToFields=&$params; return $this; }
+	public function exportable($types,$fileName,$title=null){$this->exportable=array($types,$fileName,$title); return $this;}
 	
 	public function isFiltersAllowed(){ return $this->allowFilters!==false; }
 	public function isFilterAdvancable(){ return $this->allowFilters==='advanced'; }
-	public function &isOrderAllowed(){ return $this->allowOrder; }
-	public function &getPagination(){ return $this->pagination; }
-	public function &getFilters(){ return $this->FILTERS; }
+	public function isOrderAllowed(){ return $this->allowOrder; }
+	public function getPagination(){ return $this->pagination; }
+	public function getFilters(){ return $this->FILTERS; }
 	public function isExportable(){ return $this->exportable!==false; }
 	public function getExportableTypes(){ return explode(',',$this->exportable[0]); }
 	public function getBelongsToFields(){ return $this->belongsToFields; }
@@ -26,12 +26,12 @@ class QTable extends QFindAll{
 	public function getFieldsForTable(){ return $this->_fieldsForTable; }
 	
 	protected function process(){
-		$modelName=&$this->modelName;
+		$modelName=$this->modelName;
 		$fields=$this->getFields();
 		if($fields===null) $fields=$modelName::$__modelInfos['colsName'];
-		$this->_fieldsForTable=&$fields;
+		$this->_fieldsForTable=$fields;
 		
-		$belongsToFields=&$this->belongsToFields; $belongsToRel=array();
+		$belongsToFields=$this->belongsToFields; $belongsToRel=array();
 		if($this->autoRelations!==false){
 			if($belongsToFields!==false && empty($this->belongsToFields)){
 				$modelRelations=$modelName::$__modelInfos['relations'];
@@ -89,12 +89,12 @@ class QTable extends QFindAll{
 							$relFieldName=$relModelName::$__displayField;
 							$condK=$rel['alias'].'.'.$relFieldName;
 							
-							$propDef=&$relModelName::$__PROP_DEF[$relFieldName];
+							$propDef=$relModelName::$__PROP_DEF[$relFieldName];
 							$type=$propDef['type'];
 						}else{
 							$condK=$fieldName;
 							
-							$propDef=&$modelName::$__PROP_DEF[$fieldName];
+							$propDef=$modelName::$__PROP_DEF[$fieldName];
 							$type=$propDef['type'];
 						}
 						$condV=CBinder::bind($type,$postValue);
@@ -160,7 +160,7 @@ class QTable extends QFindAll{
 		}
 	}
 
-	private function _export(&$type,&$fileName,&$title){
+	private function _export($type,$fileName,$title){
 		ob_clean();
 		if(empty($fileName)) $fileName=$this->getModelName();
 		$table=new CModelTableExport($this);
@@ -172,7 +172,7 @@ class QTable extends QFindAll{
 		return $this->_export($type,$fileName,$title);
 	}
 	
-	public function &pagination(){
+	public function pagination(){
 		$this->process();
 		
 		$this->pagination=CPagination::create($this)->pageSize(25);

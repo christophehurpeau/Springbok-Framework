@@ -10,13 +10,11 @@ abstract class CLogger{
      * @param string $type
      * @return Logger
      */
-    static public function &get($name,$type='FileLogger'){
-        if(!isset(self::$_instances[$name]))
-        {
-            $rc=new ReflectionClass($type);
-            self::$_instances[$name]=$rc->newInstance($name);
-        }
-        return self::$_instances[$name];
+    static public function get($name,$type='FileLogger'){
+        if(isset(self::$_instances[$name])) return self::$_instances[$name];
+        $rc=new ReflectionClass($type);
+        return self::$_instances[$name]=$rc->newInstance($name);
+        
     }
 }
 

@@ -6,7 +6,7 @@ class UProfiling{
 		return microtime(true) - $t;
 	}
 	
-	public static function &compare($nbIt/* HIDE */,$callbacks/* /HIDE */){
+	public static function compare($nbIt/* HIDE */,$callbacks/* /HIDE */){
 		$callbacks=func_get_args();
 		unset($callbacks[0]);
 		$res=array();

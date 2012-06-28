@@ -1,6 +1,6 @@
 <?php
 class QFindListAll extends QFindAll{
-	public function &execute(){
+	public function execute(){
 		$res=$this->_db->doSelectListObjects($this->_toSQL(),$this,$this->queryResultFields);
 		
 		if($res){
@@ -10,20 +10,20 @@ class QFindListAll extends QFindAll{
 		return $res;
 	}
 	
-	public function &calcFoundRows(){
+	public function calcFoundRows(){
 		$this->calcFoundRows=true;
 		return $this;
 	}
-	public function &noCalcFoundRows(){
+	public function noCalcFoundRows(){
 		$this->calcFoundRows=null;
 		return $this;
 	}
 	
-	public function &hasCalcFoundRows(){
+	public function hasCalcFoundRows(){
 		return $this->calcFoundRows;
 	}
 	
-	public function &foundRows(){
+	public function foundRows(){
 		return $this->calcFoundRows;
 	}
 }

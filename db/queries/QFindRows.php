@@ -1,6 +1,6 @@
 <?php
 class QFindRows extends QFind{
-	public function &execute(){
+	public function execute(){
 		$res=$this->_db->doSelectRows($this->_toSQL());
 		
 		if($this->calcFoundRows===true){
@@ -14,16 +14,16 @@ class QFindRows extends QFind{
 		$this->_db->doSelectRowsCallback($this->_toSQL(),$callback);
 	}
 	
-	public function &calcFoundRows(){
+	public function calcFoundRows(){
 		$this->calcFoundRows=true;
 		return $this;
 	}
 	
-	public function &hasCalcFoundRows(){
+	public function hasCalcFoundRows(){
 		return $this->calcFoundRows;
 	}
 	
-	public function &foundRows(){
+	public function foundRows(){
 		return $this->calcFoundRows;
 	}
 	

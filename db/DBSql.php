@@ -15,18 +15,18 @@ abstract class DBSql extends DB{
 	public abstract function escape($string);
 
 	/* DEV */
-	public function &doSelect($methodName,$methodParams){
+	public function doSelect($methodName,$methodParams){
 		$t=microtime(true);
-		$result=call_user_func_array(array(&$this,'_doSelect'.$methodName),$methodParams);
+		$result=call_user_func_array(array($this,'_doSelect'.$methodName),$methodParams);
 		$t=microtime(true) - $t;
-		$this->_logQuery(array('query'=>&$methodParams[0],'result'=>&$result,'time'=>&$t));
+		$this->_logQuery(array('query'=>$methodParams[0],'result'=>$result,'time'=>$t));
 		return $result;
 	}
 	public function doUpdate($query){
 		$t=microtime(true);
 		$result=$this->_doUpdate($query);
 		$t=microtime(true) - $t;
-		$this->_logQuery(array('query'=>&$query,'result'=>&$result,'time'=>&$t));
+		$this->_logQuery(array('query'=>$query,'result'=>$result,'time'=>$t));
 		return $result;
 	}
 	
@@ -72,30 +72,30 @@ abstract class DBSql extends DB{
 	public function doSelectListValue($query){
 		return $this->doSelect('ListValue',func_get_args());
 	}
-	public function doSelectObjects(&$query,&$queryObj,&$fields){
-		return $this->doSelect('Objects',array(&$query,&$queryObj,&$fields));
+	public function doSelectObjects($query,$queryObj,$fields){
+		return $this->doSelect('Objects',array($query,$queryObj,$fields));
 	}
-	public function doSelectListObjects(&$query,&$queryObj,&$fields){
-		return $this->doSelect('ListObjects',array(&$query,&$queryObj,&$fields));
+	public function doSelectListObjects($query,$queryObj,$fields){
+		return $this->doSelect('ListObjects',array($query,$queryObj,$fields));
 	}
-	public function doSelectAssocObjects(&$query,&$queryObj,&$fields,&$tabResKey){
-		return $this->doSelect('AssocObjects',array(&$query,&$queryObj,&$fields,&$tabResKey));
+	public function doSelectAssocObjects($query,$queryObj,$fields,$tabResKey){
+		return $this->doSelect('AssocObjects',array($query,$queryObj,$fields,$tabResKey));
 	}
-	public function doSelectObject(&$query,&$queryObj,&$fields){
-		return $this->doSelect('Object',array(&$query,&$queryObj,&$fields));
+	public function doSelectObject($query,$queryObj,$fields){
+		return $this->doSelect('Object',array($query,$queryObj,$fields));
 	}
 	
 	public function doSelectRowsCallback($query,$callback){
-		return $this->doSelect('RowsCallback',array(&$query,&$callback));
+		return $this->doSelect('RowsCallback',array($query,$callback));
 	}
 	public function doSelectRowsCallback_($query,$callback){
-		return $this->doSelect('RowsCallback_',array(&$query,&$callback));
+		return $this->doSelect('RowsCallback_',array($query,$callback));
 	}
-	public function doSelectObjectsCallback(&$query,&$queryObj,&$fields,&$callback){
-		return $this->doSelect('ObjectsCallback',array(&$query,&$queryObj,&$fields,&$callback));
+	public function doSelectObjectsCallback($query,$queryObj,$fields,$callback){
+		return $this->doSelect('ObjectsCallback',array($query,$queryObj,$fields,$callback));
 	}
 	public function doSelectValuesCallback($query,$callback,$numCol=0){
-		return $this->doSelect('ValuesCallback',array(&$query,&$callback,&$numCol));
+		return $this->doSelect('ValuesCallback',array($query,$callback,$numCol));
 	}
 	
 	
@@ -106,22 +106,22 @@ abstract class DBSql extends DB{
 	public abstract function /* DEV */_/* /DEV */doSelectSql($query);
 	public abstract function /* DEV */_/* /DEV */doSelectSqlCallback($query,$callback,$callbackFields);
 	
-	public abstract function &/* DEV */_/* /DEV */doSelectRows($query);
+	public abstract function /* DEV */_/* /DEV */doSelectRows($query);
 	public abstract function /* DEV */_/* /DEV */doSelectRowsCallback($query,$callback);
-	public abstract function &/* DEV */_/* /DEV */doSelectRows_($query);
+	public abstract function /* DEV */_/* /DEV */doSelectRows_($query);
 	public abstract function /* DEV */_/* /DEV */doSelectRowsCallback_($query,$callback);
-	public abstract function &/* DEV */_/* /DEV */doSelectRow($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectRow_($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectObjects(&$query,&$queryObj,&$fields);
-	public abstract function /* DEV */_/* /DEV */doSelectObjectsCallback(&$query,&$queryObj,&$fields,&$callback);
-	public abstract function &/* DEV */_/* /DEV */doSelectAssocObjects(&$query,&$queryObj,&$fields,&$tabResKey);
-	public abstract function &/* DEV */_/* /DEV */doSelectObject(&$query,&$queryObj,&$fields);
-	public abstract function &/* DEV */_/* /DEV */doSelectValues($query);
+	public abstract function /* DEV */_/* /DEV */doSelectRow($query);
+	public abstract function /* DEV */_/* /DEV */doSelectRow_($query);
+	public abstract function /* DEV */_/* /DEV */doSelectObjects($query,$queryObj,$fields);
+	public abstract function /* DEV */_/* /DEV */doSelectObjectsCallback($query,$queryObj,$fields,$callback);
+	public abstract function /* DEV */_/* /DEV */doSelectAssocObjects($query,$queryObj,$fields,$tabResKey);
+	public abstract function /* DEV */_/* /DEV */doSelectObject($query,$queryObj,$fields);
+	public abstract function /* DEV */_/* /DEV */doSelectValues($query);
 	public abstract function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0);
-	public abstract function &/* DEV */_/* /DEV */doSelectValue($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectListRows($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectListRows_($query);
-	public abstract function &/* DEV */_/* /DEV */doSelectListValue($query);
+	public abstract function /* DEV */_/* /DEV */doSelectValue($query);
+	public abstract function /* DEV */_/* /DEV */doSelectListRows($query);
+	public abstract function /* DEV */_/* /DEV */doSelectListRows_($query);
+	public abstract function /* DEV */_/* /DEV */doSelectListValue($query);
 	
 	/* QUERIES LOG */
 	
@@ -143,7 +143,7 @@ abstract class DBSql extends DB{
 			CLogger::get('queries-'.date('Y-m-d-H'))->log($qr['query']);
 		}else CLogger::get('queries-'.date('Y-m-d-H'))->log($qr['query']);
 	}
-	private static function _createQueryWithParams(&$query,&$params){
+	private static function _createQueryWithParams($query,$params){
 		if(empty($params)) return $query;
 		$i=0;
 		return preg_replace_callback('/\?/m',function($matches) use(&$i,&$params){ return '"'.$params[$i++].'"'; },$query);
@@ -165,7 +165,7 @@ abstract class DBSql extends DB{
 	}
 	
 	protected function insertOrReplaceMultiple($keyword,$tableName,$nbValues,$data,$cols=NULL){
-		$db=&$this;
+		$db=$this;
 		$query=$keyword.' INTO '.$this->formatTable($tableName);
 		if(!empty($cols)) $query.=' (`'.implode('`,`',$cols).'`)';
 		$values=array();

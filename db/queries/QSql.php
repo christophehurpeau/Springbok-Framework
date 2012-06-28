@@ -4,7 +4,7 @@ class QSql{
 	private $fields,$returnValue,$isCalcFoundRows=false,$isSelect,$isShow,$isJoined,$isCount,
 		$select,$from,$where,$groupBy,$having,$orderBy,$limit;
 	
-	public function __construct(&$db,$sql,$returnValue=false){
+	public function __construct($db,$sql,$returnValue=false){
 		$sql=str_replace("\n",' ',rtrim(trim($sql),';'));
 		
 		if($this->isSelect=(bool)preg_match('/^\s*SELECT/i',$sql)){
@@ -30,16 +30,16 @@ class QSql{
 		}elseif($this->isShow=(bool)preg_match('/^\s*SHOW/i',$sql)){
 			
 		}
-		$this->_db=&$db; $this->sql=&$sql; $this->returnValue=&$returnValue;
+		$this->_db=$db; $this->sql=$sql; $this->returnValue=$returnValue;
 	}
 	
-	public function &isSelect(){return $this->isSelect;}
-	public function &isJoined(){return $this->isJoined;}
-	public function &getFields(){return $this->fields;}
+	public function isSelect(){return $this->isSelect;}
+	public function isJoined(){return $this->isJoined;}
+	public function getFields(){return $this->fields;}
 	
-	public function setFields(&$fields){ $this->fields=&$fields;}
+	public function setFields($fields){ $this->fields=$fields;}
 	
-	public function &execute(){
+	public function execute(){
 		if($this->isSelect()){
 			if($this->isCount){
 				$res=$this->_db->doSelectValue($this->sql);
@@ -50,7 +50,7 @@ class QSql{
 			}else{
 				$res=$this->_db->doSelectSql($this->sql);
 				if($this->isCalcFoundRows) $this->calcFoundRows=$this->_db->doSelectValue('SELECT FOUND_ROWS()');
-				$this->fields=&$res['fields'];
+				$this->fields=$res['fields'];
 				return $res['res'];
 			}
 		}
@@ -73,10 +73,10 @@ class QSql{
 		return $this->isCalcFoundRows;
 	}
 	
-	public function &foundRows(){
+	public function foundRows(){
 		return $this->calcFoundRows;
 	}
-	public function &noCalcFoundRows(){
+	public function noCalcFoundRows(){
 		if($this->limit===false) $this->limit='';
 		return $this;
 	}
@@ -87,7 +87,7 @@ class QSql{
 			.($this->groupBy===false?'':(' GROUP BY'.$this->groupBy)).($this->having===false?'':(' HAVING '.$this->having)),true);
 	}
 	
-	public function &limit($limit,$down=0){
+	public function limit($limit,$down=0){
 		if($this->limit===false){
 			if($down>0) $this->sql.=' LIMIT '.((int)$down).','.((int)$limit);
 			else $this->sql.=' LIMIT '.$limit;

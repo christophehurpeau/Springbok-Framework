@@ -11,7 +11,7 @@ abstract class DB{
 	}
 	
 	/** @return DB */
-	public static function &init($configName,$config=false){
+	public static function init($configName,$config=false){
 		if(!isset(self::$_INSTANCES[$configName])){
 			if($config===false){
 				/* DEV */
@@ -26,7 +26,7 @@ abstract class DB{
 	}
 	
 	/** @return DB */
-	public static function &createWithPrefix($configName,$prefix){
+	public static function createWithPrefix($configName,$prefix){
 		$config=self::$_allConfigs['default']+array('type'=>'MySQL','host'=>'localhost','port'=>3306);
 		$config['prefix']=$prefix;
 		$className='DB'.$config['type'];
@@ -63,7 +63,7 @@ abstract class DB{
 	public function __construct($configName,$config){
 		/* DEV */if(!isset(self::$_INSTANCES[$configName])) self::$_INSTANCES[$configName]=$this;/* /DEV */
 		$this->_name=$configName;
-		$this->_config=&$config;
+		$this->_config=$config;
 		$this->connect();
 	}
 	/*
@@ -75,11 +75,11 @@ abstract class DB{
 	*/
 	/* Getters */
 	
-	public function &_getName(){return $this->_name;}
+	public function _getName(){return $this->_name;}
 	public abstract function _getType();
 
-	public function &getConnect(){return $this->_connect;}
-	public function &_getPrefix(){return $this->_config['prefix'];}
+	public function getConnect(){return $this->_connect;}
+	public function _getPrefix(){return $this->_config['prefix'];}
 
 
 	//public function getVersion(){return $this->_connect->getAttribute(PDO::ATTR_SERVER_VERSION);}

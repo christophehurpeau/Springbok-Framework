@@ -27,7 +27,7 @@ class CCookie{
 		setcookie($name,'',time()-42000,$config['path'],$config['domain'],$config['https'],$config['httponly']);
 	}
 	
-	private static function &_getConfig($name){
+	private static function _getConfig($name){
 		$config=(isset(self::$_config[$name])?self::$_config[$name]:array())
 			+array('name'=>'Sb'.$name,'expires'=>'2 weeks','path'=>null,'domain'=>Config::$cookie_domain,'https'=>IS_HTTPS,'httponly'=>true,'key'=>NULL,);
 
@@ -62,7 +62,7 @@ class CCookie{
 		}
 	}
 	
-	public function &getName(){
+	public function getName(){
 		return $this->name;
 	}
 	
@@ -96,7 +96,7 @@ class CCookie{
 		$this->data=&$data;
 	}
 	
-	public function &_getData(){
+	public function _getData(){
 		return $this->data;
 	}
 	

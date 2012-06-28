@@ -8,7 +8,7 @@ class TXls extends STransformer{
 	}
 	
 	protected $objPHPExcel,$row=2;
-	public function __construct(&$component){
+	public function __construct($component){
 		parent::__construct($component);
 		PHPExcel_Autoloader::Register();//Should NOT be THERE, a PHP 5.3.10 bug ?
 		PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp,array('memoryCacheSize'=>'512MB'));
@@ -18,7 +18,7 @@ class TXls extends STransformer{
 		$this->objPHPExcel->setActiveSheetIndex(0);
 	}
 	
-	public function titles(&$fields){
+	public function titles($fields){
 		$col=0;
 		foreach($fields as &$field){
 			$this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col,1,$field['title']);
@@ -26,7 +26,7 @@ class TXls extends STransformer{
 		}
 	}
 	
-	public function row(&$row,&$fields){
+	public function row($row,$fields){
 		$col=0;
 		foreach($fields as $i=>$field){
 			$value=self::getValueFromModel($row,$field,$i);

@@ -32,7 +32,7 @@ class COAuth2Google extends COAuth2Connect{
 		return false;
 	}
 	
-	public function updateUserInfo(&$user,&$googleUser){
+	public function updateUserInfo($user,$googleUser){
 		if($this->me===null) $this->retrieveMe();
 		if(!$this->isValidMe()) return false;
 		$user->first_name=$this->me['given_name'];

@@ -6,7 +6,7 @@ abstract class COAuth2Connect extends COAuth2{
 		if($retrieveMe===true) $this->retrieveMe();
 	}
 	
-	public function &me($name){
+	public function me($name){
 		return $this->me[$name];
 	}
 	

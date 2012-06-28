@@ -1,7 +1,7 @@
 <?php
 class STransformer{
 	
-	public function getDisplayableValue(&$field,&$value,&$obj){
+	public function getDisplayableValue($field,$value,$obj){
 		if(isset($field['callback'])){
 			if($value===null) $value=false;
 			return call_user_func($field['callback'],$value);
@@ -15,7 +15,7 @@ class STransformer{
 		return $value;
 	}
 	
-	public static function getValueFromModel(&$model,&$field,&$i){
+	public static function getValueFromModel($model,$field,$i){
 		return isset($field['key']) ? $model->_get($field['key']) : false;
 	}
 	
@@ -25,8 +25,8 @@ class STransformer{
 	public function end(){}
 	
 	protected $component;
-	public function __construct(&$component){
-		$this->component=&$component;
+	public function __construct($component){
+		$this->component=$component;
 	}
 	
 	public function __get($name){

@@ -39,7 +39,7 @@ class UGenerator{
 		);
 	}
 	
-	public static function &randomCode($size,$chars=array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9')){
+	public static function randomCode($size,$chars=array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9')){
 		shuffle($chars);
 		$finalWord=$lastChar=$charBeforeLast='';
 		$i=0;
@@ -51,11 +51,11 @@ class UGenerator{
 		return $finalWord;
 	}
 	
-	public static function &randomLetters($size){
+	public static function randomLetters($size){
 		return self::randomCode($size,array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','p','q','r','s','t','u','v','x','y','z'));
 	}
 
-	public static function &numbers($size){
+	public static function numbers($size){
 		return self::randomCode($size,array(1,2,3,4,5,6,7,8));
 	}
 	
@@ -63,15 +63,15 @@ class UGenerator{
 		return self::pronounceableWord(($size=($size/3))*2).self::numbers($size);
 	}
 	
-	public static function &pronounceableWord($size){
+	public static function pronounceableWord($size){
 		$consonnes=array('l','m','n','p','r');
 		$chars=array(
 			'a' => array('d','m','t'),
 			'au' => array('d'),
 			'e'=> array('l','m','p'),
-			'o' => &$consonnes,
-			'ou'=> &$consonnes,
-			'u'=> &$consonnes,
+			'o' => $consonnes,
+			'ou'=> $consonnes,
+			'u'=> $consonnes,
 	
 			'c' => array('l','r'),
 			'd' => array('r','e','ou'),

@@ -14,7 +14,7 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		foreach(self::$__loadedModels as $model) $model::updateDB();
 	}
 	public static function updateDB(){static::$__modelDb=DB::get(static::$__dbName);}
-	public static function &getDB(){return static::$__modelDb;}
+	public static function getDB(){return static::$__modelDb;}
 	
 	
 	/* Properties */
@@ -38,7 +38,7 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 	public function __set($name,$value){
 		//$methodName='get'.ucfirst($name);
 		//if(!is_callable(array($this,$methodName)))
-			$this->data[$name]=&$value;
+			$this->data[$name]=$value;
 		//else
 		//	call_user_func(array($this,$methodName),$value);
 	}
@@ -46,14 +46,14 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		unset($this->data[$name]);
 	}
 	
-	public function _setData(&$data){
-		$this->data=&$data;
+	public function _setData($data){
+		$this->data=$data;
 	}
-	public function _copyData(&$data){
+	public function _copyData($data){
 		$d=array();
 		foreach($data as $key=>$val){
 			$d[$key]=$val;//copy
-/*			$this->$key=&$d[$key];*/
+/*			$this->$key=$d[$key];*/
 		}
 		$this->_setData($d);
 	}
@@ -62,9 +62,9 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		return $this->data;
 	}
 	
-	public function _set($name,&$value){
+	public function _set($name,$value){
 		$this->data[$name]=$value;
-		/*$this->$name=&$this->data[$name];*/
+		/*$this->$name=$this->data[$name];*/
 	}
 	public function _setRef($name,&$value){
 		$this->data[$name]=&$value;
@@ -128,7 +128,7 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		return '['.substr($res,0,-1).']';
 	}
 	
-	public static function &mToArray($models){
+	public static function mToArray($models){
 		$res=array();
 		if(!empty($models))
 			foreach($models as $key=>&$model) $res[$key]=$model->toArray();
@@ -154,11 +154,11 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 	protected function beforeDelete(){return true;}
 	
 	
-	protected function _afterInsert(&$data){
+	protected function _afterInsert($data){
 		$this->afterSave($data);
 		$this->afterInsert($data);
 	}
-	protected function _afterUpdate(&$data){
+	protected function _afterUpdate($data){
 		$this->afterSave($data);
 		$this->afterUpdate($data);
 	}

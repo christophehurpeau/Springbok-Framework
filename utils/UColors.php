@@ -4,7 +4,7 @@ class UColors{
 	const minBrightDiff=126;
 	const minColorDiff=500;
 	
-	public static function &rgb2hex(){
+	public static function rgb2hex(){
 		if(func_num_args() === 1) $rgb=func_get_arg(0); 
 		else $rgb=func_get_args();
 		$hex='';

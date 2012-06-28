@@ -25,7 +25,7 @@ class CLang{
 		));
 	}
 	
-	public static function &get(){
+	public static function get(){
 		return self::$lang;
 	}
 	

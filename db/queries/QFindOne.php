@@ -1,6 +1,6 @@
 <?php
 class QFindOne extends QFind{
-	public function &execute(){
+	public function execute(){
 		$this->limit1();
 		/*$row=$this->_db->doSelectRow_($query);
 		if($row){
@@ -14,7 +14,6 @@ class QFindOne extends QFind{
 			return $obj;
 		}
 		
-		$res=false;
-		return $res;
+		return false;
 	}
 }

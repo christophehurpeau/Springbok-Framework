@@ -1,6 +1,6 @@
 <?php
 class QFindValues extends QFind{
-	public function &execute(){
+	public function execute(){
 		$res=$this->_db->doSelectValues($this->_toSQL());
 		return $res;
 	}

@@ -3,35 +3,35 @@ class CModelTable extends CModelTableAbstract{
 	public $actionClick,$rowActions,$controller;
 	
 	/* !!! => CModelTableAbstract */
-	public function &actionClick($action='view'){$this->actionClick=&$action; return $this; }
-	public function &actions(){$this->rowActions=func_get_args(); return $this; }
-	public function &setActions($actions){$this->rowActions=&$actions; return $this; }
-	public function &addAction($action){$this->rowActions[]=&$action; return $this; }
-	public function &controller($controller){$this->controller=&$controller; return $this; }
+	public function actionClick($action='view'){$this->actionClick=&$action; return $this; }
+	public function actions(){$this->rowActions=func_get_args(); return $this; }
+	public function setActions($actions){$this->rowActions=&$actions; return $this; }
+	public function addAction($action){$this->rowActions[]=&$action; return $this; }
+	public function controller($controller){$this->controller=&$controller; return $this; }
 	
-	public function &setActionsRUD($iconPrefix='',$confirm=true){
+	public function setActionsRUD($iconPrefix='',$confirm=true){
 		$this->actionClick='view';
 		$this->rowActions=array( self::actionView($iconPrefix), self::actionEdit($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
 		return $this;
 	}
-	public function &setActionsRU($iconPrefix=''){
+	public function setActionsRU($iconPrefix=''){
 		$this->actionClick='view';
 		$this->rowActions=array( self::actionView($iconPrefix), self::actionEdit($iconPrefix) );
 		return $this;
 	}
-	public function &setActionsUD($iconPrefix='',$confirm=true){
+	public function setActionsUD($iconPrefix='',$confirm=true){
 		$this->actionClick='edit';
 		$this->rowActions=array( self::actionEdit($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
 		return $this;
 	}
-	public function &setActionsRD($iconPrefix='',$confirm=true){
+	public function setActionsRD($iconPrefix='',$confirm=true){
 		$this->actionClick='view';
 		$this->rowActions=array( self::actionView($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
 		return $this;
 	}
 	private function actionView($iconPrefix){ return array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')); }
 	private function actionEdit($iconPrefix){ return array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')); }
-	private function &actionDelete($iconPrefix,$confirm){
+	private function actionDelete($iconPrefix,$confirm){
 		$options=array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete'));
 		if($confirm===true) $options['data-confirm']="1";
 		elseif($confirm) $options['data-confirm']=$confirm;
@@ -106,7 +106,7 @@ class CModelTable extends CModelTableAbstract{
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
-				$href=h2(HHtml::url(CRoute::getAll(),false,true).'?');
+				$href=HHtml::url(CRoute::getAll(),false,true).'?';
 				if(!empty($_POST)) $href.=http_build_query($_POST,'','&').'&';
 				if(!empty($_GET)){
 					$get=$_GET;

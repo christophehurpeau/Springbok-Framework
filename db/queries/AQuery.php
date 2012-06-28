@@ -12,14 +12,14 @@ abstract class AQuery{
 		$this->_db=$modelName::$__modelDb;
 	}
 	
-	public function &getModelName(){
+	public function getModelName(){
 		return $this->modelName;
 	}
 	
-	public abstract function &execute();
+	public abstract function execute();
 	
 	
-	protected function _condToSQL($conds,$glue,&$sql,$fieldPrefix='',$wrap=false){
+	protected function _condToSQL($conds,$glue,$sql,$fieldPrefix='',$wrap=false){
 		if($wrap) $sql.=' (';
 		/* DEV */
 		if(!is_array($conds)){

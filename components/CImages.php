@@ -198,7 +198,7 @@ class CImages{
 		}
 	}
 
-	public static function createThumbnail(&$rimage,$filename,&$width,&$height,&$new_width,&$new_height){
+	public static function createThumbnail($rimage,$filename,$width,$height,$new_width,$new_height){
 		$dst_x=$dst_y=0;
 		if($width > $new_width || $height > $new_height){
 			$originalRatio = floatval($width) / floatval($height);

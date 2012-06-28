@@ -112,7 +112,7 @@ class GitRepository{
 	}
 	
 	/** Get details of a commit: tree, parents, author/committer (name, mail, date), message */
-	public function &commitInfos($hash='HEAD'){
+	public function commitInfos($hash='HEAD'){
 		$infos=array('name'=>$hash,'message'=>'');
 		$output = $this->run('rev-list --header --max-count=1 '.$hash);
 		// tree <h>
@@ -150,7 +150,7 @@ class GitRepository{
 	}
 
 	/** */
-	public function &entries($path,$identifier=NULL){
+	public function entries($path,$identifier=NULL){
 		$entries=array();
 		$output=explode("\n",$this->run('ls-tree -l '.($identifier===NULL?'HEAD':$identifier).':'.$path));
 		foreach($output as $line){
@@ -175,7 +175,7 @@ class GitRepository{
 	}
 	
 	const FORMAT_SHORT_REVISIONS='"%H %at%n%an%n%ae%n%s"';
-	private static function &parseShortRevisions($output){
+	private static function parseShortRevisions($output){
 		$revisions=array();
 		if(empty($output)) return $revisions;
 		$numLine=0;$revision=null;
@@ -210,7 +210,7 @@ class GitRepository{
 	}
 	
 	
-	public function &revisions($path,$identifierFrom=null,$identifierTo=null,$options=array()){
+	public function revisions($path,$identifierFrom=null,$identifierTo=null,$options=array()){
 		$output=$this->run('log --no-color --encoding=UTF-8 --raw --date=iso --pretty=fuller --parents'
 			.(isset($options['reverse'])&&$options['reverse']?' --reverse':'')
 			.(isset($options['all'])&&$options['all']?' --all':'')

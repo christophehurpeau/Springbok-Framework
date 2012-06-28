@@ -3,9 +3,9 @@ class THtml extends STransformer{
 	private static $tAligns=array('center'=>'center','right'=>'alignRight');
 	protected $component;
 	
-	public function __construct(&$component){
+	public function __construct($component){
 		echo '<table class="table'.($component->actionClick!==null?' pointer':'').'">';
-		$this->component=&$component;
+		$this->component=$component;
 	}
 	
 	public function noResults($colspan=0){
@@ -16,14 +16,14 @@ class THtml extends STransformer{
 		echo '<thead>';
 	}
 	
-	public function titles(&$fields,&$queryFields){
+	public function titles($fields,$queryFields){
 		echo '<tr>';
 		foreach($fields as &$field){
 			$th='';
 			if(isset($field['align'])) $th=' class="'.self::$tAligns[$field['align']].'"';
 			if(isset($field['widthPx'])) $th.=' style="width:'.$field['widthPx'].'px"';
 			elseif(isset($field['width%'])) $th.=' style="width:'.$field['width%'].'%"';
-			echo '<th'.$th.'>'.h2($field['title']);
+			echo '<th'.$th.'>'.h($field['title']);
 			if($this->component->isOrderAllowed() && $queryFields!==null && isset($field['key']) && in_array($field['key'],$queryFields) && $field['type'] !=='boolean') echo '<div class="order">'
 						.'<a class="arrow arrowUp" href="?orderBy='.($hKey=h($field['key'])).'&orderByDesc"></a>'
 						.'<a class="arrow arrowDown" href="?orderBy='.($hKey=h($field['key'])).'"></a>'
@@ -34,7 +34,7 @@ class THtml extends STransformer{
 		if($this->component->actionClick!==null && is_string($this->component->actionClick) && $this->component->actionClick[0]!=='/')
 			$this->component->actionClick='/'.$this->component->controller.'/'.$this->component->actionClick;
 		if($this->component->rowActions!==null){
-			echo '<th style="width:'.(1+ count($this->component->rowActions)*17).'px">'.h2(_tC('Actions')).'</th>';
+			echo '<th style="width:'.(1+ count($this->component->rowActions)*17).'px">'.h(_tC('Actions')).'</th>';
 			foreach($this->component->rowActions as $k=>&$action){
 				if(is_string($action)) $action=array(array('class'=>'action icon '.$action),$action);
 				else{
@@ -48,7 +48,7 @@ class THtml extends STransformer{
 		echo '</tr>';
 	}
 
-	public function filters(&$form,&$fields,&$FILTERS){
+	public function filters($form,$fields,$FILTERS){
 		echo '<tr class="form">';
 		foreach($fields as &$field){
 			$filterField=NULL; $attributes=array(); $filterName='filters['.$field['key'].']';
@@ -79,7 +79,7 @@ class THtml extends STransformer{
 		echo '<tbody>';
 	}
 	
-	public function displayResults(&$results,&$fields){
+	public function displayResults($results,$fields){
 		$iRow=0;
 		foreach($results as $key=>&$model){
 			if(isset($this->component->rowActions) || $this->component->actionClick) $pkValue=$model->_getPkValue();
@@ -113,7 +113,7 @@ class THtml extends STransformer{
 		}
 	}
 
-	public function displayValue(&$field,&$value,&$obj){
+	public function displayValue($field,$value,$obj){
 		$attributes=isset($field['attributes'])?$field['attributes']:array();
 				
 		if(!isset($attributes['class'])){

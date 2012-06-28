@@ -1,7 +1,7 @@
 <?php
 class HFormat{
 	
-	public static function &price($price,$currency=array()){
+	public static function price($price,$currency=array()){
 		//TODO : money_format
 		$currency=$currency+Config::$default_currency;
 		$blank = ($currency['blank'] ? ' ' : '');

@@ -3,21 +3,21 @@ abstract class HElementFormContainable extends HElement{
 	protected $form;
 	public $name,$label,$labelEscape=true,$between='';
 	
-	public function __construct(&$form,&$name){
-		$this->form=&$form;
-		$this->name=&$name;
+	public function __construct($form,$name){
+		$this->form=$form;
+		$this->name=$name;
 	}
 	
-	public function &placeholder($placeholder){ $this->attributes['placeholder']=&$placeholder; return $this; }
+	public function placeholder($placeholder){ $this->attributes['placeholder']=$placeholder; return $this; }
 	
 	public abstract function container();
 	public function noContainer(){ return $this->toString(); }
 	
-	public function &label($label){ $this->label=&$label; return $this; }
-	public function &htmlLabel($label){ $this->label=&$label; $this->labelEscape=false; return $this; }
-	public function &noLabel(){ $this->label=false; return $this; }
+	public function label($label){ $this->label=$label; return $this; }
+	public function htmlLabel($label){ $this->label=$label; $this->labelEscape=false; return $this; }
+	public function noLabel(){ $this->label=false; return $this; }
 	
-	public function &between($content){ $this->between=&$content; return $this; }
+	public function between($content){ $this->between=$content; return $this; }
 	
 	protected function _labelToString($prefix='',$suffix=' '){
 		if($this->label===null) $this->label=$this->form->defaultLabel ? ($this->form->modelName !== null ? _tF($this->form->modelName,$this->name) : $this->name): false;

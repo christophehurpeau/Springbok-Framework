@@ -16,12 +16,12 @@ class CWsdl{
 		if (!$this->_dom->loadXML($wsdl)) {
 			throw new Exception('Unable to create DomDocument');
 		} else {
-			$this->_wsdl =& $this->_dom->documentElement;
+			$this->_wsdl=$this->_dom->documentElement;
 		}
 	}
 	
-	public function &getDom(){ return $this->_dom; }
-	public function &getSchema(){
+	public function getDom(){ return $this->_dom; }
+	public function getSchema(){
 		if($this->_schema == null) $this->addSchemaTypeSection();
 		return $this->_schema;
 	}
@@ -329,14 +329,14 @@ class CWsdl{
 		$_includedTypes=array();
 	
 	
-	public function &_getType($paramType){
+	public function _getType($paramType){
 		$type=$this->getType($paramType);
 		if($type===false) $type=$this->_addComplexType($paramType);
 		return $type;
 	}
 	
 	
-	public function _addFunctionToWsdl(&$method,&$port,&$binding,&$infos){
+	public function _addFunctionToWsdl($method,$port,$binding,$infos){
 		$args=array();
 		// RPC style: add each parameter as a typed part
 		if($infos['params']!==false) foreach($infos['params'] as $name=>$param){

@@ -3,21 +3,21 @@ class THtmlEditable extends THtml{
 	
 	protected $form,$pkValue,$modelName;
 	
-	public function __construct(&$component){
+	public function __construct($component){
 		$this->form=new HForm($this->modelName=$component->getModelName(),null,'get','div',false,false);
 		echo HHtml::jsInline('window.editableTable=new S.HTableEditable('.json_encode(HHtml::url($component->editableUrl)).')');
 		parent::__construct($component);
 	}
 	
-	public function displayValue(&$field,&$value,&$obj){
+	public function displayValue($field,$value,$obj){
 		if(isset($field['editable']) && $field['editable']) $field['escape']=false;
 		if($field['key']===$this->component->editablePkField) $this->pkValue=$value;
 		parent::displayValue($field,$value,$obj);
 	}
 	
-	public function getDisplayableValue(&$field,&$value,&$obj){
+	public function getDisplayableValue($field,$value,$obj){
 		if(isset($field['editable']) && $field['editable']){
-			$modelName=&$this->modelName;
+			$modelName=$this->modelName;
 			$jsonPkValue=json_encode($this->pkValue);
 			
 			//<input type="text" value="'.h($value).'" style="width:98%" onchange=""/>

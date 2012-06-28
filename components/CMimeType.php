@@ -192,7 +192,7 @@ class CMimeType{
 		'zip'     => 'application/zip'
 	);
 	
-	public static function &autoDetect($filename){
+	public static function autoDetect($filename){
 		$finfo=finfo_open(FILEINFO_MIME_TYPE);
 		$res=finfo_file($finfo,$filepath);
 		finfo_close($finfo);

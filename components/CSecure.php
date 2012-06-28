@@ -9,7 +9,7 @@ class CSecure{
 		self::$_config=self::loadConfig();
 	}
 	
-	protected static function &loadConfig($configName='secure'){
+	protected static function loadConfig($configName='secure'){
 		$config=App::configArray($configName)
 			+array('className'=>'User','login'=>'login','password'=>'pwd','auth'=>'','authConditions'=>array(),'blacklist_back_url'=>array(),
 				'trim'=>". \t\n\r\0\x0B",'logConnections'=>false,'userHistory'=>false);
@@ -38,7 +38,7 @@ class CSecure{
 	}
 	
 	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
-	public static function &config($name){ return self::$_config[$name]; }
+	public static function config($name){ return self::$_config[$name]; }
 	
 	public static function isConnected(){
 		return CSession::exists('user_'.static::config('id'));
@@ -53,12 +53,12 @@ class CSecure{
 		return CSession::getOr('user_'.static::config('id'),$orValue);
 	}
 	
-	public static function &user(){
-		if(self::$_user===null) self::$_user=self::loadUser();
+	public static function user(){
+		if(self::$_user===null) return self::$_user=self::loadUser();
 		return self::$_user;
 	}
 	
-	public static function &userSafe(){
+	public static function userSafe(){
 		return self::$_user;
 	}
 	

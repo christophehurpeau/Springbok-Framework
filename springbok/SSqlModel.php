@@ -122,21 +122,21 @@ class SSqlModel extends SModel{
 		return $res;
 	}
 	
-	public function &findWith($key,$options=array()){
+	public function findWith($key,$options=array()){
 		QFind::findWith($this,$key,$options);
 		return $this;
 	}
 	
-	public function &findMWith($with){
+	public function findMWith($with){
 		QFind::findMWith($this,$with);
 		return $this;
 	}
 	
-	public function &findWithPaginate($key,$options=array()){
+	public function findWithPaginate($key,$options=array()){
 		return QFind::findWithPaginate('CPagination',$this,$key,$options);
 	}
 	
-	public function &findWithPaginateLetter($key,$options=array()){
+	public function findWithPaginateLetter($key,$options=array()){
 		return QFind::findWithPaginate('CPagination_Letters',$this,$key,$options);
 	}
 	
@@ -165,15 +165,15 @@ class SSqlModel extends SModel{
 	public static function QDeleteOne(){return new QDeleteOne(static::$__className);}
 	
 	public static function updateOneFieldByPk($pk,$field,$value){
-		return static::QUpdateOne()->values(array($field=>&$value))
+		return static::QUpdateOne()->values(array($field=>$value))
 			->where(array(static::_getPkName()=>$pk))
 			->execute();
 	}
 	public static function QUpdateOneField($field,$value){
-		return static::QUpdate()->values(array($field=>&$value));
+		return static::QUpdate()->values(array($field=>$value));
 	}
 	public static function updateUpdated($pk){
-		return static::QUpdateOne()->where(array(static::_getPkName()=>&$pk))->execute();
+		return static::QUpdateOne()->where(array(static::_getPkName()=>$pk))->execute();
 	}
 	
 	public static function QAll(){return new QFindAll(static::$__className);}
@@ -193,9 +193,9 @@ class SSqlModel extends SModel{
 	public static function QUnionAll(){return new QUnionAll(static::$__className);}
 	public static function QUnionOne(){return new QUnionOne(static::$__className);}
 
-	public static function ById(&$id){return self::QOne()->where(array('id'=>&$id));}
-	public static function ByIdAndStatus(&$id,$status){return self::QOne()->where(array('id'=>&$id,'status'=>&$status));}
-	public static function ByIdAndType(&$id,$type){return self::QOne()->where(array('id'=>&$id,'type'=>&$type));}
+	public static function ById($id){return self::QOne()->where(array('id'=>$id));}
+	public static function ByIdAndStatus($id,$status){return self::QOne()->where(array('id'=>$id,'status'=>$status));}
+	public static function ByIdAndType($id,$type){return self::QOne()->where(array('id'=>$id,'type'=>$type));}
 	
 	public static function findAll(){return self::QAll()->execute();}
 	public static function findOne(){return self::QOne()->execute();}
@@ -204,22 +204,22 @@ class SSqlModel extends SModel{
 	public static function TableOne(){return new QTableOne(static::$__className);}
 	
 	public static function QListName(){
-		$orderByField=&static::$__orderByField;
+		$orderByField=static::$__orderByField;
 		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
 	}
 	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return static::QListName()->execute();}
 	public static function findCachedListName(){
-		$className=&static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use(&$className){return $className::findListName();});
+		$className=static::$__className;
+		return CCache::get('models')->readOrWrite($className,function() use($className){return $className::findListName();});
 	}
 	public static function findCachedListValues($fields){
-		$className=&static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use(&$className,&$fields){return $className::QListRows()->fields($fields)->execute();});
+		$className=static::$__className;
+		return CCache::get('models')->readOrWrite($className,function() use($className,$fields){return $className::QListRows()->fields($fields)->execute();});
 	}
 	
 	public static function findFirstLetters($fieldName='name'){
-		$className=&static::$__className;
-		return CCache::get('models_firstLetters')->readOrWrite($className.'_firstLetters',function() use(&$className,&$fieldName){return $className::QValues()->field('DISTINCT SUBSTRING('.$fieldName.',1,1)');});
+		$className=static::$__className;
+		return CCache::get('models_firstLetters')->readOrWrite($className.'_firstLetters',function() use($className,$fieldName){return $className::QValues()->field('DISTINCT SUBSTRING('.$fieldName.',1,1)');});
 	}
 	
 	public static function findValues($field){return self::QValues()->fields($field)->execute();}

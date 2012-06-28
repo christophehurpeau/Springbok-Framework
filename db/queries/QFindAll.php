@@ -2,7 +2,7 @@
 class QFindAll extends QFind{
 	private $tabResKey,$groupResBy;
 	
-	public function &execute(){
+	public function execute(){
 		//$res=$this->_db->doSelectRows_($query);
 		if($this->tabResKey !== null) $res=$this->_db->doSelectAssocObjects($this->_toSQL(),$this,$this->queryResultFields,$this->tabResKey);
 		else $res=$this->_db->doSelectObjects($this->_toSQL(),$this,$this->queryResultFields);
@@ -12,7 +12,7 @@ class QFindAll extends QFind{
 				$grbf=$this->groupResBy;
 				$finalRes=array();
 				foreach($res as $key=>&$row) $finalRes[$row->$grbf][$key]=$row;
-				$res=&$finalRes;
+				$res=$finalRes;
 			}
 		}
 		
@@ -31,8 +31,8 @@ class QFindAll extends QFind{
 		$this->_db->doSelectObjectsCallback($sql,$this,$this->queryResultFields,$callback);
 	}
 	
-	public function &createCountQuery(){
-		$modelName=&$this->modelName;
+	public function createCountQuery(){
+		$modelName=$this->modelName;
 		$countQuery = new QCount($modelName);
 		
 		$join=$this->joins;$with=$this->with;
@@ -54,29 +54,29 @@ class QFindAll extends QFind{
 		return $countQuery;
 	}
 	
-	public function &calcFoundRows(){
+	public function calcFoundRows(){
 		$this->calcFoundRows=true;
 		return $this;
 	}
-	public function &noCalcFoundRows(){
+	public function noCalcFoundRows(){
 		$this->calcFoundRows=null;
 		return $this;
 	}
 	
-	public function &hasCalcFoundRows(){
+	public function hasCalcFoundRows(){
 		return $this->calcFoundRows;
 	}
 	
-	public function &foundRows(){
+	public function foundRows(){
 		return $this->calcFoundRows;
 	}
 	
-	public function &tabResKey($field='id'){
+	public function tabResKey($field='id'){
 		$this->tabResKey=$field;
 		return $this;
 	}
 	
-	public function &groupResBy($field){
+	public function groupResBy($field){
 		$this->groupResBy=$field;
 		return $this;
 	}

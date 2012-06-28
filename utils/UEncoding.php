@@ -1,6 +1,6 @@
 <?php
 class UEncoding{
-	public static function &convertToUtf8($str){
+	public static function convertToUtf8($str){
 		if(($enc=mb_detect_encoding($str,'UTF-8, ISO-8859-15, ASCII, GBK'))!=='UTF-8')
 			$str=iconv($enc,'UTF-8',$str); 
 		return $str;

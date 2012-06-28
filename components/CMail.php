@@ -12,7 +12,7 @@ class CMail{
 	/**
 	 * @return PHPMailer
 	 */
-	public static function &get(){
+	public static function get(){
 		return self::$_instance;
 	}
 	

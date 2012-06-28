@@ -185,6 +185,9 @@ class PhpFile extends EnhancerFile{
 		$phpContent=preg_replace('/\/\*\s+HIDE\s+\*\/.*\/\*\s+\/HIDE\s+\*\//Ums','',$phpContent);
 		$phpContent=preg_replace('/return !new [^;]+;/','',$phpContent);
 		
+		
+		$phpContent=preg_replace('/notFoundIfFalse\(([^)]+)\);/','if($1===false)notFound();',$phpContent);
+		
 		//autoexecute
 		$phpContent=$this->addExecuteToQueries($phpContent);
 		

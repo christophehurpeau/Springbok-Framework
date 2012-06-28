@@ -89,7 +89,7 @@ class STreeModel extends SSqlModel{
 	}
 	
 	
-	public function &QParent(){
+	public function QParent(){
 		$query=static::QOne()->byId($this->parent_id);
 		return $query;
 	}
@@ -125,12 +125,12 @@ class STreeModel extends SSqlModel{
 		return $query->where(array('left <='=>$this->left,'right >='=>$this->right))->orderBy('left')->execute();
 	}
 	
-	public static function &getQPath($id){
+	public static function getQPath($id){
 		$model=static::QOne()->fields('left,right')->byId($id);
 		return $model->QPath();
 	}
 	
-	public static function &getPath($id,$fields){
+	public static function getPath($id,$fields){
 		$model=static::QOne()->fields('left,right')->byId($id);
 		return $model->path($fields);
 	}
@@ -150,7 +150,7 @@ class STreeModel extends SSqlModel{
 		
 		foreach($result as &$res){
 			if($res->$parentId){
-				$result[$res->$parentId]->children[]=&$res;
+				$result[$res->$parentId]->children[]=$res;
 			}else $tree[]=$res;
 		}
 		

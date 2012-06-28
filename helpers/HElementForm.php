@@ -1,11 +1,11 @@
 <?php
 class HElementForm extends HElement{
-	public static function &ForModel($modelName,$name=null,$setValuesFromVar=true){
+	public static function ForModel($modelName,$name=null,$setValuesFromVar=true){
 		$elt=new static('post');
 		$elt->setModelName($modelName,$name,$setValuesFromVar);
 		return $elt;
 	}
-	public static function &ForModelGET($modelName,$name=null,$setValuesFromVar=true){
+	public static function ForModelGET($modelName,$name=null,$setValuesFromVar=true){
 		$elt=new static('get');
 		$elt->setModelName($modelName,$name,$setValuesFromVar);
 		return $elt;
@@ -13,7 +13,7 @@ class HElementForm extends HElement{
 	
 	public static function Post(){ return new static('post'); }
 	public static function Get(){ return new static('get'); }
-	public static function &File(){
+	public static function File(){
 		$elt= new static('post');
 		$elt->attr('enctype','multipart/form-data');
 		return $elt;
@@ -56,8 +56,8 @@ class HElementForm extends HElement{
 	
 	public function isContainable(){ return $this->tagContainer!==false; }
 	public function getTagContainer(){ return $this->tagContainer; }
-	public function &tagContainer($tagContainer){ $this->tagContainer=&$tagContainer; return $this; }
-	public function &noContainer(){ $this->tagContainer=false; return $this; }
+	public function tagContainer($tagContainer){ $this->tagContainer=&$tagContainer; return $this; }
+	public function noContainer(){ $this->tagContainer=false; return $this; }
 	
 	
 	public function __toString(){
@@ -74,8 +74,8 @@ class HElementForm extends HElement{
 	
 	
 	
-	public function &all(){
-		$modelName=&$this->modelName; $res='';
+	public function all(){
+		$modelName=$this->modelName; $res='';
 		foreach($modelName::$__PROP_DEF as $name=>&$def){
 			$infos=$modelName::$__modelInfos['columns'][$name];
 			if(! $infos['autoincrement'] && !in_array($name,array('created','updated','modified'))){
@@ -84,15 +84,15 @@ class HElementForm extends HElement{
 		}
 		return $res;
 	}
-	public function &autoFields($fields){
+	public function autoFields($fields){
 		if(is_string($fields)) $fields=explode(',',$fields);
 		$res='';
 		foreach($fields as &$field) $res.=$this->autoField($name);
 		return $res;
 	}
 	public function autoField($name,$def=null){
-		$modelName=&$this->modelName;
-		if($def===null) $def=&$modelName::$__PROP_DEF[$name];
+		$modelName=$this->modelName;
+		if($def===null) $def=$modelName::$__PROP_DEF[$name];
 		/*if($infos['notnull']===false){
 			$attr=array('id'=>'checkboxCRUD'.$modelName.$name);
 			if($this->_getValue($name)===null) $attr['checked']=true;
@@ -120,8 +120,8 @@ class HElementForm extends HElement{
 	}
 	
 	
-	public function &text($name){
-		$modelName=&$this->modelName;
+	public function text($name){
+		$modelName=$this->modelName;
 		if(isset($modelName::$__PROP_DEF[$name]['annotations']['Text'])) return $this->textarea($name);
 		return $this->input($name);
 	}
@@ -151,8 +151,8 @@ class HElementForm extends HElement{
 	
 	public function _getValue(&$name){
 		$TAB=NULL;
-		if($this->method=='post') $TAB=&$_POST;
-		elseif($this->method=='get') $TAB=&$_GET;
+		if($this->method=='post') $TAB=$_POST;
+		elseif($this->method=='get') $TAB=$_GET;
 		if($this->modelName === NULL) return isset($TAB[$name])? $TAB[$name] : NULL;
 		else return isset($TAB[$this->name][$name]) ? $TAB[$this->name][$name] : NULL;
 		return NULL;

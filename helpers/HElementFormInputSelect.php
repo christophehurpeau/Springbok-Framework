@@ -1,19 +1,19 @@
 <?php
 class HElementFormInputSelect extends HElementFormContainable{
 	private $list,$seleted,$style='select',$empty;
-	public function __construct(&$form,&$name,&$list,&$selected){
+	public function __construct($form,$name,$list,$selected){
 		parent::__construct($form,$name);
 		if($list===null) $list=call_user_func(array($this->form->modelName,$this->name.'List'));
 		if($selected===null) $selected=$this->form->_getValue($name);
 		
-		$this->list=&$list;
-		$this->seleted=&$selected;
+		$this->list=$list;
+		$this->seleted=$selected;
 		
 		$this->_setAttrId();
 	}
 	
-	public function &radio(){ $this->style='radio'; return $this; }
-	public function &emptyValue($value){ $this->empty=&$value; return $this; }
+	public function radio(){ $this->style='radio'; return $this; }
+	public function emptyValue($value){ $this->empty=$value; return $this; }
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'input select '.$this->style); }
 	

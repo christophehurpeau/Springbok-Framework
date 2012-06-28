@@ -54,7 +54,7 @@ class UArray {
 	}
 
 
-	public static function &createTree(&$list, $parent){
+	public static function createTree(&$list, $parent){
 		$tree = array();
 		foreach ($parent as $k=>$l){
 			if(isset($list[$l['id']])){

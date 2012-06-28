@@ -3,7 +3,7 @@
 abstract class CCache_MemCache extends CCache{
 	private $_mcache=NULL;
 
-	public function __construct(&$config){
+	public function __construct($config){
 		$pool=explode(';',$config['servers']);
 		foreach ($pool as $server){
 			// Hostname:port
@@ -22,7 +22,7 @@ abstract class CCache_MemCache extends CCache{
 		if(is_bool($val)) return false;
 		list($time,$data)=unserialize(gzinflate($val));
 	}
-	public function write($key,&$data){
+	public function write($key,$data){
 		return memcache_set($this->_mcache,$key,self::serializeWithTime($data));
 	}
 	public function delete($key){

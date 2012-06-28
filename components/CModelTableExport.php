@@ -2,19 +2,19 @@
 class CModelTableExport extends CModelTableAbstract{
 	public $type,$fileName,$title,$transformerClass,$params;
 	
-	public function &init(&$type,&$fileName,&$title){
-		$this->type=&$type;
-		$this->fileName=&$fileName;
-		$this->title=&$title;
+	public function init($type,$fileName,$title){
+		$this->type=$type;
+		$this->fileName=$fileName;
+		$this->title=$title;
 		return $this;
 	}
-	public function &type($type){ $this->type=&$type; return $this; }
-	public function &fileName($fileName){ $this->fileName=&$fileName; return $this; }
-	public function &title($title){ $this->title=&$title; return $this; }
-	public function &transformerClass($transformerClass){ $this->transformerClass=&$transformerClass; return $this; }
-	public function &params($params){ $this->params=&$params; return $this; }
+	public function type($type){ $this->type=$type; return $this; }
+	public function fileName($fileName){ $this->fileName=$fileName; return $this; }
+	public function title($title){ $this->title=$title; return $this; }
+	public function transformerClass($transformerClass){ $this->transformerClass=$transformerClass; return $this; }
+	public function params($params){ $this->params=$params; return $this; }
 	
-	private function &process($setHeaders){
+	private function process($setHeaders){
 		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache	
 		$transformerClass=$this->transformerClass===null ? $this->transformers[$this->type] : $this->transformerClass;
 		
@@ -49,7 +49,7 @@ class CModelTableExport extends CModelTableAbstract{
 		$this->process(false)->toFile($path);
 	}
 	
-	public function &displayIfExport(){ $this->display(); exit; }
+	public function displayIfExport(){ $this->display(); exit; }
 	
 	/* Compatibility with CModelTable */
 	public function render(){ $this->displayIfExport(); }

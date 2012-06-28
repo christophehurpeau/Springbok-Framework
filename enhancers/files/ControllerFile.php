@@ -43,17 +43,21 @@ class ControllerFile extends PhpFile{
 		//$content=preg_replace_callback('/(?:\/\*\*(.*)\*\/)?[\s]+public[\s]+function[\s]+([a-zA-Z0-9_ \$]+)[\s]*\((.*)\)[\s]*{([^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{.*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*)}/Ums',array($this,'enhanceMethodParams'),$content);
 		$phpContent=preg_replace_callback(self::REGEXP_ACTION,array($this,'enhanceMethodParams'),$phpContent);
 		
-		$phpContent=preg_replace('/(self::|\s+)(mset|set|set_|setForLayout|setForLayout_|setForLayoutAndView|setForLayoutAndView_|'
+		$phpContent=preg_replace('/(self::|\s+)(mset|set|set_|setForLayout|setForLayoutAndView|'
 				.'uploadedFiles|moveUploadedFile|redirect|redirectLast|'
-				.'render|_render|renderTable|renderJSON|renderText|renderHtml|renderFile|sendFile)\(/',
+				.'render|_render|renderJSON|renderText|renderHtml|renderFile|sendFile)\(/',
 			' self::$2(',$phpContent);
 		
 		$phpContent=preg_replace_callback('/self::mset\(((?:\s*\$(?:[a-zA-Z0-9\_]+)\s*\,)*\s*\$(?:[a-zA-Z0-9\_]+)\s*)\);/mU',function(&$matches){
 			$content='';
-			foreach(explode(',',$matches[1]) as $varname){
+/*			foreach(explode(',',$matches[1]) as $varname){
 				$content.="'".($varname=substr(trim($varname),1))."'".'=>&$'.$varname.',';
 			}
-			return 'self::mset(array('.rtrim($content,',').'));';
+			return 'self::mset(array('.rtrim($content,',').'));';*/
+			
+			foreach(explode(',',$matches[1]) as $varname)
+				$content.="self::set/* PROD */_/* /PROD */('".($varname=substr(trim($varname),1))."'".',$'.$varname.');'; //TODO !
+			return $content;
 		},$phpContent);
 		
 		//$phpContent=preg_replace('/(extends [A-Za-z_]*Controller{)/','$1 protected static $_methodAnnotations='.UPhp::exportCode($this->_methodAnnotations).';', $phpContent);

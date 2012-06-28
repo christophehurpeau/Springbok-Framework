@@ -10,7 +10,7 @@ include_once __DIR__.DS.'AQuery.php';
 abstract class QDelete extends AQuery{
 	protected $where,$orderBy,$limit;
 	
-	public function &by($query,$values){
+	public function by($query,$values){
 		$fields=explode('And',$query);
 		$fields=array_map('lcfirst',$fields);
 		$conds=array(); $length=count($fields); $i=-1;
@@ -19,17 +19,17 @@ abstract class QDelete extends AQuery{
 		$this->where=&$conds;
 		return $this;
 	}
-	public function &where($where){$this->where=&$where;return $this;}
-	public function &orderBy($orderBy){$this->orderBy=&$orderBy;return $this;}
+	public function where($where){$this->where=&$where;return $this;}
+	public function orderBy($orderBy){$this->orderBy=&$orderBy;return $this;}
 	/** (limit) or ($limit, down) */
-	public function &limit($limit,$down=0){
+	public function limit($limit,$down=0){
 		if($down>0) $this->limit=((int)$down).','.((int)$limit);
 		else $this->limit=&$limit;
 		return $this;
 	}
-	public function &limit1(){$this->limit=1;return $this;}
+	public function limit1(){$this->limit=1;return $this;}
 	
-	public function &__call($method, $params){
+	public function __call($method, $params){
         if (!preg_match('/^by(\w+)$/',$method,$matches))
             throw new \Exception("Call to undefined method {$method}");
         $this->by($matches[1],$params);

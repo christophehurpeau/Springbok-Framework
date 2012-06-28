@@ -52,7 +52,7 @@ class UExec{
 		return $sshCommand;
 	}
 	
-	private static function &execWithSshAgent($sshCommand,$ssh){
+	private static function execWithSshAgent($sshCommand,$ssh){
 		if(empty($ssh['passphrase']))
 			return self::exec($sshCommand);
 		

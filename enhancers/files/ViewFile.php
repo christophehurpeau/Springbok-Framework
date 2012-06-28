@@ -43,11 +43,11 @@ class ViewFile extends PhpFile{
 	
 	public function enhanceFinalContent($content){
 		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
-		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+(?:\->[a-zA-Z0-9_\(\)]+)+)\s*;?\s*\?>/','<?php echo h2($1) ?>',$content);
-		$content=preg_replace('/<\?=\s*(.+)\s*;?\s*\?>/U','<?php echo h2($1) ?>',$content);
+		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+(?:\->[a-zA-Z0-9_\(\)]+)+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
+		$content=preg_replace('/<\?=\s*(.+)\s*;?\s*\?>/U','<?php echo h($1) ?>',$content);
 		$content=preg_replace('/{(\$[a-zA-Z0-9_]+(?:\[[a-zA-Z0-9_\'\"\->\$]+\])*)}/','<?php echo h($1) ?>',$content);
-		$content=preg_replace('/{(\$[a-zA-Z0-9_]+(?:\->[a-zA-Z0-9_\(\),\$]+)+)\}/mU','<?php echo h2($1) ?>',$content);
-		$content=preg_replace('/{=\s*([^$]+?)\s*;?\s*\}/','<?php echo h2($1) ?>',$content);
+		$content=preg_replace('/{(\$[a-zA-Z0-9_]+(?:\->[a-zA-Z0-9_\(\),\$]+)+)\}/mU','<?php echo h($1) ?>',$content);
+		$content=preg_replace('/{=\s*([^$]+?)\s*;?\s*\}/','<?php echo h($1) ?>',$content);
 		$content=preg_replace('/<\?\s+(.+)\s*;?\s+\?>/Us','<?php echo $1 ?>',$content);
 		
 		//Exception à la règle
@@ -79,7 +79,7 @@ class ViewFile extends PhpFile{
 		
 		
 		$content=preg_replace_callback('/\s*{table(?:\s+([^}]+))?}\s*(.+)\s*{\/table}\s*/Us',function(&$m){
-			return '<?php $itable=0; ?><table'.(empty($m[1])?'':' '.implode(' ',array_map(function($p){$p=explode(':',$p,2);return $p[0].'="'.h2(trim($p[1],'\'')).'"';},explode(' ',$m[1])))).'>'//TODO parser
+			return '<?php $itable=0; ?><table'.(empty($m[1])?'':' '.implode(' ',array_map(function($p){$p=explode(':',$p,2);return $p[0].'="'.h(trim($p[1],'\'')).'"';},explode(' ',$m[1])))).'>'//TODO parser
 				.preg_replace_callback('#\s*{row}\s*(.*)\s*{/row}\s*#Us',function($mr) use(&$isAlternateRow){
 						return '<tr<?php if($itable++%2) echo \' class="alternate"\' ?>>'.$mr[1].'</tr>';},$m[2])
 				.'</table>';
@@ -103,7 +103,7 @@ class ViewFile extends PhpFile{
 		
 		$content=preg_replace('/{icon\s+([^}]+)\s*\}/','<span class="icon $1"></span>',$content);
 		
-		$content=preg_replace('/{(t|tF|tC)\s+([^}]+)\s*}/U','<?php echo h2(_$1($2)) ?>',$content);
+		$content=preg_replace('/{(t|tF|tC)\s+([^}]+)\s*}/U','<?php echo h(_$1($2)) ?>',$content);
 		
 		/* HELPERS */
 		$content=preg_replace('/{(link|iconLink|iconAction|iconBlockLink|img|imgLink)\s+([^}]+)\s*}/U','<?php echo HHtml::$1($2) ?>',$content);

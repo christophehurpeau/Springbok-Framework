@@ -29,7 +29,7 @@ class HTable{
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
-				$href=h2(HHtml::url(CRoute::getAll(),false,true).'?');
+				$href=HHtml::url(CRoute::getAll(),false,true).'?';
 				if(!empty($_POST)) $href.=http_build_query($_POST,'','&').'&';
 				if(!empty($_GET)){
 					$get=$_GET;
@@ -57,7 +57,7 @@ class HTable{
 				if(isset($field['align'])) $th=' class="'.self::$tAligns[$field['align']].'"';
 				if(isset($field['widthPx'])) $th.=' style="width:'.$field['widthPx'].'px"';
 				elseif(isset($field['width%'])) $th.=' style="width:'.$field['width%'].'%"';
-				echo '<th'.$th.'>'.h2($field['title']);
+				echo '<th'.$th.'>'.h($field['title']);
 				if($component->queryFields!==null && isset($field['key']) && in_array($field['key'],$component->queryFields) && $field['type'] !=='boolean') echo '<div class="order">'
 							.'<a class="arrow arrowUp" href="?orderBy='.($hKey=h($field['key'])).'&orderByDesc"></a>'
 							.'<a class="arrow arrowDown" href="?orderBy='.($hKey=h($field['key'])).'"></a>'
@@ -74,7 +74,7 @@ class HTable{
 			
 			if($component->defaultAction!==null && is_string($component->defaultAction) && $component->defaultAction[0]!=='/') $component->defaultAction='/'.$component->controller.'/'.$component->defaultAction;
 			if($component->rowActions!==null){
-				echo '<th style="width:'.(count($component->rowActions)*16).'px">'.h2(_tC('Actions')).'</th>';
+				echo '<th style="width:'.(count($component->rowActions)*16).'px">'.h(_tC('Actions')).'</th>';
 				foreach($component->rowActions as $k=>&$action){
 					if(is_string($action)) $action=array('url'=>$action,'icon'=>$action);
 					if($action['url'][0] !== '/') $component->rowActions[$k]['url']='/'.$component->controller.'/'.$action['url'];

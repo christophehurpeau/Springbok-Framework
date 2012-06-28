@@ -1,7 +1,7 @@
 <?php
 class CCache_File extends CCache{
 	private $_path;
-	public function __construct(&$config){
+	public function __construct($config){
 		$this->_path=DATA.'cache/'.(isset($config['path'])?$config['path']:'');
 		$this->setExpiration($config['expiration']);
 	}
@@ -21,14 +21,14 @@ class CCache_File extends CCache{
 		if($data!==false) return static::data_read($data); //after the lock
 		return false;
 	}
-	public static function data_read(&$data){
+	public static function data_read($data){
 		return unserialize($data);
 	}
-	public static function data_write(&$data){
+	public static function data_write($data){
 		return serialize($data);
 	}
 	
-	public function write($key,&$data){
+	public function write($key,$data){
 		$fp=fopen($this->_path.$key,'wb');
 		$dataw=static::data_write($data);//before the lock
 		if(!flock($fp, LOCK_EX)) return false;

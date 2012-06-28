@@ -40,7 +40,7 @@ class COAuth2Live extends COAuth2Connect{
 		return false;
 	}
 	
-	public function updateUserInfo(&$user,&$wliveUser){
+	public function updateUserInfo($user,$wliveUser){
 		if($this->me===null) $this->retrieveMe();
 		if(!$this->isValidMe()) return false;
 		$user->first_name=$this->me['first_name'];

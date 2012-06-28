@@ -80,7 +80,7 @@ class HTableCompare extends HTable{
 				
 				if(!$same){
 					$val='';
-					foreach($component->comparedKeys as $key) $val.='<b>'.$key.':</b> '.h2($values->$key->$field['key']).'<br />';
+					foreach($component->comparedKeys as $key) $val.='<b>'.$key.':</b> '.h($values->$key->$field['key']).'<br />';
 				}
 				
 				self::displayValue($field,$val);

@@ -1,7 +1,7 @@
 <?php
 class CHttpClientParallel extends CHttpClient{
 	
-	public function &useReferer(){ throw new Exception('Referer cannot be used in parallel mode.');}
+	public function useReferer(){ throw new Exception('Referer cannot be used in parallel mode.');}
 	
 	public static $MAX_PARALLEL_REQUESTS=8;
 	private $master,$requests=array(),$i=0,$stop=false,$isCallback,$urls,$countUrls;
@@ -36,7 +36,7 @@ class CHttpClientParallel extends CHttpClient{
 		empty($target) ? $this->stop=true : $this->addHandle($target);
 	}
 	
-	private function addHandle(&$target){
+	private function addHandle($target){
 		if(is_array($target)){
 			$method='POST';
 			$params=$target[1];

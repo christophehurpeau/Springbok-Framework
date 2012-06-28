@@ -1,6 +1,6 @@
 <?php
 class UPhp{
-	public static function &exportCode(&$var,$ifEmptyArray=false){
+	public static function exportCode($var,$ifEmptyArray=false){
 		$content='';
 		$content=self::exportCode_recursiveArray($content,$var,true);
 		if($ifEmptyArray!==false && ($content==='false' || $content==='array()')) return $ifEmptyArray;

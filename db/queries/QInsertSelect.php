@@ -13,21 +13,21 @@ class QInsertSelect extends AQuery{
 		$this->createdField=$createdField;
 	}
 	
-	public function &cols($cols){
-		$this->cols=&$cols;
+	public function cols($cols){
+		$this->cols=$cols;
 		return $this;
 	}
 	
-	public function &query($query){
-		$this->query=&$query;
+	public function query($query){
+		$this->query=$query;
 		return $this;
 	}
 	
-	public function &ignore(){
+	public function ignore(){
 		$this->start='INSERT IGNORE';
 		return $this;
 	}
-	public function &replace(){
+	public function replace(){
 		$this->start='REPLACE';
 		return $this;
 	}
@@ -39,7 +39,7 @@ class QInsertSelect extends AQuery{
 		return $sql.' '.$this->query->_toSQL($this->_db);
 	}
 
-	public function &execute(){
+	public function execute(){
 		$modelName=$this->modelName;
 		$res=$this->_db->doUpdate($this->_toSQL());
 		return $res;

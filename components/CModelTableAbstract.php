@@ -8,18 +8,18 @@ class CModelTableAbstract{
 	public $fields,$modelFields,$fieldsEditable,$translateField=true,
 		$transformers=array('csv'=>'TCsv','xls'=>'TXls');
 	
-	public function &fields($fields){$this->fields=&$fields; return $this; }
-	public function &doNotTranslateFields(){ $this->translateField=false; return $this; }
-	public function &fieldsEditable($fields){ $this->fieldsEditable=&$fields; return $this; }
+	public function fields($fields){$this->fields=&$fields; return $this; }
+	public function doNotTranslateFields(){ $this->translateField=false; return $this; }
+	public function fieldsEditable($fields){ $this->fieldsEditable=&$fields; return $this; }
 	
-	public function &actionClick($action='view'){ return $this; }
-	public function &actions(){ return $this; }
-	public function &controller($controller){ return $this; }
+	public function actionClick($action='view'){ return $this; }
+	public function actions(){ return $this; }
+	public function controller($controller){ return $this; }
 	
 	public function getModelName(){ return $this->query->getModelName(); }
 	public function isOrderAllowed(){ return $this->query->isOrderAllowed(); }
 	
-	public function &displayIfExport(){ return $this; }
+	public function displayIfExport(){ return $this; }
 	
 	public function _setFields($export=false){
 		if($this->fields !== null){

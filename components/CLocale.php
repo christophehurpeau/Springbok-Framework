@@ -3,10 +3,9 @@ class CLocale{
 	private static $instances;
 	
 	/** @return CLocale */
-	public static function &get($locale){
-		if(!isset(self::$instances[$locale]))
-			self::$instances[$locale]=new CLocale($locale);
-		return self::$instances[$locale];
+	public static function get($locale){
+		if(isset(self::$instances[$locale])) return self::$instances[$locale];
+		return self::$instances[$locale]=new CLocale($locale);
 	}
 	
 	private $locale,$data;
@@ -15,7 +14,7 @@ class CLocale{
 		$this->data=include CORE.'i18n'.DS.$locale.'.php';
 	}
 	
-	public function &data($name){
+	public function data($name){
 		return $this->data[$name];
 	}
 	

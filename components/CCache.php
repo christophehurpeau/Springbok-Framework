@@ -5,7 +5,7 @@ abstract class CCache{
 		self::$_config=App::configArray('caches');
 	}
 
-	public static function &detect(){
+	public static function detect(){
 		if(!isset(self::$_instances['detected'])){
 			//TODO on depl ?
 			$exts=array_intersect(array('apc','xcache'),array_map('strtolower',get_loaded_extensions()));
@@ -17,7 +17,7 @@ abstract class CCache{
 	
 	/* -- -- -- */
 	
-	public static function &get($cacheName='_'){
+	public static function get($cacheName='_'){
 		if(!isset(self::$_instances[$cacheName]))
 			self::$_instances[$cacheName]=CCache::create(self::$_config[$cacheName]);
 		return self::$_instances[$cacheName];
@@ -25,7 +25,7 @@ abstract class CCache{
 	
 	protected $_expiration;
 	
-	public static function &create($config){
+	public static function create($config){
 		if(!isset($config['expiration'])) $config['expiration']=null;
 		$instanceClassName='CCache_'.$config['type'];
 		$instance=new $instanceClassName($config);
@@ -33,10 +33,10 @@ abstract class CCache{
 	}
 	
 	public abstract function read($key);
-	public abstract function write($key,&$data);
+	public abstract function write($key,$data);
 	public abstract function delete($key);
 	
-	public function &readOrWrite($key,$callback){
+	public function readOrWrite($key,$callback){
 		$cache=$this->read($key);
 		if($cache===null){
 			$cache=$callback();
@@ -46,12 +46,12 @@ abstract class CCache{
 	}
 	
 	
-	protected function setExpiration(&$expiration){
+	protected function setExpiration($expiration){
 		if($expiration===null) $this->_expiration=/* DEV */120/* /DEV *//* HIDE */+/* /HIDE *//* PROD */3600/* /PROD */;
 		else $this->_expiration=$expiration;
 	}
 	
-	protected static function serializeWithTime(&$data){
+	protected static function serializeWithTime($data){
 		return gzdeflate(serialize(array(time(),$data)));
 	}
 }

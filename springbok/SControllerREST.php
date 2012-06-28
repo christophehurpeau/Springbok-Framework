@@ -1,15 +1,15 @@
 <?php
 /* Representational state transfer */
 class SControllerREST extends Controller{
-	public static function dispatch(&$suffix,&$mdef){
-		self::$suffix=&$suffix;
+	public static function dispatch($suffix,$mdef){
+		self::$suffix=$suffix;
 		static::beforeDispatch();
 		$method=CHttpRequest::getMethod(); $methodName=CRoute::getAction();
 		if($method !=='GET') $methodName.=$method;
 		
 		if(!method_exists(get_called_class(),$methodName)) notFound();
-		self::$methodName=&$methodName;
-		$methodAnnotations=&$mdef['annotations'];
+		self::$methodName=$methodName;
+		$methodAnnotations=$mdef['annotations'];
 		static::crossDomainHeaders();
 		return call_user_func_array(array('static',$methodName),$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations));
 	}

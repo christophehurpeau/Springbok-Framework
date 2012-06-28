@@ -4,8 +4,8 @@ class HBreadcrumbs{
 	private static $_links=array(),$_lastTitle;
 	
 	public static function set($links,$lastTitle=null){
-		self::$_links=&$links;
-		self::$_lastTitle=&$lastTitle;
+		self::$_links=$links;
+		self::$_lastTitle=$lastTitle;
 	}
 	
 	public static function add($titleLink,$link){
@@ -14,9 +14,9 @@ class HBreadcrumbs{
 	
 	public static function display($homeLink,$lastTitle,$options=array('class'=>'breadcrumbs')){
 		if(empty(self::$_links) && empty($lastTitle)) return;
-		if(isset($options['spanAttributes'])) $spanAttributes=&$options['spanAttributes'];
+		if(isset($options['spanAttributes'])) $spanAttributes=$options['spanAttributes'];
 		else $spanAttributes=array();
-		if(isset($options['linkoptions'])) $linkoptions=&$options['linkoptions'];
+		if(isset($options['linkoptions'])) $linkoptions=$options['linkoptions'];
 		else $linkoptions=array();
 		$separator=isset($options['separator'])?$options['separator']:' &raquo; ';
 		$linkoptions['itemprop']='url';
@@ -57,7 +57,7 @@ class HBreadcrumbs{
 	public static function toJs($lastTitle){
 		if(self::$_lastTitle!==null) self::$_links[]=self::$_lastTitle;
 		elseif(!empty($lastTitle)) self::$_links[]=$lastTitle;
-		array_walk(self::$_links,function(&$value,&$title){
+		array_walk(self::$_links,function($value,$title){
 			if(!is_int($title)){
 				if(!is_array($value)) $value=HHtml::url($value,false,false);
 				else $value['url']=HHtml::url($value['url'],false,false);
