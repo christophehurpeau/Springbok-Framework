@@ -180,7 +180,7 @@ class DBMySQL extends DBSql{
 		while($r->fetch()) $callback($value);
 		$r->close();
 	}
-	public function &/* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
+	public function /* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
 		$value=false;
 		$fields=array(&$value);
 		$r=$this->_query_($query,$fields);
