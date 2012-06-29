@@ -135,9 +135,9 @@ abstract class QFind extends QSelect{
 	public function _setJoin(&$join){$this->joins=&$join;return $this;}
 	
 	private function _addWithInJoin($modelName,$modelAlias,&$key,&$join,$inRecursive=false){
+		if(!($join['reltype']==='belongsTo' || $join['reltype']==='hasOne' || $join['reltype']==='hasOneThrough' || $join['forceJoin']===true || $join['isCount']===true)) return false;
 		$joinModelName=$join['modelName'];
-		if(!($join['reltype']==='belongsTo' || $join['reltype']==='hasOne' || $join['reltype']==='hasOneThrough' || $join['forceJoin']===true || $join['isCount']===true)
-				 || ($modelName::$__dbName!==$joinModelName::$__dbName && !$modelName::$__modelDb->isInSameHost($joinModelName::$__modelDb))) return false;
+		if($modelName::$__dbName!==$joinModelName::$__dbName && !$modelName::$__modelDb->isInSameHost($joinModelName::$__modelDb)) return false;
 		//if(!empty($join['with'])) return false; //TODO should be handled someplace else because here generate a lot of requests... 
 		if($join['reltype'] === 'hasOneThrough' || $join['reltype'] === 'hasManyThrough'){
 			$lastAlias=$modelAlias;$lastModelName=$this->modelName;
