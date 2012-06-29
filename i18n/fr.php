@@ -9,7 +9,7 @@
 	'dates'=>array(
 		'monthNames'=>array(
 			'full'=>array(1=>'Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'),
-			'short'=>array(1=>'janv','fev','mar','avr','mai','juin','juil','aout','sept','oct','nov','dec'),
+			'short'=>array(1=>'janv','fev','mars','avr','mai','juin','juil','aout','sept','oct','nov','dec'),
 			'compact'=>array(1=>'J','F','M','A','M','J','J','A','S','O','N','D')
 		),
 		'weekDayNames'=>array(

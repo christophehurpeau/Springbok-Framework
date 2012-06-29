@@ -6,6 +6,6 @@ $.fn.sticky=function(options){
 		e.waypoint(function(event, direction) {
 			parent.toggleClass('sticky', direction === "down");
 			event.stopPropagation();
-		});
+		},{onlyOnScroll:true});
 	});
 };
