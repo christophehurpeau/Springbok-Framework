@@ -34,7 +34,6 @@ S.tinymce={
 				{title:'Clearfix',selector:'div', classes:'clearfix'},
 			],
 			formats:{
-				alignleft:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignLeft'},
 				bold:{inline:'strong'},italic:{inline:'i'},
 				alignleft:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignLeft'},
 				aligncenter:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'center'},
