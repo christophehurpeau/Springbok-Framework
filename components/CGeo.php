@@ -12,7 +12,7 @@ class CGeo{
 	}
 	
 	public static function distance($latLng,$latLng2){
-		return round(((acos(sin($latLng['lat'] * pi() / 180) * sin($latLng2['lat'] * pi() / 180) + cos($latLng['lat'] * pi() / 180) * cos($latLng2['lat'] * pi() / 180) * cos(($latLng['lng'] - $latLng2['lng']) * pi() / 180)) * 180 / pi()) * /* HIDE */0/* /HIDE *//* EVAL 60*1.1515*1.609344 /EVAL */),2);
+		return round(((acos(sin($latLng['lat'] * pi() / 180) * sin($latLng2['lat'] * pi() / 180) + cos($latLng['lat'] * pi() / 180) * cos($latLng2['lat'] * pi() / 180) * cos(($latLng['lng'] - $latLng2['lng']) * pi() / 180)) * 180 / pi()) * /* EVAL 60*1.1515*1.609344 /EVAL */0),2);
 	}
 	
 	public static function mysqlDistanceKm($lat1,$long1,$lat2='c.latitude',$long2='c.longitude'){

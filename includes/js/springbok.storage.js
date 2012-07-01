@@ -3,7 +3,7 @@
  * Copyright (c) 2010 Andris Reinman, andris.reinman@gmail.com
  * Modified by Christophe Hurpeau for Springbok Framework
 */
-
+includeCore('jquery/json');
 /**
 * S.Storage
 *
@@ -496,5 +496,8 @@ S.StoredConfig.prototype={
 		this.config[key]=value;
 		S.Storage.set(this.name,this.config);
 	},
-	mset:function(v){ for(var k in key) this.set(key,key[k]); }
+	mset:function(v){
+		for(var k in v) this.config[k]=v[k];
+		S.Storage.set(this.name,this.config);
+	}
 };

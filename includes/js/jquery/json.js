@@ -15,7 +15,7 @@
  */
 /* Needed for springbok.storage */
 
-(function( $ ) {
+(function() {
 
 	var	escapeable = /["\\\x00-\x1f\x7f-\x9f]/g,
 		meta = {
@@ -191,4 +191,4 @@
 		return '"' + string + '"';
 	};
 
-})( jQuery );
+})();

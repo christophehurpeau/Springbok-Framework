@@ -28,7 +28,6 @@ S.extendsClass(S.HEltFContble,S.HElt,{
 	},
 	
 	_setAttrValue:function(){
-		console.log(this);
 		var value=this._form._getValue(this._name);
 		if(value != null) this.elt.val(value);
 	},

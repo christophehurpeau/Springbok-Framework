@@ -26,7 +26,7 @@ class HElementFormInput extends HElementFormContainable{
 							case 'email': case 'mail':
 								$this->type='email';
 								break;
-							case 'url': case 'site_web':
+							case 'url': case 'website':
 								$this->type='url';
 								break;
 						} 

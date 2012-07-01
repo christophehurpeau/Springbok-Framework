@@ -13,7 +13,7 @@ ob_start();
 require 'base/HttpException.php';
 
 class Springbok{
-	const VERSION=/* HIDE */0/* /HIDE *//* EVAL time() /EVAL */;
+	const VERSION=/* EVAL time() /EVAL */0;
 	public static $scriptname='index',$prefix='',$suffix='';
 
 	public static function load($class_name,$path,$default_path){

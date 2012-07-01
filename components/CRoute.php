@@ -29,8 +29,8 @@ class CRoute{
 		list(self::$controller,self::$action,self::$params,self::$ext)=$route;
 	}
 	
-	public static function cliinit($prefix,$suffix){
-		$routes=App::configArray('routes'.$suffix);
+	public static function cliinit(/* DEV */$prefix/* /DEV */){
+		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];
 		self::$_langs=$routes['langs'];
 		/* DEV */self::$_prefix=$prefix;/* /DEV */

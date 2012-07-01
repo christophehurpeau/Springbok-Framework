@@ -179,8 +179,11 @@ class PhpFile extends EnhancerFile{
 			}
 		}
 		
-		$phpContent=preg_replace_callback('/\/\*\s+EVAL\s+(.*)\s+\/EVAL\s+\*\//Ums',
-			function($matches){$val='';eval('$val='.$matches[1].';');return $val;}
+		$phpContent=preg_replace_callback('/\/\*\s+EVAL\s+(.*)\s+\/EVAL\s+\*\/(\\\'\\\'|0)/Us',
+			function($matches){$val='';eval('$val='.$matches[1].';');if($val==='') exit(print_r($matches,true));return UPhp::exportCode($val);}
+			,$phpContent);
+		$phpContent=preg_replace_callback('/\/\*\s+EVAL\s+(.*)\s+\/EVAL\s+\*\//Us',
+			function($matches){$val='';eval('$val='.$matches[1].';');if($val==='') exit(print_r($matches,true));return UPhp::exportCode($val);}
 			,$phpContent);
 		$phpContent=preg_replace('/\/\*\s+HIDE\s+\*\/.*\/\*\s+\/HIDE\s+\*\//Ums','',$phpContent);
 		$phpContent=preg_replace('/return !new [^;]+;/','',$phpContent);

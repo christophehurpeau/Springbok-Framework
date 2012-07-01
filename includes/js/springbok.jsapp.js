@@ -3,10 +3,9 @@ includeCore('springbok.base');
 
 S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 
-(function($){
+(function(){
 	var readyCallbacks=$.Callbacks(),loadedRequired={};
 	window.App={
-		name:'',version:1,
 		header:'',footer:true,page:0,
 		
 		jsapp:function(name,version){this.name=name;this.version=version;},
@@ -58,7 +57,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 		}
 	};
 	S.ready=App.ready;
-}(jQuery));
+}());
 
 function FatalError(error){
 	alert(error);
@@ -68,6 +67,7 @@ function FatalError(error){
 includeCore('jsapp/httpexceptions');
 includeCore('jsapp/langs');
 includeCore('jsapp/controller');
+includeCore('jsapp/model');
 includeCore('jsapp/layout');
 includeCore('helpers/form');
 includeCore('springbok.router');

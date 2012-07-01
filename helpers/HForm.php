@@ -339,13 +339,13 @@ class HForm{
 	
 	
 	public function selectHour($name,$containerAttributes=array(),$options=array()){
-		return $this->select($name,/* EVAL UPhp::exportCode2(range(0,23)) /EVAL *//* HIDE */0/* /HIDE */,$options,$containerAttributes);
+		return $this->select($name,/* EVAL range(0,23) /EVAL */0,$options,$containerAttributes);
 	}
 	public function selectHourMorning($name,$containerAttributes=array(),$options=array()){
-		return $this->select($name,/* EVAL UPhp::exportCode2(range(0,12)) /EVAL *//* HIDE */0/* /HIDE */,$options,$containerAttributes);
+		return $this->select($name,/* EVAL range(0,12) /EVAL */0,$options,$containerAttributes);
 	}
 	public function selectHourAfternoon($name,$containerAttributes=array(),$options=array()){
-		return $this->select($name,/* EVAL UPhp::exportCode2(array_combine(range(12,23),range(12,23))) /EVAL *//* HIDE */0/* /HIDE */,$options,$containerAttributes);
+		return $this->select($name,/* EVAL array_combine(range(12,23),range(12,23)) /EVAL */0,$options,$containerAttributes);
 	}
 	public function selectMonth($name,$containerAttributes=array(),$options=array()){
 		$options+=array('empty'=>'--');

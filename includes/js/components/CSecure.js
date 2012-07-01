@@ -1,6 +1,4 @@
 (S.CSecure={
-	_connected:null,
-	
 	init:function(){
 		this.storage=new S.StoredConfig('S.CSecure');
 	},
@@ -9,8 +7,10 @@
 		return !!this.connected();
 	},
 	connected:function(){
-		if(this._connected===null)
+		if(this._connected===undefined){
 			this._connected=this.storage.get('connected');
+			this._token=this.storage.get('token');
+		}
 		return this._connected;
 	},
 	
@@ -20,5 +20,10 @@
 			return false;
 		}
 		return true;
+	},
+	
+	setConnected:function(userId,token){
+		this.storage.set('connected',this._connected=userId);
+		this.storage.set('token',this._token=token);
 	}
 }).init();

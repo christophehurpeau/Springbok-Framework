@@ -10,6 +10,8 @@
 .icon{width:16px;height:16px;margin:2px 3px 2px 0;@extend .hiddenText;}/* pourquoi pas en display inline-block ? */
 li .icon,.button .icon{margin:0 2px 0 0}
 
+.imgLoading{background:url('../img/ajax-loader.gif');width:16px;height:16px}
+
 @include coreIcon16('pageAdd','page_white_add');
 @include coreIcon16('pageEdit','page_white_edit');
 @include coreIcon16('pageDelete','page_white_delete');

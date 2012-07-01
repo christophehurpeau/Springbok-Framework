@@ -69,18 +69,18 @@ class CHttpRequest{
 
 	public static function isMobile(){
 		if(empty($_SERVER['HTTP_USER_AGENT'])) return false;
-		return (bool)preg_match('/'./* EVAL "'".implode('|',array(
+		return (bool)preg_match('/'./* EVAL implode('|',array(
 			'Mobile',
 			'Android', 'AvantGo', 'BlackBerry', 'DoCoMo', 'Fennec', 'iPod', 'iPhone',
 			'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'PalmOS', 'PalmSource',
 			'portalmmm', 'Plucker', 'ReqwirelessWeb', 'SonyEricsson', 'Symbian', 'UP\\.Browser',
 			'webOS', 'Windows CE', 'Xiino'
-		))."'" /EVAL *//* HIDE */''/* /HIDE */.'/i',$_SERVER['HTTP_USER_AGENT']);
+		)) /EVAL */''.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 	
 	public static function isBot(){
 		if(empty($_SERVER['HTTP_USER_AGENT'])) return true;
-		return (bool)preg_match('/'./* EVAL "'".implode('|',array(
+		return (bool)preg_match('/'./* EVAL implode('|',array(
 			'bot',
 			//'Googlebot',
 			'Google Web Preview', // Google - www.google.com
@@ -106,7 +106,7 @@ class CHttpRequest{
 			'Baiduspider', 'Feedfetcher-Google', 'TechnoratiSnoop',
 			'Mediapartners-Google', 'Sogou web spider',
 			'Butterfly','Twitturls','Me.dium','Twiceler'
-		))."'" /EVAL *//* HIDE */''/* /HIDE */.'/i',$_SERVER['HTTP_USER_AGENT']);
+		)) /EVAL */''.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 
 	public static function isIElt8(){

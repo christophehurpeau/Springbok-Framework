@@ -6,9 +6,6 @@ class UPhp{
 		if($ifEmptyArray!==false && ($content==='false' || $content==='array()')) return $ifEmptyArray;
 		return $content;
 	}
-	public static function exportCode2($var){
-		return self::exportCode($var);
-	}
 	
 	public static function exportCode_recursiveArray(&$content,&$array,$start){
 		if(!is_array($array)) self::exportCode_addVar($content,$array);

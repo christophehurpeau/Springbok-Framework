@@ -9,6 +9,7 @@ S.HEltForm.ForModelGET=function(modelName,name,value){ return (new S.HEltForm('g
 S.extendsClass(S.HEltForm,S.HElt,{
 	setModelName:function(modelName,name,value){
 		if(!name && modelName!=null) name=modelName.sbLcFirst();
+		if(modelName!=null) App.require('m/'+modelName);
 		this._modelName=modelName; this._name=name; this._value=value;
 		return this;
 	},
@@ -47,3 +48,26 @@ S.extendsClass(S.HEltForm,S.HElt,{
 	_getValue:function(name){ return this._value && this._value[name]; }
 });
 S.addSetMethods(S.HEltForm,'tagContainer');
+
+
+
+$.fn.sSubmit=function(callback,beforeSubmit){
+	var form=this,submit,imgLoadingSubmit;
+	this.unbind('submit').submit(function(evt){
+		evt.preventDefault();
+		evt.stopPropagation();
+		submit=form.find(':submit');
+		form.fadeTo(180,0.4);
+		if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
+		if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid')))
+			form.stop().fadeTo(0,1);
+		else{
+			submit.hide();submit.parent().append(imgLoadingSubmit=$('<span/>').attr('class',"img imgLoading"));
+			callback(form,function(){
+				submit.show().blur();imgLoadingSubmit.remove();form.fadeTo(150,1)
+			});
+		}
+		return false;
+	});
+	return this;
+};

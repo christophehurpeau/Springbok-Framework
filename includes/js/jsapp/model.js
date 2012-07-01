@@ -14,7 +14,8 @@ S.Model.prototype={
 	}
 };
 
-S.Model.extend=function(name,methods,superclass){
+S.Model.add=function(name,fields,methods,superclass){
 	M[name]=function(methods){ this.methods=methods; };
+	M[name].Fields=fields;
 	S.extendsClass(M[name],superclass||S.Model,methods);
 };

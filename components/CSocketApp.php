@@ -78,7 +78,7 @@ class CSocketApp{
 	
 	public function run($name){
 		$this->prefix=$name.DS;
-		CRoute::cliinit('','_'.$name);
+		CRoute::cliinit(/* DEV */''/* /DEV */);
 		
 	}
 	
