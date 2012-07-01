@@ -14,7 +14,7 @@ class HForm{
 		
 		$setValuesFromVar=true;
 		if($formOptions!==null){
-			$formOptions=$formOptions+array('method'=>'post','urlfull'=>false);
+			$formOptions=$formOptions+array('method'=>'post','entry'=>null,'urlfull'=>false);
 			if(!isset($formOptions['action'])) $formOptions['action']=CRoute::getAll();
 			if(!isset($formOptions['name'])){
 				if($modelName===NULL) $name=NULL;
@@ -24,7 +24,7 @@ class HForm{
 				$formOptions['enctype']='multipart/form-data';
 				$formOptions['method']='post';
 			}
-			echo '<form action="'.HHtml::url($formOptions['action'],$formOptions['urlfull'],true).'" method="'.($method=$formOptions['method']).'"';
+			echo '<form action="'.HHtml::urlEscape($formOptions['action'],$formOptions['entry'],$formOptions['urlfull']).'" method="'.($method=$formOptions['method']).'"';
 			unset($formOptions['action'],$formOptions['method'],$formOptions['name'],$formOptions['urlfull']);
 			HHtml::_echoAttributes($formOptions);
 			echo '>';

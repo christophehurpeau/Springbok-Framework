@@ -20,12 +20,12 @@ S.Controller.prototype={
 		return L[name].render();
 	},
 	redirect:function(to,exit){
-		S.app.load(to);
+		App.load(to);
 		if(exit) throw new S.Controller.Stop();
 	}
 };
 S.Controller.extend=function(name,methods,superclass){
-	var target=S.app[name+"Controller"]=function(methods){ this.methods=methods; };
+	var target=App[name+"Controller"]=function(methods){ this.methods=methods; };
 	S.extendsClass(target,superclass||S.Controller,methods);
 	target.add=function(name,methods){ C[name]=new target(methods) };
 };

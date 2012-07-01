@@ -1,7 +1,7 @@
+includeCore('jquery/outerHTML');
 S.HEltFContble=function(form,name){this._form=form; this._name=name; this._labelEscape=1; };
 S.extendsClass(S.HEltFContble,S.HElt,{
 	placeholder:function(value){ this.attr('placeholder',value); return this; },
-	noContainer:function(){ return this._form.append(this.elt); },
 	
 	label:function(value){ this._label=value; return this; },
 	htmlLabel:function(value){ this._label=value; this._labelEscape=0; return this; },
@@ -22,12 +22,13 @@ S.extendsClass(S.HEltFContble,S.HElt,{
 		}
 		return $prefix.HHtml::tag('label',array('for'=>$this->attributes['id']),$label,$this->labelEscape).$suffix;
 		*/
-		
-		$('<label/>')[this._labelEscape?'text':'html'](label).attr('for',this.elt.attr('id'));
-		return this.elt.before(label,' ',this._between||'',this.elt);
+		label=$('<label/>')[this._labelEscape?'text':'html'](label).attr('for',this.elt.attr('id'));
+		//return this.elt.before(label,' ',this._between||'');
+		return $(label.outerHTML()+(this._between||' ')+this.elt.outerHTML());
 	},
 	
 	_setAttrValue:function(){
+		console.log(this);
 		var value=this._form._getValue(this._name);
 		if(value != null) this.elt.val(value);
 	},

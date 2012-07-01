@@ -126,10 +126,10 @@ s.parentNode.insertBefore(g,s);
 	}
 	
 	public static function link($title,$url=false,$options=array()){
-		$options=$options+array('confirm'=>false,'fullUrl'=>false);
+		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>false);
 		if($url){
-			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:'))) $url=self::url($url,$options['fullUrl']);
-		}else $title=$url=self::url($title,$options['fullUrl']);
+			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:'))) $url=self::url($url,$options['entry'],$options['fullUrl']);
+		}else $title=$url=self::url($title,$options['entry'],$options['fullUrl']);
 		
 		
 		if(isset($options['escape'])) $escape=$options['escape'];
@@ -153,7 +153,7 @@ s.parentNode.insertBefore(g,s);
 			
 		}
 		
-		unset($options['escape'],$options['confirm'],$options['current'],$options['fullUrl']);
+		unset($options['escape'],$options['confirm'],$options['current'],$options['entry'],$options['fullUrl']);
 		
 		$options['href']=$url;
 		return self::tag('a',$options,$title,$escape);
@@ -227,19 +227,30 @@ s.parentNode.insertBefore(g,s);
 		return self::tag('option',$attributes,$name);
 	}
 	
-	public static function url($url=null,$full=false,$escape=false){
+	public static function url($url=null,$entry=null,$full=false,$escape=false){
+		/* DEV */
+		if($entry===false || $entry===true)
+			throw new Exception('Entrance param cannot be false or true');
+		/* /DEV */
+		if($entry===null){
+			$entry=Springbok::$scriptname;
+			if($full===true) $full=Config::$siteUrl[$entry];
+		}elseif($entry!==Springbok::$scriptname || $full===true) $full=Config::$siteUrl[$entry];
 		if(is_array($url)){
-			$url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($url);
+			$url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($entry,$url);
 			$escape=false;
 		}else{
 			if(empty($url) || $url==='/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.'/';
 			else{
 				if(strpos($url,'://')>0) return $url;
 				if(substr($url,0,2)==='\/') $url=substr($url,1);
-				elseif($url[0]==='/'){$url=substr($url,1); $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getStringLink($url);}
+				elseif($url[0]==='/'){$url=substr($url,1); $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getStringLink($entry,$url);}
 			}
 		}
 		return $escape?h($url,false):$url;
+	}
+	public static function urlEscape($url=null,$entry=null,$full=false){
+		return self::url($url,$entry,$full,true);
 	}
 	
 	public static function staticUrl($url=null,$folder=false,$escape=true){

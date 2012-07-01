@@ -1,6 +1,6 @@
 <?php
 class EnhancedApp extends Enhanced{
-	private $controllers,$controllersDeleted,$md5EnhanceConfig;
+	private $controllers,$controllersDeleted,$md5EnhanceConfig,$isJsApp;
 	public $appConfig,$devConfig;
 	
 	public function __construct($type,&$dirname){
@@ -8,6 +8,7 @@ class EnhancedApp extends Enhanced{
 		if(file_exists($this->getAppDir().'src/config/_.php')) $this->appConfig=include $this->getAppDir().'src/config/_.php';
 		if(file_exists($this->getAppDir().'src/config/_'.ENV.'.php')) $this->devConfig=include $this->getAppDir().'src/config/_'.ENV.'.php';
 		$this->md5EnhanceConfig=empty($this->config['config'])?'':implode('~',$this->config['config']);
+		$this->isJsApp=file_exists($this->getAppDir().'src/web/jsapp.js');
 	}
 	
 	public function getTmpDir(){
@@ -22,6 +23,8 @@ class EnhancedApp extends Enhanced{
 	
 	public function md5EnhanceConfig(){ return $this->md5EnhanceConfig; }
 	
+	
+	public function isJsApp(){ return $this->isJsApp; }
 	
 	public function pluginPath($plugin){
 		$pluginsPaths=$this->devConfig('pluginsPaths');

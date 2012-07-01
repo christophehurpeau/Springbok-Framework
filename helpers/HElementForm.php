@@ -19,7 +19,7 @@ class HElementForm extends HElement{
 		return $elt;
 	}
 	
-	public $method,$action,$urlfull=false,
+	public $method,$action,$actionEntry=null,$urlfull=false,
 			$defaultLabel=true,$name,$modelName,
 			$tagContainer='div',$fieldsetStarted=false;
 	
@@ -50,7 +50,7 @@ class HElementForm extends HElement{
 	/**
 	 * @return HElementForm
 	 */
-	public function action($action,$urlfull=null){$this->action=$action; $this->urlfull=$urlfull; return $this; }
+	public function action($action,$entry=null,$urlfull=false){$this->action=$action; $this->actionEntry=$entry; $this->urlfull=$urlfull; return $this; }
 	public function urlfull($urlfull){$this->urlfull=$urlfull; return $this; }
 	//public function &file(){ /* $this->method='post'; */ $this->attributes['enctype']='multipart/form-data'; return $this; }
 	
@@ -61,7 +61,7 @@ class HElementForm extends HElement{
 	
 	
 	public function __toString(){
-		return '<form action="'.HHtml::url($this->action===null ? CRoute::getAll() : $this->action,$this->urlfull,true).'"'
+		return '<form action="'.HHtml::url($this->action===null ? CRoute::getAll() : $this->action,$this->actionEntry,$this->urlfull,true).'"'
 				.' method="'.$this->method.'"'.$this->_attributes().'>';
 	}
 	

@@ -7,8 +7,8 @@ class HSitemap{
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 ');
 	}
-	public function add($url,$options=array()){
-		$content='<url><loc>'.HHtml::url($url,Config::$site_url,true).'</loc>';
+	public function add($url,$options=array(),$entry='index'){
+		$content='<url><loc>'.HHtml::urlEscape($url,$entry,true).'</loc>';
 		foreach($options as $key=>&$option) $content.=HHtml::tag($key,array(),$option);
 		$content.='</url>'.PHP_EOL;
 		gzwrite($this->_file,$content);

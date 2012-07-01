@@ -94,8 +94,8 @@ class THtml extends STransformer{
 					$callback=&$this->component->actionClick;
 					$defaultActionUrl=$callback($pkValue,$model);
 				}
-				//echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
-				echo ' rel="'.HHtml::url($defaultActionUrl,false,true).'"'; //event.target.nodeName
+				//echo ' onclick="S.redirect(\''.HHtml::urlEscape($defaultActionUrl).'\')"'; //event.target.nodeName
+				echo ' rel="'.HHtml::urlEscape($defaultActionUrl).'"'; //event.target.nodeName
 			}
 			echo '>';
 			foreach($fields as $i=>&$field){

@@ -190,7 +190,7 @@ define('APP', __DIR__.'/dev/');";
 	
 	
 	private function createIndexFile(&$dev,&$prod){
-		$entrances=$this->enhanced->configNotEmpty('entrances') ? $this->enhanced->config('entrances') : array();
+		$entries=$this->enhanced->configNotEmpty('entries') ? $this->enhanced->config('entries') : array();
 
 		$htaccess='<IfModule mod_rewrite.c>
 	Options -Indexes
@@ -199,15 +199,15 @@ define('APP', __DIR__.'/dev/');";
 	RewriteEngine on
 	RewriteRule ^web/(.*)$ web/$1 [NE,L]';
 
-		foreach($entrances as $entrance)
+		foreach($entries as $entry)
 			$htaccess.='
-	RewriteRule ^'.$entrance.'/(.*)$ '.$entrance.'.php?url=$1 [QSA,NE,L]
-	RewriteRule ^'.$entrance.'.php/(.*)$ '.$entrance.'.php?url=$1 [QSA,NE,L]';
+	RewriteRule ^'.$entry.'/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,L]
+	RewriteRule ^'.$entry.'.php/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,L]';
 	
 	
-		/*foreach($entrances as $entrance)
+		/*foreach($entries as $entry)
 			$htaccess.='
-	RewriteCond %{REQUEST_URI} !'.$entrance.'.php';*/
+	RewriteCond %{REQUEST_URI} !'.$entry.'.php';*/
 		$htaccess.='
 	RewriteRule ^(.*)$ index.php?url=$1 [QSA,NE,NS,L]
  </IfModule>';
@@ -232,8 +232,8 @@ define('APP_DATE',".time()."); define('WEB_FOLDER','');
 if(file_exists((".'$filename'."=CORE.'maintenance.php'))) include ".'$filename'.";
 else echo '<h1>503 Service Temporarily Unavailable</h1>';";
 			
-			$entrances[]='index';
-			foreach($entrances as $index){
+			$entries[]='index';
+			foreach($entries as $index){
 				file_put_contents($dev->getPath().$index.'.php',$indexDevContent);
 				file_put_contents($prod->getPath().$index.'.php',$indexProdContent);
 			}

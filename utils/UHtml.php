@@ -10,7 +10,7 @@ class UHtml{
 			preg_match('/data\-type="([^"]+)"/',$m[1],$type);
 			preg_match('/data\-params="([^"]+)"/',$m[1],$params);
 			
-			return '<a href='.HHtml::url(call_user_func_array($routes[$type[1]],json_decode(html_entity_decode($params[1],ENT_QUOTES,'UTF-8'),true)),false,true).'" '.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params|href)="[^"]+"\s*#U',' ',$m[1])).'>';
+			return '<a href='.HHtml::urlEscape(call_user_func_array($routes[$type[1]],json_decode(html_entity_decode($params[1],ENT_QUOTES,'UTF-8'),true))).'" '.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params|href)="[^"]+"\s*#U',' ',$m[1])).'>';
 		},$content);
 	}
 	

@@ -66,40 +66,44 @@ class ConfigFile extends PhpFile{
 				}
 				$this->write($configname,'',$devFile,$prodFile);
 			}
-		}elseif($configname=='routes'||substr($configname,0,7)=='routes_'){
-			$routes=include $this->srcFile()->getPath();
-			
+		}elseif(substr($configname,0,7)=='routes_'){
+			throw new Exception('Define all routes in routes.php, now.');
+		}elseif($configname=='routes'){
 			/* ROUTES */
+			$routes=include $this->srcFile()->getPath();
+			if(!isset($routes['index'])) $routes=array('index'=>$routes);
 			$finalRoutes=array();
-			foreach($routes as $url=>$route){
-				$finalRoutes[$url]['_']=$route[0]; $paramsDef=isset($route[1])?$route[1]:NULL; $langs=isset($route[2])?$route[2]:NULL;
-				$finalRoutes[$url]['ext']=isset($route['ext'])?$route['ext']:NULL;
-				$route=array('en'=>$url); if($langs !== NULL) $route=$route+$langs;
-				foreach($route as $lang=>&$routeLang){
-					$paramsNames=array();
-					if($specialEnd=(substr($routeLang,-2)==='/*'))
-						$routeLangPreg=substr($routeLang,0,-2);
-					elseif($specialEnd2=(substr($routeLang,-4))==='/*)?')
-						$routeLangPreg=substr($routeLang,0,-4).substr($routeLang,-2);
-					else $routeLangPreg=$routeLang;
-					$routeLangPreg=str_replace(array('/','-','*','('),array('\/','\-','(.*)','(?:'),$routeLangPreg);
-					if($specialEnd) $routeLangPreg.='(?:\/(.*))?';
-					elseif($specialEnd2) $routeLangPreg=substr($routeLangPreg,0,-2).'(?:\/(.*))?'.substr($routeLangPreg,-2);
-					
-					$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_]+)/',
-						function($m) use(&$paramsDef,&$paramsNames){
-							if(!empty($m[1])) return $m[0];
-							$paramsNames[]=$m[2];
-							if(isset($paramsDef[$m[2]])) return $paramsDef[$m[2]]=='id' ? '([0-9]+)' : '('.$paramsDef[$m[2]].')'; /* can have 0 before : 001-Slug */
-							if(in_array($m[2],array('id'))) return '([0-9]+)';
-							return '([^\/]+)';
-						},$routeLangPreg).($finalRoutes[$url]['ext']===null?'':($finalRoutes[$url]['ext']==='html'?'(\.html|)':'(\.'.$finalRoutes[$url]['ext'].')')),
-						1=>rtrim(str_replace('/*','%s',str_replace(array('?','(',')'),'',preg_replace('/(\:[a-zA-Z_]+)/m','%s',$routeLang))),'/')
-					);
-					$finalRoutes[$url][$lang]=$routeLang;
-					if(!empty($paramsNames)) $finalRoutes[$url][':']=$paramsNames;
+			foreach($routes as $entry=>$entryRoutes){
+				foreach($entryRoutes as $url=>$route){
+					$finalRoutes[$entry][$url]['_']=$route[0]; $paramsDef=isset($route[1])?$route[1]:NULL; $langs=isset($route[2])?$route[2]:NULL;
+					$finalRoutes[$entry][$url]['ext']=isset($route['ext'])?$route['ext']:NULL;
+					$route=array('en'=>$url); if($langs !== NULL) $route=$route+$langs;
+					foreach($route as $lang=>&$routeLang){
+						$paramsNames=array();
+						if($specialEnd=(substr($routeLang,-2)==='/*'))
+							$routeLangPreg=substr($routeLang,0,-2);
+						elseif($specialEnd2=(substr($routeLang,-4))==='/*)?')
+							$routeLangPreg=substr($routeLang,0,-4).substr($routeLang,-2);
+						else $routeLangPreg=$routeLang;
+						$routeLangPreg=str_replace(array('/','-','*','('),array('\/','\-','(.*)','(?:'),$routeLangPreg);
+						if($specialEnd) $routeLangPreg.='(?:\/(.*))?';
+						elseif($specialEnd2) $routeLangPreg=substr($routeLangPreg,0,-2).'(?:\/(.*))?'.substr($routeLangPreg,-2);
+						
+						$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_]+)/',
+							function($m) use(&$paramsDef,&$paramsNames){
+								if(!empty($m[1])) return $m[0];
+								$paramsNames[]=$m[2];
+								if(isset($paramsDef[$m[2]])) return $paramsDef[$m[2]]=='id' ? '([0-9]+)' : '('.$paramsDef[$m[2]].')'; /* can have 0 before : 001-Slug */
+								if(in_array($m[2],array('id'))) return '([0-9]+)';
+								return '([^\/]+)';
+							},$routeLangPreg).($finalRoutes[$entry][$url]['ext']===null?'':($finalRoutes[$entry][$url]['ext']==='html'?'(\.html|)':'(\.'.$finalRoutes[$entry][$url]['ext'].')')),
+							1=>rtrim(str_replace('/*','%s',str_replace(array('?','(',')'),'',preg_replace('/(\:[a-zA-Z_]+)/m','%s',$routeLang))),'/')
+						);
+						$finalRoutes[$entry][$url][$lang]=$routeLang;
+						if(!empty($paramsNames)) $finalRoutes[$entry][$url][':']=$paramsNames;
+					}
+					$finalRoutes[$entry][$url]['paramsCount']=substr_count($finalRoutes[$entry][$url]['en'][1],'%s');
 				}
-				$finalRoutes[$url]['paramsCount']=substr_count($finalRoutes[$url]['en'][1],'%s');
 			}
 		
 			/* LANGS */
@@ -144,15 +148,14 @@ class ConfigFile extends PhpFile{
 		}elseif($configname[0]==='_'){
 			$configArray=include $this->srcFile()->getPath();
 			if($this->enhanced->isApp()){
-				foreach(array('site_url') as $attr)
+				foreach(array('siteUrl') as $attr)
 					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
-				foreach($configArray as $key=>&$val){
-					if($key==='site_url' || substr($key,-9)==='_site_url'){
-						$val=rtrim($val,'/');
-					}
-				}
+				if(!empty($this->enhanced->config['entries']))
+					foreach($this->enhanced->config['entries'] as $entry)
+						if(!isset($configArray['siteUrl'][$entry])) throw new Exception('Missing site url for entry : '.$entry.' (file : '.$configname.')');
 				
+				foreach($configArray['siteUrl'] as $key=>&$val) $val=rtrim($val,'/');
 				if(!isset($configArray['cookie_domain'])) $configArray['cookie_domain']='';
 
 				$configArray=UArray::union_recursive($configArray,$this->enhanced->appConfig);

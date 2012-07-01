@@ -186,7 +186,7 @@ class ControllerFile extends PhpFile{
 			$file=new File($folderMethods.$filename);
 			$file->write($content);
 		}
-		if(($entrance=basename(dirname($dirname))) != 'controllers') $key=substr($entrance,11).DS;
+		if(($entry=basename(dirname($dirname))) != 'controllers') $key=substr($entry,11).DS;
 		else $key='';
 		self::$defFiles[$key][$this->_className]=array_keys($this->_methodDefFiles);
 	}
@@ -231,11 +231,11 @@ class ControllerFile extends PhpFile{
 			self::$aclPermissionsConfig=include $f->getPath();
 		}else self::$aclPermissionsConfig=array();
 		
-		/*$entrances=empty($config['entrances']) ? array() : $config['entrances']; 
-		$entrances[]='index';
+		/*$entries=empty($config['entries']) ? array() : $config['entries']; 
+		$entries[]='index';
 		
-		foreach($entrances as $entrance){
-			$suffix= $entrance==='index' ? '' : '.'.$entrance;
+		foreach($entries as $entry){
+			$suffix= $entry==='index' ? '' : '.'.$entry;
 			$d=new Folder($folder->getPath().'controllers'.$suffix.'/methods'); if($suffix) $d->mkdirs(0775);
 			if($d->exists()) $d->moveTo($tmpFolder.'controllers'.$suffix.'/methods');
 			$d->mkdirs(0775);
@@ -247,7 +247,7 @@ class ControllerFile extends PhpFile{
 	}
 	public static function fileDeleted($file){
 		$controllerName=substr($file->getName(),0,-(4+10));
-		if(($entrance=basename(dirname($file->getPath()))) != 'controllers') $key='.'.$entrance;
+		if(($entry=basename(dirname($file->getPath()))) != 'controllers') $key='.'.$entry;
 		else $key='';
 		self::$controllersDeleted[$key][]=$controllerName;
 		

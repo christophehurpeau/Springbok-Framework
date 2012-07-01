@@ -91,7 +91,7 @@ abstract class AFolderEnhancer{
 			if($class==='ConfigFile' && ($filename==='enhance.php'||$filename==='_.php'||startsWith($filename,'routes-langs'))) continue;
 			
 			if($class==='ControllerFile'){
-				if(($entrance=basename(dirname($file->getPath()))) != 'controllers') $key=$entrance.DS;
+				if(($entry=basename(dirname($file->getPath()))) != 'controllers') $key=$entry.DS;
 				else $key='';
 				$this->controllers[$key][]=substr($filename,0,-4);
 				if($filename[0]==='_') $justDev=true; 

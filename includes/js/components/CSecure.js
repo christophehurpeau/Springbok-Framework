@@ -16,7 +16,7 @@
 	
 	checkAccess:function(){
 		if(!this.isConnected()){
-			S.app.load('/site/login');
+			App.load('/site/login');
 			return false;
 		}
 		return true;

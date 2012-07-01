@@ -82,7 +82,7 @@ class HPagination{
 		if($pagination->hasPager()) 
 			return $pager='<div class="pager">'.self::createPager($pagination->getPage(),$pagination->getTotalPages(),
 			function($page){
-				return ' href="'.HHtml::url(CRoute::getAll(),false,true).'?page='.$page.'"';
+				return ' href="'.HHtml::url(CRoute::getAll()).'?page='.$page.'"';
 			}).'</div>';
 		return '';
 	}
@@ -104,6 +104,6 @@ class HPagination{
 	}
 	
 	public static function callbackCreateUrl($page){
-		return HHtml::url(CRoute::getAll(),false,true).'?page='.$page;
+		return HHtml::url(CRoute::getAll()).'?page='.$page;
 	}
 }

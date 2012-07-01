@@ -5,11 +5,11 @@ class JsFile extends EnhancerFile{
 	public function loadContent($srcContent){
 		if($this->fileName()==='jsapp.js'){
 			$srcContent="includeCore('springbok.jsapp');"
-				.'S.app.jsapp('.json_encode($this->enhanced->appConfig('projectName')).','.time().');' // force également à toujours refaire le fichier
+				.'App.jsapp('.json_encode($this->enhanced->appConfig('projectName')).','.time().');' // force également à toujours refaire le fichier
 				.('S.router.init(includeJsAppConfig(\'routes\')'/*.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1)*/.','
 						.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes-langs.js'),6,-1).');')
 				.$srcContent
-				.'S.app.run();';
+				.'App.run();';
 			//debugCode($srcContent);
 		}
 		
@@ -22,10 +22,10 @@ class JsFile extends EnhancerFile{
 		$this->_srcContent=$srcContent;
 		//if($this->fileName()==='jsapp.js') debug($srcContent);
 		$jsFiles=array('global.js','jsapp.js');
-		if(!empty($this->enhanced->config['entrances'])) foreach(($entrances=$this->enhanced->config['entrances']) as $entrance) $jsFiles[]=$entrance.'.js';
-		else $entrances=array();
+		if(!empty($this->enhanced->config['entries'])) foreach(($entries=$this->enhanced->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
+		else $entries=array();
 		if(in_array($this->fileName(),$jsFiles))
-			$this->_srcContent="window.basedir='".(defined('BASE_URL')?BASE_URL:'').(in_array(substr($this->fileName(),0,-3),$entrances)?'/'.substr($this->fileName(),0,-3):'')."/'"
+			$this->_srcContent="window.basedir='".(defined('BASE_URL')?BASE_URL:'').(in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
 				./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/";window.webdir=basedir+'web/';window.staticUrl=webdir;window.imgdir=webdir+'img/';window.jsdir=webdir+'js/';\n".$this->_srcContent;
 	}
 	/*
@@ -88,8 +88,9 @@ class JsFile extends EnhancerFile{
 			$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
 			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			
-			self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
-			//$this->executeGoogleCompressor($devFile->getPath().'_googleclosure.js');
+			//self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
+			self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$devFile->getPath());
+			//self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$devFile->getPath().'_googleclosure.js');
 			//self::uglify($this->_srcContent,$devFile->getPath().'_uglify.js');
 		}
 	}
@@ -97,11 +98,11 @@ class JsFile extends EnhancerFile{
 		//if(in_array($this->fileName(),array('global.js','mobile.js','admin.js','jsapp.js')))
 		//	$this->_srcContent="var basedir='/',webdir=basedir+'web/',imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
 		$jsFiles=array('global.js','jsapp.js');
-		if(!empty($this->config['entrances'])) foreach(($entrances=$this->config['entrances']) as $entrance) $jsFiles[]=$entrance.'.js';
-		else $entrances=array();
+		if(!empty($this->config['entries'])) foreach(($entries=$this->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
+		else $entries=array();
 		if(in_array($this->fileName(),$jsFiles)){
 			$this->_srcContent="(function(window,document,Object,Array,Math,undefined){window.basedir='".(defined('BASE_URL')?str_replace('/dev/','/prod/',BASE_URL.'/'):'/')
-				.(in_array(substr($this->fileName(),0,-3),$entrances)
+				.(in_array(substr($this->fileName(),0,-3),$entries)
 							&&(!isset($this->enhanced->devConfig['dev_prefixed_routes'])||$this->enhanced->devConfig['dev_prefixed_routes']!==false)
 								?substr($this->fileName(),0,-3).'/':'')."'"
 				.substr($this->_srcContent,strpos($this->_srcContent,';',28));
@@ -145,22 +146,22 @@ class JsFile extends EnhancerFile{
 		}
 	}
 	
-	public function executeGoogleCompressor($destination){
-		$content=&$this->_srcContent;
-		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'gclosuredest');
+	public static function executeGoogleCompressor($tmpDir,$enhancer,&$content,$destination){
+		$dest=$destination?$destination:tempnam($tmpDir,'gclosuredest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
-		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' --js ';
-		$tmpfname = tempnam($this->enhanced->getTmpDir(),'gclosure');
+		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --compilation_level SIMPLE_OPTIMIZATIONS --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' --js ';
+		$tmpfname = tempnam($tmpDir,'gclosure');
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
 		if(!empty($res)){
 			if(preg_match('/:\s+ERROR\s+-\s+(.*)\n(.*)\n/',$res,$m)){
-				prettyDebug(HText::highlightLine($content,null,$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
+				debugCode($destination."\n".$res,false);
+				prettyDebug(HText::highlightLine($content,null,(int)$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
 			}/*else h($content);*/
 			
 			if(preg_match_all('/:\s+WARNING\s+-\s+(.*)\n(.*)\n/',$res,$m)){
-				foreach($m[0] as $i=>$abcd)$this->warnings[]=array($m[1][$i],$m[2][$i]);
+				foreach($m[0] as $i=>$abcd)$enhancer->warnings[]=array($m[1][$i],$m[2][$i]);
 			}
 		}
 		//unlink($tmpfname);

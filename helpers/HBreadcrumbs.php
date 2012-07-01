@@ -12,7 +12,8 @@ class HBreadcrumbs{
 		self::$_links[$titleLink]=$link;
 	}
 	
-	public static function display($homeLink,$lastTitle,$options=array('class'=>'breadcrumbs')){
+	public static function display($homeLink,$lastTitle,$options=array()){
+		if(!isset($options['class'])) $options['class']='breadcrumbs';
 		if(empty(self::$_links) && empty($lastTitle)) return;
 		if(isset($options['spanAttributes'])) $spanAttributes=$options['spanAttributes'];
 		else $spanAttributes=array();
@@ -59,8 +60,8 @@ class HBreadcrumbs{
 		elseif(!empty($lastTitle)) self::$_links[]=$lastTitle;
 		array_walk(self::$_links,function($value,$title){
 			if(!is_int($title)){
-				if(!is_array($value)) $value=HHtml::url($value,false,false);
-				else $value['url']=HHtml::url($value['url'],false,false);
+				if(!is_array($value)) $value=HHtml::url($value);
+				else $value['url']=HHtml::url($value['url']);
 			}
 		});
 		return json_encode(self::$_links,JSON_FORCE_OBJECT);

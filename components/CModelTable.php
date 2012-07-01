@@ -106,13 +106,14 @@ class CModelTable extends CModelTableAbstract{
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
-				$href=HHtml::url(CRoute::getAll(),false,true).'?';
-				if(!empty($_POST)) $href.=http_build_query($_POST,'','&').'&';
+				$hrefQuery='';
+				if(!empty($_POST)) $hrefQuery=http_build_query($_POST,'','&').'&';
 				if(!empty($_GET)){
 					$get=$_GET;
 					unset($get['page'],$get['ajax']);
-					if(!empty($get)) $href.=http_build_query($get,'','&').'&';
+					if(!empty($get)) $hrefQuery=http_build_query($get,'','&').'&';
 				}
+				$href=HHtml::urlEscape(array(true,CRoute::getAll(),'?'=>$hrefQuery));
 			}
 			echo $pager='<div class="pager">'.HPagination::createPager($pagination->getPage(),$pagination->getTotalPages(),
 				$this->query->isFiltersAllowed()?function($page) use(&$idPage,&$formId){

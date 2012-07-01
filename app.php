@@ -131,7 +131,7 @@ class App{
 			/* /DEV */
 			if(Springbok::$scriptname==='index'){
 				Springbok::$prefix=Springbok::$suffix='';
-				CRoute::init('','');
+				CRoute::init(/* DEV */''/* /DEV */);
 			}else{
 				Springbok::$prefix=Springbok::$scriptname.'_';
 				Springbok::$suffix='.'.Springbok::$scriptname;
@@ -143,7 +143,7 @@ class App{
 				}
 				/* /DEV */
 				/* PROD */
-				CRoute::init('','_'.Springbok::$scriptname);
+				CRoute::init();
 				/* /PROD */
 			}
 			Controller::$defaultLayout=Springbok::$prefix.'default';

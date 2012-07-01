@@ -7,7 +7,7 @@ class HTableCompare extends HTable{
 			$class=$i++%2 ? 'alternate' : '';
 			echo '<tr';
 			if($component->defaultAction!==null){
-				$link=HHtml::url($component->defaultAction.'/'.$pkValue,false,true);
+				$link=HHtml::urlEscape($component->defaultAction.'/'.$pkValue);
 				$class.=' pointer';
 				echo ' onclick="S.redirect(\''.$link.'\')"';
 			}else $link=false;

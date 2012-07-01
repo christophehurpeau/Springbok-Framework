@@ -5,7 +5,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 
 (function($){
 	var readyCallbacks=$.Callbacks(),loadedRequired={};
-	S.app={
+	window.App={
 		name:'',version:1,
 		header:'',footer:true,page:0,
 		
@@ -21,7 +21,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 		},
 		
 		run:function(){
-			S.app.init();
+			App.init();
 			readyCallbacks.fire();
 			S.ajax.load(S.history.getFragment());//TODO duplicate if #
 		},
@@ -57,7 +57,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
 			del:function(){}
 		}
 	};
-	S.ready=S.app.ready;
+	S.ready=App.ready;
 }(jQuery));
 
 function FatalError(error){
@@ -78,13 +78,13 @@ includeCore('springbok.date');
 includeCore('springbok.ajax');
 includeCore('springbok.storage');
 
-S.app.load=S.ajax.load=function(url){
+App.load=S.ajax.load=function(url){
 	if(url.sbStartsWith(basedir)) url = url.substr(basedir.length);
 	try{
 		var route=S.router.find(url);
 		//console.log(route);
 		S.history.navigate(url);
-		S.app.require('c/'+route.controller);
+		App.require('c/'+route.controller);
 		C[route.controller].dispatch(route);
 	}catch(err){
 		if(err instanceof S.Controller.Stop) return;
@@ -92,5 +92,6 @@ S.app.load=S.ajax.load=function(url){
 			
 		}
 		console.log("APP : catch error :",err);
+		throw err;
 	}
 };

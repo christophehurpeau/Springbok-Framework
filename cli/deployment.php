@@ -86,9 +86,9 @@ include CORE.'cli.php';");
 		file_put_contents($tmpfname,$indexContentStopped);
 		echo UExec::copyFile($tmpfname,$argv['target'].'index.php',$options['ssh']);
 		
-		if(!empty($argv['entrances']))
-			foreach($argv['entrances'] as $entrance) 
-				echo UExec::copyFile($tmpfname,$argv['target'].$entrance.'.php',$options['ssh']);
+		if(!empty($argv['entries']))
+			foreach($argv['entries'] as $entry) 
+				echo UExec::copyFile($tmpfname,$argv['target'].$entry.'.php',$options['ssh']);
 		
 		break;
 	case 'core':
@@ -129,9 +129,9 @@ if($argv['type'] == 'app'){
 	file_put_contents($tmpfname,$indexContentStarted);
 	echo UExec::copyFile($tmpfname,$argv['target'].'index.php',$options['ssh']);
 	
-	if(!empty($argv['entrances']))
-		foreach($argv['entrances'] as $entrance) 
-			echo UExec::copyFile($tmpfname,$argv['target'].$entrance.'.php',$options['ssh']);
+	if(!empty($argv['entries']))
+		foreach($argv['entries'] as $entry) 
+			echo UExec::copyFile($tmpfname,$argv['target'].$entry.'.php',$options['ssh']);
 	
 	/* UPDATE CRON */
 	

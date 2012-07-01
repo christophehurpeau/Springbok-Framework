@@ -16,7 +16,7 @@ class COAuthWrap{
 		debugVar($callback);
 		return $this->urlAuthorize. http_build_query(array(
 			'wrap_client_id' => $this->key,
-			'wrap_callback'	=> $callback===NULL ? urlencode("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) : HHtml::url($callback,true,false),
+			'wrap_callback'	=> $callback===NULL ? urlencode("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']) : HHtml::urlEscape($callback),
 			'wrap_client_only' => 'true'
 		)); 
 	}

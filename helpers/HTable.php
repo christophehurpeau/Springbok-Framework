@@ -29,7 +29,7 @@ class HTable{
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
-				$href=HHtml::url(CRoute::getAll(),false,true).'?';
+				$href=HHtml::url(CRoute::getAll()).'?';
 				if(!empty($_POST)) $href.=http_build_query($_POST,'','&').'&';
 				if(!empty($_GET)){
 					$get=$_GET;
@@ -133,7 +133,7 @@ class HTable{
 					$defaultActionUrl=$callback($pkValue,$model);
 				}
 				$class.=' pointer';
-				echo ' onclick="S.redirect(\''.HHtml::url($defaultActionUrl,false,true).'\')"'; //event.target.nodeName
+				echo ' onclick="S.redirect(\''.HHtml::urlEscape($defaultActionUrl).'\')"'; //event.target.nodeName
 			}
 			echo (empty($class)?'':' class="'.trim($class).'"').'>';
 			foreach($component->fields as $i=>$field){

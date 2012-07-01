@@ -7,8 +7,8 @@ class CRoute{
 	private static $_routes,$_langs,
 		$all,$controller,$action,$params,$ext;
 
-	public static function init($prefix,$suffix){
-		$routes=App::configArray('routes'.$suffix);
+	public static function init(/* DEV */$prefix/* /DEV */){
+		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];
 		self::$_langs=$routes['langs'];
 		/* DEV */self::$_prefix=$prefix;/* /DEV */
@@ -46,7 +46,7 @@ class CRoute{
 
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
-		foreach(self::$_routes as $route){
+		foreach(self::$_routes[Springbok::$scriptname] as $route){
 			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['en'][0]).'$/Ui',$all,$matches)){
 				/*$ext=isset($matches['ext'])?array_pop($matches):NULL;
 				unset($matches[0],$matches['ext']);
@@ -109,15 +109,12 @@ class CRoute{
 		}
 		return false;
 	}
-	public static function getLink($params){
-		return is_array($params) ? self::getArrayLink($params) : self::getStringLink($params);
-	}
 	
-	public static function getArrayLink(&$params){
+	public static function getArrayLink($entry,$params){
 		$plus='';
 		$link=array_shift($params);
 		if($link !==true){
-			$route=self::$_routes[$link];
+			$route=self::$_routes[$entry][$link];
 			/* DEV */
 			if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
 			/* /DEV */
@@ -132,16 +129,16 @@ class CRoute{
 		unset($params['ext'],$params['?'],$params['#'],$params['lang']);
 		
 		if(empty($params)) return $route[$lang][1].$plus;
-		$url=($link===true?self::getStringLink($params[0]):vsprintf($route[CLang::get()][1],$params));
+		$url=($link===true?self::getStringLink($entry,$params[0]):vsprintf($route[CLang::get()][1],$params));
 		return /* DEV */self::$_prefix./* /DEV */($url==='/'?'/':rtrim($url,'/')).$plus;
 	}
 	
-	public static function getStringLink(&$params){
+	public static function getStringLink($entry,$params){
 		$route=explode('/',trim($params,'/'),3);
 		$controller=$route[0];
 		$action=isset($route[1])?$route[1]:self::DEFAULT_ACTION;
 		$params=isset($route[2])?$route[2]:null;
-		$lang=CLang::get(); $route=self::$_routes['/:controller(/:action/*)?'];
+		$lang=CLang::get(); $route=self::$_routes[$entry]['/:controller(/:action/*)?'];
 		
 		if($action==self::DEFAULT_ACTION)
 			$froute='/'.self::translate($controller,$lang);
