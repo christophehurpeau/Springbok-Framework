@@ -222,6 +222,7 @@ function render($file,$vars,$return=false){
 /* PROD */
 //backward compatibility
 function notFoundIfFalse($v){if($v===false)notFound();}
+function e/* space */(&$var,$else){ return empty($var) ? $else : $var; }
 /* /PROD */
 
 function displayJson($content){

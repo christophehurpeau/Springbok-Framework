@@ -21,7 +21,7 @@ class ViewFile extends PhpFile{
 			if(!endsWith($matches[2],'.php')) $matches[2].='.php';
 			if(empty($matches[1])){
 				if(substr($matches[2],0,6)==='VIEWS/') $filename=$viewsFolder.substr($matches[2],6);
-				elseif($matches[2][0]==='/') $filename=$enhanced->getAppDir().substr($matches[2],1);
+				elseif($matches[2][0]==='/') $filename=$enhanced->getAppDir().'src/'.substr($matches[2],1);
 				else $filename=$currentPath.'/'.$matches[2];
 			}else{
 				if($matches[1]==='Plugin'){
