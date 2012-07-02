@@ -59,11 +59,11 @@ class ScssFile extends EnhancerFile{
 			'backface-visibility'=>array('-moz-backface-visibility','-webkit-backface-visibility')
 		);
 		foreach($rules as $rule=>$copyRules){
-			$this->_srcContent=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function(&$m) use(&$rule,&$copyRules){
+			$this->_srcContent=preg_replace_callback('/'.preg_quote($rule).':\s*([^;]+);/',function($m) use(&$rule,&$copyRules){
 				$return='';
 				foreach($copyRules as $copyRule) $return.=$copyRule.':'.$m[1].';';
-				if(in_array($rule,array('border-radius','border-top-right-radius','border-top-left-radius','border-bottom-right-radius',
-					'border-bottom-left-radius','box-shadow'))) $return.='@extend .iepie;';
+				/*if(in_array($rule,array('border-radius','border-top-right-radius','border-top-left-radius','border-bottom-right-radius',
+					'border-bottom-left-radius','box-shadow'))) $return.='@extend .iepie;';*/
 				return $return.$m[0];
 			},$this->_srcContent);
 		}
