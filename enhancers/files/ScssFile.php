@@ -102,7 +102,10 @@ class ScssFile extends EnhancerFile{
 		}
 		unlink($tmpfname);
 		chmod($dest,0777);
-		CssFile::executeCompressor($this->enhanced->getTmpDir(),file_get_contents($dest),$dest);
+		$content=file_get_contents($dest);
+		$content=preg_replace_callback('/filter\:progid\:DXImageTransform\.Microsoft\.gradient\(startColorstr=(?:\'|\")#([0-9A-F]{3,6})(?:\'|\"),endColorstr=(?:\'|\")#([0-9A-F]{3,6})(?:\'|\")([^)]*)\)/',
+				function($m){return "filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#".(strlen($m[1])===3?$m[1].$m[1]:$m[1])."',endColorstr='#".(strlen($m[2])===3?$m[2].$m[2]:$m[2])."'".$m[3].')'; },$content);
+		CssFile::executeCompressor($this->enhanced->getTmpDir(),$content,$dest);
 		
 		if(!$destination){
 			$destination=file_get_contents($dest);

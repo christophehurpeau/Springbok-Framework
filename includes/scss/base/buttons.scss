@@ -13,7 +13,7 @@ $BUTTON_TEXTSHADOW:#555 !default;
 input.submit,button,.button{
 	@include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
 	border-radius:3px;
-	box-shadow:0 1px 1px rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.4);
+	box-shadow:0 1px 1px rgba(255,255,255,0.2) inset, 0 1px 2px rgba(0,0,0,0.4);
 	border:$BUTTON_BORDER;
 	color:$BUTTON_COLOR;
 	text-shadow:$BUTTON_TEXTSHADOW;

@@ -14,10 +14,11 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .float_right{float:right}
 .float_left{float:left}
 .fa_right{float:right;text-align:right}
-.context{ overflow:auto; overflow-x: hidden; position:relative }
+.context{ overflow:auto; overflow-x:hidden; position:relative }
 .nowrap,.w1{white-space:nowrap}
 .hidden{display:none}
-.hiddenText{text-indent:-99999px}
+.hiddenText{text-indent:-99999px; *text-indent:0; *font-size:0; *line-height:0; *overflow:hidden; }
+
 .smallinfo{font-size:8pt}
 .biginfo{font-size:11pt}
 .aposTR{position:absolute;top:0;right:0}
@@ -78,7 +79,7 @@ span.img,span.icon{display:block;display:inline-block}
   display: table-cell;
   vertical-align: middle;
 }
-a.aicon{display: inline-block;text-decoration:none;}
+a.aicon{display:inline-block;text-decoration:none;}
 
 pre{
   text-align:left;margin:0;overflow:auto;

@@ -7,7 +7,7 @@
 }
 
 .iconWrap div{height:30px;padding-left:28px}
-.icon{width:16px;height:16px;margin:2px 3px 2px 0;@extend .hiddenText;}/* pourquoi pas en display inline-block ? */
+.icon{width:16px;height:16px;margin:2px 3px 2px 0;@extend .hiddenText;font-size:0;}/* display inline-block dans global.scss */
 li .icon,.button .icon{margin:0 2px 0 0}
 
 .imgLoading{background:url('../img/ajax-loader.gif');width:16px;height:16px}
