@@ -17,13 +17,13 @@ class CTable{
 
 	public function __construct($query){
 		$this->modelName=$query->getModelName();
-		$this->query=&$query;
+		$this->query=$query;
 	}
 	
 	
 	public function execute($exportOutput=null){
 		if($this->executed===true) return; $this->executed=true;
-		$modelName=&$this->modelName;
+		$modelName=$this->modelName;
 		$this->queryFields=$fields=$this->query->getFields();
 		if($fields===NULL) $fields=$modelName::$__modelInfos['colsName'];
 		

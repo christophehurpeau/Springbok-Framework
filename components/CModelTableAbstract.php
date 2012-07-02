@@ -2,15 +2,15 @@
 class CModelTableAbstract{
 	protected $query;
 	public function __construct($query){
-		$this->query=&$query;
+		$this->query=$query;
 	}
 	
 	public $fields,$modelFields,$fieldsEditable,$translateField=true,
 		$transformers=array('csv'=>'TCsv','xls'=>'TXls');
 	
-	public function fields($fields){$this->fields=&$fields; return $this; }
+	public function fields($fields){ $this->fields=$fields; return $this; }
 	public function doNotTranslateFields(){ $this->translateField=false; return $this; }
-	public function fieldsEditable($fields){ $this->fieldsEditable=&$fields; return $this; }
+	public function fieldsEditable($fields){ $this->fieldsEditable=$fields; return $this; }
 	
 	public function actionClick($action='view'){ return $this; }
 	public function actions(){ return $this; }

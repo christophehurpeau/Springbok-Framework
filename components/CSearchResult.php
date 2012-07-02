@@ -6,7 +6,7 @@ class CSearchResult{
 		$this->query=self::trim($query);
 		
 		$page=1;
-		CSession::set('search',array('query'=>&$query,'page'=>&$page));
+		CSession::set('search',array('query'=>$query,'page'=>$page));
 		$search->set($query);
 		
 		Controller::setForView('search',$search);

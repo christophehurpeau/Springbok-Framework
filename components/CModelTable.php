@@ -99,7 +99,7 @@ class CModelTable extends CModelTableAbstract{
 		if($this->query->isFiltersAllowed()){
 			$formId=uniqid();
 			$form=HForm::create(NULL,array('id'=>$formId,'rel'=>'content'),false,false);
-		}
+		}else $form=null;
 		
 		
 		if($this->query->isExportable()){
@@ -126,9 +126,9 @@ class CModelTable extends CModelTableAbstract{
 				$href=HHtml::urlEscape(array(true,CRoute::getAll(),'?'=>$hrefQuery));
 			}
 			echo $pager='<div class="pager">'.HPagination::createPager($pagination->getPage(),$pagination->getTotalPages(),
-				$this->query->isFiltersAllowed()?function($page) use(&$idPage,&$formId){
+				$this->query->isFiltersAllowed()?function($page){
 					return ' href="#" onclick="return changePage('.$page.');"';
-				}:function($page) use(&$href){
+				}:function($page) use($href){
 					return ' href="'.$href.'page='.$page.'"';
 				},3,3,null,null).'</div>';
 		}else $pager='';
@@ -145,7 +145,7 @@ class CModelTable extends CModelTableAbstract{
 			$this->controller=lcfirst(CRoute::getController());
 	}
 
-	protected function callTransformer($transformerClass,&$results,&$form=null){
+	protected function callTransformer($transformerClass,$results,$form=null){
 		$transformer=new $transformerClass($this);
 		if(!$this->query->isFiltersAllowed() && empty($results)){
 			$transformer->startBody();
