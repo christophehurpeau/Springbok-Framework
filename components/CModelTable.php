@@ -10,32 +10,42 @@ class CModelTable extends CModelTableAbstract{
 	public function controller($controller){$this->controller=&$controller; return $this; }
 	
 	public function setActionsRUD($iconPrefix='',$confirm=true){
-		$this->actionClick='view';
-		$this->rowActions=array( self::actionView($iconPrefix), self::actionEdit($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
+		self::actionView($iconPrefix);
+		self::actionEdit($iconPrefix);
+		self::actionDelete($iconPrefix,$confirm);
 		return $this;
 	}
 	public function setActionsRU($iconPrefix=''){
-		$this->actionClick='view';
-		$this->rowActions=array( self::actionView($iconPrefix), self::actionEdit($iconPrefix) );
+		self::actionView($iconPrefix);
+		self::actionEdit($iconPrefix);
 		return $this;
 	}
 	public function setActionsUD($iconPrefix='',$confirm=true){
 		$this->actionClick='edit';
-		$this->rowActions=array( self::actionEdit($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
+		self::actionEdit($iconPrefix);
+		self::actionDelete($iconPrefix,$confirm);
 		return $this;
 	}
 	public function setActionsRD($iconPrefix='',$confirm=true){
-		$this->actionClick='view';
-		$this->rowActions=array( self::actionView($iconPrefix), self::actionDelete($iconPrefix,$confirm) );
+		self::actionView($iconPrefix);
+		self::actionDelete($iconPrefix,$confirm);
 		return $this;
 	}
-	private function actionView($iconPrefix){ return array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View')); }
-	private function actionEdit($iconPrefix){ return array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify')); }
-	private function actionDelete($iconPrefix,$confirm){
+	public function actionView($iconPrefix=''){
+		$this->actionClick='view';
+		$this->rowActions[]=array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View'));
+		return $this;
+	}
+	public function actionEdit($iconPrefix=''){
+		$this->rowActions[]=array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify'));
+		return $this;
+	}
+	public function actionDelete($iconPrefix='',$confirm=true){
 		$options=array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete'));
 		if($confirm===true) $options['data-confirm']="1";
 		elseif($confirm) $options['data-confirm']=$confirm;
-		return $options;
+		$this->rowActions[]=$options;
+		return $this;
 	}
 	
 	public function render($title,$add=false,$layout=null){
