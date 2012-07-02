@@ -139,7 +139,7 @@ class CImages{
 		return self::add($tmpfname,$image,$toJpeg,$folderPrefix);
 	}
 	
-	public static function add($tmpFile,&$image,$toJpeg=true,$folderPrefix=''){
+	public static function add($tmpFile,$image,$toJpeg=true,$folderPrefix=''){
 		if(!($image_params = getimagesize($tmpFile)))
 			throw new Exception(_tC('Invalid image'));
 		list($width,$height,$type)=$image_params;
