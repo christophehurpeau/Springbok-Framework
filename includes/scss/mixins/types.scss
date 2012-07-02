@@ -19,14 +19,14 @@
 	}
   
   .block#{$i},#page .block#{$i},input.type#{$i}.submit,button.type#{$i},.button.type#{$i},.button.type#{$i}:hover,.button.type#{$i}:focus{
-    @include background($background);
+    @include background($background,true);
     @include border($border);
   }
 }
 
 @mixin typeHover($i,$background,$color:false,$border:false){
  #page .clickable .block#{$i}:hover,#page .clickable .block#{$i}:hover,input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
-    @include background($background);
+    @include background($background,true);
     @if $color{ color:$color; }
     @include border($border);
   }
@@ -37,7 +37,7 @@
 
 @mixin typeFocus($i,$background,$color:false,$border:false){
   #page .clickable .block#{$i}:focus,#page .clickable .block#{$i}:focus,input.type#{$i}.submit:focus,button.type#{$i}:focus,.button.type#{$i}:focus{
-    @include background($background);
+    @include background($background,true);
     @if $color{ color:$color; }
     @include border($border);
   }
@@ -48,7 +48,7 @@
 
 @mixin typeBlock($i,$background,$color:false,$border:false,$borderRadius:false){
   .block#{$i},div .block#{$i},#page .clickable .block#{$i}{
-    @include background($background);
+    @include background($background,true);
     @if $color{ color:$color; }
     @include border($border);
     @if $borderRadius{ border-radius:$borderRadius; }
@@ -57,7 +57,7 @@
 
 @mixin typeButton($i,$background,$color:false,$border:false,$textShadow:false,$boxShadow:false,$borderRadius:false){
   input.type#{$i}.submit,button.type#{$i},.button.type#{$i},input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
-    @include background($background);
+    @include background($background,true);
     @if $color{ color:$color; }
     @include border($border);
     @if $textShadow{ text-shadow:$border; }
@@ -67,7 +67,7 @@
 }
 @mixin typeButtonHover($i,$background,$color:false,$border:false,$textShadow:false,$boxShadow:false,$borderRadius:false){
   input.type#{$i}.submit:hover,button.type#{$i}:hover,.button.type#{$i}:hover,.button.type#{$i}:focus{
-    @include background($background);
+    @include background($background,true);
     @if $color{ color:$color; }
     @include border($border);
     @if $textShadow{ text-shadow:$border; }

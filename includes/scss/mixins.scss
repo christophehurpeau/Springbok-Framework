@@ -40,9 +40,9 @@
   border-bottom-left-radius: $length;
 }
 
-@mixin background($background){
+@mixin background($background,$forceResetIeFilter:false){
   @if type-of($background)=='list'{ @include bg-gradient-tb(nth($background,1),nth($background,2)); }
-  @else if $background{ background:$background; }
+  @else if $background{ background:$background; @if $forceResetIeFilter {filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);} }
 }
 
 @mixin border($border){
@@ -55,7 +55,7 @@
   @if $top==true{ $top:lighten($bottom,$amount) }
   @else if $bottom==true{ $bottom:lighten($top,$amount) }
   @if lightness($top) > lightness($bottom){ background:$top; } @else { background:$bottom; } /* Old browsers */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$top}',endColorstr='#{$bottom}',GradientType=0); /* IE6-9 */
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$top}',endColorstr='#{$bottom}',GradientType=0); /* IE6-9 */
   background: -moz-linear-gradient(top, $top 0%, $bottom 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$top), color-stop(100%,$bottom)); /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(top, $top 0%,$bottom 100%); /* Chrome10+,Safari5.1+ */
