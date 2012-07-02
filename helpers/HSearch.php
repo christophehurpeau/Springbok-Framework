@@ -6,4 +6,8 @@ abstract class HSearch{
 		$this->search=$search;
 		$this->result=$result;
 	}
+	
+	public function pager(){
+		return HPagination::simple($this->result->pagination);
+	}
 }

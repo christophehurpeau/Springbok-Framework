@@ -14,9 +14,12 @@ class CSearchResult{
 		$this->pagination=$search->createPagination()->execute();
 		$page=$this->pagination->getPage();
 		
-		Controller::setForView('hSearch',new AHSearch($search,$this));
-		
+		$this->afterPagination($search);
 		$this->afterSearch($search);
+	}
+	
+	public function afterPagination($search){
+		Controller::setForView('hSearch',new AHSearch($search,$this));
 	}
 	
 	public function afterSearch($search){
