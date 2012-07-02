@@ -125,11 +125,14 @@ window.S={
 	},
 	
 	tableClick:function(){
-		$('table.pointer tr').off('click').each(function(i,elt){
+		this.eltClick('table.pointer tr');
+	},
+	eltClick:function(selector){
+		$(selector).off('click').each(function(i,elt){
 			elt=$(elt);
 			var trTimeout,href=elt.attr('rel');
 			elt.on('click',function(){trTimeout=setTimeout(function(){S.redirect(href)},250);});
-			elt.find('a').off('click').on('click',function(e){ clearTimeout(trTimeout); e.stopPropagation(); e.preventDefault();
+			elt.find('a[href]:not([href="#"])').off('click').on('click',function(e){ clearTimeout(trTimeout); e.stopPropagation(); e.preventDefault();
 					var a=$(this),confirmMessage=a.data('confirm'); if(!confirmMessage || confirm(confirmMessage=='1' ? i18nc['Are you sure ?'] : confirmMessage)) S.redirect(a.attr('href')); })
 		});
 		
