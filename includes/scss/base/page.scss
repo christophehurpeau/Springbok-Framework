@@ -38,7 +38,7 @@ body{
 	font: normal 9.5pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 	@include background($BODY_BACKGROUND); color:$BODY_COLOR;
 	margin:0;padding:0;
-	@include webkitAntialiased;
+	/* @include webkitAntialiased; */
 }
 input,textarea{
 	font: normal 9pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
@@ -100,7 +100,6 @@ footer,div.footer{
 	text-align:center;
 	width:100%;
 	clear:both;
-	a{text-decoration:none}
 }
 @if $PAGE_100{
 	footer{
@@ -108,6 +107,8 @@ footer,div.footer{
 		bottom:0;
 	}
 }
+
+footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 
 #breadcrumbs{
 	@if $BREADCRUMBS_BACKGROUND{ margin:3px 3px 5px;padding:2px 3px 3px; background:$BREADCRUMBS_BACKGROUND; }
