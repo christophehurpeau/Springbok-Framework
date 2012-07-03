@@ -33,7 +33,7 @@ class UPhp{
 		elseif(is_numeric($var)) $content.= $var;
 		elseif(is_bool($var)) $content.= $var ? 'true' : 'false';
 		elseif(is_null($var)) $content.='null';
-		else die('ERROR - UNKNOWN : '.print_r($var,true));
+		else throw new Exception('exportCode addVar - UNKNOWN : '.print_r($var,true));
 	}
 	
 	public static function exportString($string){

@@ -115,8 +115,8 @@ define('APP', __DIR__.'/dev/');";
 			}
 		//}
 		if($this->enhanced->configNotEmpty('plugins')){
-			$this->enhanced->setType('plugin');
 			foreach($this->enhanced->config['plugins'] as &$plugin){
+				$this->enhanced->setType('plugin',$plugin[1]);
 				$pluginPath=$this->enhanced->pluginPath($plugin);
 				if(!isset($plugin[2]))
 					$this->recursiveDir($pluginPath,new Folder($pluginPath), $dev->getPath(), $prod->getPath(),$this->enhanced->getAppDir().'src/');

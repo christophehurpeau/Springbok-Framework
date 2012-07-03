@@ -117,9 +117,9 @@ class HTable{
 		echo $pager;
 	}
 
-	protected static function displayResults(&$component,&$results){
+	protected static function displayResults($component,$results){
 		$iRow=0;
-		foreach($results as $key=>&$model){
+		foreach($results as $key=>$model){
 			if(isset($component->rowActions) || $component->defaultAction) $pkValue=$model->_getPkValue();
 			$class=$iRow++%2 ? 'alternate' : '';
 			echo '<tr';
@@ -151,7 +151,7 @@ class HTable{
 		}
 	}
 
-	protected static function displayValue(&$field,&$value,&$obj){
+	protected static function displayValue($field,$value,$obj){
 		$attributes=isset($field['attributes'])?$field['attributes']:array();
 				
 		if(!isset($attributes['class'])){
@@ -163,7 +163,7 @@ class HTable{
 		echo HHtml::tag('td',$attributes,static::getDisplayableValue($field,$value,$obj),$field['escape']);
 	}
 	
-	public static function getDisplayableValue(&$field,&$value,&$obj){
+	public static function getDisplayableValue($field,$value,$obj){
 		if(isset($field['callback'])){
 			if($value===null) $value=false;
 			return call_user_func($field['callback'],$value);
@@ -177,12 +177,12 @@ class HTable{
 		return $value;
 	}
 	
-	public static function getValueFromModel(&$model,&$field,&$i){
+	public static function getValueFromModel($model,$field,$i){
 		return isset($field['key']) ? $model->_get($field['key']) : false;
 	}
 	
 	
-	public static function export($type,&$component,&$fields,&$exportOutput,$filename,$title){
+	public static function export($type,$component,$fields,$exportOutput,$filename,$title){
 		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache
 		$transformerClass=$component->transformers[$type];
 		if($exportOutput===null){
@@ -195,12 +195,12 @@ class HTable{
 		$transformer=new $transformerClass($title);
 		$thisClass=get_called_class();
 		
-		$component->callback(function(&$f) use(&$component,&$transformer,&$fields){
+		$component->callback(function($f) use($component,$transformer,$fields){
 			$component->modelFields=$f;
 			if($component->fields !== NULL) $component->_setFields($component->fields,false,true);
 			else $component->_setFields($fields,true,true);
 			$transformer->titles($component->fields);
-		},function(&$row) use(&$component,&$transformer,&$thisClass){
+		},function($row) use($component,$transformer,$thisClass){
 			$transformer->row($row,$component->fields,$thisClass);
 		});
 		

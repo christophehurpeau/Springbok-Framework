@@ -57,7 +57,7 @@ class ConfigFile extends PhpFile{
 				$fileLang=$this->enhanced->getAppDir().'db/'.substr($configname,5).'.db';
 				if(file_exists($fileLang)){
 					$db=new DBSQLite(false,array( 'file'=>$fileLang,'flags'=>SQLITE3_OPEN_READWRITE ));
-					$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' )');
+					$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$this->enhanced->getName().'.%" )');
 					$configArray=include $this->srcFile()->getPath();
 					foreach($configArray as $key=>$value){
 						$db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'a\','.$db->escape($value).')');
@@ -171,13 +171,8 @@ class ConfigFile extends PhpFile{
 							$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
 					}
 				
-				if($this->enhanced->configNotEmpty('plugins'))
-					foreach($this->enhanced->config['plugins'] as $key=>$plugin){
-						$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1];
-						if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$configname.'.php')))
-							$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
-					}
-				
+				$configArray=$this->mergeWithPluginsConfig('_',$configArray);
+				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
 				$configArray['models_infos']=$configArray['autoload_default'].'infos/';
 			}elseif($this->enhanced->isPlugin()){
 				return;
@@ -196,10 +191,21 @@ class ConfigFile extends PhpFile{
 		}else{
 			if(substr(file_get_contents($this->srcFile()->getPath()),0,12)=='<?php return'){
 				$configArray=include $this->srcFile()->getPath();
+				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
 				$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 			}else parent::processEhancing($devFile,$prodFile,$justDev);
 		}
 		//else parent::processEhancing($devFile,$prodFile,$justDev);
+	}
+
+	private function mergeWithPluginsConfig($configname,$configArray){
+		if($this->enhanced->configNotEmpty('plugins'))
+			foreach($this->enhanced->config['plugins'] as $key=>$plugin){
+				$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1];
+				if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$configname.'.php')))
+					$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
+			}
+		return $configArray;
 	}
 
 	private function write(&$configname,$content,&$devFile,&$prodFile){

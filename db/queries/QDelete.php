@@ -19,12 +19,13 @@ abstract class QDelete extends AQuery{
 		$this->where=&$conds;
 		return $this;
 	}
-	public function where($where){$this->where=&$where;return $this;}
-	public function orderBy($orderBy){$this->orderBy=&$orderBy;return $this;}
+	public function where($where){$this->where=$where;return $this;}
+	public function addCondition($key,$value){$this->where[$key]=$value;return $this;}
+	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
 	/** (limit) or ($limit, down) */
 	public function limit($limit,$down=0){
 		if($down>0) $this->limit=((int)$down).','.((int)$limit);
-		else $this->limit=&$limit;
+		else $this->limit=$limit;
 		return $this;
 	}
 	public function limit1(){$this->limit=1;return $this;}

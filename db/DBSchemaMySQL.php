@@ -29,7 +29,7 @@ class DBSchemaMySQL extends DBSchema{
 		$sql='ALTER TABLE '.$this->db->formatTable($this->tableName);
 		$prev=false;
 		foreach($this->modelInfos['columns'] as $colname=>&$coldef){
-			$sql.=' MODIFY '.$this->db->formatColumn($colname).' '.self::_getColumnDef($coldef).($coldef['autoincrement']?' PRIMARY KEY':'')
+			$sql.=' MODIFY '.$this->db->formatColumn($colname).' '.self::_getColumnDef($coldef)/*.($coldef['autoincrement']?' PRIMARY KEY':'')*/
 								.' '.($prev?'AFTER '.$this->db->formatColumn($prev):'FIRST').', ';
 			$prev=$colname;
 		}

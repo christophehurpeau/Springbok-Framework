@@ -1,6 +1,6 @@
 <?php
 class Enhanced{
-	private $appDir,$type;
+	private $appDir,$type,$name;
 	public $config,$oldDef=array(),$newDef=array(),$warnings=array(),$errors=array();
 	
 	public function __construct($type,&$dirname){
@@ -15,8 +15,9 @@ class Enhanced{
 	public function isPlugin(){return $this->type==='plugin';}
 	public function isCore(){return $this->type==='core';}
 	public function isUnknown(){return $this->type==='?';}
+	public function getName(){ return $this->name; }
 
-	public function setType($type){ $this->type=&$type; }
+	public function setType($type,$name=''){ $this->type=$type; $this->name=$name; }
 	
 	private $fileDef;
 	public function loadFileDef($force){

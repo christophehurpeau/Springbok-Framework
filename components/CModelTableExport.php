@@ -29,13 +29,13 @@ class CModelTableExport extends CModelTableAbstract{
 		$transformer=new $transformerClass($this);
 		$transformer->startHead();
 		
-		$component=&$this; $query=&$this->query->noCalcFoundRows();
-		$query->callback(function(&$f) use(&$component,&$transformer,&$query){
+		$component=$this; $query=$this->query->noCalcFoundRows();
+		$query->callback(function($f) use($component,$transformer,$query){
 			$component->_setFields(true);
 			$transformer->titles($component->fields,$query->getFields());
 			$transformer->endHead();
 			$transformer->startBody();
-		},function(&$row) use(&$component,&$transformer){
+		},function($row) use($component,$transformer){
 			$transformer->row($row,$component->fields);
 		});
 		$transformer->end();
