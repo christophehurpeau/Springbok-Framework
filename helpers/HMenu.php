@@ -1,6 +1,6 @@
 <?php
 class HMenu{
-	public static $tagName='nav',$separator='-';
+	public static $tagName='nav',$separatorTop='-',$separator='-----------';
 	
 	
 	public static function top($links,$options=array()){
@@ -27,7 +27,7 @@ class HMenu{
 		if(self::$tagName!=='ul') $res.=HHtml::openTag('ul',array());
 		foreach($links as $title=>$value){
 			if(is_int($title)){
-				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),self::$separator); continue; }
+				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
 				$title=$value['title'];
 			}
 			
