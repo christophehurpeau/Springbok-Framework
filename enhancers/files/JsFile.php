@@ -88,7 +88,7 @@ class JsFile extends EnhancerFile{
 			$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
 			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			
-			if(substr($this->fileName(),0,6)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
+			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
 			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$devFile->getPath());
 			
 			
@@ -121,7 +121,7 @@ class JsFile extends EnhancerFile{
 			$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
 			
 			
-			if(substr($this->fileName(),0,6)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$prodFile->getPath(),true);
+			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$prodFile->getPath(),true);
 			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$prodFile->getPath());
 			
 			
