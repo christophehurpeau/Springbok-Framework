@@ -125,7 +125,7 @@ window.S={
 	},
 	
 	tableClick:function(){
-		this.eltClick('table.pointer tr');
+		S.eltClick('table.pointer tr');
 	},
 	eltClick:function(selector){
 		$(selector).off('click').each(function(i,elt){
