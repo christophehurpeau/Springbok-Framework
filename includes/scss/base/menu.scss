@@ -29,8 +29,6 @@ $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND:false !default;
 $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top:false !default;
 $HEADER_MENU_A_CURRENT_HOVER_COLOR:false !default;
 $HEADER_MENU_A_CURRENT_HOVER_SHADOW:false !default;
-$VARIABLE_MENU_COLOR:false !default;
-$VARIABLE_MENU_CURRENT_BACKGROUND:false !default;
 
 nav{
 	margin:2px 0; padding:0;
@@ -128,20 +126,28 @@ div.header nav li a.current:hover{
 	@elseif $HEADER_MENU_A_CURRENTHOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENTHOVER_BACKGROUND; }
 }
 
+$VARIABLE_MENU_COLOR:false !default;
+$VARIABLE_MENU_BACKGROUND:#CCC !default;
+$VARIABLE_MENU_CURRENT_COLOR:false !default;
+$VARIABLE_MENU_CURRENT_BACKGROUND:false !default;
+$VARIABLE_MENU_RADIUS_BOTTOM_RIGHT:10px 25px !default;
+$VARIABLE_MENU_RADIUS_TOP_LEFT:10px 25px !default;
+
 #page nav.top{padding-left:5px;}
 #page nav.top{margin-bottom:0}
-#page nav.top li{margin-bottom:0; @if $VARIABLE_MENU_COLOR{ color:$VARIABLE_MENU_COLOR; } }
+#page nav.top li{margin-bottom:0;}
 @if $VARIABLE_MENU_COLOR{ #page nav.top li a:hover{color:$VARIABLE_MENU_COLOR} }
 #page nav.top li a{
 	padding:2px 6px 3px;
-	border-bottom-right-radius:10px 25px;
-	border-top-left-radius:10px 25px;
-	background:#CCC;
+	@if $VARIABLE_MENU_COLOR{ color:$VARIABLE_MENU_COLOR; }
+	@if $VARIABLE_MENU_RADIUS_BOTTOM_RIGHT { border-bottom-right-radius:$VARIABLE_MENU_RADIUS_BOTTOM_RIGHT; }
+	@if $VARIABLE_MENU_RADIUS_TOP_LEFT { border-top-left-radius:$VARIABLE_MENU_RADIUS_TOP_LEFT; }
+	@if $VARIABLE_MENU_BACKGROUND{ @include background($VARIABLE_MENU_BACKGROUND); }
 }
 #page nav.top li a.current{
 	position: relative; z-index: 2; /* couvre l'ombre, si existe, du div suivant */
-	@if $VARIABLE_MENU_CURRENT_BACKGROUND{ background:$VARIABLE_MENU_CURRENT_BACKGROUND; }
-	color:$VARIABLE_MENU_CURRENT_COLOR;
+	@if $VARIABLE_MENU_CURRENT_BACKGROUND{ @include background($VARIABLE_MENU_CURRENT_BACKGROUND); }
+	@if $VARIABLE_MENU_CURRENT_COLOR{ color:$VARIABLE_MENU_CURRENT_COLOR; }
 }
 
 #page .fixed nav{padding:5px 10px;}
