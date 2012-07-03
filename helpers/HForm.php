@@ -1,7 +1,7 @@
 <?php
 class HForm{
-	public static function &Post(){ HElementForm::Post(); }
-	public static function &Get(){ HElementForm::Get(); }
+	public static function Post(){ return HElementForm::Post(); }
+	public static function Get(){ return HElementForm::Get(); }
 	
 	
 	/* OLD WAY */
@@ -35,10 +35,10 @@ class HForm{
 	
 	private $modelName,$name,$method,$tagContainer,$defaultLabel;
 	public function __construct($modelName,$name,$method,$tagContainer,$defaultLabel,$setValuesFromVar){
-		$this->method=&$method;
+		$this->method=$method;
 		$this->setModelName($modelName,$name,$setValuesFromVar);
-		$this->tagContainer=&$tagContainer;
-		$this->defaultLabel=&$defaultLabel;
+		$this->tagContainer=$tagContainer;
+		$this->defaultLabel=$defaultLabel;
 	}
 	
 	private function _name($name){
@@ -47,7 +47,7 @@ class HForm{
 	
 	public function setModelName($modelName=NULL,$name=NULL,$setValuesFromVar=true){
 		if($name===NULL && $modelName !== NULL) $name=lcfirst($modelName);
-		$this->modelName=&$modelName;$this->name=&$name;
+		$this->modelName=$modelName;$this->name=$name;
 
 		if($setValuesFromVar && $name && Controller::_isset($name)){
 			$val=Controller::get($name);
@@ -64,7 +64,7 @@ class HForm{
 	}
 	
 	public function all($attributes=array(),$containerAttributes=array()){
-		$modelName=&$this->modelName;
+		$modelName=$this->modelName;
 		foreach($modelName::$__PROP_DEF as $name=>&$def){
 			$infos=$modelName::$__modelInfos['columns'][$name];
 			if(! $infos['autoincrement'] && !in_array($name,array('created','updated','modified'))){
@@ -77,7 +77,7 @@ class HForm{
 		foreach($fields as &$field) $this->autoField($name,$attributes,$containerAttributes);
 	}
 	public function autoField($name,$attributes=array(),$containerAttributes=array(),$def=null){
-		$modelName=&$this->modelName;
+		$modelName=$this->modelName;
 		if($def===null) $def=&$modelName::$__PROP_DEF[$name];
 		/*if($infos['notnull']===false){
 			$attr=array('id'=>'checkboxCRUD'.$modelName.$name);
@@ -113,13 +113,13 @@ class HForm{
 		return '</fieldset>';
 	}
 	
-	public function &text($name,$attributes=array(),$containerAttributes=array()){
+	public function text($name,$attributes=array(),$containerAttributes=array()){
 		$modelName=&$this->modelName;
 		if(isset($modelName::$__PROP_DEF[$name]['annotations']['Text'])) return $this->textarea($name,$attributes,$containerAttributes);
 		return $this->input($name,$attributes,$containerAttributes);
 	}
 	
-	public function &textarea($name,$attributes=array(),$containerAttributes=array()){
+	public function textarea($name,$attributes=array(),$containerAttributes=array()){
 		if(is_string($attributes)){
 			$value=$attributes;
 			$attributes=array();
@@ -169,7 +169,7 @@ class HForm{
 		return $this->_inputContainer($content,'textarea'.($hasError?' invalid':''),$containerAttributes);
 	}
 	
-	public function &input($name,$attributes=array(),$containerAttributes=array(),$largeSize=1){
+	public function input($name,$attributes=array(),$containerAttributes=array(),$largeSize=1){
 		if(is_string($attributes)) $attributes=array('value'=>$attributes);
 		
 		$type='text';
@@ -241,7 +241,7 @@ class HForm{
 		return HHtml::tag('input',$attributes);
 	}
 	
-	public function &submit($title=true,$options=array(),$containerAttributes=NULL){
+	public function submit($title=true,$options=array(),$containerAttributes=NULL){
 		if($title===true) $title=_tC('Save');
 		$options['value']=$title; $options['type']='submit';
 		if(!isset($options['class'])) $options['class']='submit';
@@ -251,7 +251,7 @@ class HForm{
 	}
 	
 	
-	public function &checkbox($name,$label=false,$attributes=array(),$containerAttributes=array()){
+	public function checkbox($name,$label=false,$attributes=array(),$containerAttributes=array()){
 		$attributes['type']='checkbox'; if($name!==false) $attributes['name']=$this->modelName === NULL ? $name : $this->name.'['.$name.']';
 		if(!isset($attributes['id'])) $attributes['id']=$this->modelName != NULL ? $this->modelName.ucfirst($name) : $name;
 		$res=HHtml::tag('input',$attributes);
@@ -259,10 +259,19 @@ class HForm{
 		return $this->_inputContainer($res,'input checkbox',$containerAttributes);
 	}
 	
+	
+	public function range($name,$label=false,$attributes=array(),$containerAttributes=array()){
+		$attributes['type']='range'; if($name!==false) $attributes['name']=$this->modelName === NULL ? $name : $this->name.'['.$name.']';
+		if(!isset($attributes['id'])) $attributes['id']=$this->modelName != NULL ? $this->modelName.ucfirst($name) : $name;
+		$res=HHtml::tag('input',$attributes);
+		if($label) $res.=HHtml::tag('label',array('for'=>$attributes['id']),$label);
+		return $this->_inputContainer($res,'input range',$containerAttributes);
+	}
+	
 	/**
 	 * options['style'] : select, radio, checkbox
 	 */
-	public function &select($name,$list,$options=NULL,$containerAttributes=array()){
+	public function select($name,$list,$options=NULL,$containerAttributes=array()){
 		if($options===NULL){ $selected=NULL; $options=array(); }
 		elseif(is_string($options)){ $selected=$options; $options=array(); }
 		else{ $selected=isset($options['selected'])?$options['selected']:NULL; unset($options['selected']); }
@@ -486,7 +495,7 @@ class HForm{
 		return NULL;
 	}
 	
-	private function &_inputContainer($res,$defaultClass,$attributes){
+	private function _inputContainer($res,$defaultClass,$attributes){
 		if($this->tagContainer && $attributes !== false){
 			if(!isset($attributes['class'])) $attributes['class']=$defaultClass;
 			if(isset($attributes['before'])){ $res=$attributes['before'].$res; unset($attributes['before']);}
