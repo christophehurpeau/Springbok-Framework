@@ -5,8 +5,9 @@ S.tinymce={
 		if(window.tinymce===undefined){
 			S.loadSyncScript(webdir+'js/tinymce.js');
 			S.loadSyncScript(webdir+'js/tinymce.'+i18n_lang+'.js');
-			// bug for ajax partial load - document.ready should not be necessary, but we never know !
-			/*S.ready(function(){tinymce.dom.Event._pageInit(window)});*/
+			// bug for ajax partial load
+			if($.isReady) tinymce.dom.Event.domLoaded=true;
+			/*old tinymce S.ready(function(){tinymce.dom.Event._pageInit(window)});*/
 		}
 		return this;
 	},
