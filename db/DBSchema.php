@@ -410,7 +410,7 @@ abstract class DBSchema{
 				
 				if($type === 'belongsToType'){
 					if(!isset($relation['fieldType'])) $relation['fieldType']=$key;
-					$relation['forceJoin']=false; $relation['isCount']=false;
+					$relation['join']=null; $relation['isCount']=false;
 					$relations=array();
 					/*debugVar($relation['types']);*/
 					foreach($relation['relations'] as $key2=>$rel2){
@@ -438,8 +438,8 @@ abstract class DBSchema{
 		if(!isset($relation['modelName'])) $relation['modelName']=$key;
 		if(!isset($relation['alias'])) $relation['alias']=$relation['modelName']::$__alias;
 		if(in_array($type,array('hasMany','belongsTo','hasOne')))
-			$relation+=array('fieldsInModel'=>false,'isCount'=>false,'isDistinct'=>false,'forceJoin'=>false,'type'=>' LEFT JOIN ','fields'=>null);
-		else $relation+=array('fields'=>null,'forceJoin'=>false,'isCount'=>false);
+			$relation+=array('fieldsInModel'=>false,'isCount'=>false,'isDistinct'=>false,'join'=>null,'type'=>' LEFT JOIN ','fields'=>null);
+		else $relation+=array('fields'=>null,'join'=>null,'isCount'=>false);
 		
 		$keyDataName=$key[0]==='E' && strtoupper(substr($key,0,3))==substr($key,0,3) ? substr($key,2) : $key;
 		if(!isset($relation['conditions'])){

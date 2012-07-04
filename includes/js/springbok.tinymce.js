@@ -50,7 +50,7 @@ S.tinymce={
 			body_class:'variable'
 		};
 		
-		if(_.cms){
+		if(_&&_.cms){
 			if(_.cms.internalLinks) this.attrs.internalLinks=_.cms.internalLinks;
 			if(withImageManager) this.attrs.gallery=_.cms.getGallery();
 		}

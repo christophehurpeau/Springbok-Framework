@@ -85,7 +85,7 @@ abstract class QFind extends QSelect{
 	public function withLang($options=array(),$lang=false){
 		if($lang===false) $lang=CLang::get();
 		if(is_string($options)) $options=array('fields'=>$options);
-		$options+=array('fieldsInModel'=>true,'forceJoin'=>true,'onConditions'=>array('lang'=>$lang));
+		$options+=array('fieldsInModel'=>true,'join'=>true,'onConditions'=>array('lang'=>$lang));
 		$mL=$this->modelName.'Lang';
 		$this->_addWithToQuery($mL,$options);
 		return $this;
@@ -94,7 +94,7 @@ abstract class QFind extends QSelect{
 	public function withForce($with,$options=array()){
 		if(is_string($options)) $options=array('fields'=>$options);
 		elseif(!isset($options['fields'])) $options['fields']=false;
-		$options['forceJoin']=true;
+		$options['join']=true;
 		$this->_addWithToQuery($with,$options);
 		return $this;
 	}
@@ -135,7 +135,8 @@ abstract class QFind extends QSelect{
 	public function _setJoin(&$join){$this->joins=&$join;return $this;}
 	
 	private function _addWithInJoin($modelName,$modelAlias,&$key,&$join,$inRecursive=false){
-		if(!($join['reltype']==='belongsTo' || $join['reltype']==='hasOne' || $join['reltype']==='hasOneThrough' || $join['forceJoin']===true || $join['isCount']===true)) return false;
+		// $join['join'] can be false (fore to not join), true (force to join) or null (auto)
+		if($join['join']===false || !($join['join']===true || $join['reltype']==='belongsTo' || $join['reltype']==='hasOne' || $join['reltype']==='hasOneThrough' || $join['isCount']===true)) return false;
 		$joinModelName=$join['modelName'];
 		if($modelName::$__dbName!==$joinModelName::$__dbName && !$modelName::$__modelDb->isInSameHost($joinModelName::$__modelDb)) return false;
 		//if(!empty($join['with'])) return false; //TODO should be handled someplace else because here generate a lot of requests... 
@@ -143,7 +144,7 @@ abstract class QFind extends QSelect{
 			$lastAlias=$modelAlias;$lastModelName=$this->modelName;
 			foreach($join['joins'] as $relName=>$options){
 				if(is_int($relName)){ $relName=$options; $options=array(); }
-				$options+=array('fields'=>false,'forceJoin'=>true);
+				$options+=array('fields'=>false,'join'=>true);
 				/* DEV */if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
 				$options+=$lastModelName::$_relations[$relName];
 				
@@ -196,7 +197,7 @@ abstract class QFind extends QSelect{
 	public function _toSQL($currentDb=NULL){
 		$modelName=$this->modelName;
 		
-		$modelAlias=(!empty($this->with) || !empty($this->joins)?$this->alias:null);
+		$modelAlias=(!empty($this->with) || !empty($this->joins)?$this->alias:null); 
 		
 		$fieldPrefix=$modelAlias!==null?$modelAlias.'.':'';
 
@@ -225,7 +226,10 @@ abstract class QFind extends QSelect{
 						$this->objFields[]=$alias;
 						//$this->objData[$alias]=null;
 						$this->queryResultFields[]=&$this->objData[$alias];
-						if($fpos!==false) $sql.=' AS '.$this->_db->formatField($alias);
+						if($fpos!==false){
+							$modelAlias=$this->alias;
+							$sql.=' AS '.$this->_db->formatField($alias);
+						}
 					}else{
 						$this->objFields[]=$field;
 						//$this->objData[$field]=null;
@@ -299,8 +303,8 @@ abstract class QFind extends QSelect{
 			if($hasCount && empty($this->groupBy)) $this->groupBy=array($modelName::_getPkName());
 		}
 		
-		$sql=substr($sql,0,-1).' FROM '.($currentDb!==NULL && $currentDb->getDbName() !== $modelName::$__modelDb->getDbName()?$modelName::$__modelDb->getDbName().'.':'').$modelName::_fullTableName();
-		if($modelAlias!==NULL) $sql.=' '.$modelAlias;
+		$sql=substr($sql,0,-1).' FROM '.($currentDb!==null && $currentDb->getDbName() !== $modelName::$__modelDb->getDbName()?$modelName::$__modelDb->getDbName().'.':'').$modelName::_fullTableName();
+		if($modelAlias!==null) $sql.=' '.$modelAlias;
 		
 		if(!empty($this->joins)){
 			foreach($this->joins as &$join){
@@ -448,7 +452,7 @@ abstract class QFind extends QSelect{
 	private static function _recursiveThroughWith(&$with,&$joins,$w=array()/*,&$lastModelName*/){
 		$relName=key($joins); $options=current($joins);
 		if(is_int($relName)){ $relName=$options; $options=array(); }
-		$options+=array('fields'=>false,'forceJoin'=>true);
+		$options+=array('fields'=>false,'join'=>true);
 		/* DEV *///if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
 		//$options+=$lastModelName::$_relations[$relName];
 		if(isset($w['withOptions'][$relName])) $options=$w['withOptions'][$relName]+$options;// can override 'fields'
@@ -472,14 +476,25 @@ abstract class QFind extends QSelect{
 					
 					$values=self::_getValues($objs,$objField);
 					if(!empty($values)){
-						$listRes = self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
+						$listRes = self::_createHasManyQuery($w['fieldsInModel']===true?new QFindRows($w['modelName']):null,$w,$values,$resField,true)->execute();
 						
-						if($listRes) foreach($objs as &$obj){
-							foreach($listRes as &$res)
-								if ($res->_get($resField) == $obj->_get($objField)){
-									$obj->_set($w['dataName'],$res);
-									break;
-								}
+						if($listRes){
+							if($w['fieldsInModel']===true){
+								foreach($objs as &$obj)
+									foreach($listRes as &$res)
+										if($res[$resField] == $obj->_get($objField)){
+											foreach($res as $k=>&$v)
+												if($k!==$resField) $obj->_set($k,$v);
+											break;
+										}
+							}else{
+								foreach($objs as &$obj)
+									foreach($listRes as &$res)
+										if ($res->_get($resField) == $obj->_get($objField)){
+											$obj->_set($w['dataName'],$res);
+											break;
+										}
+							}
 						}
 					}
 					unset($with[$key]);
