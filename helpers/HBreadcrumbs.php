@@ -24,19 +24,18 @@ class HBreadcrumbs{
 		$linkoptions['escape']=false;
 		
 		unset($options['spanAttributes'],$options['linkoptions'],$options['separator']);
-		$attributes=array('id'=>'breadcrumbs','itemscope'=>null,'itemtype'=>'http://data-vocabulary.org/Breadcrumb');
+		$attributes=array('id'=>'breadcrumbs');
 		
 		echo HHtml::openTag(self::$tagName,$attributes);
-		echo is_array($homeLink) ?  self::link($homeLink[0],$homeLink[1],$linkoptions,$spanAttributes) : self::link($homeLink,'/',$linkoptions,$spanAttributes);
+		echo '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'.(is_array($homeLink) ?  self::link($homeLink[0],$homeLink[1],$linkoptions,$spanAttributes) : self::link($homeLink,'/',$linkoptions,$spanAttributes)).'</span>';
 		foreach(self::$_links as $title=>$value)
 			echo $separator.'<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'
-				.self::link($title,$value,$linkoptions,$spanAttributes);
+				.self::link($title,$value,$linkoptions,$spanAttributes).'</span>';
 		{
 			$spanAttributes['class']='last';
 			if(self::$_lastTitle!==null) echo $separator.'<span class="last" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><span itemprop="title">'.h(self::$_lastTitle).'</span></span>';
 			elseif(!empty($lastTitle)) echo $separator.'<span class="last" itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><span itemprop="title">'.h($lastTitle).'</span></span>';
 		}
-		foreach(self::$_links as $title=>$value) echo '</span>';
 		echo HHtml::closeTag(self::$tagName);
 	}
 	
