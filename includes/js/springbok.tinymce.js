@@ -50,6 +50,11 @@ S.tinymce={
 			body_class:'variable'
 		};
 		
+		if(_.cms){
+			if(_.cms.internalLinks) this.attrs.internalLinks=_.cms.internalLinks;
+			if(withImageManager) this.attrs.gallery=_.cms.getGallery();
+		}
+		
 		if(barType==='basic'){
 			this.attrs.plugins="springbok,style,fullscreen,inlinepopups,contextmenu,advlink"+(withImageManager?',advimage,springbokgallery':'');
 			this.attrs.theme_advanced_buttons1="fullscreen,code,|,bold,italic,underline,strikethrough,|,styleselect,fontsizeselect,,forecolor,|,bullist,numlist,|,link,unlink"+(withImageManager?',image,springbokAddImage':'')+',|,removeformat,visualaid';
