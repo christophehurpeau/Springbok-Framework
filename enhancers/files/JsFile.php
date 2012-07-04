@@ -21,12 +21,6 @@ class JsFile extends EnhancerFile{
 		
 		$this->_srcContent=$srcContent;
 		//if($this->fileName()==='jsapp.js') debug($srcContent);
-		$jsFiles=array('global.js','jsapp.js');
-		if(!empty($this->enhanced->config['entries'])) foreach(($entries=$this->enhanced->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
-		else $entries=array();
-		if(in_array($this->fileName(),$jsFiles))
-			$this->_srcContent="window.basedir='".(defined('BASE_URL')?BASE_URL:'').(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
-				./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/";window.webdir=basedir+'web/';window.staticUrl=webdir;window.imgdir=webdir+'img/';window.jsdir=webdir+'js/';\n".$this->_srcContent;
 	}
 	/*
 	public function getMd5Content(){
@@ -70,6 +64,14 @@ class JsFile extends EnhancerFile{
 			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false)
 				$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
+			
+			$jsFiles=array('global.js','jsapp.js');
+
+			if(!empty($this->enhanced->config['entries'])) foreach(($entries=$this->enhanced->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
+			else $entries=array();
+			if(in_array($this->fileName(),$jsFiles))
+				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
+					./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",webdir=basedir+'web/',staticUrl=webdir,imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
 		}
 	}
 	
@@ -102,7 +104,7 @@ class JsFile extends EnhancerFile{
 		//if(in_array($this->fileName(),array('global.js','mobile.js','admin.js','jsapp.js')))
 		//	$this->_srcContent="var basedir='/',webdir=basedir+'web/',imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
 		$jsFiles=array('global.js','jsapp.js');
-		if(!empty($this->config['entries'])) foreach(($entries=$this->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
+		/*if(!empty($this->config['entries'])) foreach(($entries=$this->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
 		else $entries=array();
 		if(in_array($this->fileName(),$jsFiles)){
 			$this->_srcContent="(function(window,document,Object,Array,Math,undefined){window.basedir='".(defined('BASE_URL')?str_replace('/dev/','/prod/',BASE_URL.'/'):'/')
@@ -110,7 +112,7 @@ class JsFile extends EnhancerFile{
 							&&(!isset($this->enhanced->devConfig['dev_prefixed_routes'])||$this->enhanced->devConfig['dev_prefixed_routes']!==false)
 								?substr($this->fileName(),0,-3).'/':'')."'"
 				.substr($this->_srcContent,strpos($this->_srcContent,';',28));
-		}
+		}*/
 		//if($this->fileName()==='jsapp.js')
 		//	$this->_srcContent.='S.app='.json_encode(array('name'=>self::$APP_CONFIG['projectName'],'version'=>time()));
 		
