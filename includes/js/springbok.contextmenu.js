@@ -3,9 +3,9 @@
     // Methods
     var methods= {
         init: function(element, options){
-            $this = this;
-            // Bind options
-            var contextmenu =  $.extend(element, options);
+			var $this = this,
+            	// Bind options
+            	contextmenu =  $.extend(element, options);
             contextmenu.init(contextmenu);
             contextmenu.bind({
                 'contextmenu':function(e){
