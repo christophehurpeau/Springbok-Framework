@@ -34,6 +34,9 @@ class SViewCachedElement extends SViewElement{
 	public function render($view='view'){
 		return $this->read($view);
 	}
+	public function incl($view='view',$vars=array()){
+		return render($this->path.$view,$vars,true);
+	}
 	
 	protected function read($view){
 		return file_get_contents($this->path.$view);

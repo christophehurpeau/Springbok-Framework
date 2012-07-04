@@ -42,6 +42,8 @@ class ViewFile extends PhpFile{
 	
 	
 	public function enhanceFinalContent($content){
+		$content=preg_replace('/{=include ([^}]+)\}/U','<?php echo "<?php include $1 ?>" ?>',$content);
+		
 		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
 		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+(?:\->[a-zA-Z0-9_\(\)]+)+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
 		$content=preg_replace('/<\?=\s*(.+)\s*;?\s*\?>/U','<?php echo h($1) ?>',$content);
