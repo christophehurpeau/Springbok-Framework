@@ -468,7 +468,7 @@ class CssFile extends EnhancerFile{
 							if(substr($url,0,8)==='COREIMG/'){
 								$key=$url;
 							}else{
-								if((!empty($matches[2]) && ($trimMatches2=trim($matches[2])) && ($trimMatches2==='transparent' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
+								if((!empty($matches[2]) && ($trimMatches2=trim($matches[2])) && ($trimMatches2==='transparent' || $trimMatches2==='/**/' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
 										|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
 										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery'
 										|| $url==='../img/'.$spritename){

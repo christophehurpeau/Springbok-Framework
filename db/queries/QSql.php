@@ -94,4 +94,16 @@ class QSql{
 		}
 		return $this;
 	}
+	
+	
+	public function getPagination(){
+		return CPagination::create($this)->pageSize(25)->execute($this);
+	}
+	public function getFieldsForTable(){
+		$fields=$this->getFields(); $fieldsForTable=array();
+		if(empty($fields)) return;
+		foreach($fields as $key=>$val){
+			$fieldsForTable[]=array('title'=>$val['name'],'escape'=>$val['type']==='string','type'=>$val['type']);
+		}
+	}
 }

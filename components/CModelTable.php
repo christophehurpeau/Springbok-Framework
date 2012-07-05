@@ -80,8 +80,8 @@ class CModelTable extends CModelTableAbstract{
 	
 	public $editablePkField,$editableUrl;
 	public function displayEditable($pkField,$url,$displayTotalResults=true){
-		/* DEV */ if($this->query->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
-		/* DEV */ if($this->query->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
+		/* DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
+		/* DEV */ if($this->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
 		
 		$this->editablePkField=$pkField;
 		$this->editableUrl=$url;
@@ -92,27 +92,27 @@ class CModelTable extends CModelTableAbstract{
 		$pagination=$this->query->getPagination();
 		$results=$pagination->getResults();
 		
-		if($pagination->getTotalResults() !== 0 || $this->query->isFiltersAllowed()) $this->_setFields();
+		if($pagination->getTotalResults() !== 0 || $this->isFiltersAllowed()) $this->_setFields();
 		
 		$this->initController();
 		
-		if($this->query->isFiltersAllowed()){
+		if($this->isFiltersAllowed()){
 			$formId=uniqid();
 			$form=HForm::create(NULL,array('id'=>$formId,'rel'=>'content'),false,false);
 		}else $form=null;
 		
 		
-		if($this->query->isExportable()){
+		if($this->isExportable()){
 			echo '<span class="exportLinks">'; 
 			foreach($this->query->getExportableTypes() as $exportType)
 				echo HHtml::iconAction('file'.ucfirst($exportType),'?export='.$exportType,array('target'=>'_blank'));//target : springbok.ajax
 			echo '</span>';
 		}
 		
-		if($this->query->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
+		if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
 		
 		if($pagination->hasPager()){
-			if($this->query->isFiltersAllowed()){
+			if($this->isFiltersAllowed()){
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
@@ -126,7 +126,7 @@ class CModelTable extends CModelTableAbstract{
 				$href=HHtml::urlEscape(array(true,CRoute::getAll(),'?'=>$hrefQuery));
 			}
 			echo $pager='<div class="pager">'.HPagination::createPager($pagination->getPage(),$pagination->getTotalPages(),
-				$this->query->isFiltersAllowed()?function($page){
+				$this->isFiltersAllowed()?function($page){
 					return ' href="#" onclick="return changePage('.$page.');"';
 				}:function($page) use($href){
 					return ' href="'.$href.'page='.$page.'"';
@@ -137,7 +137,7 @@ class CModelTable extends CModelTableAbstract{
 			echo '<div class="totalResults">'.$pagination->getTotalResults().' '.($pagination->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		
 		$this->callTransformer($transformerClass,$results,$form);
-		if($this->query->isFiltersAllowed()) $form->end(false);
+		if($this->isFiltersAllowed()) $form->end(false);
 		echo $pager;
 	}
 	protected function initController(){
@@ -147,13 +147,13 @@ class CModelTable extends CModelTableAbstract{
 
 	protected function callTransformer($transformerClass,$results,$form=null){
 		$transformer=new $transformerClass($this);
-		if(!$this->query->isFiltersAllowed() && empty($results)){
+		if(!$this->isFiltersAllowed() && empty($results)){
 			$transformer->startBody();
 			$transformer->noResults();
 		}else{
 			$transformer->startHead();
 			$transformer->titles($this->fields,$this->query->getFields());
-			if($this->query->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters(),$this->query->isFilterAdvancable());
+			if($this->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters(),$this->query->isFilterAdvancable());
 			$transformer->endHead();
 			$transformer->startBody();
 			empty($results) ? $transformer->noResults(count($this->fields)) : $transformer->displayResults($results,$this->fields);
