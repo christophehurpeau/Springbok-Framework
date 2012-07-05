@@ -90,14 +90,14 @@ class JsFile extends EnhancerFile{
 			$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
 			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			
-			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
-			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$devFile->getPath());
+			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
+			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath());
 			
 			
 			
-			//self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$devFile->getPath(),true);
-			//self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$devFile->getPath().'_googleclosure.js');
-			//self::uglify($this->_srcContent,$devFile->getPath().'_uglify.js');
+			//self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
+			//self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath().'_googleclosure.js');
+			//self::uglify($content,$devFile->getPath().'_uglify.js');
 		}
 	}
 	public function writeProdFile($prodFile){
@@ -123,13 +123,13 @@ class JsFile extends EnhancerFile{
 			$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
 			
 			
-			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$prodFile->getPath(),true);
-			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$this->_srcContent,$prodFile->getPath());
+			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);
+			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$prodFile->getPath());
 			
 			
-			//self::executeCompressor($this->enhanced->getTmpDir(),$this->_srcContent,$prodFile->getPath());
-			//self::executeGoogleCompressor($this->_srcContent,$prodFile->getPath().'_googleclosure.js');
-			//self::uglify($this->_srcContent,$prodFile->getPath().'_uglify.js');
+			//self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath());
+			//self::executeGoogleCompressor($content,$prodFile->getPath().'_googleclosure.js');
+			//self::uglify($content,$prodFile->getPath().'_uglify.js');
 		}
 	}
 	

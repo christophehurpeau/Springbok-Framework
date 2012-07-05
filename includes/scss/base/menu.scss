@@ -126,19 +126,25 @@ div.header nav li a.current:hover{
 	@elseif $HEADER_MENU_A_CURRENTHOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENTHOVER_BACKGROUND; }
 }
 
+$VARIABLE_MENU_PADDING:0 0 0 5px !default;
 $VARIABLE_MENU_COLOR:false !default;
 $VARIABLE_MENU_BACKGROUND:#CCC !default;
 $VARIABLE_MENU_CURRENT_COLOR:false !default;
 $VARIABLE_MENU_CURRENT_BACKGROUND:false !default;
 $VARIABLE_MENU_RADIUS_BOTTOM_RIGHT:10px 25px !default;
 $VARIABLE_MENU_RADIUS_TOP_LEFT:10px 25px !default;
+$VARIABLE_MENU_LI_MARGIN:false !default;
+$VARIABLE_MENU_WIDTH:false !default;
+$VARIABLE_MENU_ALIGN:false !default;
 
-#page nav.top{padding-left:5px;}
+#page nav.top{padding:$VARIABLE_MENU_PADDING;}
 #page nav.top{margin-bottom:0}
-#page nav.top li{margin-bottom:0;}
+#page nav.top li{@if $VARIABLE_MENU_LI_MARGIN{ margin:$VARIABLE_MENU_LI_MARGIN; } @else { margin-bottom:0; }}
 @if $VARIABLE_MENU_COLOR{ #page nav.top li a:hover{color:$VARIABLE_MENU_COLOR} }
 #page nav.top li a{
 	padding:2px 6px 3px;
+	@if $VARIABLE_MENU_WIDTH{ width:$VARIABLE_MENU_WIDTH; }
+	@if $VARIABLE_MENU_ALIGN{ text-align:$VARIABLE_MENU_ALIGN; }
 	@if $VARIABLE_MENU_COLOR{ color:$VARIABLE_MENU_COLOR; }
 	@if $VARIABLE_MENU_RADIUS_BOTTOM_RIGHT { border-bottom-right-radius:$VARIABLE_MENU_RADIUS_BOTTOM_RIGHT; }
 	@if $VARIABLE_MENU_RADIUS_TOP_LEFT { border-top-left-radius:$VARIABLE_MENU_RADIUS_TOP_LEFT; }
