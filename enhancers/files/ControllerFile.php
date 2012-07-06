@@ -6,7 +6,7 @@ class ControllerFile extends PhpFile{
 	private $_methodDefFiles=array();//,$_methodAnnotations=array();
 	
 	protected function loadContent($srcContent){
-		$controllersSrc=array(); $enhanced=&$this->enhanced;
+		$controllersSrc=array(); $enhanced=$this->enhanced;
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportAction\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
 			eval('$eval=array('.$m[1].');');
 			if(!isset($eval))

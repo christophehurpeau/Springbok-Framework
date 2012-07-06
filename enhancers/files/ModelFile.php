@@ -2,6 +2,34 @@
 class ModelFile extends PhpFile{
 	public $_className,$_contentInfos,$_classAnnotations;
 	
+	
+	protected function loadContent($srcContent){//TODO mettre en commun le code avec ControllerFile dans PhpFile.
+		$controllersSrc=array(); $enhanced=$this->enhanced;
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,$controllersSrc){
+			eval('$eval=array('.$m[1].');');
+			if(!isset($eval))
+				throw new Exception('Error eval : '.$m[1]);
+			$countEval=count($eval);
+			if($countEval===2 && ($eval[0]==='core')||($eval[0]==='springbok')){
+				array_shift($eval);
+				$modelPath=CORE.'models/'.$eval[0].'.php';
+				if(!isset($controllersSrc[$countEval.$modelPath]))
+					$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
+			}else{
+				$parentPath=$countEval===3 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
+				$suffix=$countEval===2||$countEval===3 ? '.'.array_shift($eval):''; if($suffix==='.') $suffix='';
+				$modelPath='models'.$suffix.'/'.($eval[0]).'.php';
+				if(!isset($controllersSrc[$countEval.$modelPath]))
+					$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
+			}
+			if(!preg_match(ModelFile::REGEXP_FIELDS,$controllersSrc[$countEval.$modelPath],$mFields))
+				throw new Exception('Import fields : unable to find '.$modelPath);
+			return $mFields[0];
+		},$srcContent);
+		$this->_srcContent=$srcContent;
+	}
+	
+	
 	public function enhancePhpContent($content,$false=false){
 		$matches=array();
 		//preg_match('/class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches);
