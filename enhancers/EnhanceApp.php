@@ -234,8 +234,10 @@ else echo '<h1>503 Service Temporarily Unavailable</h1>';";
 			
 			$entries[]='index';
 			foreach($entries as $index){
-				file_put_contents($dev->getPath().$index.'.php',$indexDevContent);
-				file_put_contents($prod->getPath().$index.'.php',$indexProdContent);
+				file_put_contents($fname=$dev->getPath().$index.'.php',$indexDevContent);
+				chmod($fname,0755);
+				file_put_contents($fname=$prod->getPath().$index.'.php',$indexProdContent);
+				chmod($fname,0755);
 			}
 					
 		//}

@@ -177,7 +177,7 @@ class ControllerFile extends PhpFile{
 	private function writeMethodDefFile(){
 		$dirname=$this->currentDestFile->getPath();
 		$folderMethods=new Folder(dirname($dirname).DS.'methods');
-		$folderMethods->mkdirs();
+		$folderMethods->mkdirs(0775);
 		$folderMethods=$folderMethods->getPath();
 		
 		//UExec::exec('cd / && rm -f '.UExec::rmEscape($folderMethods.$this->_className).'-*');
