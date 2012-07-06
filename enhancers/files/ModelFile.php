@@ -2,6 +2,7 @@
 class ModelFile extends PhpFile{
 	public $_className,$_contentInfos,$_classAnnotations;
 	
+	const REGEXP_FIELDS='/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums';
 	
 	protected function loadContent($srcContent){//TODO mettre en commun le code avec ControllerFile dans PhpFile.
 		$controllersSrc=array(); $enhanced=$this->enhanced;
@@ -16,9 +17,8 @@ class ModelFile extends PhpFile{
 				if(!isset($controllersSrc[$countEval.$modelPath]))
 					$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
 			}else{
-				$parentPath=$countEval===3 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
-				$suffix=$countEval===2||$countEval===3 ? '.'.array_shift($eval):''; if($suffix==='.') $suffix='';
-				$modelPath='models'.$suffix.'/'.($eval[0]).'.php';
+				$parentPath=$countEval===2 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
+				$modelPath='models/'.($eval[0]).'.php';
 				if(!isset($controllersSrc[$countEval.$modelPath]))
 					$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
 			}
@@ -41,7 +41,7 @@ class ModelFile extends PhpFile{
 			//$content=parent::enhancePhp($content,false);
 			
 			$content=preg_replace_callback('/\/\*\*([^;{]*)\*\/\s+public\s+\$([A-Za-z0-9\s_]+);/Ums',array($this,'fields'),$content);
-			$content=preg_replace_callback('/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums',array($this,'mfields'),$content);
+			$content=preg_replace_callback(self::REGEXP_FIELDS,array($this,'mfields'),$content);
 
 			$contentInfos=array('primaryKeys'=>array(),'columns'=>array(),'isAI'=>false,'indexes'=>array(),'relations'=>array(),'generate'=>'default');
 			$modelFile=$this; $enhanceConfig=&$this->enhanced->config;

@@ -128,6 +128,7 @@ div.header nav li a.current:hover{
 
 $VARIABLE_MENU_PADDING:0 0 0 5px !default;
 $VARIABLE_MENU_COLOR:false !default;
+$VARIABLE_MENU_UPPERCASE:false !default;
 $VARIABLE_MENU_BACKGROUND:#CCC !default;
 $VARIABLE_MENU_CURRENT_COLOR:false !default;
 $VARIABLE_MENU_CURRENT_BACKGROUND:false !default;
@@ -149,6 +150,7 @@ $VARIABLE_MENU_ALIGN:false !default;
 	@if $VARIABLE_MENU_RADIUS_BOTTOM_RIGHT { border-bottom-right-radius:$VARIABLE_MENU_RADIUS_BOTTOM_RIGHT; }
 	@if $VARIABLE_MENU_RADIUS_TOP_LEFT { border-top-left-radius:$VARIABLE_MENU_RADIUS_TOP_LEFT; }
 	@if $VARIABLE_MENU_BACKGROUND{ @include background($VARIABLE_MENU_BACKGROUND); }
+	@if $VARIABLE_MENU_UPPERCASE{ text-transform:uppercase; }
 }
 #page nav.top li a.current{
 	position: relative; z-index: 2; /* couvre l'ombre, si existe, du div suivant */
