@@ -72,6 +72,8 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/{\/if}/','<?php endif; ?>',$content);
 		$content=preg_replace('/{ifnull\s+([^}]+?)\s*\}/','<?php if($1===null): ?>',$content);
 		$content=preg_replace('/{if!null\s+([^}]+?)\s*\}/','<?php if($1!==null): ?>',$content);
+		$content=preg_replace('/{ifTrue\s+([^}]+?)\s*\}/','<?php if($1===true): ?>',$content);
+		$content=preg_replace('/{ifFalse\s+([^}]+?)\s*\}/','<?php if($1===false): ?>',$content);
 		
 
 		$content=preg_replace('/{f\s+([^}]+?)\s*\}/','<?php foreach($1): ?>',$content);

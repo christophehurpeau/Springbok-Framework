@@ -88,10 +88,9 @@ class CssSpriteGen {
          return $this->aImageTypes;
       }
 	  
-	  public function CreateSprite($imgDir,$aFiles,$spritename,$imageType='PNG') {
+	  public function CreateSprite($imgDir,$aFiles,$outputFile,$imageType='PNG') {
 	  	$this->aFormValues['image-output']=$imageType;
 	  	$cssRules=array();
-		$outputFile=$imgDir.$spritename;
 		
          // set up variable defaults used when calculating offsets etc
          $aFilesInfo = array();

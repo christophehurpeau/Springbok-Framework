@@ -412,11 +412,15 @@ class CssFile extends EnhancerFile{
 	private static $spriteGenDone=NULL;
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))){
-			self::$spriteGenDone=true;$cssImgs=array(); $spritename='img-sprite.png';
-			$compiledCssFolder=new Folder($enhanced->getAppDir().'tmp/compiledcss/prod/');
+			self::$spriteGenDone=true;
+			$compiledCssFolder=$enhanced->getAppDir().'tmp/compiledcss/prod/';
 			
-			foreach($compiledCssFolder->listFiles() as $file){
-				$fileContent=file_get_contents($file->getPath());
+			$cssProdFolder=new Folder($prod->getPath().'web/css/');
+			foreach($cssProdFolder->listFiles() as $prodFile){
+				if(substr($prodFile->getName(),-4)!=='.css') continue;
+				
+				$cssImgs=array(); $spritename=substr($prodFile->getName(),0,-4).'.png';
+				$fileContent=file_get_contents($compiledCssFolder.$prodFile->getName());
 				$matches=array();
 				if(preg_match_all('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)/U',$fileContent,$matches)){
 					foreach($matches[3] as $i=>$url){
@@ -432,16 +436,62 @@ class CssFile extends EnhancerFile{
 						}
 					}
 				}
+
+
+				$cssImgs=array_unique($cssImgs); $md5CssImgs=md5(implode('#',$cssImgs));
+				
+				if(!empty($cssImgs)){
+					$imgDir=$enhanced->getAppDir().'src/web/img/';
+					
+					include_once CORE.'enhancers/CssSpriteGen.php';
+					$cssSpriteGen=new CssSpriteGen();
+					$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritePath=$enhanced->getAppDir().'src/web/sprites/'.$spritename);
+					/*if(file_exists($imgDir.$spritename)) */copy($spritePath,$dev->getPath().'web/sprites/'.$spritename);
+					copy($spritePath,$prod->getPath().'web/sprites/'.$spritename);
+					//debug($cssRules);
+					
+					/* background: background-color background-image background-repeat background-attachment background-position
+					 * It does not matter if one of the property values is missing, as long as the ones that are present are in this order. 
+					 */
+					$content=preg_replace_callback('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)([^;}{]*[;|}])?/U',function(&$matches) use(&$cssRules,&$spritename){
+						$url=trim($matches[3],' \'"');
+						if(substr($url,0,8)==='COREIMG/'){
+							$key=$url;
+						}else{
+							if((!empty($matches[2]) && ($trimMatches2=trim($matches[2])) && ($trimMatches2==='transparent' || $trimMatches2==='/**/' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
+									|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
+									|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery'
+									|| $url==='../sprites/'.$spritename){
+								return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
+							}
+							$key=substr($url,7);
+						}
+						if(!isset($cssRules[$key])){
+							throw new Exception('Sprite creator : Css Rule not found for : '.$url."\nCss Rules:\n".print_r($cssRules,true));
+							return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
+						}
+						$val=$cssRules[$key];
+						
+						return 'background:'.(empty($matches[2])?' ':$matches[2].' ').'url(\'../sprites/'.$spritename.'\')'.(empty($matches[4])?' ':rtrim($matches[4],'}').' ').$val['position']
+							.(substr($key,0,8)==='actions/'||substr($key,0,6)==='icons/'||substr($url,0,8)==='COREIMG/'?'':';width:'.$val['width'].';height:'.$val['height'])
+							.(!empty($matches[4]) && substr($matches[4],-1)==='}'?'}':'');
+					},$fileContent);
+					//debugCode($content);
+					
+					foreach(array($prodFile,new File($dev->getPath().'web/css/'.$prodFile->getName())) as $file){
+						$file->write($content);
+					}
+				}
 			}
-			$cssImgs=array_unique($cssImgs); $md5CssImgs=md5(implode('#',$cssImgs));
+			
 			/*if(file_exists($enhanced->getAppDir().'imgSprite_md5') && file_exists($prod->getPath().'web/img/img-sprite.png')){
 				$md5=file_get_contents($enhanced->getAppDir().'imgSprite_md5');
 				if($md5===$md5CssImgs) return;
 			}
 			file_put_contents($enhanced->getAppDir().'imgSprite_md5',$md5CssImgs);
 			*/
-			if(!empty($cssImgs)){
-				$imgDir=$enhanced->getAppDir().'src/web/img/';
+			
+				
 				/*foreach($cssImgs as $imgKey=>&$cssImg)
 					if(!file_exists($imgDir.$cssImg)){
 						throw new Exception('Img does NOT exist : '.$cssImg);
@@ -449,48 +499,16 @@ class CssFile extends EnhancerFile{
 					}
 				*/
 				
-				include_once CORE.'enhancers/CssSpriteGen.php';
-				$cssSpriteGen=new CssSpriteGen();
-				$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritename);
-				/*if(file_exists($imgDir.$spritename)) */copy($imgDir.$spritename,$dev->getPath().'web/img/'.$spritename);
-				copy($imgDir.$spritename,$prod->getPath().'web/img/'.$spritename);
-				//debug($cssRules);
 				
 				/* background: background-color background-image background-repeat background-attachment background-position
 				 * It does not matter if one of the property values is missing, as long as the ones that are present are in this order. 
-				 */
+				 *//*
 				foreach(array(new Folder($prod->getPath().'web/css'),new Folder($dev->getPath().'web/css')) as $cssFolder){
 					foreach($cssFolder->listFiles() as $file){
-						if(substr($file->getName(),-4)!=='.css') continue;
-						$content=file_get_contents($compiledCssFolder->getPath().$file->getName());
-						$content=preg_replace_callback('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)([^;}{]*[;|}])?/U',function(&$matches) use(&$cssRules,&$spritename){
-							$url=trim($matches[3],' \'"');
-							if(substr($url,0,8)==='COREIMG/'){
-								$key=$url;
-							}else{
-								if((!empty($matches[2]) && ($trimMatches2=trim($matches[2])) && ($trimMatches2==='transparent' || $trimMatches2==='/**/' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
-										|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
-										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery'
-										|| $url==='../img/'.$spritename){
-									return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
-								}
-								$key=substr($url,7);
-							}
-							if(!isset($cssRules[$key])){
-								throw new Exception('Sprite creator : Css Rule not found for : '.$url."\nCss Rules:\n".print_r($cssRules,true));
-								return 'background'.$matches[1].':'.(empty($matches[2])?' ':$matches[2].' ').'url(\''.$url.'\')'.(empty($matches[4])?'':$matches[4]);
-							}
-							$val=$cssRules[$key];
-							
-							return 'background:'.(empty($matches[2])?' ':$matches[2].' ').'url(\'../img/'.$spritename.'\')'.(empty($matches[4])?' ':rtrim($matches[4],'}').' ').$val['position']
-								.(substr($key,0,8)==='actions/'||substr($key,0,6)==='icons/'||substr($url,0,8)==='COREIMG/'?'':';width:'.$val['width'].';height:'.$val['height'])
-								.(!empty($matches[4]) && substr($matches[4],-1)==='}'?'}':'');
-						},$content);
-						//debugCode($content);
-						$file->write($content);
+						
 					}
 				}
-			}
+			}*/
 		}
 	}
 }
