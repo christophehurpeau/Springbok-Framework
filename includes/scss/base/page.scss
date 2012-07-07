@@ -200,8 +200,9 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	}
 	
 	div.variablep{margin:0;padding:0;float:left; }
-	
-	.content{padding:5px 10px;}
+}
+.content,#page .content{padding:5px 10px;}
+#page{
 	div.variable.padding{padding:8px 10px}
 	@if $VARIABLE_AUTO_CONTENT_PADDING{
 	  @if false==$VARIABLE_BACKGROUND{
