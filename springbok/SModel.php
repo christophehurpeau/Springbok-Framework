@@ -79,7 +79,9 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 	
 	
 	protected function _getSaveData($args){
-		return !empty($args) ? array_intersect_key($this->_getData(),array_flip($args),static::$__PROP_DEF) : array_intersect_key($this->_getData(),static::$__PROP_DEF);
+		if(empty($args)) return array_intersect_key($this->_getData(),static::$__PROP_DEF);
+		$args[]='updated';
+		return array_intersect_key($this->_getData(),array_flip($args),static::$__PROP_DEF);
 	}
 	
 	
