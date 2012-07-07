@@ -152,7 +152,7 @@ class Controller{
 			/*if(isset($_GET['ajax']))
 				self::renderHtml(HHtml::jsInline('S.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
 			else*/if(isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])){
-				header('SpringbokRedirect: '.HHtml::url($to));
+				header('SpringbokRedirect: '.HHtml::url($to,$entry));
 				if($exit) exit;
 				return;
 			}
@@ -161,7 +161,7 @@ class Controller{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Status: 301 Moved Permanently',false,301);
 		}
-		header('Location: '.HHtml::url($to));
+		header('Location: '.HHtml::url($to,$entry));
 		if($exit) exit;
 	}
 	
