@@ -147,7 +147,7 @@ class Controller{
 		header('Status: 404 Not Found',false,404);
 	}
 
-	public static function redirect($to,$permanent=false,$exit=true,$forbiddendForAjax=true){
+	public static function redirect($to,$entry=null,$exit=true,$forbiddendForAjax=true,$permanent=true){
 		if(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
 				self::renderHtml(HHtml::jsInline('S.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
@@ -165,11 +165,15 @@ class Controller{
 		if($exit) exit;
 	}
 	
-	public static function redirectLast($toIfNotFound,$exit=true){
+	public static function redirectLast($toIfNotFound,$entryIfNotFound=null,$exit=true){
 		$to=CHttpRequest::referer(true);
-		if($to===CRoute::getAll()) $to=&$toIfNotFound;
-		elseif($to===null) $to=&$toIfNotFound;
-		self::redirect($to,false,$exit);
+		if($to===CRoute::getAll()) $to=$toIfNotFound;
+		elseif($to===null) $to=$toIfNotFound;
+		self::redirect($to,$entryIfNotFound,$exit);
+	}
+	
+	public static function redirectPermanent($to,$entry=null,$exit=true,$forbiddendForAjax=true){
+		self::redirect($to,$entry,$exit,$forbiddendForAjax,true);
 	}
 	
 	/* RENDER */

@@ -44,7 +44,7 @@ class ControllerFile extends PhpFile{
 		$phpContent=preg_replace_callback(self::REGEXP_ACTION,array($this,'enhanceMethodParams'),$phpContent);
 		
 		$phpContent=preg_replace('/(self::|\s+)(mset|set|set_|setForLayout|setForLayoutAndView|'
-				.'uploadedFiles|moveUploadedFile|redirect|redirectLast|'
+				.'uploadedFiles|moveUploadedFile|redirect|redirectPermanent|redirectLast|'
 				.'render|_render|renderJSON|renderText|renderHtml|renderFile|sendFile)\(/',
 			' self::$2(',$phpContent);
 		

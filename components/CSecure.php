@@ -127,7 +127,7 @@ class CSecure{
 		if(static::isConnected()) static::redirectAfterConnection();
 	}
 	public static function redirectAfterConnection($exit=true){
-		Controller::redirect(CSession::getAndRemoveOr(self::BACK_URL,static::config('url_redirect')),false,$exit);
+		Controller::redirect(CSession::getAndRemoveOr(self::BACK_URL,static::config('url_redirect')),null,$exit);
 	}
 
 	public static function setConnected($type,$connected,$login){
