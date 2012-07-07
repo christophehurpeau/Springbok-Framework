@@ -15,6 +15,7 @@ class View{
 			header('SpringbokAjaxTitle: '.json_encode($title));
 			header('SpringbokAjaxTo: '.$to);
 		}
+		header('SpringbokAppVersion: '.APP_VERSION);
 	}
 	
 	public function set($name,$value=null){
@@ -29,7 +30,7 @@ class View{
 		$this->vars[$name]=$value;
 	}
 	
-	public function &get($name){
+	public function get($name){
 		return $this->vars[$name];
 	}
 

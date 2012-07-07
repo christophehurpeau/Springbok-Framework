@@ -618,7 +618,7 @@ class CssSpriteGen {
          ) {
             // this probably won't work with PHP safe mode enabled
             // no real alternative - you'll have to enable to use
-            shell_exec('optipng -o7 '.$sFilename);
+            //shell_exec('optipng -o7 '.$sFilename);
          }
       }
       

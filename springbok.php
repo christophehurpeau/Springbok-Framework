@@ -51,7 +51,7 @@ class Springbok{
 		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
 		self::$inError=true;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
-		if(ob_get_length()>0) ob_end_clean();
+		while(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
 		//echo $log; ob_flush();
 		if(isset($_SERVER['REQUEST_URI'])){
@@ -91,7 +91,7 @@ class Springbok{
 		
 		/* PROD */ if(! in_array($code,array(E_ERROR,E_CORE_ERROR,E_USER_ERROR,E_WARNING,E_CORE_WARNING,E_COMPILE_WARNING,E_USER_WARNING,E_RECOVERABLE_ERROR))) return true; /* /PROD */
 		
-		if(ob_get_length()>0) ob_end_clean();
+		while(ob_get_length()>0) ob_end_clean();
 		
 		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
 		App::displayError($forceDefault,$code, $message, $file, $line,$context);

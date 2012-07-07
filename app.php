@@ -9,6 +9,7 @@ require '_init.php';
 
 /* DEV */
 define('APP_DATE',time());
+define('APP_VERSION','');
 define('WEB_FOLDER','');
 /* /DEV */
 

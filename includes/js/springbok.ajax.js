@@ -101,6 +101,9 @@ includeCore('ui/slideTo');
 				success:function(data,textStatus,jqXHR){*/
 					var h,div,to;
 					
+					if(h=jqXHR.getResponseHeader('SpringbokAppVersion'))
+						if(h!=version) if(confirm("L'application a été mise à jour. Souhaitez vous recharger la page ?")) window.location.reload();
+					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
 						divLoading.remove();
 						S.ajax.load(h,false,false,true);

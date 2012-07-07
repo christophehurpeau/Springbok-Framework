@@ -6,7 +6,7 @@ error_reporting(E_ALL | E_STRICT);
 
 set_time_limit(0);
 
-define('BASE_URL',''); define('WEB_FOLDER','');
+define('BASE_URL',''); define('APP_VERSION',''); define('WEB_FOLDER','');
 include CORE.'springbok.php';
 
 
