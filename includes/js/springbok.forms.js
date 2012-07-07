@@ -34,10 +34,9 @@
 		return this;
 	};
 	
-	var num=0;
 	$.fn.ajaxForm=function(url,success,beforeSubmit,error){
 		if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
-		var form=this,submit;
+		var form=this,submit,imgLoadingSubmit=$('<span/>').attr({'class':"img imgLoading"});
 		if(!url) url=form.attr('action');
 		this.unbind('submit').submit(function(evt){
 			evt.preventDefault();
@@ -49,12 +48,11 @@
 				form.stop().fadeTo(0,1)
 				return false;
 			}
-			var currentNum=num++,
-			 ajaxOptions={
+			var ajaxOptions={
 				type:'post',cache:false,
-				beforeSend:function(){submit.hide();submit.parent().append($('<span/>').attr({id:'imgLoadingSubmit'+currentNum,'class':"img imgLoading"}));},
+				beforeSend:function(){submit.hide();submit.parent().append(imgLoadingSubmit);},
 				data:form.serialize(),
-				complete:function(){submit.show().blur();$('#imgLoadingSubmit'+currentNum).remove();form.fadeTo(150,1)},
+				complete:function(){submit.show().blur();form.find('.img.imgLoading').remove();form.fadeTo(150,1)},
 				error:error
 			};
 			if(success) ajaxOptions.success=success;
@@ -71,7 +69,7 @@
 	
 	$.fn.ajaxChangeForm=function(url,success,beforeSubmit,error){
 		if(!error) error=function(jqXHR, textStatus){alert(i18nc['Error:']+' '+textStatus);};
-		var form=this;
+		var form=this,imgLoadingSubmit;
 		this.unbind('change').change(function(){
 			form.fadeTo(180,0.4);
 			if(beforeSubmit) beforeSubmit();
@@ -80,12 +78,11 @@
 				form.fadeTo(0,1)
 				return false;
 			}
-			var currentNum=num++,
-			 ajaxOptions={
+			var ajaxOptions={
 				type:'post',cache:false,
-				beforeSend:function(){form.before($('<span/>').attr({id:'imgLoadingForm'+currentNum,'class':"img imgLoading"}).offset({left:form.position().left+form.width()-16}).css({position:'absolute','z-index':5}));},
+				beforeSend:function(){form.before(imgLoadingSubmit=$('<span/>').attr({'class':"img imgLoading"}).offset({left:form.position().left+form.width()-16}).css({position:'absolute','z-index':5}));},
 				data:form.serialize(),
-				complete:function(){$('#imgLoadingForm'+currentNum).remove();form.fadeTo(150,1)},
+				complete:function(){imgLoadingSubmit.remove();form.fadeTo(150,1)},
 				error:error
 			};
 			if(success) ajaxOptions.success=success;

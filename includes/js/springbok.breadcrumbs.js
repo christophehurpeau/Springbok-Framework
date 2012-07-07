@@ -1,16 +1,17 @@
 (function(){
 	var linkoptions={itemprop:'url'},separator=' &raquo; ';
 	S.breadcrumbs=function(links){
-		var b=$('#breadcrumbs > span:first').html(''),first=true,url;
+		var b=$('#breadcrumbs'),span,first=b.children(':first-child'),url;
+		b.html(first);
 		$.each(links,function(i,l){
-			first ? first=false : b.append(separator);
-			b=$('<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"/>').appendTo(b);
-			if(/*$.type(i)==='number'*/$.isNumeric(i)) b=$('<span/>').text(l).appendTo(b);
+			b.append(separator);
+			span=$('<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"/>').appendTo(b);
+			if(/*$.type(i)==='number'*/$.isNumeric(i)) $('<span/>').text(l).appendTo(span);
 			else{
 				url=S.isObject(l) ? l.url : l;
-				b.append($('<a/>').attr(linkoptions).attr('href',url).html($('<span itemprop="title"/>').text(i)));
+				span.append($('<a/>').attr(linkoptions).attr('href',url).html($('<span itemprop="title"/>').text(i)));
 			}
 		});
-		b.addClass('last');
+		span.addClass('last');
 	};
 })();
