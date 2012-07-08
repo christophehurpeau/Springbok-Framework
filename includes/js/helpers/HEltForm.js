@@ -62,7 +62,7 @@ $.fn.sSubmit=function(callback,beforeSubmit){
 		if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid')))
 			form.stop().fadeTo(0,1);
 		else{
-			submit.hide();submit.parent().append(imgLoadingSubmit=$('<span/>').attr('class',"img imgLoading"));
+			submit.hide();submit.parent().append(imgLoadingSubmit=$('<span class="img imgLoading"/>'));
 			callback(form,function(){
 				submit.show().blur();imgLoadingSubmit.remove();form.fadeTo(150,1)
 			});

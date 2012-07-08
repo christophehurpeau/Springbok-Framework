@@ -46,12 +46,13 @@
   }
 }
 
-@mixin typeBlock($i,$background,$color:false,$border:false,$borderRadius:false){
+@mixin typeBlock($i,$background,$color:false,$border:false,$borderRadius:false,$boxShadow:false){
   .block#{$i},div .block#{$i},#page .clickable .block#{$i}{
     @include background($background,true);
     @if $color{ color:$color; }
     @include border($border);
     @if $borderRadius{ border-radius:$borderRadius; }
+    @if $boxShadow{ box-shadow:$boxShadow; }
   }
 }
 

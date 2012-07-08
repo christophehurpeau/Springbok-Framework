@@ -235,7 +235,8 @@ class PhpFile extends EnhancerFile{
 			ob_flush();
 */	
 //debug($matches);
-		if(!empty($matches[4]) && $matches[4]=='execute') echo 'WARNING : double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1].'<br />';
+		if(!empty($matches[4]) && $matches[4]=='execute') echo "<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n"
+														.'WARNING : double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1].'<br/>';
 			if(!empty($matches[4]) && $matches[4]=='callback') return str_replace($matches[5],$phpFile->addExecuteToQueries($matches[5],$isModelFile),$matches[1]);
 			if((!empty($matches[2]) && substr($matches[2],0,5)=='query')||(!empty($matches[4]) && $matches[4]=='execute') || (!empty($matches[3]))) return $matches[1];
 			return $matches[1].'->execute()';
