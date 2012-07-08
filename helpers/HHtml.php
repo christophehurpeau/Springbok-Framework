@@ -141,7 +141,7 @@ s.parentNode.insertBefore(g,s);
 			else $options['onclick']='if(!'.$jsConfirm.')return false;'.$options['onclick'];
 		}
 		
-		if(isset($options['current'])){
+		if(isset($options['current']) && $options['current']!==false){
 			if($options['current']===1) $current=true;
 			elseif($options['current'] && $url!==BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.'/') $current=$url==substr(BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.CRoute::getAll(),0,strlen($url));
 			else $current=($url==(BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.CRoute::getAll()));
