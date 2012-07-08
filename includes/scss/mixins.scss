@@ -47,7 +47,23 @@
 
 @mixin border($border){
 	@if type-of($border)=='color'{ border-color:$border; }
-	@else if $border{ border:$border; }
+	@else if $border{
+	  $borderTRBL:false;
+	  @if type-of($border)=='list'{
+	    $borderTRBL:type-of(nth($border,1))=='list';
+	    @if $borderTRBL == false{
+	      $borderTRBL:type-of(nth($border,1))=='bool';
+	    }
+	  }
+	  @if $borderTRBL{
+	    @if nth($border,1){ border-top:nth($border,1); }
+	    @if nth($border,2){ border-right:nth($border,2); }
+	    @if nth($border,3){ border-bottom:nth($border,3); }
+	    @if nth($border,4){ border-left:nth($border,4); }
+	  }@else{
+  	  border:$border;
+  	}
+	 }
 }
 
 
