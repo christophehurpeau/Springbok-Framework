@@ -25,7 +25,7 @@ class HForm{
 				$formOptions['method']='post';
 			}
 			echo '<form action="'.HHtml::urlEscape($formOptions['action'],$formOptions['entry'],$formOptions['urlfull']).'" method="'.($method=$formOptions['method']).'"';
-			unset($formOptions['action'],$formOptions['method'],$formOptions['name'],$formOptions['urlfull']);
+			unset($formOptions['action'],$formOptions['method'],$formOptions['name'],$formOptions['urlfull'],$formOptions['entry']);
 			HHtml::_echoAttributes($formOptions);
 			echo '>';
 		}
