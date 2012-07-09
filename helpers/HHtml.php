@@ -10,8 +10,8 @@ class HHtml{
 	public static function linkAtom($title,$url){
 		echo '<link rel="alternate" type="application/atom+xml" href="'.self::url($url).'" title="'.$title.'"/>';
 	}
-	public static function linkIcon($url=false){
-		echo '<link rel="shorcut icon" type="image/x-icon" href="'.($url?self::staticUrl($url,'img'):STATIC_URL.'img/favicon.ico').'" />';
+	public static function linkIcon($url='/favicon.ico'){
+		echo '<link rel="shorcut icon" type="image/x-icon" href="'.($url?self::staticUrl($url,'img'):STATIC_URL.'img/'.$url).'"/>';
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
