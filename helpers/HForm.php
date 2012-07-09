@@ -59,6 +59,10 @@ class HForm{
 		}
 	}
 
+	public function _setModelName($modelName){
+		$this->modelName=$modelName;
+	}
+
 	public function setTagContainer($tagContainer){
 		$this->tagContainer=&$tagContainer;
 	}
