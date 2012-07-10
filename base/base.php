@@ -206,7 +206,7 @@ function startsWith($haystack,$needle) {return substr($haystack,0,strlen($needle
 function endsWith($haystack,$needle){return strrpos($haystack,$needle)===strlen($haystack)-strlen($needle);}
 
 //TODO PhpFileEnhancer
-function isE(&$var,$then,$else){ return empty($var) ? $then : $else; }
+function isE(&$var,$then,$else='ReplaceWithVar'){ return empty($var) ? $then : ($else==='ReplaceWithVar'?$var:$else); }
 function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
 function isTrue($cond,$then,$else=''){ return $cond===true ? $then : $else; }
 function isFalse($cond,$then,$else=''){ return $cond===false ? $then : $else; }
