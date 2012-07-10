@@ -9,6 +9,12 @@ class HMeta{
 	public static function description($description){
 		self::$metas['description']=$description;
 	}
+	
+	public static function set($metas){
+		self::$metas['keywords']=$metas['keywords'];
+		self::$metas['description']=$metas['description'];
+	}
+	
 	public static function robots($content){
 		self::$metas['robots']=$content;
 	}
