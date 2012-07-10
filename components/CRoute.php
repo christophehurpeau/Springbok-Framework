@@ -91,7 +91,7 @@ class CRoute{
 							unset($params['controller']);
 						}else $controller=substr($controller,0,-1).self::DEFAULT_CONTROLLER;
 					}
-					if($action=='!'){
+					if($action=='!' || isset($params['action'])){
 						if(!empty($params['action'])){
 							$action=self::untranslate($params['action'],$lang);
 							unset($params['action']);
