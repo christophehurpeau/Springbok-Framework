@@ -78,9 +78,11 @@ class CHttpRequest{
 		)) /EVAL */''.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 	
+	private static $_isBot;
 	public static function isBot(){
-		if(empty($_SERVER['HTTP_USER_AGENT'])) return true;
-		return (bool)preg_match('/'./* EVAL implode('|',array(
+		if(self::$_isBot!==null) return self::$_isBot;
+		if(empty($_SERVER['HTTP_USER_AGENT'])) return self::$_isBot=true;
+		return self::$_isBot=(bool)preg_match('/'./* EVAL implode('|',array(
 			'bot',
 			//'Googlebot',
 			'Google Web Preview', // Google - www.google.com
