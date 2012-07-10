@@ -62,13 +62,18 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/{\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? $2 : $1 ?>',$content);
 		$content=preg_replace('/{=\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? h($2) : h($1) ?>',$content);
 		
-		$content=preg_replace('/{if\s+([^}]+?)\s*\}/','<?php if($1): ?>',$content);
-		$content=preg_replace('/{ife\s+([^}]+?)\s*\}/','<?php if(empty($1)): ?>',$content);
-		$content=preg_replace('/{if!e\s+([^}]+?)\s*\}/','<?php if(!empty($1)): ?>',$content);
+		$content=preg_replace('/{(else)?if\s+([^}]+?)\s*\}/','<?php $1if($2): ?>',$content);
+		$content=preg_replace_callback('/{(else)?ife\s+([^}]+?)\s*\}/',function($m){
+			$m[2]=implode(')&&empty(',preg_split('/\s*\&\&\s*/',$m[2]));
+			$m[2]=implode(')||empty(',preg_split('/\s*\|\|\s*/',$m[2]));
+			return '<?php '.$m[1].'if(empty('.$m[2].')): ?>';
+		},$content);
+		$content=preg_replace_callback('/{(else)?if!e\s+([^}]+?)\s*\}/',function($m){
+			$m=implode(')&&!empty(',preg_split('/\s*\&\&\s*/',$m[2]));
+			$m=implode(')||!empty(',preg_split('/\s*\|\|\s*/',$m[2]));
+			return '<?php '.$m[1].'if(!empty('.$m[2].')): ?>';
+		},$content);
 		$content=preg_replace('/{else}/','<?php else: ?>',$content);
-		$content=preg_replace('/{elseif\s+([^}]+?)\s*\}/','<?php elseif($1): ?>',$content);
-		$content=preg_replace('/{elseife\s+([^}]+?)\s*\}/','<?php elseif(empty($1)): ?>',$content);
-		$content=preg_replace('/{elseif!e\s+([^}]+?)\s*\}/','<?php elseif(!empty($1)): ?>',$content);
 		$content=preg_replace('/{\/if}/','<?php endif; ?>',$content);
 		$content=preg_replace('/{ifnull\s+([^}]+?)\s*\}/','<?php if($1===null): ?>',$content);
 		$content=preg_replace('/{if!null\s+([^}]+?)\s*\}/','<?php if($1!==null): ?>',$content);
