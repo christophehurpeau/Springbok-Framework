@@ -28,7 +28,8 @@ includeCore('ui/slideTo');
 				if($(evt.target).is('a[onclick^="return"]') && !lastConfirmResult) return false;
 				evt.preventDefault();
 				evt.stopPropagation();
-				var a=$(this),rel='content',menu,url=a.attr('href');
+				var a=$(this),rel='content',menu,url=a.attr('href'),confirmMessage=a.data('confirm');
+				if(confirmMessage && !confirm(confirmMessage=='1' ? i18nc['Are you sure ?'] : confirmMessage)) return false;
 				if(a.is('header nav.ajax a')){
 					menu=a.closest('nav');
 					if(a.hasClass('current')) S.ajax.load(url);

@@ -73,6 +73,7 @@ span.img,span.icon{display:block;display:inline-block}
 .iconWrap{
   position:relative;
   overflow:hidden;
+  zoom:1;
 }
 .iconWrap .icon{
   position:absolute;
