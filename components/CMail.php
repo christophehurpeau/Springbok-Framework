@@ -23,6 +23,7 @@ class CMail{
 		$mailer->ClearAllRecipients();
 		$mailer->AddAddress($to);
 		$mailer->Subject=$subject;
+		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
 		$mailer->MsgHTML(render(APP.'viewsMails/'.$template.'.php',$vars,true),APP);
 		return $mailer->Send();
 	}
