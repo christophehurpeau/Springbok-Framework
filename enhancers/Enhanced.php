@@ -1,6 +1,6 @@
 <?php
 class Enhanced{
-	private $appDir,$type,$name;
+	private $appDir,$type,$name,$logger;
 	public $config,$oldDef=array(),$newDef=array(),$warnings=array(),$errors=array();
 	
 	public function __construct($type,&$dirname){
@@ -11,11 +11,21 @@ class Enhanced{
 			$this->config=include $configname;
 	}
 	
+	public function initLogger(){
+		$this->logger=$this->createLogger();
+	}
+	public function createLogger(){
+		$logger=new stdClass;
+		$logger->log=function($message){ display($message); };
+		return $logger;
+	}
+	
 	public function isApp(){return $this->type==='app';}
 	public function isPlugin(){return $this->type==='plugin';}
 	public function isCore(){return $this->type==='core';}
 	public function isUnknown(){return $this->type==='?';}
 	public function getName(){ return $this->name; }
+	public function getLogger(){ return $this->logger; }
 
 	public function setType($type,$name=''){ $this->type=$type; $this->name=$name; }
 	
@@ -53,7 +63,7 @@ class Enhanced{
 	public function hasOldEnhancedFolders(){ return !empty($this->oldDef['enhancedFolders']); }
 	public function getOldEnhancedFolders(){ return $this->oldDef['enhancedFolders']; }
 	public function removeOldEnhancedFolder($enhancedFolder){ unset($this->oldDef['enhancedFolders'][$enhancedFolder]); }
-	
+
 	public function addDeleteChange($enhancedFile){ $this->newDef['changes']['deleted'][]=$enhancedFile; }
 	
 	public function getChanges(){ return empty($this->newDef['changes']) ? false : $this->newDef['changes']; }

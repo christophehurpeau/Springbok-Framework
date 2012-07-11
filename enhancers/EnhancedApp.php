@@ -11,6 +11,10 @@ class EnhancedApp extends Enhanced{
 		$this->isJsApp=file_exists($this->getAppDir().'src/web/jsapp.js');
 	}
 	
+	public function createLogger(){
+		return CLogger::get('enhance-process-'.time());
+	}
+	
 	public function getTmpDir(){
 		return $this->getAppDir().'tmp/';
 	}

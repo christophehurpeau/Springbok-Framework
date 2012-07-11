@@ -46,6 +46,7 @@ abstract class AEnhance{
 		$this->initDev($dev);
 		$this->initProd($prod);
 		$this->afterInit($dev,$prod);
+		$this->enhanced->initLogger();
 		//debug('initDev,initProd,afterInit took : '.(microtime(true) - $t).' s');
 		
 		//$t=microtime(true);

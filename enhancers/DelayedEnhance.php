@@ -22,10 +22,15 @@ class DelayedEnhance{
 			)
 		));
 		if(!$dbSchema->tableExist()) $dbSchema->createTable();
+		$this->db->beginTransaction();
 	}
 	
 	public function add($path,$type){
 		CLogger::get('delayedEnhance')->log('add: '.$path.' - '.$type);
 		$this->db->doUpdate('INSERT OR IGNORE INTO `files`(`path`,`type`) VALUES ('.$this->db->escape($path).','.$this->db->escape($type).')');
+	}
+	
+	public function commit(){
+		$this->db->commit();
 	}
 }

@@ -31,9 +31,9 @@ class DBSQLite extends DBSql{
 	}
 	
 	
-	public function beginTransaction(){  }
-	public function commit(){  }
-	public function rollBack(){  }
+	public function beginTransaction(){  $this->_query('BEGIN TRANSACTION'); }
+	public function commit(){ $this->_query('COMMIT');  }
+	public function rollBack(){ $this->_query('ROLLBACK'); }
 	
 	public function escape($string){
 		return '\''.$this->_connect->escapeString($string).'\'';

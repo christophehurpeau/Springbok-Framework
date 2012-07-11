@@ -122,6 +122,7 @@ define('APP', __DIR__.'/dev/');";
 					$this->recursiveDir($pluginPath,new Folder($pluginPath), $dev->getPath(), $prod->getPath(),$this->enhanced->getAppDir().'src/');
 			}
 		}
+		DelayedEnhance::get($this->enhanced)->commit();
 		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default',false,false);
 		
 		/*$webFolder=date('mdH');

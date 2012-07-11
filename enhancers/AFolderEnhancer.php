@@ -2,8 +2,8 @@
 abstract class AFolderEnhancer{
 	private $dir,$devDir,$prodDir,$enhanced;
 	
-	public function __construct(&$enhanced,&$dir,&$devDir,&$prodDir){
-		$this->enhanced=&$enhanced; $this->dir=&$dir;$this->devDir=&$devDir;$this->prodDir=&$prodDir;
+	public function __construct($enhanced,&$dir,&$devDir,&$prodDir){
+		$this->enhanced=$enhanced; $this->dir=&$dir;$this->devDir=&$devDir;$this->prodDir=&$prodDir;
 	}
 	
 	
@@ -25,7 +25,10 @@ abstract class AFolderEnhancer{
 	
 	
 	public function process($class='PhpFile',$allowUnderscoredFiles=true,$override=true){
-		$dir=&$this->dir;$devDir=&$this->devDir;$prodDir=&$this->prodDir;
+		$dir=$this->dir;$devDir=$this->devDir;$prodDir=$this->prodDir;
+		
+		$logger=$this->enhanced->getLogger();
+		$logger->log('D: '.$dir->getName());
 		
 		if(substr($dir->getName(),0,1)==='.') return;
 		$devFolder=new Folder($devDir,0775);
@@ -35,6 +38,7 @@ abstract class AFolderEnhancer{
 		
 		foreach($files as $file){
 			$filename=$file->getName();
+			$logger->log('F: '.$filename);
 			if($override!==true && file_exists($override.$filename)) continue;
 			$ext=$file->getExt();
 			

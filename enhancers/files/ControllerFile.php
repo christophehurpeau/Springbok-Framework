@@ -29,6 +29,7 @@ class ControllerFile extends PhpFile{
 				throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 			return $mAction[0];
 		},$srcContent);
+		$srcContent=preg_replace('/\/\*\s+@SimpleAction\(\'([^*\']+)\'\)\s+\*\//',"/** */\n\tfunction $1(){\n\t\trender();\n\t}",$srcContent);
 		$this->_srcContent=$srcContent;
 	}
 	

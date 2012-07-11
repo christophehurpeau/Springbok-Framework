@@ -415,11 +415,14 @@ class CssFile extends EnhancerFile{
 			self::$spriteGenDone=true;
 			$compiledCssFolder=$enhanced->getAppDir().'tmp/compiledcss/prod/';
 			
+			$logger=$enhanced->getLogger();
+			
 			$cssProdFolder=new Folder($prod->getPath().'web/css/');
 			foreach($cssProdFolder->listFiles() as $prodFile){
 				if(substr($prodFile->getName(),-4)!=='.css') continue;
 				
 				$cssImgs=array(); $spritename=substr($prodFile->getName(),0,-4).'.png';
+				$logger->log('ImgSprite: '.$spritename);
 				$fileContent=file_get_contents($compiledCssFolder.$prodFile->getName());
 				$matches=array();
 				if(preg_match_all('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)/U',$fileContent,$matches)){
@@ -438,14 +441,17 @@ class CssFile extends EnhancerFile{
 				}
 
 
-				$cssImgs=array_unique($cssImgs); $md5CssImgs=md5(implode('#',$cssImgs));
-				
 				if(!empty($cssImgs)){
+					$cssImgs=array_unique($cssImgs);
+					$md5CssImgs=md5(implode('#',$cssImgs));
+					
+					$spritePath=$enhanced->getAppDir().'src/web/sprites/'.$spritename;
+					
 					$imgDir=$enhanced->getAppDir().'src/web/img/';
 					
 					include_once CORE.'enhancers/CssSpriteGen.php';
 					$cssSpriteGen=new CssSpriteGen();
-					$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritePath=$enhanced->getAppDir().'src/web/sprites/'.$spritename);
+					$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritePath);
 					/*if(file_exists($imgDir.$spritename)) */copy($spritePath,$dev->getPath().'web/sprites/'.$spritename);
 					copy($spritePath,$prod->getPath().'web/sprites/'.$spritename);
 					//debug($cssRules);

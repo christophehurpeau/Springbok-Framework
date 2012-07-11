@@ -1,5 +1,6 @@
 <?php
 class ConfigFile extends PhpFile{
+	private $md5;
 	public function getMd5Content(){
 		//return '';
 		$md5=$this->_srcContent;
@@ -29,7 +30,7 @@ class ConfigFile extends PhpFile{
 				}
 			}
 		}
-		return md5($md5);
+		return $this->md5=md5($md5);
 	}
 	
 	public function processEhancing($devFile,$prodFile,$justDev=false,$isCore=false){
@@ -57,11 +58,16 @@ class ConfigFile extends PhpFile{
 				$fileLang=$this->enhanced->getAppDir().'db/'.substr($configname,5).'.db';
 				if(file_exists($fileLang)){
 					$db=new DBSQLite(false,array( 'file'=>$fileLang,'flags'=>SQLITE3_OPEN_READWRITE ));
-					$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$this->enhanced->getName().'.%" )');
-					$configArray=include $this->srcFile()->getPath();
-					foreach($configArray as $key=>$value){
-						$db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'a\','.$db->escape($value).')');
-						$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'P\','.$db->escape($value).')');
+					$pluginName=$this->enhanced->getName();
+					if($db->doSelectValue('SELECT t FROM t WHERE c=\'P\' AND s="plugin.'.$pluginName.'.md5"')!==$this->md5){
+						debugVar("UPDATE LANGS : ".$pluginName); 
+						$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$pluginName.'.%" )');
+						$configArray=include $this->srcFile()->getPath();
+						foreach($configArray as $key=>$value){
+							$db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'a\','.$db->escape($value).')');
+							$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'P\','.$db->escape($value).')');
+						}
+						$db->doUpdate('INSERT INTO t (s,c,t) VALUES ("plugin.'.$pluginName.'.md5",\'P\','.$db->escape($this->md5).')');
 					}
 				}
 				$this->write($configname,'',$devFile,$prodFile);

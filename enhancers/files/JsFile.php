@@ -84,11 +84,16 @@ class JsFile extends EnhancerFile{
 		//return $this->_realSrcContent;
 		return $content;
 	}
+	
+	private $devProdDiff;
 	public function writeDevFile($devFile){
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($devFile->getPath()))==='ace') $devFile->write($this->_srcContent);
 		else{
-			$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
-			$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
+			
+			if($this->devProdDiff= (strpos($this->_srcContent,'/* DEV */'!==false||strpos($this->_srcContent,'/* PROD */')!==false))){
+				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
+				$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
+			}
 			
 			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
 			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath());
@@ -103,7 +108,7 @@ class JsFile extends EnhancerFile{
 	public function writeProdFile($prodFile){
 		//if(in_array($this->fileName(),array('global.js','mobile.js','admin.js','jsapp.js')))
 		//	$this->_srcContent="var basedir='/',webdir=basedir+'web/',imgdir=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
-		$jsFiles=array('global.js','jsapp.js');
+		//$jsFiles=array('global.js','jsapp.js');
 		/*if(!empty($this->config['entries'])) foreach(($entries=$this->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
 		else $entries=array();
 		if(in_array($this->fileName(),$jsFiles)){
@@ -119,13 +124,16 @@ class JsFile extends EnhancerFile{
 		//$this->_srcContent=preg_replace('/\/\*\!?\s+[^\(?:\*\/)]*\s+\*\//mU','',$this->_srcContent);
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($prodFile->getPath()))==='ace') $prodFile->write($this->_srcContent);
 		else{
-			$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
-			$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
-			
-			
-			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);
-			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$prodFile->getPath());
-			
+			if($this->devProdDiff){
+				$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
+				$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
+				
+				
+				if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);
+				else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$prodFile->getPath());
+			}else{
+				copy($this->getDevFile()->getPath(),$prodFile->getPath());
+			}
 			
 			//self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath());
 			//self::executeGoogleCompressor($content,$prodFile->getPath().'_googleclosure.js');

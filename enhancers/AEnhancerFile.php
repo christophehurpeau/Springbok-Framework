@@ -1,6 +1,6 @@
 <?php
 abstract class EnhancerFile{
-	private $srcFile,$fileName,$_isCore,$_isProd,$_config,$_isInLibDir;
+	private $srcFile,$fileName,$_isCore,$_isProd,$_config,$_isInLibDir,$_devFile;
 	public $currentDestFile;
 	
 	protected $enhanced,$_srcContent,$warnings,$errors;
@@ -28,7 +28,7 @@ abstract class EnhancerFile{
 		//if($justDev===null) throw new Exception('just dev is deprecated');
 		//$justDev=$this->isJustDev();
 		if(is_string($devFile)) $devFile=new File($devFile);
-		$this->currentDestFile=$devFile; $this->_isProd=false;
+		$this->_devFile=$this->currentDestFile=$devFile; $this->_isProd=false;
 		
 		$this->enhanceContent();
 			
@@ -44,6 +44,7 @@ abstract class EnhancerFile{
 	}
 	
 	protected function isJustDev(){return false;} 
+	protected function getDevFile(){return $this->_devFile;} 
 	
 	
 	public abstract function enhanceContent();
@@ -61,14 +62,14 @@ abstract class EnhancerFile{
 	public abstract function getEnhancedProdContent();
 	
 	public function hardConfig($content){
-		$enhanced=&$this->enhanced;
-		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*\\\\?/\*\s+/IF\s+\*\\\\?/#Us',function(&$m) use(&$enhanced){
+		$enhanced=$this->enhanced;
+		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*\\\\?/\*\s+/IF\s+\*\\\\?/#Us',function(&$m) use($enhanced){
 			return $enhanced->config['config'][$m[1]] ? $m[2] : '';
 		},$content);
-		$content=preg_replace_callback('#/\*\s+IF\!\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*\\\\?/\*\s+/IF\s+\*\\\\?/#Us',function(&$m) use(&$enhanced){
+		$content=preg_replace_callback('#/\*\s+IF\!\(([A-Za-z0-9_\-]+)\)\s+\*/\s*(.*)\s*\\\\?/\*\s+/IF\s+\*\\\\?/#Us',function(&$m) use($enhanced){
 			return !$enhanced->config['config'][$m[1]] ? $m[2] : '';
 		},$content);
-		$content=preg_replace_callback('#/\*\s+VALUE\(([A-Za-z0-9_\-]+)\)\s+\*\\\\?/#Us',function(&$m) use(&$enhanced){
+		$content=preg_replace_callback('#/\*\s+VALUE\(([A-Za-z0-9_\-]+)\)\s+\*\\\\?/#Us',function(&$m) use($enhanced){
 			return $enhanced->config['config'][$m[1]];
 		},$content);
 		return $content;
