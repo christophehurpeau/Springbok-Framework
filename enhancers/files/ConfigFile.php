@@ -90,11 +90,11 @@ class ConfigFile extends PhpFile{
 						elseif($specialEnd2) $routeLangPreg=substr($routeLangPreg,0,-2).'(?:\/(.*))?'.substr($routeLangPreg,-2);
 						
 						$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_]+)/',
-							function($m) use($paramsDef,&$paramsNames){
+							function($m) use($paramsDef,$lang,&$paramsNames){
 								if(!empty($m[1])) return $m[0];
 								$paramsNames[]=$m[2];
-								if(isset($paramsDefL[$m[2]])){
-									$paramDefVal=is_array($paramsDefL[$m[2]]) ? $paramsDefL[$m[2]][$lang] : $paramsDefL[$m[2]];
+								if(isset($paramsDef[$m[2]])){
+									$paramDefVal=is_array($paramsDef[$m[2]]) ? $paramsDef[$m[2]][$lang] : $paramsDef[$m[2]];
 									return $paramDefVal=='id' ? '([0-9]+)' : '('.str_replace('(','(?:',$paramDefVal).')'; /* can have 0 before : 001-Slug */
 								}
 								if(in_array($m[2],array('id'))) return '([0-9]+)';
