@@ -89,9 +89,10 @@ class JsFile extends EnhancerFile{
 	public function writeDevFile($devFile){
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($devFile->getPath()))==='ace') $devFile->write($this->_srcContent);
 		else{
+			$content=$this->_srcContent;
 			
 			if($this->devProdDiff= (strpos($this->_srcContent,'/* DEV */'!==false||strpos($this->_srcContent,'/* PROD */')!==false))){
-				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_srcContent);
+				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$content);
 				$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			}
 			
