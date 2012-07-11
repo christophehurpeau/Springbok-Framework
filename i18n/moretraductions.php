@@ -36,3 +36,5 @@ _tC('Password lost ?');
 _tC('User');
 _tC('Guest');
 _tC('Basic user');
+
+_tC('Are you sure ?');
