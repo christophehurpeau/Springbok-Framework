@@ -28,4 +28,10 @@ class SiteController extends Controller{
 		CSecure::logout();
 		self::redirect('/');
 	}
+	
+	/** */
+	function captchaImage(){
+		CCaptcha::image();
+	}
+	
 }

@@ -30,7 +30,7 @@ class CCaptcha{
 			CSession::remove(CAPTCHA_SESSION_ID);
 			return true;
 		}
-		CValidation::addError($key,_t('Bad captcha'));
+		CValidation::addError($key,_tC('Incorrect captcha'));
 		return false;
 	}
 }
