@@ -39,7 +39,17 @@ abstract class AFolderEnhancer{
 		foreach($files as $file){
 			$filename=$file->getName();
 			$logger->log('F: '.$filename);
-			if($override!==true && file_exists($override.$filename)) continue;
+			if($override!==true && $class!=='ConfigFile'){
+				$fileExists=false;
+				foreach($override as $o)
+					//debugVar('test file exists : '.$o.$filename);
+					if(file_exists($o.$filename)){
+						//debugVar('file exists : '.$o.$filename);
+						$fileExists=true;
+						break;
+					}
+				if($fileExists!==false) continue;
+			}
 			$ext=$file->getExt();
 			
 			$found=$this->findEnhancer($filename,$ext);

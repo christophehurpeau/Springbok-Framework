@@ -1,5 +1,6 @@
 <?php
 class ScssFile extends EnhancerFile{
+	public static $CACHE_PATH='scss_8.0';
 	
 	public function loadContent($srcContent){
 		if(!$this->isCore()){
@@ -68,22 +69,33 @@ class ScssFile extends EnhancerFile{
 			},$this->_srcContent);
 		}
 	}
-	public function getEnhancedDevContent(){return $this->_srcContent; }
-	public function getEnhancedProdContent(){return $this->_srcContent; }
+
+	public function getEnhancedDevContent(){}
+	public function getEnhancedProdContent(){}
 	
 	public function writeDevFile($devFile){
-		$this->callSass($this->getEnhancedDevContent(),$devFile->getPath(),true);
+		$this->callSass($this->_srcContent,$devFile->getPath(),true);
 		if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore()){
-			if(!file_exists($appDir.'tmp/compiledcss/dev/')) mkdir($appDir.'tmp/compiledcss/dev/',0755,true);
-			$devFile->copyTo($appDir.'tmp/compiledcss/dev/'.$devFile->getName());
+			if(!file_exists($appDir.'tmp/compiledcss/')) mkdir($appDir.'tmp/compiledcss/',0755,true);
+			$devFile->copyTo($appDir.'tmp/compiledcss/'.$devFile->getName());
 		}
+		return true;
 	}
 	public function writeProdFile($prodFile){
-		$this->callSass($this->getEnhancedProdContent(),$prodFile->getPath());
+		/*$this->callSass($this->getEnhancedProdContent(),$prodFile->getPath());
 		if(($appDir=$this->enhanced->getAppDir())){
 			if(!file_exists($appDir.'tmp/compiledcss/prod/')) mkdir($appDir.'tmp/compiledcss/prod/',0755);
 			$prodFile->copyTo($appDir.'tmp/compiledcss/prod/'.$prodFile->getName());
-		}
+		}*/
+		$this->getDevFile()->copyTo($prodFile->getPath());
+		return true;
+	}
+
+	
+	protected function copyFromCache($cachefile,$devFile,$prodFile,$justDev){
+		parent::copyFromCache($cachefile,$devFile,$prodFile,$justDev);
+		copy($cachefile.'_dev',$devFile->getPath());
+		if(!$justDev && $prodFile!==false) copy($cachefile.'_prod',is_string($prodFile) ? $prodFile : $prodFile->getPath());
 	}
 	
 	private static $sassExecutable='sass';

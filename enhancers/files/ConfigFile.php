@@ -1,6 +1,7 @@
 <?php
 class ConfigFile extends PhpFile{
-	private $md5;
+	public static $CACHE_PATH=false;
+	
 	public function getMd5Content(){
 		//return '';
 		$md5=$this->_srcContent;
@@ -59,8 +60,8 @@ class ConfigFile extends PhpFile{
 				if(file_exists($fileLang)){
 					$db=new DBSQLite(false,array( 'file'=>$fileLang,'flags'=>SQLITE3_OPEN_READWRITE ));
 					$pluginName=$this->enhanced->getName();
-					if($db->doSelectValue('SELECT t FROM t WHERE c=\'P\' AND s="plugin.'.$pluginName.'.md5"')!==$this->md5){
-						debugVar("UPDATE LANGS : ".$pluginName); 
+					if(($md5Value=$db->doSelectValue('SELECT t FROM t WHERE c=\'P\' AND s="plugin.'.$pluginName.'.md5"'))!==$this->md5){
+						debugVar("UPDATE LANGS : ".$pluginName.' ('.$md5Value.' != '.$this->md5.')'); 
 						$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$pluginName.'.%" )');
 						$configArray=include $this->srcFile()->getPath();
 						foreach($configArray as $key=>$value){

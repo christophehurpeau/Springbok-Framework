@@ -20,7 +20,7 @@ class FileLogger extends CLogger{
 	private $_file;
 
 	public function __construct($name='info'){
-		$this->_file=fopen(APP.'logs/'.date('Y-m-').Springbok::$prefix.$name.'.log', 'a+');
+		$this->_file=fopen(APP.'logs/'.date('Y-m-')./* DEV */(class_exists('Springbok',false)?/* /DEV */Springbok::$prefix/* DEV */:'')/* /DEV */.$name.'.log', 'a+');
 	}
 
 	public function log($message = ''){

@@ -4,6 +4,7 @@ include_once __DIR__.DS.'DefaultFolderEnhancer.php';
 include_once __DIR__.DS.'DelayedEnhance.php';
 include_once __DIR__.DS.'EnhancedApp.php';
 include_once __DIR__.'/../utils/UColors.php';
+include_once __DIR__.'/../components/CLogger.php';
 
 class EnhanceApp extends AEnhance{
 	public function __construct($dirname){
@@ -20,8 +21,10 @@ class EnhanceApp extends AEnhance{
 		parent::initDev($dev);
 		
 		global $enhancers;
-		foreach($enhancers as $className)
+		foreach($enhancers as $className){
 			$className::initFolder($dev,$this->enhanced->getConfig());
+			if($className::$CACHE_PATH!==false) if(!file_exists($newDir=$this->enhanced->getTmpDir().$className::$CACHE_PATH)) mkdir($newDir,0777);
+		}
 		
 		$d=new Folder($dev->getPath().'logs',0777);
 	}
@@ -86,7 +89,7 @@ define('APP', __DIR__.'/dev/');";
 	
 	public function afterEnhance(&$dev,&$prod){
 		if(!file_exists($path=($dev->getPath().'daemons/'))) mkdir($path);
-		if(!file_exists($path=($dev->getPath().'daemons/delayedEnhanceDaemon.php')) || true) copy(CORE.'enhancers/daemon.php',$path);
+		/* if(!file_exists($path=($dev->getPath().'daemons/delayedEnhanceDaemon.php')) || true) copy(CORE.'enhancers/daemon.php',$path); */
 		//UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default');
 		//if(!empty($this->config['includes'])){
 		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
@@ -115,15 +118,18 @@ define('APP', __DIR__.'/dev/');";
 			}
 		//}
 		if($this->enhanced->configNotEmpty('plugins')){
+			$pathsProcessed=array($this->enhanced->getAppDir().'src/');
 			foreach($this->enhanced->config['plugins'] as &$plugin){
 				$this->enhanced->setType('plugin',$plugin[1]);
 				$pluginPath=$this->enhanced->pluginPath($plugin);
 				if(!isset($plugin[2]))
-					$this->recursiveDir($pluginPath,new Folder($pluginPath), $dev->getPath(), $prod->getPath(),$this->enhanced->getAppDir().'src/');
+					$this->recursiveDir($pluginPath,new Folder($pluginPath), $dev->getPath(), $prod->getPath(),$pathsProcessed);
+				$pathsProcessed[]=$pluginPath;
 			}
 		}
-		DelayedEnhance::get($this->enhanced)->commit();
+		/*DelayedEnhance::get($this->enhanced)->commit();
 		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default',false,false);
+		*/
 		
 		/*$webFolder=date('mdH');
 		
@@ -165,7 +171,8 @@ define('APP', __DIR__.'/dev/');";
 				continue;
 			}
 			
-			$newDevDir=$devDir.$dirname.DS; $newProdDir=$prodDir.$dirname.DS; $newOverride=$override===true ? true : $override.$dirname.DS;
+			$newDevDir=$devDir.$dirname.DS; $newProdDir=$prodDir.$dirname.DS;
+			$newOverride=$override===true ? true : array_map(function($override) use($dirname){return $override.$dirname.DS;},$override);
 			$allowUnderscoredFiles=false;
 			
 			if($defaultClass===false){

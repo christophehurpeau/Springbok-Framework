@@ -40,6 +40,10 @@ div.input.select label,div.radio label{vertical-align:middle}
 .medium-label div.input label,.medium-label .radio .title{
 	width:$FORM_MEDIUM_LABEL_WIDTH;
 }
+.label-wp100 div.input label, .label-wp100 div.textarea label{
+  display:block;
+  width:auto;
+}
 
 
 /*

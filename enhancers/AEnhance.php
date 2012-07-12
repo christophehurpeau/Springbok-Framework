@@ -62,8 +62,7 @@ abstract class AEnhance{
 		$this->enhanced->initNewDefContent();
 		
 		//$t=microtime(true);
-		$this->recursiveDir($this->enhanced->getAppDir().'src/',new Folder($this->enhanced->getAppDir().'src'),
-						$dev->getPath(), $prod->getPath(),array('logs','tmp'));
+		$this->recursiveDir($this->enhanced->getAppDir().'src/',new Folder($this->enhanced->getAppDir().'src'),$dev->getPath(),$prod->getPath());
 		//debug('recursiveDir took : '.(microtime(true) - $t).' s');
 		//debugVar($this->newDef);
 		

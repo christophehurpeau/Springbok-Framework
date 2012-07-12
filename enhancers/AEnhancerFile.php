@@ -3,11 +3,11 @@ abstract class EnhancerFile{
 	private $srcFile,$fileName,$_isCore,$_isProd,$_config,$_isInLibDir,$_devFile;
 	public $currentDestFile;
 	
-	protected $enhanced,$_srcContent,$warnings,$errors;
+	protected $enhanced,$_srcContent,$warnings,$errors,$md5;
 	
-	public function __construct(&$enhanced,$filename,$isCore=false,$isInLibDir=false){
+	public function __construct($enhanced,$filename,$isCore=false,$isInLibDir=false){
 		$this->srcFile=new File($filename);
-		$this->enhanced=&$enhanced;
+		$this->enhanced=$enhanced;
 		$this->_isCore=$isCore; $this->fileName=$this->srcFile->getName();
 		$this->_isInLibDir=$isInLibDir;
 		$this->loadContent($this->srcFile->read());
@@ -16,7 +16,7 @@ abstract class EnhancerFile{
 	protected function loadContent($srcContent){ $this->_srcContent=$srcContent; }
 	
 	public function getMd5Content(){
-		return md5($this->_srcContent);
+		return $this->md5=md5($this->_srcContent);
 	}
 	
 	public function hasWarnings(){ return !empty($this->warnings); }
@@ -25,22 +25,31 @@ abstract class EnhancerFile{
 	public function getErrors(){ return $this->errors; }
 	
 	public function processEhancing($devFile,$prodFile,$justDev=null){
-		//if($justDev===null) throw new Exception('just dev is deprecated');
-		//$justDev=$this->isJustDev();
 		if(is_string($devFile)) $devFile=new File($devFile);
-		$this->_devFile=$this->currentDestFile=$devFile; $this->_isProd=false;
 		
-		$this->enhanceContent();
+		//echo($devFile->getPath().' ==> '.md5($devFile->getPath()).'_'.$this->md5.'<br/>'); ob_flush();
+		if(($cacheActive=(!$this->enhanced->isCore() && static::$CACHE_PATH!==false))
+					 && file_exists(($cachefile=$this->enhanced->getTmpDir().static::$CACHE_PATH.'/'.md5($this->srcFile->getPath()).'_'.$this->md5).'_dev')){
+			$this->copyFromCache($cachefile,$devFile,$prodFile,$justDev);
+		}else{
+			$this->_devFile=$this->currentDestFile=$devFile; $this->_isProd=false;
 			
-		//$t=microtime(true);
-		$this->writeDevFile($devFile);
-		if(!$justDev && $prodFile!==false){
-			if(is_string($prodFile)) $prodFile=new File($prodFile);
-			$this->currentDestFile=$prodFile; $this->_isProd=true;
-			$this->writeProdFile($prodFile);
+			$this->enhanceContent();
+		
+			//$t=microtime(true);
+			if($this->writeDevFile($devFile)!==false && $cacheActive) copy($devFile->getPath(),$cachefile.'_dev');
+			if(!$justDev && $prodFile!==false){
+				if(is_string($prodFile)) $prodFile=new File($prodFile);
+				$this->currentDestFile=$prodFile; $this->_isProd=true;
+				if($this->writeProdFile($prodFile) !==false && $cacheActive) copy($devFile->getPath(),$cachefile.'_prod');
+			}
 		}
-		//$t=(microtime(true) - $t);
-		//if($t > 1) debugVar('Write time : '.$this->srcFile->getPath() .' : '.$t);
+	}
+	
+	protected function copyFromCache($cachefile,$devFile,$prodFile,$justDev){
+		//echo('copy : '.$cachefile.'<br/>');ob_flush();
+		copy($cachefile.'_dev',$devFile->getPath());
+		if(!$justDev && $prodFile!==false) copy($cachefile.'_prod',is_string($prodFile) ? $prodFile : $prodFile->getPath());
 	}
 	
 	protected function isJustDev(){return false;} 
@@ -52,10 +61,12 @@ abstract class EnhancerFile{
 	public function writeDevFile($devFile){
 		$content=$this->getEnhancedDevContent();
 		if($content!==false) $devFile->write($content);
+		return true;
 	}
 	public function writeProdFile($prodFile){
 		$content=$this->getEnhancedProdContent();
 		if($content!==false) $prodFile->write($content);
+		return true;
 	}
 	
 	public abstract function getEnhancedDevContent();

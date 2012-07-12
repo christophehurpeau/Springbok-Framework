@@ -1,5 +1,6 @@
 <?php
 class PhpFile extends EnhancerFile{
+	public static $CACHE_PATH=false;
 	protected $_devContent,$_prodContent;
 	
 	protected function loadContent($srcContent){
@@ -42,7 +43,7 @@ class PhpFile extends EnhancerFile{
 	}
 
 	public function getMd5Content(){
-		return md5($this->_srcContent).$this->enhanced->md5EnhanceConfig();
+		return $this->md5=(md5($this->_srcContent).$this->enhanced->md5EnhanceConfig());
 	}
 	
 	public function enhanceContent(){

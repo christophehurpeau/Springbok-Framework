@@ -1,5 +1,7 @@
 <?php
 class ControllerFile extends PhpFile{
+	public static $CACHE_PATH=false;//'controllers_8.0';
+	
 	const REGEXP_ACTION='/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)[\s]*{\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums';
 	
 	private $_className,$_annotations=array(),$_classAnnotations;

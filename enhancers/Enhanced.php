@@ -4,9 +4,9 @@ class Enhanced{
 	public $config,$oldDef=array(),$newDef=array(),$warnings=array(),$errors=array();
 	
 	public function __construct($type,&$dirname){
-		$this->type=&$type;
+		$this->type=$type;
 		if(!substr($dirname,-(strlen(DS))) != DS) $dirname.=DS;
-		$this->appDir=&$dirname;
+		$this->appDir=$dirname;
 		if(file_exists($configname=$dirname.'src/config/enhance.php'))
 			$this->config=include $configname;
 	}

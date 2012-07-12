@@ -1,5 +1,6 @@
 <?php
 class JobFile extends PhpFile{
+	public static $CACHE_PATH='jobs_8.0';
 	
 	protected function enhancePhpContent($phpContent,$false=false){
 		self::$_changes=true;

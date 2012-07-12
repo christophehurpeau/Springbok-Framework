@@ -1,5 +1,6 @@
 <?php
 class ModelFile extends PhpFile{
+	public static $CACHE_PATH=false;
 	public $_className,$_contentInfos,$_classAnnotations;
 	
 	const REGEXP_FIELDS='/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums';

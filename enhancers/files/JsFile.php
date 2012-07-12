@@ -1,6 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
+	public static $CACHE_PATH='js_8.0';
 
 	public function loadContent($srcContent){
 		if($this->fileName()==='jsapp.js'){
@@ -34,7 +35,7 @@ class JsFile extends EnhancerFile{
 			$md5.=file_get_contents($this->enhanced->getAppDir().'src/config/routes'.$suffix.'.php')
 				.file_get_contents($this->enhanced->getAppDir().'src/config/routes-langs'.$suffix.'.php');
 		}
-		return md5($md5);
+		return $this->md5=md5($md5);
 	}*/
 	
 	public function enhanceContent(){
@@ -105,6 +106,7 @@ class JsFile extends EnhancerFile{
 			//self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath().'_googleclosure.js');
 			//self::uglify($content,$devFile->getPath().'_uglify.js');
 		}
+		return true;
 	}
 	public function writeProdFile($prodFile){
 		//if(in_array($this->fileName(),array('global.js','mobile.js','admin.js','jsapp.js')))
@@ -140,6 +142,7 @@ class JsFile extends EnhancerFile{
 			//self::executeGoogleCompressor($content,$prodFile->getPath().'_googleclosure.js');
 			//self::uglify($content,$prodFile->getPath().'_uglify.js');
 		}
+		return true;
 	}
 	
 	public static function executeCompressor($tmpDir,&$content,$destination,$nomunge=false){
@@ -157,7 +160,7 @@ class JsFile extends EnhancerFile{
 				prettyDebug(HText::highlightLine($content,null,(int)$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
 			}else h($content);
 		}
-		//unlink($tmpfname);
+		unlink($tmpfname);
 		chmod($dest,0777);
 		if(!$destination){
 			$destination=file_get_contents($dest);
@@ -184,7 +187,7 @@ class JsFile extends EnhancerFile{
 				foreach($m[0] as $i=>$abcd)$enhancer->warnings[]=array($m[1][$i],$m[2][$i]);
 			}
 		}
-		//unlink($tmpfname);
+		unlink($tmpfname);
 		chmod($dest,0777);
 		if(!$destination){
 			$destination=file_get_contents($dest);

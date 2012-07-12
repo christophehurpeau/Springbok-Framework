@@ -1,5 +1,7 @@
 <?php
 class CssFile extends EnhancerFile{
+	public static $CACHE_PATH='css_8.0';
+	
 	private $_devSrcContent,$_config=array('compress'=>true,'autoBrowsersCompatibility'=>true);
 
 	public function setConfig($name,$val){$this->_config[$name]=$val;}
@@ -26,6 +28,7 @@ class CssFile extends EnhancerFile{
 			if(!file_exists($appDir.'tmp/compiledcss/dev/')) mkdir($appDir.'tmp/compiledcss/dev/',0755,true);
 			$devFile->copyTo($appDir.'tmp/compiledcss/dev/'.$devFile->getName());
 		}
+		return true;
 	}
 	public function writeProdFile($prodFile){
 		if($this->_config['compress']) self::executeCompressor($this->enhanced->getTmpDir(),$this->getEnhancedProdContent(),$prodFile->getPath());
@@ -34,6 +37,7 @@ class CssFile extends EnhancerFile{
 			if(!file_exists($appDir.'tmp/compiledcss/prod/')) mkdir($appDir.'tmp/compiledcss/prod/',0755);
 			$prodFile->copyTo($appDir.'tmp/compiledcss/prod/'.$prodFile->getName());
 		}
+		return true;
 	}
 	
 	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
@@ -413,7 +417,7 @@ class CssFile extends EnhancerFile{
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))){
 			self::$spriteGenDone=true;
-			$compiledCssFolder=$enhanced->getAppDir().'tmp/compiledcss/prod/';
+			$compiledCssFolder=$enhanced->getAppDir().'tmp/compiledcss/';//prod/';
 			
 			$logger=$enhanced->getLogger();
 			
