@@ -19,8 +19,6 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .hidden{display:none}
 .hiddenText{text-indent:-99999px; *text-indent:0; *font-size:0; *line-height:0; *overflow:hidden; }
 
-.smallinfo{font-size:8pt}
-.biginfo{font-size:11pt}
 .aposTR{position:absolute;top:0;right:0}
 .aposR{position:absolute;right:0}
 /*.iepie{behavior:url(/web/css/PIE.htc);}
@@ -35,7 +33,9 @@ h4{font-size:11pt;margin-bottom:8px;}
 h5{font-size:10pt;margin-bottom:5px;}
 h6{font-size:9pt;margin-bottom:5px;}
 
+.smallinfo{font-size:8pt}
 article{font-size:10pt}
+.biginfo{font-size:11pt}
 
 .sepTop,ul.cSepTop li{margin-top:8px;padding-top:8px;}
 .sepBot{margin-bottom:8px;padding-bottom:8px;}

@@ -18,4 +18,8 @@ class CGeo{
 	public static function mysqlDistanceKm($lat1,$long1,$lat2='c.latitude',$long2='c.longitude'){
 		return 'round(((ACOS(SIN('.$lat2.'*PI()/180)*SIN('.$lat1.'*PI()/180)+COS('.$lat2.'*PI()/180)*COS('.$lat1.'*PI()/180)*COS(('.$long2.'-'.$long1.')*PI()/180))*180/PI())*/* EVAL 60*1.1515*1.609344 /EVAL */),2)';
 	}
+
+	public static function mysqlDistanceCoord($lat1,$long1,$lat2='c.latitude',$long2='c.longitude'){
+		return 'SQRT( POW(('.$lat2.'-'.$lat1.'),2 ) + POW(('.$long2.'-'.$long1.'),2) )';
+	}
 }
