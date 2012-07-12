@@ -67,7 +67,7 @@ abstract class QFind extends QSelect{
 	/** options: withoutFields, fieldsInModel, dataName */
 	private function _join($type,$modelName,$fields,$onConditions,$options){
 		$join=array('type'=>$type,'modelName'=>$modelName,'onConditions'=>$onConditions)+$options
-			+array('fieldsInModel'=>false,'dataName'=>lcfirst($modelName),'isCount'=>false);
+			+array('fieldsInModel'=>false,'dataName'=>lcfirst($modelName),'isCount'=>false,'fields'=>$fields);
 		if(!isset($join['alias'])) $join['alias']=$modelName::$__alias;
 		$this->joins[$join['alias']]=$join;
 		$this->fields[$join['alias']]=$fields;
