@@ -1,5 +1,6 @@
 <?php
 class QFindRows extends QFind{
+	protected static $FORCE_ALIAS=true;
 	public function execute(){
 		$res=$this->_db->doSelectRows($this->_toSQL());
 		

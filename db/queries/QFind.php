@@ -18,6 +18,7 @@
  * @author Christophe Hurpeau
  */
 abstract class QFind extends QSelect{
+	protected static $FORCE_ALIAS=false;
 	protected $fields=array(0=>null),$alias,$joins=array(),$with=array(),$queryResultFields,$objData,$joinData,$objFields,$allFields=array();
 
 	//private $equalsFieldsInConditions;
@@ -226,7 +227,7 @@ abstract class QFind extends QSelect{
 						$this->objFields[]=$alias;
 						//$this->objData[$alias]=null;
 						$this->queryResultFields[]=&$this->objData[$alias];
-						if($fpos!==false){
+						if($fpos!==false||static::$FORCE_ALIAS){
 							$modelAlias=$this->alias;
 							$sql.=' AS '.$this->_db->formatField($alias);
 						}
@@ -256,7 +257,7 @@ abstract class QFind extends QSelect{
 				$joinModelName=$join['modelName'];
 				if(isset($join['fields'])){
 					if($join['fields']!==false){
-						foreach($joinFields as $field=>$alias){
+						foreach($join['fields'] as $field=>$alias){
 							if(is_int($field)){ $field=$alias; $alias=false;}
 							if($fpos=strpos($field,'(')){
 								$sql.=$field;
@@ -272,7 +273,7 @@ abstract class QFind extends QSelect{
 								$this->allFields[$join['alias']][]=$alias;
 								//$this->joinData[$join['alias']][$alias]=null;
 								$this->queryResultFields[]=&$this->joinData[$join['alias']][$alias];
-								if($fpos) $sql.=' AS '.$this->_db->formatField($alias);
+								if($fpos||static::$FORCE_ALIAS) $sql.=' AS '.$this->_db->formatField($alias);
 							}else{
 								$this->allFields[$join['alias']][]=$field;
 								//$this->joinData[$join['alias']][$field]=null;
