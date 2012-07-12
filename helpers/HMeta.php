@@ -1,7 +1,7 @@
 <?php
 /** http://www.google.com/support/webmasters/bin/answer.py?answer=79812 */
 class HMeta{
-	private static $metas,$canonical,$prev,$next,$altLangs;
+	private static $metas,$canonical,$canonicalEntry,$prev,$next,$altLangs;
 	
 	public static function keywords($keywords){
 		self::$metas['keywords']=$keywords;
@@ -27,6 +27,7 @@ class HMeta{
 	}
 	
 	public static function canonical($url){ self::$canonical=$url; }
+	public static function canonicalEntry($entry){ self::$canonicalEntry=$entry; }
 	public static function prev($url){ self::$prev=$url; }
 	public static function next($url){ self::$next=$url; }
 	
@@ -43,7 +44,7 @@ class HMeta{
 	public static function displayCanonical(){
 		/* DEV */ if(self::$canonical===null && !Springbok::$inError) throw new Exception("canonical is not defined"); /* /DEV */
 		if(self::$canonical===false) return '';
-		$result='<link rel="canonical" href="'.HHtml::url(self::$canonical).'"/>';
+		$result='<link rel="canonical" href="'.HHtml::url(self::$canonical,self::$canonicalEntry,true).'"/>';
 		if(self::$prev!==null) $result.='<link rel="prev" href="'.HHtml::url(self::$prev).'"/>';
 		if(self::$next!==null) $result.='<link rel="next" href="'.HHtml::url(self::$next).'"/>';
 		return $result;
