@@ -17,7 +17,7 @@ class CMail{
 	}
 	
 	public static function send($template,$vars,$subject,$to){
-		$vars['subject']=$subject;
+		if(!isset($vars['subject'])) $vars['subject']=$subject;
 		include_once CORE.'mvc/views/View.php';
 		$mailer=self::get();
 		$mailer->ClearAllRecipients();

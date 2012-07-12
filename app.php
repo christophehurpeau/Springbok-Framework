@@ -157,8 +157,8 @@ class App{
 			$mdef=include $filename;
 			
 			$controllerName=CRoute::getController().'Controller';
-			/*if(!file_exists($filename=APP.'controllers'.$suffix.'/'.$controllerName.'.php')) notFound();*/
-			/* DEV */if(!file_exists(APP.'controllers'.Springbok::$suffix.'/'.$controllerName.'.php')) throw new Exception("Controller does not exists : ".$controllerName); /* /DEV */
+			/* if(!file_exists($filename=APP.'controllers'.$suffix.'/'.$controllerName.'.php')) notFound(); */
+			/* DEV */ if(!file_exists(APP.'controllers'.Springbok::$suffix.'/'.$controllerName.'.php')) throw new Exception("Controller does not exists : ".$controllerName); /* /DEV */
 			include APP.'controllers'.Springbok::$suffix.'/'.$controllerName.'.php';
 			
 			/*if(!class_exists($controllerName,false)) notFound();*/
