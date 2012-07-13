@@ -8,6 +8,7 @@ S.dialogs={
 		    position:['center',150],
 		    width:450,
 		    modal:true,
+		    close:function(){ div.remove(); },
 		    zIndex:9000 //fancybox : 8030
 		});
 	},
@@ -31,8 +32,9 @@ S.dialogs={
 		
 		buttons[i18nc.Cancel]=function(){$(this).dialog( "close" );};
 		buttons[okButtonName]=function(){
-			$(this).dialog( "close" );
+			div.hide();
 			callback(div.find('input').val());
+			div.dialog( "close" );
 		};
 		
 		div.dialog({
@@ -42,6 +44,7 @@ S.dialogs={
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
+		    close:function(){ div.remove(); },
 		    zIndex:9000 //fancybox : 8030
 		});
 	},
@@ -50,10 +53,11 @@ S.dialogs={
 		var div=$('<div/>'),buttons={};
 		div.html(content);
 		
-		buttons[i18nc.Cancel]=function(){$(this).dialog( "close" );};
+		buttons[i18nc.Cancel]=function(){div.dialog( "close" );};
 		buttons[okButtonName]=function(){
-			$(this).dialog( "close" );
+			div.hide();
 			callback();
+			div.dialog( "close" );
 		};
 		
 		div.dialog({
@@ -63,6 +67,7 @@ S.dialogs={
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
+		    close:function(){ div.remove(); },
 		    zIndex:9000 //fancybox : 8030
 		});
 	}
