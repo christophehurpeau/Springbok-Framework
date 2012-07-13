@@ -36,6 +36,8 @@ abstract class QFind extends QSelect{
 	public function field($field){$this->fields[0]=array($field);return $this;}
 	/** @return QSelect */
 	public function setFields($fields,$params=NULL){$this->fields[0]=$fields;/* DEV */if($params !== NULL) throw new Exception('NOT SUPPORTED !'); /* /DEV */return $this;}
+	public function noFields(){ $this->fields=false; }
+	
 	
 	public function addField($field){$this->fields[0][]=$field;return $this;}
 	public function addFieldWithAlias($field,$alias){$this->fields[0][$field]=$alias;return $this;}
@@ -301,7 +303,7 @@ abstract class QFind extends QSelect{
 					$sql.=$join['alias'].'.*,';
 				}
 			}
-			if($hasCount && empty($this->groupBy)) $this->groupBy=array($modelName::_getPkName());
+			if($hasCount && empty($this->groupBy)) $this->groupBy=array($fieldPrefix.$modelName::_getPkName());
 		}
 		
 		$sql=substr($sql,0,-1).' FROM '.($currentDb!==null && $currentDb->getDbName() !== $modelName::$__modelDb->getDbName()?$modelName::$__modelDb->getDbName().'.':'').$modelName::_fullTableName();
