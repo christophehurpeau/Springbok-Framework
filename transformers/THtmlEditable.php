@@ -17,12 +17,18 @@ class THtmlEditable extends THtml{
 	
 	public function getDisplayableValue($field,$value,$obj){
 		if(isset($field['editable']) && $field['editable']){
-			$modelName=is_string($field['editable']) ? $field['editable'] : $this->modelName;
+			$name=$fieldKey=$field['key'];
+			if(is_array($field['editable'])){
+				$modelName=$field['editable'][0];
+				$fieldKey=$field['editable'][1];
+			}else{
+				$modelName=is_string($field['editable']) ? $field['editable'] : $this->modelName;
+			}
 			$jsonPkValue=json_encode($this->pkValue);
 			
 			//<input type="text" value="'.h($value).'" style="width:98%" onchange=""/>
-			$def=$modelName::$__PROP_DEF[$name=$field['key']];
-			$infos=$modelName::$__modelInfos['columns'][$name];
+			$def=$modelName::$__PROP_DEF[$fieldKey];
+			$infos=$modelName::$__modelInfos['columns'][$fieldKey];
 			
 			$attributes=array('onchange'=>'editableTable.updateField(\''.$name.'\','.$jsonPkValue.',this)','value'=>$value);
 			$containerAttributes=array('sytle'=>'width:100%;position:relative');
