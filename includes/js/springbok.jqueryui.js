@@ -137,6 +137,7 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
 	options=options || {}; options.url=options.url || '';
 	var ul=div.find('ul'),select=ajaxC_CommonFunction(div,url,options,prepare,function(select,action,data,d,val){
+		var t;
 		if(action=='create'){
 			t=data.val;
 			val=d
@@ -165,9 +166,8 @@ $.fn.ajaxCRDSelectFiltrable=function(url,options){
 		return div.find('select:first').combobox();
 	},function(select,li,val){
 		select.append($('<option/>').attr('value',val).text(li.find('span:first').text()));
-	},function(select,val){
-		o=select.find('option[value="'+val+'"]');
-		var t=o.text();
+	},function(select,val){console.log(select);
+		var o=select.find('option[value="'+val+'"]'),t=o.text();
 		o.remove();
 		return t;
 	})
