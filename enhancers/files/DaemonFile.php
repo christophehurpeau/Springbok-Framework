@@ -1,6 +1,6 @@
 <?php
 class DaemonFile extends PhpFile{
-	public static $CACHE_PATH='daemon_8.0';
+	public static $CACHE_PATH=FALSE;//'daemon_8.0';
 	
 	protected function enhancePhpContent($phpContent,$false=false){
 		preg_match('/class ([A-Za-z_]+)Daemon/',$phpContent,$matches);//debug($matches);
