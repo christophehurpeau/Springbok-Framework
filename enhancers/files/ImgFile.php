@@ -12,7 +12,7 @@ class ImgFile extends EnhancerFile{
 		$filename=$this->fileName();
 		if($filename[0]!=='_'){
 			if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore())
-				if(startsWith($this->srcFile()->getPath(),$appDir.'src/web/img/sprites/')) $this->srcFile()->copyTo($devFile->getPath());
+				if(startsWith($this->srcFile()->getPath(),$appDir.'src/web/sprites/')) $this->srcFile()->copyTo($devFile->getPath());
 				else{//$this->fileName() !== 'img-sprite.png'){
 					if(!file_exists($tmpFolder=$appDir.'tmp/imgs/')) mkdir($tmpFolder,0755,true);
 					
