@@ -21,7 +21,8 @@
 				$this.val(function(i,v){if(!$this.is(':focus') && (v=='' || v==this.title)) return this.title; $this.removeClass('default');return v;})
 				.focusin(function(){if($this.hasClass('default') || $this.val()===this.title) $this.removeClass('default').val('');})
 				.focusout(function(e){if(!$this.hasClass('default') && $this.val()=='') $this.addClass('default').val($this.attr('title'));})
-				.change(function(e){if($this.hasClass('default')) $this.val()!='' ? $this.removeClass('default') : $this.val($this.attr('title'))});
+				.change(function(e){ if($this.hasClass('default')){ if($this.val()!='') $this.removeClass('default'); else $this.val($this.attr('title')); }
+											else if($this.val()==''){ $this.addClass('default').val($this.attr('title')); }});
 			});
 			return inputs;
 		}else if(methods[method]){
