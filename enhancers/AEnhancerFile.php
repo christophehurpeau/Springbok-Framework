@@ -41,7 +41,7 @@ abstract class EnhancerFile{
 			if(!$justDev && $prodFile!==false){
 				if(is_string($prodFile)) $prodFile=new File($prodFile);
 				$this->currentDestFile=$prodFile; $this->_isProd=true;
-				if($this->writeProdFile($prodFile) !==false && $cacheActive) copy($devFile->getPath(),$cachefile.'_prod');
+				if($this->writeProdFile($prodFile) !==false && $cacheActive) copy($prodFile->getPath(),$cachefile.'_prod');
 			}
 		}
 	}

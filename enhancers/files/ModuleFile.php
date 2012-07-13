@@ -1,6 +1,6 @@
 <?php
 class ModuleFile extends PhpFile{
-	public static $CACHE_PATH='controllers_8.0';
+	public static $CACHE_PATH='modules_8.0';
 	private $_className;
 	
 	protected function enhancePhpContent($phpContent,$false=false){

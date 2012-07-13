@@ -68,7 +68,7 @@ class ConfigFile extends PhpFile{
 							$db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'a\','.$db->escape($value).')');
 							$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'P\','.$db->escape($value).')');
 						}
-						$db->doUpdate('INSERT INTO t (s,c,t) VALUES ("plugin.'.$pluginName.'.md5",\'P\','.$db->escape($this->md5).')');
+						$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ("plugin.'.$pluginName.'.md5",\'P\','.$db->escape($this->md5).')');
 					}
 				}
 				$this->write($configname,'',$devFile,$prodFile);
