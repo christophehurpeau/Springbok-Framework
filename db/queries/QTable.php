@@ -33,11 +33,12 @@ class QTable extends QFindAll{
 		
 		$belongsToFields=$this->belongsToFields; $belongsToRel=array();
 		if($this->autoRelations!==false){
-			if($belongsToFields!==false && empty($this->belongsToFields)){
+			if(empty($this->belongsToFields)){
 				$modelRelations=$modelName::$__modelInfos['relations'];
 				$parentRelModelName=isset($modelRelations['Parent'])?$modelRelations['Parent']['modelName']:false;
 				foreach($modelRelations as $relKey=>&$rel){
-					if($rel['reltype']==='belongsTo' && $rel['modelName']!==$parentRelModelName && in_array($rel['foreignKey'],$fields)) $belongsToFields[$rel['foreignKey']]=$relKey;}
+					if($rel['reltype']==='belongsTo' && $rel['modelName']!==$parentRelModelName && in_array($rel['foreignKey'],$fields) 
+							&& empty($modelName::$__PROP_DEF[$rel['foreignKey']]['annotations']['Enum'])) $belongsToFields[$rel['foreignKey']]=$relKey;}
 			}
 			foreach($belongsToFields as $field=>$relKey){
 				$belongsToRel[$field]=$modelName::$_relations[$relKey];
