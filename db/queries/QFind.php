@@ -36,7 +36,7 @@ abstract class QFind extends QSelect{
 	public function field($field){$this->fields[0]=array($field);return $this;}
 	/** @return QSelect */
 	public function setFields($fields,$params=NULL){$this->fields[0]=$fields;/* DEV */if($params !== NULL) throw new Exception('NOT SUPPORTED !'); /* /DEV */return $this;}
-	public function noFields(){ $this->fields=false; }
+	public function noFields(){ $this->fields[0]=false; return $this; }
 	
 	
 	public function addField($field){$this->fields[0][]=$field;return $this;}
