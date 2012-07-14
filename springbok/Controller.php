@@ -161,20 +161,40 @@ class Controller{
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Status: 301 Moved Permanently',false,301);
 		}
-		header('Location: '.HHtml::url($to,$entry));
+		header('Location: '.($entry===false?$to:HHtml::url($to,$entry)));
 		if($exit) exit;
 	}
 	
 	public static function redirectLast($toIfNotFound,$entryIfNotFound=null,$exit=true){
 		$to=CHttpRequest::referer(true);
-		if($to===CRoute::getAll()) $to=$toIfNotFound;
-		elseif($to===null) $to=$toIfNotFound;
+		if($to===CRoute::getAll() || $to===null) $to=$toIfNotFound;
+		else $entryIfNotFound=false;
 		self::redirect($to,$entryIfNotFound,$exit);
 	}
 	
 	public static function redirectPermanent($to,$entry=null,$exit=true,$forbiddendForAjax=true){
 		self::redirect($to,$entry,$exit,$forbiddendForAjax,true);
 	}
+	
+	public static function redirectLastIfNotSecured($toIfNotFound,$exit=true){
+		throw new Exception('TODO : put ischeckrequired in mdef');
+		$to=CHttpRequest::referer(true);
+		$entry=null;
+		if($to===CRoute::getAll() || $to===null) $to=$toIfNotFound;
+		else{
+			$route=CRoute::resolveRoute($to);
+			$filename=APP.'controllers'.Springbok::$suffix.'/methods/'.$route['controller'].'-'.$route['action'];
+			if(!file_exists($filename)) $to=$toIfNotFound;
+			else{
+				$entry=false;
+				$mdef=include $filename;
+				
+			}
+			
+		}
+		self::redirect($to,$entry,$exit);
+	}
+	
 	
 	/* RENDER */
 

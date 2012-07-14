@@ -29,6 +29,10 @@ class CRoute{
 		list(self::$controller,self::$action,self::$params,self::$ext)=$route;
 	}
 	
+	public static function resolveRoute($url){
+		return CRoute::find('/'.trim($url,'/'));
+	}
+	
 	public static function cliinit(/* DEV */$prefix/* /DEV */){
 		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];
