@@ -141,12 +141,16 @@ class HElementForm extends HElement{
 		return new HElementFormInputSubmit($this,$title);
 	}
 	
-	public function checkbox($name){
-		return new HElementFormInputCheckbox($this,$name);
+	public function checkbox($name,$label=false){
+		return new HElementFormInputCheckbox($this,$name,$label);
 	}
 	
 	public function select($name,$list=null,$selected=null){
 		return new HElementFormInputSelect($this,$name,$list,$selected);
+	}
+	
+	public function stars($name,$nbStars=5){
+		return new HElementFormStars($this,$name,$nbStars);
 	}
 	
 	public function _getValue(&$name){

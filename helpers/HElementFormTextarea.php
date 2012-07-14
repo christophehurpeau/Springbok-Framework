@@ -31,8 +31,8 @@ class HElementFormTextarea extends HElementFormContainable{
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'textarea'); }
 	
-	public function toString($name){
+	public function toString(){
 		if(empty($this->value)) $this->value='';//close the 'textarea' tag
-		return $this->_labelToString().$this->between.HHtml::tag('textarea',$this->attributes,$value);
+		return $this->_labelToString().$this->between.HHtml::tag('textarea',$this->attributes,$this->value);
 	}
 }
