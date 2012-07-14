@@ -21,7 +21,7 @@ class CHttpClient{
 	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),
 		$cookies=array(),$_cookies=array(),$referer=false,$cookiePath,$useCookies=false,//$saveCookies=true,
 		$username=null,$password=null,$proxy=null,
-		$result,$headers,$status=0,$redirect=true,$curRedirect=0;
+		$result,$headers,$status=0,$error,$redirect=true;
 
 	public static function randomUserAgent(){
 		// TODO update user agent list
@@ -72,9 +72,14 @@ class CHttpClient{
 	/*public function &saveCookies($val){$this->saveCookies=&$val;return $this;}*/
 	public function useCookies($value=true){$this->useCookies=$value;return $this;}
 	public function useReferer(){$this->referer='';return $this;}
-	public function followRedirects($value){$this->redirect=$value;return $this;}
+	public function followRedirects(){$this->redirect=true;return $this;}
+	public function doNotfollowRedirects(){$this->redirect=false;return $this;}
 	/** ip:port , username:password */
 	public function proxy($proxy,$auth=false){$this->proxy=array($proxy,$auth);return $this;}
+	
+	public function getStatus(){ return $this->status; }
+	public function getError(){ return $this->error; }
+	public function getResult(){ return $this->result; }
 	
 	public function get($target,$referer=null){
 		return $this->execute($target,$referer,'GET');
@@ -101,9 +106,9 @@ class CHttpClient{
 		
 		$ch=$this->_curl_create($method,$target,$this->params);
 		
-		$content=curl_exec($ch);
-		$status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
-		$error=curl_error($ch);
+		$this->result=curl_exec($ch);
+		$this->status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		$this->error=curl_error($ch);
 		
 		
 		//debug($content);exit;
@@ -120,9 +125,9 @@ class CHttpClient{
 		
 		if($this->referer!==false) $this->referer=$this->target;
 		
-		if($status!==200 || $error) throw new HttpClientError($target,$status,$error,$content);
+		if($this->status!==200 || $this->error) throw new HttpClientError($target,$this->status,$this->error,$this->result);
 		
-		return $content;
+		return $this->result;
 	}
 
 
