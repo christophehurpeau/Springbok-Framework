@@ -1,7 +1,7 @@
 includeLib('jquery-1.7.2.min');
 includeCore('springbok.base');
 
-S.loadSyncScript(staticUrl+'js/i18n-'+i18n_lang+'.js');
+S.loadSyncScript(staticUrl+'js/i18n-'+S.lang+'.js');
 
 (function(){
 	var readyCallbacks=$.Callbacks(),loadedRequired={};

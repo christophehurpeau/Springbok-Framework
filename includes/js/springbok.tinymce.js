@@ -4,7 +4,7 @@ S.tinymce={
 	load:function(plugins){
 		if(window.tinymce===undefined){
 			S.loadSyncScript(webdir+'js/tinymce.js');
-			S.loadSyncScript(webdir+'js/tinymce.'+i18n_lang+'.js');
+			S.loadSyncScript(webdir+'js/tinymce.'+S.lang+'.js');
 			// bug for ajax partial load
 			if($.isReady) tinymce.dom.Event.domLoaded=true;
 			/*old tinymce S.ready(function(){tinymce.dom.Event._pageInit(window)});*/
@@ -14,7 +14,7 @@ S.tinymce={
 	
 	init:function(w,h,barType,withImageManager){
 		this.attrs={
-			theme:'advanced',language:i18n_lang,
+			theme:'advanced',language:S.lang,
 			skin:'o2k7',skin_variant:'black',
 			
 			theme_advanced_toolbar_location:'top', theme_advanced_toolbar_align:'left', theme_advanced_statusbar_location:'bottom',//  theme_advanced_resizing:false,

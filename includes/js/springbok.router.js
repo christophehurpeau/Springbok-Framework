@@ -108,7 +108,7 @@
 			else if(route.ext) plus+= '.'+route.ext;
 			if(options['#']) plus+='#'+options['#'];
 		
-			return params ? route[i18n_lang][1].sbVFormat(params)+plus : route[i18n_lang][1]+plus;
+			return params ? route[S.lang][1].sbVFormat(params)+plus : route[S.lang][1]+plus;
 		},
 		
 		/* Exemples :
@@ -123,10 +123,10 @@
 		},
 		
 		translate:function(string){
-			return routesLangs['en->'+i18n_lang][string] || string;
+			return routesLangs['en->'+S.lang][string] || string;
 		},
 		untranslate:function(string){
-			return routesLangs[i18n_lang+'->en'][string] || string;
+			return routesLangs[S.lang+'->en'][string] || string;
 		}
 	};
 })();

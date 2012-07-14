@@ -1,4 +1,3 @@
-includeCore('langs/core-fr');
 S.i18n={
 	date:{
 		format:'dd/mm/yyyy',
@@ -90,3 +89,4 @@ S.i18n={
 		}
 	}
 };
+includeCore('langs/core-fr');

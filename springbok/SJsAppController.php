@@ -6,7 +6,7 @@ class SJsAppController extends Controller{
 			.'<title>'.Config::$projectName.' - '.($loading=_tC('Loading...')).'</title>';
 		HHtml::cssLink();
 		echo HHtml::jsInline(
-			'var i18n_lang="'.CLang::get().'";'
+			'S.lang="'.CLang::get().'";'
 			.'window.onload=function(){'
 				.'var s=document.createElement("script");'
 				.'s.type="text/javascript";'
