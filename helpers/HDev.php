@@ -1,7 +1,7 @@
 <?php
 class HDev{
 	public static function springbokBar(){
-		if(CHttpRequest::isMobile()) return;
+		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
 		echo HHtml::cssInline(file_get_contents(CORE.'includes/springbokBar.css'));
 		echo HHtml::jsInline(file_get_contents(CORE.'includes/springbokBar.js'));
 		$changes=&App::$changes[0];
