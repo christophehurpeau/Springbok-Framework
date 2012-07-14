@@ -83,6 +83,7 @@ class HDev{
 	private static function springbokBarSession(){
 		echo '<h2>Session</h2>';
 		if(!class_exists('CSession',false)) echo "not started";
+		elseif(!isset($_SESSION)) echo "closed";
 		else{
 			echo short_debug_var($_SESSION);
 		}
