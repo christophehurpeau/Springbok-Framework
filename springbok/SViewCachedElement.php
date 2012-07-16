@@ -27,6 +27,7 @@ class SViewCachedElement extends SViewElement{
 	}
 	public function exists(){ return file_exists($this->path.'view'); }
 	public function generateAll(){
+		include_once CORE.'mvc/views/View.php';
 		foreach(static::$views as $view) $this->write($view,parent::render($view));
 	}
 	
