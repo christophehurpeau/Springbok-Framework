@@ -94,8 +94,9 @@ class ScssFile extends EnhancerFile{
 	
 	protected function copyFromCache($cachefile,$devFile,$prodFile,$justDev){
 		parent::copyFromCache($cachefile,$devFile,$prodFile,$justDev);
-		copy($cachefile.'_dev',$devFile->getPath());
-		if(!$justDev && $prodFile!==false) copy($cachefile.'_prod',is_string($prodFile) ? $prodFile : $prodFile->getPath());
+		$tmpDir=$this->enhanced->getTmpDir();
+		if(!file_exists($tmpDir.'compiledcss/')) mkdir($tmpDir.'compiledcss/',0755,true);
+		$devFile->copyTo($tmpDir.'compiledcss/'.$devFile->getName());
 	}
 	
 	private static $sassExecutable='sass';

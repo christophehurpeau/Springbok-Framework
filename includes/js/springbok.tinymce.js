@@ -3,8 +3,8 @@ S.tinymce={
 	
 	load:function(plugins){
 		if(window.tinymce===undefined){
-			S.loadSyncScript(webdir+'js/tinymce.js');
-			S.loadSyncScript(webdir+'js/tinymce.'+S.lang+'.js');
+			S.loadSyncScript(jsdir+'tinymce.js');
+			S.loadSyncScript(jsdir+'tinymce.'+S.lang+'.js');
 			// bug for ajax partial load
 			if($.isReady) tinymce.dom.Event.domLoaded=true;
 			/*old tinymce S.ready(function(){tinymce.dom.Event._pageInit(window)});*/

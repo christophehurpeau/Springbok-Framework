@@ -417,7 +417,9 @@ class CssFile extends EnhancerFile{
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
 		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))){
 			self::$spriteGenDone=true;
-			$compiledCssFolder=$enhanced->getAppDir().'tmp/compiledcss/';//prod/';
+			$compiledCssFolder=($tmpDir=$enhanced->getTmpDir()).'compiledcss/';//prod/';
+			if(!file_exists($cacheFolder=$tmpDir.'sprites_8.0.3/')) mkdir($cacheFolder,0775);
+			if(!file_exists($tmpFolder=$tmpDir.'imgssprites/')) mkdir($tmpFolder,0755,true);
 			
 			$logger=$enhanced->getLogger();
 			
@@ -450,12 +452,18 @@ class CssFile extends EnhancerFile{
 					$md5CssImgs=md5(implode('#',$cssImgs));
 					
 					$spritePath=$enhanced->getAppDir().'src/web/sprites/'.$spritename;
-					
 					$imgDir=$enhanced->getAppDir().'src/web/img/';
 					
-					include_once CORE.'enhancers/CssSpriteGen.php';
-					$cssSpriteGen=new CssSpriteGen();
-					$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritePath);
+					if(file_exists($cacheFolder.$md5CssImgs) && file_exists($cacheFolder.$md5CssImgs.'_imgs')){
+						$spritePath=$cacheFolder.$md5CssImgs;
+						$cssRules=json_decode(file_get_contents($cacheFolder.$md5CssImgs.'_imgs'),true);
+					}else{
+						include_once CORE.'enhancers/CssSpriteGen.php';
+						$cssSpriteGen=new CssSpriteGen($tmpFolder);
+						$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritePath);
+						copy($spritePath,$cacheFolder.$md5CssImgs);
+						file_put_contents($cacheFolder.$md5CssImgs.'_imgs',json_encode($cssRules));
+					}
 					/*if(file_exists($imgDir.$spritename)) */copy($spritePath,$dev->getPath().'web/sprites/'.$spritename);
 					copy($spritePath,$prod->getPath().'web/sprites/'.$spritename);
 					//debug($cssRules);

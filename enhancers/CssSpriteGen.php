@@ -13,7 +13,9 @@ class CssSpriteGen {
       protected $sTempSpriteName;
       protected $bValidImages;
       
-      public function __construct() {
+	  private $tmpFolder;
+      public function __construct($tmpFolder) {
+      	$this->tmpFolder=$tmpFolder;
          // check which image library to use
          // Imagick (Image Magick) is preferable
          if (extension_loaded('imagick')) {
@@ -619,6 +621,10 @@ class CssSpriteGen {
             // this probably won't work with PHP safe mode enabled
             // no real alternative - you'll have to enable to use
             //shell_exec('optipng -o7 '.$sFilename);
+            /*shell_exec('pngcrush -rem alla -reduce -brute '.escapeshellarg($sFilename).' '.escapeshellarg($sFilename.'_pngcrush'));
+			if(filesize($sFilename.'_pngcrush') < filesize($sFilename)) shell_exec('mv -f '.escapeshellarg($sFilename.'_pngcrush').' '.escapeshellarg($sFilename));
+			else unlink($sFilename.'_pngcrush');*/
+			ImgFile::compressImg($sFilename,basename($sFilename),$this->tmpFolder);
          }
       }
       

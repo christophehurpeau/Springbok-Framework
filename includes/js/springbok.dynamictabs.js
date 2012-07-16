@@ -7,6 +7,7 @@
 		S.dynamictabs.init();
 		$(document).bind('click',function(e){
 			if(e.which==2){
+				if(target.is('a[target]') || target.is('a[href="#"]') || target.is('a[href*=":"]')) return true;
 				var target=$(e.target);
 				if(target.is('nav.dynamictabs a')){
 					S.dynamictabs.delTab(target);
