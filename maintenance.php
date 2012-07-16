@@ -21,7 +21,8 @@ class App{
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		
 		$vars=array();
-		if(file_exists(APP.'views/maintenance.php')) render(APP.'views/maintenance.php',$vars);
+		if(Springbok::$scriptname && Springbok::$scriptname!=='index' && file_exists($fmaintenance=(APP.'views.'.Springbok::$scriptname.'/maintenance.php'))) render($fmaintenance,$vars);
+		elseif(file_exists(APP.'views/maintenance.php')) render(APP.'views/maintenance.php',$vars);
 		elseif(file_exists(CORE.'mvc/views/maintenance.php')) render(CORE.'mvc/views/maintenance.php',$vars);
 		else echo "<h1>503 Service Temporarily Unavailable</h1>";
 		
