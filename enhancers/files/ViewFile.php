@@ -89,9 +89,9 @@ class ViewFile extends PhpFile{
 		
 		
 		$content=preg_replace_callback('/\s*{table(?:\s+([^}]+))?}\s*(.+)\s*{\/table}\s*/Us',function(&$m){
-			return '<?php $itable=0; ?><table'.(empty($m[1])?'':' '.implode(' ',array_map(function($p){$p=explode(':',$p,2);return $p[0].'="'.h(trim($p[1],'\'')).'"';},explode(' ',$m[1])))).'>'//TODO parser
-				.preg_replace_callback('#\s*{row}\s*(.*)\s*{/row}\s*#Us',function($mr) use(&$isAlternateRow){
-						return '<tr<?php if($itable++%2) echo \' class="alternate"\' ?>>'.$mr[1].'</tr>';},$m[2])
+			return '<?php $itable=0; ?><table'.ViewFile::params($m).'>'
+				.preg_replace_callback('#\s*{row(?:\s+((?:[^}]+(?:{[^}]+})*)*))?}\s*(.*)\s*{/row}\s*#Us',function($mr) use(&$isAlternateRow){
+						return '<tr<?php if($itable++%2) echo \' class="alternate"\' ?>'.ViewFile::params($mr).'>'.$mr[2].'</tr>';},$m[2])
 				.'</table>';
 		},$content);
 		
@@ -134,6 +134,11 @@ class ViewFile extends PhpFile{
 		}
 		
 		return parent::enhanceFinalContent($content);
+	}
+
+	public static function params(&$m){//TODO parser
+		//debugVar($m);
+		return empty($m[1])?'':(' '.implode(' ',array_map(function($p){$p=explode(':',$p,2);return $p[0].'="'.h(trim($p[1],'\'')).'"';},explode(' ',$m[1]))));
 	}
 	
 	public function getEnhancedDevContent(){
