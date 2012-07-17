@@ -10,9 +10,6 @@ class HHtml{
 	public static function linkAtom($title,$url){
 		echo '<link rel="alternate" type="application/atom+xml" href="'.self::url($url).'" title="'.$title.'"/>';
 	}
-	public static function linkIcon($url='/favicon.ico'){
-		echo '<link rel="shorcut icon" type="image/x-icon" href="'.($url?self::staticUrl($url,'img'):STATIC_URL.'img/'.$url).'"/>';
-	}
 	
 	public static function metaCharset($encoding='utf-8'){
 		return '<meta charset="'.$encoding.'"><meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>';
@@ -22,7 +19,7 @@ class HHtml{
 	}
 	public static function metaLanguage($lang=null){
 		if($lang===null) $lang=CLang::get();
-		return '<meta http-equiv="content-language" content="'.$lang.'">';
+		return '<meta name="language" content="'.$lang.'"/><meta http-equiv="content-language" content="'.$lang.'"/>';
 	}
 	
 	public static function cssLink($url='/main',$media=false){
