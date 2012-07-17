@@ -137,7 +137,12 @@ function debugVar(){
 	$message=ob_get_clean();
 	prettyDebug($message,2);
 }
-
+function debugVarNoFlush(){
+	ob_start();
+	call_user_func_array('var_dump',func_get_args());
+	$message=ob_get_clean();
+	prettyDebug($message,2,false);
+}
 function dev_test_preg_error(){
 	if(preg_last_error() !== PREG_NO_ERROR){
 		switch(preg_last_error()){
@@ -195,6 +200,7 @@ function prettyDebug($message,$skipLength=2){}
 function debug($object){}
 function debugCode($code){}
 function debugVar($var){}
+function debugVarNoFlush(){}
 /* /PROD */
 
 function h($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}

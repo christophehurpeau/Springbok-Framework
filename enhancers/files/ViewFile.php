@@ -106,6 +106,7 @@ class ViewFile extends PhpFile{
 </script>';},$content);
 		
 		$content=preg_replace('/{debug\s+([^}]+?)\s*\}/','<?php debug($1,false) ?>',$content);
+		$content=preg_replace('/{debugVar\s+([^}]+?)\s*\}/','<?php debugVarNoFlush($1) ?>',$content);
 		
 		$content=preg_replace_callback('/{recursiveFunction\s+([^}]+)\s*(?:use\(([^)]+)\)\s*)\}(.*){\/recursiveFunction}/Us',function(&$m){
 			return '<?php UPhp::recursive(function(&$callback,&'.$m[1].')'.(empty($m[2])?'':' use(&'.implode(',&',explode(',',$m[2])).')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
