@@ -14,7 +14,7 @@ class HForm{
 		
 		$setValuesFromVar=true;
 		if($formOptions!==null){
-			$formOptions=$formOptions+array('method'=>'post','entry'=>null,'urlfull'=>false);
+			$formOptions=$formOptions+array('method'=>'post','entry'=>null,'urlfull'=>null);
 			if(!isset($formOptions['action'])) $formOptions['action']=CRoute::getAll();
 			if(!isset($formOptions['name'])){
 				if($modelName===NULL) $name=NULL;

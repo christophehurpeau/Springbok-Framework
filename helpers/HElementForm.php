@@ -19,7 +19,7 @@ class HElementForm extends HElement{
 		return $elt;
 	}
 	
-	public $method,$action,$actionEntry=null,$urlfull=false,
+	public $method,$action,$actionEntry,$urlfull,
 			$defaultLabel=true,$name,$modelName,
 			$tagContainer='div',$fieldsetStarted=false;
 	
@@ -50,7 +50,7 @@ class HElementForm extends HElement{
 	/**
 	 * @return HElementForm
 	 */
-	public function action($action,$entry=null,$urlfull=false){$this->action=$action; $this->actionEntry=$entry; $this->urlfull=$urlfull; return $this; }
+	public function action($action,$entry=null,$urlfull=null){$this->action=$action; $this->actionEntry=$entry; $this->urlfull=$urlfull; return $this; }
 	public function urlfull($urlfull){$this->urlfull=$urlfull; return $this; }
 	//public function &file(){ /* $this->method='post'; */ $this->attributes['enctype']='multipart/form-data'; return $this; }
 	

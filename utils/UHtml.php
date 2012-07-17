@@ -5,12 +5,12 @@ class UHtml{
 	* 	'article'=>function($id){$postSlug=Post::findValueSlugById($id); return array('/:controller/:id-:slug','posts',sprintf('%03d',$id),$postSlug);}
 	* ))
 	*/
-	public static function transformInternalLinks($content,$routes){
-		return preg_replace_callback('#<a([^>]+data\-role="internalLink"[^>]*)>#U',function($m) use($routes){
+	public static function transformInternalLinks($content,$routes,$entryUrls='index',$fullUrls=null){
+		return preg_replace_callback('#<a([^>]+data\-role="internalLink"[^>]*)>#U',function($m) use($routes,$entryUrls,$fullUrls){
 			preg_match('/data\-type="([^"]+)"/',$m[1],$type);
 			preg_match('/data\-params="([^"]+)"/',$m[1],$params);
 			
-			return '<a href="'.HHtml::urlEscape(call_user_func_array(array($routes[$type[1]],'internalLink'),json_decode(html_entity_decode($params[1],ENT_QUOTES,'UTF-8'),true))).'" '.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params|href)="[^"]+"\s*#U',' ',$m[1])).'>';
+			return '<a href="'.HHtml::urlEscape(call_user_func_array(array($routes[$type[1]],'internalLink'),json_decode(html_entity_decode($params[1],ENT_QUOTES,'UTF-8'),true)),$entryUrls,$fullUrls).'" '.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params|href)="[^"]+"\s*#U',' ',$m[1])).'>';
 		},$content);
 	}
 	

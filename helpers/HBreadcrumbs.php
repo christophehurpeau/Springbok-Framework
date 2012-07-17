@@ -29,7 +29,7 @@ class HBreadcrumbs{
 		$attributes=array('id'=>'breadcrumbs');
 		
 		echo HHtml::openTag(self::$tagName,$attributes);
-		echo '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'.(is_array($homeLink) ?  self::link($homeLink[0],$homeLink[1],$homelinkoptions,$spanAttributes) : self::link($homeLink,'/',$linkoptions,$spanAttributes)).'</span>';
+		echo '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'.(is_array($homeLink) ?  self::link($homeLink[0],$homeLink[1],$homelinkoptions,$spanAttributes) : self::link($homeLink,'/',$homelinkoptions,$spanAttributes)).'</span>';
 		foreach(self::$_links as $title=>$value)
 			echo $separator.'<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">'
 				.self::link($title,$value,$linkoptions,$spanAttributes).'</span>';

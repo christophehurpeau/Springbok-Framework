@@ -123,7 +123,7 @@ s.parentNode.insertBefore(g,s);
 	}
 	
 	public static function link($title,$url=false,$options=array()){
-		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>false);
+		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>null);
 		if($url){
 			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:'))) $url=self::url($url,$options['entry'],$options['fullUrl']);
 		}else $title=$url=self::url($title,$options['entry'],$options['fullUrl']);
@@ -233,17 +233,14 @@ s.parentNode.insertBefore(g,s);
 		return self::tag('option',$attributes,$name);
 	}
 	
-	public static function url($url=null,$entry=null,$full=false,$escape=false){
-		/* DEV */
-		if($entry===false || $entry===true)
-			throw new Exception('Entrance param cannot be false or true');
-		/* /DEV */
+	public static function url($url=null,$entry=null,$full=null,$escape=false){
+		/* DEV */ if($entry===false || $entry===true) throw new Exception('Entry param cannot be false or true'); /* /DEV */
 		if($entry===null){
 			$entry=Springbok::$scriptname;
 			if($full===true) $full=Config::$siteUrl[$entry];
-		}elseif($entry!==Springbok::$scriptname || $full===true) $full=Config::$siteUrl[$entry];
+		}elseif(($entry!==Springbok::$scriptname && $full===null) || $full===true) $full=Config::$siteUrl[$entry];
 		if(is_array($url)){
-			$url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($entry,$url);
+			$url=(!$full?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($entry,$url);
 			$escape=false;
 		}else{
 			if(empty($url) || $url==='/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.'/';
@@ -255,7 +252,7 @@ s.parentNode.insertBefore(g,s);
 		}
 		return $escape?h($url,false):$url;
 	}
-	public static function urlEscape($url=null,$entry=null,$full=false){
+	public static function urlEscape($url=null,$entry=null,$full=null){
 		return self::url($url,$entry,$full,true);
 	}
 	
