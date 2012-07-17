@@ -155,6 +155,15 @@ s.parentNode.insertBefore(g,s);
 		$options['href']=$url;
 		return self::tag('a',$options,$title,$escape);
 	}
+
+	public static function cutLink($maxSize,$title,$url=false,$options=array()){
+		if($url===false) $url=$title;
+		if(($l=strlen($title)) > $maxSize){
+			if(!isset($options['title'])) $options['title']=$title;
+			$title=substr($title,0,$halfSize=floor(min($l,$maxSize-3)/2)).'...'.substr($title,$l-$halfSize);
+		}
+		return self::link($title,$url,$options);
+	}
 	
 	public static function img($url,$options=array()){
 		if(!isset($options['alt'])) $options['alt']='';
