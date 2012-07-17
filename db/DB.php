@@ -54,6 +54,9 @@ abstract class DB{
 			$instance->connect();
 		}
     }
+	public static function resetAllQueries(){
+		foreach(self::$_INSTANCES as $instance) $instance->resetQueries();
+	}
 	
 	
 	/* Class DB */
