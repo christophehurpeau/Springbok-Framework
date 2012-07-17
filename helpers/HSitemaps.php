@@ -9,6 +9,7 @@ class HSitemaps{
 		if(++$this->count >49995){
 			$this->count=0;
 			$this->sitemap->end();
+			unset($this->sitemap);
 			$this->sitemap=new HSitemap('sitemaps/'.$this->prefix.($this->sitemapNum++).'.xml');
 		}
 		$this->sitemap->add($url,$options);
