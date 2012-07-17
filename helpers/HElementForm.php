@@ -25,7 +25,7 @@ class HElementForm extends HElement{
 	
 	
 	public function __construct($method='post'){
-		$this->method=&$method;
+		$this->method=$method;
 	}
 	
 	public function basic(){
@@ -56,8 +56,9 @@ class HElementForm extends HElement{
 	
 	public function isContainable(){ return $this->tagContainer!==false; }
 	public function getTagContainer(){ return $this->tagContainer; }
-	public function tagContainer($tagContainer){ $this->tagContainer=&$tagContainer; return $this; }
+	public function tagContainer($tagContainer){ $this->tagContainer=$tagContainer; return $this; }
 	public function noContainer(){ $this->tagContainer=false; return $this; }
+	public function noDefaultLabel(){ $this->defaultLabel=false; return $this; }
 	
 	
 	public function __toString(){
