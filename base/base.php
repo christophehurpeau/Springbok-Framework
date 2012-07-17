@@ -104,7 +104,11 @@ function short_debug_var($var,$MAX_DEPTH=3,$currentDepth=0){
 	}elseif(is_null($var)){
 		return 'null';
 	}else{
-		return UPhp::exportCode($var);//var_dump($var);
+		try{
+			return UPhp::exportCode($var);//var_dump($var);
+		}catch(Exception $e){
+			return print_r($val,true).' (exportCode=Exception)';
+		}
 	}
 }
 
