@@ -56,6 +56,9 @@ abstract class DBSql extends DB{
 	public function doSelectValues($query,$numCol=0){
 		return $this->doSelect('Values',func_get_args());
 	}
+	public function doSelectAssocValues($query,$tabResKey){
+		return $this->doSelect('AssocValues',func_get_args());
+	}
 	public function doSelectValue($query,$numCol=0){
 		return $this->doSelect('Value',func_get_args());
 	}

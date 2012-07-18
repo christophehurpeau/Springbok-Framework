@@ -118,6 +118,13 @@ class DBSQLite extends DBSql{
 		$r=$this->_query($query);
 		while($row=$r->fetchArray(SQLITE3_NUM)) $callback($row[$numCol]);
 	}
+	public function /* DEV */_/* /DEV */doSelectAssocValues($query,$tabResKey){
+		$r=$this->_query($query); $res=array();
+		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row[0];
+		return $res;
+	}
+	
+	
 	public function /* DEV */_/* /DEV */doSelectValue($query){
 		//return $this->_connect->querySingle($query);
 		$r=$this->_query($query);

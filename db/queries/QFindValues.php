@@ -1,8 +1,9 @@
 <?php
 class QFindValues extends QFind{
+	private $tabResKey;
 	public function execute(){
-		$res=$this->_db->doSelectValues($this->_toSQL());
-		return $res;
+		if($this->tabResKey !== null) return $this->_db->doSelectAssocValues($this->_toSQL(),$this->tabResKey);
+		return $this->_db->doSelectValues($this->_toSQL());
 	}
 	
 	
@@ -10,5 +11,8 @@ class QFindValues extends QFind{
 		$this->_db->doSelectValuesCallback($this->_toSQL(),$callback);
 	}
 	
-	public function tabResKey(){}
+	public function tabResKey($field='id'){
+		$this->tabResKey=$field;
+		return $this;
+	}
 }

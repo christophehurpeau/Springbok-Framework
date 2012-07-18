@@ -180,6 +180,16 @@ class DBMySQL extends DBSql{
 		while($r->fetch()) $callback($value);
 		$r->close();
 	}
+	public function /* DEV */_/* /DEV */doSelectAssocValues($query,$tabResKey){
+		$value=false; $res=array();
+		$fields=array(&$value);
+		$r=$this->_query_($query,$fields);
+		while($r->fetch()) $res[$value]=$value;
+		$r->close(); return $res;
+	}
+	
+	
+	
 	public function /* DEV */_/* /DEV */doSelectValue($query,$numCol=0){
 		$value=false;
 		$fields=array(&$value);
