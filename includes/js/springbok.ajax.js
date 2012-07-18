@@ -77,7 +77,7 @@ includeCore('ui/slideTo');
 		},
 		load:function(url,data,type,forceNotAddDataToGetORdoNotDoTheEffect){
 			if(url.substr(0,1)==='?') url=location.pathname+url;
-			var ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
+			var oldCurrentTitle=document.title,ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
 			if(data && !forceNotAddDataToGetORdoNotDoTheEffect) url+=(url.indexOf('?')==-1?'?':'&')+data;
 			
@@ -94,13 +94,14 @@ includeCore('ui/slideTo');
 				type:type?type:'GET', data:data, headers:headers,
 				async:false,
 				complete:function(jqXHR){
-					S.history.navigate(url);
-					
+					S.setTitle(oldCurrentTitle);
+					setTimeout(function(){S.history.navigate(url)},3);
 				/*	$('body').removeClass('cursorWait');
 					divLoading.remove();
 				},
 				success:function(data,textStatus,jqXHR){*/
-					var h,div,to;
+					var div,to,h=jqXHR.getResponseHeader('SpringbokAjaxTitle'),newTitle=h?$.parseJSON(h):'-';
+					setTimeout(function(){S.setTitle(newTitle)},5);
 					
 					if(h=jqXHR.getResponseHeader('SpringbokAppVersion'))
 						if(h!=version) if(confirm("L'application a été mise à jour. Souhaitez vous recharger la page ?")) window.location.reload();
@@ -111,7 +112,6 @@ includeCore('ui/slideTo');
 						return;
 					}
 					
-					if(h=jqXHR.getResponseHeader('SpringbokAjaxTitle')) S.setTitle($.parseJSON(h));
 					if(h=jqXHR.getResponseHeader('SpringbokAjaxBreadcrumbs')) S.breadcrumbs($.parseJSON(h));
 					
 					if(!(to=jqXHR.getResponseHeader('SpringbokAjaxTo'))) to='base';
