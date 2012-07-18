@@ -29,6 +29,11 @@ class CRoute{
 		list(self::$controller,self::$action,self::$params,self::$ext)=$route;
 	}
 	
+	public static function setControllerAndAction($controller,$action){
+		self::$controller=$controller;
+		self::$action=$action;
+	}
+	
 	public static function resolveRoute($url){
 		return CRoute::find('/'.trim($url,'/'));
 	}
