@@ -154,7 +154,7 @@ class ControllerFile extends PhpFile{
 
 		/* Les premiers à être testés */
 		if(isset($mdef['annotations']['Post']) || isset($this->_classAnnotations['Post'])){
-			$methodBody='if(empty($_POST)) /* DEV */throw new Exception("POST empty");/* /DEV *//* PROD */notFound();/* /PROD */'.$methodBody;
+			$methodBody='if(empty($_POST)) /* DEV */throw new Exception("POST empty");/* /DEV *//* PROD */methodNotAllowed();/* /PROD */'.$methodBody;
 			unset($mdef['annotations']['Post']);
 		}
 		if(isset($mdef['annotations']['Ajax']) || isset($this->_classAnnotations['Ajax'])){
