@@ -71,7 +71,7 @@ class App{
 			$generateSchema=($changes && !empty($changes['Model'])) || CHttpRequest::_GETor('apply')==='springbokProcessSchema';
 			$cookie=CCookie::get('springbok');
 			if(!$generateSchema){
-				if(!CCookie::exists('springbok') || !isset($cookie->check)){
+				/*if(!CCookie::exists('springbok') || !isset($cookie->check)){
 					if(isset($_GET['check']) && ($_GET['check']==='springbokCheckFalse' || $_GET['check']==='springbokCheckTrue')){
 						if($_GET['check']==='springbokCheckFalse') $cookie->check=false;
 						elseif($_GET['check']==='springbokCheckTrue') $cookie->check=true;
@@ -82,8 +82,8 @@ class App{
 						$vars=array(); render(CORE.'db/check-view.php',$vars);
 						exit;
 					}
-				}
-				if($cookie->check && (empty($cookie->lastProcess) || $cookie->lastProcess<(time()-(60*60*10)))){
+				}*/
+				if(/*$cookie->check && (*/empty($cookie->lastProcess) || $cookie->lastProcess<(time()-(60*60*10)))/*)*/{
 					$cookie->lastProcess=time();
 					$updateCookie=$generateSchema=true;
 				}
