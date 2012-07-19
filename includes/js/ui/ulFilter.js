@@ -4,7 +4,7 @@
 		else{
 			this.find('li').each(function(i,li){
 				li=$(li);
-				li.text().toLowerCase().indexOf(filter.toLowerCase())===-1 ? li.sHide() : li.sShow();
+				li.text().toLowerCase().sbRemoveSpecialChars().indexOf(filter.toLowerCase().sbRemoveSpecialChars())===-1 ? li.sHide() : li.sShow();
 			});
 		}
 	}
