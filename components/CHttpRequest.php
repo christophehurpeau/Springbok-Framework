@@ -294,6 +294,7 @@ class CHttpRequest{
 	
 
 	public static function accepts($type=null){
+		if(empty($_SERVER['HTTP_ACCEPT'])) return false;
 		$acceptTypes=explode(',',$_SERVER['HTTP_ACCEPT']);
 		foreach($acceptTypes as $k => &$accept){
 			if(strpos($accept, ';') !== false){
