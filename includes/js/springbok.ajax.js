@@ -18,7 +18,7 @@ includeCore('ui/slideTo');
 		S.ready=function(callback){ readyCallbacks.add(callback); };
 	});
 	S.redirect=function(url){ S.ajax.load(url); }
-	S.setTitle=function(title){ document.title=title; divVariable.find('h1:first').text(title) }
+	S.setTitle=function(title){ document.title=title; divVariable.children('h1:first').text(title) }
 	S.ajax={
 		init:function(){
 			$(document).on('click',
@@ -94,14 +94,14 @@ includeCore('ui/slideTo');
 				type:type?type:'GET', data:data, headers:headers,
 				async:false,
 				complete:function(jqXHR){
-					S.setTitle(oldCurrentTitle);
+					document.title=oldCurrentTitle;
 					setTimeout(function(){S.history.navigate(url)},3);
 				/*	$('body').removeClass('cursorWait');
 					divLoading.remove();
 				},
 				success:function(data,textStatus,jqXHR){*/
 					var div,to,h=jqXHR.getResponseHeader('SpringbokAjaxTitle'),newTitle=h?$.parseJSON(h):'-';
-					setTimeout(function(){S.setTitle(newTitle)},5);
+					setTimeout(function(){S.setTitle(newTitle)},20);
 					
 					if(h=jqXHR.getResponseHeader('SpringbokAppVersion'))
 						if(h!=version) if(confirm("L'application a été mise à jour. Souhaitez vous recharger la page ?")) window.location.reload();
