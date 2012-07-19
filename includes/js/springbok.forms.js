@@ -11,9 +11,9 @@
 	};
 	$.fn.defaultInput = function(method){
 		if(!method){
-			var inputs;
+			var inputs,selectorInput='input.default,input[placeholder]';
 			if(this.is('input')) inputs=this.addClass('default');
-			else inputs=this.find('input.default,input[placeholder]');
+			else inputs=this.find(selectorInput);
 			
 			inputs.each(function(){
 				var $this=$(this),placeholder=$this.attr('placeholder');
@@ -25,6 +25,10 @@
 					.focusout(function(e){if(!$this.hasClass('default') && $this.val()=='') $this.addClass('default').val($this.attr('title'));})
 					.change(function(e){ if($this.hasClass('default')){ if($this.val()!='') $this.removeClass('default'); else $this.val($this.attr('title')); }
 												else if($this.val()==''){ $this.addClass('default').val($this.attr('title')); }});
+			});
+			inputs.closest('form').each(function(){
+				var form=$(this);
+				form.submit(function(){ form.defaultInput('beforeSubmit'); return true; });
 			});
 			return inputs;
 		}else if(methods[method]){
