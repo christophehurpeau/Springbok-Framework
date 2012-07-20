@@ -8,7 +8,7 @@ class HSitemapIndex{
 ');
 	}
 	public function add($url,$options=array(),$entry='index'){
-		$content='<sitemap><loc>'.HHtml::urlEscape($url,$entry,true).'</loc>';
+		$content='<sitemap><loc>'.HHtml::urlEscape('/',$entry,true).substr($url,1).'</loc>';
 		foreach($options as $key=>&$option) $content.=HHtml::tag($key,array(),$option);
 		$content.='</sitemap>'.PHP_EOL;
 		gzwrite($this->_file,$content);
