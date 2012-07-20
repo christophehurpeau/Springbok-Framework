@@ -125,8 +125,8 @@ class ConfigFile extends PhpFile{
 					$finalTranslations=array();
 					foreach($translations as $s=>$t){
 						foreach($t as $lang=>$s2){
-							$finalTranslations['en->'.$lang][$s]=$s2;
-							$finalTranslations[$lang.'->en'][$s2]=$s;
+							$finalTranslations['en->'.$lang][strtolower($s)]=$s2;
+							$finalTranslations[$lang.'->en'][strtolower($s2)]=$s;
 						}
 					}
 				}

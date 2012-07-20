@@ -158,12 +158,14 @@ class CRoute{
 	}
 
 	public static function translate($string,$lang){
-		if(!isset(self::$_langs['en->'.$lang][$string])) return $string;
-		return self::$_langs['en->'.$lang][$string];
+		$stringT=strtolower($string);
+		if(!isset(self::$_langs['en->'.$lang][$stringT])) return $string;
+		return self::$_langs['en->'.$lang][$stringT];
 	}
 
 	public static function untranslate($string,$lang){
-		if(!isset(self::$_langs[$lang.'->en'][$string])) return $string;
-		return self::$_langs[$lang.'->en'][$string];
+		$stringT=strtolower($string);
+		if(!isset(self::$_langs[$lang.'->en'][$stringT])) return $string;
+		return self::$_langs[$lang.'->en'][$stringT];
 	}
 }
