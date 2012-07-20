@@ -20,6 +20,6 @@ class CGeo{
 	}
 
 	public static function mysqlDistanceCoord($lat1,$long1,$lat2='c.latitude',$long2='c.longitude'){
-		return 'SQRT( POW(('.$lat2.'-'.$lat1.'),2 ) + POW(('.$long2.'-'.$long1.'),2) )';
+		return 'POW(('.$lat2.'-'.$lat1.'),2 )+POW(('.$long2.'-'.$long1.'),2)';
 	}
 }
