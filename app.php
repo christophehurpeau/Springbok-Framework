@@ -168,8 +168,14 @@ class App{
 			if(!($exception instanceof HttpException)){
 				if($exception instanceof DBException) $e=new FatalHttpException(503,'Service Temporarily Unavailable');
 				elseif($exception instanceof mysqli_sql_exception){
-					if($exception->getCode()===1040){
+					/* http://dev.mysql.com/doc/refman//5.5/en/error-messages-server.html */
+					$code=$exception->getCode();
+					if($code===1040)
 						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded'),$exception);
+					if($code===2002) /* Can't connect to local MySQL server through socket */
+						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The database is currently inaccessible'),$exception);
+					elseif($code<1022){
+						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded').'',$exception);
 					}else $e=new FatalHttpException(503,'Service Temporarily Unavailable');
 				}else $e=new FatalHttpException(500,'Internal Server Error');
 			}else $e=$exception;
