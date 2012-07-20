@@ -36,7 +36,7 @@ class ViewFile extends PhpFile{
 				$filename.=$matches[2];
 			}
 			
-			return ViewFile::includes(file_get_contents($filename),$currentPath,$viewsFolder,$enhanced);
+			return ViewFile::includes('<?php /* FILE : '.replaceAppAndCoreInFile($filename).' */ ?>'."\n".file_get_contents($filename),$currentPath,$viewsFolder,$enhanced);
 		},$content);
 		return $content;
 	}
