@@ -5,8 +5,9 @@ S.Layout=function(name,methods,init){
 	t.page=App.page;
 	t.init=init;
 	$.each(methods,function(i,v){
-		t[v]=function(content){
-			t['$'+v].html(content);
+		t[v]=function(){
+			var elt=t['$'+v].empty();
+			elt.append.apply(elt,arguments);
 			return t;
 		};
 	});
@@ -18,5 +19,8 @@ S.Layout.prototype={
 			this.init(this.page);
 		}
 		return this;
+	},
+	variableContent:function(){
+		return $('<div class="variable padding"/>').html(this.$content=$('<div class="content"/>'))
 	}
 };

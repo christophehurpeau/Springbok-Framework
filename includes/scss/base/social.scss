@@ -41,10 +41,11 @@
 }
 
 .google-button{
-	background:#357AE8 url('COREIMG/social/google_16.png') no-repeat;
+	background:#1155CC/*#357AE8*/ url('COREIMG/social/google_16.png') no-repeat;
 	color:#EFEFEF;
 	border:1px solid #3079ED;
 }
 .google-button:hover{
 	color:#FFF;
+	background-color:#006AC8;
 }

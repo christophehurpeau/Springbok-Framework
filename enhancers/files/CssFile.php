@@ -1,6 +1,6 @@
 <?php
 class CssFile extends EnhancerFile{
-	public static $CACHE_PATH='css_8.0';
+	public static $CACHE_PATH='css_8.0.1';
 	
 	private $_devSrcContent,$_config=array('compress'=>true,'autoBrowsersCompatibility'=>true);
 

@@ -11,6 +11,7 @@ class SViewElement{
 	}
 	
 	public function render($view='view'){
+		include_once CORE.'mvc/views/View.php';
 		return render(APP.'viewsElements/'.substr($this->calledClass,1).'/'.$view.'.php',$this->vars,true);
 	}
 }

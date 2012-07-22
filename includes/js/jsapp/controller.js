@@ -5,7 +5,7 @@ S.Controller=function(methods){
 S.Controller.Stop=function(){};
 S.Controller.prototype={
 	dispatch:function(route){
-		if(this.beforeDispatch) if(!this.beforeDispatch()) return;
+		if(this.beforeDispatch) this.beforeDispatch();
 		route.sParams.unshift(route.nParams)
 		var m=this.methods[route.action];
 		/* DEV */ if(!m) console.log('This action doesn\'t exists: '+route.action); /* /DEV */
@@ -13,11 +13,10 @@ S.Controller.prototype={
 		m.apply(this,route.sParams);
 	},
 	check:function(){
-		S.CSecure.checkAccess();
-		throw new S.Controller.Stop();
+		if(!S.CSecure.checkAccess()) throw new S.Controller.Stop();
 	},
 	layout:function(name){
-		return L[name].render();
+		return (this.methods.layout||L[name]).render();
 	},
 	redirect:function(to,exit){
 		App.load(to);
@@ -29,4 +28,4 @@ S.Controller.extend=function(name,methods,superclass){
 	S.extendsClass(target,superclass||S.Controller,methods);
 	target.add=function(name,methods){ C[name]=new target(methods) };
 };
-S.Controller.add=function(name,methods){ C[name]= new S.Controller(methods); }
+S.Controller.add=function(name,methods){ C[name]=new S.Controller(methods); }

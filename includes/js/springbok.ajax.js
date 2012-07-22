@@ -104,7 +104,11 @@ includeCore('ui/slideTo');
 					setTimeout(function(){S.setTitle(newTitle)},20);
 					
 					if(h=jqXHR.getResponseHeader('SpringbokAppVersion'))
-						if(h!=version) if(confirm("L'application a été mise à jour. Souhaitez vous recharger la page ?")) window.location.reload();
+						if(h!=version) if(confirm("L'application a été mise à jour. Souhaitez vous recharger la page ?")){
+							$('body').empty();
+							setTimeout(function(){window.location.reload();},21);
+							return;
+						}
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
 						divLoading.remove();

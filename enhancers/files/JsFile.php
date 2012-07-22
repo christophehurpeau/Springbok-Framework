@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.0';
+	public static $CACHE_PATH='js_8.0.3';
 
 	public function loadContent($srcContent){
 		if($this->fileName()==='jsapp.js'){
@@ -57,13 +57,19 @@ class JsFile extends EnhancerFile{
 				$constantes[$matches[1]]=$matches[2];
 				return '';
 			},$c);
-			uksort($constantes,function(&$k1,&$k2){return strlen($k1)<strlen($k2);}); // trie les constantes du plus grd au moins grd pour éviter de remplacer des bouts de constantes
+			uksort($constantes,function($k1,$k2){return strlen($k1)<strlen($k2);}); // trie les constantes du plus grd au moins grd pour éviter de remplacer des bouts de constantes
 			
 			foreach($constantes as $const=>$replacement)
 				$c=str_replace($const,$replacement,$c);
 			$c=$this->hardConfig($c);
 			
-			if(strpos(dirname($this->srcFile()->getPath()),'app')===false)
+			
+			//if(preg_match('/\'{t(c)? (.*)}\'/',$c,$mI))
+			//	debugVar($mI);
+			$c=preg_replace('/\'{t(f|c)\s+([^}]+)\s*}\'/U','i18n$1[\'$2\']',$c);
+			//$c=preg_replace('/\'{t(c)? (.*)}\'/U','i18n$1[\'$2\']',$c);
+			
+			if(strpos(dirname($this->srcFile()->getPath()),'app')===false && substr($this->fileName(),0,5)!=='i18n-')
 				$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
 			
 			$jsFiles=array('global.js','jsapp.js');

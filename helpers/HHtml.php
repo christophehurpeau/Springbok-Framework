@@ -155,6 +155,10 @@ s.parentNode.insertBefore(g,s);
 		$options['href']=$url;
 		return self::tag('a',$options,$title,$escape);
 	}
+	public static function linkHtml($title,$url,$options=array()){
+		$options['escape']=false;
+		return self::link($title,$url,$options);
+	}
 
 	public static function cutLink($maxSize,$title,$url=false,$options=array()){
 		if($url===false) $url=$title;

@@ -1,4 +1,7 @@
 $SEP_BORDER:1px solid #BBB !default;
+$H1_COLOR:#FFF !default;
+$H1_BACKGROUND:false !default;
+$H1_TEXT_SHADOW:false !default;
 
 .center{text-align:center}
 .clear{clear:both}
@@ -26,7 +29,13 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .w1{width:1px}
 
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
-h1{font-size:16pt;margin-bottom:15px;}
+h1{
+  font-size:16pt;margin-bottom:15px;
+  @if $H1_COLOR{ color:$H1_COLOR; } 
+  @if $H1_BACKGROUND{ padding:8px 5px; background:$H1_BACKGROUND; }
+  @else{ padding:0; }
+  @if $H1_TEXT_SHADOW{ text-shadow:$H1_TEXT_SHADOW; }
+}
 h2{font-size:14pt;margin:4px 0 12px;}
 h3{font-size:12pt;margin-bottom:10px;}
 h4{font-size:11pt;margin-bottom:8px;}
@@ -154,19 +163,19 @@ ul.clickable{
 }
 
 @if $JQueryUI{ $__moreSelector:'.ui-state-default,.ui-widget-content .ui-state-default,'; }
-#{$__moreSelector}ul.clickable li{
+#{$__moreSelector}div.clickable,ul.clickable li{
   background:$InteractionDefaultBackgroundColor;
   color:findBestFgColor($InteractionDefaultBackgroundColor);
   cursor:pointer;
 }
 @if $JQueryUI{ $__moreSelector:'.ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited,'; }
-#{$__moreSelector}ul.clickable li a{color:findBestFgColor($InteractionDefaultBackgroundColor); text-decoration:none;}
+#{$__moreSelector}div.clickable a,ul.clickable li a{color:findBestFgColor($InteractionDefaultBackgroundColor); text-decoration:none;}
 
 @if($INTERACTION_HOVER_BACKGROUND_COLOR){
   @if $JQueryUI{ $__moreSelector:'.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus,'; }
-  #{$__moreSelector}ul.clickable li:hover{ background:$INTERACTION_HOVER_BACKGROUND_COLOR; color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
+  #{$__moreSelector}div.clickable:hover,ul.clickable li:hover{ background:$INTERACTION_HOVER_BACKGROUND_COLOR; color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
   @if $JQueryUI{ $__moreSelector:'.ui-state-hover a, .ui-state-hover a:hover,ui-state-focus a,ui-state-focus a:hover,'; }
-  #{$__moreSelector}ul.clickable li:hover a{ color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
+  #{$__moreSelector}div.clickable:hover a,ul.clickable li:hover a{ color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
 }
 
 @if($INTERACTION_CURRENT_BACKGROUND_COLOR){

@@ -2,12 +2,11 @@
 class SJsAppController extends Controller{
 	protected static function renderStartPage(){
 		echo '<!DOCTYPE html><html><head>'
-			.'<meta charset="UTF-8">'
+			.HHtml::metaCharset().HHtml::metaLanguage()
 			.'<title>'.Config::$projectName.' - '.($loading=_tC('Loading...')).'</title>';
 		HHtml::cssLink();
 		echo HHtml::jsInline(
-			'S.lang="'.CLang::get().'";'
-			.'window.onload=function(){'
+			'window.onload=function(){'
 				.'var s=document.createElement("script");'
 				.'s.type="text/javascript";'
 				.'s.src="'.HHtml::staticUrl('/jsapp'.'.js','js')/* DEV */.'?'.time()/* /DEV */.'";'

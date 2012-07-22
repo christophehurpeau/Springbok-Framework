@@ -26,6 +26,7 @@ S.html={
 		
 		return a.attr('href',url);
 	},
+	linkHtml:function(title,url,options){ options=options||{}; options.escape=false; return this.link(title,url,options); },
 	
 	tag:function(tag,attrs,content,escape){
 		tag=$('<'+tag+'/>');

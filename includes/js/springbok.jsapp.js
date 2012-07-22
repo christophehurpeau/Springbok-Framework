@@ -1,7 +1,7 @@
 includeLib('jquery-1.7.2.min');
 includeCore('springbok.base');
 
-S.loadSyncScript(staticUrl+'js/i18n-'+S.lang+'.js');
+S.loadSyncScript(staticUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
 
 (function(){
 	var readyCallbacks=$.Callbacks(),loadedRequired={};
@@ -85,11 +85,14 @@ App.load=S.ajax.load=function(url){
 		//console.log(route);
 		S.history.navigate(url);
 		App.require('c/'+route.controller);
-		C[route.controller].dispatch(route);
+		var c=C[route.controller];
+		/* DEV */ if(!c) console.log('This action doesn\'t exists: '+route.action); /* /DEV */
+		if(!c) notFound();
+		c.dispatch(route);
 	}catch(err){
 		if(err instanceof S.Controller.Stop) return;
 		if(err instanceof HttpException){
-			
+			console.log("APP : catch HttpException :",err);
 		}
 		console.log("APP : catch error :",err);
 		throw err;
