@@ -30,7 +30,7 @@ class HTableCompare extends HTable{
 					$comp=isset($field['icons']) ? ($field['icons'][$model->$key->$field['key']] != $field['icons'][$val]) : $model->$key->$field['key'] != $val;
 					if($comp){ $same=false; break; }
 				}
-				$field['attributes']['class']=$same?'same':'different';
+				$field['attributes']['class']=$same?'valid':'invalid';
 				
 				$val='';
 				foreach($component->comparedKeys as $key){
@@ -76,7 +76,7 @@ class HTableCompare extends HTable{
 				$same=true; $val=$values->{$component->comparedKeys[0]}->$field['key'];
 				foreach(array_slice($component->comparedKeys,1) as $key)
 					if($values->$key->$field['key'] != $val){ $same=false; break; }
-				$field['attributes']['class']=$same?'same':'different';
+				$field['attributes']['class']=$same?'valid':'invalid';
 				
 				if(!$same){
 					$val='';

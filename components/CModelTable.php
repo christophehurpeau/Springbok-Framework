@@ -1,13 +1,16 @@
 <?php
 class CModelTable extends CModelTableAbstract{
-	public $actionClick,$rowActions,$controller;
+	public $actionClick,$rowActions,$controller,$afterContent='';
 	
 	/* !!! => CModelTableAbstract */
-	public function actionClick($action='view'){$this->actionClick=&$action; return $this; }
+	public function actionClick($action='view'){$this->actionClick=$action; return $this; }
 	public function actions(){$this->rowActions=func_get_args(); return $this; }
-	public function setActions($actions){$this->rowActions=&$actions; return $this; }
-	public function addAction($action){$this->rowActions[]=&$action; return $this; }
-	public function controller($controller){$this->controller=&$controller; return $this; }
+	public function setActions($actions){$this->rowActions=$actions; return $this; }
+	public function addAction($action){$this->rowActions[]=$action; return $this; }
+	public function controller($controller){$this->controller=$controller; return $this; }
+	
+	
+	public function addAfter($content){$this->afterContent.=$content; return $this; }
 	
 	public function setActionsRUD($iconPrefix='',$confirm=true){
 		self::actionView($iconPrefix);
@@ -54,6 +57,7 @@ class CModelTable extends CModelTableAbstract{
 		$this->_add($add);
 		$this->display();
 		$v->render();
+		return $this;
 	}
 	
 	public function renderEditable($title,$pkField,$url,$add=false,$layout=null){
@@ -62,6 +66,7 @@ class CModelTable extends CModelTableAbstract{
 		$this->_add($add);
 		$this->displayEditable($pkField,$url);
 		$v->render();
+		return $this;
 	}
 	
 	private function _add($add){
@@ -138,7 +143,7 @@ class CModelTable extends CModelTableAbstract{
 		
 		$this->callTransformer($transformerClass,$results,$form);
 		if($this->isFiltersAllowed()) $form->end(false);
-		echo $pager;
+		echo $pager.$this->afterContent;
 	}
 	protected function initController(){
 		if($this->controller===null && ($this->actionClick!==null || $this->rowActions!==null))
@@ -159,5 +164,15 @@ class CModelTable extends CModelTableAbstract{
 			empty($results) ? $transformer->noResults(count($this->fields)) : $transformer->displayResults($results,$this->fields);
 		}
 		$transformer->end();
+	}
+	
+	
+	
+	
+	/* ----- PLUS ----- */
+	
+	
+	public function jsActions(){
+		return new HTableJsActions($this);
 	}
 }

@@ -153,6 +153,13 @@ ul.cMt10 li:first-child,ul.cMt15 li:first-child{margin-top:0}
 
 ul.cSepTop li:first-child{margin-top:0;padding-top:0;border-top:0;}
 
+
+$BCOLOR_VALID:#D3DBD3 !default;
+$BCOLOR_INVALID:#CEBBBB !default;
+
+.valid{ background:$BCOLOR_VALID; }
+.invalid{ background:$BCOLOR_INVALID; }
+
 /* interactions */
 
 $JQueryUI:false !default;
