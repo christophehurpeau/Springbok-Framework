@@ -8,12 +8,12 @@
   //}
 
 	@if $color{
-		.block#{$i},.block#{$i} a,#page .clickable .block#{$i},ul.clickable .block#{$i} a,ul.clickable .block#{$i} a:hover,
+		.block#{$i},.block#{$i} a,#page .clickable .block#{$i},ul.clickable li.block#{$i} a,ul.clickable li.block#{$i} a:hover,
        input.type#{$i}.submit,button.type#{$i},.button.type#{$i}{
         color:$color;
   	}
 	} @else {
-		#page .clickable .block#{$i},ul.clickable .block#{$i} a,ul.clickable .block#{$i} a:hover{
+		#page .clickable li.block#{$i},ul.clickable li.block#{$i} a,ul.clickable li.block#{$i} a:hover{
         color:$BODY_COLOR;
        }
 	}
