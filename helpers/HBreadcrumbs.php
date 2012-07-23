@@ -47,7 +47,7 @@ class HBreadcrumbs{
 		}else{
 			if(!is_array($value)) $url=$value;
 			else{
-				$url=$value['url'];
+				$url=$value[0];
 				if(!empty($value['options'])) $linkoptions=$value['options']+$linkoptions;
 			}
 			return HHtml::link('<span itemprop="title">'.h($title).'</span>',$url,$linkoptions);
@@ -62,7 +62,7 @@ class HBreadcrumbs{
 		array_walk(self::$_links,function($value,$title){
 			if(!is_int($title)){
 				if(!is_array($value)) $value=HHtml::url($value);
-				else $value['url']=HHtml::url($value['url']);
+				else{ $value['url']=HHtml::url($value[0]); unset($value[0]); }
 			}
 		});
 		return json_encode(self::$_links,JSON_FORCE_OBJECT);

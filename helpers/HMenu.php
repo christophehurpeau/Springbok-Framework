@@ -30,8 +30,6 @@ class HMenu{
 				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
 				$title=$value['title'];
 			}
-			
-			if(is_array($value) && isset($value['visible'])){ if(!$value['visible']) continue; unset($value['visible']); }
 			$res.=self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
 		}
 		if(self::$tagName!=='ul') $res.=HHtml::closeTag('ul');
@@ -44,20 +42,21 @@ class HMenu{
 			$lioptions=$value['lioptions']+$lioptions;
 			unset($value['lioptions']);
 		}
+		if($isValueArray && isset($value['visible'])){ if(!$value['visible']) return ''; unset($value['visible']); }
 		if($isValueArray && isset($value['current'])){
-			$url=$value['url'];
+			$url=$value[0];
 			if($value['current']){
 				$value['current']=1;
 			}
-			unset($value['url']);
+			unset($value[0]);
 			if(!empty($value)) $linkoptions=$value+$linkoptions;
 		}else{
 			$startsWith=$options['startsWith'];
 			if(!$isValueArray) $url=$value;
 			else{
 				if(isset($value['startsWith'])) $startsWith=$value['startsWith'];
-				$url=$value['url'];
-				unset($value['url'],$value['startsWith']);
+				$url=$value[0];
+				unset($value[0],$value['startsWith']);
 				/* DEV */
 				if(isset($value['options'])) throw new Exception('Deprecated');
 				/* /DEV */
