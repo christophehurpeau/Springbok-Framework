@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.0.1';
+	public static $CACHE_PATH='views_8.0.2';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -117,7 +117,7 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/{(t|tF|tC)\s+([^}]+)\s*}/U','<?php echo h(_$1($2)) ?>',$content);
 		
 		/* HELPERS */
-		$content=preg_replace('/{(link|iconLink|iconAction|iconBlockLink|img|imgLink|cutLink)\s+([^}]+)\s*}/U','<?php echo HHtml::$1($2) ?>',$content);
+		$content=preg_replace('/{(link|linkHtml|iconLink|iconAction|iconBlockLink|img|imgLink|cutLink)\s+([^}]+)\s*}/U','<?php echo HHtml::$1($2) ?>',$content);
 		$content=preg_replace('/{menuLink\s+([^}]+)\s*}/U','<?php echo HMenu::link($1) ?>',$content);
 		$content=preg_replace('/{price\s+([^}]+)\s*}/U','<?php echo HFormat::price($1) ?>',$content);
 		$content=preg_replace_callback('/{menu(Top|Left|Right)\s*([^\n]*)\n+(.*)}/Us',function(&$m){
