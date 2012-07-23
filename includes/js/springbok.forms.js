@@ -43,7 +43,7 @@
 	
 	$.fn.ajaxForm=function(url,success,beforeSubmit,error){
 		if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
-		var form=this,submit,imgLoadingSubmit=$('<span/>').attr({'class':"img imgLoading"});
+		var form=this,submit,imgLoadingSubmit=S.imgLoading();
 		if(!url) url=form.attr('action');
 		this.unbind('submit').submit(function(evt){
 			evt.preventDefault();
@@ -87,7 +87,7 @@
 			}
 			var ajaxOptions={
 				type:'post',cache:false,
-				beforeSend:function(){form.before(imgLoadingSubmit=$('<span/>').attr({'class':"img imgLoading"}).offset({left:form.position().left+form.width()-16}).css({position:'absolute','z-index':5}));},
+				beforeSend:function(){form.before(imgLoadingSubmit=S.imgLoading().offset({left:form.position().left+form.width()-16}).css({position:'absolute','z-index':5}));},
 				data:form.serialize(),
 				complete:function(){imgLoadingSubmit.remove();form.fadeTo(150,1)},
 				error:error

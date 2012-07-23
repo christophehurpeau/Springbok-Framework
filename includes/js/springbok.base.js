@@ -8,6 +8,8 @@ window.S={
 	redirect:function(url){ window.location=url; },
 	setTitle:function(title){document.title=title;},
 	
+	imgLoading:function(){ return $('<span class="img imgLoading"/>') },
+	
 	loadScript:function(url){
 		var script = document.createElement("script");
 		script.type = "text/javascript";
