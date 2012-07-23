@@ -398,6 +398,7 @@ abstract class QFind extends QSelect{
 	
 	
 	public static function createWithQuery(&$obj,&$w,$query=null){
+		if($query===null && $w['isCount']) $query=new QCount($w['modelName']);
 		switch($w['reltype']){
 			case 'belongsTo':
 			case 'hasOne':
