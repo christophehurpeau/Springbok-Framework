@@ -8,18 +8,13 @@ class UDate{
 		return (($year % 4 === 0 && $year % 100 !== 0) || $year % 400 === 0);
 	}
 	
-	public static function addMonths($time,$months){
-		$day=date('j',$time);
-		$month=date('m',$time) + $months;
-		$year=date('Y',$time);
-		while($month>12){
-			$month-=12;
-			$year++;
-		}
+	public static function addMonths_Time($time,$months){
+		list($day,$month,$year)=explode('-',date('j-m-Y',$time),3);
+		list($month,$year)=self::addMonths((int)$month,(int)$year,$months);
 		return strtotime($year.'-'.$month.'-'.min($day,self::getDaysInMonth($year,$month)));
 	}
 	
-	public static function removeMonths($time,$months){
+	public static function removeMonths_Time($time,$months){
 		$day=date('j',$time);
 		$month=date('m',$time) - $months;
 		$year=date('Y',$time);
@@ -28,5 +23,11 @@ class UDate{
 			$year--;
 		}
 		return strtotime($year.'-'.$month.'-'.min($day,self::getDaysInMonth($year,$month)));
+	}
+	
+	public static function addMonths($month,$year,$months){
+		$month+=$months;
+		while($month>12){ $month-=12; $year++; }
+		return array($month,$year);
 	}
 }
