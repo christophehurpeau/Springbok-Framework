@@ -2,17 +2,17 @@
 class ControllerFile extends PhpFile{
 	public static $CACHE_PATH=false;//'controllers_8.0';
 	
-	const REGEXP_ACTION='/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)[\s]*{\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums';
+	const REGEXP_ACTION='/(?:\/\*\*([^{]*)\*\/)\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)\s*{\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums';
 	
 	private $_className,$_annotations=array(),$_classAnnotations;
 	private $_methodDefFiles=array();//,$_methodAnnotations=array();
 	
 	protected function loadContent($srcContent){
 		$controllersSrc=array(); $enhanced=$this->enhanced;
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportAction\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
-			eval('$eval=array('.$m[1].');');
+		$srcContent=preg_replace_callback('/\/\*\s+@Import(Action|Function)\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
+			eval('$eval=array('.$m[2].');');
 			if(!isset($eval))
-				throw new Exception('Error eval : '.$m[1]);
+				throw new Exception('Error eval : '.$m[2]);
 			$countEval=count($eval);
 			if($countEval===3 && ($eval[0]==='core')||($eval[0]==='springbok')){
 				array_shift($eval);
@@ -26,10 +26,18 @@ class ControllerFile extends PhpFile{
 				if(!isset($controllersSrc[$countEval.$controllerPath]))
 					$controllersSrc[$countEval.$controllerPath]=file_get_contents($parentPath.$controllerPath);
 			}
-			if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('.preg_quote($eval[1]).')',
-						ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
-				throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
-			return $mAction[0];
+			if($m[1]==='Action'){
+				if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('.preg_quote($eval[1]).')',
+							ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
+					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
+				return $mAction[0];
+			}else{
+				if(!preg_match('/(?:public|private|protected)\s+(?:static\s+)?function\s+'.preg_quote($eval[1]).'\s*\((.*)\)\s*{'
+																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums',
+								$controllersSrc[$countEval.$controllerPath],$mAction))
+					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
+				return $mAction[0];
+			}
 		},$srcContent);
 		$srcContent=preg_replace('/\/\*\s+@SimpleAction\(\'([^*\']+)\'\)\s+\*\//',"/** */\n\tfunction $1(){\n\t\trender();\n\t}",$srcContent);
 		$this->_srcContent=$srcContent;
