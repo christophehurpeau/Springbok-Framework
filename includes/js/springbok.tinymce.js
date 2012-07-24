@@ -33,6 +33,9 @@ S.tinymce={
 				{title:'Italic text',selector:'span,p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'italic'},
 				{title:'Clear',selector:'span,p,h1,h2,h3,h4,h5,h6,div,ul,table,img', classes:'clear'},
 				{title:'Clearfix',selector:'div', classes:'clearfix'},
+				{title:'Margin Top 20px',selector:'p,div,ul,ol', classes:'mt20'},
+				{title:'Margin Top 10px',selector:'p,div,ul,ol', classes:'mt10'},
+				
 			],
 			formats:{
 				bold:{inline:'strong'},italic:{inline:'i'},
