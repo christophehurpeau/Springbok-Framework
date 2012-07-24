@@ -37,7 +37,7 @@ body{
 	/* @include webkitAntialiased; */
 }
 input,textarea{
-	font:normal 1.05 Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	font:normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 }
 @if $FIXED_VARIABLE_BACKGROUND{
   body.mceContentBody{background:$FIXED_VARIABLE_BACKGROUND;}
