@@ -25,20 +25,19 @@ $PAGE_SHADOWED_BOX_SHADOW_COLOR:#888 !default;
 
 $BREADCRUMBS_IN_VARIABLE:false !default;
 $BREADCRUMBS_BACKGROUND:false !default;
-$BREADCRUMBS_FONTSIZE:8pt !default;
-
+$BREADCRUMBS_FONTSIZE:0.88em !default;
 
 
 
 html,body{ @if $PAGE_100{ height:100%; } @else { min-height:100%; }}
 body{
-	font: normal 9.5pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	font:normal /*62.5%*/80%/1.1 Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 	@include background($BODY_BACKGROUND); color:$BODY_COLOR;
 	margin:0;padding:0;
 	/* @include webkitAntialiased; */
 }
 input,textarea{
-	font: normal 9pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	font:normal 1.05 Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 }
 @if $FIXED_VARIABLE_BACKGROUND{
   body.mceContentBody{background:$FIXED_VARIABLE_BACKGROUND;}
@@ -47,7 +46,7 @@ input,textarea{
 @includeCore 'base/interactions.scss';
 
 #container pre,#container code{
-	font:normal 9.5pt 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;
+	font:normal 1.07 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;
 }
 
 body #container{
@@ -82,7 +81,7 @@ header,div.header,table tr.head th,table thead th,.flashMessage{
 
 @if $HEADER_COLOR{ header a,div.header a,header a:hover,div.header a:hover{color:$HEADER_COLOR;} }
 
-header div{font-size:9pt}
+header div{font-size:0.95em}
 header div.right{
 	float:right;text-align:right;
 	padding:2px 3px;
@@ -92,7 +91,7 @@ header div.right a{font-size:8.5pt}
 
 footer,div.footer{
 	color:$FOOTER_COLOR;
-	font-size:7pt;
+	font-size:0.7em;
 	padding-bottom:5px;
 	text-align:center;
 	width:100%;
@@ -253,7 +252,7 @@ div.shadowed-box{
 	background:$PAGE_SHADOWED_BOX_BACKGROUND;
 	@if $PAGE_SHADOWED_BOX_BORDER{ border:$PAGE_SHADOWED_BOX_BORDER; }
 	
-	h2{font-size:12pt; margin-top:2px;}
+	h2{font-size:1.3em; margin-top:2px;}
 }
 
 /* Width & Height */
@@ -271,7 +270,7 @@ div.shadowed-box{
 .wp10{width:10%}
 .wp20{width:20%}
 .wp30{width:30%}
-.wp33{width:33%}
+.wp33{width:33.33%}
 .wp40{width:40%}
 .wp50{width:50%}
 .wp60{width:60%}
