@@ -46,9 +46,10 @@ class SSqlModel extends SModel{
 			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
 		}else{
 			$id=static::QInsert()->data($data)->execute();
+			if(!empty($data[$pkName=self::_getPkName()])) $id=$data[$pkName];
 			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
 			$this->_afterInsert($data);
-		} 
+		}
 		return $id;
 	}
 	

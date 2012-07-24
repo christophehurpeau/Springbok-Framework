@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html style="margin:0;padding:0">
 	<head>
-		<meta charset="UTF-8">
+		<? HHtml::metaCharset() ?>
 	</head>
 	<body style="margin:0;padding:32px 5px 0">
 <?php 

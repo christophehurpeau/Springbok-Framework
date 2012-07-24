@@ -140,6 +140,7 @@ class ModelFile extends PhpFile{
 					}
 				foreach($modelFile->_fields as $name=>&$field){
 					$column=array();
+					if(isset($field['Format'])) $field['Format']=$field['Format'][0];
 					if(isset($field['Boolean'])){
 						$column['type']='char(0)';
 						$column['default']=(isset($field['Default']) && $field['Default'][0]?'""':null);

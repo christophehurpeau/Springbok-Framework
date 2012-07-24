@@ -1,6 +1,7 @@
 .stars a,.stars span{
 	/*background: transparent url(sprite_rate.png) 0 0 no-repeat;*/
-	display: inline-block;
+	display: block;
+  display: inline-block;
 	width:14px; height:14px;
 	margin:1px;
 	border-radius:4px;
