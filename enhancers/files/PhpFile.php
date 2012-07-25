@@ -69,7 +69,7 @@ class PhpFile extends EnhancerFile{
 						break;
 					case T_CLOSE_TAG:
 						$isPhp=false;
-						$this->enhancePhpContent($phpContent.$string);
+						$this->_phpContent=$this->enhancePhpContent($phpContent.$string);
 						$finalDevContent.=$finalContent.$this->getEnhancedDevPhpContent();
 						$finalProdContent.=$finalContent.$this->getEnhancedProdPhpContent();
 						$phpContent=$finalContent='';
@@ -79,7 +79,7 @@ class PhpFile extends EnhancerFile{
 			}else $isPhp? $phpContent.=$token : $finalContent.=$token;
 		}
 		if($isPhp){
-			$this->enhancePhpContent($phpContent);
+			$this->_phpContent=$this->enhancePhpContent($phpContent);
 			$finalDevContent.=$finalContent.$this->getEnhancedDevPhpContent();
 			$finalProdContent.=$finalContent.$this->getEnhancedProdPhpContent();
 		}else{
@@ -138,7 +138,7 @@ class PhpFile extends EnhancerFile{
 	
 	
 	protected $_phpContent;
-	protected function enhancePhpContent($phpContent,$overrideClassAnnotations=false){
+	public function enhancePhpContent($phpContent,$overrideClassAnnotations=false){
 		/* $phpContent=preg_replace_callback('/(?:\/\*\*([^{};]*)\*\/\s+)?class ([A-Za-z_]+)([^{]*)?{/ms',function($matches) use(&$overrideClassAnnotations){
 			/*if($overrideClassAnnotations!==false) $annotations=$overrideClassAnnotations;
 			else $annotations=PhpFile::parseAnnotations($matches[1]);/*
@@ -214,7 +214,7 @@ class PhpFile extends EnhancerFile{
 		// Strip /* */ comments
 		//$content=preg_replace('/\/\*[\s\S]*?\*\//m','',$content);
 		
-		$this->_phpContent=$phpContent;
+		return $phpContent;
 	}
 
 	public function addExecuteToQueries(&$phpContent,$isModelFile=false){

@@ -2,14 +2,14 @@
 class DaemonFile extends PhpFile{
 	public static $CACHE_PATH=FALSE;//'daemon_8.0';
 	
-	protected function enhancePhpContent($phpContent,$false=false){
+	public function enhancePhpContent($phpContent,$false=false){
 		preg_match('/class ([A-Za-z_]+)Daemon/',$phpContent,$matches);//debug($matches);
 		if(empty($matches[1])) return parent::enhancePhpContent($phpContent);
 		$className=$matches[1];
 		$val=false;
 		self::$_daemonsConfig[$className]=$val;
 		self::$_changes=true;
-		parent::enhancePhpContent($phpContent);
+		return parent::enhancePhpContent($phpContent);
 	}
 	
 	private static $_daemonsConfig,$_changes=false;

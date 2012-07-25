@@ -7,6 +7,12 @@ class ImgFile extends EnhancerFile{
 	public function getEnhancedDevContent(){}
 	public function getEnhancedProdContent(){}
 	
+	protected function read(){ }
+	
+	public function getMd5Content(){
+		return $this->md5=md5_file($this->srcFile()->getPath());
+	}
+	
 	private $_smallerTmpImgPath;
 	public function writeDevFile($devFile){
 		$filename=$this->fileName();

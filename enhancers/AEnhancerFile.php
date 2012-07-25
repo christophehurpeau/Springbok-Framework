@@ -10,8 +10,10 @@ abstract class EnhancerFile{
 		$this->enhanced=$enhanced;
 		$this->_isCore=$isCore; $this->fileName=$this->srcFile->getName();
 		$this->_isInLibDir=$isInLibDir;
-		$this->loadContent($this->srcFile->read());
+		$this->read();
 	}
+	
+	protected function read(){ $this->loadContent($this->srcFile->read()); }
 	
 	protected function loadContent($srcContent){ $this->_srcContent=$srcContent; }
 	

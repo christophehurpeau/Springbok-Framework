@@ -3,7 +3,7 @@ class ModuleFile extends PhpFile{
 	public static $CACHE_PATH='modules_8.0';
 	private $_className;
 	
-	protected function enhancePhpContent($phpContent,$false=false){
+	public function enhancePhpContent($phpContent,$false=false){
 		self::$_changes=true;
 		$matches=array();
 		preg_match('/class ([A-Za-z_]+)/',$phpContent,$matches);//debug($matches);
@@ -17,7 +17,7 @@ class ModuleFile extends PhpFile{
 		$phpContent=preg_replace_callback('/(?:\/\*\*([^{]*)\*\/)?[\s]+public\s+static\s+function\s+([a-zA-Z0-9_ \$]+)\s*\((.*)\)\s*{\s*(.*)\s*\n\t}\n/Ums',
 				array($this,'enhanceMethodParams'),$phpContent);
 		
-		parent::enhancePhpContent($phpContent);
+		return parent::enhancePhpContent($phpContent);
 	}
 	
 	private function enhanceMethodParams($matches){

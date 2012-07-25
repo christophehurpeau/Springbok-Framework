@@ -43,7 +43,7 @@ class ControllerFile extends PhpFile{
 		$this->_srcContent=$srcContent;
 	}
 	
-	protected function enhancePhpContent($phpContent,$false=false){
+	public function enhancePhpContent($phpContent,$false=false){
 		$matches=array();
 		preg_match('/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)Controller/U',$phpContent,$matches);//debug($matches);
 		if(empty($matches[2])) return parent::enhancePhpContent($phpContent);
@@ -75,7 +75,7 @@ class ControllerFile extends PhpFile{
 		
 		unset($this->_classAnnotations['Check'],$this->_classAnnotations['Post'],$this->_classAnnotations['Ajax']);
 		
-		parent::enhancePhpContent($phpContent,$this->_classAnnotations);
+		return parent::enhancePhpContent($phpContent,$this->_classAnnotations);
 	}
 	
 

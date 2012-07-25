@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.0.2';
+	public static $CACHE_PATH='views_8.0.3';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -54,8 +54,8 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/<\?\s+(.+)\s*;?\s+\?>/Us','<?php echo $1 ?>',$content);
 		
 		//Exception à la règle
-		$jusqualafin='\$[^}]+(?:{[^}]+}[^}]*)?';
-		$content=preg_replace('/{=('.$jusqualafin.')\}/U','<?php echo $1 ?>',$content);
+		$jusqualafin='\$[^}]+(?:{[^}]+}[^}]*)?'; $t=$this;
+		$content=preg_replace_callback('/{=('.$jusqualafin.')\}/U',function($m) use($t){return '<?php echo '.$t->enhancePhpContent($m[1]).' ?>';},$content);
 		
 		$content=preg_replace('/{\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? $2 : $3 ?>',$content);
 		$content=preg_replace('/{=\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? h($2) : h($3) ?>',$content);

@@ -276,7 +276,7 @@ class ModelFile extends PhpFile{
 			
 			$content.=$matches[2].'::init("'.$matches[2].'");';
 		}
-		$this->_phpContent=$this->addExecuteToQueries($content,true);
+		return $this->addExecuteToQueries($content,true);
 	}
 
 	private function writeInfos(){

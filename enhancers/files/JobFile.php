@@ -2,7 +2,7 @@
 class JobFile extends PhpFile{
 	public static $CACHE_PATH='jobs_8.0';
 	
-	protected function enhancePhpContent($phpContent,$false=false){
+	public function enhancePhpContent($phpContent,$false=false){
 		self::$_changes=true;
 		$matches=array();
 		preg_match('/\/\*\*([^{]*)\*\/\s+class ([A-Za-z_]+)Job/',$phpContent,$matches);//debug($matches);
@@ -26,7 +26,7 @@ class JobFile extends PhpFile{
 		//else unset(self::$_jobsConfig[$className]);
 		self::$_changes=true;
 		
-		parent::enhancePhpContent($phpContent);
+		return parent::enhancePhpContent($phpContent);
 	}
 	
 	private static $_jobsConfig,$_changes=false;
