@@ -53,7 +53,7 @@ class QTable extends QFindAll{
 		
 		$relationsMap=array();
 		foreach($this->joins as $alias=>$join){
-			foreach($join['fields'] as $keyField=>$field) $relationsMap[$field]=$alias;
+			if(!empty($join['fields'])) foreach($join['fields'] as $keyField=>$field) $relationsMap[$field]=$alias;
 		}
 		
 		$SESSION_SUFFIX=$this->modelName.CRoute::getAll();
