@@ -10,7 +10,8 @@ class QTable extends QFindAll{
 	public function allowAdvancedFilters(){$this->allowFilters='advanced'; return $this; }
 	public function disallowOrder(){$this->allowOrder=false; return $this; }
 	public function noAutoRelations(){$this->autoRelations=false; return $this;}
-	public function belongsToFields($params){$this->belongsToFields=&$params; return $this; }
+	public function autoRelations($params=array()){$this->autoRelations=$params; return $this; }
+	public function belongsToFields($params){$this->belongsToFields=$params; return $this; }
 	public function exportable($types,$fileName,$title=null){$this->exportable=array($types,$fileName,$title); return $this;}
 	
 	public function isFiltersAllowed(){ return $this->allowFilters!==false; }
@@ -50,6 +51,11 @@ class QTable extends QFindAll{
 			}
 		}
 		
+		$relationsMap=array();
+		foreach($this->joins as $alias=>$join){
+			foreach($join['fields'] as $keyField=>$field) $relationsMap[$field]=$alias;
+		}
+		
 		$SESSION_SUFFIX=$this->modelName.CRoute::getAll();
 		if($this->isOrderAllowed()){
 			if(isset($_GET['orderBy']) && in_array($_GET['orderBy'],$fields)){
@@ -58,11 +64,7 @@ class QTable extends QFindAll{
 			}else $orderByField=CSession::getOr('CTableOrderBy'.$SESSION_SUFFIX);
 			
 			if($orderByField !==null){
-				if(isset($belongsToFields[$orderByField])){
-					$rel=$belongsToRel[$orderByField];
-					$relModelName=$rel['modelName'];
-					$orderByField=$rel['alias'].'.'.$relModelName::$__displayField;
-				}
+				if(isset($relationsMap[$orderByField])) $orderByField=$relationsMap[$orderByField].'.'.$orderByField;
 				$this->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
 			}
 		}
@@ -79,18 +81,16 @@ class QTable extends QFindAll{
 				$this->FILTERS=CSession::getOr('CTableFilters'.$this->modelName.CRoute::getAll(),array());
 			
 			if(!empty($this->FILTERS)){
-				foreach($fields AS $key=>$fieldName){
+				$filterFields=empty($relationsMap)?$fields:array_merge($fields,array_keys($relationsMap));
+				foreach($filterFields AS $key=>$fieldName){
 					if(isset($this->FILTERS[$fieldName]) && (!empty($this->FILTERS[$fieldName]) || $this->FILTERS[$fieldName]==='0')){
 						$filter=true;
 						
 						$postValue=$this->FILTERS[$fieldName];
-						if(isset($belongsToFields[$fieldName])){
-							$rel=$belongsToRel[$fieldName];
-							$relModelName=$rel['modelName'];
-							$relFieldName=$relModelName::$__displayField;
-							$condK=$rel['alias'].'.'.$relFieldName;
-							
-							$propDef=$relModelName::$__PROP_DEF[$relFieldName];
+						if(isset($relationsMap[$fieldName])){
+							$condK=($alias=$relationsMap[$fieldName]).'.'.$fieldName;
+							$relModelName=$this->joins[$alias]['modelName'];
+							$propDef=$relModelName::$__PROP_DEF[$fieldName];
 							$type=$propDef['type'];
 						}else{
 							$condK=$fieldName;
