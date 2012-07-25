@@ -24,15 +24,22 @@ class HMenu{
 		$options=$options+array('lioptions'=>array(),'linkoptions'=>array(),'startsWith'=>false);
 		if(!isset($options['menuAttributes']['class'])) $options['menuAttributes']['class']=$type;
 		$res=HHtml::openTag(self::$tagName,$options['menuAttributes']);
-		if(self::$tagName!=='ul') $res.=HHtml::openTag('ul',array());
+		if(self::$tagName!=='ul') $res.='<ul>';
 		foreach($links as $title=>$value){
 			if(is_int($title)){
 				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
 				$title=$value['title'];
 			}
-			$res.=self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
+			if(isset($value['children'])){
+				$res.='<li>'.(!empty($value['escape'])?h($title):$title).'<ul>';
+				foreach($value['children'] as $childTitle=>$childValue){
+					$res.=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
+				}
+				$res.='</ul></li>';
+			}else
+				$res.=self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
 		}
-		if(self::$tagName!=='ul') $res.=HHtml::closeTag('ul');
+		if(self::$tagName!=='ul') $res.='</ul>';
 		return $res.HHtml::closeTag(self::$tagName);
 	}
 	public static function link($title,$value,$linkoptions=array(),$options=array(),$lioptions=false){
