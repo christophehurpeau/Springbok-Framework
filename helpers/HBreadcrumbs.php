@@ -59,7 +59,7 @@ class HBreadcrumbs{
 	public static function toJs($lastTitle){
 		if(self::$_lastTitle!==null) self::$_links[]=self::$_lastTitle;
 		elseif(!empty($lastTitle)) self::$_links[]=$lastTitle;
-		array_walk(self::$_links,function($value,$title){
+		array_walk(self::$_links,function(&$value,$title){
 			if(!is_int($title)){
 				if(!is_array($value)) $value=HHtml::url($value);
 				else{ $value['url']=HHtml::url($value[0]); unset($value[0]); }
