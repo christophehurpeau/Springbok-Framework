@@ -9,6 +9,7 @@ class ImgFile extends EnhancerFile{
 	
 	protected function read(){ }
 	
+	
 	public function getMd5Content(){
 		return $this->md5=md5_file($this->srcFile()->getPath());
 	}
@@ -20,7 +21,8 @@ class ImgFile extends EnhancerFile{
 			if(($appDir=$this->enhanced->getAppDir()) && !$this->isCore())
 				if(startsWith($this->srcFile()->getPath(),$appDir.'src/web/sprites/')) $this->srcFile()->copyTo($devFile->getPath());
 				else{//$this->fileName() !== 'img-sprite.png'){
-					if(!file_exists($tmpFolder=$appDir.'tmp/imgs/')) mkdir($tmpFolder,0755,true);
+					if(file_exists($tmpFolder=$appDir.'tmp/imgs/')) UExec::exec('rm -Rf '.escapeshellarg($tmpFolder));
+					mkdir($tmpFolder,0755,true);
 					
 					//pngcrush image.png -rem alla -reduce -brute result.png
 					//mogrify -strip(ImageMagick)
