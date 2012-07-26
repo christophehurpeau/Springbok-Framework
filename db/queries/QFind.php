@@ -484,7 +484,7 @@ abstract class QFind extends QSelect{
 						
 						if($listRes){
 							if($w['fieldsInModel']===true){
-								foreach($objs as &$obj)
+								foreach($objs as $obj)
 									foreach($listRes as $res)
 										if($res[$resField] == $obj->_get($objField)){
 											foreach($res as $k=>$v)
@@ -492,7 +492,7 @@ abstract class QFind extends QSelect{
 											break;
 										}
 							}else{
-								foreach($objs as &$obj)
+								foreach($objs as $obj)
 									foreach($listRes as $res)
 										if ($res->_get($resField) == $obj->_get($objField)){
 											$obj->_set($w['dataName'],$res);
@@ -512,7 +512,7 @@ abstract class QFind extends QSelect{
 						
 						$oneField=count($w['fields'])===1?$w['fields'][0]:false;
 						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
-						if($listRes) foreach($objs as $key=>&$obj){
+						if($listRes) foreach($objs as $key=>$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
 								if($res->_get($resField) == $obj->_get($objField)){
