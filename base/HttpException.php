@@ -30,7 +30,7 @@ function unauthorized(){throw new HttpException(401,'Unauthorized');}
 function forbidden(){throw new HttpException(403,'Forbidden');}
 function notFound(){throw new HttpException(404,'Not Found',_tC('The page you requested was not found'));}
 function methodNotAllowed(){throw new HttpException(405,'Method Not Allowed');}
-function notAccepable(){throw new HttpException(406,'Not Acceptable');}
+function notAcceptable(){throw new HttpException(406,'Not Acceptable');}
 function proxyAuthenticationRequired(){throw new HttpException(407,'Proxy Authentication Required');}
 function requestTimeout(){throw new HttpException(408,'Request Timeout');}
 function internalServerError(){throw new FatalHttpException(500,'Internal Server Error');}
