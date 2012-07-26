@@ -63,7 +63,7 @@ class Springbok{
 		
 		if($exception instanceof HttpException){
 			if($exception instanceof FatalHttpException) CLogger::get('fatal-http-exception')->log($log);
-			else CLogger::get('http-exception')->log($log);
+			else CLogger::get(date('d').'-'.'http-exception')->log($log);
 			return;
 		}
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
