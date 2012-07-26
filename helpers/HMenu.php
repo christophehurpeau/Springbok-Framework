@@ -30,7 +30,7 @@ class HMenu{
 				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
 				$title=$value['title'];
 			}
-			if(isset($value['children'])){
+			if(is_array($value) && isset($value['children'])){
 				$res.='<li>'.(!empty($value['escape'])?h($title):$title).'<ul>';
 				foreach($value['children'] as $childTitle=>$childValue){
 					$res.=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
