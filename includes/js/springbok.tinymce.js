@@ -59,16 +59,16 @@ S.tinymce={
 		}
 		
 		if(barType==='basic'){
-			this.attrs.plugins="springbok,style,fullscreen,inlinepopups,contextmenu,advlink"+(withImageManager?',advimage,springbokgallery':'');
+			this.attrs.plugins="springbok,style,fullscreen,inlinepopups,contextmenu,springboklink,springbokclean"+(withImageManager?',advimage,springbokgallery':'');
 			this.attrs.theme_advanced_buttons1="fullscreen,code,|,bold,italic,underline,strikethrough,|,styleselect,fontsizeselect,,forecolor,|,bullist,numlist,|,link,unlink"+(withImageManager?',image,springbokAddImage':'')+',|,removeformat,visualaid';
 			this.attrs.theme_advanced_buttons2=this.attrs.theme_advanced_buttons3="";
 			//attrs.theme_advanced_buttons4="insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,pagebreak";
 		}else if(barType==='basicAdvanced'){
-			this.attrs.plugins="springbok,style,fullscreen,inlinepopups,contextmenu,springboklink"+(withImageManager?',advimage,springbokgallery':'')+',springbokclean';
+			this.attrs.plugins="springbok,style,fullscreen,inlinepopups,contextmenu,springboklink,springbokclean"+(withImageManager?',advimage,springbokgallery':'');
 			this.attrs.theme_advanced_buttons1="fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,,styleselect,fontsizeselect,formatselect,|,bullist,numlist,sub,sup,|,link,unlink"+(withImageManager?',image,springbokAddImage':'')+',|,removeformat,visualaid';
 			this.attrs.theme_advanced_buttons2=this.attrs.theme_advanced_buttons3="";
 		}else{
-			this.attrs.plugins="springbok,pagebreak,style,fullscreen,table,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste"+(withImageManager?',springbokgallery':'')+',springbokclean';
+			this.attrs.plugins="springbok,pagebreak,style,fullscreen,table,advimage,springboklink,springbokclean,inlinepopups,media,searchreplace,contextmenu,paste"+(withImageManager?',springbokgallery':'');
 			this.attrs.theme_advanced_buttons1="fullscreen,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontsizeselect,|,cut,copy,paste,pastetext,pasteword,|,cleanup,help";
 			this.attrs.theme_advanced_buttons2="bullist,numlist,|,sub,sup,|,link,unlink,anchor,image,"+(withImageManager?'springbokAddImage,':'')+"charmap,media,syntaxhl,|,forecolor,backcolor,|,search,replaceoutdent,indent,blockquote,|,hr,tablecontrols,|,undo,redo";
 			this.attrs.theme_advanced_buttons3="";
