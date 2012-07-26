@@ -53,16 +53,19 @@ h6{font-size:1.05em;margin-bottom:5px;}
 .sepR{border-right:$SEP_BORDER;}
 .sepBot,.sepB{border-bottom:$SEP_BORDER;}
 
-.clearfix:after { 
-  clear: both; 
+.clearfix:after,header:after,.header:after,.fixed:after,.variable:after{ 
+  /*clear: both; 
   display: block; 
   height: 0; 
   font-size: 0; 
   visibility: hidden; 
-  content: "."; 
+  content: ".";*/
+  content: "";
+  display: table;
+  clear: both; 
 }
-* html .clearfix { zoom: 1 }
-*:first-child+html .clearfix { zoom: 1 }
+/** html .clearfix,*:first-child+html .clearfix*/
+.clearfix,header,.header,.fixed,.variable { zoom: 1 }
 
 hr{
   height:1px;
@@ -196,3 +199,29 @@ ul.clickable{
   #{$__moreSelector}ul.clickable li.current,ul.clickable li.current a{ color:findBestFgColor($INTERACTION_CURRENT_BACKGROUND_COLOR); }
 }
 @includeCore 'base/types.scss';
+
+
+/* -- http://www.knacss.com/ -- */
+@media print {
+    p, blockquote {orphans: 2; widows: 2;}
+    blockquote, ul, ol {page-break-inside: avoid;}
+    h1, h2, h3, caption { page-break-after: avoid;}
+}
+
+/* quick smartphone reset */
+@media (max-width: 640px) {
+    [class*="w160"], [class*="w200"], [class*="w280"],
+    [class*="w300"], [class*="w350"], [class*="w380"],
+    [class*="w400"], [class*="w420"], [class*="w600"],
+    [class*="wp10"], [class*="wp20"], [class*="wp30"],
+    [class*="wp33"], [class*="wp40"], [class*="wp50"],
+    [class*="wp60"], [class*="wp70"], [class*="wp80"],
+    [class*="wp90"], [class*="wp100"] {
+        width: auto;
+    }
+    
+    [class*="h600"], [class*="h400"], [class*="h200"],
+    [class*="h300"]{
+        height: auto;
+    }
+}
