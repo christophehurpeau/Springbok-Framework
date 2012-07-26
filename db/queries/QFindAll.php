@@ -26,7 +26,7 @@ class QFindAll extends QFind{
 		$sql=$this->_toSQL();
 		if($callback2!==null){
 			$callback($this->getModelFields());
-			$callback=&$callback2;
+			$callback=$callback2;
 		}
 		$this->_db->doSelectObjectsCallback($sql,$this,$this->queryResultFields,$callback);
 	}

@@ -442,7 +442,7 @@ abstract class QFind extends QSelect{
 		}
 	}
 	
-	private static function AfterQuery_obj(&$with,&$obj){
+	private static function AfterQuery_obj(&$with,$obj){
 		foreach($with as $key=>&$w){
 			$query=self::createWithQuery($obj,$w);
 			if($query!==false){
@@ -465,11 +465,11 @@ abstract class QFind extends QSelect{
 		self::_recursiveThroughWith($with['with'][$relName],$joins/*,$lastModelName::$_relations[$relName]['modelName']*/);
 	}
 	
-	protected function _afterQuery_objs(&$objs){
+	protected function _afterQuery_objs($objs){
 		self::AfterQuery_objs($this->with,$objs);
 	}
 	
-	private static function AfterQuery_objs(&$with,&$objs){
+	private static function AfterQuery_objs(&$with,$objs){
 		if(empty($objs)) return;
 		foreach($with as $key=>&$w){
 			switch($w['reltype']){
@@ -485,15 +485,15 @@ abstract class QFind extends QSelect{
 						if($listRes){
 							if($w['fieldsInModel']===true){
 								foreach($objs as &$obj)
-									foreach($listRes as &$res)
+									foreach($listRes as $res)
 										if($res[$resField] == $obj->_get($objField)){
-											foreach($res as $k=>&$v)
+											foreach($res as $k=>$v)
 												if($k!==$resField) $obj->_set($k,$v);
 											break;
 										}
 							}else{
 								foreach($objs as &$obj)
-									foreach($listRes as &$res)
+									foreach($listRes as $res)
 										if ($res->_get($resField) == $obj->_get($objField)){
 											$obj->_set($w['dataName'],$res);
 											break;
@@ -551,7 +551,7 @@ abstract class QFind extends QSelect{
 						if($listRes!==false){
 							foreach($objs as $k=>&$obj){
 								$listObjsRes=array();
-								foreach($listRes as &$res){
+								foreach($listRes as $res){
 									if($res->_get($resField) == $obj->_get($objField)){
 										if($oneField===false) $listObjsRes[] = $res;
 										else $listObjsRes[]=$res->_get($oneField);
@@ -629,7 +629,7 @@ abstract class QFind extends QSelect{
 		return array_unique($values);
 	}
 	
-	private static function _createBelongsToAndHasOneQuery($query,&$w,$values,&$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
+	private static function _createBelongsToAndHasOneQuery($query,$w,$values,&$resField,$addResField=false,$moreWith=NULL,$fieldTableAlias=NULL){
 		if($query===null) $query=new QFindOne($w['modelName']);
 		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
 		if(isset($w['where'])) $where=$w['where']; else $where=array();
@@ -641,7 +641,7 @@ abstract class QFind extends QSelect{
 		return $query;
 	}
 	
-	private static function _createHasManyQuery($query,&$w,$values,$resField,$addResField=false,&$moreWith=NULL,&$fieldTableAlias=NULL){
+	private static function _createHasManyQuery($query,$w,$values,$resField,$addResField=false,$moreWith=NULL,$fieldTableAlias=NULL){
 		if($query===null){
 			if($addResField===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
 			else $query = new QFindAll($w['modelName']);
