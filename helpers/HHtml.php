@@ -12,7 +12,7 @@ class HHtml{
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
-		return '<meta charset="'.$encoding.'"><meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>';
+		return '<meta charset="'.$encoding.'"/><meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>';
 	}
 	public static function metaRobots($content){
 		echo '<meta name="robots" content="'.$content.'"/>';
@@ -120,6 +120,19 @@ s.parentNode.insertBefore(g,s);
 })(document,\'script\');
 //]]>
 </script>';
+	}
+	
+	public static function ganalyticsMultiTracker($codes,$domainName,$trackPageLoadTime=false,$https=false){
+		$gaq= '<script type="text/javascript">//<![CDATA[var _gaq=[[\'_setDomainName\', \''.$domainName.'\']';
+		foreach ($codes as $key => $value) {$gaq.= '[\''.$key.'_setAccount","'.$value.'\'],[\''.$key.'_trackPageview\']'.($trackPageLoadTime?",['".$key."_trackPageLoadTime']":'');}
+		$gaq.='];
+		(function(d,t){
+			var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+			g.type=\'text/javascript\';g.async=1;g.src=\''.($https?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
+			s.parentNode.insertBefore(g,s);
+		})(document,\'script\');
+		//]]></script>';
+		return $gaq;
 	}
 	
 	public static function link($title,$url=false,$options=array()){
