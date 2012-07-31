@@ -92,7 +92,9 @@ class CHttpRequest{
 			//'VoilaBot',
 			//'WebCrawler',
 			'crawler',
-			
+		 
+			'Xenu',
+		 
 			'Scooter', // Alta Vita - www.altavista.com
 			//'Ask Jeeves\/Teoma', // Ask - www.ask.com & Teoma - ww.teoma.com
 			'Lycos_Spider_\(T-Rex\)', // Lycos - www.lycos.com
