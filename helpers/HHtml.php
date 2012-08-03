@@ -319,7 +319,7 @@ s.parentNode.insertBefore(g,s);
 	
 	public static function ajaxCRDSelectFiltrable($url,$items,$added,$options=array()){
 		$divid=uniqid('ajaxCRDSelectFiltrable_');
-		$options+=array('selectAttributes'=>array());
+		$options+=array('selectAttributes'=>array(),'ulAttributes'=>array('class'=>'compact'));
 		$res=HHtml::openTag('select',$options['selectAttributes'])
 			.HHtml::tag('option',array('value'=>'','selected'=>true),'');
 		$addedItems=array();
@@ -334,7 +334,7 @@ s.parentNode.insertBefore(g,s);
 			$res.=HHtml::tag('option',$attributes,$name);
 		}
 		$res.=HHtml::closeTag('select').' '.self::iconAction('add vaMid','#');
-		$res.='<ul class="compact">';
+		$res.=HHtml::openTag('ul',$options['ulAttributes']);
 		foreach($addedItems as $id=>&$name){
 			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,true).' '.self::iconAction('delete','#'),false);
 		}
@@ -345,13 +345,13 @@ s.parentNode.insertBefore(g,s);
 
 	public static function ajaxCRDInputAutocomplete($url,$items,$options=array()){
 		$divid=uniqid('ajaxCRDInputAutocomplete_');
-		$options+=array('inputAttributes'=>array());
+		$options+=array('inputAttributes'=>array(),'ulAttributes'=>array('class'=>'compact'));
 		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
 		if(is_object(current($items))){
 			$list=$items; $items=array();
 			foreach($list as $model) $items[$model->_getPkValue()]=$model->name();
 		}	
-		$res.='<ul class="compact">';
+		$res.=HHtml::openTag('ul',$options['ulAttributes']);
 		foreach($items as $id=>&$name)
 			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,true).' '.self::iconAction('delete','#'),false);
 		$res.='</ul>';
