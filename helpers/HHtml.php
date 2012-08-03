@@ -124,16 +124,16 @@ s.parentNode.insertBefore(g,s);
 	
 	public static function ganalyticsMultiTracker($codes,$domainName,$trackPageLoadTime=false,$https=false){
 		$gaq= '<script type="text/javascript">//<![CDATA[
-		var _gaq = _gaq || [];_gaq.push([\'_setDomainName\', \''.$domainName.'\']';
-		foreach ($codes as $key => $value) {$gaq.= ',[\''.$key.'_setAccount\',\''.$value.'\'],[\''.$key.'_trackPageview\']'.($trackPageLoadTime?",['".$key."_trackPageLoadTime']":'');}
-		$gaq.=');
-		(function(d,t){
-			var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-			g.type=\'text/javascript\';g.async=1;g.src=\''.($https?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
-			s.parentNode.insertBefore(g,s);
-		})(document,\'script\');
-		//]]></script>';
-		return $gaq;
+var _gaq = _gaq || [];_gaq.push([\'_setDomainName\', \''.$domainName.'\']';
+		foreach($codes as $key => $value) 
+			$gaq.= ',[\''.$key.'_setAccount\',\''.$value.'\'],[\''.$key.'_trackPageview\']'.($trackPageLoadTime?",['".$key."_trackPageLoadTime']":'');
+		return $gaq.');
+(function(d,t){
+var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+g.type=\'text/javascript\';g.async=1;g.src=\''.($https?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
+s.parentNode.insertBefore(g,s);
+})(document,\'script\');
+//]]></script>';
 	}
 	
 	public static function link($title,$url=false,$options=array()){
