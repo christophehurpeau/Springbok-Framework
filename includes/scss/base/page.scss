@@ -5,6 +5,10 @@ $PAGE_FIXED:false !default;
 $HEADER_BACKGROUND:false !default;
 $HEADER_COLOR:false !default;
 $HEADER_BORDER_RADIUS:false !default;
+$HEADER_PADDING:false !default;
+
+$PAGE_WIDTH:false !default;
+$PAGE_BACKGROUND:false !default;
       
 $FIXED_VARIABLE_SHADOW:false !default;
 $FIXED_BACKGROUND:false !default;
@@ -13,6 +17,7 @@ $FIXED_VARIABLE_MARGIN:$FIXED_VARIABLE_SHADOW !default;
 $VARIABLE_BACKGROUND:false !default;
 $VARIABLE_BORDER:false !default;
 $VARIABLE_SHADOW:false !default;
+$FIXED_VARIABLE_BACKGROUND:#FFF !default;
 $FIXED_VARIABLE_BORDER:false !default;
 $VARIABLE_CONTENT_BACKGROUND:false !default;
 $VARIABLE_AUTO_CONTENT_PADDING:true !default;
@@ -62,6 +67,7 @@ body #container{
 header,div.header{
 	@if $HEADER_SHADOW{ @include boxShadow($HEADER_SHADOW,5px); }
 	@if $HEADER_BORDER_RADIUS{ @include borderRadiusBottom(5px); }
+	@if $HEADER_PADDING{ padding:$HEADER_PADDING; }
 	display:block;
 	/*width:98%;
 	margin:0 auto; padding:1px 0;*/
@@ -129,8 +135,15 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	/*overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
 	/*overflow-x: hidden;*/
 	padding-bottom:20px;
+	@if $PAGE_WIDTH{
+	  width:$PAGE_WIDTH;
+	  margin:0 auto;
+	}
+	@if $PAGE_BACKGROUND{ @include background($PAGE_BACKGROUND); }
+	
 	@if $PAGE_FIXED{
-  	margin:0 3px;padding-top:38px;
+  	@if $PAGE_WIDTH==false{ margin:0 3px; }
+  	padding-top:38px;
     position:relative;
     overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
     overflow-x: hidden;
