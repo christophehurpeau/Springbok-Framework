@@ -91,7 +91,7 @@ class CHttpRequest{
 			'Yahoo',
 			//'VoilaBot',
 			//'WebCrawler',
-			'crawler','spider'
+			'crawler','spider',
 		 
 			'Xenu',
 		 
