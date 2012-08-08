@@ -12,6 +12,10 @@ class HBreadcrumbs{
 		self::$_links[$titleLink]=$link;
 	}
 	
+	public static function setLast($lastTitle){
+		self::$_lastTitle=$lastTitle;
+	}
+	
 	public static function display($homeLink,$lastTitle,$options=array()){
 		if(!isset($options['class'])) $options['class']='breadcrumbs';
 		if(empty(self::$_links) && empty($lastTitle)) return;
