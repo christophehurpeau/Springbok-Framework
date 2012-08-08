@@ -147,7 +147,7 @@ var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
 		$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t)).append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
 		ul.change();
 	});
-	ul.on('click','a',function(e){
+	ul.on('click','a.delete',function(e){
 		e.preventDefault();
 		var li=$(this).closest('li'),val=li.attr('rel');
 		$.get(url+'/del/'+val+options.url,function(d){

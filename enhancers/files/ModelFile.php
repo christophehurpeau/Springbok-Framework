@@ -57,7 +57,7 @@ class ModelFile extends PhpFile{
 				if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
 				$createdField=isset($annotations['CreatedField'])?$annotations['CreatedField'][0][0]:false;
 				$updatedField=isset($annotations['UpdatedField'])?$annotations['UpdatedField'][0][0]:false;
-				$orderByField=isset($annotations['OrderByField'])?$annotations['PositionField'][0][0]:false;
+				$orderByField=isset($annotations['OrderByField'])?$annotations['OrderByField'][0][0]:false;
 				$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
 				
 				if(isset($annotations['Comment'])) $contentInfos['comment']=$annotations['Comment'][0][0];
@@ -204,10 +204,11 @@ class ModelFile extends PhpFile{
 					foreach($enums as $fieldName=>$array){
 						if(count($array)===1 && is_array($array[0])) $array=$array[0];
 						$res.='public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){return array(';
-						foreach($array as $key=>$value) $res.=UPhp::exportCode($key).'=>'.UPhp::exportCode($value).',';
+						foreach($array as $key=>$value)
+							$res.=UPhp::exportCode($key).'=>_tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).'),';
 						$res=substr($res,0,-1).');}';
 						$res.='public function '.$fieldName.'(){$v=$this->'.$fieldName.';';
-						foreach($array as $key=>$value) $res.='if($v==='.UPhp::exportCode($key).')return '.UPhp::exportCode($value).';';
+						foreach($array as $key=>$value) $res.='if($v==='.UPhp::exportCode($key).')return _tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).');';
 						$res.='return \'\';}';
 						/*foreach($array as $key=>$value){
 							$res.='public function is'.ucfirst($fieldName).'{return $this->'.$fieldName.'==='.$key.'}';
