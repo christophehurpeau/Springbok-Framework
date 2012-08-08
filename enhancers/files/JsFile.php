@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.0.3';
+	public static $CACHE_PATH='js_8.0.4';
 
 	public function loadContent($srcContent){
 		if($this->fileName()==='jsapp.js'){
@@ -78,7 +78,7 @@ class JsFile extends EnhancerFile{
 			else $entries=array();
 			if(in_array($this->fileName(),$jsFiles))
 				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
-					./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webdir+'img/';\n".$this->_srcContent;
+					./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webUrl+'img/';\n".$this->_srcContent;
 		}
 	}
 	
