@@ -1,6 +1,6 @@
 <?php
 class CLang{
-	private static $lang;
+	private static $lang,$cache;
 	/** @var DB */
 	private static $db;
 	
@@ -30,7 +30,8 @@ class CLang{
 	}
 	
 	public static function translate($string,$category){
-		return self::$db->doSelectValue('SELECT t FROM t WHERE c=\''.$category.'\' AND s='.self::$db->escape($string).' LIMIT 1');
+		return isset(self::$cache[$category][$string]) ? self::$cache[$category][$string] : 
+			self::$cache[$category][$string]=self::$db->doSelectValue('SELECT t FROM t WHERE c=\''.$category.'\' AND s='.self::$db->escape($string).' LIMIT 1');
 	}
 }
 CLang::init();
