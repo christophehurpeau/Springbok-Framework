@@ -45,8 +45,8 @@ class HMeta{
 		/* DEV */ if(self::$canonical===null && !Springbok::$inError) throw new Exception("canonical is not defined"); /* /DEV */
 		if(self::$canonical===false) return '';
 		$result='<link rel="canonical" href="'.HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true).'"/>';
-		if(self::$prev!==null) $result.='<link rel="prev" href="'.HHtml::urlEscape(self::$prev,null,true).'"/>';
-		if(self::$next!==null) $result.='<link rel="next" href="'.HHtml::urlEscape(self::$next,null,true).'"/>';
+		if(self::$prev!==null) $result.='<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,true).'"/>';
+		if(self::$next!==null) $result.='<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,true).'"/>';
 		return $result;
 	}
 	

@@ -108,8 +108,9 @@ class ConfigFile extends PhpFile{
 								if(in_array($m[2],array('id'))) return '([0-9]+)';
 								return '([^\/]+)';
 							},$routeLangPreg).($finalRoutes[$entry][$url]['ext']===null?'':($finalRoutes[$entry][$url]['ext']==='html'?'(\.html|)':'(\.'.$finalRoutes[$entry][$url]['ext'].')')),
-							1=>rtrim(str_replace('/*','%s',str_replace(array('?','(',')'),'',preg_replace('/(\:[a-zA-Z_]+)/m','%s',$routeLang))),'/')
+							1=>str_replace('/*','%s',str_replace(array('?','(',')'),'',preg_replace('/(\:[a-zA-Z_]+)/m','%s',$routeLang)))
 						);
+						if($routeLang[1]!=='/') $routeLang[1]=rtrim($routeLang[1],'/');
 						$finalRoutes[$entry][$url][$lang]=$routeLang;
 						if(!empty($paramsNames)) $finalRoutes[$entry][$url][':']=$paramsNames;
 					}
