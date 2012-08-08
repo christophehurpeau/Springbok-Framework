@@ -88,7 +88,7 @@ includeCore('ui/slideTo');
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
 			$('body').addClass('cursorWait').append(divLoading);
-			if(normalFaviconHref) linkFavicon.attr('href',webdir+'img/ajax-roller.gif');
+			if(normalFaviconHref) linkFavicon.attr('href',imgUrl+'ajax-roller.gif');
 			
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data, headers:headers,

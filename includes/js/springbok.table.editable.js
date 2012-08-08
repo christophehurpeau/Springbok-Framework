@@ -3,7 +3,7 @@ S.HTableEditable=function(url){
 };
 S.HTableEditable.prototype={
 	updateField:function(name,pk,input){
-		var img=$('<img src="'+webdir+'img/ajax-roller.gif" style="position:absolute;right:2px;top:2px"/>'),$i=$(input).after(img),val;
+		var img=$('<img src="'+imgUrl+'ajax-roller.gif" style="position:absolute;right:2px;top:2px"/>'),$i=$(input).after(img),val;
 		$i.parent().find('img,span.icon').remove();
 		
 		if($i.is(':checkbox')) val=$i.is(':checked') ? '' : undefined;

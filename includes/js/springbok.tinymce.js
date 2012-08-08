@@ -3,8 +3,8 @@ S.tinymce={
 	
 	load:function(plugins){
 		if(window.tinymce===undefined){
-			S.loadSyncScript(jsdir+'tinymce.js');
-			S.loadSyncScript(jsdir+'tinymce.'+S.lang+'.js');
+			S.loadSyncScript(webUrl+'js/tinymce.js');
+			S.loadSyncScript(webUrl+'js/tinymce.'+S.lang+'.js');
 			// bug for ajax partial load
 			if($.isReady) tinymce.dom.Event.domLoaded=true;
 			/*old tinymce S.ready(function(){tinymce.dom.Event._pageInit(window)});*/
@@ -49,7 +49,7 @@ S.tinymce={
 			theme_advanced_styles:'Center=center;Clear=clear;Pointer=pointer;Smallinfo=smallinfo;Margin-Right 10=mr10;Margin-Right 20=mr20;Margin-Left 10=ml10;Margin-Left 20=ml20;Margin-Top 10=mt10;Margin-Top 20=mt20;',
 			
 			
-			content_css:webdir+'css/main.css',
+			content_css:webUrl+'css/main.css',
 			body_class:'variable'
 		};
 		

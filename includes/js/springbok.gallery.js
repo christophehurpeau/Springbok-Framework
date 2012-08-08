@@ -173,7 +173,7 @@ Gallery.prototype={
 	
 	addAlbum:function(album,animate,idxOf){
 		var t=this,li=$('<li class="album pointer"/>').attr('title',album.name).click(function(){var parent=t.selectedAlbum;t.selectAlbum(album.id);t.albumsMap[album.id].id=album.id;t.albumsMap[album.id].parent=parent;t.addBreadcrumb(album)})
-			.html(album.imageId?t.image(album.imageId)+' ':$('<img/>').attr(this.imageAttrs).attr('src',webdir+'img/folder-default.png'))
+			.html(album.imageId?t.image(album.imageId)+' ':$('<img/>').attr(this.imageAttrs).attr('src',imgUrl+'folder-default.png'))
 			.append($('<div class="center"/>').text(album.name+' ('+album.images+')'));
 		t._addItem(li,animate,'album',idxOf);
 		li.contextmenu({menu:[
@@ -210,8 +210,8 @@ Gallery.prototype={
 			//max_file_size : '10mb',
 			url:options.url,
 			//resize : {width : 320, height : 240, quality : 90},
-			flash_swf_url :jsdir+'plupload/plupload.flash.swf',
-			silverlight_xap_url : jsdir+'plupload/plupload.silverlight.xap',
+			flash_swf_url :webUrl+'js/plupload/plupload.flash.swf',
+			silverlight_xap_url : webUrl+'js/plupload/plupload.silverlight.xap',
 			filters : [
 				{title : "Images", extensions : "jpg,jpeg,gif,png"}
 			]

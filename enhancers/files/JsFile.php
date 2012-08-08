@@ -78,7 +78,7 @@ class JsFile extends EnhancerFile{
 			else $entries=array();
 			if(in_array($this->fileName(),$jsFiles))
 				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
-					./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",staticUrl=basedir+'web/',webdir=staticUrl,webUrl=webdir,imgUrl=webdir+'img/',jsdir=webdir+'js/';\n".$this->_srcContent;
+					./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webdir+'img/';\n".$this->_srcContent;
 		}
 	}
 	
