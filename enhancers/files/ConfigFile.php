@@ -232,9 +232,9 @@ class ConfigFile extends PhpFile{
 		if(isset($configArray['static_url'])){
 			$configArray['static_url']=rtrim($configArray['static_url'],'/');
 			$afterContent.=UPhp::exportString($configArray['static_url'].'/');
-			/*unset($configArray['static_url']);*/
+			unset($configArray['static_url']);
 		}else $afterContent.="BASE_URL.'/web/'";
-		$afterContent.=".WEB_FOLDER);";
+		$afterContent.=");define('WEB_URL',STATIC_URL.WEB_FOLDER);";
 		
 		if(isset($configArray['data_dir'])){
 			$afterContent.="define('DATA',".$this->replaceAPP(UPhp::exportString(rtrim($configArray['data_dir'],'/').'/')).");";

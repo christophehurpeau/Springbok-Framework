@@ -27,7 +27,7 @@ class HHtml{
 	}
 	
 	public static function favicon($imgUrl='favicon.png'){
-		$href=self::staticUrl('/'.$imgUrl,'img');
+		$href=STATIC_URL.'img/'.$imgUrl;
 		return '<link rel="icon" type="image/vnd.microsoft.icon" href="'.$href.'"/>'
 			.'<link rel="shortcut icon" type="image/x-icon" href="'.$href.'"/>';
 	}
@@ -275,10 +275,10 @@ s.parentNode.insertBefore(g,s);
 	}
 	
 	public static function staticUrl($url=null,$folder=false,$escape=true){
-		if(empty($url)) $url=STATIC_URL.($folder?$folder.'/':'');
+		if(empty($url)) $url=WEB_URL.($folder?$folder.'/':'');
 		if(strpos('://',$url)) return $url;
 		if(substr($url,0,2)==='\/') $url=substr($url,1);
-		elseif($url[0]==='/') $url=STATIC_URL.($folder?$folder.'/':'').substr($url,1);
+		elseif($url[0]==='/') $url=WEB_URL.($folder?$folder.'/':'').substr($url,1);
 		return $escape?h($url):$url;
 	}
 	

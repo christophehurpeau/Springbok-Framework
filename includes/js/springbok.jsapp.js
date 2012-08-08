@@ -1,7 +1,7 @@
 includeLib('jquery-1.7.2.min');
 includeCore('springbok.base');
 
-S.loadSyncScript(staticUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
+S.loadSyncScript(webUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
 
 (function(){
 	var readyCallbacks=$.Callbacks(),loadedRequired={};
@@ -29,7 +29,7 @@ S.loadSyncScript(staticUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('c
 			$.each(arguments,function(k,fileName){
 				if(!loadedRequired[fileName]){
 					loadedRequired[fileName]=true;
-					S.loadSyncScript(staticUrl+'js/app/'+fileName+'.js'/* DEV */+'?'+(new Date().getTime())/* /DEV */);
+					S.loadSyncScript(webUrl+'js/app/'+fileName+'.js'/* DEV */+'?'+(new Date().getTime())/* /DEV */);
 				}
 			});
 		},
