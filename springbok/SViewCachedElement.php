@@ -16,7 +16,7 @@ class SViewCachedElement extends SViewElement{
 			if(file_exists($path.$view)) unlink($path.$view);
 	}
 	
-	protected $path;
+	protected $path,$_file;
 	public function __construct($vars){
 		$this->calledClass=get_called_class();
 		$this->path=call_user_func_array($this->calledClass.'::path',$vars).'_';
@@ -24,11 +24,21 @@ class SViewCachedElement extends SViewElement{
 			parent::__construct($vars);
 			$this->generateAll();
 		}
+		$this->_file=fopen($this->path.'view','rb');
+		flock($this->_file,LOCK_SH);
+	}
+	public function __destruct(){
+		flock($this->_file, LOCK_UN);
+		fclose($this->_file);
 	}
 	public function exists(){ return file_exists($this->path.'view'); }
 	public function generateAll(){
 		include_once CORE.'mvc/views/View.php';
+		$this->_file=fopen($this->path.'view','w');
+		flock($this->_file,LOCK_EX);
 		foreach(static::$views as $view) $this->write($view,parent::render($view));
+		flock($this->_file, LOCK_UN);
+		fclose($this->_file);
 	}
 	
 	
@@ -43,6 +53,6 @@ class SViewCachedElement extends SViewElement{
 		return file_get_contents($this->path.$view);
 	}
 	protected function write($view,$content){
-		return file_put_contents($this->path.$view,$content);
+		return $view==='view' ? fwrite($this->_file,$content) : file_put_contents($this->path.$view,$content);
 	}
 }
