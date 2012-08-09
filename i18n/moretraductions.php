@@ -30,6 +30,9 @@ _tC('Sign out');
 _tC('Sign up');
 _tC('Register');
 
+_tC('Created');
+_tC('Updated');
+
 _tC('New name ?');
 _tC('Password lost ?');
 
