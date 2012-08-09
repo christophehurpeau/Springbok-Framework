@@ -4,6 +4,7 @@ $HEADER_MENU_BORDER:false !default;
 $HEADER_MENU_BACKGROUND:false !default;
 $HEADER_MENU_BACKGROUND_Top:false !default;
 $HEADER_MENU_COLOR:false !default;
+$HEADER_MENU_FONTSIZE:false !default;
 
 $HEADER_MENU_A_MARGIN:1px 2px !default;
 $HEADER_MENU_A_WIDTH:false !default;
@@ -52,6 +53,10 @@ nav.right.nomarg li,menu.left.nomarg li{margin:0}
 nav.left ul ul{
 	margin-left:8px;padding-left:1px;
 	border-left:1px dotted #BBB;
+}
+
+header nav,div.header nav{
+  @if $HEADER_MENU_FONTSIZE{ font-size:$HEADER_MENU_FONTSIZE; }
 }
 
 // the compiler automaticly remove empty
