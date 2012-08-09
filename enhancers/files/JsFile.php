@@ -66,11 +66,12 @@ class JsFile extends EnhancerFile{
 			
 			//if(preg_match('/\'{t(c)? (.*)}\'/',$c,$mI))
 			//	debugVar($mI);
-			$c=preg_replace('/\'{t(f|c)\s+([^}]+)\s*}\'/U','i18n$1[\'$2\']',$c);
+			$c=preg_replace('/\'{t(f|c|)\s+([^}]+)\s*}\'/U','i18n$1[\'$2\']',$c);
 			//$c=preg_replace('/\'{t(c)? (.*)}\'/U','i18n$1[\'$2\']',$c);
 			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false && substr($this->fileName(),0,5)!=='i18n-')
 				$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);';
+			else $this->_srcContent=$c;
 			
 			$jsFiles=array('global.js','jsapp.js');
 

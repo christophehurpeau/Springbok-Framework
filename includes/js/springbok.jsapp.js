@@ -36,24 +36,32 @@ S.loadSyncScript(webUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('cont
 		
 		api:{
 			//List,Retrieve
-			get:function(url){
+			get:function(url,data,type){
 				var result,headers={};
+				if(S.CSecure.isConnected()) headers.AUTHORIZATION=S.CSecure._token;
 				jQuery.ajax({
+					type:type,
 					headers:headers,
-					url: url,
-					data: data,
-					success: function(r){result=r;},
+					url:basedir+'api/'+url,
+					data:data,
+					success:function(r){result=r;},
 					dataType:'json',
 					async:false
 				});
 				return result;
 			},
 			//Create
-			post:function(){},
+			post:function(url,data){
+				this.get(url,data,'POST');
+			},
 			//Replace
-			put:function(){},
+			put:function(url,data){
+				this.get(url,data,'PUT');
+			},
 			//Delete
-			del:function(){}
+			del:function(url,data){
+				this.get(url,data,'DELETE');
+			}
 		}
 	};
 	S.ready=App.ready;
