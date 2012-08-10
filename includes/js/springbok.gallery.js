@@ -33,7 +33,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	);
 	var id=$.guid++,$fileList=$('<div class="filelist"/>').hide();
 	t.$.html('')
-		.append($('<div class="float_right mr10"/>')
+		.append($('<div class="floatR mr10"/>')
 			.append($('<a href="#" class="action icon folder_add"/>').click(function(){
 				S.dialogs.prompt(i18nc.Create,i18nc.Name,i18nc.Create,'',function(newAlbumName){
 					$.getJSON(t.albumLink+'/addAlbum',{parentId:t.selectedAlbum,name:newAlbumName},function(data){
