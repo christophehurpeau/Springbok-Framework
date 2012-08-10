@@ -25,6 +25,11 @@ class FatalHttpException extends HttpException{
 	
 }
 
+function httpCreated(){throw new HttpException(201,'Created');}
+function httpAccepted(){throw new HttpException(202,'Accepted');}
+function httpNoContent(){throw new HttpException(204,'No Content',false);}
+
+
 function badRequest(){throw new HttpException(400,'Bad Request');}
 function unauthorized(){throw new HttpException(401,'Unauthorized');}
 function forbidden(){throw new HttpException(403,'Forbidden');}

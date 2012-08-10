@@ -193,6 +193,7 @@ class App{
 			self::displayException($e,false);
 			/* /DEV */
 			/* PROD */
+			if($e->getDescription()===false) exit;
 			$vars=array('title'=>$e->getHttpCode().' '.$e->getMessage(),'descr'=>$e->getDescription());
 			if(file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){
 				include_once CORE.'mvc/views/View.php';
