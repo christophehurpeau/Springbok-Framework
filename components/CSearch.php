@@ -18,8 +18,7 @@ class CSearch{
 	}
 	
 	public function isEmpty(){
-		return $this->searchWords===false && $this->cityFound===false && $this->whereWords===null
-				&& ($this->num_dep===null || !$this->hasFoundKeywords());
+		return $this->searchWords===false && !$this->hasFoundKeywords();
 	}
 	
 	
@@ -147,10 +146,10 @@ class CSearch{
 				$countWordsId=count($wordsId);
 				if(empty($this->foundKeywordIds)){
 					$addSqlScoreWords=$countWordsId!==1;
-					$query->withForce('SearchableWord')->addCondition('sw.word_id',$wordsId)->groupBy('id');
+					$query->withForce('SearchableWord')->addCondition('sw.word_id',$wordsId)->groupBy('sb.id');
 				}else{
 					$addSqlScoreWords=true;
-					$query->withForce('SearchableWord',array('onConditions'=>array('sw.word_id'=>$wordsId)))->groupBy('id');
+					$query->withForce('SearchableWord',array('onConditions'=>array('sw.word_id'=>$wordsId)))->groupBy('sb.id');
 					if(!empty($this->searchWordsInCondition)){
 						$wordConditionIds=SearchablesWord::QValues()->fields('id')->where(array('word LIKE'=>$this->searchWordsInCondition));
 						if(!empty($wordConditionIds)) $query->withForce('SearchableWord',array('alias'=>'swcond'))->addCondition('swcond.word_id',$wordConditionIds);
@@ -170,7 +169,7 @@ class CSearch{
 		$query->addFieldWithAlias($sqlScore,'score');
 		
 		if(!empty($this->foundKeywordIds)){
-			$query->withForce('SearchableKeyword',array('alias'=>'skwd'))->addCondition('skwd.keyword_id',$this->foundKeywordIds)->groupBy('id');
+			$query->withForce('SearchableKeyword',array('alias'=>'skwd'))->addCondition('skwd.keyword_id',$this->foundKeywordIds)->groupBy('sb.id');
 		}
 		
 		if(!empty($this->searchWordsInCondition) && empty($wordsId)){
