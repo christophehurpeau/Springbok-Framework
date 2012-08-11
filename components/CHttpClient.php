@@ -21,7 +21,7 @@ class CHttpClient{
 	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),
 		$cookies=array(),$_cookies=array(),$referer=false,$cookiePath,$useCookies=false,//$saveCookies=true,
 		$username=null,$password=null,$proxy=null,
-		$result,$headers,$status=0,$error,$redirect=true;
+		$result,$headers,$lastUrl,$status=0,$error,$redirect=true;
 
 	public static function randomUserAgent(){
 		// TODO update user agent list
@@ -80,6 +80,8 @@ class CHttpClient{
 	public function getStatus(){ return $this->status; }
 	public function getError(){ return $this->error; }
 	public function getResult(){ return $this->result; }
+	public function getLastUrl(){ return $this->lastUrl; }
+	
 	
 	public function get($target,$referer=null){
 		return $this->execute($target,$referer,'GET');
@@ -108,6 +110,7 @@ class CHttpClient{
 		
 		$this->result=curl_exec($ch);
 		$this->status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
+		$this->lastUrl=curl_getinfo($ch,CURLINFO_EFFECTIVE_URL);
 		$this->error=curl_error($ch);
 		
 		
@@ -123,7 +126,7 @@ class CHttpClient{
 		//debug($this->error);
 		curl_close($ch);
 		
-		if($this->referer!==false) $this->referer=$this->target;
+		if($this->referer!==false) $this->referer=$this->lastUrl;
 		
 		if($this->status!==200 || $this->error) throw new HttpClientError($target,$this->status,$this->error,$this->result);
 		

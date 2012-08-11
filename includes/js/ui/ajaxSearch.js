@@ -18,7 +18,7 @@ includeLib('jquery-ui-1.8.20.position');
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
 		if(!S.isObject(options)) options={minLength:options==null?3:options};
-		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json' },options);
+		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
 		display=display||defaultDisplayList;
 		$(window).on('beforeunload',function(){
 			
@@ -60,7 +60,7 @@ includeLib('jquery-ui-1.8.20.position');
 								destContent.empty();
 							}
 						});
-					},160);
+					},options.delay);
 				}
 			});
 		return this;

@@ -61,7 +61,7 @@ class Springbok{
 		}
 		$log.="\nCall Stack:\n".$exception->getTraceAsString();
 		
-		if($exception instanceof HttpException){
+		if($isHttpException=($exception instanceof HttpException)){
 			if($exception instanceof FatalHttpException) CLogger::get('fatal-http-exception')->log($log);
 			else CLogger::get(date('d').'-'.'http-exception')->log($log);
 			return;
@@ -69,7 +69,7 @@ class Springbok{
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
 		/* DEV */elseif(App::$enhancing){debug($log); exit;}else die($log);/* /DEV */
 		
-		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
+		if(!$isHttpException && !headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
 		App::displayException($exception,$forceDefault);
 		exit(1);
 	}
