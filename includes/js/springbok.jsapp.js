@@ -38,14 +38,20 @@ S.loadSyncScript(webUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('cont
 			//List,Retrieve
 			get:function(url,data,type){
 				var result,headers={};
-				if(S.CSecure.isConnected()) headers.AUTHORIZATION=S.CSecure._token;
+				if(S.CSecure.isConnected()) headers.SAUTH=S.CSecure._token;
 				jQuery.ajax({
 					type:type,
 					headers:headers,
 					url:basedir+'api/'+url,
 					data:data,
 					success:function(r){result=r;},
-					dataType:'json',
+					error:function(jqXHR, textStatus, errorThrown){
+						console.log('Error:',jqXHR);
+						if(jqXHR.status===403){
+							if(S.CSecure.isConnected()) S.CSecure.reconnect()
+						}
+					},
+					dataType:'json', cache:false,
 					async:false
 				});
 				return result;

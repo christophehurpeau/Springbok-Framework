@@ -126,6 +126,13 @@ window.S={
 		return target;
 	},
 	
+	map:function(objectOrArray,callback){
+		if(objectOrArray)
+			for(var i in objectOrArray)
+				objectOrArray[i]=callback(objectOrArray[i],i);
+		return objectOrArray;
+	},
+	
 	tableClick:function(){
 		S.eltClick('table.pointer tr');
 	},

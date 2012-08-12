@@ -18,6 +18,7 @@ class SocketController extends Controller{
 		
 		$rParams=CRoute::getParams();
 		$num=0;
+		$mdef=include $mdef;
 		foreach($mdef['params'] as $paramName=>$def){
 			if($rParams && isset($rParams[$paramName])) $val=$rParams[$paramName];
 			elseif($rParams && isset($rParams[$num])) $val=$rParams[$num];

@@ -25,12 +25,12 @@ class CSecureRest{
 	
 	public static function checkAuth(){
 		if(self::$connected===null){
-			if(isset($_SERVER['HTTP_AUTHORIZATION'])){
+			if(isset($_SERVER['HTTP_SAUTH'])){
 				self::$connected=UserToken::QValue()->field('user_id')
-					->where(array('token'=>$_SERVER['HTTP_AUTHORIZATION'],'userAgent'=>sha1($_SERVER['HTTP_USER_AGENT'].USecure::getSalt())));
+					->where(array('token'=>$_SERVER['HTTP_SAUTH'],'userAgent'=>sha1($_SERVER['HTTP_USER_AGENT'].USecure::getSalt())));
 			}
 		}
-		return self::$connected!==false;
+		return self::$connected!==false && self::$connected!==null;
 	}
 	
 	public static function checkAccess($params=null){
@@ -54,6 +54,7 @@ class CSecureRest{
 			$ut=new UserToken;
 			$ut->user_id=self::$connected;
 			$ut->token=UGenerator::randomCode(22,/* EVAL str_split('azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN1234567890_-+') /EVAL */'');
+			$ut->userAgent=sha1($_SERVER['HTTP_USER_AGENT'].USecure::getSalt());
 			$ut->insert();
 			return $ut->token;
 		}

@@ -11,6 +11,7 @@ class SControllerServerSentEvents extends Controller{
 		
 		if(!method_exists(get_called_class(),$methodName)) notFound();
 		self::$methodName=$methodName;
+		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		$params=$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations);
 		self::$resp=new ServerSentEventsResponse();

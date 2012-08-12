@@ -21,6 +21,10 @@
 		}
 		return true;
 	},
+	reconnect:function(){
+		this._connected=false;
+		this.checkAccess();
+	},
 	
 	setConnected:function(userId,token){
 		this.storage.set('connected',this._connected=userId);
