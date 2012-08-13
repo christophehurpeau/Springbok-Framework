@@ -65,9 +65,9 @@
 						m.shift(); // remove m[0];
 						var nbNamedParameters=r[':'].length,countMatches=m.length;
 						if(countMatches !== 0){
-							r[':'].sbEach(function(k,v){ params[v]=m.shift(); });
+							r[':'].sEach(function(k,v){ params[v]=m.shift(); });
 						}
-						['controller','action'].sbEach(function(k,v){
+						['controller','action'].sEach(function(k,v){
 							if(c_a[k]==='!'){
 								if(params[v]){
 									c_a[k]=t.untranslate(params[v]).sbUcFirst();
@@ -101,7 +101,7 @@
 		* S.router.getArrayLink(['/:id-:slug',post.id,post.slug])
 		*/
 		getArrayLink:function(params){
-			var options=S.isObject(url.sbLast()) ? url.pop() : {},
+			var options=S.isObject(url.sLast()) ? url.pop() : {},
 				plus=options['?'] ? '?'+options['?'] : '',
 				route=routes[params.shift()];
 			if(options.ext) plus+='.'+params.ext;

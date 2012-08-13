@@ -30,7 +30,7 @@ S.menu={
 		}
 		options=S.extendsObj({menuAttributes:{'class':type},lioptions:{},linkoptions:{},startsWith:false},options);
 		var t=this,res=S.html.tag(this.tagName,options.menuAttributes),ul=this.tagName==='ul'?res:$('<ul/>').appendTo(res);
-		links.sbEach(function(k,item){
+		links.sEach(function(k,item){
 			if(!item[0]){ ul.append(S.html.tag('li',{'class':'separator'},this.separator,1)); return; }
 			var linkOptions=S.extendsObj(options.linkoptions,item[2]);
 			

@@ -10,7 +10,7 @@ S.HGoogle={
 		if(markers){
 			if(markers.multiple) delete markers.multiple;
 			else markers=[markers];
-			markers.sbEach(function(i,marker){
+			markers.sEach(function(i,marker){
 				url+='&markers=';
 				if(S.isObject(marker)){
 					url+=marker.style.join('|')+'|';

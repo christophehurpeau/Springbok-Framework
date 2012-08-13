@@ -31,7 +31,7 @@ S.extendsPrototype(String,{
 			[/Ŵ/g,'W'],[/ŵ/g,'w'],
 			[/Ź|Ż|Ž/g,'Z'],[/ź|ż|ž/g,'z'],
 			[/Æ|Ǽ/g,'AE'],[/ß/g,'ss'],[/Ĳ/g,'IJ'],[/ĳ/g,'ij'],[/Œ/g,'OE'],[/ƒ/g,'f'],[/&/g,'et'],[/þ/,'th'],[/Þ/,'TH']
-		].sbEach(function(i,pattern){
+		].sEach(function(i,pattern){
 			t=t.replace(pattern[0],pattern[1]);
 		});
 		return t;

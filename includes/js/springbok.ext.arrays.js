@@ -8,17 +8,17 @@ S.extendsPrototype(Array,{
 			if(i in t && array[i] === searchElement) return i;
 		return -1;
 	},
-	sbEach:function(callback){
+	sEach:function(callback){
 		return $.each(this,callback);
 	},
-	sbFindBy:function(propName,val){
-		var k=this.sbFindKeyBy(propName,val);
+	sFindBy:function(propName,val){
+		var k=this.sFindKeyBy(propName,val);
 		if(k===false) return k;
 		return this[k];
 	},
-	sbFindKeyBy:function(propName,val){
+	sFindKeyBy:function(propName,val){
 		var res=false;
-		this.sbEach(function(k,v){
+		this.sEach(function(k,v){
 			if(v[propName] == val){
 				res=k;
 				return false;
@@ -26,14 +26,14 @@ S.extendsPrototype(Array,{
 		});
 		return res;
 	},
-	sbSortBy:function(propName,asc,sortFunc){
+	sSortBy:function(propName,asc,sortFunc){
 		if(!$.isFunction(sortFunc)) sortFunc=S.arraysort[sortFunc===undefined?'':sortFunc];
 		return this.sort(function(a,b){
 			if(asc) return sortFunc(a[propName],b[propName]);
 			return sortFunc(b[propName],a[propName]);
 		});
 	},
-	sbEqualsTo:function(array){
+	sEqTo:function(array){
 		if(typeof array !== 'array' || this.length != array.length) return false;
 		for (var i = 0; i < array.length; i++) {
 	        /*if (this[i].compare) { 
@@ -43,5 +43,5 @@ S.extendsPrototype(Array,{
 	    }
 	    return true;
 	},
-	sbLast:function(){return this[this.length-1]}
+	sLast:function(){return this[this.length-1]}
 });

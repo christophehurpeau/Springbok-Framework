@@ -92,7 +92,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 				var idxOf=images.sHas(image);
 				t.addImage(image,true,idxOf===imagesLength?false:idxOf);
 				if(t.selectedAlbum!==0)
-					t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children.sbFindBy('id',t.selectedAlbum).images++;
+					t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children.sFindBy('id',t.selectedAlbum).images++;
 			}
 		}
 	});
@@ -119,11 +119,11 @@ Gallery.prototype={
 	},
 	sort:function(create){
 		var idAlbum=this.selectedAlbum;
-		this.albumsMap[idAlbum].images.sbSortBy(this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
+		this.albumsMap[idAlbum].images.sSortBy(this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
 		if(create) this.createListAlbums(this.albumsMap[idAlbum].children,this.albumsMap[idAlbum].images);
 	},
 	selectImage:function(idImage){
-		return this.onSelectImage(idImage,this.albumsMap[this.selectedAlbum].images.sbFindBy('id',idImage));
+		return this.onSelectImage(idImage,this.albumsMap[this.selectedAlbum].images.sFindBy('id',idImage));
 	},
 	createListAlbums:function(albums,images){
 		var t=this;
