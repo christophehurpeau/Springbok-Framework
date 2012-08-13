@@ -150,11 +150,10 @@ class App{
 			Controller::$defaultLayout=Springbok::$prefix.'default';
 			
 			//TODO do some optimization with cache + langs
-			$filename=APP.'controllers'.Springbok::$suffix.'/methods/'.CRoute::getController().'-'.CRoute::getAction();
-			if(!file_exists($filename))
+			$mdef=APP.'controllers'.Springbok::$suffix.'/methods/'.CRoute::getController().'-'.CRoute::getAction();
+			if(!file_exists($mdef))
 				/* DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')'); /* /DEV */
 				/* PROD */ notFound(); /* /PROD */
-			$mdef=include $filename;
 			
 			$controllerName=CRoute::getController().'Controller';
 			/* if(!file_exists($filename=APP.'controllers'.$suffix.'/'.$controllerName.'.php')) notFound(); */

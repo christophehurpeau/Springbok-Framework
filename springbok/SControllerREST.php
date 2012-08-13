@@ -5,10 +5,11 @@ class SControllerREST extends Controller{
 		self::$suffix=$suffix;
 		static::beforeDispatch();
 		$method=CHttpRequest::getMethod(); $methodName=CRoute::getAction();
-		if($method !=='GET') $methodName.=$method;
+		if($method !=='GET'){ $methodName.=$method; $mdef.=$method; }
 		
 		if(!method_exists(get_called_class(),$methodName)) notFound();
 		self::$methodName=$methodName;
+		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		static::crossDomainHeaders();
 		return call_user_func_array(array('static',$methodName),$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations));

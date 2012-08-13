@@ -12,6 +12,7 @@ class Controller{
 		static::beforeDispatch();
 		if(!method_exists(get_called_class(),$methodName=CRoute::getAction())) notFound();
 		self::$methodName=$methodName;
+		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		//if(isset(static::$_classAnnotations))
 		//	$methodAnnotations += static::$_classAnnotations;
@@ -19,7 +20,6 @@ class Controller{
 		if(isset($methodAnnotations['Ajax'])){
 			if(!CHttpRequest::isAjax()) notFound();
 		} */
-		
 		return call_user_func_array(array('static',$methodName),$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations));
 	}
 	
