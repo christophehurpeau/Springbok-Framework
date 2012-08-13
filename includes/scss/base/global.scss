@@ -17,6 +17,8 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .floatR{float:right}
 .floatL{float:left}
 .faR{float:right;text-align:right}
+.row{ @extend .clear; display:table; table-layout:fixed; width:100%; }
+.row .col{ display:table-cell; }
 .context{ overflow:auto; overflow-x:hidden; position:relative }
 .nowrap,.w1{white-space:nowrap}
 html body .hidden{display:none}
