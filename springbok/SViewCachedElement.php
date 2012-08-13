@@ -28,8 +28,10 @@ class SViewCachedElement extends SViewElement{
 		flock($this->_file,LOCK_SH);
 	}
 	public function __destruct(){
-		flock($this->_file, LOCK_UN);
-		fclose($this->_file);
+		if($this->_file!==null){
+			flock($this->_file, LOCK_UN);
+			fclose($this->_file);
+		}
 	}
 	public function exists(){ return file_exists($this->path.'view'); }
 	public function generateAll(){

@@ -511,15 +511,17 @@ abstract class QFind extends QSelect{
 						$resField = $w['associationForeignKey'];
 						
 						$oneField=count($w['fields'])===1?$w['fields'][0]:false;
+						if(isset($w['tabResKey'])){ $tabResKey=$w['tabResKey']; unset($w['tabResKey']); }
+						else $tabResKey=false;
 						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
 						if($listRes) foreach($objs as $key=>$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
 								if($res->_get($resField) == $obj->_get($objField)){
-									if($oneField===false)
-										$listObjsRes[] = $res;
-									else
-										$listObjsRes[]=$res->_get($oneField);
+									if($oneField===false){
+										if($tabResKey===false) $listObjsRes[]=$res;
+										else $listObjsRes[$res->_get($tabResKey)]=$res;
+									}else $listObjsRes[]=$res->_get($oneField);
 								}
 							}
 							$obj->_set($w['dataName'],$listObjsRes);
