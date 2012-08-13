@@ -82,6 +82,14 @@ class ConfigFile extends PhpFile{
 			if(!isset($routes['index'])) $routes=array('index'=>$routes);
 			$finalRoutes=array();
 			foreach($routes as $entry=>$entryRoutes){
+				if(isset($entryRoutes['includesFromEntry'])){
+					if(is_string($entryRoutes['includesFromEntry'])) $entryRoutes['includesFromEntry']=array($entryRoutes['includesFromEntry']);
+					foreach($entryRoutes['includesFromEntry'] as $includeFromEntry){
+						if(is_string($includeFromEntry)) $entryRoutes=$entryRoutes+$routes[$includeFromEntry];
+						else foreach($includeFromEntry as $includeRouteFromEntry) $entryRoutes[$includeRouteFromEntry]=$routes[$includeFromEntry][$includeRouteFromEntry];
+					}
+					unset($entryRoutes['includesFromEntry']);
+				}
 				foreach($entryRoutes as $url=>$route){
 					$finalRoutes[$entry][$url]['_']=$route[0]; $paramsDef=isset($route[1])?$route[1]:NULL; $langs=isset($route[2])?$route[2]:NULL;
 					$finalRoutes[$entry][$url]['ext']=isset($route['ext'])?$route['ext']:NULL;
