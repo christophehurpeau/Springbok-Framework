@@ -10,6 +10,10 @@ class View{
 		ob_start();
 	}
 	
+	public function layoutTitle($layoutTitle){
+		$this->vars['layout_title']=$layoutTitle;
+	}
+	
 	public function ajaxHeaders($title,$to){
 		if($title!==false){
 			header('SpringbokAjaxTitle: '.json_encode($title));

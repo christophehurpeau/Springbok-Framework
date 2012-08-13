@@ -7,7 +7,7 @@ class UPhp{
 		return $content;
 	}
 	
-	public static function exportCode_recursiveArray(&$content,&$array,$start){
+	public static function exportCode_recursiveArray($content,$array,$start){
 		if(!is_array($array)) self::exportCode_addVar($content,$array);
 		else{
 			$content.='array(';
@@ -28,7 +28,7 @@ class UPhp{
 		return $start?rtrim($content,','):$content;
 	}
 	
-	public static function exportCode_addVar(&$content,&$var){
+	public static function exportCode_addVar(&$content,$var){
 		if(is_string($var)) $content.= self::exportString($var);//var_export($var,true);
 		elseif(is_numeric($var)) $content.= $var;
 		elseif(is_bool($var)) $content.= $var ? 'true' : 'false';
