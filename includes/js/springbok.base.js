@@ -129,8 +129,9 @@ window.S={
 	
 	map:function(objectOrArray,callback){
 		if(objectOrArray)
-			for(var i in objectOrArray)
-				objectOrArray[i]=callback(objectOrArray[i],i);
+			$.each(function(i,v){
+				objectOrArray[i]=callback(v,i);
+			});
 		return objectOrArray;
 	},
 	

@@ -4,7 +4,6 @@ S.Model=function(){
 };
 S.Model.prototype={
 	findAll:function(){
-		console.log('findAll');
 		return this._mapAll(App.api.get('models/'+this.Name+'/all'));
 	},
 	findOne:function(){
