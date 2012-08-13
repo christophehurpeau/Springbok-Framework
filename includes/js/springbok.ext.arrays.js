@@ -1,6 +1,5 @@
 S.extendsPrototype(Array,{
-	//sHas
-	sInArray:function(searchElement,i){
+	sHas:function(searchElement,i){
 		if(this.indexOf) return this.indexOf(searchElement,i);
 		/* See jQuery.inArray */
 		var t=this,l=t.length;

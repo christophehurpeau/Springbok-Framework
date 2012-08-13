@@ -42,7 +42,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 							albumsLength=albums.length;
 						albums.push(album);
 						t.sort();
-						var idxOf=albums.sInArray(album);
+						var idxOf=albums.sHas(album);
 						t.addAlbum(album,true,idxOf===albumsLength?false:idxOf);
 					});
 				});
@@ -89,7 +89,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 					imagesLength=images.length;
 				images.push(image);
 				t.sort();
-				var idxOf=images.sInArray(image);
+				var idxOf=images.sHas(image);
 				t.addImage(image,true,idxOf===imagesLength?false:idxOf);
 				if(t.selectedAlbum!==0)
 					t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children.sbFindBy('id',t.selectedAlbum).images++;
@@ -111,7 +111,7 @@ Gallery.prototype={
 		$.fancybox.close();
 	},
 	selectAlbum:function(idAlbum){
-		if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].sInArray(idAlbum)!==-1) return false;
+		if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].sHas(idAlbum)!==-1) return false;
 		if(this.albumsMap[idAlbum]===undefined)
 			this.albumsMap[idAlbum]=S.syncJson(this.albumLink,{id:idAlbum});
 		this.selectedAlbum=idAlbum;

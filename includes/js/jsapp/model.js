@@ -25,6 +25,6 @@ S.Model.add=function(name,extendsMainObj,extendsDataObj,superclass){
 	var model=new f();
 	model.Name=name;
 	M[name]=function(data){ if(data){ this.data=data; S.extendsObj(this,data); } };
-	var createFunction=function(methodName){ return function(){ return model[methodName].apply(model,arguments)}; };
+	var createFunction=function(methodName){ return S.isFunc(model[methodName]) ? function(){ return model[methodName].apply(model,arguments)} : model[methodName] ; };
 	for(var k in f.prototype) if(k[0]!=='_' && k!='constructor') M[name][k]=createFunction(k);
 };

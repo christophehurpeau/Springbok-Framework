@@ -57,7 +57,7 @@ S.extendsPrototype(String,{
 	    	blockTags='article,aside,blockquote,br,dd,div,dl,dt,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,li,menu,nav,ol,output,p,pre,section,table,tbody,textarea,tfoot,th,thead,tr,ul'.split(',');
 		return input.replace(commentsAndPhpTags, '').replace(tags,function($0,$1){
 			var tag=$1.toLowerCase();
-			return allowed.indexOf('<' + tag + '>') > -1 ? $0 : blockTags.sInArray(tag) ? "\n":'';
+			return allowed.indexOf('<' + tag + '>') > -1 ? $0 : blockTags.sHas(tag) ? "\n":'';
 		}).replace(/\n+\s*\n*/,"\n");
 	},
 	sbWordsCount:function(){

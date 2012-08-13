@@ -12,8 +12,9 @@ S.HEltFInput=function(form,name,largeSize){
 					else if(name==='url' || name==='website') e=$('<input type="url"/>');
 					break; 
 			}
-			e===undefined ? this.elt=e=$('<input type="text"/>') : this.elt=e;
-			
+		}
+		e===undefined ? this.elt=e=$('<input type="text"/>') : this.elt=e;
+		if(fModel){	
 			if(fModel[1].minL || fModel[1].req) e.prop('required',true);
 			if(v=fModel[1].min) e.attr('min',v);
 			if(v=fModel[1].max) e.attr('max',v);

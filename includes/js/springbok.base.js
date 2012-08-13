@@ -81,6 +81,7 @@ window.S={
 	isString:function(varName){ return typeof(varName)==='string'; },
 	isArray:Array.isArray || $.isArray,
 	isObject:function(varName){ return typeof(varName)==='object' },
+	isFunc:function(varName){ return typeof(varName)==='function' },
 	
 	clone:function(object){
 		// clone like _.clone : Shallow copy

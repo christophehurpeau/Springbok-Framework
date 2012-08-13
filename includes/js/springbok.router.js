@@ -30,7 +30,7 @@
 						if(p1) return str;
 						paramsNames.push(p2);
 						if(paramsDef && paramsDef[p2]) return paramsDef[p2]==='id' ? '([0-9]+)' : '('+paramsDef[p2]+')';
-						if(['id'].sInArray(p2) !== -1) return '([0-9]+)';
+						if(['id'].sHas(p2) !== -1) return '([0-9]+)';
 						return '([^\/]+)';
 					}) + (routes[url].ext ? (routes[url].ext==='html' ? '(?:\.html)?':'\.'+routes[url].ext) : '')+"$"),
 						routeLang.replace(/(\:[a-zA-Z_]+)/g,'%s').replace(/[\?\(\)]/g,'').replace('/*','%s').sbRtrim()];
