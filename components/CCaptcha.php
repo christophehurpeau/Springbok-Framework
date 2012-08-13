@@ -22,7 +22,8 @@ class CCaptcha{
 	}
 	
 	public static function check($caseInsensitive=false){
-		$userCode=$_POST[$key='captcha'];
+		if(!isset($_POST[$key='captcha'])) return false;
+		$userCode=$_POST[$key];
 		
 		if($caseInsensitive) $userCode=strtoupper($userCode);
 		
