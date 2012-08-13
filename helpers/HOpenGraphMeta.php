@@ -11,6 +11,10 @@ class HOpenGraphMeta{
 		return $res;
 	}
 	
+	public static function title($title){
+		self::$metas['title']=$title;
+	}
+	
 	/** That image should be at least 50x50 in any of the usually supported image forms (JPG, PNG, etc.) */
 	public static function image($url){
 		self::$metas['image']=$url;
