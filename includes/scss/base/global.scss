@@ -226,4 +226,12 @@ ul.clickable{
     [class*="h300"]{
         height: auto;
     }
+    
+    .row .col{
+      display: block  !important;
+      margin: 0 !important;
+      border: 0 !important;
+      float: none !important;
+      width: auto !important;
+    }
 }
