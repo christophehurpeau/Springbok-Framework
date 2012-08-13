@@ -41,6 +41,10 @@ includeLib('jquery-ui-1.8.20.position');
 				var val=input.val();
 				if(options.keyup && options.keyup(val,eKeyCode)===false) return;
 				
+				input.trigger('sSearch',[val])
+			}).bind('sSearch',function(e,val){
+				if(val===undefined) val=input.val();
+				val=val.sbTrim();
 				if(options.navigate) S.history.navigate(url+'/'+val);
 				if(val == '' || val.length < options.minLength) options.reset ? options.reset() : destContent.empty();
 				else if(val!=lastVal){
