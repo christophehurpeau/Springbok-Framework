@@ -40,6 +40,8 @@ abstract class QSelect extends AQuery{
 	public function addCond($key,$value){$this->where[$key]=$value;return $this;}
 	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
 	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
+	public function addOrder($value){ $this->orderBy[]=$value; return $this; }
+	public function addOrderDesc($value){ $this->orderBy[$value]='DESC'; return $this; }
 	public function getOrderBy(){
 		if(is_string($this->orderBy)) return $this->orderBy;
 		foreach($this->orderBy as $k=>$v)

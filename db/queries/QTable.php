@@ -1,7 +1,8 @@
 <?php
 class QTable extends QFindAll{
 	protected $pagination,
-		$allowOrder=true,$allowFilters=false,$FILTERS,
+		$allowFilters=false,$FILTERS,
+		$allowOrder=true,$defaultOrder,
 		$autoRelations=true,$belongsToFields=array(),
 		$exportable=false
 		;
@@ -13,6 +14,7 @@ class QTable extends QFindAll{
 	public function autoRelations($params=array()){$this->autoRelations=$params; return $this; }
 	public function belongsToFields($params){$this->belongsToFields=$params; return $this; }
 	public function exportable($types,$fileName,$title=null){$this->exportable=array($types,$fileName,$title); return $this;}
+	public function defaultOrder($defaultOrder){$this->defaultOrder=$defaultOrder; return $this; }
 	
 	public function isFiltersAllowed(){ return $this->allowFilters!==false; }
 	public function isFilterAdvancable(){ return $this->allowFilters==='advanced'; }
@@ -66,6 +68,16 @@ class QTable extends QFindAll{
 			if($orderByField !==null){
 				if(isset($relationsMap[$orderByField])) $orderByField=$relationsMap[$orderByField].'.'.$orderByField;
 				$this->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
+				if($this->defaultOrder!==null && isset($this->defaultOrder[1])) $this->addOrder($this->defaultOrder[1]);
+			}
+			if($this->defaultOrder!==null){
+				foreach($this->defaultOrder as $keyOrder=>$valueOrder){
+					if(is_int($keyOrder)){
+						if($valueOrder!==$orderByField) $this->addOrder($valueOrder);
+					}else{
+						if($keyOrder!==$orderByField) $this->addOrderDesc($keyOrder);
+					}
+				}
 			}
 		}
 		
