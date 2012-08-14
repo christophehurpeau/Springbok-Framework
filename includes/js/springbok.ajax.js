@@ -65,8 +65,9 @@ includeCore('ui/slideTo');
 				return false;
 			});
 			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([enctype]):not([action^="http://"])',function(){
-				var form=$(this);
-				S.ajax.load(form.attr('action'),form.serialize(),form.attr('method')==='get'?0:'post',form.has('input[type="password"]'));
+				var form=$(this),isGet=form.attr('method')==='get',action=form.attr('action'),params=form.serialize();
+				if(isGet){ action+=(action.sHas('?')?'&':'?')+params; params=undefined; }
+				S.ajax.load(action,params,isGet?0:'post',form.has('input[type="password"]'));
 				return false;
 			});
 		},

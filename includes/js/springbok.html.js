@@ -61,7 +61,7 @@ S.html={
 			if(url) url=url.sbTrim();
 			if(!url || url==='/') return (full || '') + this.baseurl + '/';
 			else{
-				if(url.sbContains('://')) return url;
+				if(url.sHas('://')) return url;
 				if(url.sbStartsWith('\\/')) return url.substr(1);
 				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
 			}
