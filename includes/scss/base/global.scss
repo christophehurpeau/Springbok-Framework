@@ -14,15 +14,24 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .alignRight{text-align:right}
 .alignLeft{text-align:left}
 .alignJustify{text-align:justify}
-.floatR{float:right}
-.floatL{float:left}
 .faR{float:right;text-align:right}
-.row{ @extend .clear; display:table; table-layout:fixed; width:100%; }
-.row .col{ display:table-cell; }
 .context{ overflow:auto; overflow-x:hidden; position:relative }
 .nowrap,.w1{white-space:nowrap}
 html body .hidden{display:none}
 .hiddenText{text-indent:-99999px; *text-indent:0; *font-size:0; *line-height:0; *overflow:hidden; }
+
+.floatR{float:right}
+.floatL{float:left}
+
+.row{ @extend .clear; display:table; table-layout:fixed; width:100%; }
+.row .col{ display:table-cell; }
+
+.line.gut > * + * { 
+    margin-left:1em;
+}
+.row.gut > * + * { 
+    border-left:1em solid #fff; /* must be color of parent background */
+}
 
 .aposTR{position:absolute;top:0;right:0}
 .aposR{position:absolute;right:0}

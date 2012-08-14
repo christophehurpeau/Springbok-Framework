@@ -24,8 +24,8 @@ ul.linksList{
     margin:0;
     @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
     border-top:$BUTTON_BORDER;
-    padding:3px 8px;
     transition:all .4s;
+    > a{padding:3px 8px;}
   }
   > li:hover{
     @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
@@ -34,6 +34,7 @@ ul.linksList{
     @include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
   }
 }
+.col > .linksList, .col.linksList{ margin-right:1px; }
 #page ul.linksList{
   a,a:hover,a:focus{
     display:block;
