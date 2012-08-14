@@ -1,0 +1,37 @@
+/* quick smartphone reset */
+@media (max-width: 640px) {
+    [class*="w160"], [class*="w200"], [class*="w280"],
+    [class*="w300"], [class*="w350"], [class*="w380"],
+    [class*="w400"], [class*="w420"], [class*="w600"],
+    [class*="wp10"], [class*="wp20"], [class*="wp30"],
+    [class*="wp33"], [class*="wp40"], [class*="wp50"],
+    [class*="wp60"], [class*="wp70"], [class*="wp80"],
+    [class*="wp90"], [class*="wp100"] {
+        width: auto;
+    }
+    
+    [class*="h600"], [class*="h400"], [class*="h200"],
+    [class*="h300"]{
+        height: auto;
+    }
+    
+    /* PAGE.SCSS */
+    
+    body{
+      font-size:100% !important;
+    }
+    
+    body #container{min-width:0}
+    
+    .row .col{
+      display: block  !important;
+      margin: 0 !important;
+      border: 0 !important;
+      float: none !important;
+      width: auto !important;
+    }
+    
+    .paddingtop > article{
+      padding:0 3px;
+    }
+}
