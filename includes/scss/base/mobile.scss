@@ -1,0 +1,60 @@
+/* quick smartphone reset */
+@media (max-width: 640px) {
+    [class*="w160"], [class*="w200"], [class*="w280"],
+    [class*="w300"], [class*="w350"], [class*="w380"],
+    [class*="w400"], [class*="w420"], [class*="w600"],
+    [class*="wp10"], [class*="wp20"], [class*="wp30"],
+    [class*="wp33"], [class*="wp40"], [class*="wp50"],
+    [class*="wp60"], [class*="wp70"], [class*="wp80"],
+    [class*="wp90"], [class*="wp100"] {
+        width: auto;
+    }
+    
+    [class*="h600"], [class*="h400"], [class*="h200"],
+    [class*="h300"]{
+        height: auto;
+    }
+    
+    body{
+      font-size:100% !important;
+    }
+    
+    .row .col{
+      display: block  !important;
+      margin: 0 !important;
+      border: 0 !important;
+      float: none !important;
+      width: auto !important;
+    }
+    
+    
+    $BUTTON_BACKGROUND_Top:#FFF;$BUTTON_BACKGROUND_Bottom:#F1F1F1;
+    $BUTTON_HOVER_BACKGROUND_Top:#F1F1F1;$BUTTON_HOVER_BACKGROUND_Bottom:#E5E5E5;
+    $BUTTON_FOCUS_BACKGROUND_Top:#E5E5E5;$BUTTON_FOCUS_BACKGROUND_Bottom:#FFF;
+    $BUTTON_COLOR:#111; $BUTTON_BORDER:1px solid #AAA;
+
+    @includeCore 'base/buttons.scss';
+    
+    ul.linksList{
+      list-style:none;
+      margin:0;padding:0;
+      border-bottom:$BUTTON_BORDER;
+      li{margin:0}
+      a{
+        @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
+        border-top:$BUTTON_BORDER;
+        padding:3px 8px;
+        transition:all .4s;
+      }
+    }
+    #page ul.linksList{
+      a,a:hover,a:focus{
+        display:block;
+        text-align:left;
+      }
+    }
+    #page .button{
+      margin: 2px;
+      padding:6px 8px;
+    }
+}

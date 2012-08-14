@@ -121,12 +121,15 @@ class AjaxPageDynamicTabsView extends AjaxPageView{
 class AjaxContentPageView extends AjaxPageView{
 	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		parent::__construct($title,'',$layout,$layoutNameOverride);
-	 	echo '<div class="variable padding">';
+	 	echo '<div class="'.static::attrClass().'">';
     }
     public function render(){
         echo '</div>';
         parent::render();
     }
+	protected static function attrClass(){
+		return 'variable padding';
+	}
 }
 
 class AjaxContentView extends AbstractAjaxView{

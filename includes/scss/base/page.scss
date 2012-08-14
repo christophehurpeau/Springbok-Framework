@@ -213,6 +213,7 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 .content,#page .content{padding:5px 10px;}
 #page{
 	div.variable.padding{padding:8px 10px}
+	div.variable.paddingtop{padding:8px 0 0}
 	@if $VARIABLE_AUTO_CONTENT_PADDING{
 	  @if false==$VARIABLE_BACKGROUND{
 	    @if false==$FIXED_VARIABLE_BACKGROUND{
