@@ -12,7 +12,7 @@ $BUTTON_TEXTSHADOW:#555 !default;
 $_BUTTON_OVERRIDE:FALSE !default;
 
 
-@if $_BUTTON_OVERRIDE{
+@if $_BUTTON_OVERRIDE==TRUE{
   html{
     input.submit,button,.button{
       @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
@@ -21,6 +21,7 @@ $_BUTTON_OVERRIDE:FALSE !default;
     }
     input.submit:hover,button:hover,.button:hover{
       @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
+    @if $BUTTON_HOVER_BORDER{ border:$BUTTON_HOVER_BORDER; }
     }
     body input.submit:focus,body button:focus,body .button:focus{
       @include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);

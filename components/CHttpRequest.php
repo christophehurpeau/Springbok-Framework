@@ -72,7 +72,7 @@ class CHttpRequest{
 		return (bool)preg_match('/'./* EVAL implode('|',array(
 			'Mobile',
 			'Android', 'AvantGo', 'BlackBerry', 'DoCoMo', 'Fennec', 'iPod', 'iPhone',
-			'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'PalmOS', 'PalmSource',
+			'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'Opera Mobi', 'PalmOS', 'PalmSource',
 			'portalmmm', 'Plucker', 'ReqwirelessWeb', 'SonyEricsson', 'Symbian', 'UP\\.Browser',
 			'webOS', 'Windows CE', 'Xiino'
 		)) /EVAL */''.'/i',$_SERVER['HTTP_USER_AGENT']);
