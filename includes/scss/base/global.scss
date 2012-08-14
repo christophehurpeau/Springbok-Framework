@@ -179,36 +179,7 @@ $BCOLOR_INVALID:#CEBBBB !default;
 
 /* interactions */
 
-$JQueryUI:false !default;
-$__moreSelector:'';
-
 @includeCore 'base/interactions.scss';
-ul.clickable{
-  @extend ul.nobullets;
-}
-
-@if $JQueryUI{ $__moreSelector:'.ui-state-default,.ui-widget-content .ui-state-default,'; }
-#{$__moreSelector}div.clickable,ul.clickable li{
-  background:$InteractionDefaultBackgroundColor;
-  color:findBestFgColor($InteractionDefaultBackgroundColor);
-  cursor:pointer;
-}
-@if $JQueryUI{ $__moreSelector:'.ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited,'; }
-#{$__moreSelector}div.clickable a,ul.clickable li a{color:findBestFgColor($InteractionDefaultBackgroundColor); text-decoration:none;}
-
-@if($INTERACTION_HOVER_BACKGROUND_COLOR){
-  @if $JQueryUI{ $__moreSelector:'.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus,'; }
-  #{$__moreSelector}div.clickable:hover,ul.clickable li:hover{ background:$INTERACTION_HOVER_BACKGROUND_COLOR; color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
-  @if $JQueryUI{ $__moreSelector:'.ui-state-hover a, .ui-state-hover a:hover,ui-state-focus a,ui-state-focus a:hover,'; }
-  #{$__moreSelector}div.clickable:hover a,ul.clickable li:hover a{ color:findBestFgColor($INTERACTION_HOVER_BACKGROUND_COLOR); }
-}
-
-@if($INTERACTION_CURRENT_BACKGROUND_COLOR){
-  @if $JQueryUI{ $__moreSelector:'.ui-state-active, .ui-widget-content .ui-state-active,'; }
-  #{$__moreSelector}ul.clickable li.current{ background:$INTERACTION_CURRENT_BACKGROUND_COLOR; color:findBestFgColor($INTERACTION_CURRENT_BACKGROUND_COLOR); }
-  @if $JQueryUI{ $__moreSelector:'.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited,'; }
-  #{$__moreSelector}ul.clickable li.current,ul.clickable li.current a{ color:findBestFgColor($INTERACTION_CURRENT_BACKGROUND_COLOR); }
-}
 @includeCore 'base/types.scss';
 
 
