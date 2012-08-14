@@ -15,8 +15,16 @@ class COAuth2Google extends COAuth2Connect{
 		return parent::redirectForConnection($url,$state,$scope,$offline?'&access_type=offline&approval_prompt=force':'');
 	}
 	
+	public static function refreshTokens($refreshToken,$NULL=null){
+		return CSimpleHttpClient::postJson(static::$TOKEN_URL,'client_id='.static::appId().'&client_secret='.urlencode(static::secret()).'&refresh_token='.$refreshToken.'&grant_type=refresh_token');
+	}
+	
 	public function retrieveMe(){
 		return $this->me=CSimpleHttpClient::getJson('https://www.googleapis.com/oauth2/v1/userinfo?access_token='.$this->accessToken);
+	}
+	
+	public function allContacts($minUpdated=null){
+		return CSimpleHttpClient::getJson('https://www.google.com/m8/feeds/contacts/default/full?v=3&alt=json'.($minUpdated===null?'':'&$min-updated='.HTime::toRFC3339Time($minUpdated)).'&max-results=99999&access_token='.$this->accessToken);
 	}
 	
 	

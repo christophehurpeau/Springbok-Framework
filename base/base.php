@@ -147,6 +147,10 @@ function debugVarNoFlush(){
 	$message=ob_get_clean();
 	prettyDebug($message,2,false);
 }
+function debugShort($var,$flush=true){
+	prettyDebug(short_debug_var($var),2,$flush);
+}
+
 function dev_test_preg_error(){
 	if(preg_last_error() !== PREG_NO_ERROR){
 		switch(preg_last_error()){

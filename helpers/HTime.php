@@ -69,5 +69,7 @@ class HTime{
 	
 	public static function toAtom($dateString){ return self::toAtomTime(strtotime($date));  }
 	public static function toAtomTime($date){ return date('Y-m-d\TH:i:s\Z',$date); }
+	
+	public static function toRFC3339Time($date){ return date('Y-m-d\TH:i:sP',$date); }
 }
 HTime::init();
