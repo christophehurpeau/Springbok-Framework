@@ -9,32 +9,49 @@ $BUTTON_HOVER_COLOR:#FFF !default;
 $BUTTON_FOCUS_BACKGROUND_Top:#555555 !default;$BUTTON_FOCUS_BACKGROUND_Bottom:#777777 !default;
 $BUTTON_FOCUS_COLOR:#FFF !default;
 $BUTTON_TEXTSHADOW:#555 !default;
-      
-input.submit,button,.button{
-	@include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
-	border-radius:3px;
-	box-shadow:0 1px 1px rgba(255,255,255,0.2) inset, 0 1px 2px rgba(0,0,0,0.4);
-	border:$BUTTON_BORDER;
-	color:$BUTTON_COLOR;
-	text-shadow:$BUTTON_TEXTSHADOW;
-	padding:2px 8px;
-	cursor:pointer;
-	transition:all .4s;
-	box-sizing: border-box;
-}
-input.submit:hover,button:hover,.button:hover{
-	@include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
-	@if $BUTTON_HOVER_BORDER{ border:$BUTTON_HOVER_BORDER; }
-	@if $BUTTON_HOVER_COLOR{ color:$BUTTON_HOVER_COLOR; }
-}
-body input.submit:focus,body button:focus,body .button:focus{
-	@include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
-	color:$BUTTON_FOCUS_COLOR;outline:0;
-	text-shadow:$BUTTON_TEXTSHADOW;
-}
-a.button,a.button:hover{text-decoration:none;display:inline-block;}
-button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
+$_BUTTON_OVERRIDE:FALSE !default;
 
+
+@if $_BUTTON_OVERRIDE{
+  html{
+    input.submit,button,.button{
+      @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
+      border:$BUTTON_BORDER;
+      color:$BUTTON_COLOR;
+    }
+    input.submit:hover,button:hover,.button:hover{
+      @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
+    }
+    body input.submit:focus,body button:focus,body .button:focus{
+      @include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
+    }
+  }
+}@else{
+  input.submit,button,.button{
+  	@include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
+  	border-radius:3px;
+  	box-shadow:0 1px 1px rgba(255,255,255,0.2) inset, 0 1px 2px rgba(0,0,0,0.4);
+  	border:$BUTTON_BORDER;
+  	color:$BUTTON_COLOR;
+  	text-shadow:$BUTTON_TEXTSHADOW;
+  	padding:2px 8px;
+  	cursor:pointer;
+  	transition:all .4s;
+  	box-sizing: border-box;
+  }
+  input.submit:hover,button:hover,.button:hover{
+  	@include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
+  	@if $BUTTON_HOVER_BORDER{ border:$BUTTON_HOVER_BORDER; }
+  	@if $BUTTON_HOVER_COLOR{ color:$BUTTON_HOVER_COLOR; }
+  }
+  body input.submit:focus,body button:focus,body .button:focus{
+  	@include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
+  	color:$BUTTON_FOCUS_COLOR;outline:0;
+  	text-shadow:$BUTTON_TEXTSHADOW;
+  }
+  a.button,a.button:hover{text-decoration:none;display:inline-block;}
+  button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
+}
 /* IE */
 /*input.submit,button{
 	position:relative;

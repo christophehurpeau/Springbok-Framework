@@ -19,7 +19,8 @@ class ScssFile extends EnhancerFile{
 	public static function &includes($content,$currentPath,&$includes,&$enhanced){
 		$content=preg_replace_callback('/@include(Core|Lib|Plugin)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,&$includes,&$enhanced){
 			if(!endsWith($matches[2],'.css') && !endsWith($matches[2],'.scss')) $matches[2].='.scss';
-			if(isset($includes[$matches[1]][$matches[2]])) return '';
+			if($matches[2]==='base/buttonsOverride.scss') $matches[2]='base/buttons.scss';
+			elseif(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
 			
 			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;

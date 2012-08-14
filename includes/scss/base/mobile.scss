@@ -31,6 +31,10 @@
       width: auto !important;
     }
     
+    .paddingtop > article{
+      padding:0 3px;
+    }
+    
     /* PAGER.SCSS */
     div.pager{height:32px;}
     ul.pager{font-size:1em !important;}
@@ -44,8 +48,9 @@
     $BUTTON_HOVER_BACKGROUND_Top:#F1F1F1;$BUTTON_HOVER_BACKGROUND_Bottom:#E5E5E5;
     $BUTTON_FOCUS_BACKGROUND_Top:#E5E5E5;$BUTTON_FOCUS_BACKGROUND_Bottom:#FFF;
     $BUTTON_COLOR:#111; $BUTTON_BORDER:1px solid #CCC;
+    $_BUTTON_OVERRIDE:TRUE;
 
-    @includeCore 'base/buttons.scss';
+    @includeCore 'base/buttonsOverride.scss';
     
     ul.linksList{
       list-style:none;
