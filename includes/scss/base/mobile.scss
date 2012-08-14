@@ -15,9 +15,13 @@
         height: auto;
     }
     
+    /* PAGE.SCSS */
+    
     body{
       font-size:100% !important;
     }
+    
+    body #container{min-width:0}
     
     .row .col{
       display: block  !important;
@@ -27,6 +31,14 @@
       width: auto !important;
     }
     
+    /* PAGER.SCSS */
+    div.pager{height:32px;}
+    ul.pager{font-size:1em !important;}
+    ul.pager li a{
+      padding:6px 10px;
+    }
+    
+    /* BUTTONS.SCSS */
     
     $BUTTON_BACKGROUND_Top:#FFF;$BUTTON_BACKGROUND_Bottom:#F1F1F1;
     $BUTTON_HOVER_BACKGROUND_Top:#F1F1F1;$BUTTON_HOVER_BACKGROUND_Bottom:#E5E5E5;
