@@ -56,17 +56,17 @@
       list-style:none;
       margin:0;padding:0;
       border-bottom:$BUTTON_BORDER;
-      li{margin:0}
-      a{
+      > li{/* not a */
+        margin:0;
         @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
         border-top:$BUTTON_BORDER;
         padding:3px 8px;
         transition:all .4s;
       }
-      a:hover{
+      > li:hover{
         @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
       }
-      a:focus{
+      > li:focus{
         @include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
       }
     }
