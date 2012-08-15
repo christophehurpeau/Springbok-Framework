@@ -90,8 +90,9 @@ class ModelFile extends PhpFile{
 				}
 				if(isset($annotations['Child'])){
 					$idField=isset($modelFile->_fields['id']) ? 'p_id' : 'id';
-					$modelFile->_fields[$idField]=array( 'SqlType'=>array(isset($annotations['ParentBigintId'])?'bigint(20) unsigned':'int(10) unsigned'), 'NotNull'=>false, 'NotBindable'=>false,
+					$fieldToInsert=array( 'SqlType'=>array(isset($annotations['ParentBigintId'])?'bigint(20) unsigned':'int(10) unsigned'), 'NotNull'=>false, 'NotBindable'=>false,
 										'ForeignKey'=>array($annotations['Child'][0][0],'id','onDelete'=>'CASCADE'));
+					$modelFile->_fields=array($idField=>$fieldToInsert)+$modelFile->_fields;
 					$idField==='id' ? $modelFile->_fields[$idField]['Pk']=false : $modelFile->_fields[$idField]['Unique']=false;
 					$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$annotations['Child'][0][0],'foreignKey'=>$idField,
 									'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
