@@ -22,8 +22,9 @@
 		return true;
 	},
 	reconnect:function(){
-		this._connected=false;
+		this.setConnected(false);
 		this.checkAccess();
+		throw new S.Controller.Stop();
 	},
 	
 	setConnected:function(userId,token){

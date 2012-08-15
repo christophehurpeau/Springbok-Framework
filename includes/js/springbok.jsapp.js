@@ -48,7 +48,7 @@ S.loadSyncScript(webUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('cont
 					error:function(jqXHR, textStatus, errorThrown){
 						console.log('Error:',jqXHR);
 						if(jqXHR.status===403){
-							if(S.CSecure.isConnected()) S.CSecure.reconnect()
+							if(S.CSecure.isConnected()) S.CSecure.reconnect();
 						}
 					},
 					dataType:'json', cache:false,
