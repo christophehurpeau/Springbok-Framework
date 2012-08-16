@@ -28,8 +28,9 @@ class DBMySQL extends DBSql{
 		return false;
 	}
 	
-	public function beginTransaction(){ $this->_connect->autocommit(false); }
-	public function commit(){ $this->_connect->commit(); $this->_connect->autocommit(true); }
+	private $_transactionBegun=0;
+	public function beginTransaction(){ if($this->_transactionBegun++ === 0) $this->_connect->autocommit(false); }
+	public function commit(){ if(--$this->_transactionBegun === 0){ $this->_connect->commit(); $this->_connect->autocommit(true); } }
 	public function rollBack(){ $this->_connect->rollback(); $this->_connect->autocommit(true); }
 	
 	public function escape($string){
