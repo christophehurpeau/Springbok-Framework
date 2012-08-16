@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.0.3';
+	public static $CACHE_PATH='views_8.1.4';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -45,6 +45,42 @@ class ViewFile extends PhpFile{
 	public function enhanceFinalContent($content){
 		$content=preg_replace('/{=include ([^}]+)\}/U','<?php echo "<?php include $1 ?>" ?>',$content);
 		
+		
+		
+		foreach(array(''=>function($c){return '<?php '.$c.' ?>';},
+					'='=>function($c){return '<?php echo \'<?php '.str_replace("'",'\\\'',$c).' ?>\' ?>';}) as $prfx=>$callback){
+			$callbackCreator=function($string) use($callback){ return function($m) use($callback,$string){
+					if(isset($m[1])) $string=str_replace('$1',$m[1],$string);
+					if(isset($m[2])) $string=str_replace('$2',$m[2],$string);
+					return $callback($string);}; };
+			
+			$content=preg_replace_callback('/{'.$prfx.'(else)?if\s+([^}]+?)\s*\}/',$callbackCreator('$1if($2):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'(else)?ife\s+([^}]+?)\s*\}/',function($m) use($callback){
+				$m[2]=implode(')&&empty(',preg_split('/\s*\&\&\s*/',$m[2]));
+				$m[2]=implode(')||empty(',preg_split('/\s*\|\|\s*/',$m[2]));
+				return $callback((empty($m[1])?'':$m[1]).'if(empty('.$m[2].')):');
+			},$content);
+			$content=preg_replace_callback('/{'.$prfx.'(else)?if!e\s+([^}]+?)\s*\}/',function($m) use($callback){
+				$m[2]=implode(')&&!empty(',preg_split('/\s*\&\&\s*/',$m[2]));
+				$m[2]=implode(')||!empty(',preg_split('/\s*\|\|\s*/',$m[2]));
+				return $callback((empty($m[1])?'':$m[1]).'if(!empty('.$m[2].')):');
+			},$content);
+			$content=preg_replace('/{'.$prfx.'else}/',$callback('else:'),$content);
+			$content=preg_replace('/{'.$prfx.'\/if}/',$callback('endif;'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'ifnull\s+([^}]+?)\s*\}/',$callbackCreator('if($1===null):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'if!null\s+([^}]+?)\s*\}/',$callbackCreator('if($1!==null):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'ifTrue\s+([^}]+?)\s*\}/',$callbackCreator('if($1===true):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'ifFalse\s+([^}]+?)\s*\}/',$callbackCreator('if($1===false):'),$content);
+			
+	
+			$content=preg_replace_callback('/{'.$prfx.'f\s+([^}]+?)\s*\}/',$callbackCreator('foreach($1):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'\/f}/',$callbackCreator('endforeach;'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'while\s+([^}]+?)\s*\}/',$callbackCreator('while($1):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'\/while}/',$callbackCreator('endwhile;'),$content);
+		}
+		
+		
+		
 		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
 		$content=preg_replace('/<\?=\s*(\$[a-zA-Z0-9_]+(?:\->[a-zA-Z0-9_\(\)]+)+)\s*;?\s*\?>/','<?php echo h($1) ?>',$content);
 		$content=preg_replace('/<\?=\s*(.+)\s*;?\s*\?>/U','<?php echo h($1) ?>',$content);
@@ -62,31 +98,6 @@ class ViewFile extends PhpFile{
 		
 		$content=preg_replace('/{\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? $2 : $1 ?>',$content);
 		$content=preg_replace('/{=\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? h($2) : h($1) ?>',$content);
-		
-		$content=preg_replace('/{(else)?if\s+([^}]+?)\s*\}/','<?php $1if($2): ?>',$content);
-		$content=preg_replace_callback('/{(else)?ife\s+([^}]+?)\s*\}/',function($m){
-			$m[2]=implode(')&&empty(',preg_split('/\s*\&\&\s*/',$m[2]));
-			$m[2]=implode(')||empty(',preg_split('/\s*\|\|\s*/',$m[2]));
-			return '<?php '.(empty($m[1])?'':$m[1]).'if(empty('.$m[2].')): ?>';
-		},$content);
-		$content=preg_replace_callback('/{(else)?if!e\s+([^}]+?)\s*\}/',function($m){
-			$m[2]=implode(')&&!empty(',preg_split('/\s*\&\&\s*/',$m[2]));
-			$m[2]=implode(')||!empty(',preg_split('/\s*\|\|\s*/',$m[2]));
-			return '<?php '.(empty($m[1])?'':$m[1]).'if(!empty('.$m[2].')): ?>';
-		},$content);
-		$content=preg_replace('/{else}/','<?php else: ?>',$content);
-		$content=preg_replace('/{\/if}/','<?php endif; ?>',$content);
-		$content=preg_replace('/{ifnull\s+([^}]+?)\s*\}/','<?php if($1===null): ?>',$content);
-		$content=preg_replace('/{if!null\s+([^}]+?)\s*\}/','<?php if($1!==null): ?>',$content);
-		$content=preg_replace('/{ifTrue\s+([^}]+?)\s*\}/','<?php if($1===true): ?>',$content);
-		$content=preg_replace('/{ifFalse\s+([^}]+?)\s*\}/','<?php if($1===false): ?>',$content);
-		
-
-		$content=preg_replace('/{f\s+([^}]+?)\s*\}/','<?php foreach($1): ?>',$content);
-		$content=preg_replace('/{\/f}/','<?php endforeach; ?>',$content);
-		$content=preg_replace('/{while\s+([^}]+?)\s*\}/','<?php while($1): ?>',$content);
-		$content=preg_replace('/{\/while}/','<?php endwhile; ?>',$content);
-		
 		
 		$content=preg_replace_callback('/\s*{table(?:\s+([^}]+))?}\s*(.+)\s*{\/table}\s*/Us',function(&$m){
 			return '<?php $itable=0; ?><table'.ViewFile::params($m).'>'
