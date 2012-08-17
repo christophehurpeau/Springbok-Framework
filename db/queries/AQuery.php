@@ -55,8 +55,8 @@ abstract class AQuery{
 						}
 						$sql.=$this->formatField($key,$fieldPrefix).$op.'('.implode(',',$values).')';
 					}else{
-						$start=$this->formatField($key,$fieldPrefix).$op;$db=&$this->_db;
-						$sql.='('.implode(' OR ',array_map(function(&$v) use(&$start,&$db){return $start.$db->escape($v);},$value)).')';
+						$start=$this->formatField($key,$fieldPrefix).$op;$db=$this->_db;
+						$sql.='('.implode(' OR ',array_map(function($v) use($start,$db){return $start.$db->escape($v);},$value)).')';
 					}
 				/*}elseif($value instanceof AQuery){
 					list($sqlQuery,$sqlParams)=$value->_toSQL($this->_db);
