@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.1.4';
+	public static $CACHE_PATH='views_8.1.5';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -67,10 +67,10 @@ class ViewFile extends PhpFile{
 			},$content);
 			$content=preg_replace('/{'.$prfx.'else}/',$callback('else:'),$content);
 			$content=preg_replace('/{'.$prfx.'\/if}/',$callback('endif;'),$content);
-			$content=preg_replace_callback('/{'.$prfx.'ifnull\s+([^}]+?)\s*\}/',$callbackCreator('if($1===null):'),$content);
-			$content=preg_replace_callback('/{'.$prfx.'if!null\s+([^}]+?)\s*\}/',$callbackCreator('if($1!==null):'),$content);
-			$content=preg_replace_callback('/{'.$prfx.'ifTrue\s+([^}]+?)\s*\}/',$callbackCreator('if($1===true):'),$content);
-			$content=preg_replace_callback('/{'.$prfx.'ifFalse\s+([^}]+?)\s*\}/',$callbackCreator('if($1===false):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'(else)?ifnull\s+([^}]+?)\s*\}/',$callbackCreator('$1if($2===null):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'(else)?if!null\s+([^}]+?)\s*\}/',$callbackCreator('$1if($2!==null):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'(else)?ifTrue\s+([^}]+?)\s*\}/',$callbackCreator('$1if($2===true):'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'(else)?ifFalse\s+([^}]+?)\s*\}/',$callbackCreator('$1if($2===false):'),$content);
 			
 	
 			$content=preg_replace_callback('/{'.$prfx.'f\s+([^}]+?)\s*\}/',$callbackCreator('foreach($1):'),$content);
