@@ -17,7 +17,7 @@ class HTableJsActions{
 	}
 	
 	public function end(){
-		$this->modelTableComponent->addAfter(HHtml::jsInline('S.ready(function(){'.$this->content.'});'));
+		HHtml::jsReady($this->content);
 		return $this->modelTableComponent;
 	}
 }

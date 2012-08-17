@@ -56,9 +56,22 @@ class HHtml{
 //]]>
 </script>';
 	}
+	private static $jsReady='';
+	public static function jsReady($content){
+		self::$jsReady.=rtrim(trim($content),';').';';
+	}
+	public static function displayJsReady(){
+		if(self::$jsReady==='') return;
+		echo '<script type="text/javascript">//<![CDATA[
+S.ready(function(){'.substr(self::$jsReady,0,-1).'})
+//]]>
+</script>';
+	}
+	
 	public static function jsLink($url='/global'){
 		echo '<script type="text/javascript" src="'.self::staticUrl($url.'.js','js').'"></script>';
 	}
+	
 	private static $_JS;
 	public static function jsLinks(){
 		if(isset(self::$_JS['all']))
@@ -98,7 +111,13 @@ class HHtml{
 		ob_start();
 	}
 	public static function jsInlineEnd(){
-		return self::jsInline(ob_get_clean());
+		return self::jsInline(str_replace("\t",'',ob_get_clean()));
+	}
+	public static function jsReadyStart(){
+		ob_start();
+	}
+	public static function jsReadyEnd(){
+		self::jsReady(str_replace("\t",'',ob_get_clean()));
 	}
 	
 	public static function jsEscape($string){
@@ -356,6 +375,7 @@ s.parentNode.insertBefore(g,s);
 			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,$options['escape']).' '.self::iconAction('delete','#'),false);
 		$res.='</ul>';
 		unset($options['inputAttributes']);
-		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('S.ready(function(){$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')})');
+		HHtml::jsReady('$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')');
+		return '<div id="'.$divid.'">'.$res.'</div>';
 	}
 }

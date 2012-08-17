@@ -8,8 +8,6 @@ abstract class HElementFormContainable extends HElement{
 		$this->name=$name;
 	}
 	
-	public function placeholder($placeholder){ $this->attributes['placeholder']=$placeholder; return $this; }
-	
 	public abstract function container();
 	public function noContainer(){ return $this->toString(); }
 	

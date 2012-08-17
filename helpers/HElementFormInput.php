@@ -53,6 +53,13 @@ class HElementFormInput extends HElementFormContainable{
 	
 	public function value($value){ $this->attributes['value']=$value; return $this; }
 	public function value_(&$value){ $this->attributes['value']=$value; return $this; }
+	public function readOnly(){ $this->attributes['readonly']=true; return $this; }
+	public function disabled(){ $this->attributes['disabled']=true; return $this; }
+	public function size($size){ $this->attributes['size']=$size; return $this; }
+	public function noName(){ unset($this->attributes['name']); return $this; }
+	public function placeholder($placeholder){ $this->attributes['placeholder']=$placeholder; return $this; }
+	
+
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.($this->type!=='text'?'text ':'').$this->type); }
 	
 	public function toString(){

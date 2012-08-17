@@ -61,6 +61,7 @@ class AjaxView extends View{
 	}
 	public function render(){
 		if($this->active===true) parent::render();
+		else HHtml::displayJsReady();
 	}
 }
 
@@ -70,7 +71,7 @@ class AbstractAjaxView extends View{
 		if($this->active===true){
 			echo '</div>';
 			parent::render();
-		}
+		}else HHtml::displayJsReady();
 	}
 }
 
@@ -148,7 +149,10 @@ class AjaxContentView extends AbstractAjaxView{
 	}
 	public function render(){
 		if($this->active===true) parent::render();
-		else if(isset($_SERVER['HTTP_SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($this->title));
+		else{
+			HHtml::displayJsReady();
+			if(isset($_SERVER['HTTP_SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($this->title));
+		}	
 	}
 }
 

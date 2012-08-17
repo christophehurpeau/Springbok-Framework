@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.1.5';
+	public static $CACHE_PATH='views_8.1.6';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -77,6 +77,11 @@ class ViewFile extends PhpFile{
 			$content=preg_replace_callback('/{'.$prfx.'\/f}/',$callbackCreator('endforeach;'),$content);
 			$content=preg_replace_callback('/{'.$prfx.'while\s+([^}]+?)\s*\}/',$callbackCreator('while($1):'),$content);
 			$content=preg_replace_callback('/{'.$prfx.'\/while}/',$callbackCreator('endwhile;'),$content);
+			
+			$content=preg_replace_callback('/{'.$prfx.'debug\s+([^}]+?)\s*\}/',$callbackCreator('debug($1,false)'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'debugVar\s+([^}]+?)\s*\}/',$callbackCreator('debugVarNoFlush($1)'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'jsReady\}/',$callbackCreator('HHtml::jsReadyStart()'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'\/jsReady\}/',$callbackCreator('HHtml::jsReadyEnd()'),$content);
 		}
 		
 		
@@ -116,8 +121,6 @@ class ViewFile extends PhpFile{
 //]]>
 </script>';},$content);
 		
-		$content=preg_replace('/{debug\s+([^}]+?)\s*\}/','<?php debug($1,false) ?>',$content);
-		$content=preg_replace('/{debugVar\s+([^}]+?)\s*\}/','<?php debugVarNoFlush($1) ?>',$content);
 		
 		$content=preg_replace_callback('/{recursiveFunction\s+([^}]+)\s*(?:use\(([^)]+)\)\s*)\}(.*){\/recursiveFunction}/Us',function(&$m){
 			return '<?php UPhp::recursive(function(&$callback,&'.$m[1].')'.(empty($m[2])?'':' use(&'.implode(',&',explode(',',$m[2])).')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
@@ -144,7 +147,7 @@ class ViewFile extends PhpFile{
 				'<?php $1$v=new $2View(',$content)
 				.'<?php $v->render();?>';
 		}
-		
+		$content=str_replace('</body>','<?php HHtml::displayJsReady() ?></body>',$content);
 		return parent::enhanceFinalContent($content);
 	}
 
