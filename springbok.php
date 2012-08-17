@@ -130,7 +130,7 @@ class Springbok{
 
 function __autoload($className){ /* DEV */
 	if($className==='Config'){
-		eval('class Config{public static $autoload_default,$cookie_domain="",$models_infos,$db=array("default"=>array("dbname"=>"mysql","user"=>"mysql","password"=>"mysql"));}'
+		eval('class Config{public static $autoload_default,$cookie_domain="",$models_infos,$default_lang="fr",$siteUrl=array("index"=>""),$db=array("default"=>array("dbname"=>"mysql","user"=>"mysql","password"=>"mysql"));}'
 			.'Config::$autoload_default=APP.\'models/\';Config::$models_infos=Config::$autoload_default."infos/";');
 		define("STATIC_URL",BASE_URL.'/web/');
 		define("WEB_URL",STATIC_URL.WEB_FOLDER);

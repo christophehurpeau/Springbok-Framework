@@ -119,7 +119,7 @@ define('APP', __DIR__.'/dev/');";
 				}
 			}
 		//}
-		if($this->enhanced->configNotEmpty('plugins')){
+		//if($this->enhanced->configNotEmpty('plugins')){
 			$pathsProcessed=array($this->enhanced->getAppDir().'src/');
 			foreach($this->enhanced->config['plugins'] as &$plugin){
 				$this->enhanced->setType('plugin',$plugin[1]);
@@ -128,7 +128,7 @@ define('APP', __DIR__.'/dev/');";
 					$this->recursiveDir($pluginPath,new Folder($pluginPath), $dev->getPath(), $prod->getPath(),$pathsProcessed);
 				$pathsProcessed[]=$pluginPath;
 			}
-		}
+		//}
 		/*DelayedEnhance::get($this->enhanced)->commit();
 		UExec::exec('php '.escapeshellarg($this->enhanced->getAppDir().'daemon.php').' delayedEnhance default',false,false);
 		*/

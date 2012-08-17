@@ -1,6 +1,14 @@
 /*! Springbok */
 /*'use strict';*/
 
+window.onerror=function handleError(message,url,line){
+	$.get(basedir+'site/jsError',{website:document.domain,location:document.location,url:url,message:message,line:line})
+	//alert("An error has occurred!\n"+e);
+	//if(console) console.log(e);
+	//console.log(arguments);
+	return true;
+};
+
 var arraySliceFunction=Array.prototype.slice;
 
 window.S={
@@ -32,7 +40,7 @@ window.S={
 		}*/
 		
 		var result;
-		jQuery.ajax({
+		$.ajax({
 			url: url,
 			data: data,
 			success: function(r){result=r;},
@@ -198,13 +206,6 @@ RegExp.sbEscape=function(value){
 	$.fn.sHide=function(){ this.addClass('hidden'); return this; };
 	$.fn.sShow=function(){ this.removeClass('hidden'); return this; };
 })(jQuery);
-
-function handleError(e){
-	//alert("An error has occurred!\n"+e);
-	if(console) console.log(e);
-	return true;
-}
-//window.onerror = handleError;
 
 /*function extendBasic(subclass,superclass,basicsuperclass,varName,extendsPrototype){
 	extend(subclass,superclass,extendsPrototype);

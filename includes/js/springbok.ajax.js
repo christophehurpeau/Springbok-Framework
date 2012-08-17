@@ -76,7 +76,7 @@ includeCore('ui/slideTo');
 			divVariable=divPage.find('div.variable:first');
 			divContent=divVariable.is('.content') && divVariable.has('h1').length===0 ? divVariable : divVariable.find('.content:first');
 		},
-		load:function(url,data,type,forceNotAddDataToGetORdoNotDoTheEffect){
+		load:function(url,data,type,forceNotAddDataToGetORdoNotDoTheEffect,replaceUrl){
 			if(url.substr(0,1)==='?') url=location.pathname+url;
 			var oldCurrentTitle=document.title,ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
@@ -96,7 +96,7 @@ includeCore('ui/slideTo');
 				async:false,
 				complete:function(jqXHR){
 					document.title=oldCurrentTitle;
-					setTimeout(function(){S.history.navigate(url)},3);
+					setTimeout(function(){S.history.navigate(url,replaceUrl)},3);
 				/*	$('body').removeClass('cursorWait');
 					divLoading.remove();
 				},
@@ -113,7 +113,7 @@ includeCore('ui/slideTo');
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
 						divLoading.remove();
-						S.ajax.load(h,false,false,true);
+						S.ajax.load(h,false,false,true,true);
 						return;
 					}
 					

@@ -9,6 +9,9 @@ class ControllerFile extends PhpFile{
 	
 	protected function loadContent($srcContent){
 		$controllersSrc=array(); $enhanced=$this->enhanced;
+		if($this->fileName()==='SiteController.php'){
+			$srcContent=preg_replace('/\}\s*$/',"/* @ImportAction('core','Site','jsError') */\n}",$srcContent);
+		}/* @ImportAction('core','Site','jsError') */
 		$srcContent=preg_replace_callback('/\/\*\s+@Import(Action|Function)\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
 			eval('$eval=array('.$m[2].');');
 			if(!isset($eval))

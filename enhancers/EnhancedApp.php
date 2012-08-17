@@ -9,15 +9,22 @@ class EnhancedApp extends Enhanced{
 		if(file_exists($this->getAppDir().'src/config/_'.ENV.'.php')) $this->devConfig=include $this->getAppDir().'src/config/_'.ENV.'.php';
 		$this->md5EnhanceConfig=empty($this->config['config'])?'':md5(implode('~',$this->config['config']));
 		$this->isJsApp=file_exists($this->getAppDir().'src/web/jsapp.js');
-		if($this->configNotEmpty('plugins')){
-			foreach($this->config['plugins'] as &$plugin){
-				if(!isset($plugin[2])){
-					$pluginPath=$this->pluginPath($plugin);
-					if(file_exists($pluginPath.'config/defaultConfig.php'))
-						foreach((include $pluginPath.'config/defaultConfig.php') as $k=>$v) if(!isset($this->config['config'][$k])) $this->config['config'][$k]=$v;
-				}
+		
+		if(empty($this->devConfig['pluginsPaths'])) $this->devConfig['pluginsPaths']=array();
+		$this->devConfig['pluginsPaths']['SpringbokCore']=dirname(CORE).'/plugins/';
+		
+		
+		//if($this->configNotEmpty('plugins')){
+		if(empty($this->config['plugins'])) $this->config['plugins']=array();
+		$this->config['plugins']['Springbok']=array('SpringbokCore','base');
+		foreach($this->config['plugins'] as &$plugin){
+			if(!isset($plugin[2])){
+				$pluginPath=$this->pluginPath($plugin);
+				if(file_exists($pluginPath.'config/defaultConfig.php'))
+					foreach((include $pluginPath.'config/defaultConfig.php') as $k=>$v) if(!isset($this->config['config'][$k])) $this->config['config'][$k]=$v;
 			}
 		}
+		//}
 	}
 	
 	public function createLogger(){
