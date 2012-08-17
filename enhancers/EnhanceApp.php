@@ -47,6 +47,7 @@ define('DS', DIRECTORY_SEPARATOR);
 define('CORE','".dirname(CORE).DS."dev".DS."');
 define('APP', __DIR__.'/dev/');";
 		file_put_contents($this->enhanced->getAppDir().'cli.php',$base.'unset($argv[0]);'."\n".'$action=array_shift($argv);'."\n"."include CORE.'cli.php';");
+		file_put_contents($this->enhanced->getAppDir().'job.php',$base.'$action="job";'."\n"."include CORE.'cli.php';");
 		file_put_contents($this->enhanced->getAppDir().'daemon.php',$base.'$action="daemon";'."\n"."include CORE.'cli.php';");
 	}
 	
