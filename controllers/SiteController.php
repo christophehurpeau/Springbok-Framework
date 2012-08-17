@@ -34,9 +34,9 @@ class SiteController extends Controller{
 		CCaptcha::image();
 	}
 	
-	/** @ValidParams @Required('url') */
-	function jsError($website,$location,$url,$message,$line){
-		JsLog::create($website,$location,$url,$message,$line);
+	/** @ValidParams @Required('jsurl') */
+	function jsError($website,$href,$jsurl,$message,$line){
+		JsLog::create($website,$href,$jsurl,$message,$line);
 	}
 	
 }
