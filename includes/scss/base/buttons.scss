@@ -52,6 +52,9 @@ $_BUTTON_OVERRIDE:FALSE !default;
   }
   a.button,a.button:hover{text-decoration:none;display:inline-block;}
   button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
+  button.big, .button.big{
+    padding:5px 16px;
+  }
 }
 /* IE */
 /*input.submit,button{
