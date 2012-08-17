@@ -70,12 +70,13 @@ class App{
 			echo ''.$e->getDescription().'';
 		}
 		if(ob_get_length() > 0){
-			echo PHP_EOL;
 			ob_end_flush();
 		}
 	}
 	
-	public static function shutdown(){}
+	public static function shutdown(){
+		echo PHP_EOL;
+	}
 	
 	/**
 	 * @param Exception $exception
