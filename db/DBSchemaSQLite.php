@@ -127,7 +127,7 @@ class DBSchemaSQLite extends DBSchema{
 	}
 	
 	private static function _getColumnDef($col){
-		return $col['type']
+		return str_ireplace(' unsigned','',$col['type'])
 			.($col['notnull']?' NOT NULL':'')
 			.($col['unique']?' UNIQUE':'')
 			.($col['default']?' DEFAULT '.$col['default']:'');
@@ -142,7 +142,7 @@ class DBSchemaSQLite extends DBSchema{
 	}
 
 	public function compareColumn($column,$modelInfo){
-		return strtolower($column['type']) != strtolower($modelInfo['type'])
+		return strtolower($column['type']) != str_replace(' unsigned','',strtolower($modelInfo['type']))
 			|| ((int)$column['notnull']) != ((int)$modelInfo['notnull'])
 			|| ((string)$column['dflt_value']) != ((string)$modelInfo['default'])
 		;
