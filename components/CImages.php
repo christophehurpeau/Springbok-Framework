@@ -163,7 +163,8 @@ class CImages{
 		}else $id=$image->insert();
 		
 		$filename=DATA.$folderPrefix.'images/'.$id;
-		rename($tmpFile,$filename.$ext);	
+		rename($tmpFile,$filename.$ext);
+		chmod($filename.$ext,0755);	
 		
 		if($toJpeg && $type != IMAGETYPE_JPEG){
 			switch ($type) {
