@@ -161,10 +161,9 @@ class Model implements Iterator{
 		}
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
 		$this->_afterUpdate($data);
-		return true;
-		
+		return true;	
 	}
-	
+    
 	public function updateOrInsert(){
 		if(!$this->beforeSave()) return false;
 		$data=$this->_getSaveData(func_get_args());
@@ -255,15 +254,15 @@ class Model implements Iterator{
 	public static function QDeleteOne(){return new QDeleteOne(static::$__className);}
 	
 	public static function updateOneFieldByPk($pk,$field,$value){
-		return static::QUpdateOne()->values(array($field=>&$value))
+		return static::QUpdateOne()->values(array($field=>$value))
 			->where(array(static::_getPkName()=>$pk))
 			->execute();
 	}
 	public static function QUpdateOneField($field,$value){
-		return static::QUpdate()->values(array($field=>&$value));
+		return static::QUpdate()->values(array($field=>$value));
 	}
 	public static function updateUpdated($pk){
-		return static::QUpdateOne()->where(array(static::_getPkName()=>&$pk))->execute();
+		return static::QUpdateOne()->where(array(static::_getPkName()=>$pk))->execute();
 	}
 	
 	public static function QAll(){return new QFindAll(static::$__className);}

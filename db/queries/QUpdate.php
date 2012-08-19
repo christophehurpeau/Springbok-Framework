@@ -19,6 +19,7 @@ class QUpdate extends AQuery{
 	public function where($conditions){$this->where=$conditions;return $this;}
 	
 	public function updatedField($field){$this->updatedField=$field;return $this;}
+    public function doNotUpdateUpdatedField(){ $this->updatedField=null; return $this; }
 	
 	public function by($query,$values){
 		$fields=explode('And',$query);

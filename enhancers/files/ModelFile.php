@@ -96,7 +96,7 @@ class ModelFile extends PhpFile{
 					$idField==='id' ? $modelFile->_fields[$idField]['Pk']=false : $modelFile->_fields[$idField]['Unique']=false;
 					$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$annotations['Child'][0][0],'foreignKey'=>$idField,
 									'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
-					$classBeforeContent.='public function insert(){ $this->'.$idField.'=$this->insertParent(); return parent::insert(); }';
+					$classBeforeContent.='public function insert(){ $this->data["'.$idField.'"]=$this->insertParent(); $res=parent::insert(); return $res ? $this->data["'.$idField.'"] : $res; }';
 					$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->'.$idField.'=$idParent; return parent::insert();} }';
 					$typesParent=$enhanceConfig['modelParents'][$annotations['Child'][0][0]];
 					$typeForParent=array_search($modelFile->_className,$typesParent);
