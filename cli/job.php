@@ -7,7 +7,7 @@ else{
 	
 	$logger=CLogger::get('jobs');
 	
-	$lockfile = sys_get_temp_dir().DS.$jobName.'.joblock';
+	$lockfile = sys_get_temp_dir().DS.$jobName.'.joblock'.(empty($argv)?'':'.'.md5(implode('¤',$argv)));
 	if(file_exists($lockfile)){
 		$pid = file_get_contents($lockfile);
 		if (posix_getsid($pid) !== false){
@@ -24,6 +24,6 @@ else{
 	$logger->log($jobName.' : START');
 	$className=$jobName.'Job';
 	include APP.'jobs/'.$className.'.php';
-	call_user_func_array(array($className,'doJob'),$argv);
+	call_user_func_array(array($className,'main'),$argv);
 	$logger->log($jobName.' : END');
 }
