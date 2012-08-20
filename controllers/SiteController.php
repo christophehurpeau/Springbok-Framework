@@ -35,8 +35,8 @@ class SiteController extends Controller{
 	}
 	
 	/** @ValidParams @Required('jsurl') */
-	function jsError($website,$href,$jsurl,$message,$line){
-		JsLog::create($website,$href,$jsurl,$message,$line);
+	function jsError($href,$jsurl,$message,$line){
+		JsLog::create($href,$jsurl,$message,$line);
 	}
 	
 }

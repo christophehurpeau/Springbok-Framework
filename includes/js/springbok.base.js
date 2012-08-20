@@ -2,7 +2,7 @@
 /*'use strict';*/
 
 window.onerror=function handleError(message,url,line){
-	$.get(basedir+'site/jsError',{website:document.domain,href:window.location.href,jsurl:url,message:message,line:line})
+	$.get(basedir+'site/jsError',{href:window.location.href,jsurl:url,message:message,line:line})
 	//alert("An error has occurred!\n"+e);
 	//if(console) console.log(e);
 	//console.log(arguments);
