@@ -24,13 +24,14 @@ html body .hidden{display:none}
 .floatL{float:left}
 
 .row{ @extend .clear; display:table; table-layout:fixed; width:100%; }
-.row .col{ display:table-cell; }
+.row .col{ display:table-cell; vertical-align:top; /* Opera */ *float:left; /* IE <7 */ }
 
 .line.gut > * + * { 
     margin-left:1em;
 }
 .row.gut > * + * { 
     border-left:1em solid #fff; /* must be color of parent background */
+   *border-left:0;
 }
 
 .aposTR{position:absolute;top:0;right:0}
