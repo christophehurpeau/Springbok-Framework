@@ -65,14 +65,14 @@ class DBSchemaSQLite extends DBSchema{
 	public function applyColumnsModifications(){
 		if(!empty($this->_addColumns)) $this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' '.implode(', ',$this->_addColumns));
 		if($this->_hasChangedOrRemovedColumn){
-			$fields=array(); $columns=$this->columns();
+			$fields=array(); $columns=$this->columns;
 			foreach($columns as $k=>$col) $columns[$k]=$col['name'];
-			foreach($modelInfos['columns'] as $name=>$col){
-				if($name != $column) $fields[]= in_array($name,$columns) ? $this->db->formatColumn($name) : 'NULL';
+			foreach($this->modelInfos['columns'] as $name=>$col){
+				if($name != $col) $fields[]= in_array($name,$columns) ? $this->db->formatColumn($name) : 'NULL';
 			}
 			$fields=implode(',',$fields);
 			$this->db->beginTransaction();
-			$tableF=$this->db->formatTable($schema->tableName);
+			$tableF=$this->db->formatTable($this->tableName);
 			$this->createTable($tempTableName='t'.time().'_backup');
 			//$this->db->doUpdate('CREATE TEMPORARY TABLE t1_backup AS SELECT '.$fields.' FROM '.$table);
 			$this->db->doUpdate('INSERT INTO '.$this->db->formatTable($tempTableName).' SELECT '.$fields.' FROM '.$tableF);
