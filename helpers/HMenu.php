@@ -31,6 +31,7 @@ class HMenu{
 				$title=$value['title'];
 			}
 			if(is_array($value) && isset($value['children'])){
+				if( isset($value['visible']) && !$value['visible']) continue;
 				$res.='<li>'.(!empty($value['escape'])?h($title):$title).'<ul>';
 				foreach($value['children'] as $childTitle=>$childValue){
 					$res.=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
