@@ -215,9 +215,12 @@ s.parentNode.insertBefore(g,s);
 	}
 
 	public static function iconLink($icon,$text,$url,$optionsLink=array()){
+		return self::iconLinkHtml(h($text),$url,$optionsLink);
+	}
+	public static function iconLinkHtml($icon,$html,$url,$optionsLink=array()){
 		$optionsLink['escape']=false;
 		if(!isset($optionsLink['class'])) $optionsLink['class']='aicon';
-		return self::link('<span class="icon '.h($icon).'"></span>'.h($text),$url,$optionsLink);
+		return self::link('<span class="icon '.h($icon).'"></span>'.$html,$url,$optionsLink);
 	}
 	public static function iconBlockLink($icon,$text,$url,$optionsLink=array()){
 		$optionsLink['escape']=false;
