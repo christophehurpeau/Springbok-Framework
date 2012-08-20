@@ -215,7 +215,7 @@ s.parentNode.insertBefore(g,s);
 	}
 
 	public static function iconLink($icon,$text,$url,$optionsLink=array()){
-		return self::iconLinkHtml(h($text),$url,$optionsLink);
+		return self::iconLinkHtml($icon,h($text),$url,$optionsLink);
 	}
 	public static function iconLinkHtml($icon,$html,$url,$optionsLink=array()){
 		$optionsLink['escape']=false;
