@@ -3,7 +3,7 @@ class USecure{
 	private static $_config;
 	
 	public static function init(){
-		self::$_config=&Config::$secure;
+		self::$_config=Config::$secure;
 	}
 	
 	public static function hashWithSalt($string){
@@ -13,6 +13,14 @@ class USecure{
 	public static function getSalt(){
 		return self::$_config['salt'];
 	}
+	
+	public static function hasAltSalt(){
+		return isset(self::$_config['salt_alt']);
+	}
+	public static function hasWithAltSalt($string){
+		return sha1(self::$_config['salt_alt'].$string);
+	}
+	
 	
 	public static function decryptAES($val,$ky=null){
 		if($ky===null) $ky=self::$_config['crypt_key'];
