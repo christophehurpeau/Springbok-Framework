@@ -59,6 +59,7 @@ class Springbok{
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
 			if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
 		}
+		if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
 		$log.="\nCall Stack:\n".$exception->getTraceAsString();
 		
 		if($isHttpException=($exception instanceof HttpException)){
@@ -85,6 +86,7 @@ class Springbok{
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
 			if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
 		}
+		if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
 		$log.="\nCall Stack:\n".prettyBackTrace();
 		if($message==='Unsupported operand types') $log.="\nContext:\n".print_r($context,true);
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('error')->log($log);
