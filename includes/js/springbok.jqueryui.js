@@ -110,6 +110,10 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 		var val=select&&select.val(),action,data={};
 		if(!val){
 			if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
+			if(S.isFunc(options.allowNew)){
+				options.allowNew(val);
+				return false;
+			}
 			action='create';
 			data={val:input.val()};
 		}else action='add/'+val;

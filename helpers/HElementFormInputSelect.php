@@ -15,7 +15,7 @@ class HElementFormInputSelect extends HElementFormContainable{
 	public function radio(){ $this->style='radio'; return $this; }
 	public function emptyValue($value){ $this->empty=$value; return $this; }
 	
-	public function container(){ return new HElementFormContainer($this->form,$this,'input '.$this->type.' '.$this->style); }
+	public function container(){ return new HElementFormContainer($this->form,$this,'input './*$this->type.' '.*/$this->style); }
 	
 	public function toString(){
 		return $this->_labelToString().$this->{'render_'.$this->style}();

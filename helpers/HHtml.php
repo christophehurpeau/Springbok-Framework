@@ -367,7 +367,7 @@ s.parentNode.insertBefore(g,s);
 
 	public static function ajaxCRDInputAutocomplete($url,$items,$options=array()){
 		$divid=uniqid('ajaxCRDInputAutocomplete_');
-		$options+=array('inputAttributes'=>array(),'ulAttributes'=>array('class'=>'compact'),'modelFunctionName'=>'name','escape'=>true);
+		$options+=array('inputAttributes'=>array(),'ulAttributes'=>array('class'=>'compact'),'modelFunctionName'=>'name','escape'=>true,'js'=>'{}');
 		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
 		if(is_object(current($items))){
 			$list=$items; $items=array();
@@ -377,8 +377,9 @@ s.parentNode.insertBefore(g,s);
 		foreach($items as $id=>&$name)
 			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,$options['escape']).' '.self::iconAction('delete','#'),false);
 		$res.='</ul>';
-		unset($options['inputAttributes']);
-		HHtml::jsReady('$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.json_encode($options):'').')');
+		//unset($options['inputAttributes'],$options['ulAttributes'],$options['modelFunctionName'],$options['escape']);
+		if(isset($options['allowNew'])) $options['js']='{allowNew:1}';
+		HHtml::jsReady('$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.$options['js']:'').')');
 		return '<div id="'.$divid.'">'.$res.'</div>';
 	}
 }
