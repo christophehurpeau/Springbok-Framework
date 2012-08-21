@@ -191,7 +191,7 @@ class PhpFile extends EnhancerFile{
 		
 		// short methods
 		$phpContent=preg_replace('/notFoundIfFalse\(([^)]+)\);/','if($1===false)notFound();',$phpContent);
-		$phpContent=preg_replace('/(=|;|\s|\(|\)|,)e\(([^,]+),([^)]+)\)/','$1(empty($2)?$3:$2)',$phpContent);
+		$phpContent=preg_replace('/(=|;|\s|\(|\)|,)e\(([^,]+),(array\([^)]*\)|[^)]+)\)/','$1(empty($2)?$3:$2)',$phpContent);
 		
 		//autoexecute
 		$phpContent=$this->addExecuteToQueries($phpContent);

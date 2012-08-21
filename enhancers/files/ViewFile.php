@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.1.8.1';
+	public static $CACHE_PATH='views_8.2';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
