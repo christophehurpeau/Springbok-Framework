@@ -2,7 +2,8 @@
 /*'use strict';*/
 
 window.onerror=function handleError(message,url,line){
-	$.get(basedir+'site/jsError',{href:window.location.href,jsurl:url,message:message,line:line})
+	if(url && !(url.indexOf('chrome://')===0 || url.indexOf('http://127.0.0.1')===0))
+		$.get(basedir+'site/jsError',{href:window.location.href,jsurl:url,message:message,line:line});
 	//alert("An error has occurred!\n"+e);
 	//if(console) console.log(e);
 	//console.log(arguments);
