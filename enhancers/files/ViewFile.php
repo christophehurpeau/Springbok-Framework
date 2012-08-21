@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.1.7';
+	public static $CACHE_PATH='views_8.1.8.1';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -101,6 +101,7 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/{\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? $2 : $3 ?>',$content);
 		$content=preg_replace('/{=\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? h($2) : h($3) ?>',$content);
 		
+		$content=preg_replace('/{\?e\s+([^\s]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? $2 : $3 ?>',$content);
 		$content=preg_replace('/{\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? $2 : $1 ?>',$content);
 		$content=preg_replace('/{=\?e\s+([^:]+)\s+:\s+([^}]+)\s*}/','<?php echo empty($1) ? h($2) : h($1) ?>',$content);
 		
