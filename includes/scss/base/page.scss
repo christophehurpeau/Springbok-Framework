@@ -7,6 +7,11 @@ $HEADER_COLOR:false !default;
 $HEADER_BORDER_RADIUS:false !default;
 $HEADER_PADDING:false !default;
 
+
+$CONTAINER_WIDTH:false !default;
+$CONTAINER_BACKGROUND:false !default;
+$CONTAINER_SHADOW:false !default;
+
 $PAGE_WIDTH:false !default;
 $PAGE_BACKGROUND:false !default;
       
@@ -59,6 +64,12 @@ body #container{
 	@if $PAGE_100{ position:relative; height:auto; min-height:100%; }
 	/*position:absolute;top:0;left:0;right:0;bottom:0;*/
 	/*overflow-x:hidden;*/
+	@if $CONTAINER_WIDTH{
+	  width:$CONTAINER_WIDTH;
+	  margin:0 auto;
+	}
+	@if $CONTAINER_BACKGROUND{ @include background($CONTAINER_BACKGROUND); }
+	@if $CONTAINER_SHADOW{ @include boxShadow($CONTAINER_SHADOW); }
 }
 @if false==$PAGE_FIXED{
   html > body #container{height:auto;}

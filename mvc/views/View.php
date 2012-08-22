@@ -94,7 +94,7 @@ class AjaxPageView extends AbstractAjaxView{
 		if(CSecure::isConnected()) $layoutNameOverride.=CSecure::connected();
 		if(($this->active= !isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])||$_SERVER['HTTP_SPRINGBOKAJAXPAGE']!==$layoutNameOverride)===true){
 			parent::__construct($title,$layout);
-			echo '<div id="page" class="'.$class.'" data-layoutname="'.$layoutNameOverride.'">';
+			echo '<div id="page"'.($class===''?'':' class="'.$class.'"').' data-layoutname="'.$layoutNameOverride.'">';
 		}else{
 			//if(isset($_SERVER['SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($title));
 			$this->ajaxHeaders($title,'page');

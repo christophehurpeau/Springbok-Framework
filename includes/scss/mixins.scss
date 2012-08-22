@@ -3,6 +3,7 @@
   @if $color == 0{
     @include boxShadows(0);
   }@else{
+  	@if type-of($color)=='list'{ $blur:nth($color,2); $color:nth($color,1); }
     $full:$hOffset $vOffset;
     @if $blur{ $full:$full $blur; }
     @if $spread{ $full:$full $spread; }
