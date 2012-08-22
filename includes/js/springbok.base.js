@@ -175,6 +175,15 @@ RegExp.sbEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
+/* DEV */
+S.ready(function(){
+	$('[id]').each(function(){
+		var ids = $('[id="'+this.id+'"]');
+		if(ids.length>1 && ids[0]==this)
+			alert('Multiple IDs #'+this.id);
+	});
+});
+/* /DEV */
 
 $(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() })
 	.ajaxError(function(e, xhr, settings, thrownError){

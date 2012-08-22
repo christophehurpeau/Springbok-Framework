@@ -279,6 +279,7 @@ abstract class DBSchema{
 			$annotations=!empty($modelName::$__modelInfos['annotations'][$pname])?$modelName::$__modelInfos['annotations'][$pname]:array();
 			if(isset($annotations['var'])) $ptype=$annotations['var'];
 			else{
+				if(!isset($col['type'])) throw new Exception($modelName.': field "'.$pname.'" has no @SqlType !');
 				if($max=strpos($sqltype=$col['type'],'(')) $sqltype=substr($sqltype,0,$max);
 				if($min=strpos($col['type'],'(')){
 					$sqltypeparams=substr($col['type'],$min+1,-1);

@@ -19,24 +19,25 @@ class SSqlModel extends SModel{
 	
 	
 	/* Queries */
+	
+	private function _insert($query,$data){
+		$id=$query->data($data)->execute();
+		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
+		$this->_afterInsert($data);
+		return $id;
+	}
 
 	public function insert(){
 		if(!$this->_beforeInsert()) return false;
 		$data=$this->_getSaveData(func_get_args());
-		$id=static::QInsert()->data($data)->execute();
-		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-		$this->_afterInsert($data);
-		return $id;
+		return $this->_insert(static::QInsert(),$data);
 	}
 	public function insertIgnore(){
 		if(!$this->_beforeInsert()) return false;
 		$data=$this->_getSaveData(func_get_args());
-		$id=static::QInsert()->ignore()->data($data)->execute();
-		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-		$this->_afterInsert($data);
-		return $id;
+		return $this->_insert(static::QInsert()->ignore(),$data);
 	}
-	public function findIdOrInsert(){
+	public function findIdOrInsert(/* DEV */$UniqueField/* /DEV */){
 		$args=func_get_args();
 		$UniqueField=array_shift($args);
 		if(!$this->_beforeInsert()) return false;
@@ -45,10 +46,10 @@ class SSqlModel extends SModel{
 		if($id){
 			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
 		}else{
-			$id=static::QInsert()->data($data)->execute();
-			if(!empty($data[$pkName=self::_getPkName()])) $id=$data[$pkName];
-			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-			$this->_afterInsert($data);
+			if($id=$this->_insert(static::QInsert(),$data)){
+			//if(!empty($data[$pkName=self::_getPkName()]))
+				$id=/*$this->data[$pkName]=*/$data[$pkName]; /* override id, if for example pk is in */
+			}
 		}
 		return $id;
 	}
@@ -73,8 +74,17 @@ class SSqlModel extends SModel{
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
 		$this->_afterUpdate($data);
 		return true;
-		
 	}
+	
+	public function updateField($fieldName,$value){
+		$this->$fieldName=$value;
+		$where=array();
+		foreach(static::$__modelInfos['primaryKeys'] as $pkName){
+			$where[$pkName]=$this->data[$pkName];
+		}
+		if(!static::QUpdateOne()->values(array($fieldName=>$value))->where($where)->execute()) return false;
+	}
+	
 	
 	public function updateOrInsert(){
 		if(!$this->beforeSave()) return false;
@@ -94,14 +104,23 @@ class SSqlModel extends SModel{
 		return $res;
 	}
 	
-	public function updateField($fieldName,$value){
-		$this->$fieldName=$value;
+	
+	public function updateCompare($originalData=null){
+		if(!$this->_beforeUpdate()) return false;
+		/* DEV */if($originalData===null && $this->originalData===null) throw new Exception('Model needed to be prepared'); /* /DEV */
+		$data=$this->_getSaveData(array_keys(array_diff_assoc($this->data,$originalData===null?$this->originalData:$originalData)));
+		if(empty($data)) return null;
 		$where=array();
 		foreach(static::$__modelInfos['primaryKeys'] as $pkName){
 			$where[$pkName]=$this->data[$pkName];
+			unset($data[$pkName]);
 		}
-		if(!static::QUpdateOne()->values(array($fieldName=>$value))->where($where)->execute()) return false;
+		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
+		$this->afterUpdateCompare($data,$where);
+		return true;
+		
 	}
+	
 	
 	public function delete(){
 		if($this->beforeDelete()){
@@ -121,6 +140,15 @@ class SSqlModel extends SModel{
 			->execute();
 		if($res && $getPk) $this->__set($getPk,$res);
 		return $res;
+	}
+	
+	public function findFieldsForCompare(){
+		$where=array();
+		foreach(static::$__modelInfos['primaryKeys'] as $pkName)
+			$where[$pkName]=$this->data[$pkName];
+		/* DEV */if(empty($where)) throw new Exception('WHERE should not be empty !'); /* /DEV */
+		$this->originalData=self::QRow()->setFields(array_keys(array_diff_key($this->data,$where)))->where($where)->execute();
+		
 	}
 	
 	public function findWith($key,$options=array()){
@@ -215,7 +243,7 @@ class SSqlModel extends SModel{
 	}
 	public static function findCachedListValues($fields){
 		$className=static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use($className,$fields){return $className::QListRows()->fields($fields)->execute();});
+		return CCache::get('models')->readOrWrite($className,function() use($className,$fields){return $className::QListRows()->fields($fields);});
 	}
 	
 	public static function findFirstLetters($fieldName='name'){

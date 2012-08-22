@@ -19,7 +19,7 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 	
 	/* Properties */
 	
-	protected $data=array();
+	protected $data=array(),$originalData;
 	
 	public function __isset($name){
 		return isset($this->data[$name]);
@@ -82,6 +82,12 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		if(empty($args)) return array_intersect_key($this->_getData(),static::$__PROP_DEF);
 		$args[]='updated';
 		return array_intersect_key($this->_getData(),array_flip($args),static::$__PROP_DEF);
+	}
+	
+	
+	public function prepareUpdate(){
+		$this->originalData=$this->data;
+		return $this;
 	}
 	
 	
@@ -164,11 +170,15 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		$this->afterSave($data);
 		$this->afterUpdate($data);
 	}
+	protected function afterUpdateCompare($data,$primaryKeys){
+		$this->_afterUpdate($data);
+	}
 	
 	protected function afterSave(){}
 	protected function afterInsert(){}
 	protected function afterUpdate(){}
 	protected function afterDelete(){}
+	
 	
 	
 	/* Helpers */

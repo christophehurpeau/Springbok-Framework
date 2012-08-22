@@ -7,12 +7,13 @@
  */
 include_once __DIR__.DS.'AQuery.php';
 class QInsert extends AQuery{
-	private $cols=false,$values,$ignore=false,$onDuplicateKeyUpdate,$createdField;
+	private $cols=false,$values,$ignore=false,$onDuplicateKeyUpdate,$createdField,$createdByField;
 	protected $keyword='INSERT';
 
-	public function __construct($modelName,$createdField=null){
+	public function __construct($modelName,$createdField=null,$createdByField=null){
 		parent::__construct($modelName);
 		$this->createdField=$createdField;
+		$this->createdByField=$createdByField;
 	}
 	
 	public function cols($cols){
@@ -58,15 +59,17 @@ class QInsert extends AQuery{
 	public function _toSQL(){
 		$modelName=$this->modelName;
 		$sql=$this->keyword.' '; $hasCreatedField=$this->createdField!==null && $this->cols!==false && !in_array($this->createdField,$this->cols);
+		$hasCreatedByField=$this->createdByField!==null && $this->cols!==false && !in_array('created_by',$this->cols);
 		if($this->ignore!==false) $sql.='IGNORE ';
 		$sql.='INTO '.$modelName::_fullTableName();
 		if($this->cols !==false){
 			$sql.=' (';
 			if(!empty($this->cols)){
 				$sql.=implode(',',array_map(array($this->_db,'formatField'),$this->cols));
-				if($hasCreatedField) $sql.=',';
+				if($hasCreatedField||$hasCreatedByField) $sql.=',';
 			}
-			if($hasCreatedField) $sql.=$this->_db->formatField($this->createdField);
+			if($hasCreatedField){ $sql.=$this->_db->formatField($this->createdField); if($hasCreatedByField) $sql.=','; }
+			if($hasCreatedByField){ $sql.=$this->_db->formatField('created_by'); }
 			$sql.=')';
 		}
 		$sql.= ' VALUES ';
@@ -85,6 +88,7 @@ class QInsert extends AQuery{
 					$sql.=',';
 				}
 				if($hasCreatedField) $sql.='NOW(),';
+				if($hasCreatedByField){ $connected=CSecure::connected(null); $sql.=($connected===null?'NULL,':$this->_db->escape(CSecure::connected()).','); }
 				$sql=substr($sql,0,-1).'),';
 			}
 		}

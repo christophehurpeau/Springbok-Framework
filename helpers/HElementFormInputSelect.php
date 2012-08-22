@@ -67,7 +67,8 @@ class HElementFormInputSelect extends HElementFormContainable{
 		$attributes['name']=$name;
 		$attributes['value']=$value;
 		if(!isset($attributes['id'])) $attributes['id']=$name.$value;
-		if($selected==$value) $attributes['checked']=true;
+		if($value==='00'){ if($selected=='0') $attributes['checked']=true; }
+		elseif($selected==$value) $attributes['checked']=true;
 		return HHtml::tag('input',$attributes).($label===null?'':HHtml::tag('label',array('for'=>$attributes['id']),$label));
 	}
 }

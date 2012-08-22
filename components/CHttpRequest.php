@@ -64,7 +64,7 @@ class CHttpRequest{
 	public static function isDELETE(){return self::$method==='DELETE';}
 	public static function isHEAD(){return self::$method==='HEAD';}
 	public static function isOPTIONS(){return self::$method==='OPTIONS';}
-	public static function isAjax(){return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest';}
+	public static function isAjax(){return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest') /* DEV */|| (isset($_GET['AJAX']) && $_GET['AJAX']==='force') /* /DEV */;}
 	public static function isFlash(){return empty($_SERVER['HTTP_USER_AGENT'])? false : (bool)preg_match($_SERVER['HTTP_USER_AGENT'],'/^(Shockwave|Adobe) Flash/');}
 
 	public static function isMobile(){

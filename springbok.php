@@ -84,7 +84,15 @@ class Springbok{
 		//echo $log; ob_flush();
 		if(isset($_SERVER['REQUEST_URI'])){
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
-			if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
+			/* DEV */if(!App::$enhancing){/* /DEV */
+				if(!class_exists('CSession',false)) include CORE.'components/CSession.php';
+				if(!class_exists('CSecure',false)) include CORE.'components/CSecure.php';
+				/* DEV */
+				if(!class_exists('HText',false)) include CORE.'helpers/HText.php';
+				if(!class_exists('HDev',false)) include CORE.'helpers/HDev.php';
+				/* /DEV */
+				if(CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
+			/* DEV */}/* /DEV */
 		}
 		if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
 		$log.="\nCall Stack:\n".prettyBackTrace();

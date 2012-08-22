@@ -17,6 +17,9 @@ class HElementFormInput extends HElementFormContainable{
 				$propDef=$modelName::$__PROP_DEF[$name];
 				switch($propDef['type']){
 					case 'int': $type='number'; break;
+					case 'float': case 'double':
+						$this->attributes['pattern']='[0-9]*([\.\,][0-9]+)?';
+						break;
 					case 'string':
 						switch($name){
 							case 'pwd': case 'password':

@@ -45,7 +45,7 @@ class UPhp{
 			return '"'.str_replace(array('\\',"\n","\r","\t","\v","\f",'$'),array('\\\\','\n','\r','\t','\v','\f','\$'),$string).'"';
 		
 		$count1=substr_count($string,"'")+substr_count($string,"\\'"); $count2=substr_count($string,'"')+substr_count($string,'$')+substr_count($string,'\\');
-		if($count2 < $count1) return '"'.str_replace(array('\\','$'),array('\\\\','\$'),$string).'"';
+		if($count2 < $count1) return '"'.str_replace(array('\\','$','"'),array('\\\\','\$','\"'),$string).'"';
 		else return "'".str_replace(array('\\\'','\''),array('\\\\\'','\\\''),$string)."'";
 	}
 	
