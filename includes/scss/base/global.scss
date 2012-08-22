@@ -65,7 +65,7 @@ h6{font-size:1.05em;margin-bottom:5px;}
 .sepR{border-right:$SEP_BORDER;}
 .sepBot,.sepB{border-bottom:$SEP_BORDER;}
 
-.clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after{ 
+.clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after{ 
   /*clear: both; 
   display: block; 
   height: 0; 
@@ -77,7 +77,7 @@ h6{font-size:1.05em;margin-bottom:5px;}
   clear: both; 
 }
 /** html .clearfix,*:first-child+html .clearfix*/
-.clearfix,header,.header,.fixed,.variable,ul.mosaic{ zoom: 1 }
+.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top{ zoom: 1 }
 
 hr{
   height:1px;
@@ -85,6 +85,16 @@ hr{
   border:0;
 }
 img{border:0}
+
+textarea, table, td, th, code, pre, samp, div, p, ul {
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+}
+
 
 span.right_val{
     float: right;

@@ -43,7 +43,7 @@ nav li a{text-decoration: none;text-shadow:none;}
 nav li a:focus{outline: none}
 nav li a:hover{text-decoration: underline;text-shadow:none;}
 
-nav.top,nav.top ul{float:left}
+header nav.top,nav.top ul{float:left}
 nav.top li{float:left;display:block;display:inline-block;}
 nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;display:inline-block;}
 /*menu.right li a, menu.left li a{padding:5px;}*/
