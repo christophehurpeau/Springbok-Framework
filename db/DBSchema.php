@@ -5,6 +5,8 @@ abstract class DBSchema{
 	/**  @var DB */
 	protected $db;
 	
+	public function getModelName(){ return $this->modelName; }
+	
 	public static function &create(&$schemaProcessing,$modelName,$isEntity=false){
 		$db=$modelName::getDB();
 		$schemaClass='DBSchema'.$db->_getType();

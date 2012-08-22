@@ -5,7 +5,7 @@ class DBSchemaProcessing{
 	
 	public function __construct(Folder $modelDir,Folder $triggersDir,$force=false,$generate=true){
 		if(!$modelDir->exists()) return false;
-		
+		$issetCurrentFileEnhanced=(class_exists('App',false) && isset(App::$currentFileEnhanced));
 		self::$isProcessing=true;
 		
 		$this->force=&$force; $schemas=array();
@@ -14,6 +14,7 @@ class DBSchemaProcessing{
 		
 		foreach($modelDir->listFiles() as $file){
 			$modelName=substr($file->getName(),0,-4);
+			if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$modelName;
 			$schemas[$modelName]=DBSchema::create($this,$modelName,0,-4);
 		}
 		
@@ -22,6 +23,7 @@ class DBSchemaProcessing{
 			if($dirname == 'infos') continue;
 			foreach($dir->listFiles() as $file){
 				$modelName='E'.$dirname.substr($file->getName(),0,-4);
+				if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$modelName;
 				$schemas[$modelName]=DBSchema::create($this,$modelName,true);
 			}
 		}
@@ -31,8 +33,13 @@ class DBSchemaProcessing{
 		foreach($schemas as $schema) if(!isset($this->dbs[$schema->getDb()->_getName()])) $this->dbs[$schema->getDb()->_getName()]=$schema->getDb();
 		//foreach($dbs as $db) $db->disableForeignKeyChecks();
 		
-		foreach($schemas as $schema) $schema->process();
 		
+		
+		foreach($schemas as $schema){
+			if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$schema->getModelName();
+			$schema->process();
+		}
+		if($issetCurrentFileEnhanced) App::$currentFileEnhanced='';
 		
 		//$this->compareIndexes();
 		//$this->compareForeignKeys();
@@ -43,7 +50,10 @@ class DBSchemaProcessing{
 		
 		/* DEV */
 		//regenerate after modifs
-		if($this->generate) foreach($schemas as $schema) $schema->generatePropDefs();
+		if($this->generate) foreach($schemas as $schema){
+			if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$schema->getModelName();
+			$schema->generatePropDefs();
+		}
 		
 		if($this->logs !==null && $generate && isset($_SERVER['REQUEST_URI'])){
 			$vars=array('dbs'=>&$this->logs);
