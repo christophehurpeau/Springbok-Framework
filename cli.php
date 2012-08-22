@@ -63,7 +63,7 @@ class App{
 			if($call) call_user_func_array(array($className,'main'),$argv);
 		}catch(Exception $exception){
 			if(!($exception instanceof HttpException)){
-				$e=new HttpException(500,'Internal Server Error');
+				$e=new InternalServerError();
 			}else $e=$exception;
 			
 			Springbok::handleException($exception);

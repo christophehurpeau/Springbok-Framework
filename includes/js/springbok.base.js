@@ -18,6 +18,13 @@ window.S={
 	setTitle:function(title){document.title=title;},
 	
 	imgLoading:function(){ return $('<span class="img imgLoading"/>') },
+	bodyIcon:function(iconName,of,my,at){
+		if(!my) my='right center';
+		if(!at) at='right center';
+		var icon=$('<span class="icon tick"/>').css({display:'block',position:'absolute'})
+			.position({my:my,at:at,of:of}).delay(3000).fadeOut('slow',function(){icon.remove()}).appendTo('body');
+		return icon;
+	},
 	
 	loadScript:function(url){
 		var script = document.createElement("script");
@@ -168,45 +175,50 @@ RegExp.sbEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
-(function($){
-	$(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() });
 
-	/* https://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js */
-	$.fn.delayedBind=function(delay,eventType,eventData,handler,throttle){
-		if($.isFunction(eventData)){
-			throttle = handler;
-			handler = eventData;
-			eventData = undefined;
-		}
-		handler.guid = handler.guid || $.guid++;
-		
-		return this.each(function(){
-			var wait = null;
-			
-			function cb() {
-				var ctx = this;
-				var throttler = function() {
-					wait = null;
-					handler.apply(ctx,arguments);
-				};
-				if (!throttle) { clearTimeout(wait); wait = null; }
-				if (!wait) { wait = setTimeout(throttler,delay); }
-			}
-			cb.guid = handler.guid;
-			$(this).bind(eventType,eventData,cb);
-		});
-	};
+$(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() })
+	.ajaxError(function(e, xhr, settings, thrownError){
+		if(xhr.status===503) alert(i18nc['The server is currently unavailable : down for maintenance.']);
+		else if(xhr.status===500) alert(i18nc['Internal Server Error']);
+	});
+
+
+/* https://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js */
+$.fn.delayedBind=function(delay,eventType,eventData,handler,throttle){
+	if($.isFunction(eventData)){
+		throttle = handler;
+		handler = eventData;
+		eventData = undefined;
+	}
+	handler.guid = handler.guid || $.guid++;
 	
-	$.fn.delayedKeyup=function(delay,handler){
-		if($.isFunction(delay)){
-			handler=delay;
-			delay=200;
+	return this.each(function(){
+		var wait = null;
+		
+		function cb() {
+			var ctx = this;
+			var throttler = function() {
+				wait = null;
+				handler.apply(ctx,arguments);
+			};
+			if (!throttle) { clearTimeout(wait); wait = null; }
+			if (!wait) { wait = setTimeout(throttler,delay); }
 		}
-		return $(this).delayedBind(delay,'keyup',undefined,handler);
-	};
-	$.fn.sHide=function(){ this.addClass('hidden'); return this; };
-	$.fn.sShow=function(){ this.removeClass('hidden'); return this; };
-})(jQuery);
+		cb.guid = handler.guid;
+		$(this).bind(eventType,eventData,cb);
+	});
+};
+
+$.fn.delayedKeyup=function(delay,handler){
+	if($.isFunction(delay)){
+		handler=delay;
+		delay=200;
+	}
+	return $(this).delayedBind(delay,'keyup',undefined,handler);
+};
+$.fn.sHide=function(){ this.addClass('hidden'); return this; };
+$.fn.sShow=function(){ this.removeClass('hidden'); return this; };
+
 
 /*function extendBasic(subclass,superclass,basicsuperclass,varName,extendsPrototype){
 	extend(subclass,superclass,extendsPrototype);

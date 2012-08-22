@@ -22,7 +22,7 @@ function methodNotAllowed(){throw new HttpException(405,'Method Not Allowed');}
 function notAccepable(){throw new HttpException(406,'Not Acceptable');}
 function proxyAuthenticationRequired(){throw new HttpException(407,'Proxy Authentication Required');}
 function requestTimeout(){throw new HttpException(408,'Request Timeout');}
-function internalServerError(){throw new FatalHttpException(500,'Internal Server Error');}
+function internalServerError(){throw new FatalHttpException(500,i18nc['Internal Server Error']);}
 function notImplemented(){throw new HttpException(501,'Not Implemented');}
 function serviceUnavailable(details){throw new FatalHttpException(503,'Service Unavailable',details);}
 

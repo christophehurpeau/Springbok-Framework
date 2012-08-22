@@ -176,7 +176,7 @@ class App{
 					elseif($code<1022){
 						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded').'',$exception);
 					}else $e=new FatalHttpException(503,'Service Temporarily Unavailable');
-				}else $e=new FatalHttpException(500,'Internal Server Error');
+				}else $e=new InternalServerError();
 			}else $e=$exception;
 			
 			$server_protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : false;

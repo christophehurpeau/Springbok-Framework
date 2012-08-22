@@ -110,7 +110,7 @@ class CSocketApp{
 				elseif($exception instanceof mysqli_sql_exception){
 					if($exception->getCode()===1040) $e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded'));
 					else $e=new FatalHttpException(503,'Service Temporarily Unavailable');
-				}else $e=new FatalHttpException(500,'Internal Server Error');
+				}else $e=new InternalServerError(500);
 			}else $e=$exception;
 			
 			Springbok::handleException($exception);

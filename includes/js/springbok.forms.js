@@ -42,7 +42,7 @@
 	};
 	
 	$.fn.ajaxForm=function(url,success,beforeSubmit,error){
-		if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
+		//if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
 		var form=this,submit,imgLoadingSubmit=S.imgLoading();
 		if(!url) url=form.attr('action');
 		this.unbind('submit').submit(function(evt){
@@ -63,9 +63,12 @@
 				error:error
 			};
 			if(success) ajaxOptions.success=success;
-			$.ajax(url,ajaxOptions);
+			$.ajax(url,ajaxOptions)
+				.success(function(){S.bodyIcon('tick',form);})
+				.error(function(){S.bodyIcon('tick',cross);});
 			return false;
-		})/*.find(':submit').unbind('click').click(function(){
+		})
+		/*.find(':submit').unbind('click').click(function(){
 			//var validator=form.data('validator');
 			//if(validator && !validator.checkValidity()) return false;
 			//submit=$(this);

@@ -27,7 +27,7 @@ class App{
 			else include CORE.'cli/'.$action.'.php';
 		}catch(Exception $exception){
 			if(!($exception instanceof HttpException)){
-				$e=new HttpException(500,'Internal Server Error');
+				$e=new InternalServerError();
 			}else $e=$exception;
 			
 			Springbok::handleException($exception);
