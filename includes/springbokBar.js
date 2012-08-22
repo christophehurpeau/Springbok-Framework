@@ -35,11 +35,11 @@ $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 	.fadeOut(0).appendTo(this).fadeIn(); //fade isn't really usefull...
 });
 var oldConsoleVar=console,jsConsoleContent=$('#springbok-bar-js-console ul'),
-log=function(){
+log=function(type,args){
 	jsConsoleLink.stop(true,true).fadeOut('fast').fadeIn('fast').fadeOut('fast').fadeIn('fast');
 
 	jsConsoleSpanCount.text(new Number(jsConsoleSpanCount.text())+1);
-	jsConsoleContent.append($('<li/>').text(Array.prototype.join.call($.map(arguments,function(v){return $.toJSON(v);},', '))));
+	jsConsoleContent.append($('<li/>').text(Array.prototype.join.call($.map(args,function(v){return $.toJSON(v);},', '))));
 };
 window.console={
 	assert:function(){},
