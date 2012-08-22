@@ -3,7 +3,7 @@ class HDev{
 	public static function springbokBar(){
 		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
 		echo HHtml::cssInline(file_get_contents(CORE.'includes/springbokBar.css'));
-		echo HHtml::jsInline(file_get_contents(CORE.'includes/springbokBar.js'));
+		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE.'includes/js/jquery/json.js').file_get_contents(CORE.'includes/springbokBar.js').'});');
 		$changes=&App::$changes[0];
 		echo '<div id="springbok-bar"><b onclick="$(\'#springbok-bar\').fadeOut()">Springbok</b>'
 			.' | <a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':
@@ -11,8 +11,9 @@ class HDev{
 										.empty($changes) || empty($changes[0][1]['all']) ?'0':count($changes[0][1]['all']))).'</span>)</a>'
 			.' | <a href="javascript:;" rel="queries">Queries ('.(!class_exists('DB',false)?'0':(array_sum(array_map(function(&$db){return $db->getNbQueries();},DB::getAll())))).')</a>'
 			.' | <a href="javascript:;" rel="route">Route</a>'
+			.' | <a href="javascript:;" rel="sessiotn">Session</a>'
+			.' | <a href="javascript:;" rel="js-console">Js Console (<span>0</span>)</a>'
 			.' | <a href="javascript:;" rel="ajax">Ajax (<span>0</span>)</a>'
-			.' | <a href="javascript:;" rel="session">Session</a>'
 			.'</div>';
 		
 		echo '<div id="springbok-bar-changes" class="springbok-bar-content"><div>'; self::springbokBarChanges(); echo '</div></div>';
@@ -25,7 +26,7 @@ class HDev{
 					.'<div id="SpringbokBarAjaxContent" style="margin-left:310px"></div>';
 		echo '</div></div>';
 		
-		echo '<div id="springbok-bar-console" class="springbok-bar-content"><div>'; echo '</div></div>';
+		echo '<div id="springbok-bar-js-console" class="springbok-bar-content"><ul class="nobullets spaced"></ul></div>';
 		
 		/*echo '<div id="springbok-bar-popup"><a href="javascript:;" onclick="$(\'#springbok-bar-popup\').fadeOut()">Close</a><pre></pre></div>';*/
 	}
