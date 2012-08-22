@@ -24,6 +24,11 @@ class CDaemons{
 		return self::start($daemon,$instance);
 	}
 	
+	public static function kill($daemon,$instance='default'){
+		$lockfile = sys_get_temp_dir().DS.$daemon.'--'.$instance.'.daemonlock';
+		return file_exists($lockfile) && posix_kill(file_get_contents($lockfile),SIGTERM) !== false;
+	}
+	
 	public static function startAll(){
 		return UExec::exec('php '.escapeshellarg(APP.'cli.php').' daemons');
 	}

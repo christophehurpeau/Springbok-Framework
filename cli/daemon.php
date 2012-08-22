@@ -34,14 +34,19 @@ else{
 		posix_setsid();
 		file_put_contents($lockfile, getmypid()); // create lockfile
 		
+		$logger->log($argv[1].': START');
+		global $className;
+		$className=$argv[1].'Daemon';
+		
 		function sig_handler($signo){
+			global $className;
 			if($signo===SIGTERM || $signo===SIGINT){
 				CLogger::get('daemon')->log(/*$argv[1].'--'.$argv[2].': '.*/($signo===SIGTERM?'SIGTERM':'SIGINT'));
-				Daemon::_exit();
+				$className::_exit();
 				exit;
 			}elseif($signo===SIGHUP){
 				CLogger::get('daemon')->log(/*$argv[1].'--'.$argv[2].*/': SIGUP');
-				Daemon::_restart();
+				$className::_restart();
 			}elseif($signo===SIGCHLD) pcntl_waitpid(-1, $status);
 		}
 		declare(ticks = 1);
@@ -49,8 +54,6 @@ else{
 		pcntl_signal(SIGINT, 'sig_handler');
 		pcntl_signal(SIGCHLD, 'sig_handler');
 		
-		$logger->log($argv[1].': START');
-		$className=$argv[1].'Daemon';
 		include APP.'daemons/'.$className.'.php';
 		$className::start($argv[2]);
 		$logger->log($argv[1].': END');
