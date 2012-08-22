@@ -43,6 +43,7 @@ class ControllerFile extends PhpFile{
 			}
 		},$srcContent);
 		$srcContent=preg_replace('/\/\*\s+@SimpleAction\(\'([^*\']+)\'\)\s+\*\//',"/** */\n\tfunction $1(){\n\t\trender();\n\t}",$srcContent);
+		$srcContent=preg_replace('/\/\*\s+@SimpleCheckedAction\(\'([^*\']+)\'\)\s+\*\//',"/** @Check */\n\tfunction $1(){\n\t\trender();\n\t}",$srcContent);
 		$this->_srcContent=$srcContent;
 	}
 	
