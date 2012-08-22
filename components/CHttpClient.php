@@ -63,11 +63,13 @@ class CHttpClient{
 		if(file_exists(DATA.'tmp/curl/'.$this->cookiePath)) unlink(DATA.'tmp/curl/'.$this->cookiePath);
 		return $this;
 	}
+	public function getCookies(){return $this->cookies;}
 	
 	public function auth($username,$password){$this->username=$username;$this->password=$password;return $this;}
 	
 	public function params($params){$this->params=$params;return $this;}
 	public function addParam($name,$value){$this->params[$name]=$value;return $this;}
+	public function getParams(){return $this->params;}
 	
 	/*public function &saveCookies($val){$this->saveCookies=&$val;return $this;}*/
 	public function useCookies($value=true){$this->useCookies=$value;return $this;}
