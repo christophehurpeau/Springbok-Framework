@@ -21,7 +21,7 @@ class HMenu{
 	}
 	
 	public static function create($links,$options=array(),$type='top'){
-		$options=$options+array('lioptions'=>array(),'linkoptions'=>array(),'startsWith'=>false);
+		$options=$options+array('lioptions'=>array(),'linkoptions'=>array(),'startsWith'=>0);
 		if(!isset($options['menuAttributes']['class'])) $options['menuAttributes']['class']=$type;
 		$res=HHtml::openTag(self::$tagName,$options['menuAttributes']);
 		if(self::$tagName!=='ul') $res.='<ul>';
