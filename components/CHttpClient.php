@@ -18,7 +18,7 @@ class HttpClientError extends Exception{
 }
 class CHttpClient{
 	public static $MAX_REDIRECT=5,$TIMEOUT=25,$CONNECT_TIMEOUT=6,$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
-	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),
+	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),$httpHeaders,$ajax=false,
 		$cookies=array(),$_cookies=array(),$referer=false,$cookiePath,$useCookies=false,//$saveCookies=true,
 		$username=null,$password=null,$proxy=null,
 		$result,$headers,$lastUrl,$status=0,$error,$redirect=true;
@@ -77,6 +77,11 @@ class CHttpClient{
 	/** ip:port , username:password */
 	public function proxy($proxy,$auth=false){$this->proxy=array($proxy,$auth);return $this;}
 	
+	/* Not really sure about this API */
+	private function ajax(){ $this->httpHeaders[]='X-Requested-With: XMLHttpRequest'; $this->ajax=count($this->httpHeaders)-1; return $this;}
+	private function noAjax(){ unset($this->httpHeaders[$this->ajax]); empty($this->httpHeaders) ? $this->httpHeaders=null : $this->httpHeaders=array_values($this->httpHeaders); $this->ajax=false; return $this;}
+	
+	
 	public function getStatus(){ return $this->status; }
 	public function getError(){ return $this->error; }
 	public function getResult(){ return $this->result; }
@@ -89,6 +94,17 @@ class CHttpClient{
 	public function post($target,$referer=null){
 		return $this->execute($target,$referer,'POST');
 	}
+	public function ajaxGet($target,$referer=null){
+		$res=$this->ajax()->execute($target,$referer,'GET');
+		$this->noAjax();
+		return $res;
+	}
+	public function ajaxPost($target,$referer=null){
+		$res=$this->ajax()->execute($target,$referer,'POST');
+		$this->noAjax();
+		return $res;
+	}
+	
 	
 	private function execute($target,$referer,$method){
 		if($referer!==null) $this->referer=$referer;
@@ -126,7 +142,7 @@ class CHttpClient{
 		//debug($this->error);
 		curl_close($ch);
 		
-		if($this->referer!==false) $this->referer=$this->lastUrl;
+		if($this->referer!==false && $this->ajax===false) $this->referer=$this->lastUrl;
 		
 		if($this->status!==200 || $this->error) throw new HttpClientError($target,$this->status,$this->error,$this->result);
 		
@@ -165,6 +181,7 @@ class CHttpClient{
 		}
 		
 		curl_setopt($ch,CURLOPT_HEADER,false);
+		if($this->httpHeaders!==null) curl_setopt($ch,CURLOPT_HTTPHEADER,$this->httpHeaders);
 		//curl_setopt($ch,CURLOPT_NOBODY,false);
 		curl_setopt($ch,CURLOPT_TIMEOUT,self::$TIMEOUT);
 		curl_setopt($ch,CURLOPT_USERAGENT,self::$USER_AGENT); // Webbot name
