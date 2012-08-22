@@ -50,9 +50,12 @@ class DBSchemaProcessing{
 		
 		/* DEV */
 		//regenerate after modifs
-		if($this->generate) foreach($schemas as $schema){
-			if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$schema->getModelName();
-			$schema->generatePropDefs();
+		if($this->generate){
+			foreach($schemas as $schema){
+				if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$schema->getModelName();
+				$schema->generatePropDefs();
+			}
+			if($issetCurrentFileEnhanced) App::$currentFileEnhanced='';
 		}
 		
 		if($this->logs !==null && $generate && isset($_SERVER['REQUEST_URI'])){
