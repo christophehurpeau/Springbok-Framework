@@ -26,7 +26,7 @@ class SSoapController extends Controller{
 			if(!isset($infos['annotations']['Return'])) continue;
 			$wsdl->_addFunctionToWsdl($method,$port,$binding,$infos);
 		}
-		
+		debugVar($wsdlfilename);
 		$wsdl->dump($wsdlfilename);
 		/* PROD */endif;/* /PROD */
 		

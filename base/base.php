@@ -148,7 +148,7 @@ function debugVarNoFlush(){
 	prettyDebug($message,2,false);
 }
 function debugShort($var,$flush=true){
-	prettyDebug(short_debug_var($var),2,$flush);
+	prettyDebug(short_debug_var($var,5),2,$flush);
 }
 
 function dev_test_preg_error(){
