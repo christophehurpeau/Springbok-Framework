@@ -70,14 +70,14 @@ class Springbok{
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
 		/* DEV */elseif(App::$enhancing){debug($log); exit;}else die($log);/* /DEV */
 		
-		if(!$isHttpException && !headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
+		if(!$isHttpException && !headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500); // ????
 		App::displayException($exception,$forceDefault);
 		exit(1);
 	}
 	
 	
-	public static function handleError($code,$message,$file,$line,&$context=null){//debugCode(print_r($context,true));
-		/* PROD */ if(! in_array($code,array(E_ERROR,E_CORE_ERROR,E_USER_ERROR,E_WARNING,E_CORE_WARNING,E_COMPILE_WARNING,E_USER_WARNING,E_RECOVERABLE_ERROR))) return true; /* /PROD */
+	public static function handleError($code,$message,$file,$line,&$context=null,$fromShutdown=false){//debugCode(print_r($context,true));
+		if($fromShutdown===false && !($code & (E_STRICT|E_NOTICE)))
 			throw new ErrorException($message,$code,0,$file,$line);
 		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
 		self::$inError=true;
@@ -102,7 +102,7 @@ class Springbok{
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('error')->log($log);
 		/* DEV *//*elseif(App::$enhancing){debug($log); exit;}else die($log);*//* /DEV */
 		
-		/* PROD */ if(! in_array($code,array(E_ERROR,E_CORE_ERROR,E_USER_ERROR,E_WARNING,E_CORE_WARNING,E_COMPILE_WARNING,E_USER_WARNING,E_RECOVERABLE_ERROR))) return true; /* /PROD */
+		/* PROD */ if($code & (E_STRICT|E_NOTICE)) return true; /* /PROD */
 		
 		while(ob_get_length()>0) ob_end_clean();
 		
@@ -135,7 +135,7 @@ class Springbok{
 	
 	public static function shutdown(){
 		if(($error=error_get_last()) && in_array($error['type'],array(E_ERROR,E_PARSE,E_CORE_ERROR,E_CORE_WARNING,E_COMPILE_ERROR,E_COMPILE_WARNING)))
-			self::handleError($error['type'],$error['message'],$error['file'],$error['line']);
+			self::handleError($error['type'],$error['message'],$error['file'],$error['line'],null,true);
 		App::shutdown();
 	}
 }

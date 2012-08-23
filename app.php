@@ -1,7 +1,7 @@
 <?php
 /* DEV */ini_set('display_errors',1);/* /DEV */
 /* PROD */ini_set('display_errors',0);/* /PROD */
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL/* | E_STRICT*/);
 
 include CORE.'springbok.php';
 
