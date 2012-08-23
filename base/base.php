@@ -250,7 +250,7 @@ function displayXml($content){
 
 
 function br2nl($string){
-	return preg_replace('#\<br\s*/?\>#i',"\n",$string);
+	return preg_replace('#(\r\n|\r|\n|\n)?\<br\s*/?\>(\r\n|\r|\n|\n)?#i',"\n",$string);
 }
 
 /* http://kevin.vanzonneveld.net/techblog/article/create_short_ids_with_php_like_youtube_or_tinyurl/ */
