@@ -249,6 +249,9 @@ function displayXml($content){
 }
 
 
+function br2nl($string){
+	return preg_replace('#\<br\s*/?\>#i',"\n",$string);
+}
 
 /* http://kevin.vanzonneveld.net/techblog/article/create_short_ids_with_php_like_youtube_or_tinyurl/ */
 function shortAlphaNumber_enc($number){
