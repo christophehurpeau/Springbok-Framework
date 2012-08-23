@@ -76,7 +76,7 @@ class UFileOpened{
 
 
 	public function log($message=''){
-		return fwrite($this->_file,date('m-d H:i:s')."\t".$message."\r\n");
+		return fwrite($this->_file,date('m-d H:i:s')."\t".$message."\n");
 	}
 
 

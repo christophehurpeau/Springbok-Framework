@@ -20,12 +20,19 @@ class SViewCachedElement extends SViewElement{
 	public function __construct($vars){
 		$this->calledClass=get_called_class();
 		$this->path=call_user_func_array($this->calledClass.'::path',$vars).'_';
-		if(!$this->exists()){
+		if($this->exists()!==true){
 			parent::__construct($vars);
 			$this->generateAll();
 		}
-		$this->_file=fopen($this->path.'view','rb');
-		flock($this->_file,LOCK_SH);
+		try{
+			$this->_file=UFile::open($this->path.'view','rb');
+		}catch(ErrorException $e){
+			parent::__construct($vars);
+			$this->generateAll();
+			$this->_file=UFile::open($this->path.'view','rb');
+		}
+		$this->_file->lockShared();
+		
 	}
 	public function __destruct(){
 		if($this->_file!==null){
@@ -33,14 +40,14 @@ class SViewCachedElement extends SViewElement{
 			fclose($this->_file);
 		}
 	}
-	public function exists(){ return file_exists($this->path.'view'); }
+	public function exists(){ return true; }
 	public function generateAll(){
 		include_once CORE.'mvc/views/View.php';
-		$this->_file=fopen($this->path.'view','w');
-		flock($this->_file,LOCK_EX);
+		$this->_file=UFile::open($this->path.'view','w');
+		$this->_file->lockExclusive();
 		foreach(static::$views as $view) $this->write($view,parent::render($view));
-		flock($this->_file, LOCK_UN);
-		fclose($this->_file);
+		$this->_file->unlock();
+		$this->_file->close();
 	}
 	
 	
@@ -52,9 +59,9 @@ class SViewCachedElement extends SViewElement{
 	}
 	
 	protected function read($view){
-		return file_get_contents($this->path.$view);
+		return $view==='view' ? $this->_file->read() : file_get_contents($this->path.$view);
 	}
 	protected function write($view,$content){
-		return $view==='view' ? fwrite($this->_file,$content) : file_put_contents($this->path.$view,$content);
+		return $view==='view' ? $this->_file->write($content) : file_put_contents($this->path.$view,$content);
 	}
 }
