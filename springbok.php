@@ -77,6 +77,8 @@ class Springbok{
 	
 	
 	public static function handleError($code,$message,$file,$line,&$context=null){//debugCode(print_r($context,true));
+		/* PROD */ if(! in_array($code,array(E_ERROR,E_CORE_ERROR,E_USER_ERROR,E_WARNING,E_CORE_WARNING,E_COMPILE_WARNING,E_USER_WARNING,E_RECOVERABLE_ERROR))) return true; /* /PROD */
+			throw new ErrorException($message,$code,0,$file,$line);
 		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
 		self::$inError=true;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */

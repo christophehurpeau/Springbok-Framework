@@ -1,7 +1,7 @@
 <?php
 class_exists('UFile');
 
-$f=dirname(APP).'/block_enhance'; if(file_exists($f)) unlink($f);
+$f=dirname(APP).'/block_enhance'; UFile::rm($f);
 
 if(!class_exists('EnhanceApp',false)) include CORE.'enhancers/EnhanceApp.php';
 App::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));

@@ -1,5 +1,86 @@
 <?php
-class UFile{}
+class UFile{
+	public static function getContents($path){
+		try{
+			return file_get_contents($path);
+		}catch(ErrorException $e){}
+		return false;
+	}
+	
+	public static function rm($path){
+		try{
+			return unlink($path);
+		}catch(ErrorException $e){}
+		return false;
+	}
+	
+	public static function open($path,$mode='r'){
+		return new UFileOpened($path,$mode);
+	}
+	
+	public static function readWithLock($path,$mode='rb'){
+		$file=self::open($path,$mode);
+		if(false===$file->lockShared()){ $file->close(); return false; }
+		$data=$file->read();
+		$file->unlock();
+		$file->close();
+		return $data;
+	}
+	
+	public static function writeWithLock($path,$data/*,$mode='wb'*/){
+		/*$file=self::open($path,$mode);
+		if(false===$file->lockExclusive()) return false;
+		$data=$file->write($data);
+		$file->unlock();
+		$file->close();
+		return true;*/
+		return file_put_contents($path,$data,LOCK_EX);
+	}
+}
+
+class UFileOpened{
+	private $_path,$_file;
+
+	public function __construct($path,$mode){
+		$this->_file=fopen($this->_path=$path,$mode);
+	}
+	
+	public function close(){
+		try{
+			return fclose($this->_file);
+		}catch(ErrorException $e){}
+	}
+		
+	public function write($string){
+		return fwrite($this->_file,$string);
+	}
+	
+	public function read(){
+		//if(($filesize=filesize($this->_path)) > 0) return fread($this->_file,$filesize);
+		//return null;
+		return stream_get_contents($this->_file);
+	}
+	
+	public function lockShared(){
+		return flock($this->_file,LOCK_SH);
+	}
+	
+	public function lockExclusive(){
+		return flock($this->_file,LOCK_SH);
+	}
+
+	public function unlock(){
+		return flock($this->_file,LOCK_UN);
+	}
+
+
+
+	public function log($message=''){
+		return fwrite($this->_file,date('m-d H:i:s')."\t".$message."\r\n");
+	}
+
+
+}
 
 abstract class AFile{
 	protected $name;
