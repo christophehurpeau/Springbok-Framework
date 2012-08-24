@@ -135,7 +135,7 @@ class Springbok{
 	
 	public static function shutdown(){
 		if(($error=error_get_last()) && in_array($error['type'],array(E_ERROR,E_PARSE,E_CORE_ERROR,E_CORE_WARNING,E_COMPILE_ERROR,E_COMPILE_WARNING)))
-			self::handleError($error['type'],$error['message'],$error['file'],$error['line'],null,true);
+			self::handleError($error['type'],$error['message'],$error['file'],$error['line'],$NULL,true);
 		App::shutdown();
 	}
 }
