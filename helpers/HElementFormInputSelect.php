@@ -43,21 +43,21 @@ class HElementFormInputSelect extends HElementFormContainable{
 	
 	public function render_select(){
 		$contentSelect=''; $options=array();
-		if($empty !== null){
+		if($this->empty !== null){
 			$optionAttributes=array('value'=>'');
-			if($selected==='') $optionAttributes['selected']=true;
-			$contentSelect.=HHtml::tag('option',$optionAttributes,$empty);
+			if($this->selected==='') $optionAttributes['selected']=true;
+			$contentSelect.=HHtml::tag('option',$optionAttributes,$this->empty);
 		}
-		if(!empty($list)){
-			if(is_object(current($list))){
-				foreach($list as $model)
-					$contentSelect.=HHtml::_option($model->_getPkValue(),$model->name(),$selected);
+		if(!empty($this->list)){
+			if(is_object(current($this->list))){
+				foreach($this->list as $model)
+					$contentSelect.=HHtml::_option($model->_getPkValue(),$model->name(),$this->selected);
 			}else{
-				foreach($list as $key=>$value)
-					$contentSelect.=HHtml::_option($key,$value,$selected);
+				foreach($this->list as $key=>$value)
+					$contentSelect.=HHtml::_option($key,$value,$this->selected);
 			}
 		}
-		$options['name']=$this->_name($name);
+		$options['name']=$this->_name($this->name);
 		return 	HHtml::tag('select',$options,$contentSelect,false);
 	}
 	
