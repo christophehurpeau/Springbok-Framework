@@ -20,10 +20,12 @@ class CSoapWsdl{
 	}
 	
 	private function addFieldsFromModel($modelName,&$el,$fields){
-		$propDef=$modelName::$__PROP_DEF;
+		$propDef=$modelName::$__PROP_DEF; $modelInfos=$modelName::$__modelInfos;
 		if(empty($fields)) $fields=array_keys($propDef);
 		foreach($fields as $key=>$field){
-			$el[]=new PhpWsdlElement($field,$propDef[$field]['type'],array('nillable'=>'true'));
+			$settings=array('nillable'=>'true');
+			if(!empty($modelInfos['columns'][$field]['comment'])) $settings['docs']=$modelInfos['columns'][$field]['comment'];
+			$el[]=new PhpWsdlElement($field,$propDef[$field]['type'],$settings);
 		}
 	}
 	
