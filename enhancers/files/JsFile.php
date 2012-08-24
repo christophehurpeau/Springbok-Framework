@@ -1,8 +1,9 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.0.4';
+	public static $CACHE_PATH='js_8.0.6';
 
+	private $devProdDiff;
 	public function loadContent($srcContent){
 		if($this->fileName()==='jsapp.js'){
 			$srcContent="includeCore('springbok.jsapp');"
@@ -19,6 +20,8 @@ class JsFile extends EnhancerFile{
 		$includes=array();
 		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$includes,$this->enhanced);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
+		
+		$this->devProdDiff= (strpos($srcContent,'/* DEV */')!==false||strpos($this->_srcContent,'/* PROD */')!==false);
 		
 		$this->_srcContent=$srcContent;
 		//if($this->fileName()==='jsapp.js') debug($srcContent);
@@ -93,13 +96,12 @@ class JsFile extends EnhancerFile{
 		return $content;
 	}
 	
-	private $devProdDiff;
 	public function writeDevFile($devFile){
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($devFile->getPath()))==='ace') $devFile->write($this->_srcContent);
 		else{
 			$content=$this->_srcContent;
 			
-			if($this->devProdDiff= (strpos($this->_srcContent,'/* DEV */'!==false||strpos($this->_srcContent,'/* PROD */')!==false))){
+			if($this->devProdDiff){
 				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$content);
 				$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
 			}
