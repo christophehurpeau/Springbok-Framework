@@ -26,7 +26,7 @@ class SControllerSoap extends Controller{
 			HHtml::url('/'.CRoute::getController(),null,true),	// Change this to your SOAP endpoint URI (or keep it NULL and PhpWsdl will determine it)
 			DATA.'soap/',							// Change this to a folder with write access
 			null,								// PhpWsdl should not parse PHP comments for this demonstration
-			$className,							// The name of the class that serves the webservice
+			$className.'Controller',			// The name of the class that serves the webservice
 			$params['methods'],
 			$params['complexTypes'],
 			false,								// Don't send WSDL right now
@@ -37,8 +37,11 @@ class SControllerSoap extends Controller{
 		PhpWsdl::$CacheTime=0;					// Disable caching in PhpWsdl
 		/* /DEV */
 		
+		static::beforeRunServer($soap);
+		
 		$soap->RunServer();
 	}
+	protected static function beforeRunServer($soap){}
 
 	public static function soapMethods($className){
 		$methods=array();
