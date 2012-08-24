@@ -71,51 +71,54 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 	}
 	return $prettyMessage;
 }
-
-function short_debug_var($var,$MAX_DEPTH=3,$currentDepth=0){
+function _debug_color($content,$color,$html=true){ return $html?'<span style="color:#'.$color.';">'.htmlentities($content,ENT_QUOTES,'UTF-8',true).'</span>':$content; }
+//define('SHORTDEBUGVAR_KEY','short_debug_var_recursion_protection_scheme'); define('SHORTDEBUGVAR_KEYNAME','short_debug_var_referenced_object_name');
+function short_debug_var($var,$MAX_DEPTH=3,$html=null,$currentDepth=0){
+	if($html===null) $html=!defined('STDIN');
 	if(is_object($var)){
-		$res="Object: ".get_class($var);
+		$res=_debug_color("Object: ",'BD74BE',$html)._debug_color(get_class($var),'BD74BE;font-weight:bold',$html);
 		if($currentDepth<$MAX_DEPTH){
 			$objectVars = get_object_vars($var);
 			if($var instanceof SModel) $objectVars=array_merge($objectVars,$var->_getData());
 			if(!empty($objectVars)) $res.="\n";
 			foreach($objectVars as $key=>&$value)
-				$res.=str_repeat("\t",$currentDepth+1).$key.'= '.short_debug_var($value,$MAX_DEPTH,$currentDepth+1)."\n";
+				$res.=str_repeat(_debug_color('| ','666',$html),$currentDepth+1).$key.'= '.short_debug_var($value,$MAX_DEPTH,$html,$currentDepth+1)."\n";
 		}
 		return $res;
 	}elseif(is_resource($var)){
 		return '[ressource]';
 	}elseif(is_array($var)){
-		reset($var);
-		if(empty($var)) $res='empty';
-		elseif(count($var) > 100){
-			$res=' > 100';
-			$var=array_slice($var,0,100);
-		}
-		if($currentDepth<$MAX_DEPTH){
-			$res="\n";
-			foreach($var as $k=>&$v)
-				$res.=str_repeat("\t",$currentDepth+1).$k.'=>'.short_debug_var($v,$MAX_DEPTH,$currentDepth+1)."\n";
-			$res=rtrim($res);
-		}else return 'Array';
-		return 'Array : '.$res;
-	}elseif(is_bool($var)){
-		return $var?'true':'false';
-	}elseif(is_null($var)){
-		return 'null';
-	}else{
-		try{
-			return UPhp::exportCode($var);//var_dump($var);
-		}catch(Exception $e){
-			return print_r($val,true).' (exportCode=Exception)';
-		}
-	}
+		//if(isset($var[SHORTDEBUGVAR_KEYVAR])) $res=_debug_color('= & '.$var[SHORTDEBUGVAR_KEYNAME],'e87800',$html);
+		//else{
+			reset($var);
+			if(empty($var)) $res=_debug_color('empty','FFF;font-weight:bold',$html);
+			else{
+				$count=count($var);
+				$res=_debug_color('size='.$count,'AAA',$html);
+				if($count > 100){
+					$res.=' (> 100)';
+					$var=array_slice($var,0,100);
+				}
+			}
+			if($currentDepth<$MAX_DEPTH){
+				$res.="\n";
+				foreach($var as $k=>&$v)
+					$res.=str_repeat(_debug_color('| ','666',$html),$currentDepth+1)._debug_color($k,'6BCEDE',$html).'=>'.short_debug_var($v,$MAX_DEPTH,$html,$currentDepth+1)."\n";
+				$res=rtrim($res);
+			}
+		//}
+		return _debug_color('Array: ','BD74BE',$html).$res;
+	}elseif(is_string($var)) return _debug_color(UPhp::exportString($var),'EC7600',$html);
+	elseif(is_numeric($var)) return _debug_color($var,'FFCD22',$html);
+	elseif(is_bool($var)) return _debug_color($var?'true':'false','93C763;font-weight:bold',$html);
+	elseif(is_null($var)) return _debug_color('null','93C763;font-weight:bold',$html);
+	else return 'UNKNOWN : '.print_r($var,true);
 }
 
-function prettyDebug($message,$skipLength=2,$flush=true){
+function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 	if(!defined('STDIN')){
 		$id=uniqid('',true);
-		echo str_pad('<div style="text-align:left;background:#FFDDAA;color:#333;border:1px solid #E07308;overflow:auto;padding:1px 2px;position:relative;z-index:999999">'
+		echo str_pad('<div style="text-align:left;'.($black?'background:#1A1A1A;color:#FCFCFC;border:1px solid #050505':'background:#FFDDAA;color:#333;border:1px solid #E07308').';overflow:auto;padding:1px 2px;position:relative;z-index:999999">'
 			.'<pre style="text-align:left;margin:0;overflow:auto;font:normal 1em \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.$message.'</pre>'
 			.'<div style="margin-top:5px"><a href="javascript:;" style="color:#CA6807;text-decoration:none;font-size:7pt;font-style:italic;" onclick="var el=document.getElementById(\''.$id.'\'); el.style.display=el.style.display==\'none\'?\'block\':\'none\';">Afficher / cacher le backtrace</a></div><div id="'.$id.'" class="backtrace" style="display:none">'
 			.($skipLength!==false?'<pre style="text-align:left;margin:0;overflow:auto;background:#FFFFCE;font:normal 9pt \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.prettyHtmlBackTrace($skipLength).'</pre>':'')
@@ -130,7 +133,7 @@ function prettyDebug($message,$skipLength=2,$flush=true){
 	}
 }
 function debug($object,$flush=true){
-	prettyDebug(htmlentities(print_r($object,true),ENT_QUOTES,'UTF-8'),2,$flush);
+	prettyDebug(short_debug_var($object,5),2,$flush,true);
 }
 function debugCode($code,$withBacktrace=true){
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
@@ -147,8 +150,8 @@ function debugVarNoFlush(){
 	$message=ob_get_clean();
 	prettyDebug($message,2,false);
 }
-function debugShort($var,$flush=true){
-	prettyDebug(short_debug_var($var,5),2,$flush);
+function debugPrintr($var,$flush=true){
+	prettyDebug(htmlentities(print_r($object,true),ENT_QUOTES,'UTF-8'),2,$flush);
 }
 
 function dev_test_preg_error(){
