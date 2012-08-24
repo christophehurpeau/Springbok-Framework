@@ -43,8 +43,8 @@ class COAuth2Google extends COAuth2Connect{
 	public function updateUserInfo($user,$googleUser){
 		if($this->me===null) $this->retrieveMe();
 		if(!$this->isValidMe()) return false;
-		$user->first_name=$this->me['given_name'];
-		$user->last_name=$this->me['family_name'];
+		if(!empty($this->me['given_name'])) $user->first_name=$this->me['given_name'];
+		if(!empty($this->me['family_name'])) $user->last_name=$this->me['family_name'];
 		$googleUser->access_token=$this->accessToken;
 		$googleUser->outdated=false;
 		if(!empty($this->refreshToken)) $googleUser->refresh_token=$this->refreshToken;
