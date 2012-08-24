@@ -36,8 +36,8 @@ class SViewCachedElement extends SViewElement{
 	}
 	public function __destruct(){
 		if($this->_file!==null){
-			flock($this->_file, LOCK_UN);
-			fclose($this->_file);
+			$this->_file->unlock();
+			$this->_file->close();
 		}
 	}
 	public function exists(){ return true; }
