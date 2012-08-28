@@ -1,7 +1,7 @@
 <?php
 class EnhancedApp extends Enhanced{
 	private $controllers,$controllersDeleted,$md5EnhanceConfig,$isJsApp;
-	public $appConfig,$devConfig;
+	public $appConfig,$devConfig,$warnings;
 	
 	public function __construct($type,&$dirname){
 		parent::__construct($type,$dirname);

@@ -21,12 +21,18 @@ class CDaemons{
 	
 	public static function startIfNotAlive($daemon,$instance='default'){
 		if(self::isAlive($daemon,$instance)) return false;
-		return self::start($daemon,$instance);
+		return ($res=self::start($daemon,$instance))===''?true:$res;
 	}
 	
 	public static function kill($daemon,$instance='default'){
 		$lockfile = sys_get_temp_dir().DS.$daemon.'--'.$instance.'.daemonlock';
-		return file_exists($lockfile) && posix_kill(file_get_contents($lockfile),SIGTERM) !== false;
+		if(!file_exists($lockfile)) return false;// posix_kill(file_get_contents($lockfile),SIGTERM) !== false;
+		if(posix_getsid(($pid=file_get_contents($lockfile)))===false) return false;
+		shell_exec('kill '.$pid);
+		sleep(1);
+		if(posix_getsid($pid)!==false) shell_exec('kill -9 '.$pid);
+		UFile::rm($lockfile);
+		return true;
 	}
 	
 	public static function startAll(){

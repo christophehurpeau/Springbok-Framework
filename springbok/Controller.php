@@ -142,6 +142,11 @@ class Controller{
 		return false;
 	}
 	
+	public static function ajaxUploadResult($result){
+		//http://www.webmotionuk.co.uk/php-jquery-image-upload-and-crop-v11/
+		echo '<script language="javascript" type="text/javascript">window.top.window.S.upload.FileUploaded('.$result.');</script>';
+	}
+	
 	public static function header404(){
 		header('HTTP/1.1 404 Not Found');
 		header('Status: 404 Not Found',false,404);

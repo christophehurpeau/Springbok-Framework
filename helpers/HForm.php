@@ -2,7 +2,7 @@
 class HForm{
 	public static function Post(){ return HElementForm::Post(); }
 	public static function Get(){ return HElementForm::Get(); }
-	
+	public static function AjaxFile(){ return HElementAjaxFileForm::create(); }
 	
 	/* OLD WAY */
 	/**
