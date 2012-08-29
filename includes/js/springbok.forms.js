@@ -44,6 +44,12 @@
 	$.fn.ajaxForm=function(url,success,beforeSubmit,error){
 		//if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
 		var form=this,submit,imgLoadingSubmit=S.imgLoading();
+		if(S.isFunc(url)){
+			error=beforeSubmit;
+			beforeSubmit=success;
+			success=url;
+			url=undefined;
+		}
 		if(!url) url=form.attr('action');
 		this.unbind('submit').submit(function(evt){
 			evt.preventDefault();

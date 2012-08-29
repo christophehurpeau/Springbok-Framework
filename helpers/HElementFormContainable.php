@@ -40,12 +40,12 @@ abstract class HElementFormContainable extends HElement{
 		$this->attributes['id']=$this->form->modelName != null ? $this->form->modelName.ucfirst($this->name) : $this->name;
 	}
 	
-	protected function _setAttrName(){
-		$this->attributes['name']=$this->_name();
+	protected function _setAttrName($name){
+		$this->attributes['name']=$this->_name($name);
 	}
 	
 	
 	protected function _name($name){
-		return $this->form->modelName !== null ? $this->form->name.'['.$this->name.']' : $this->name;
+		return $this->form->modelName !== null && $this->form->name!==false ? $this->form->name.'['.$this->name.']' : $this->name;
 	}
 }
