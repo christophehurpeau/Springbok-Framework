@@ -17,7 +17,7 @@ class USecure{
 	public static function hasAltSalt(){
 		return isset(self::$_config['salt_alt']);
 	}
-	public static function hasWithAltSalt($string){
+	public static function hashWithAltSalt($string){
 		return sha1(self::$_config['salt_alt'].$string);
 	}
 	
