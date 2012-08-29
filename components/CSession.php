@@ -65,7 +65,8 @@ class CSession{
 	public static function flash($key='message',$element='div',$params=array()){
 		if(!self::exists('flash.'.$key)) return;
 		$flash=self::getAndRemove('flash.'.$key);
-		$params+=$flash['params'];
+		if(is_string($flash['params'])) $params['class']=$flash['params'];
+		else $params+=$flash['params'];
 		if(!isset($params['class'])) $params['class']='flashMessage';
 		if(!isset($params['id'])) $params['id']=uniqid('f_');
 		return HHtml::tag($element,$params,(empty($params['icon'])?'':'<span class="icon '.h($params['icon']).'"></span>')
