@@ -135,12 +135,15 @@ tr.form td{border:1px solid #C4C4C4; padding:0}
 
 input.bigInput, form.big .text input{
 	font-size:1.1em;
-	height:28px; line-height:28px; width:290px;
+	height:28px; line-height:28px;
 	background:#F5F5F5;color:#4C4C4C;
 	border:1px solid #ccc;
 	box-shadow:0 0 10px #eee inset;
 	border-radius:6px;
 }
+.w300 input{ width:280px; }
+.w300 fieldset input{ width:278px; } /* -2px si fieldset*/
+.w300 input.submit{margin:5px 0}
 form.big .text label{
 	height:30px; line-height:30px;
 }

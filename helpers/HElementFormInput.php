@@ -62,6 +62,7 @@ class HElementFormInput extends HElementFormContainable{
 	public function noName(){ unset($this->attributes['name']); return $this; }
 	public function placeholder($placeholder){ $this->attributes['placeholder']=$placeholder; return $this; }
 	public function pattern($pattern){ $this->attributes['pattern']=$pattern; return $this; }
+	public function wp100(){ $this->attributes['class']='wp100'; return $this; }
 	
 
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.($this->type!=='text'?'text ':'').$this->type); }
