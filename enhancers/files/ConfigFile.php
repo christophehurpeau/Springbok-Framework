@@ -6,9 +6,7 @@ class ConfigFile extends PhpFile{
 		//return '';
 		$md5=$this->_srcContent;
 		
-		if($this->fileName()==='routes.php' || substr($this->fileName(),0,7)==='routes_'){
-			$routesLangsFileName=dirname($this->srcFile()->getPath()).'/routes-langs'.substr($this->fileName(),6);
-			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
+		if($this->fileName()==='routes.php'){
 			$routesLangsFileName=dirname($this->srcFile()->getPath()).'/routes-langs.php';
 			if(file_exists($routesLangsFileName)) $md5.=file_get_contents($routesLangsFileName);
 		}
