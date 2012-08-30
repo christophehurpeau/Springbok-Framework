@@ -27,7 +27,8 @@ class EnhanceApp extends AEnhance{
 		}
 		
 		$d=new Folder($dev->getPath().'logs',0777);
-		$d=new Folder(dirname($dev->getPath()).'/data/logs',0777);
+		$d=new Folder($dataFolder=(dirname($dev->getPath()).'/data/'),0777);
+		$d=new Folder($dataFolder.'logs/',0777);
 	}
 	
 	public function initProd(&$prod){	
