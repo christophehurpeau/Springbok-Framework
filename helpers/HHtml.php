@@ -159,6 +159,7 @@ s.parentNode.insertBefore(g,s);
 		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>null);
 		if($url){
 			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:'))) $url=self::url($url,$options['entry'],$options['fullUrl']);
+			if($title===null) $title=$url;
 		}else $title=$url=self::url($title,$options['entry'],$options['fullUrl']);
 		
 		
