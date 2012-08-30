@@ -57,7 +57,7 @@ class COAuth2Live extends COAuth2Connect{
 			if(!empty($email)) $user->email=$email;
 			if(!empty($this->me['emails']['account'])) $wliveUser->email=$this->me['emails']['account'];
 		}
-		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==="male" ? AConsts::MAN : ($this->me['gender']==='female' ? AConsts::WOMAN : AConsts::UNKNOWN );
+		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==="male" ? SConsts::MAN : ($this->me['gender']==='female' ? SConsts::WOMAN : SConsts::UNKNOWN );
 		return true;
 	}
 }

@@ -54,7 +54,7 @@ class COAuth2Google extends COAuth2Connect{
 			$user->email=$this->me['email'];
 			$user->email_verified = $this->me['verified_email'] ? true : false;
 		}
-		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==='male' ? AConsts::MAN : ($this->me['gender']==='female' ? AConsts::WOMAN : AConsts::UNKNOWN );
+		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==='male' ? SConsts::MAN : ($this->me['gender']==='female' ? SConsts::WOMAN : SConsts::UNKNOWN );
 		return true;
 	}
 }
