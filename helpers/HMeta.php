@@ -50,6 +50,11 @@ class HMeta{
 		return $result;
 	}
 	
+	public static function getCanonical($fullUrl=true){
+		if(empty(self::$canonical)) return false;
+        return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl);
+	}
+	
 	public static function displayAltLangs(){
 		if(empty(self::$altLangs)) return '';
 		$result='';
