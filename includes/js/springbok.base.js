@@ -31,10 +31,11 @@ window.S={
 		return icon;
 	},
 	
-	loadScript:function(url){
+	loadScript:function(url,lang){
 		var script = document.createElement("script");
 		script.type = "text/javascript";
 		script.src = url;
+		if(lang) script.lang=lang;
 		document.body.appendChild(script);
 	},
 	loadSyncScript:function(url){
