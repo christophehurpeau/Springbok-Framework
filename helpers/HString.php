@@ -74,13 +74,14 @@ class HString{
  * @link http://book.cakephp.org/view/1479/Class-methods
  */
 	static public function slug($string, $replacement = '-') {
-		$quotedReplacement=preg_quote($replacement, '/');
+		//$quotedReplacement=preg_quote($replacement, '/');
 
 		foreach(self::$_transliteration as $pattern=>$r)
 			$string=preg_replace($pattern,$r,$string);
 		$string=preg_replace('/[^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]/mu', ' ', $string);
-		$string=preg_replace('/\\s+/', $replacement, $string);
-		return preg_replace(sprintf('/^[%s]+|[%s]+$/',$quotedReplacement,$quotedReplacement),'',$string);
+		$string=preg_replace('/\\s+/',$replacement,$string);
+		//return preg_replace('/^['.$quotedReplacement.']+|['.$quotedReplacement.']+$/','',$string);
+		return trim($string,$replacement);
 	}
 
 	static public function removeSpecialChars($string){
