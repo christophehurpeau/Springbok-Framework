@@ -1,4 +1,4 @@
-includeLib('ht5ifv-0.9.7');
+includeCore('libs/ht5ifv-0.9.7');
 /*
 include Lib ('ht5ifv-0.9.8');
 
