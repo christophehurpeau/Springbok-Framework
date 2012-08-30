@@ -143,7 +143,12 @@ input.bigInput, form.big .text input{
 }
 .w300 input{ width:280px; }
 .w300 fieldset input{ width:278px; } /* -2px si fieldset*/
-.w300 input.submit{margin:5px 0}
+.w400 input{ width:380px; }
+.w400 fieldset input{ width:378px; } /* -2px si fieldset*/
+.w300 input.submit,.w400 input.submit{margin:5px 0}
+
+
+
 form.big .text label{
 	height:30px; line-height:30px;
 }

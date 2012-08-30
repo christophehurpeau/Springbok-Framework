@@ -60,8 +60,8 @@ class HElementForm extends HElement{
 	public function noContainer(){ $this->tagContainer=false; return $this; }
 	public function noDefaultLabel(){ $this->defaultLabel=false; return $this; }
 	
-	public function saveOnChange(){ $this->attr('onchange','$(this).submit()'); return $this; }
-	public function ajax(){ HHtml::jsReady('$("#'.$this->getAttr('id').'").ht5ifv().ajaxForm()'); return $this; }
+	public function ajax($saveOnChange=false){ HHtml::jsReady('$("#'.$this->getAttr('id').'").ht5ifv().ajaxForm()'
+		.($saveOnChange?'.change(function(){$(this).submit()})':'')); return $this; }
 	
 	public function __toString(){
 		return '<form action="'.HHtml::url($this->action===null ? CRoute::getAll() : $this->action,$this->actionEntry,$this->urlfull,true).'"'
