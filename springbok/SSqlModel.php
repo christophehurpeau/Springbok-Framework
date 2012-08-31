@@ -48,7 +48,7 @@ class SSqlModel extends SModel{
 		}else{
 			if($id=$this->_insert(static::QInsert(),$data)){
 			//if(!empty($data[$pkName=self::_getPkName()]))
-				$id=/*$this->data[$pkName]=*/$data[$pkName]; /* override id, if for example pk is in */
+				$id=/*$this->data[$pkName]=*/$data[/* $pkName */self::_getPkName()]; /* override id, if for example pk is in */
 			}
 		}
 		return $id;
