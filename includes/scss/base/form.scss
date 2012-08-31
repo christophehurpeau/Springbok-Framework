@@ -4,11 +4,6 @@ $FORM_MEDIUM_LABEL_WIDTH:90px !default;
 $FORM_LABEL_WIDTH:180px !default;
 $FORM_LARGE_LABEL_WIDTH:280px !default;
 
-form.centered{
-	width:480px;
-	margin:0 auto;
-}
-form.centered div.input label{width:120px}
 
 fieldset{
 	background:$FORM_FIELDSET_BACKGROUND;
@@ -141,16 +136,27 @@ input.bigInput, form.big .text input{
 	box-shadow:0 0 10px #eee inset;
 	border-radius:6px;
 }
-.w300 input{ width:280px; }
-.w300 fieldset input{ width:278px; } /* -2px si fieldset*/
-.w400 input{ width:380px; }
-.w400 fieldset input{ width:378px; } /* -2px si fieldset*/
-.w300 input.submit,.w400 input.submit{margin:5px 0}
-
+.w300{
+	input{ width:280px; }
+	fieldset input{width:278px; } /* -2px si fieldset*/
+	div.text label{width:270px}
+}
+.w400{
+	input{ width:380px; }
+	fieldset input{ width:378px; } /* -2px si fieldset*/
+	div.text label{width:370px}
+}
+.w480{
+	input{ width:460px; }
+	fieldset input{ width:458px; } /* -2px si fieldset*/
+	div.text label{width:450px}
+}
+.w300 input.submit,.w400 input.submit,.w480 input.submit{margin:5px 0}
 
 
 form.big .text label{
 	height:30px; line-height:30px;
+	font-size:1.2em;
 }
 input.bigInput:hover, form.big .text input:hover{background:#FAFAFA}
 input.bigInput:focus, form.big .text input:focus{background:#FFF}

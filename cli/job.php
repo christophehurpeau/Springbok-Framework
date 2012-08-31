@@ -18,7 +18,6 @@ else{
 	file_put_contents($lockfile, getmypid()); // create lockfile
 	
 	abstract class Job{
-		public static function doJob(){}
 	}
 	
 	$logger->log($jobName.' : START');

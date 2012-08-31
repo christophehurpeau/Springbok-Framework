@@ -1,5 +1,5 @@
 includeCore('ui/base');
-includeLib('jquery-ui-1.8.20.position');
+includeCore('libs/jquery-ui-1.8.23.position');
 /* https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.autocomplete.js */
 (function($){
 	var defaultDisplayList=function(data,ulAttrs,callback){

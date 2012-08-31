@@ -151,7 +151,7 @@ function debugVarNoFlush(){
 	prettyDebug($message,2,false);
 }
 function debugPrintr($var,$flush=true){
-	prettyDebug(htmlentities(print_r($object,true),ENT_QUOTES,'UTF-8'),2,$flush);
+	prettyDebug(htmlentities(print_r($var),ENT_QUOTES,'UTF-8'),2,$flush);
 }
 
 function dev_test_preg_error(){

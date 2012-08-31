@@ -19,10 +19,13 @@ a{
 
 $__moreSelector:'';
 
-ul.clickable{
-  @extend ul.nobullets;
-  > li > a{ display:block; padding:12px 8px; }
+ul.clickable.linksList{
+	> li{
+		padding:0;
+		> a{ display:block; padding:12px 8px; }
+	}
 }
+
 
 @if $JQueryUI{ $__moreSelector:'.ui-state-default,.ui-widget-content .ui-state-default,'; }
 #{$__moreSelector}div.clickable,ul.clickable li{

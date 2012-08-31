@@ -10,6 +10,3 @@ $TYPES_BLOCK_PADDING:5px 10px !default;
   @if $TYPES_BLOCK_BORDERBOTTOM{ border-bottom:$TYPES_BLOCK_BORDERBOTTOM; }
   @if $TYPES_BLOCK_PADDING{ padding:$TYPES_BLOCK_PADDING; }
 }
-a.block{
-	display:block;/* for a  - si ca pose problème, pour des listes par ex.  on peut créer a.block */
-}

@@ -24,7 +24,10 @@ class CMail{
 		$mailer->AddAddress($to);
 		$mailer->Subject=$subject;
 		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
-		$mailer->MsgHTML(render(APP.'viewsMails/'.$template.'.php',$vars,true),APP);
+		$html=render(APP.'viewsMails/'.$template.'.php',$vars,true);
+		$html=preg_replace('#\s*<(/?(?:li|ul|ol|div|p|table|tr)|td|body|html|head)(\s+|>)#iu',"\n<$1$2",$html);
+		$html=preg_replace('#\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?#iu',"\n$1$2$3$4$5\n",$html);
+		$mailer->MsgHTML($html,APP);
 		return $mailer->Send();
 	}
 	

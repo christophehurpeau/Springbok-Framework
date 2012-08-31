@@ -1,4 +1,5 @@
-(function($){
+includeCore('libs/jquery-ui-1.8.23.position');
+(function(){
 	var methods={
 		beforeSubmit:function(){
 			this.find('input.default').removeClass('default').val('');
@@ -106,7 +107,7 @@
 			return false;
 		});
 	}
-})(jQuery);
+})();
 
 
 S.HForm=function(modelName,formAttributes,tagContainer,options){
