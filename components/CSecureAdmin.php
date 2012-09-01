@@ -1,5 +1,5 @@
 <?php
-class SSecureAdmin extends CSecure{
+class CSecureAdmin extends CSecure{
 	private static $_config;
 	
 	public static function init(){
@@ -16,4 +16,4 @@ class SSecureAdmin extends CSecure{
 		parent::createCookie($user);
 	}
 }
-SSecureAdmin::init();
+CSecureAdmin::init();
