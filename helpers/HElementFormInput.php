@@ -57,6 +57,7 @@ class HElementFormInput extends HElementFormContainable{
 	public function value_(&$value){ $this->attributes['value']=$value; return $this; }
 	public function readOnly(){ $this->attributes['readonly']=true; return $this; }
 	public function disabled(){ $this->attributes['disabled']=true; return $this; }
+	public function required(){ $this->attributes['required']=true; return $this; }
 	public function size($size){ $this->attributes['size']=$size; return $this; }
 	public function name($value){ $this->attributes['name']=$value; return $this; }
 	public function noName(){ unset($this->attributes['name']); return $this; }
