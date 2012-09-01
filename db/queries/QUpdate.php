@@ -8,7 +8,7 @@ include_once __DIR__.DS.'AQuery.php';
     [LIMIT row_count]
  */
 class QUpdate extends AQuery{
-	private $values,$where,$limit=NULL,$updatedField;
+	private $values,$where,$limit=null,$orderBy,$updatedField;
 
 	public function __construct($modelName,$updatedField=null){
 		parent::__construct($modelName);
@@ -37,6 +37,11 @@ class QUpdate extends AQuery{
         $this->by($matches[1],$params);
         return $this;
     }
+	
+	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
+	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
+	public function addOrder($value){ $this->orderBy[]=$value; return $this; }
+	
 	
 	/** (limit) or ($limit, down) */
 	public function limit($limit,$down=0){
@@ -67,6 +72,25 @@ class QUpdate extends AQuery{
 		if(isset($this->where)){
 			$sql.=' WHERE ';
 			$sql=$this->_condToSQL($this->where,'AND',$sql,'');
+		}
+		
+		if(isset($this->orderBy)){
+			$sql.=' ORDER BY ';
+			if(is_string($this->orderBy))
+				$sql.=strpos($this->orderBy,'(')!==false ? $this->orderBy : $this->_db->formatField($this->orderBy);
+			else{
+				foreach($this->orderBy as $key=>$value){
+					if(is_int($key)){
+						if(is_array($value)){
+							$sqlOrderBy=$value[0].(isset($value[1]) && $value[1]!==NULL?' '.$value:'').',';
+							if(isset($value[2])) foreach($value[2] as $obK=>&$param) $sqlOrderBy=str_replace('$'.$obK,$this->_db->escape($param),$sqlOrderBy);
+							$sql.=$sqlOrderBy;
+						}elseif(strpos($value,'(')!==false) $sql.=$value.',';
+						else $sql.=$this->_db->formatField($value).',';
+					}else $sql.=$this->_db->formatField($key).' '.$value.',';
+				}
+				$sql=substr($sql,0,-1);
+			}
 		}
 		
 		if(isset($this->limit) && !$this->_db instanceof DBSQLite) $sql.=' LIMIT '.$this->limit;
