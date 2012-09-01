@@ -57,6 +57,7 @@ class ModelFile extends PhpFile{
 				if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
 				$createdField=isset($annotations['CreatedField'])?$annotations['CreatedField'][0][0]:false;
 				$updatedField=isset($annotations['UpdatedField'])?$annotations['UpdatedField'][0][0]:false;
+				$createdByField=isset($annotations['CreatedByField'])?$annotations['CreatedByField'][0][0]:false;
 				$orderByField=isset($annotations['OrderByField'])?$annotations['OrderByField'][0][0]:false;
 				$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
 				
@@ -77,7 +78,7 @@ class ModelFile extends PhpFile{
 				}
 				if(isset($annotations['CreatedBy'])){
 					if(isset($modelFile->_fields['created_by'])) throw new Exception($modelFile->_className.' already contains a field "created_by"');
-					$modelFile->_fields['created_by']=array('SqlType'=>array('int(10) unsigned'),'NotNull'=>false,'NotBindable'=>false);
+					$modelFile->_fields[$createdByField='created_by']=array('SqlType'=>array('int(10) unsigned'),'NotNull'=>false,'NotBindable'=>false);
 				}
 				if(isset($annotations['Updated'])){
 					if(isset($modelFile->_fields['updated'])) throw new Exception($modelFile->_className.' already contains a field "updated"');
@@ -190,6 +191,10 @@ class ModelFile extends PhpFile{
 						elseif($column['type']==='int(10)'||$column['type']==='int(11)') $field['Format']='datetime';
 						$updatedField=$name;
 					}
+					if(isset($field['CreatedByField'])){
+						$field['NotBindable']=0;
+						$createdByField=$name;
+					}
 					if(isset($field['OrderByField']) || (!$orderByField && $name==='position' 
 						&& ((substr($column['type'],0,4)==='int(') || substr($column['type'],0,8)==='tinyint(')) ){
 						$orderByField=$name;
@@ -203,7 +208,7 @@ class ModelFile extends PhpFile{
 					if(isset($field['Json'])){ $specialFields[$name]='Json';}
 					
 					unset($field['Pk'],$field['Boolean'],$field['SqlType'],$field['Null'],$field['NotNull'],$field['DefaultValue'],$field['Default'],$field['AutoIncrement'],
-								$field['CreatedField'],$field['UpdatedField'],$field['PositionField'],
+								$field['CreatedField'],$field['UpdatedField'],$field['CreatedByField'],$field['PositionField'],
 								$field['ForeignKey'],$field['Index'],$field['Comment']);
 					if(!empty($field)) $contentInfos['annotations'][$name]=$field;
 				}
@@ -254,8 +259,8 @@ class ModelFile extends PhpFile{
 						.(empty($specialFieldsSetData)?'':'public function _setData(&$data){'.$specialFieldsSetData.'parent::_setData($data);}')
 						.(empty($specialFieldsGetData)?'':'public function &_getData(){$data=parent::_getData();$d=$data;'.$specialFieldsGetData.'return $d;}')
 					)
-					.($createdField||isset($annotations['CreatedBy'])||isset($annotations['Child'])?
-						'public static function QInsert(){return new QInsert(self::$__className,'.($stringCreatedField=($createdField?UPhp::exportString($createdField):'null')).(isset($annotations['CreatedBy'])?',true':'').');}'
+					.($createdField||isset($annotations['CreatedBy'])||$createdByField||isset($annotations['Child'])?
+						'public static function QInsert(){return new QInsert(self::$__className,'.($stringCreatedField=($createdField?UPhp::exportString($createdField):'null')).($createdByField?','.UPhp::exportString($createdByField):'').');}'
 						.'public static function QInsertSelect(){return new QInsertSelect(self::$__className,'.$stringCreatedField.');}'
 						.'public static function QReplace(){return new QReplace(self::$__className,'.$stringCreatedField.');}'
 					:'')

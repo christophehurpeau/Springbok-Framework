@@ -38,7 +38,7 @@ includeCore('libs/jquery-ui-1.8.23.position');
 		}
 	};
 	$.fn.reset=function(){
-		this.find('input[type=text],input[type=email],input[type=url],input[type=number],input[type=search],input[type=password],textarea,select').val('');
+		this.find('input[type=text],input[type=email],input[type=url],input[type=number],input[type=search],input[type=password],input[type=file],textarea,select').val('');
 		return this;
 	};
 	

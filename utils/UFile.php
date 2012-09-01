@@ -36,6 +36,14 @@ class UFile{
 		return true;*/
 		return file_put_contents($path,$data,LOCK_EX);
 	}
+	
+	
+	/** Don't forget basename() if needed ! */
+	public static function extension($filename){
+		$ext=strrpos($filename,'.');
+		if($ext!==false) $ext=substr($filename,$ext+1);
+		return $ext;
+	}
 }
 
 class UFileOpened{

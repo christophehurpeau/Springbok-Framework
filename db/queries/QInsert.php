@@ -59,7 +59,7 @@ class QInsert extends AQuery{
 	public function _toSQL(){
 		$modelName=$this->modelName;
 		$sql=$this->keyword.' '; $hasCreatedField=$this->createdField!==null && $this->cols!==false && !in_array($this->createdField,$this->cols);
-		$hasCreatedByField=$this->createdByField!==null && $this->cols!==false && !in_array('created_by',$this->cols);
+		$hasCreatedByField=$this->createdByField!==null && $this->cols!==false && !in_array($this->createdByField,$this->cols);
 		if($this->ignore!==false) $sql.='IGNORE ';
 		$sql.='INTO '.$modelName::_fullTableName();
 		if($this->cols !==false){
@@ -69,7 +69,7 @@ class QInsert extends AQuery{
 				if($hasCreatedField||$hasCreatedByField) $sql.=',';
 			}
 			if($hasCreatedField){ $sql.=$this->_db->formatField($this->createdField); if($hasCreatedByField) $sql.=','; }
-			if($hasCreatedByField){ $sql.=$this->_db->formatField('created_by'); }
+			if($hasCreatedByField){ $sql.=$this->_db->formatField($this->createdByField); }
 			$sql.=')';
 		}
 		$sql.= ' VALUES ';

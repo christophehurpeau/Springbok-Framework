@@ -1,60 +1,21 @@
 <?php
-class CImages{
+class CImages extends CFiles{
 	private static $_config;
+	protected static $toJpeg=true;
+	
 	public static function init(){
 		self::$_config=&Config::$images;
 		if(!isset(self::$_config['thumbnails_background'])) self::$_config['thumbnails_background']=array(255,255,255);
 	}
 	
-	/**
-	 * @throw Exception
-	 */
-	public static function upload($name,$image=NULL,$toJpeg=true,$folderPrefix=''){
-		$errorMessage=self::fileErrorMessage($_FILES[$name]['error']);
-		if($errorMessage===true){
-			$tmpFile=tempnam('/tmp','img');
-			move_uploaded_file($_FILES[$name]['tmp_name'], $tmpFile);
-			if($image===NULL) $image=static::createImage();
-			$image->name=$_FILES[$name]['name'];
-			self::add($tmpFile,$image,true,$folderPrefix);
-			return $image;
-		}else throw new Exception($errorMessage);
-		return false;
-	}
-	
-	public static function uploadM($name,$toJpeg=true,$folderPrefix=''){
-		$images=$errors=array();
-		foreach($_FILES[$name]['error'] as $key => $error){
-			$errorMessage=self::fileErrorMessage($error);
-			if($errorMessage===true){
-				$tmpFile=tempnam('/tmp','img');
-				move_uploaded_file($_FILES[$name]['tmp_name'][$key], $tmpFile);
-				$image=static::createImage();
-				$image->name=$_FILES[$name]['name'][$key];
-				try{
-					self::add($tmpFile,$image,$toJpeg,$folderPrefix);
-					$images[]=$image;
-				}catch(Exception $ex){
-					$errors[$_FILES[$name]['name'][$key]]=$ex->getMessage();
-				}
-			}else $errors[$_FILES[$name]['name'][$key]]=$errorMessage;
-		}
-		return array($images,$errors);
-	}
-
-	private static function fileErrorMessage($error){
-		if($error == UPLOAD_ERR_OK) return true;
-		elseif($error===UPLOAD_ERR_INI_SIZE) return _tC('The uploaded file exceeds the maximum size allowed by the configuration.');
-		elseif($error===UPLOAD_ERR_FORM_SIZE) return _tC('The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.');
-		elseif($error===UPLOAD_ERR_PARTIAL) return _tC('The uploaded file was only partially uploaded.');
-	}
-	
 	protected static function createImage(){
 		return new Image();
 	}
+	protected static function createObject(){
+		return static::createImage();
+	}
 	
-	
-	public static function plupload($image=null,$toJpeg=true,$folderPrefix='',$result=null){
+	public static function plupload($image=null,$result=null){
 		Controller::noCache();
 		$targetDir=DATA.'tmp/plupload/';
 		set_time_limit(5 * 60);
@@ -128,18 +89,18 @@ class CImages{
 			if(in_array(strtolower(substr($image->name,-4)),array('.jpg','.png','.gif'))) $image->name=substr($image->name,0,-4);
 			elseif(strtolower(substr($image->name,-5))==='.jpeg') $image->name=substr($image->name,0,-5);
 			
-			$idImage=self::add($targetDir.DS.$fileName,$image,$toJpeg,$folderPrefix);
+			$idImage=self::add($targetDir.DS.$fileName,$image);
 			echo '{"jsonrpc" : "2.0", "result": '.($result===null?'null':$result($image)).', "id" :'.$idImage.'}';
 		}else echo '{"jsonrpc" : "2.0", "result": null, "id": null}';
 	}
 	
-	public static function importImage($url,$image,$toJpeg=true,$folderPrefix=''){
+	public static function importImage($url,$image){
 		$tmpfname = tempnam('/tmp','img');
 		file_put_contents($tmpfname,file_get_contents($url));
-		return self::add($tmpfname,$image,$toJpeg,$folderPrefix);
+		return self::add($tmpfname,$image);
 	}
 	
-	public static function add($tmpFile,$image,$toJpeg=true,$folderPrefix=''){
+	public static function add($tmpFile,$image){
 		if(!($image_params = getimagesize($tmpFile)))
 			throw new Exception(_tC('Invalid image'));
 		list($width,$height,$type)=$image_params;
@@ -162,11 +123,11 @@ class CImages{
 			$image->update();
 		}else $id=$image->insert();
 		
-		$filename=DATA.$folderPrefix.'images/'.$id;
+		$filename=DATA.static::$folderPrefix.'images/'.$id;
 		rename($tmpFile,$filename.$ext);
 		chmod($filename.$ext,0755);	
 		
-		if($toJpeg && $type != IMAGETYPE_JPEG){
+		if(self::$toJpeg && $type != IMAGETYPE_JPEG){
 			switch ($type) {
 				case IMAGETYPE_GIF: $rimage=imagecreatefromgif($filename.$ext); break;
 				case IMAGETYPE_JPEG: $rimage=imagecreatefromjpeg($filename.$ext); break;
@@ -179,15 +140,15 @@ class CImages{
 			unlink($filename.$ext);
 		}
 		
-		self::generateThumbnails($id,null,$folderPrefix);
+		self::generateThumbnails($id,null);
 		
 		return $id;
 	}
 
-	public static function generateThumbnails($filenameWithoutExt,$thumbnails=null,$folderPrefix=''){
-		if($thumbnails===null) $thumbnails=self::$_config[$folderPrefix.'thumbnails'];
+	public static function generateThumbnails($filenameWithoutExt,$thumbnails=null){
+		if($thumbnails===null) $thumbnails=self::$_config[static::$folderPrefix.'thumbnails'];
 		if($thumbnails){
-			$filenameWithoutExt=DATA.$folderPrefix.'images/'.$filenameWithoutExt;
+			$filenameWithoutExt=DATA.$folderPrefix.'images/'.static::$folderPrefix;
 			if(!($image_params = getimagesize($filenameWithoutExt.'.jpg')))
 				throw new Exception(_tC('Invalid image'));
 			list($width,$height)=$image_params;
@@ -246,7 +207,7 @@ class CImages{
 	}
 	
 	
-	public static function deleteFiles($id,$folderPrefix=''){
+	public static function deleteFiles($id){
 		$filename=DATA.$folderPrefix.'images/'.$id;
 		if(file_exists($cfilename=$filename.'.jpg')) unlink($cfilename);
 		foreach(self::$_config['thumbnails'] as $suffix=>$params)
@@ -254,8 +215,8 @@ class CImages{
 	}
 	
 	
-	public static function crop($srcFileName,$destFileName,$crop_width,$crop_height,$folderPrefix=''){
-		$images_dir=DATA.$folderPrefix.'images/';
+	public static function crop($srcFileName,$destFileName,$crop_width,$crop_height){
+		$images_dir=DATA.static::$folderPrefix.'images/';
 		return self::cropFile($images_dir.$srcFileName,$images_dir.$destFileName,$crop_width,$crop_height);
 	}
 	

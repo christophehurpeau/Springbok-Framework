@@ -34,6 +34,8 @@ $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 	})
 	.fadeOut(0).appendTo(this).fadeIn(); //fade isn't really usefull...
 });
+
+
 var oldConsoleVar=window.console,jsConsoleContent=$('#springbok-bar-js-console ul'),
 log=function(type,args){
 	jsConsoleLink.stop(true,true).fadeOut('fast').fadeIn('fast').fadeOut('fast').fadeIn('fast');
@@ -63,7 +65,7 @@ window.console={
 	trace:function(){},
 	warn:function(){log('warn',arguments);}
 };
-oldConsoleVar && $.each(console,function(k,v){
+oldConsoleVar && !$.browser.msie && $.each(console,function(k,v){
 	var f=window.console[k];
 	window.console[k]=function(){
 		oldConsoleVar && oldConsoleVar[k] && oldConsoleVar[k].apply(oldConsoleVar,arguments);
