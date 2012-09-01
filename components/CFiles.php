@@ -59,7 +59,7 @@ class CFiles{
 		}else $id=$file->insert();
 		
 		$filename=DATA.static::$folderPrefix.'files/'.$id;
-		rename($tmpFile,$fullFilename=($filename.$file->ext));
+		rename($tmpFile,$fullFilename=($filename.'.'.$file->ext));
 		chmod($fullFilename,0755);	
 		
 		return $id;
