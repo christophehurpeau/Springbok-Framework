@@ -46,6 +46,18 @@ class View{
 	public static function element($name,$vars){
 		return render(APP.'viewsElements/'.$name.'.php',$vars,true);
 	}
+	
+	public static function fromData($filename){
+		try{
+			return file_get_contents(DATA.$filename);
+		}catch(ErrorException $e){}
+		return '';
+	}
+	public static function includeFromData($filename){
+		try{
+			include DATA.$filename;
+		}catch(ErrorException $e){}
+	}
 }
 
 class MailView extends View{ public function __construct($layout='mails'){ parent::__construct('',$layout); } }
