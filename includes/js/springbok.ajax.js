@@ -3,7 +3,10 @@ includeCore('ui/slideTo');
 (function($){
 	var lastConfirmResult=true,readyCallbacks=$.Callbacks();
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
-	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref;
+	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref,
+		changeLinkFavicon=function(href){
+			if(normalFaviconHref) linkFavicon.remove().attr('href',href).appendTo('head')
+		};
 	S.ready(function(){
 		//console.log('AJAX DOCUMENT READY');
 		divContainer=$('#container');
@@ -89,7 +92,7 @@ includeCore('ui/slideTo');
 			document.title=i18nc['Loading...'];
 			//$('body').fadeTo(0.4);
 			$('body').addClass('cursorWait').append(divLoading);
-			if(normalFaviconHref) linkFavicon.attr('href',imgUrl+'ajax-roller.gif');
+			changeLinkFavicon(imgUrl+'ajax-roller.gif');
 			
 			$.ajax(ajaxurl,{
 				type:type?type:'GET', data:data, headers:headers,
@@ -137,7 +140,7 @@ includeCore('ui/slideTo');
 					S.ajax.loadContent(div,jqXHR.responseText,function(){OnReadyCallbacks.fire();$(document).trigger('springbokAjaxPageLoaded',div);},to,data || forceNotAddDataToGetORdoNotDoTheEffect);
 					readyCallbacks=$.Callbacks();
 					
-					if(normalFaviconHref) linkFavicon.attr('href',normalFaviconHref);
+					changeLinkFavicon(normalFaviconHref);
 					
 					if(to === 'base') divPage=$('#page'); 
 					if(to === 'base' || to === 'page') S.ajax.updateVariable(divPage);
