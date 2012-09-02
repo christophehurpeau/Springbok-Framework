@@ -54,8 +54,7 @@ class QSql{
 				return $res['res'];
 			}
 		}
-		$res=$this->_db->doUpdate($this->sql);
-		return $res;
+		return $this->_db->doMultiQueries($this->sql);
 	}
 	
 	public function callback($callback,$callback2=null){

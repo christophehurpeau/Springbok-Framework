@@ -82,6 +82,21 @@ class DBMySQL extends DBSql{
 		return false;
 	}
 	
+	public function doMultiQueries($queries){
+		$results=array();
+		if($this->_connect->multi_query($queries)){
+			do{
+				if($result=$this->_connect->store_result()){
+					$r=array();
+					while($row=$result->fetch_row()) $r[]=$row;
+					$result->free();
+					$results[]=$r;
+				}else $results[]=$this->_connect->affected_rows;
+			}while($this->_connect->more_results() && $this->_connect->next_result());
+		}
+		return $results;
+	}
+	
 	
 	/* SELECT SQL */
 	private function getFieldsSQL($r){
