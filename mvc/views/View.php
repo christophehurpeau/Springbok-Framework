@@ -1,6 +1,6 @@
 <?php
 class View{
-	private $layout,$vars/*,$active*/;
+	protected $layout,$vars/*,$active*/;
 	
 	public function __construct($title=false,$layout=null){
 		if($layout===null) $layout=Controller::$defaultLayout;
@@ -60,7 +60,13 @@ class View{
 	}
 }
 
-class MailView extends View{ public function __construct($layout='mails'){ parent::__construct('',$layout); } }
+class MailView extends View{
+	public function __construct($layout='mails',$title=null){
+		$this->vars=array('layout_title'=>$title);
+		$this->layout=$layout;
+		ob_start();
+	}
+}
 class BaseView extends View{ public function __construct($title=false,$layout=null){ if($layout===null) $layout=Springbok::$prefix.'base'; parent::__construct($title,$layout); } }
 class PageView extends View{ public function __construct($title=false,$layout=null){ if($layout===null) $layout=Springbok::$prefix.'page'; parent::__construct($title,$layout); } }
 

@@ -162,7 +162,7 @@ class ViewFile extends PhpFile{
 	public function getEnhancedDevContent(){
 		//if(!strpos($this->_devContent,($replace='<footer>')))
 		//	$replace='</body>';
-		if(strpos($this->fileName(),'mails')===false){
+		if(strpos($this->fileName(),'mails')===false && basename(dirname($this->srcFile()->getPath()))!=='mails'){
 			$replace='</html>';
 			$this->_devContent=str_replace($replace,'<?php HDev::springbokBar() ?>'.$replace,$this->_devContent);
 		}
