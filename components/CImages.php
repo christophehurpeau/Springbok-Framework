@@ -15,6 +15,10 @@ class CImages extends CFiles{
 		return static::createImage();
 	}
 	
+	public static function upload($name='image',$image=null){
+		return parent::upload($name,$image);
+	}
+	
 	public static function plupload($image=null,$result=null){
 		Controller::noCache();
 		$targetDir=DATA.'tmp/plupload/';
@@ -148,7 +152,7 @@ class CImages extends CFiles{
 	public static function generateThumbnails($filenameWithoutExt,$thumbnails=null){
 		if($thumbnails===null) $thumbnails=self::$_config[static::$folderPrefix.'thumbnails'];
 		if($thumbnails){
-			$filenameWithoutExt=DATA.$folderPrefix.'images/'.static::$folderPrefix;
+			$filenameWithoutExt=DATA.static::$folderPrefix.'images/'.$filenameWithoutExt;
 			if(!($image_params = getimagesize($filenameWithoutExt.'.jpg')))
 				throw new Exception(_tC('Invalid image'));
 			list($width,$height)=$image_params;
@@ -208,7 +212,7 @@ class CImages extends CFiles{
 	
 	
 	public static function deleteFiles($id){
-		$filename=DATA.$folderPrefix.'images/'.$id;
+		$filename=DATA.static::$folderPrefix.'images/'.$id;
 		if(file_exists($cfilename=$filename.'.jpg')) unlink($cfilename);
 		foreach(self::$_config['thumbnails'] as $suffix=>$params)
 			if(file_exists($cfilename=$filename.'-'.$suffix.'.jpg')) unlink($cfilename);
