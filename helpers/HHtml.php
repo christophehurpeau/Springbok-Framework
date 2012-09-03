@@ -317,9 +317,9 @@ s.parentNode.insertBefore(g,s);
 		return $res;
 	}
 	
-	public static function tag($tagName,$attributes,$content=NULL,$contentEscape=true){
+	public static function tag($tagName,$attributes,$content=null,$contentEscape=true){
 		return '<'.$tagName.(!empty($attributes)?self::_attributes($attributes):'')
-			.($content===NULL?'/>':('>'.($contentEscape?h($content):$content).'</'.$tagName.'>'));
+			.($content===null?'/>':('>'.($contentEscape?h($content):$content).'</'.$tagName.'>'));
 	}
 	
 	public static function openTag($tagName,$attributes){

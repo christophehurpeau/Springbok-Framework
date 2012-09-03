@@ -61,7 +61,7 @@ class HElementForm extends HElement{
 	public function noDefaultLabel(){ $this->defaultLabel=false; return $this; }
 	
 	public function ajax($saveOnChange=false){ HHtml::jsReady('$("#'.$this->getAttr('id').'").ht5ifv().ajaxForm()'
-		.($saveOnChange?'.change(function(){$(this).submit()})':'')); return $this; }
+		.($saveOnChange?'.change(function(e){$(this).submit()})':'')); return $this; }
 	
 	public function __toString(){
 		return '<form action="'.HHtml::url($this->action===null ? CRoute::getAll() : $this->action,$this->actionEntry,$this->urlfull,true).'"'
@@ -157,11 +157,11 @@ class HElementForm extends HElement{
 	}
 	
 	public function _getValue(&$name){
-		$TAB=NULL;
+		$TAB=null;
 		if($this->method=='post') $TAB=$_POST;
 		elseif($this->method=='get') $TAB=$_GET;
-		if($this->modelName === NULL) return isset($TAB[$name])? $TAB[$name] : NULL;
-		else return isset($TAB[$this->name][$name]) ? $TAB[$this->name][$name] : NULL;
-		return NULL;
+		if($this->modelName === null) return isset($TAB[$name])? $TAB[$name] : null;
+		else return isset($TAB[$this->name][$name]) ? $TAB[$this->name][$name] : null;
+		return null;
 	}
 }
