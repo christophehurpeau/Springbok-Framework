@@ -56,7 +56,8 @@ class App{
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			CRoute::cliinit(/* DEV */''/* /DEV */);
-			if(ctype_upper($action)){ $action.='Cli'; $call=true; }else $call=false;
+			$className=basename($action);
+			if(ctype_upper($className[0])){ $action.='Cli'; $className.='Cli'; $call=true; }else $call=false;
 			if(file_exists($filename=APP.'cli/'.$action.'.php'))
 				include $filename;
 			else include CORE.'cli/'.$action.'.php';
