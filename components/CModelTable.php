@@ -73,6 +73,7 @@ class CModelTable extends CModelTableAbstract{
 		if($add!==false){
 			if($add===true) $add=array('modelName'=>$this->getModelName());
 			elseif(is_string($add)) $add=array('modelName'=>$add);
+			elseif(!isset($add['modelName'])) $add['modelName']=$this->getModelName();
 			if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
 			if(!isset($add['formContainer'])) $add['formContainer']=false;
 			if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
