@@ -143,7 +143,7 @@ abstract class DBSchema{
 			$primaryKeys=&$modelInfos['primaryKeys'];
 			$pks=$this->getPrimaryKeys();
 			if($primaryKeys!=$pks){
-				$this->log('Change Pks : '.(empty($pks)?$pks:implode(',',$pks)).' ===> '.(empty($primaryKeys)?$primaryKeys:implode(',',$primaryKeys)));
+				$this->log('Change Pks : '.(empty($pks)?'':implode(',',$pks)).' ===> '.(empty($primaryKeys)?'':implode(',',$primaryKeys)));
 				if($this->shouldApply()){
 					if($pks) $this->changePrimaryKey();
 					else $this->addPrimaryKey();

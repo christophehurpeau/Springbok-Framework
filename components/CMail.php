@@ -26,6 +26,7 @@ class CMail{
 		include_once CORE.'mvc/views/View.php';
 		$mailer=self::get();
 		$mailer->ClearAllRecipients();
+		$mailer->ClearAttachments();
 		$mailer->AddAddress($to);
 		$mailer->Subject=$subject;
 		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
