@@ -20,7 +20,7 @@ abstract class COAuth2Connect extends COAuth2{
 	}
 	
 	public function isValidMe(){
-		CLogger::get('debug-isValidMe')->log($this->accessToken);
+		//CLogger::get('debug-isValidMe')->log($this->accessToken);
 		return !empty($this->me) && !isset($this->me['error']) && !empty($this->me['id']);
 	}
 }
