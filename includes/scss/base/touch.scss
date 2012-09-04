@@ -27,7 +27,7 @@ ul.linksList{
     @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
     border-top:$BUTTON_BORDER;
     transition:all .4s;
-    > a{padding:3px 8px;}
+    > a{padding:5px 8px;}
   }
   > li:hover{
     @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
