@@ -268,6 +268,7 @@ class PhpFile extends EnhancerFile{
 	}
 	
 	public function optimisePhpPlace($phpContent){
+		$phpContent=preg_replace('/for\s*\(\s*\;\s*(?:\;\s*)?\)/','while(true)',$phpContent);
 		// remove comments
 		$phpContent=substr(self::removePhpComments('<?php '.$phpContent),6);
 		
