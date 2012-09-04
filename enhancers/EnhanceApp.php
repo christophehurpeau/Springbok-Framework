@@ -47,7 +47,8 @@ class EnhanceApp extends AEnhance{
 		
 		$base="<?php
 define('DS', DIRECTORY_SEPARATOR);
-define('CORE','".dirname(CORE).DS."dev".DS."');
+define('CORE','".dirname(CORE)."/dev/"."');
+define('CLIBS','".dirname(CORE)."/libs/dev/');
 define('APP', __DIR__.'/dev/');";
 		file_put_contents($this->enhanced->getAppDir().'cli.php',$base.'unset($argv[0]);'."\n".'$action=array_shift($argv);'."\n"."include CORE.'cli.php';");
 		file_put_contents($this->enhanced->getAppDir().'job.php',$base.'$action="job";'."\n"."include CORE.'cli.php';");
@@ -229,7 +230,8 @@ define('APP', __DIR__.'/dev/');";
 		//if(!empty($this->newDef['changes'])){
 			$baseDev="<?php
 define('DS', DIRECTORY_SEPARATOR);
-define('CORE','".dirname(CORE).DS."dev".DS."');
+define('CORE','".dirname(CORE)."/dev/');
+define('CLIBS','".dirname(CORE)."/libs/dev/');
 define('APP', __DIR__.DS);";
 			
 			$indexDevContent=$baseDev."

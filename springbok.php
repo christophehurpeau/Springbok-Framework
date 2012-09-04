@@ -4,7 +4,7 @@ define('ENV',include $parentCore.'env.php');
 require 'base/base.php';
 define('ALIBS',APP.'libs/');
 //define('CLIBS',CORE.'libs'.DS);
-define('CLIBS',$parentCore.'libs//* DEV */dev/* /DEV *//* PROD */prod/* /PROD *//');
+//define('CLIBS',$parentCore.'libs//* DEV */dev/* /DEV *//* PROD */prod/* /PROD *//');
 
 
 date_default_timezone_set('Europe/Paris');
