@@ -30,9 +30,14 @@ html body .hidden{display:none}
 .line.gut > * + * { 
     margin-left:1em;
 }
+/*
 .row.gut > * + * { 
-    border-left:1em solid #fff; /* must be color of parent background */
+    border-left:1em solid #fff; /* must be color of parent background *//*
    *border-left:0;
+}*/
+.row.gut{
+	border-collapse:separate;
+	border-spacing:1em 0;
 }
 
 .aposTR{position:absolute;top:0;right:0}
@@ -141,7 +146,7 @@ ul.mosaic{
   li img{display:block; margin:0 auto 0; border:0}
 }
 
-ul.inline,ul.nobullets,ul.simpleDouble{
+ul.inline,ul.nobullets,ul.simpleDouble,ul.clickable{
   list-style:none;
   margin:0;padding:0;
 }
