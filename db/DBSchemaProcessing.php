@@ -8,7 +8,7 @@ class DBSchemaProcessing{
 		$issetCurrentFileEnhanced=(class_exists('App',false) && isset(App::$currentFileEnhanced));
 		self::$isProcessing=true;
 		
-		$this->force=&$force; $schemas=array();
+		$this->force=$force; $schemas=array();
 		/* DEV */ $this->shouldApply=$force?true:CHttpRequest::_GETor('apply')==='springbokProcessSchema'; /* /DEV */
 		$this->generate=$generate||$this->shouldApply;
 		

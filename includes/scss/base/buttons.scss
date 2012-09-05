@@ -1,54 +1,54 @@
-$BUTTON_BACKGROUND_Top:#555555 !default;$BUTTON_BACKGROUND_Bottom:#444444 !default;
-$BUTTON_BOXSHADOW:#777777 !default;
-$BUTTON_BORDER:1px solid #111 !default;
-$BUTTON_COLOR:#EEE !default;
-$BUTTON_TEXTSHADOW:#999 !default;
-$BUTTON_HOVER_BACKGROUND_Top:#666666 !default;$BUTTON_HOVER_BACKGROUND_Bottom:#555555 !default;
-$BUTTON_HOVER_BORDER:1px solid #333333 !default;
-$BUTTON_HOVER_COLOR:#FFF !default;
-$BUTTON_FOCUS_BACKGROUND_Top:#555555 !default;$BUTTON_FOCUS_BACKGROUND_Bottom:#777777 !default;
-$BUTTON_FOCUS_COLOR:#FFF !default;
-$BUTTON_TEXTSHADOW:#555 !default;
+$ButtonBackground:#555555 #444444 !default;
+$ButtonBoxShadow:#777777 !default;
+$ButtonBorder:1px solid #111 !default;
+$ButtonColor:#EEE !default;
+$ButtonTextShadow:#999 !default;
+$ButtonHoverBackground:#666666 #555555 !default;
+$ButtonHoverBorder:1px solid #333333 !default;
+$ButtonHoverColor:#FFF !default;
+$ButtonFocusBackground:#555555 #777777!default;
+$ButtonFocusColor:#FFF !default;
+$ButtonTextShadow:#555 !default;
 $_BUTTON_OVERRIDE:FALSE !default;
 
 
 @if $_BUTTON_OVERRIDE==TRUE{
   html{
     input.submit,button,.button{
-      @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
-      border:$BUTTON_BORDER;
-      color:$BUTTON_COLOR;
+      @include background($ButtonBackground);
+      border:$ButtonBorder;
+      color:$ButtonColor;
     }
     input.submit:hover,button:hover,.button:hover{
-      @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
-    @if $BUTTON_HOVER_BORDER{ border:$BUTTON_HOVER_BORDER; }
+      @include background($ButtonHoverBackground);
+    	@if $ButtonHoverBorder{ border:$ButtonHoverBorder; }
     }
     body input.submit:focus,body button:focus,body .button:focus{
-      @include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
+      @include background($ButtonFocusBackground);
     }
   }
 }@else{
   input.submit,button,.button{
-  	@include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
+  	@include background($ButtonBackground);
   	border-radius:3px;
   	box-shadow:0 1px 1px rgba(255,255,255,0.2) inset, 0 1px 2px rgba(0,0,0,0.4);
-  	border:$BUTTON_BORDER;
-  	color:$BUTTON_COLOR;
-  	text-shadow:$BUTTON_TEXTSHADOW;
+  	border:$ButtonBorder;
+  	color:$ButtonColor;
+  	text-shadow:$ButtonTextShadow;
   	padding:2px 8px;
   	cursor:pointer;
   	transition:all .4s;
   	box-sizing: border-box;
   }
   input.submit:hover,button:hover,.button:hover{
-  	@include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
-  	@if $BUTTON_HOVER_BORDER{ border:$BUTTON_HOVER_BORDER; }
-  	@if $BUTTON_HOVER_COLOR{ color:$BUTTON_HOVER_COLOR; }
+  	@include background($ButtonHoverBackground);
+  	@if $ButtonHoverBorder{ border:$ButtonHoverBorder; }
+  	@if $ButtonHoverColor{ color:$ButtonHoverColor; }
   }
   body input.submit:focus,body button:focus,body .button:focus{
-  	@include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
-  	color:$BUTTON_FOCUS_COLOR;outline:0;
-  	text-shadow:$BUTTON_TEXTSHADOW;
+  	@include background($ButtonFocusBackground);
+  	color:$ButtonFocusColor;outline:0;
+  	text-shadow:$ButtonTextShadow;
   }
   a.button,a.button:hover{text-decoration:none;display:inline-block;}
   button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}

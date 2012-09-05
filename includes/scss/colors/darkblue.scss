@@ -1,24 +1,24 @@
-$BODY_BACKGROUND:#426e90;/*010102*/
-$BODY_COLOR:#111;/**/
-$HEADER_SHADOW:#3e5e80;
-$HEADER_COLOR:#FFF;
-$HEADER_BACKGROUND_Top:#14375d;$HEADER_BACKGROUND_Bottom:#09213c;/**/
-$FOOTER_COLOR:#F5F5F5;/**/
-$FIXED_VARIABLE_BACKGROUND:#f5f9fc;/**/
-$FIXED_VARIABLE_BORDER:1px solid #3e5e80;/**/
-$FIXED_VARIABLE_BORDER_RADIUS:1px;/**/
-$VARIABLE_CONTENT_BACKGROUND:#FEFEFE;
-$H1_BACKGROUND:#24476B;
+$BodyBackground:#426e90;/*010102*/
+$BodyColor:#111;/**/
+$HeaderShadow:#3e5e80;
+$HeaderColor:#FFF;
+$HeaderBackground:#14375d #09213c;/**/
+$FooterColor:#F5F5F5;/**/
+$FixedVariableBackground:#f5f9fc;/**/
+$FixedVariableBorder:1px solid #3e5e80;/**/
+$FixedVariableBorder_RADIUS:1px;/**/
+$VariableContentBackground:#FEFEFE;
+$H1Background:#24476B;
 $H1_TEXT_SHADOW:1px 1px #000;
 
-$HEADER_MENU_A_COLOR:#F5F5F5;
-$HEADER_MENU_A_BORDER_RADIUS:false;
-$HEADER_MENU_A_CURRENT_HOVER_COLOR:#FFF;
-$HEADER_MENU_A_CURRENT_BACKGROUND:#2d678e;
-$HEADER_MENU_A_HOVER_BACKGROUND:#81b7ce;
-$HEADER_MENU_A_HOVER_SHADOW:#2580A2;
-$VARIABLE_MENU_CURRENT_COLOR:#FFF;
-$VARIABLE_MENU_CURRENT_BACKGROUND:#2d678e;
+$HeaderMenuLinkColor:#F5F5F5;
+$HeaderMenuLinkBorderRadius:false;
+$HeaderMenuLinkCurrentOrHoverColor:#FFF;
+$HeaderMenuLinkCurrentBackground:#2d678e;
+$HeaderMenuLinkHoverBackground:#81b7ce;
+$HeaderMenuLinkHoverShadow:#2580A2;
+$VariableMenuCurrentColor:#FFF;
+$VariableMenuCurrentBackground:#2d678e;
 
 $FORM_FIELDSET_BACKGROUND:#FFF;
 $FORM_FIELDSET_BORDER:1px solid #2580A2;
@@ -31,5 +31,5 @@ $BCOLOR_VALID:#b7c4b7;
 $BCOLOR_INVALID:#c9b3b3;
 
 $InteractionDefaultColor:#245272;
-$INTERACTION_CURRENT_COLOR:#4180a4;
-$INTERACTION_HOVER_COLOR:#81b7ce;
+$InteractionCurrentColor:#4180a4;
+$InteractionHoverColor:#81b7ce;

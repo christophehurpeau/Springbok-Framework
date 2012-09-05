@@ -57,7 +57,7 @@ button.ui-combobox .ui-button-text{
 .ui-widget .ui-widget { font-size: 1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-size: 1em; }
 
-$__uiWidgetContentBackground:if($FIXED_VARIABLE_BACKGROUND,$FIXED_VARIABLE_BACKGROUND,$BODY_COLOR);
+$__uiWidgetContentBackground:if($FixedVariableBackground,$FixedVariableBackground,$BodyColor);
 $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightness(#999999),darken($__uiWidgetContentBackground,10%),lighten($__uiWidgetContentBackground,10%));
 .ui-widget-content {
   border: 1px solid darken($__uiWidgetContentBackground,50%);
@@ -68,8 +68,8 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
 /*.ui-widget-content { border: 1px solid #dddddd; background: #eeeeee; color: #333333; }
 .ui-widget-content a { color: #333333; }*/
 .ui-widget-header {
-	@if $HEADER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_BACKGROUND_Top,$HEADER_BACKGROUND_Bottom); }
-	@if $HEADER_COLOR{ color:$HEADER_COLOR; }
+	@include background($HeaderBackground);
+	@if $HeaderColor{ color:$HeaderColor; }
 	font-weight: bold;
 }
 
@@ -78,22 +78,22 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
 /*.ui-state-default, .ui-widget-content .ui-state-default{ 
   @extend .ui-state-default;
 }
-.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { /*color: $HEADER_MENU_A_COLOR; text-decoration: none; }
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { /*color: $HeaderMenuLinkColor; text-decoration: none; }
 */
 /*
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus,
 .ui-state-active, .ui-widget-content .ui-state-active {
   /*@extend ul.clickable li:hover;*/
-  /*@if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Bottom); }
-  @else if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; }
-  @if $HEADER_MENU_A_CURRENT_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW; }
-  @if $HEADER_MENU_A_CURRENT_HOVER_COLOR{ color:$HEADER_MENU_A_CURRENT_HOVER_COLOR; }*//*
+  /*@if $HeaderMenuLinkCurrentOrHoverBackground_Top{ @include bg-gradient-tb($HeaderMenuLinkCurrentOrHoverBackground_Top,$HeaderMenuLinkCurrentOrHoverBackground_Bottom); }
+  @else if $HeaderMenuLinkCurrentOrHoverBackground{ background:$HeaderMenuLinkCurrentOrHoverBackground; }
+  @if $HeaderMenuLinkCurrentOrHoverShadow{ text-shadow: -1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 1px 1px $HeaderMenuLinkCurrentOrHoverShadow,1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 -1px 1px $HeaderMenuLinkCurrentOrHoverShadow; }
+  @if $HeaderMenuLinkCurrentOrHoverColor{ color:$HeaderMenuLinkCurrentOrHoverColor; }*//*
 }
 
 /*.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus{
-  @if $HEADER_MENU_A_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_HOVER_BACKGROUND_Top,$HEADER_MENU_A_HOVER_BACKGROUND_Bottom); }
-  @else if $HEADER_MENU_A_HOVER_BACKGROUND{ background:$HEADER_MENU_A_HOVER_BACKGROUND; }
-  @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; }
+  @if $HeaderMenuLinkHoverBackground_Top{ @include bg-gradient-tb($HeaderMenuLinkHoverBackground_Top,$HeaderMenuLinkHoverBackground_Bottom); }
+  @else if $HeaderMenuLinkHoverBackground{ background:$HeaderMenuLinkHoverBackground; }
+  @if $HeaderMenuLinkHoverColor{ color:$HeaderMenuLinkHoverColor; }
 }*//*
 .ui-state-hover a, .ui-state-hover a:hover { /*@extend ul.clickable li:hover a;*//* text-decoration: none; }
 
@@ -109,36 +109,33 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
 
 .ui-widget-header{
   .ui-state-default{ 
-  	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
-  	@include background($HEADER_MENU_A_BACKGROUND);
-  	color:$HEADER_MENU_A_COLOR;
+  	@if $HeaderMenuLinkBorder{ border:1px solid $HeaderMenuLinkBorder; }
+  	@include background($HeaderMenuLinkBackground);
+  	color:$HeaderMenuLinkColor;
   	font-weight: bold;
   }
   
-  .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: $HEADER_MENU_A_COLOR; }
+  .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: $HeaderMenuLinkColor; }
   
   .ui-state-hover,.ui-state-focus,.ui-state-active{
-  	@if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND_Bottom); }
-  	@else if $HEADER_MENU_A_CURRENT_HOVER_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_HOVER_BACKGROUND; }
-  	@if $HEADER_MENU_A_CURRENT_HOVER_SHADOW{ text-shadow: -1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,1px 0 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW,0 -1px 1px $HEADER_MENU_A_CURRENT_HOVER_SHADOW; }
-  	@if $HEADER_MENU_A_CURRENT_HOVER_COLOR{ color:$HEADER_MENU_A_CURRENT_HOVER_COLOR; }
+  	@include background($HeaderMenuLinkCurrentOrHoverBackground);
+  	@if $HeaderMenuLinkCurrentOrHoverShadow{ text-shadow: -1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 1px 1px $HeaderMenuLinkCurrentOrHoverShadow,1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 -1px 1px $HeaderMenuLinkCurrentOrHoverShadow; }
+  	@if $HeaderMenuLinkCurrentOrHoverColor{ color:$HeaderMenuLinkCurrentOrHoverColor; }
   }
   
   .ui-state-hover,.ui-state-focus{
-  	@if $HEADER_MENU_A_HOVER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_HOVER_BACKGROUND_Top,$HEADER_MENU_A_HOVER_BACKGROUND_Bottom); }
-  	@else if $HEADER_MENU_A_HOVER_BACKGROUND{ background:$HEADER_MENU_A_HOVER_BACKGROUND; }
-    @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; }
+  	@include background($HeaderMenuLinkHoverBackground);
+    @if $HeaderMenuLinkHoverColor{ color:$HeaderMenuLinkHoverColor; }
   }
-  .ui-state-hover a{ @if $HEADER_MENU_A_HOVER_COLOR{ color:$HEADER_MENU_A_HOVER_COLOR; } text-decoration: none; }
+  .ui-state-hover a{ @if $HeaderMenuLinkHoverColor{ color:$HeaderMenuLinkHoverColor; } text-decoration: none; }
   
   
   .ui-state-active{
-  	@if $HEADER_MENU_A_CURRENT_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_MENU_A_CURRENT_BACKGROUND_Top,$HEADER_MENU_A_CURRENT_BACKGROUND_Bottom); }
-    @else if $HEADER_MENU_A_CURRENT_BACKGROUND{ background:$HEADER_MENU_A_CURRENT_BACKGROUND; }
-  	@if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; }
+  	@include background($HeaderMenuLinkCurrentBackground);
+  	@if $HeaderMenuLinkCurrentColor{ color:$HeaderMenuLinkCurrentColor; }
   }
   .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
-    @if $HEADER_MENU_A_CURRENT_COLOR{ color:$HEADER_MENU_A_CURRENT_COLOR; } text-decoration: none;
+    @if $HeaderMenuLinkCurrentColor{ color:$HeaderMenuLinkCurrentColor; } text-decoration: none;
   }
 }
 .ui-widget :active { outline: none; }

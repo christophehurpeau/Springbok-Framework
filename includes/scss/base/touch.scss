@@ -10,32 +10,32 @@ ul.pager li a{
 
 /* BUTTONS.SCSS */
 
-$BUTTON_BACKGROUND_Top:#FFF;$BUTTON_BACKGROUND_Bottom:#F1F1F1;
-$BUTTON_HOVER_BACKGROUND_Top:#F1F1F1;$BUTTON_HOVER_BACKGROUND_Bottom:#E5E5E5;
-$BUTTON_FOCUS_BACKGROUND_Top:#E5E5E5;$BUTTON_FOCUS_BACKGROUND_Bottom:#FFF;
-$BUTTON_COLOR:#111; $BUTTON_BORDER:1px solid #CCC;
-$BUTTON_HOVER_BORDER:1px solid #AAA;
+$ButtonBackground:#FFF #F1F1F1;
+$ButtonHoverBackground:#F1F1F1 #E5E5E5;
+$ButtonFocusBackground:#E5E5E5 #FFF;
+$ButtonColor:#111; $ButtonBorder:1px solid #CCC;
+$ButtonHoverBorder:1px solid #AAA;
 
 @includeCore 'base/buttonsOverride.scss';
 
 ul.linksList,ul ul.linksList{
   list-style:none;
   margin:0;padding:0;
-  border-bottom:$BUTTON_BORDER;
+  border-bottom:$ButtonBorder;
 }
 ul.linksList{
   > li{/* not a */
     margin:0;
-    @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
-    border-top:$BUTTON_BORDER;
+    @include background($ButtonBackground);
+    border-top:$ButtonBorder;
     transition:all .4s;
     > a{padding:5px 8px;}
   }
   > li:hover{
-    @include bg-gradient-tb($BUTTON_HOVER_BACKGROUND_Top,$BUTTON_HOVER_BACKGROUND_Bottom);
+    @include background($ButtonHoverBackground);
   }
   > li:focus{
-    @include bg-gradient-tb($BUTTON_FOCUS_BACKGROUND_Top,$BUTTON_FOCUS_BACKGROUND_Bottom);
+    @include background($ButtonFocusBackground);
   }
 }
 .col > .linksList, .col.linksList{ margin-right:1px; }

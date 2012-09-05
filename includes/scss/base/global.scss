@@ -1,6 +1,6 @@
 $SEP_BORDER:1px solid #BBB !default;
-$H1_COLOR:#FFF !default;
-$H1_BACKGROUND:false !default;
+$H1Color:#FFF !default;
+$H1Background:false !default;
 $H1_TEXT_SHADOW:false !default;
 
 .center{text-align:center}
@@ -46,8 +46,8 @@ html body .hidden{display:none}
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
 h1{
   font-size:1.6em;margin-bottom:15px;
-  @if $H1_COLOR{ color:$H1_COLOR; } 
-  @if $H1_BACKGROUND{ padding:8px 5px; background:$H1_BACKGROUND; }
+  @if $H1Color{ color:$H1Color; } 
+  @if $H1Background{ padding:8px 5px; background:$H1Background; }
   @else{ padding:0; }
   @if $H1_TEXT_SHADOW{ text-shadow:$H1_TEXT_SHADOW; }
 }
@@ -68,7 +68,7 @@ h6{font-size:1.05em;margin-bottom:5px;}
 .sepR{border-right:$SEP_BORDER;}
 .sepBot,.sepB{border-bottom:$SEP_BORDER;}
 
-.clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after{ 
+.clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after,nav.top ul:after{ 
   /*clear: both; 
   display: block; 
   height: 0; 
@@ -80,7 +80,7 @@ h6{font-size:1.05em;margin-bottom:5px;}
   clear: both; 
 }
 /** html .clearfix,*:first-child+html .clearfix*/
-.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top{ zoom: 1 }
+.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top,nav.top ul{ zoom: 1 }
 
 hr{
   height:1px;

@@ -46,8 +46,8 @@
   @else if $background{ background:$background; @if $forceResetIeFilter { filter:progid:DXImageTransform.Microsoft.gradient(enabled=false);} }
 }
 
-@mixin border($border){
-	@if type-of($border)=='color'{ border-color:$border; }
+@mixin border($border,$ifColorCreateBasicBorder:false){
+	@if type-of($border)=='color'{ @if($ifColorCreateBasicBorder){ border:1px solid $border; }@else{ border-color:$border; } }
 	@else if $border{
 	  $borderTRBL:false;
 	  @if type-of($border)=='list'{

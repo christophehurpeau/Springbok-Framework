@@ -2,33 +2,34 @@
 
 $PAGE_100:true !default;
 $PAGE_FIXED:false !default;
-$HEADER_BACKGROUND:false !default;
-$HEADER_COLOR:false !default;
-$HEADER_BORDER_RADIUS:false !default;
-$HEADER_PADDING:false !default;
+
+$HeaderBackground:false !default;
+$HeaderColor:false !default;
+$HeaderBorderRadius:false !default;
+$HeaderPadding:false !default;
 
 
-$CONTAINER_WIDTH:false !default;
-$CONTAINER_BACKGROUND:false !default;
-$CONTAINER_SHADOW:false !default;
+$ContainerWidth:false !default;
+$ContainerBackground:false !default;
+$ContainerShadow:false !default;
 
-$PAGE_WIDTH:false !default;
-$PAGE_BACKGROUND:false !default;
+$PageWidth:false !default;
+$PageBackground:false !default;
       
-$FIXED_VARIABLE_SHADOW:false !default;
-$FIXED_BACKGROUND:false !default;
-$FIXED_BORDER:false !default;
-$FIXED_VARIABLE_MARGIN:$FIXED_VARIABLE_SHADOW !default;
-$VARIABLE_BACKGROUND:false !default;
-$VARIABLE_BORDER:false !default;
-$VARIABLE_SHADOW:false !default;
-$FIXED_VARIABLE_BACKGROUND:#FFF !default;
-$FIXED_VARIABLE_BORDER:false !default;
-$VARIABLE_CONTENT_BACKGROUND:false !default;
-$VARIABLE_AUTO_CONTENT_PADDING:true !default;
+$FixedVariableShadow:false !default;
+$FixedBackground:false !default;
+$FixedBorder:false !default;
+$FixedVariableMargin:$FixedVariableShadow !default;
+$VariableBackground:false !default;
+$VariableBorder:false !default;
+$VariableShadow:false !default;
+$FixedVariableBackground:#FFF !default;
+$FixedVariableBorder:false !default;
+$VariableContentBackground:false !default;
+$VariableAutoContentPadding:true !default;
       
 $IE6_VARIABLE_WIDTH:700px !default;
-      
+
 $PAGE_SHADOWED_BOX_BACKGROUND:#FFF !default;
 $PAGE_SHADOWED_BOX_BORDER:false !default;
 $PAGE_SHADOWED_BOX_SHADOW_COLOR:#888 !default;
@@ -42,15 +43,15 @@ $BREADCRUMBS_FONTSIZE:0.88em !default;
 html,body{ @if $PAGE_100{ height:100%; } @else { min-height:100%; }}
 body{
 	font:normal /*62.5%*/80% Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
-	@include background($BODY_BACKGROUND); color:$BODY_COLOR;
+	@include background($BodyBackground); color:$BodyColor;
 	margin:0;padding:0;
 	/* @include webkitAntialiased; */
 }
 input,textarea{
 	font:normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 }
-@if $FIXED_VARIABLE_BACKGROUND{
-  body.mceContentBody{background:$FIXED_VARIABLE_BACKGROUND;}
+@if $FixedVariableBackground{
+  body.mceContentBody{background:$FixedVariableBackground;}
 }
 
 @includeCore 'base/interactions.scss';
@@ -64,26 +65,26 @@ body #container{
 	@if $PAGE_100{ position:relative; height:auto; min-height:100%; }
 	/*position:absolute;top:0;left:0;right:0;bottom:0;*/
 	/*overflow-x:hidden;*/
-	@if $CONTAINER_WIDTH{
-	  width:$CONTAINER_WIDTH;
+	@if $ContainerWidth{
+	  width:$ContainerWidth;
 	  margin:0 auto;
 	}
-	@if $CONTAINER_BACKGROUND{ @include background($CONTAINER_BACKGROUND); }
-	@if $CONTAINER_SHADOW{ @include boxShadow($CONTAINER_SHADOW); }
+	@if $ContainerBackground{ @include background($ContainerBackground); }
+	@if $ContainerShadow{ @include boxShadow($ContainerShadow); }
 }
 @if false==$PAGE_FIXED{
   html > body #container{height:auto;}
 }
 
 header,div.header{
-	@if $HEADER_SHADOW{ @include boxShadow($HEADER_SHADOW,5px); }
-	@if $HEADER_BORDER_RADIUS{ @include borderRadiusBottom(5px); }
-	@if $HEADER_PADDING{ padding:$HEADER_PADDING; }
+	@if $HeaderShadow{ @include boxShadow($HeaderShadow,5px); }
+	@if $HeaderBorderRadius{ @include borderRadiusBottom(5px); }
+	@if $HeaderPadding{ padding:$HeaderPadding; }
 	display:block;
 	/*width:98%;
 	margin:0 auto; padding:1px 0;*/
 	
-	width:100%;
+	/*width:100%;*/
 	z-index:11;
 	
 	@if $PAGE_FIXED{
@@ -91,12 +92,12 @@ header,div.header{
 	}
 }
 header,div.header,table tr.head th,table thead th,.flashMessage{
-	@if $HEADER_BACKGROUND_Top{ @include bg-gradient-tb($HEADER_BACKGROUND_Top,$HEADER_BACKGROUND_Bottom); }
-	@if $HEADER_COLOR{ color:$HEADER_COLOR; }
+	@include background($HeaderBackground);
+	@if $HeaderColor{ color:$HeaderColor; }
 }
 
 
-@if $HEADER_COLOR{ header a,div.header a,header a:hover,div.header a:hover{color:$HEADER_COLOR;} }
+@if $HeaderColor{ header a,div.header a,header a:hover,div.header a:hover{color:$HeaderColor;} }
 
 header div{font-size:0.95em}
 header div.right{
@@ -107,7 +108,7 @@ header div.right{
 header div.right a{font-size:8.5pt}
 
 footer,div.footer{
-	color:$FOOTER_COLOR;
+	color:$FooterColor;
 	font-size:0.7em;
 	padding-bottom:5px;
 	text-align:center;
@@ -126,10 +127,10 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 #breadcrumbs{
 	@if $BREADCRUMBS_BACKGROUND{ margin:3px 3px 5px;padding:2px 3px 3px; background:$BREADCRUMBS_BACKGROUND; }
 	@if false==$BREADCRUMBS_IN_VARIABLE{
-		@if $FIXED_VARIABLE_SHADOW{ @include boxShadow($FIXED_VARIABLE_SHADOW,3px); }
-		@if $FIXED_VARIABLE_BORDER_RADIUS{ border-radius:$FIXED_VARIABLE_BORDER_RADIUS; }
+		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
+		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
 		@if false==$BREADCRUMBS_BACKGROUND{
-			@if $FIXED_VARIABLE_BACKGROUND{ margin:3px 3px 5px;padding:2px 3px 3px; background:$FIXED_VARIABLE_BACKGROUND; }
+			@if $FixedVariableBackground{ margin:3px 3px 5px;padding:2px 3px 3px; background:$FixedVariableBackground; }
 			@else{ margin:0 0 5px; }
 		}
 	}
@@ -137,7 +138,7 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 }
 #breadcrumbs span.last{
 	cursor:default;
-	color:$INTERACTION_CURRENT_COLOR;
+	color:$InteractionCurrentColor;
 }
 
 
@@ -146,14 +147,14 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	/*overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
 	/*overflow-x: hidden;*/
 	padding-bottom:20px;
-	@if $PAGE_WIDTH{
-	  width:$PAGE_WIDTH;
+	@if $PageWidth{
+	  width:$PageWidth;
 	  margin:0 auto;
 	}
-	@if $PAGE_BACKGROUND{ @include background($PAGE_BACKGROUND); }
+	@if $PageBackground{ @include background($PageBackground); }
 	
 	@if $PAGE_FIXED{
-  	@if $PAGE_WIDTH==false{ margin:0 3px; }
+  	@if $PageWidth==false{ margin:0 3px; }
   	padding-top:38px;
     position:relative;
     overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
@@ -167,18 +168,18 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	div.fixed,div.variable{
 	  @if $PAGE_FIXED{
   	  position:relative;
-      @if $FIXED_VARIABLE_MARGIN{ margin:3px; }
+      @if $FixedVariableMargin{ margin:3px; }
       /*position:absolute;right:0;top:0;left:0;bottom:0;*/
 	  }@else{
   	  overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
       overflow-x: hidden;
       position:relative;
-      @if $FIXED_VARIABLE_MARGIN{ margin:0 10px; }
+      @if $FixedVariableMargin{ margin:0 10px; }
 	  }
-		@if $FIXED_VARIABLE_SHADOW{ @include boxShadow($FIXED_VARIABLE_SHADOW,3px); }
-		@if $FIXED_VARIABLE_BORDER_RADIUS{ border-radius:$FIXED_VARIABLE_BORDER_RADIUS; }
-		@if $FIXED_VARIABLE_BACKGROUND{ background:$FIXED_VARIABLE_BACKGROUND; }
-		@if $FIXED_VARIABLE_BORDER{ border:$FIXED_VARIABLE_BORDER; }
+		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
+		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
+		@if $FixedVariableBackground{ background:$FixedVariableBackground; }
+		@if $FixedVariableBorder{ border:$FixedVariableBorder; }
 	}
 	
 	@if $PAGE_FIXED{
@@ -188,14 +189,14 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	
 	$__pageFixed_or_fixedBackground_or_fixedBorder:false;
 	@if $PAGE_FIXED{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
-	@else if $FIXED_BACKGROUND{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
-	@else if $FIXED_BORDER{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
+	@else if $FixedBackground{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
+	@else if $FixedBorder{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
 	@if $__pageFixed_or_fixedBackground_or_fixedBorder{
   	div.fixed{
   		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
   		overflow-x: hidden;
-  		@if $FIXED_BACKGROUND{ background:$FIXED_BACKGROUND; }
-  		@if $FIXED_BORDER{ border:1px solid $FIXED_BORDER; }
+  		@if $FixedBackground{ background:$FixedBackground; }
+  		@if $FixedBorder{ border:1px solid $FixedBorder; }
   		@if $PAGE_FIXED{
   			position:fixed; _position:absolute; z-index:6;
   			top:40px; left:0; right:0; bottom:20px;
@@ -214,9 +215,9 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	div.fixed h2{ text-align:center;}
 	
 	div.variable{
-		@if $VARIABLE_BACKGROUND{ background:$VARIABLE_BACKGROUND; }
-		@if $VARIABLE_BORDER{ border:1px solid $VARIABLE_BORDER; }
-		@if $VARIABLE_SHADOW{ @include boxShadow($VARIABLE_SHADOW); }
+		@if $VariableBackground{ background:$VariableBackground; }
+		@if $VariableBorder{ border:1px solid $VariableBorder; }
+		@if $VariableShadow{ @include boxShadow($VariableShadow); }
 	}
 	
 	div.variablep{margin:0;padding:0;float:left; }
@@ -225,9 +226,9 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 #page{
 	div.variable.padding{padding:8px 10px}
 	div.variable.paddingtop{padding:8px 0 0}
-	@if $VARIABLE_AUTO_CONTENT_PADDING{
-	  @if false==$VARIABLE_BACKGROUND{
-	    @if false==$FIXED_VARIABLE_BACKGROUND{
+	@if $VariableAutoContentPadding{
+	  @if false==$VariableBackground{
+	    @if false==$FixedVariableBackground{
 	      div.variable > div.content{padding:5px 5px 0 0}
 	    }
 	  }
@@ -235,7 +236,7 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	div.variable.padding > div.content{padding:5px 0;}
 	
 	div.variable > h1{ margin:0; }
-	div.variable.content div.content,div.variable .content div.content{clear:both;position:relative; @if $VARIABLE_CONTENT_BACKGROUND{ background:$VARIABLE_CONTENT_BACKGROUND; }}
+	div.variable.content div.content,div.variable .content div.content{clear:both;position:relative; @if $VariableContentBackground{ background:$VariableContentBackground; }}
 	div.variable.content div.content.float_left,div.variable .content div.content.float_left{clear:none}
 	div.variable div.content.float_left.noclear{clear:none}
 	/*div.variable div.content h2{ margin:2px 0; }*/

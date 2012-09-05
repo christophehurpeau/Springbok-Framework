@@ -1,24 +1,24 @@
-$BODY_BACKGROUND:#e6ebf1;
-$BODY_COLOR:#222;
-$HEADER_SHADOW:#111;
-$HEADER_BACKGROUND_Top:#444444;$HEADER_BACKGROUND_Bottom:#333333;
-$HEADER_COLOR:#EEE;
-$FOOTER_COLOR:#555;
-$FIXED_VARIABLE_BACKGROUND:#f1f4f7;
-$FIXED_VARIABLE_SHADOW:#A3B7CB;
-$FIXED_VARIABLE_BORDER_RADIUS:2px;
-$FIXED_VARIABLE_MARGIN:true;
-$VARIABLE_CONTENT_BACKGROUND:#d4dee6;
-$H1_BACKGROUND:#444;
+$BodyBackground:#e6ebf1;
+$BodyColor:#222;
+$HeaderShadow:#111;
+$HeaderBackground:#444444 #333333;
+$HeaderColor:#EEE;
+$FooterColor:#555;
+$FixedVariableBackground:#f1f4f7;
+$FixedVariableShadow:#A3B7CB;
+$FixedVariableBorder_RADIUS:2px;
+$FixedVariableMargin:true;
+$VariableContentBackground:#d4dee6;
+$H1Background:#444;
 
-$HEADER_MENU_A_BORDER_RADIUS:1px;
-$HEADER_MENU_A_BACKGROUND:#555;
-$HEADER_MENU_A_COLOR:#EEE;
-$HEADER_MENU_A_CURRENT_HOVER_COLOR:#FFF;
-$HEADER_MENU_A_CURRENT_BACKGROUND:#2580A2;
-$HEADER_MENU_A_HOVER_BACKGROUND:#a22542;
-$VARIABLE_MENU_CURRENT_COLOR:#FFF;
-$VARIABLE_MENU_CURRENT_BACKGROUND:#2580A2;
+$HeaderMenuLinkBorderRadius:1px;
+$HeaderMenuLinkBackground:#555;
+$HeaderMenuLinkColor:#EEE;
+$HeaderMenuLinkCurrentOrHoverColor:#FFF;
+$HeaderMenuLinkCurrentBackground:#2580A2;
+$HeaderMenuLinkHoverBackground:#a22542;
+$VariableMenuCurrentColor:#FFF;
+$VariableMenuCurrentBackground:#2580A2;
 
 $FORM_FIELDSET_BACKGROUND:#FFF;
 $FORM_FIELDSET_BORDER:1px solid #2580A2;
@@ -31,8 +31,8 @@ $BCOLOR_VALID:#b7c4b7;
 $BCOLOR_INVALID:#c9b3b3;
 
 $InteractionDefaultColor:#20718d;
-$INTERACTION_CURRENT_COLOR:#8d203a;
-$INTERACTION_HOVER_COLOR:#8d203a;
+$InteractionCurrentColor:#8d203a;
+$InteractionHoverColor:#8d203a;
 
 @include type(1,#D9E1E9);
 
@@ -42,6 +42,6 @@ $INTERACTION_HOVER_COLOR:#8d203a;
 @include type(3,#b5c5d5);
 
 #page div.variable article h1{
-  background:none; color:$BODY_COLOR;
+  background:none; color:$BodyColor;
   padding:0; font-size:1.4em;
 }

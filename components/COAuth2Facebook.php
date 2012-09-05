@@ -53,7 +53,7 @@ class COAuth2Facebook extends COAuth2Connect{
 		$facebookUser->link=$this->me['link'];
 		if(isset($this->me['email'])) $user->email=$facebookUser->email=$this->me['email'];
 		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==="male" ? SConsts::MAN : ($this->me['gender']==='female' ? SConsts::WOMAN : SConsts::UNKNOWN );
-		$facebookUser->facebook_verified=$this->me['verified'];
+		if(!empty($this->me['verified'])) $facebookUser->facebook_verified=$this->me['verified'];
 		return true;
 	}
 }

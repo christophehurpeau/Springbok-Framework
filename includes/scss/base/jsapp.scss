@@ -6,11 +6,11 @@ div.startloading{
 	z-index:11;
 	margin-top:-200px;
 	margin-left:-250px;
-	@if $HEADER_MENU_A_BORDER{ border:1px solid $HEADER_MENU_A_BORDER; }
-	@include background($HEADER_MENU_A_BACKGROUND);
-	@if $FIXED_VARIABLE_SHADOW{ @include boxShadow($FIXED_VARIABLE_SHADOW,8px); }
+	@if $HeaderMenuLinkBorder{ border:1px solid $HeaderMenuLinkBorder; }
+	@include background($HeaderMenuLinkBackground);
+	@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,8px); }
 	border-radius:16px;
-	color:$HEADER_MENU_A_COLOR;
+	color:$HeaderMenuLinkColor;
 	text-align:center;
 	font-size:1.4em;
 }

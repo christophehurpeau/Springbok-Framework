@@ -42,20 +42,20 @@ table th .order{
 @includeCore 'base/arrow.scss';
 
 table .order .arrowUp{
-  @if $HEADER_COLOR{ @include arrowUp(6px,5px,$HEADER_COLOR); }
+  @if $HeaderColor{ @include arrowUp(6px,5px,$HeaderColor); }
   @else{ @include arrowUp(6px,5px,#000000); }
 	position:absolute;
 	left:0; bottom:0;
 }
 table .order .arrowUp:hover{
-	@include arrowUpOverride($INTERACTION_HOVER_COLOR);
+	@include arrowUpOverride($InteractionHoverColor);
 }
 table .order .arrowDown{
-	@if $HEADER_COLOR{ @include arrowDown(6px,5px,$HEADER_COLOR); }
+	@if $HeaderColor{ @include arrowDown(6px,5px,$HeaderColor); }
 	@else{ @include arrowDown(6px,5px,#000000); }
 	position:absolute;
 	right:0; bottom:0;
 }
 table .order .arrowDown:hover{
-	@include arrowDownOverride($INTERACTION_HOVER_COLOR);
+	@include arrowDownOverride($InteractionHoverColor);
 }

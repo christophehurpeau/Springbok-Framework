@@ -7,17 +7,17 @@ abstract class DBSchema{
 	
 	public function getModelName(){ return $this->modelName; }
 	
-	public static function &create(&$schemaProcessing,$modelName,$isEntity=false){
+	public static function create(&$schemaProcessing,$modelName,$isEntity=false){
 		$db=$modelName::getDB();
 		$schemaClass='DBSchema'.$db->_getType();
 		$dbSchema=new $schemaClass($db,$modelName::_fullTableName());
-		$dbSchema->schemaProcessing=&$schemaProcessing;
-		$dbSchema->modelName=&$modelName;
-		$dbSchema->isEntity=&$isEntity;
+		$dbSchema->schemaProcessing=$schemaProcessing;
+		$dbSchema->modelName=$modelName;
+		$dbSchema->isEntity=$isEntity;
 		return $dbSchema;
 	}
 	
-	public static function &get(&$db,&$tableName){
+	public static function get(&$db,&$tableName){
 		$schemaClass='DBSchema'.$db->_getType();
 		$dbSchema=new $schemaClass($db,$tableName);
 		return $dbSchema;
@@ -28,11 +28,11 @@ abstract class DBSchema{
 		$this->tableName=$tableName;
 	}
 	
-	public function &getDB(){return $this->db;}
+	public function getDB(){return $this->db;}
 	public function setModelInfos($modelInfos){$this->modelInfos=&$modelInfos;}
 	
 	public function process(){
-		$modelName=&$this->modelName;
+		$modelName=$this->modelName;
 		$this->modelInfos=&$modelName::$__modelInfos;
 		$db=&$this->db;
 		

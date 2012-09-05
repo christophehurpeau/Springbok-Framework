@@ -3,18 +3,18 @@ $JQueryUI:false !default;
 $InteractionDefaultBackgroundColor:$InteractionDefaultColor !default;
 $INTERACTION_DEFAULT_TEXT_SHADOW:false !default;
 $INTERACTION_DEFAULT_BACKGROUND_COLOR:false !default;
-$INTERACTION_HOVER_BACKGROUND_COLOR:$INTERACTION_HOVER_COLOR !default;
-$INTERACTION_CURRENT_BACKGROUND_COLOR:$INTERACTION_CURRENT_COLOR !default;
+$INTERACTION_HOVER_BACKGROUND_COLOR:$InteractionHoverColor !default;
+$INTERACTION_CURRENT_BACKGROUND_COLOR:$InteractionCurrentColor !default;
 
 a{
   color:$InteractionDefaultColor;
   @if $INTERACTION_DEFAULT_TEXT_SHADOW{ text-shadow:$INTERACTION_DEFAULT_TEXT_SHADOW; }
 }
-@if $INTERACTION_CURRENT_COLOR == $INTERACTION_HOVER_COLOR{
-  a:hover,a.current{color:$INTERACTION_CURRENT_COLOR}
+@if $InteractionCurrentColor == $InteractionHoverColor{
+  a:hover,a.current{color:$InteractionCurrentColor}
 }@else{
-  a.current{color:$INTERACTION_CURRENT_COLOR}
-  a:hover{color:$INTERACTION_HOVER_COLOR}
+  a.current{color:$InteractionCurrentColor}
+  a:hover{color:$InteractionHoverColor}
 }
 
 $__moreSelector:'';
