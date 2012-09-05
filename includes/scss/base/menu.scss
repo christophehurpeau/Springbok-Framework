@@ -102,7 +102,7 @@ ul.pager .selected a,ul.pager .page a:hover{
 	@include background($HeaderMenuLinkCurrentOrHoverBackground);
 	@if $HeaderMenuLinkCurrentOrHoverShadow{ text-shadow: -1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 1px 1px $HeaderMenuLinkCurrentOrHoverShadow,1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 -1px 1px $HeaderMenuLinkCurrentOrHoverShadow; }
 	@if $HeaderMenuLinkCurrentOrHoverColor{ color:$HeaderMenuLinkCurrentOrHoverColor; }
-	@if $HeaderMenuLinkCurrentOrHoverBorderBottom{ border-bottom:$HeaderMenuLinkCurrentBorderBottom; }
+	@if $HeaderMenuLinkCurrentOrHoverBorderBottom{ border-bottom:$HeaderMenuLinkCurrentOrHoverBorderBottom; }
 }
 
 header nav li a.current,
