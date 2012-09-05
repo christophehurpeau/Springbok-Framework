@@ -18,10 +18,12 @@ $BUTTON_HOVER_BORDER:1px solid #AAA;
 
 @includeCore 'base/buttonsOverride.scss';
 
-ul.linksList{
+ul.linksList,ul ul.linksList{
   list-style:none;
   margin:0;padding:0;
   border-bottom:$BUTTON_BORDER;
+}
+ul.linksList{
   > li{/* not a */
     margin:0;
     @include bg-gradient-tb($BUTTON_BACKGROUND_Top,$BUTTON_BACKGROUND_Bottom);
