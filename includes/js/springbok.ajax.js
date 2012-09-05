@@ -26,7 +26,7 @@ includeCore('ui/slideTo');
 		init:function(){
 			$(document).on('click',
 						//'a[href]:not([href="javascript:;"]):not([href="#"]):not([href^="mailto:"]):not([target]):not([href^="http://"])'
-						'a[href]:not([href="#"]):not([target]):not([href*=":"])'
+						'a[href]:not([href^="#"]):not([target]):not([href*=":"])'
 				,function(evt){
 				if($(evt.target).is('a[onclick^="return"]') && !lastConfirmResult) return false;
 				evt.preventDefault();
