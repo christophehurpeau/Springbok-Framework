@@ -195,8 +195,9 @@ S.ready(function(){
 
 $(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() })
 	.ajaxError(function(e, xhr, settings, thrownError){
-		if(xhr.status===503) alert(i18nc['The server is currently unavailable : down for maintenance.']);
-		else if(xhr.status===500) alert(i18nc['Internal Server Error']);
+		if(xhr.status===503) alert(i18nc['http.503.maintenance']);
+		else if(xhr.status===500) alert(i18nc['http.500']);
+		else if(xhr.status===403) alert(i18nc['http.403']);
 	});
 
 
