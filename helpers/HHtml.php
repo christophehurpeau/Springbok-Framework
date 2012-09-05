@@ -1,7 +1,8 @@
 <?php
 class HHtml{
+	private static $isIElt8=false;
 	public static function doctype(){
-		return CHttpRequest::isIElt8() ? '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' : '<!DOCTYPE html>';
+		return (self::$isIElt8=CHttpRequest::isIElt8()) ? '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' : '<!DOCTYPE html>';
 	}
 	
 	public static function linkRSS($title,$url){
@@ -12,7 +13,7 @@ class HHtml{
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
-		return '<meta http-equiv="Content-Type" content="text/html; charset="'.$encoding.'"/>';
+		return self::$isIElt8 ? '<meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>' : '<meta charset="'.$encoding.'">';
 	}
 	public static function metaRobots($content){
 		echo '<meta name="robots" content="'.$content.'"/>';
@@ -30,6 +31,20 @@ class HHtml{
 		$href=STATIC_URL.'img/'.$imgUrl;
 		return '<link rel="icon" type="image/vnd.microsoft.icon" href="'.$href.'"/>'
 			.'<link rel="shortcut icon" type="image/x-icon" href="'.$href.'"/>';
+	}
+
+	public static function logoMobile($imgNamePrefix='logo'){
+		$href=STATIC_URL.'img/'.$imgNamePrefix;
+		return
+			//<!-- For third-generation iPad with high-resolution Retina display: -->
+			 '<link rel="apple-touch-icon-precomposed" sizes="144x144" href="'.$href.'-144.png">'
+			//<!-- For iPhone with high-resolution Retina display: -->
+			.'<link rel="apple-touch-icon-precomposed" sizes="114x114" href="'.$href.'-114.png">'
+			//<!-- For first- and second-generation iPad: -->
+			.'<link rel="apple-touch-icon-precomposed" sizes="72x72" href="'.$href.'-72.png">'
+			//<!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+			.'<link rel="apple-touch-icon-precomposed" href="'.$href.'-57.png">'
+			.'<link rel="apple-touch-icon" href="'.$href.'-57.png"/>';
 	}
 	
 	private static $_CSS;
