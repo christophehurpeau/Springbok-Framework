@@ -27,6 +27,8 @@ class CMail{
 		$mailer=self::get();
 		$mailer->ClearAllRecipients();
 		$mailer->ClearAttachments();
+		$mailer->ClearReplyTos();
+		$mailer->AltBody='';
 		$mailer->AddAddress($to);
 		$mailer->Subject=$subject;
 		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
