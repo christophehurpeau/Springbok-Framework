@@ -39,7 +39,14 @@ class SControllerSoap extends Controller{
 		
 		static::beforeRunServer($soap);
 		
-		$soap->RunServer();
+		try{
+			$soap->RunServer();
+		}catch(Exception $e){
+			/* http://dcx.sybase.com/1200/en/dbprogramming/errors-http.html */
+			//Client 	The message was incorrectly formed or contained incorrect information
+			//Server 	There was a problem with the server so the message could not proceed
+			$soap->fault('Server','Internal Server Error','SControllerSoap');
+		}
 	}
 	protected static function beforeRunServer($soap){}
 
