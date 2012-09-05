@@ -12,7 +12,7 @@ class HHtml{
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
-		return '<meta charset="'.$encoding.'"/><meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>';
+		return '<meta http-equiv="Content-Type" content="text/html; charset="'.$encoding.'"/>';
 	}
 	public static function metaRobots($content){
 		echo '<meta name="robots" content="'.$content.'"/>';
