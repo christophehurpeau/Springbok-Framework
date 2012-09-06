@@ -8,7 +8,7 @@ abstract class AFolderEnhancer{
 	
 	
 	public static function registerFileEnhancers(){}
-	public static function findEnhancer(&$filename,&$ext){
+	public static function findEnhancer($filename,$ext){
 		foreach(static::$fileEnhancers as &$fileEnhancer){
 			if(!((is_string($fileEnhancer['ext']) && $ext==$fileEnhancer['ext']) || (is_array($fileEnhancer['ext']) && in_array($ext,$fileEnhancer['ext'])))) continue;
 			$justSrc=$fileEnhancer['_justsrc'] ? substr($filename,0,1)=='_' : false;
@@ -20,7 +20,7 @@ abstract class AFolderEnhancer{
 		return false;
 	}
 	public static function registerEnhancer($class,$ext,$_justsrc=false,$destExt=false,$copy=false){
-		static::$fileEnhancers[]=array('class'=>&$class,'ext'=>&$ext,'_justsrc'=>$_justsrc,'destExt'=>$destExt,'copy'=>$copy);
+		static::$fileEnhancers[]=array('class'=>$class,'ext'=>$ext,'_justsrc'=>$_justsrc,'destExt'=>$destExt,'copy'=>$copy);
 	}
 	
 	

@@ -415,7 +415,8 @@ class CssFile extends EnhancerFile{
 	
 	private static $spriteGenDone=NULL;
 	public static function afterEnhanceApp(&$enhanced,&$dev,&$prod){
-		if(self::$spriteGenDone===NULL && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))){
+		//debugVar($enhanced->hasChanges('Css'),$enhanced->hasChanges('Img'),$enhanced->hasChanges('Scss'));
+		if(self::$spriteGenDone===NULL/* && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))*/){
 			self::$spriteGenDone=true;
 			$compiledCssFolder=($tmpDir=$enhanced->getTmpDir()).'compiledcss/';//prod/';
 			if(!file_exists($cacheFolder=$tmpDir.'sprites_8.0.3/')) mkdir($cacheFolder,0775);
@@ -424,24 +425,28 @@ class CssFile extends EnhancerFile{
 			$logger=$enhanced->getLogger();
 			
 			$cssProdFolder=new Folder($prod->getPath().'web/css/');
+			$imgDir=$enhanced->getAppDir().'src/web/img/';
+			
 			foreach($cssProdFolder->listFiles() as $prodFile){
 				if(substr($prodFile->getName(),-4)!=='.css') continue;
 				
 				$cssImgs=array(); $spritename=substr($prodFile->getName(),0,-4).'.png';
 				$logger->log('ImgSprite: '.$spritename);
 				$fileContent=file_get_contents($compiledCssFolder.$prodFile->getName());
-				$matches=array();
+				$matches=array(); $md5CssImgs='';
 				if(preg_match_all('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)/U',$fileContent,$matches)){
 					foreach($matches[3] as $i=>$url){
 						$url=trim($url,' \'"');
 						if(substr($url,0,8)==='COREIMG/'){
 							$cssImgs[]=$url;
+							$md5CssImgs[$url]=$url;
 						}else{
 							if((!empty($matches[2][$i]) && ($trimMatches2=trim($matches[2][$i])) && ($trimMatches2==='transparent' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
 										|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || $url=='../img/'.$spritename
 										|| substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
 										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery') continue;
-							$cssImgs[]=substr($url,7);
+							$cssImgs[]=$imgPath=substr($url,7);
+							if(!isset($md5CssImgs[$imgPath])) $md5CssImgs[$imgPath]=md5_file($imgDir.$imgPath);
 						}
 					}
 				}
@@ -449,10 +454,10 @@ class CssFile extends EnhancerFile{
 
 				if(!empty($cssImgs)){
 					$cssImgs=array_unique($cssImgs);
-					$md5CssImgs=md5(implode('#',$cssImgs));
+					ksort($md5CssImgs);
+					$md5CssImgs=md5(implode('#',$md5CssImgs));
 					
 					$spritePath=$enhanced->getAppDir().'src/web/sprites/'.$spritename;
-					$imgDir=$enhanced->getAppDir().'src/web/img/';
 					
 					if(file_exists($cacheFolder.$md5CssImgs) && file_exists($cacheFolder.$md5CssImgs.'_imgs')){
 						$spritePath=$cacheFolder.$md5CssImgs;
