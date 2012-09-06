@@ -307,10 +307,22 @@ S.tinymce={
 		var ed=tinyMCE.get(editorId),dom=tinymce.DOM,txtarea_el = dom.get(editorId);
 		//tinyMCE.execCommand('mceRemoveControl',false,1);
 		if(!ed || ed.isHidden()) return false;
-		txtarea_el.style.height = ed.getContentAreaContainer().offsetHeight+20+'px';
-		ed.hide();
+	    ed.hide();
+		var editorHtml=CodeMirror.fromTextArea(document.getElementById(editorId), {
+			lineNumbers:true,indentWithTabs:true,indentUnit:8,
+	        mode: 'htmlmixed',
+	        tabMode: 'indent'
+	     });
+	    /*CodeMirror.commands["selectAll"](editorHtml);
+	    var from=editorHtml.getCursor(true),to=editorHtml.getCursor(false);
+	    editorHtml.autoFormatRange(from,to);*/
+	    txtarea_el.style.height = ed.getContentAreaContainer().offsetHeight+20+'px';
+	    ed.hide();
+		$('#'+editorId).hide().data('editorHtml',editorHtml);
 	},
 	switchtoVisual:function(editorId){
+		var txtarea=$('#'+editorId),editorHtml=txtarea.data('editorHtml');
+		if(editorHtml){ editorHtml.toTextArea(); txtarea.data('editorHtml',false); }
 		var ed=tinyMCE.get(editorId)/*,dom=tinymce.DOM,txtarea_el = dom.get(editorId)*/;
 		//tinyMCE.execCommand('mceAddControl',false,1);
 		if(!ed || !ed.isHidden()) return false;
