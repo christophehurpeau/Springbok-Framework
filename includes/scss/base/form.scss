@@ -128,7 +128,7 @@ tr.form td{border:1px solid #C4C4C4; padding:0}
 	.checkbox,label{float:left;display:block;margin:0 5px 3px 2px;}
 }
 
-input.bigInput, form.big .text input{
+input.bigInput, .big .text input{
 	font-size:1.1em;
 	height:28px; line-height:28px;
 	background:#F5F5F5;color:#4C4C4C;
@@ -154,13 +154,13 @@ input.bigInput, form.big .text input{
 .w300 input.submit,.w400 input.submit,.w480 input.submit{margin:5px 0}
 
 
-form.big .text label{
+.big .text label{
 	height:30px; line-height:30px;
 	font-size:1.2em;
 }
-input.bigInput:hover, form.big .text input:hover{background:#FAFAFA}
-input.bigInput:focus, form.big .text input:focus{background:#FFF}
-input.submit.big, form.big input.submit{
+input.bigInput:hover, .big .text input:hover{background:#FAFAFA}
+input.bigInput:focus, .big .text input:focus{background:#FFF}
+input.submit.big, .big input.submit{
 	padding:4px 15px;
 }
 

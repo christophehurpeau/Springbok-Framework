@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.0.6';
+	public static $CACHE_PATH='js_8.1';
 
 	private $devProdDiff;
 	public function loadContent($srcContent){
@@ -84,8 +84,12 @@ class JsFile extends EnhancerFile{
 			if(!empty($this->enhanced->config['entries'])) foreach(($entries=$this->enhanced->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
 			else $entries=array();
 			if(in_array($this->fileName(),$jsFiles))
-				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'').(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
-					./*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webUrl+'img/';\n".$this->_srcContent;
+				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'')
+					.(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
+					/*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/
+					.",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webUrl+'img/'"
+					.($this->fileName()==='admin.js'?',entryUrl='.json_encode($this->enhanced->devConfig['siteUrl'],JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE):'')
+					.";\n".$this->_srcContent;
 		}
 	}
 	

@@ -114,8 +114,7 @@ class CSecure{
 		}
 		return false;
 	}
-	public static function setBackUrl($url=null,$checkIfExists=false){
-		if($checkIfExists===true && CSession::exists(self::BACK_URL)) return;
+	public static function setBackUrl($url=null){
 		if($url===null) $url=CHttpRequest::referer(true);
 		/* DEV */if(startsWith($url,'/'.Springbok::$scriptname.'/')) $url=substr($url,strlen(Springbok::$scriptname)+1);
 		if($url===null) return;
