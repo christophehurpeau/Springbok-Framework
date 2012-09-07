@@ -180,6 +180,7 @@ class SSqlModel extends SModel{
 	}
 	
 	public static function dbEscape($string){return static::$__modelDb->escape($string);}
+	public static function dbFormatField($string){return static::$__modelDb->formatField($string);}
 	public static function beginTransaction(){ static::$__modelDb->beginTransaction(); }
 	public static function commit(){ static::$__modelDb->commit(); }
 	public static function rollBack(){ static::$__modelDb->rollBack(); }
