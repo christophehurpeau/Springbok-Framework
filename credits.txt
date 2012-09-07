@@ -1,3 +1,0 @@
-includes/img/silk_icon_set
-	http://www.famfamfam.com/lab/icons/silk/
-
