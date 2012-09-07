@@ -3,6 +3,8 @@ $H1Color:#FFF !default;
 $H1Background:false !default;
 $H1_TEXT_SHADOW:false !default;
 
+@includeCore 'base/reset.scss';
+
 .center{text-align:center}
 .centered{margin:0 auto}
 .clear{clear:both}
@@ -43,20 +45,6 @@ html body .hidden{display:none}
 .ieCss3{behavior:url(/web/css/ie-css3.htc);}*/
 .w1{width:1px}
 
-h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
-h1{
-  font-size:1.6em;margin-bottom:15px;
-  @if $H1Color{ color:$H1Color; } 
-  @if $H1Background{ padding:8px 5px; background:$H1Background; }
-  @else{ padding:0; }
-  @if $H1_TEXT_SHADOW{ text-shadow:$H1_TEXT_SHADOW; }
-}
-h2{font-size:1.4em;margin:4px 0 12px;}
-h3{font-size:1.3em;margin-bottom:10px;}
-h4{font-size:1.18em;margin-bottom:8px;}
-h5{font-size:1.1em;margin-bottom:5px;}
-h6{font-size:1.05em;margin-bottom:5px;}
-
 .smallinfo{font-size:0.88em}
 .biginfo{font-size:1.18em}
 .hugeinfo{font-size:1.4em}
@@ -82,22 +70,6 @@ h6{font-size:1.05em;margin-bottom:5px;}
 /** html .clearfix,*:first-child+html .clearfix*/
 .clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top,nav.top ul{ zoom: 1 }
 
-hr{
-  height:1px;
-  background:#BBB;
-  border:0;
-}
-img{border:0}
-
-textarea, table, td, th, code, pre, samp, div, p, ul {
-    word-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -o-hyphens: auto;
-    hyphens: auto;
-}
-
 
 span.right_val{
     float: right;
@@ -122,18 +94,6 @@ span.img,span.icon{display:block;display:inline-block}
 }
 a.aicon{display:inline-block;text-decoration:none;}
 
-pre{
-  text-align:left;margin:0;overflow:auto;
-  -moz-tab-size:4; -o-tab-size:4; tab-size:4;
-}
-p{
-	margin:8px 0;
-	line-height:1.3em;
-	font-size:1.02em;
-}
-
-ul{margin:8px 0; padding-left:35px}/* firefox default : margin:12px 0; padding-left:40px */
-ul ul,ul ol,ol ul,ol ol{padding-left:20px}
 ul.mosaic{
   float:left; width:100%; clear:both;
   list-style: none;
@@ -195,11 +155,3 @@ $BCOLOR_INVALID:#CEBBBB !default;
 
 @includeCore 'base/interactions.scss';
 @includeCore 'base/types.scss';
-
-
-/* -- http://www.knacss.com/ -- */
-@media print {
-    p, blockquote {orphans: 2; widows: 2;}
-    blockquote, ul, ol {page-break-inside: avoid;}
-    h1, h2, h3, caption { page-break-after: avoid;}
-}

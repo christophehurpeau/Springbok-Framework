@@ -4,6 +4,10 @@ $FORM_MEDIUM_LABEL_WIDTH:90px !default;
 $FORM_LABEL_WIDTH:180px !default;
 $FORM_LARGE_LABEL_WIDTH:280px !default;
 
+form{
+	/* Corrects margin displayed oddly in IE 6/7. */
+	margin: 0;
+}
 
 fieldset{
 	background:$FORM_FIELDSET_BACKGROUND;
@@ -17,7 +21,20 @@ legend{
 	@if $FORM_LEGEND_COLOR{ color:$FORM_LEGEND_COLOR; }
 	font-weight: bold;
 	padding:2px 6px;
+	*margin-left: -7px; /* Corrects alignment displayed oddly in IE 6/7. */
 }
+
+button,input,select,textarea {
+	margin: 0; /* Addresses margins set differently in IE 6/7, Firefox 3+, Safari 5, and Chrome. */
+	vertical-align: baseline; *vertical-align: middle; /* Improves appearance and consistency in all browsers */
+}
+
+/* Re-set default cursor for disabled elements. */
+button[disabled],input[disabled]{ cursor: default; }
+
+
+
+
 
 div.input label,div.textarea label,div.checkboxes > label,form .radio .title{
 	display:block;display:inline-block;
@@ -78,8 +95,6 @@ form div.center,form div.italic{margin:7px 0 7px}
 
 body form div.submit{margin:7px 0 0}
 form div.submit input{margin:0}
-
-
 
 /* TABLE */
 

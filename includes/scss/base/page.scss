@@ -39,7 +39,11 @@ $BREADCRUMBS_BACKGROUND:false !default;
 $BREADCRUMBS_FONTSIZE:0.88em !default;
 
 
-
+html{
+	/* Prevents iOS text size adjust after orientation change, without disabling user zoom. */
+	-webkit-text-size-adjust: 100%; /* 2 */
+  -ms-text-size-adjust: 100%; /* 2 */
+}
 html,body{ @if $PAGE_100{ height:100%; } @else { min-height:100%; }}
 body{
 	font:normal /*62.5%*/80% Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
@@ -56,7 +60,7 @@ input,textarea{
 
 @includeCore 'base/interactions.scss';
 
-#container pre,#container code{
+#container pre,#container code,kbd,samp{
 	font:normal 1.07em 'Ubuntu Mono','UbuntuBeta Mono',Monaco,Menlo,"Courier New",monospace;
 }
 
