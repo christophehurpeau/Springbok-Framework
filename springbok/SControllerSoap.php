@@ -41,11 +41,16 @@ class SControllerSoap extends Controller{
 		
 		try{
 			$soap->RunServer();
-		}catch(Exception $e){
+		}catch(Exception $exception){
 			/* http://dcx.sybase.com/1200/en/dbprogramming/errors-http.html */
 			//Client 	The message was incorrectly formed or contained incorrect information
 			//Server 	There was a problem with the server so the message could not proceed
-			$soap->fault('Server','Internal Server Error','SControllerSoap');
+			$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
+			if(isset($_SERVER['REQUEST_URI'])) $log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
+			if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
+			$log.="\nCall Stack:\n".$exception->getTraceAsString();
+			CLogger::get('ws-exception')->log($log);
+			if($soap->SoapServer!==null) $soap->SoapServer->fault('Server','Internal Server Error','SControllerSoap');
 		}
 	}
 	protected static function beforeRunServer($soap){}

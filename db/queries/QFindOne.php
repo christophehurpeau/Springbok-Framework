@@ -16,4 +16,9 @@ class QFindOne extends QFind{
 		
 		return false;
 	}
+	
+	public function toArray(){
+		$res=$this->execute();
+		return $res===false?$res:$res->toArray();
+	}
 }
