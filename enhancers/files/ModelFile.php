@@ -61,7 +61,7 @@ class ModelFile extends PhpFile{
 				$orderByField=isset($annotations['OrderByField'])?$annotations['OrderByField'][0][0]:false;
 				$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
 				
-				if(isset($annotations['Comment'])) $contentInfos['comment']=$annotations['Comment'][0][0];
+				if(isset($annotations['Comment'])) $contentInfos['comment']=str_replace('\\\'',"'",$annotations['Comment'][0][0]);
 				
 				
 				$indexes=&$contentInfos['indexes'];
@@ -172,7 +172,7 @@ class ModelFile extends PhpFile{
 					}
 					$column['unique']=isset($field['Unique'])?true:false;
 					$column['index']=isset($field['Index'])?true:false;
-					$column['comment']=isset($field['Comment'])?$field['Comment'][0]:false;
+					$column['comment']=isset($field['Comment'])?str_replace('\\\'',"'",$field['Comment'][0]):false;
 					if(isset($field['AutoIncrement'])){ $field['NotBindable']=0; $column['autoincrement']=true; $contentInfos['isAI']=true; }
 					else $column['autoincrement']=false;
 					if(isset($field['CreatedField']) || (!$createdField && isset($column['type']) && in_array($column['type'],array('DATE','DATETIME','date','datetime'))
