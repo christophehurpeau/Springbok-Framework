@@ -157,6 +157,11 @@ class ModelFile extends PhpFile{
 						$column['default']=(isset($field['Default']) && $field['Default'][0]?'""':null);
 						$column['notnull']=false;
 						$specialFields[$name]='Boolean';
+					}elseif(isset($field['BooleanInt'])){
+						$column['type']='tinyint(1) unsigned';
+						$column['default']=isset($field['Default'])?$field['Default'][0]:false;
+						$column['notnull']=isset($field['Null'])?false:true;
+						$specialFields[$name]='BooleanInt';
 					}else{
 						if(isset($field['Datetime'])){
 							$column['type']='int(11)';
@@ -235,8 +240,9 @@ class ModelFile extends PhpFile{
 				
 				$specialFieldsSetData=$specialFieldsGetData=$specialFieldsBefore='';
 				foreach($specialFields as $name=>$type){
-					if($type==='Boolean'){
-						$specialFieldsBefore.='public function is'.UInflector::camelize($name,false).'(){return $this->'.$name.'!==null&&$this->'.$name.'!==false;}';
+					if($type==='Boolean'||$type==='BooleanInt'){
+						$specialFieldsBefore.='public function is'.($camelized=UInflector::camelize($name,false)).'(){return '.($type==='Boolean'?'$this->'.$name.'!==null&&$this->'.$name.'!==false':'$this->'.$name).';}';
+						$specialFieldsBefore.='public function display'.$camelized.'(){ return $this->is'.$camelized.'() ? _tC(\'Yes\') : _tC(\'No\'); }';
 					}elseif($type==='Json'){
 						$fieldName=UInflector::camelize($name,true);
 						$specialFieldsSetData.='if(isset($data[\''.$name.'\'])) $data[\''.$name.'\']=json_decode($data[\''.$name.'\'],true);'
