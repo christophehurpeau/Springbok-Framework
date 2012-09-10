@@ -1,6 +1,7 @@
 S.dialogs={
 	alert:function(title,message){
-		var div=$('<div/>');
+		var div=$('<div/>'),buttons={};
+		buttons[i18nc['Close']]=function(){$(this).dialog( "close" );};
 		S.isString(message) ? div.text(message) : div.html(message);
 		div.dialog({
 		    autoOpen: true,
@@ -8,6 +9,7 @@ S.dialogs={
 		    position:['center',150],
 		    width:450,
 		    modal:true,
+		    buttons:buttons,
 		    close:function(){ div.remove(); },
 		    zIndex:9000 //fancybox : 8030
 		});
@@ -20,7 +22,7 @@ S.dialogs={
 			defaultVal='';
 		}
 		S.isString(message) ? div.text(message) : div.html(message);
-		div.append($('<input type="text" style="width:99%"/>').val(defaultVal).keydown(function(e){
+		div.append($('<input type="text" class="wp100"/>').val(defaultVal).keydown(function(e){
 			if(e.keyCode == '13'){
 				e.preventDefault();
 				e.stopImmediatePropagation();
