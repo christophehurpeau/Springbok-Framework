@@ -49,7 +49,7 @@ div.input.select label,div.radio label{vertical-align:middle}
 .smallLabel div.input label,.smallLabel .radio .title,.smallRadioLabel .radioLabel{
 	width:$FORM_SMALL_LABEL_WIDTH;
 }
-.mediumLabel div.input label,.mediumLabel .radio .title{
+.mediumLabel div.input label,.mediumLabel .radio .title,.mediumRadioLabel .radioLabel{
 	width:$FORM_MEDIUM_LABEL_WIDTH;
 }
 .labelWp100 div.input label, .labelWp100 div.textarea label{
