@@ -46,10 +46,10 @@ div.input.select label,div.radio label{vertical-align:middle}
 .largeLabel div.input label,.largeLabel .radio .title{
 	width:$FORM_LARGE_LABEL_WIDTH;
 }
-.smallLabel div.input label,.smallLabel .radio .title,.smallRadioLabel .radioLabel{
+.smallLabel div.input label,.smallLabel .radio .title,.smallRadioLabel div.input .radioLabel{
 	width:$FORM_SMALL_LABEL_WIDTH;
 }
-.mediumLabel div.input label,.mediumLabel .radio .title,.mediumRadioLabel .radioLabel{
+.mediumLabel div.input label,.mediumLabel .radio .title,.mediumRadioLabel div.input .radioLabel{
 	width:$FORM_MEDIUM_LABEL_WIDTH;
 }
 .labelWp100 div.input label, .labelWp100 div.textarea label{
