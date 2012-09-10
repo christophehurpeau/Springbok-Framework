@@ -6,6 +6,7 @@ _tC('Save');
 _tC('Yes');
 _tC('No');
 _tC('Cancel');
+_tC('Close');
 _tC('Loading...');
 
 _tC('Error');

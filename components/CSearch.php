@@ -89,7 +89,7 @@ class CSearch{
 	
 	
 	public function createPagination(){
-		$query=static::createQuery()->addCondition('sb.visible',true)->calcFoundRows();
+		$query=static::createQuery()->calcFoundRows();
 		
 		if($this->searchWords===false) $sqlScore='(0)'; //espace nécessaire sinon considéré comme un int
 		else{
@@ -186,7 +186,7 @@ class CSearch{
 	}
 
 	protected static function createQuery(){
-		return /**/Searchable::QAll();
+		return /**/Searchable::QAll()->addCondition('sb.visible',true);
 	}
 
 }

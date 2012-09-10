@@ -79,6 +79,10 @@ includeCore('ui/slideTo');
 			divVariable=divPage.find('div.variable:first');
 			divContent=divVariable.is('.content') && divVariable.has('h1').length===0 ? divVariable : divVariable.find('.content:first');
 		},
+		forceReloadNextPage:function(){
+			if(divPage.length>0) divPage.data('layoutname','');
+			if(divContent.length>0) divContent.data('layoutname');
+		},
 		load:function(url,data,type,forceNotAddDataToGetORdoNotDoTheEffect,replaceUrl){
 			if(url.substr(0,1)==='?') url=location.pathname+url;
 			var oldCurrentTitle=document.title,ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');

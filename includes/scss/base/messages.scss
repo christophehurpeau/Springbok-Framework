@@ -34,8 +34,7 @@
 }
 .message.error{
 	border:1px solid #B80000;
-	background:#efafaf;
-	color:#8A0000;
+	@extend .boxError;
 }
 
 .message.success{
@@ -60,4 +59,8 @@
 .boxWarning{
 	background:#FFDDAA;
 	color:#ad2d00;
+}
+.boxError{
+	background:#efafaf;
+	color:#8A0000;
 }
