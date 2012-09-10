@@ -7,7 +7,8 @@ class CSoapWsdl{
 		$this->types[]=new PhpWsdlComplex($type.'Array',array(/*new PhpWsdlElement('item',$type)*/),array('isarray'=>true));
 	}
 	
-	public function addModel($modelName,$fields,$relations=array()){
+	public function addModel($modelName,$fields,$relations=array(),$dataName=null){
+		if($dataName===null) $dataName=$modelName;
 		$el=array();
 		$this->addFieldsFromModel($modelName,$el,$fields);
 		foreach($relations as $relation=>$relFields){
@@ -16,7 +17,7 @@ class CSoapWsdl{
 			if($rel['fieldsInModel']) $this->addFieldsFromModel($rel['modelName'],$el,$relFields);
 			else $el[]=new PhpWsdlElement($rel['dataName'],$rel['modelName'].(in_array($rel['reltype'],array('hasMany','hasManyThrough'))?'Array':''));
 		}
-		$this->types[]=new PhpWsdlComplex($modelName,$el);
+		$this->types[]=new PhpWsdlComplex($dataName,$el);
 	}
 	
 	private function addFieldsFromModel($modelName,&$el,$fields){
