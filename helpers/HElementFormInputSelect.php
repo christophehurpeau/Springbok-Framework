@@ -69,6 +69,6 @@ class HElementFormInputSelect extends HElementFormContainable{
 		if(!isset($attributes['id'])) $attributes['id']=str_replace(array('[',']'),'-',$name).$value;
 		if($value==='00'){ if($selected=='0') $attributes['checked']=true; }
 		elseif($selected==$value) $attributes['checked']=true;
-		return HHtml::tag('input',$attributes).($label===null?'':HHtml::tag('label',array('for'=>$attributes['id']),$label));
+		return HHtml::tag('input',$attributes).($label===null?'':HHtml::tag('label',array('for'=>$attributes['id'],'class'=>'radioLabel'),$label));
 	}
 }
