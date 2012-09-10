@@ -43,16 +43,16 @@ div.input label,div.textarea label,div.checkboxes > label,form .radio .title{
 	vertical-align:top;
 }
 div.input.select label,div.radio label{vertical-align:middle}
-.large-label div.input label,.large-label .radio .title{
+.largeLabel div.input label,.largeLabel .radio .title{
 	width:$FORM_LARGE_LABEL_WIDTH;
 }
-.small-label div.input label,.small-label .radio .title{
+.smallLabel div.input label,.smallLabel .radio .title,.smallRadioLabel .radioLabel{
 	width:$FORM_SMALL_LABEL_WIDTH;
 }
-.medium-label div.input label,.medium-label .radio .title{
+.mediumLabel div.input label,.mediumLabel .radio .title,.mediumRadioLabel .radioLabel{
 	width:$FORM_MEDIUM_LABEL_WIDTH;
 }
-.label-wp100 div.input label, .label-wp100 div.textarea label{
+.labelWp100 div.input label, .labelWp100 div.textarea label{
   display:block;
   width:auto;
 }
