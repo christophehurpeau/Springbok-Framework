@@ -395,7 +395,8 @@ s.parentNode.insertBefore(g,s);
 		$res.='</ul>';
 		//unset($options['inputAttributes'],$options['ulAttributes'],$options['modelFunctionName'],$options['escape']);
 		if(isset($options['allowNew'])) $options['js']='{allowNew:1}';
-		HHtml::jsReady('$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.$options['js']:'').')');
+		HHtml::jsReady((isset($options['inputAttributes']['placeholder'])?'$(\'#'.$divid.' input\').defaultInput();':'')
+			.'$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.$options['js']:'').')');
 		return '<div id="'.$divid.'">'.$res.'</div>';
 	}
 }

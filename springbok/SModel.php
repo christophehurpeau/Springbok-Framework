@@ -1,5 +1,5 @@
 <?php
-abstract class SModel implements Iterator/*,JsonSerializable*/{
+abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,JsonSerializable*/{
 	public static $__dbName='default',$__modelDb,$__displayField='name',$__orderByField=null;
 	public static $__loadedModels=array();
 	
@@ -77,7 +77,6 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 		return empty($this->data);
 	}
 	
-	
 	protected function _getSaveData($args){
 		if(empty($args)) return array_intersect_key($this->_getData(),static::$__PROP_DEF);
 		$args[]='updated';
@@ -92,6 +91,7 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 	
 	
 	/* Iterator */
+	/*
 	public function rewind(){
 		reset($this->data);
 	}
@@ -107,7 +107,40 @@ abstract class SModel implements Iterator/*,JsonSerializable*/{
 	}
 	public function valid(){
 		return $this->key();
+	}*/
+	/* http://www.garfieldtech.com/blog/benchmarking-magic
+	 * Iterate internal iterator	22.87
+	 * Iterate external iterator	6.06
+	 * 
+	 */
+	/* IteratorAggregate */
+	public function getIterator(){
+		return new ArrayIterator($this->data);
 	}
+	
+	
+	/* ArrayAccess */
+	public function offsetExists($offset){
+		return isset($this->data[$offset]);
+	}
+	public function offsetGet($offset){
+		return isset($this->data[$offset]) ? $this->data[$offset] : null;
+	}
+	public function offsetSet($offset,$value){
+		/*is_null($offset) ? $this->data[]=$value :*/$this->data[$offset]=$value;
+	}
+	public function offsetUnset($offset){
+		unset($this->data[$offset]);
+	}
+	
+	/* Serializable */
+	public function serialize(){
+		return serialize($this->data);
+	}
+	public function unserialize($data){
+		$this->data=unserialize($data);
+	}
+	
 	
 	
 	/* Export */

@@ -31,6 +31,10 @@ class QFindAll extends QFind{
 		$this->_db->doSelectObjectsCallback($sql,$this,$this->queryResultFields,$callback);
 	}
 	
+	public function toArray(){
+		return SModel::mToArray($this->execute());
+	}
+	
 	public function createCountQuery(){
 		$modelName=$this->modelName;
 		$countQuery = new QCount($modelName);
