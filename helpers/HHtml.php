@@ -15,9 +15,6 @@ class HHtml{
 	public static function metaCharset($encoding='utf-8'){
 		return self::$isIElt8 ? '<meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>' : '<meta charset="'.$encoding.'">';
 	}
-	public static function metaRobots($content){
-		echo '<meta name="robots" content="'.$content.'"/>';
-	}
 	public static function metaLanguage($lang=null){
 		if($lang===null) $lang=CLang::get();
 		return '<meta name="language" content="'.$lang.'"/><meta http-equiv="content-language" content="'.$lang.'"/>';
