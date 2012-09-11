@@ -262,7 +262,7 @@ class ModelFile extends PhpFile{
 					.';'
 					.(empty($specialFields)?'':
 						$specialFieldsBefore
-						.(empty($specialFieldsSetData)?'':'public function _setData(&$data){'.$specialFieldsSetData.'parent::_setData($data);}')
+						.(empty($specialFieldsSetData)?'':'public function _setData($data){'.$specialFieldsSetData.'parent::_setData($data);}')
 						.(empty($specialFieldsGetData)?'':'public function &_getData(){$data=parent::_getData();$d=$data;'.$specialFieldsGetData.'return $d;}')
 					)
 					.($createdField||isset($annotations['CreatedBy'])||$createdByField||isset($annotations['Child'])?

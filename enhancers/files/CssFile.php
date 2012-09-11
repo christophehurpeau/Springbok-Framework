@@ -442,6 +442,7 @@ class CssFile extends EnhancerFile{
 							$md5CssImgs[$url]=$url;
 						}else{
 							if((!empty($matches[2][$i]) && ($trimMatches2=trim($matches[2][$i])) && ($trimMatches2==='transparent' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
+										|| substr($url,-4) === '.jpg'
 										|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || $url=='../img/'.$spritename
 										|| substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
 										|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery') continue;
@@ -482,6 +483,7 @@ class CssFile extends EnhancerFile{
 							$key=$url;
 						}else{
 							if((!empty($matches[2]) && ($trimMatches2=trim($matches[2])) && ($trimMatches2==='transparent' || $trimMatches2==='/**/' || (strlen($trimMatches2)===7) && $trimMatches2[0]==='#'))
+									|| substr($url,-4) === '.jpg'
 									|| substr($url,0,7) !== '../img/' || substr($url,-4)==='.gif' || substr($url,0,7+8) ==='../img/fancybox' || substr($url,0,7+6) ==='../img/mobile'
 									|| substr($url,0,7+8) === '../img/filetree' || substr($url,0,7+6) === '../img/jquery'
 									|| $url==='../sprites/'.$spritename){
