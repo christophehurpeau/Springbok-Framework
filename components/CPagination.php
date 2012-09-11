@@ -58,4 +58,8 @@ class CPagination{
 		$down=$this->pageSize*($this->page-1);
 		$this->results=$this->query->limit($this->pageSize,$down)->reexecute();
 	}
+	
+	public function getResultsToArray(){
+		return SModel::mToArray($this->results);
+	}
 }
