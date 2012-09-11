@@ -14,6 +14,11 @@ function display($str){
 	ob_flush();
 }
 
+class CSession{
+	public static function connected($orValue=false){ return $orValue; }
+	public static function getOr($name,$orValue=null){ return $orValue; }
+}
+
 class App{
 	/* DEV */public static $enhancing=false;/* /DEV */
 		
