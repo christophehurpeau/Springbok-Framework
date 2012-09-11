@@ -35,4 +35,23 @@ class CSoapWsdl{
 		if(substr($type,0,7)==='array[]') return new PhpWsdlParam($name,substr($type,7).'Array',$settings);
 		return new PhpWsdlParam($name,$type,$settings);
 	}
+	
+	public function addClass($className){
+		return new SoapWsdlAddClass($className,$this->types);
+	}
+}
+
+class SoapWsdlAddClass{
+	private $className,$types,$el=array();
+	public function __construct($className,&$types){ $this->className=$className; $this->types=&$types; }
+	
+	public function addField($fieldName,$fieldType,$nillable=true,$comment=null){
+		$settings=array('nillable'=>$nillable?'true':'false');
+		if(!empty($comment)) $settings['docs']=$comment;
+		$this->el[]=new PhpWsdlElement($fieldName,$fieldType,$settings);
+		return $this;
+	}
+	public function end(){
+		$this->types[]=new PhpWsdlComplex($this->className,$this->el);
+	}
 }
