@@ -65,16 +65,23 @@ input,textarea{
 }
 
 body #container{
-	/*width:100%; */min-width:1000px;
 	@if $PAGE_100{ position:relative; height:auto; min-height:100%; }
 	/*position:absolute;top:0;left:0;right:0;bottom:0;*/
 	/*overflow-x:hidden;*/
 	@if $ContainerWidth{
-	  width:$ContainerWidth;
+	  @if $ContainerWidth==true{ width:998px; }
+	  @else{ width:$ContainerWidth; }
 	  margin:0 auto;
+	}@else{
+		/*width:100%; */min-width:1000px;
 	}
 	@if $ContainerBackground{ @include background($ContainerBackground); }
 	@if $ContainerShadow{ @include boxShadow($ContainerShadow); }
+}
+@if $ContainerWidth==true{
+	@media(min-width:1200px){
+		body #container{ width: 1180px; }
+	}
 }
 @if false==$PAGE_FIXED{
   html > body #container{height:auto;}
