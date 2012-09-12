@@ -29,7 +29,6 @@ abstract class QFind extends QSelect{
 		$this->alias=$modelName::$__alias;
 	}
 
-
 	/** @return QSelect */
 	public function fields($fields){$this->fields[0]=explode(',',$fields);return $this;}
 	/** @return QSelect */
@@ -83,8 +82,11 @@ abstract class QFind extends QSelect{
 		};
 		return $this;
 	}
-	public function with($with,$options=array()){if(!is_array($options)) $options=array('fields'=>$options); $this->_addWithToQuery($with,$options);return $this;}
-	
+	public function with($with,$options=array()){
+		if(!is_array($options)) $options=array('fields'=>$options);
+		$this->_addWithToQuery($with,$options);
+		return $this;
+	}
 	public function withLang($options=array(),$lang=false){
 		if($lang===false) $lang=CLang::get();
 		if(is_string($options)) $options=array('fields'=>$options);
@@ -93,7 +95,6 @@ abstract class QFind extends QSelect{
 		$this->_addWithToQuery($mL,$options);
 		return $this;
 	}
-
 	public function withForce($with,$options=array()){
 		if(is_string($options)) $options=array('fields'=>$options);
 		elseif(!isset($options['fields'])) $options['fields']=false;

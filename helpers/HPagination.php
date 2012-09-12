@@ -78,11 +78,11 @@ class HPagination{
 		return $str.'</ul>';
 	}
 
-	public static function simple($pagination){
+	public static function simple($pagination,$pageName='page'){
 		if($pagination->hasPager()) 
 			return $pager='<div class="pager">'.self::createPager($pagination->getPage(),$pagination->getTotalPages(),
-			function($page){
-				return ' href="'.HHtml::url(CRoute::getAll()).'?page='.$page.'"';
+			function($page) use($pageName){
+				return ' href="'.HHtml::url(CRoute::getAll()).'?'.$pageName.'='.$page.'"';
 			}).'</div>';
 		return '';
 	}

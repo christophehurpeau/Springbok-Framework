@@ -222,7 +222,8 @@ class PhpFile extends EnhancerFile{
 */		$recursifPattern='[^()]*(?:\([^()]+\)[^()]*)*';
 		$i=5;while($i-- > 0) $recursifPattern=str_replace('[^()]+',$recursifPattern,$recursifPattern);//echo $recursifPattern;
 		$phpFile=&$this;
-		$newPhpContent=preg_replace_callback('/((?:\$([^={}\(\)]+)\s*=\s*|\s+(?:self::)?set(?:ForLayout)?\([^,]+,|=>|if\(!?|&&\s*!?|\|\|\s*!?|foreach\(|implode\(\'[^\']+\',|return|else|;|}|\:\:mToArray\(|((?:(?:CTable(?:One)?|CPagination[^\:]*)\:\:create|\->query)\(\s*)?\n)\s*'
+		$newPhpContent=preg_replace_callback('/((?:\$([^={}\(\)]+)\s*=\s*|\s+(?:self::)?set(?:ForLayout)?\([^,]+,|\=\>|if\(!?|&&\s*!?|\|\|\s*!?|'
+									.'foreach\(|implode\(\'[^\']+\',|json_encode\(|renderJSON\(|return|else|;|}|\:\:mToArray\(|((?:(?:CTable(?:One)?|CPagination[^\:]*)\:\:create|\->query)\(\s*)?\n)\s*'
 				.($isModelFile?'(?:self|parent|(?:[A-Z][a-z][A-Za-z0-9_]*|E[A-Z]{2}[a-z][A-Za-z0-9_]*|\$[A-Za-z0-9_]+))':'(?:[A-Z][a-z][A-Za-z0-9_]*|E[A-Z]{2}[a-z][A-Za-z0-9_]*|\$[A-Za-z0-9_]+)')
 				.'\:\:(?:ById|ByIdAndStatus|ByIdAndType|QCount|QDeleteAll|QDeleteOne|QExist|QAll|QListAll|QListName|QListRows|QList|QOne|QValue|QValues|QInsert|QInsertSelect|QLoadData|QReplace|QUnion|QUpdate|QUpdateOne|QUpdateOneField|QRows|QRow)\([^()]*(?:\([^()]+\)[^()]*)*\)'
 				/* .'(?:\s*\-\>[^\(\)]+\('.(/*(?:(?>[^()]*)|(?R))**//*$recursifPattern).'\))+\s*' */
@@ -236,6 +237,9 @@ class PhpFile extends EnhancerFile{
 			ob_flush();
 */	
 //debug($matches);
+			$matches[1]=preg_replace_callback('/->fields\([\'\"]([a-zA-Z0-9\_\,]+)[\'\"]\)/',
+					function($mF){return '->setFields('.UPhp::exportCode(explode(',',$mF[1])).')';},$matches[1]);
+			
 			if(!empty($matches[4])){
 				if($matches[4]=='execute') echo "<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n"
 														.'WARNING : double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1].'<br/>';
