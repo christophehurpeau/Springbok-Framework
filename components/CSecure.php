@@ -116,7 +116,7 @@ class CSecure{
 	}
 	public static function setBackUrl($url=null){
 		if($url===null) $url=CHttpRequest::referer(true);
-		/* DEV */if(startsWith($url,'/'.Springbok::$scriptname.'/')) $url=substr($url,strlen(Springbok::$scriptname)+1);
+		/* DEV */if(startsWith($url,'/'.Springbok::$scriptname.'/')) $url=substr($url,strlen(Springbok::$scriptname)+1);/* /DEV */
 		if($url===null) return;
 		if($url===HHtml::url(static::config('url_login'))) return;
 		foreach(static::config('blacklist_back_url') as $blacklistedUrl)
