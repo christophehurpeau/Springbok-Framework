@@ -53,7 +53,7 @@ class SControllerSoap extends Controller{
 			if($soap->SoapServer!==null) $soap->SoapServer->fault('Server','Internal Server Error','SControllerSoap');
 		}
 	}
-	protected static function clienFault($description,$actor=null,$details=null,$faultName=null,$headerFault=null){
+	protected static function clientFault($description,$actor=null,$details=null,$faultName=null,$headerFault=null){
 		return new SoapFault('Client',$description,$actor,$details,$faultName,$headerFault);
 	}
 
