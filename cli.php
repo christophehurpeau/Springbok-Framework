@@ -95,7 +95,7 @@ class App{
 		/* DEV */
 		if($exception->getFile() && $exception->getLine()){
 			$content=file($exception->getFile());
-			echo PHP_EOL.'Line : '.$content[$exception->getLine()];
+			echo PHP_EOL.'Line : '.$content[$exception->getLine()-1];
 		}
 		echo PHP_EOL.'Backtrace : '.prettyBackTrace(0,$exception->getTrace()).'';
 		/* /DEV */
