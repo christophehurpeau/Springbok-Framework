@@ -21,6 +21,9 @@ S.Controller.prototype={
 	redirect:function(to,exit){
 		App.load(to);
 		if(exit) throw new S.Controller.Stop();
+	},
+	dispose:function(){
+		
 	}
 };
 S.Controller.extend=function(name,methods,superclass){
