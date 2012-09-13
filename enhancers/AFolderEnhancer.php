@@ -26,13 +26,14 @@ abstract class AFolderEnhancer{
 	
 	public function process($class='PhpFile',$allowUnderscoredFiles=true,$override=true){
 		$dir=$this->dir;$devDir=$this->devDir;$prodDir=$this->prodDir;
+		$dirHasDev=$this->enhanced instanceof EnhancedApp ? strpos($dir->getPath(),'/Dev')!==false : false;
 		
 		$logger=$this->enhanced->getLogger();
 		$logger->log('D: '.$dir->getName());
 		
 		if(substr($dir->getName(),0,1)==='.') return;
 		$devFolder=new Folder($devDir,0775);
-		$prodFolder=new Folder($prodDir,0775);
+		if(!$dirHasDev) $prodFolder=new Folder($prodDir,0775);
 		
 		$files=$dir->listFiles(false);
 		
@@ -53,12 +54,12 @@ abstract class AFolderEnhancer{
 			$ext=$file->getExt();
 			
 			$found=$this->findEnhancer($filename,$ext);
+			$justDev=$dirHasDev;
 			if($found===false){
-				$justSrc=$justDev=$destFilename=false;
+				$destFilename=false;
 				$copy=$ext!=='php';
-				if(!$allowUnderscoredFiles && $this->enhanced instanceof EnhancedApp) $justSrc=$filename[0]==='_';
+				$justSrc= !$allowUnderscoredFiles && $this->enhanced instanceof EnhancedApp ? $filename[0]==='_' : false;
 			}else{
-				$justDev=false;
 				list($class,$justSrc,$destFilename,$copy)=$found;
 			}
 			
@@ -74,7 +75,7 @@ abstract class AFolderEnhancer{
 					//debugVar('file changed :',$file->getPath(),file_exists($devDir.$filename),file_exists($prodDir.$filename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
 					$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
 					copy($file->getPath(),$devDir.$destFilename);
-					copy($file->getPath(),$prodDir.$destFilename);
+					if($justDev===false) copy($file->getPath(),$prodDir.$destFilename);
 					$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>false,'dev'=>$devDir.$destFilename,'prod'=>$prodDir.$destFilename);
 				}
 				$this->enhanced->newDef['files'][$file->getPath()]=$srcMD5;
@@ -108,7 +109,6 @@ abstract class AFolderEnhancer{
 				if(($entry=basename(dirname($file->getPath()))) != 'controllers') $key=$entry.DS;
 				else $key='';
 				$this->controllers[$key][]=substr($filename,0,-4);
-				if($filename[0]==='_') $justDev=true; 
 			}
 
 			if($issetCurrentFileEnhanced=(class_exists('App',false) && isset(App::$currentFileEnhanced))) App::$currentFileEnhanced=$file->getPath();
