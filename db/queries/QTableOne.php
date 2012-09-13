@@ -13,5 +13,5 @@ class QTableOne extends QTable{
 		$this->process();
 		
 		return new CModelTableOne($this);
-	}	
+	}
 }
