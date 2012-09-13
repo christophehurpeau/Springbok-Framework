@@ -29,7 +29,7 @@ table.debug td.time{
 }
 table.debug div.query a{color:#444}
 table.debug div.result{display:none;}
-table.debug pre{
+html body table.debug pre{
 	text-align: left;
 	background:#CCC; color:#333;
 	overflow:auto;

@@ -70,7 +70,10 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 		$this->data[$name]=&$value;
 		/*$this->$name=&$this->data[$name];*/
 	}
-	public function &_get($name){
+	public function _get($name){
+		return $this->data[$name];
+	}
+	public function &_getRef($name){
 		return $this->data[$name];
 	}
 	public function _isEmpty(){
