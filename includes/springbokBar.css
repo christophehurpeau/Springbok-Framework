@@ -60,7 +60,7 @@ html body .springbok-bar-content/*,#springbok-bar-popup*/{
 	position:fixed;_position:absolute;
 	top:28px; left:0; right:0; bottom:0;
 	width:100%;
-    z-index:99999;
+    z-index:9999999;
     display:none;
     color:#FFF;
     background:#555;
