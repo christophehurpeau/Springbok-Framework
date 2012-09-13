@@ -185,6 +185,7 @@ class ControllerFile extends PhpFile{
 		return parent::getEnhancedDevContent();
 	}
 	public function getEnhancedProdContent(){
+		if(substr($this->_className,0,3)==='Dev') return false;
 		$this->writeMethodDefFile();
 		return parent::getEnhancedProdContent();
 	}

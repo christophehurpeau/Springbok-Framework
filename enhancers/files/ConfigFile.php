@@ -140,8 +140,13 @@ class ConfigFile extends PhpFile{
 				}
 			}
 			
-			$finalArray=array('routes'=>$finalRoutes,'langs'=>$finalTranslations);
-			$this->write($configname,UPhp::exportCode($finalArray),$devFile,$prodFile);
+			$finalProdContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
+			$finalRoutes['index']=array('/dev/:controller(/:action/*)?'=>array('_'=>'Dev!::!',
+				':'=>array('controller','action'),'paramsCount'=>3,'ext'=>null,
+				'en'=>array('\/dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/%s/%s%s'),
+				'fr'=>array('\/dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/%s/%s%s')))+$finalRoutes['index'];
+			$finalDevContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
+			$this->write($configname,$finalProdContent,$devFile,$prodFile,$finalDevContent);
 		}elseif($configname=='routes-langs'||substr($configname,0,13)=='routes-langs_'){
 			//NOTHING
 			
@@ -226,11 +231,12 @@ class ConfigFile extends PhpFile{
 		return $configArray;
 	}
 
-	private function write(&$configname,$content,&$devFile,&$prodFile){
+	private function write($configname,$content,&$devFile,&$prodFile,$contentForDev=false){
 		$content='<?php return '.str_replace("'".APP,"APP.'",$content).';';
-		foreach(array($devFile,$prodFile) as $dest){
+		if($contentForDev!==false) $contentForDev='<?php return '.str_replace("'".APP,"APP.'",$contentForDev).';';
+		foreach(array($devFile,$prodFile) as $k=>$dest){
 			$dest=new File(dirname($dest).DS.$configname.'.php');
-			$dest->write($content);
+			$dest->write($contentForDev===false?$content:($k===0?$contentForDev:$content));
 		}
 	}
 

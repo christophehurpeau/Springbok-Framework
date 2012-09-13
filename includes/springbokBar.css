@@ -5,6 +5,10 @@ html body #container{
 	margin-top:28px;
 }
 
+html body #springbok-bar,html body .springbok-bar-content *{
+	font:9pt Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+}
+
 html body #springbok-bar{
 	background: #111; /* Old browsers */
 	background: -moz-linear-gradient(top, #111 0%, #000 100%); /* FF3.6+ */
@@ -21,6 +25,7 @@ html body #springbok-bar{
     top:0; left:0; right:0;
     width: 100%;
 	z-index: 99999;
+	
 }
 html body #springbok-bar a,html body #springbok-bar b{
 	padding:0 6px;
@@ -60,7 +65,7 @@ html body .springbok-bar-content/*,#springbok-bar-popup*/{
 	position:fixed;_position:absolute;
 	top:28px; left:0; right:0; bottom:0;
 	width:100%;
-    z-index:99999;
+    z-index:9999999;
     display:none;
     color:#FFF;
     background:#555;
