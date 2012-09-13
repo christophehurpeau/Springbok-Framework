@@ -1,3 +1,5 @@
+if($('#container').length===0) $('body').css('paddingTop','33px');
+
 var checkedDivFixedPosition=false;
 function checkDivFixedPosition(){
 	$('#container').addClass('devEnvironnement');
@@ -18,7 +20,7 @@ var jsConsoleLink=$('#springbok-bar a[rel="js-console"]'),jsConsoleSpanCount=jsC
 $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 	if(!checkedDivFixedPosition) checkDivFixedPosition();
 	//console.log(e,xhr,settings);
-	ajaxLink.stop(true,true).fadeOut('fast').fadeIn('fast').fadeOut('fast').fadeIn('fast');
+	ajaxLink.stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
 	ajaxSpanCount.text(new Number(ajaxSpanCount.text())+1);
 	$('<li/>').append(settings.type+' ',$('<b/>').text(settings.url),' [&nbsp;'+(settings.async?'async':'sync')+'&nbsp;]',' - ',
 				//$('<a href="#"/>').text('See Request Headers').click(function(){displaySpringbokBarPopup(xhr.responseText);return false;})
@@ -38,7 +40,7 @@ $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 
 var oldConsoleVar=window.console,jsConsoleContent=$('#springbok-bar-js-console ul'),
 log=function(type,args){
-	jsConsoleLink.stop(true,true).fadeOut('fast').fadeIn('fast').fadeOut('fast').fadeIn('fast');
+	jsConsoleLink.stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
 
 	jsConsoleSpanCount.text(new Number(jsConsoleSpanCount.text())+1);
 	jsConsoleContent.append($('<li/>').text(Array.prototype.join.call($.map(args,function(v){return $.toJSON(v);},', '))));
@@ -79,7 +81,7 @@ $('#springbok-bar a').each(function(i,a){
 	var t=$(a);
 	t.click(function(){
 		t.toggleClass('current');
-		$('#springbok-bar-'+t.attr('rel')).animate({opacity:'toggle',height:'toggle'});
+		$('#springbok-bar-'+t.attr('rel')).animate({opacity:'toggle',height:'toggle'},200);
 		return false;
 	});
 });

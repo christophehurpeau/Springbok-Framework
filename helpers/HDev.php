@@ -1,7 +1,12 @@
 <?php
 class HDev{
-	public static function springbokBar(){
+	public static function springbokBar($includeJquery=false){
 		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
+		if($includeJquery){
+			echo "<script type=\"text/javascript\">\n//<![CDATA[";
+			readfile(dirname(CORE).'/src/includes/js/libs/jquery-1.8.1.min.js');
+			echo "//]]>\n</script>";
+		}
 		echo HHtml::cssInline(file_get_contents(CORE.'includes/springbokBar.css'));
 		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE.'includes/js/jquery/json.js').file_get_contents(CORE.'includes/springbokBar.js').'});');
 		$changes=&App::$changes[0];
