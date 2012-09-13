@@ -1,3 +1,5 @@
+if($('#container').length===0) $('body').css('paddingTop','33px');
+
 var checkedDivFixedPosition=false;
 function checkDivFixedPosition(){
 	$('#container').addClass('devEnvironnement');
