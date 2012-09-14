@@ -13,12 +13,15 @@ class CModelTableOne extends CModelTable{
 		$this->callTransformer($transformerClass,$this->results);
 	}
 	
+	public function hasResult(){
+		$this->execute();
+		return isset($this->results[0]);
+	}
 	public function getResult(){
 		return $this->results[0];
 	}
 	
 	public function rel($relName,$options=array()){
-		$this->execute();
 		$with=array();
 		QFind::_addWith($with,$relName,$options,$this->getModelName()); $w=$with[$relName];
 		return QFind::createWithQuery($this->getResult(),$w,new QTable($w['modelName']));

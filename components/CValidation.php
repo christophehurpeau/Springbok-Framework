@@ -52,7 +52,7 @@ class CValidation{
 
 	
 	public static function notEmpty($key,$val){
-		return self::_addError($key,self::validRequired($val));
+		return self::_addError($key,self::validNotEmpty($val));
 	}
 	private static function validNotEmpty($val){
 		return empty($val) ? _tC('This field is required') : false;
@@ -60,10 +60,10 @@ class CValidation{
 	
 	
 	public static function id($key,$val){
-		return self::_addError($key,self::validRequired($val));
+		return self::_addError($key,self::validId($val));
 	}
 	private static function validId($val){
-		return !preg_match('/^[0-9]+$/',$val) ? _tC('This field should be a valid id') : false;
+		return /*!preg_match('/^[0-9]+$/',$val)*/$val>0 ? false : _tC('This field should be a valid id');
 	}
 	
 	
