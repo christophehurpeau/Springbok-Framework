@@ -1,8 +1,13 @@
 <?php
 class CPagination{
 	public static function create($query){
+		/* DEV */throw new Exception('Use QAll()->paginate() now.');/* /DEV */
+		return self::_create($query);
+	}
+	public static function _create($query){
 		return new self($query);
 	}
+	
 	
 	protected $query,$pageSize=15,$page=1,$results,$totalResults,$totalPages=0,$return;
 	

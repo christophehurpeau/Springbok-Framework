@@ -96,7 +96,7 @@ class QSql{
 	
 	
 	public function getPagination(){
-		return CPagination::create($this)->pageSize(25)->execute($this);
+		return $this->paginate()->pageSize(25)->execute($this);
 	}
 	public function getFieldsForTable(){
 		$fields=$this->getFields(); $fieldsForTable=array();

@@ -285,6 +285,7 @@ class ModelFile extends PhpFile{
 			
 			foreach(array('hasMany','belongsTo','hasOne','hasOneThrough','hasManyThrough','belongsToType') as $relType){
 				$content=preg_replace_callback('/\s*public\s*(?:static)?\s*\$'.$relType.'\s*=\s*(array\(.*\);)/Us',function($matches2) use(&$relations,&$relType,&$contentInfos){
+					$matches2[1]=preg_replace('/\s*\b([A-Z][A-Za-z\_]+)\s*\=\>/','"$1"=>',$matches2[1]);
 					$eval=eval('return '.$matches2[1]);
 					foreach($eval as $key=>&$relation){
 						if(is_numeric($key)){ $key=$relation; $relation=array(); }
@@ -297,7 +298,7 @@ class ModelFile extends PhpFile{
 			}
 			$this->_contentInfos='<?php return '.UPhp::exportCode($contentInfos).';';
 			
-			$content.=$matches[2].'::init("'.$matches[2].'");';
+			$content.=/*'define(\''.$matches[2].'\',\''.$matches[2].'\');'.*/$matches[2].'::init("'.$matches[2].'");';
 		}
 		return $this->addExecuteToQueries($content,true);
 	}

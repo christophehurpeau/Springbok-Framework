@@ -34,6 +34,9 @@ class QFindAll extends QFind{
 	public function toArray(){
 		return SModel::mToArray($this->execute());
 	}
+	public function paginate(){
+		return CPagination::_create($this);
+	}
 	
 	public function createCountQuery(){
 		$modelName=$this->modelName;

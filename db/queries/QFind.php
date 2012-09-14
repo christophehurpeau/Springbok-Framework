@@ -198,6 +198,10 @@ abstract class QFind extends QSelect{
 		return $this->execute();
 	}
 	
+	public function fetch(){
+		return $this->execute();
+	}
+	
 	public function _toSQL($currentDb=NULL){
 		$modelName=$this->modelName;
 		
@@ -610,7 +614,7 @@ abstract class QFind extends QSelect{
 		self::_addWith($w,$key,$options,$model::$__className);
 		$query=self::createWithQuery($model,$w[$key]);
 		if($query===false) return false;
-		$res=$paginateClass::create($query);
+		$res=$paginateClass::_create($query);
 		$model->_setRef($w[$key]['dataName'],$res); //not executed, but should be a reference to the variable
 		unset($w[$key]);
 		return $res;
