@@ -3,6 +3,9 @@ class CPagination_Letters extends CPagination{
 	public static function create($query){
 		return new self($query);
 	}
+	public static function _create($query){
+		return new self($query);
+	}
 	
 	private $fieldName='name';
 	private function __construct($query){

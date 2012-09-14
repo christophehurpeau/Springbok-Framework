@@ -156,7 +156,7 @@ class CTable{
 			if($exportOutput!==null) return; else exit;
 		}
 		
-		$this->pagination=CPagination::create($this->query)->pageSize(25)->execute($this);
+		$this->pagination=$this->query->paginate()->pageSize(25)->execute($this);
 		$this->modelFields=$this->query->getModelFields();
 		$this->totalResults=$this->pagination->getTotalResults();
 		$this->results=$this->pagination->getResults();

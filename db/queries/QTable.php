@@ -188,7 +188,7 @@ class QTable extends QFindAll{
 	public function pagination(){
 		$this->process();
 		
-		$this->pagination=CPagination::create($this)->pageSize(25);
+		$this->pagination=$this->paginate()->pageSize(25);
 		$table=new CModelTable($this);
 		$this->pagination->setReturn($table);
 		return $this->pagination;

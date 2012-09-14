@@ -182,7 +182,7 @@ class CSearch{
 		
 		$query->orderBy(array('score'));
 		
-		return CPagination::create($query)->pageSize(self::$NB_RESULTS_PER_PAGE);
+		return $query->paginate()->pageSize(self::$NB_RESULTS_PER_PAGE);
 	}
 
 	protected static function createQuery(){
