@@ -132,8 +132,8 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 		flush();
 	}
 }
-function debug($object,$flush=true){
-	prettyDebug(short_debug_var($object,5),2,$flush,true);
+function debug($object,$flush=true,$MAX_DEPTH=5){
+	prettyDebug(short_debug_var($object,$MAX_DEPTH),2,$flush,true);
 }
 function debugCode($code,$withBacktrace=true){
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
