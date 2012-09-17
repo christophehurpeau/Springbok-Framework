@@ -3,7 +3,7 @@ S.extendsPrototype(Array,{
 		if(this.indexOf) return this.indexOf(searchElement,i);
 		/* See jQuery.inArray */
 		var t=this,l=t.length;
-		fromIndex=i ? i < 0 ? Math.max( 0, l + i ) : i : 0;
+		i=i ? i < 0 ? Math.max( 0, l + i ) : i : 0;
 		for(; i < l; i++ )
 			if(i in t && t[i] === searchElement) return i;
 		return -1;
