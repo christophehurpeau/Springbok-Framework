@@ -11,3 +11,5 @@ function _tF($modelName,$fieldName='',$alt=null){$r=CLang::translate($modelName.
 function _t_p($string,$count){$r=CLang::translate($string,App::getLocale()->isPlural((int)$count)?'s':'p'); return $r!==false ? $r : $string;}
 
 function _tR($string){return CRoute::translate($string,CLang::get());}
+
+function _sp($count,$singular,$plural){ return App::getLocale()->isPlural((int)$count)?$plural:$singular; }

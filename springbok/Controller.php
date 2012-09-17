@@ -147,7 +147,7 @@ class Controller{
 		header('Status: 404 Not Found',false,404);
 	}
 
-	public static function redirect($to,$entry=null,$exit=true,$forbiddendForAjax=true,$permanent=true){
+	public static function redirect($to,$entry=null,$exit=true,$forbiddendForAjax=true,$permanent=false){
 		if(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
 				self::renderHtml(HHtml::jsInline('S.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
