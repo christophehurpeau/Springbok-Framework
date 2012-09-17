@@ -49,7 +49,7 @@ class COAuth2Facebook extends COAuth2Connect{
 		$facebookUser->access_token=$this->accessToken;
 		$facebookUser->outdated=false;
 		$facebookUser->facebook_id=$this->me['id'];
-		$facebookUser->facebook_username=$this->me['username'];
+		if(!empty($this->me['username'])) $facebookUser->facebook_username=$this->me['username'];
 		$facebookUser->link=$this->me['link'];
 		if(isset($this->me['email'])) $user->email=$facebookUser->email=$this->me['email'];
 		if(!empty($this->me['gender'])) $user->gender=$this->me['gender']==="male" ? SConsts::MAN : ($this->me['gender']==='female' ? SConsts::WOMAN : SConsts::UNKNOWN );
