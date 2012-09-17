@@ -5,7 +5,7 @@ S.extendsPrototype(Array,{
 		var t=this,l=t.length;
 		fromIndex=i ? i < 0 ? Math.max( 0, l + i ) : i : 0;
 		for(; i < l; i++ )
-			if(i in t && array[i] === searchElement) return i;
+			if(i in t && t[i] === searchElement) return i;
 		return -1;
 	},
 	sEach:function(callback){
