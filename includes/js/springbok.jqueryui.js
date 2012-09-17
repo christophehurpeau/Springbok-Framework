@@ -148,8 +148,11 @@ var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
 		}else{
 			t=onAdd(select,val);
 		}
-		$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t)).append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
-		ul.change();
+		if(!ul.has('li[rel='+val+']')){
+			$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t))
+				.append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
+			ul.change();
+		}/* DEV */else alert('already has this line !'); /* /DEV */
 	});
 	ul.on('click','a.delete',function(e){
 		e.preventDefault();
@@ -170,7 +173,7 @@ $.fn.ajaxCRDSelectFiltrable=function(url,options){
 		return div.find('select:first').combobox();
 	},function(select,li,val){
 		select.append($('<option/>').attr('value',val).text(li.find('span:first').text()));
-	},function(select,val){console.log(select);
+	},function(select,val){
 		var o=select.find('option[value="'+val+'"]'),t=o.text();
 		o.remove();
 		return t;
