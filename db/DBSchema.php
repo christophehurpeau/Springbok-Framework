@@ -63,6 +63,11 @@ abstract class DBSchema{
 	public function log($log){
 		$this->schemaProcessing->log($this->db->_getName(),$this->tableName,$log);
 	}
+	public function doUpdate($sql,$keep=true){
+		$this->db->doUpdate($sql);
+		if($keep) $this->schemaProcessing->query($this->db->_getName(),$sql);
+	}
+	
 	
 	public function isGenerateSchema(){
 		return Config::$generate[$this->modelInfos['generate']];

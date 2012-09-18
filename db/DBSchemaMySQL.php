@@ -18,11 +18,11 @@ class DBSchemaMySQL extends DBSchema{
 		if(!empty($indexes[1])) foreach($indexes[1] as $index)
 			$sql.=', CONSTRAINT '.$this->_getIndexDef($index,'UNIQUE',true);
 		$sql.=') ENGINE = InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_general_ci';
-		$this->db->doUpdate($sql);
+		$this->doUpdate($sql,true);
 	}
 	
 	public function removeTable(){
-		$this->db->doUpdate('DROP TABLE '.$this->db->formatTable($this->tableName));
+		$this->doUpdate('DROP TABLE '.$this->db->formatTable($this->tableName),true);
 	}
 	
 	public function reorderTable(){
@@ -33,7 +33,7 @@ class DBSchemaMySQL extends DBSchema{
 								.' '.($prev?'AFTER '.$this->db->formatColumn($prev):'FIRST').', ';
 			$prev=$colname;
 		}
-		$this->db->doUpdate(substr($sql,0,-2));
+		$this->doUpdate(substr($sql,0,-2),true);
 	}
 	
 	
@@ -44,9 +44,9 @@ class DBSchemaMySQL extends DBSchema{
 	}
 	
 	public function correctTable(){
-		$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName)
+		$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName)
 					.' COMMENT='.(empty($this->modelInfos['comment'])?'""':$this->db->escape($this->modelInfos['comment']))
-					.' ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+					.' ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',true);
 	}
 	
 	
@@ -66,7 +66,10 @@ class DBSchemaMySQL extends DBSchema{
 	
 	private $_alterOperations;
 	public function resetColumnsModifications(){ $this->_alterOperations=array(); }
-	public function applyColumnsModifications(){ if(!empty($this->_alterOperations)) $this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' '.implode(', ',$this->_alterOperations)); }
+	public function applyColumnsModifications(){
+		if(!empty($this->_alterOperations))
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' '.implode(', ',$this->_alterOperations),true);
+	}
 	
 	public function addColumn($colName,$prev=null){
 		$colDef=&$this->modelInfos['columns'][$colName];
@@ -81,15 +84,15 @@ class DBSchemaMySQL extends DBSchema{
 			.($prev!==null?($prev?' AFTER '.$this->db->formatColumn($prev):' FIRST'):''));*/
 		if($oldColumn['type']==='datetime' && ($this->modelInfos['columns'][$colName]['type']==='int(11)' || $this->modelInfos['columns'][$colName]['type']==='int(10)')){
 			$tmpColumn=$this->db->formatColumn($colName.'_temp');
-			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD '.$tmpColumn.' '.($colDefSQL=self::_getColumnDef($this->modelInfos['columns'][$colName])));
-			$this->db->doUpdate('UPDATE '.$this->db->formatTable($this->tableName).' SET '.$tmpColumn.'=UNIX_TIMESTAMP('.$column.')');
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD '.$tmpColumn.' '.($colDefSQL=self::_getColumnDef($this->modelInfos['columns'][$colName])),true);
+			$this->doUpdate('UPDATE '.$this->db->formatTable($this->tableName).' SET '.$tmpColumn.'=UNIX_TIMESTAMP('.$column.')',true);
 			$this->_alterOperations[]='DROP '.$column;
 			$this->_alterOperations[]='CHANGE '.$tmpColumn.' '.$column.' '.$colDefSQL;
 			return;
 		}elseif(($oldColumn['type']==='int(11)' || $oldColumn['type']==='int(10)') && $this->modelInfos['columns'][$colName]['type']==='datetime'){
 			$tmpColumn=$this->db->formatColumn($colName.'_temp');
-			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD '.$tmpColumn.' '.($colDefSQL=self::_getColumnDef($this->modelInfos['columns'][$colName])));
-			$this->db->doUpdate('UPDATE '.$this->db->formatTable($this->tableName).' SET '.$tmpColumn.'=FROM_UNIXTIME('.$column.')');
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD '.$tmpColumn.' '.($colDefSQL=self::_getColumnDef($this->modelInfos['columns'][$colName])),true);
+			$this->doUpdate('UPDATE '.$this->db->formatTable($this->tableName).' SET '.$tmpColumn.'=FROM_UNIXTIME('.$column.')',true);
 			$this->_alterOperations[]='DROP '.$column;
 			$this->_alterOperations[]='CHANGE '.$tmpColumn.' '.$column.' '.$colDefSQL;
 			return;
@@ -99,8 +102,8 @@ class DBSchemaMySQL extends DBSchema{
 	public function removeColumn($colName){
 		try{
 			$constraintname='fk_'.$this->tableName.'_'.$colName;
-			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$constraintname.'`');
-			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$constraintname.'`');
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$constraintname.'`',true);
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$constraintname.'`',true);
 		}catch(DBException $ex){}
 		//$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP '.$this->db->formatColumn($colName));
 		$this->_alterOperations[]='DROP '.$this->db->formatColumn($colName);
@@ -126,12 +129,12 @@ class DBSchemaMySQL extends DBSchema{
 		/*$indexes=$this->getIndexes();
 		foreach($indexes as $key_name=>$index)
 			if($index['key_name']==$name) return;*/
-		$this->db->doUpdate('CREATE'.(empty($type)?'':' '.$type).' INDEX `'.$name.'` ON '.$this->db->formatTable($this->tableName).' ( `'.implode('`,`',$columns).'` )');
+		$this->doUpdate('CREATE'.(empty($type)?'':' '.$type).' INDEX `'.$name.'` ON '.$this->db->formatTable($this->tableName).' ( `'.implode('`,`',$columns).'` )',true);
 	}
 	
 	public function removeIndex($name){
 		try{
-			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$name.'`');
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$name.'`',true);
 		}catch(DBException $ex){}
 	}
 	
@@ -151,13 +154,13 @@ class DBSchemaMySQL extends DBSchema{
 		return $this->db->doSelectValues('SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA`=DATABASE() AND `TABLE_NAME`='.$this->db->escape($this->tableName).' AND `COLUMN_KEY`="PRI"');
 	}
 	public function removePrimaryKey(){
-		return $this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP PRIMARY KEY');
+		return $this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP PRIMARY KEY',true);
 	}
 	public function addPrimaryKey(){
-		return $this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD PRIMARY KEY ('.'`'.implode('`,`',$this->modelInfos['primaryKeys']).'`)');
+		return $this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD PRIMARY KEY ('.'`'.implode('`,`',$this->modelInfos['primaryKeys']).'`)',true);
 	}
 	public function changePrimaryKey(){
-		return $this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP PRIMARY KEY,ADD PRIMARY KEY ('.'`'.implode('`,`',$this->modelInfos['primaryKeys']).'`)');
+		return $this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP PRIMARY KEY,ADD PRIMARY KEY ('.'`'.implode('`,`',$this->modelInfos['primaryKeys']).'`)',true);
 	}
 	
 
@@ -193,8 +196,8 @@ class DBSchemaMySQL extends DBSchema{
 			$this->doUpdate($sql);
 		} 
 	}*/
-	public function disableForeignKeyChecks(){$this->db->doUpdate('SET FOREIGN_KEY_CHECKS=0');}
-	public function activeForeignKeyChecks(){$this->db->doUpdate('SET FOREIGN_KEY_CHECKS=1');}
+	public function disableForeignKeyChecks(){$this->doUpdate('SET FOREIGN_KEY_CHECKS=0',true);}
+	public function activeForeignKeyChecks(){$this->doUpdate('SET FOREIGN_KEY_CHECKS=1',true);}
 	
 	public function addForeignKey($colName,$fk,$dropBefore){
 		list($refTableName,$refColName,$onDelete,$onUpdate)=array(
@@ -206,12 +209,12 @@ class DBSchemaMySQL extends DBSchema{
 			.' ADD CONSTRAINT `'.$constraintname.'` FOREIGN KEY ('.$this->db->formatColumn($colName).') REFERENCES '.$refTableName.' ('.$this->db->formatColumn($refColName).')';
 		if($onDelete) $sql.=' ON DELETE '.$onDelete;
 		if($onUpdate) $sql.=' ON UPDATE '.$onUpdate;
-		$this->db->doUpdate($sql);
+		$this->doUpdate($sql,true);
 	}
 	public function removeForeignKey($fk){
-		$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$fk['name'].'`');
+		$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$fk['name'].'`',true);
 		try{
-			$this->db->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$fk['name'].'`');
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$fk['name'].'`',true);
 		}catch(DBException $ex){}
 	}
 

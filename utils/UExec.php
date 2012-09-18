@@ -11,8 +11,15 @@ class UExec{
 	
 	public static function rsync($source,$dest,$options,$rsyncOptions=false){
 		/* bug : rsync: getcwd(): No such file or directory (2) */
-		$command='cd / && rsync -'.($options['simulation'] === true ? 'rtvnz' : 'rtvlz').' --delete';
-		if($rsyncOptions!==false) $command.=' '.$rsyncOptions;
+		$command='cd / && rsync -'.($rsyncOptions!==false ? $rsyncOptions : ($options['simulation'] === true ? 'rtvnzC' : 'rtvlzC').' --delete');
+		/*
+		 * -v : verbose
+		 * -r : recursive
+		 * -t : preserve modification times
+		 * -l : links
+		 * -C : auto-ignore files in the same way CVS does
+		 * -z : compress file data during the transfer
+		*/
 		
 		//$dest=$dest;
 		if($options['ssh']){

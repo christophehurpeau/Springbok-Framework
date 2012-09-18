@@ -1,16 +1,62 @@
 <?php
 class DBSchemaProcessing{
 	public static $isProcessing=false;
-	private $force,$generate,$shouldApply/* PROD */ =true/* /PROD */,$dbs=array(),$columns=array(),$schemas=array(),$logs,$logger;
+	private $force,$generate,$shouldApply/* PROD */ =true/* /PROD */,$dbs=array(),$columns=array(),$schemas=array(),$logs,$logger,$time;
 	
 	public function __construct(Folder $modelDir,Folder $triggersDir,$force=false,$generate=true){
 		if(!$modelDir->exists()) return false;
+		$this->time=time();
 		$issetCurrentFileEnhanced=(class_exists('App',false) && isset(App::$currentFileEnhanced));
 		self::$isProcessing=true;
 		
 		$this->force=$force; $schemas=array();
 		/* DEV */ $this->shouldApply=$force?true:CHttpRequest::_GETor('apply')==='springbokProcessSchema'; /* /DEV */
 		$this->generate=$generate||$this->shouldApply;
+		
+		$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
+		
+		
+		$currentDbVersion=(int)trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
+	
+		$dbVersions=explode("\n",trim(UFile::getContents($baseDir.'dbVersions')));
+		if(!empty($dbVersions)){
+			$lastVersion=(int)array_pop($dbVersions);
+			
+			if($currentDbVersion !== $lastVersion){
+				$this->displayAndLog('currentDbVersion ('.$currentDbVersion.') != lastVersion ('.$lastVersion.')');
+				
+				
+				$versionsToUpdate=array($lastVersion);
+				while(($version=array_pop($dbVersions)) && $version > $currentDbVersion)
+					array_unshift($versionsToUpdate,(int)$version);
+				
+				if($generate){
+					$vars=array('versions'=>$versionsToUpdate);
+					if(!$this->shouldApply()){
+						render(CORE.'db/evolutions-view.php',$vars);
+					}else{
+						foreach($versionsToUpdate as $version){
+							$sql=UFile::getContents($baseDir.'dbEvolutions/'.$version.'.sql');
+							
+							foreach(explode("\n",$sql) as $line){
+								if(empty($line)) continue;
+								list($dbName,$query) = explode('=>',$line,2);
+								
+								$db=DB::init($dbName);
+								$db->doUpdate($query);
+							}
+							
+							file_put_contents($currentDbVersionFilename,$version);
+							$this->displayAndLog('Applied : '.$version);
+						}
+						
+						
+						if(isset($_SERVER['REQUEST_URI'])) render(CORE.'db/applied-evolutions-view.php',$vars);
+					}
+					if(isset($_SERVER['REQUEST_URI'])) exit;
+				}
+			}
+		}
 		
 		foreach($modelDir->listFiles() as $file){
 			$modelName=substr($file->getName(),0,-4);
@@ -50,18 +96,26 @@ class DBSchemaProcessing{
 		
 		/* DEV */
 		//regenerate after modifs
-		if($this->generate){
+		/*if($this->generate){
 			foreach($schemas as $schema){
 				if($issetCurrentFileEnhanced) App::$currentFileEnhanced=$schema->getModelName();
 				$schema->generatePropDefs();
 			}
 			if($issetCurrentFileEnhanced) App::$currentFileEnhanced='';
-		}
+		}*/
 		
 		if($this->logs !==null && $generate && isset($_SERVER['REQUEST_URI'])){
 			$vars=array('dbs'=>&$this->logs);
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
-			else render(CORE.'db/applied-view.php',$vars);
+			else{
+				file_put_contents($baseDir.'dbVersions',"\n".$this->time,FILE_APPEND);
+				file_put_contents($baseDir.'currentDbVersion',$this->time);
+				render(CORE.'db/applied-view.php',$vars);
+			}
+			exit;
+		}
+		if(CHttpRequest::_GETor('apply')==='springbokProcessSchema'){
+			header('Location: '.substr($_SERVER['REQUEST_URI'],0,-strlen('?apply=springbokProcessSchema')));
 			exit;
 		}
 		/* /DEV */
@@ -97,6 +151,15 @@ class DBSchemaProcessing{
 		if($this->logger===null) $this->logger=CLogger::get(time().'-schemaprocessing');
 		$this->logs[$dbName][$tableName][]=$log;
 		$this->logger->log($dbName.' : '.$tableName.' : '.$log);
+	}
+	public function displayAndLog($log){
+		if($this->logger===null) $this->logger=CLogger::get(time().'-schemaprocessing');
+		$this->logger->log($log);
+		if(function_exists('display')) display($log);
+	}
+	
+	public function query($dbName,$sql){
+		/* DEV */file_put_contents(dirname(APP).'/dbEvolutions/'.$this->time.'.sql',"\n".$dbName."=>".str_replace("\n",' ',$sql),FILE_APPEND);/* /DEV */
 	}
 
 	public function isGenerate(){

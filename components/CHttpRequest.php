@@ -91,7 +91,7 @@ class CHttpRequest{
 			'Yahoo',
 			//'VoilaBot',
 			//'WebCrawler',
-			'crawler','spider',
+			'crawler','spider','spyder',
 		 
 			'Xenu',
 		 
@@ -103,7 +103,8 @@ class CHttpRequest{
 			//'FAST\-WebCrawler', // AlltheWeb - www.alltheweb.com
 			'W3C_Validator',
 			
-			'Teoma', 'alexa', 'froogle', 'inktomi',
+			'Teoma', 'ia_archiver', //Alexa
+			'froogle', 'inktomi',
 			'looksmart', 'URL_Spider_SQL', 'Firefly', 'NationalDirectory',
 			'Ask Jeeves', 'TECNOSEEK', 'InfoSeek', 
 			'www.galaxy.com','appie', 'FAST', 'WebBug', 'Spade', 'ZyBorg', 'rabaz',
