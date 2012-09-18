@@ -148,7 +148,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	
 	/* Export */
 	public function toArray(){
-		return self::_ToArray($this->data,$modelName::$__PROP_DEF);
+		return self::_ToArray($this->data,static::$__PROP_DEF);
 	}
 	
 	private static function _ToArray($data,$props=null){
