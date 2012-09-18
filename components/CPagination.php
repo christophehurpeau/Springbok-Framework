@@ -40,7 +40,7 @@ class CPagination{
 			if($this->page===1) $down=0;
 			else{
 				$down=$this->pageSize*($this->page-1);
-				if(isset($count) && $down > $count){
+				if(isset($count) && $down >= $count){
 					throw new SPaginationOverrunException;
 				}
 			}
