@@ -241,7 +241,7 @@ class ModelFile extends PhpFile{
 				$specialFieldsSetData=$specialFieldsGetData=$specialFieldsBefore='';
 				foreach($specialFields as $name=>$type){
 					if($type==='Boolean'||$type==='BooleanInt'){
-						$specialFieldsBefore.='public function is'.($camelized=UInflector::camelize($name,false)).'(){return '.($type==='Boolean'?'$this->'.$name.'!==null&&$this->'.$name.'!==false':'$this->'.$name).';}';
+						$specialFieldsBefore.='public function is'.($camelized=UInflector::camelize($name,false)).'(){return '.($type==='Boolean'?'$this->'.$name.'!==null&&$this->'.$name.'!==false&&$this->'.$name.'!==0':'$this->'.$name).';}';
 						$specialFieldsBefore.='public function display'.$camelized.'(){ return $this->is'.$camelized.'() ? '."_tC('Yes') : _tC('No')".'; }';
 					}elseif($type==='Json'){
 						$fieldName=UInflector::camelize($name,true);
