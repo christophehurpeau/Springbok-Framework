@@ -39,8 +39,8 @@ class CPagination{
 		if($hFR || $count > 0){
 			if($this->page===1) $down=0;
 			else{
-				$down=$this->pageSize*($this->page-1);
-				if(isset($count) && $down > $count){
+				$down=$this->pageSize*($this->page-1);debugVar($down);
+				if(isset($count) && $down >= $count){
 					throw new SPaginationOverrunException;
 				}
 			}
