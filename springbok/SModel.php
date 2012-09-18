@@ -148,7 +148,17 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	
 	/* Export */
 	public function toArray(){
-		return $this->data;
+		return self::_ToArray($this->data,$modelName::$__PROP_DEF);
+	}
+	
+	private static function _ToArray($data,$props=null){
+		foreach($data as $colName => $value){
+			//if(is_array($var)) foreach($data[$colName] as $k=>&$v) self::_ToArray($data);
+			if($props!== null && isset($props[$colName]) && $props[$colName]['type']){
+				if($props[$colName]['type']==='boolean') $data[$colName]=$value!==null&&$value!==false&&$value!==0;
+			}
+		}
+		return $data;
 	}
 	
 	public function toHtml(){
@@ -159,7 +169,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	}
 	
 	public function toJSON(){
-		return json_encode($this->_getData());
+		return json_encode($this->toArray());
 	}
 	public function jsonSerialize(){
 		return json_encode($this->_getData());
