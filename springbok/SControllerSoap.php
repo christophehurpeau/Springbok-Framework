@@ -17,6 +17,7 @@ class SControllerSoap extends Controller{
 		/* PROD */ if(!file_exists($paramsFile)): /* /PROD */
 		$params=array('methods'=>static::soapMethods($className),'complexTypes'=>static::complexTypes());
 		file_put_contents($paramsFile,serialize($params));
+		ini_set('soap.wsdl_cache_enabled',0);
 		/* PROD */endif;/* /PROD */
 		
 		$params=unserialize(file_get_contents($paramsFile));

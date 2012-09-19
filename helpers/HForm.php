@@ -195,7 +195,7 @@ class HForm{
 							case 'email': case 'mail':
 								$type='email';
 								break;
-							case 'url': case 'site_web':
+							case 'url': case 'site_web': case 'website':
 								$type='url';
 								break;
 						} 
