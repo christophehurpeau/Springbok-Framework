@@ -21,13 +21,13 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .context{ overflow:auto; overflow-x:hidden; position:relative }
 .nowrap,.w1{white-space:nowrap}
 html body .hidden{display:none}
-.hiddenText{text-indent:-99999px; *text-indent:0; *font-size:0; *line-height:0; *overflow:hidden; }
+.hiddenText{text-indent:-99999px; @if $IE_COMPATIBILITY{ *text-indent:0; *font-size:0; *line-height:0; *overflow:hidden;} }
 
 .floatR{float:right}
 .floatL{float:left}
 
 .row{ @extend .clear; display:table; table-layout:fixed; width:100%; }
-.row .col{ display:table-cell; vertical-align:top; /* Opera */ *float:left; /* IE <7 */ }
+.row .col{ display:table-cell; vertical-align:top; /* Opera */  @if $IE_COMPATIBILITY{*float:left; /* IE <7 */ }}
 
 .line.gut > * + * { 
     margin-left:1em;
@@ -36,7 +36,7 @@ html body .hidden{display:none}
 .row.gut > * + * { 
    border-left:1em solid #fff; /* must be color of parent background */
    border-left-color:transparent;
-   *border-left:0;
+   @if $IE_COMPATIBILITY{*border-left:0;}
 }
 
 .aposTR{position:absolute;top:0;right:0}
@@ -68,7 +68,9 @@ html body .hidden{display:none}
   clear: both; 
 }
 /** html .clearfix,*:first-child+html .clearfix*/
-.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top,nav.top ul{ zoom: 1 }
+@if $IE_COMPATIBILITY{
+	.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top,nav.top ul{ zoom: 1 }
+}
 
 
 span.right_val{
@@ -82,7 +84,7 @@ span.img,span.icon{display:block;display:inline-block}
 .iconWrap{
   position:relative;
   overflow:hidden;
-  zoom:1;
+  @if $IE_COMPATIBILITY{ zoom:1; }
 }
 .iconWrap .icon{
   position:absolute;

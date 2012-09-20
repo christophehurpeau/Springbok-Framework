@@ -1,5 +1,6 @@
 /* TODO touch override : do not duplicate code ! */
 $_BUTTON_OVERRIDE:TRUE;
+$IE_COMPATIBILITY:false;
 
 /* PAGER.SCSS */
 div.pager{height:32px;}
@@ -10,8 +11,8 @@ ul.pager li a{
 
 /* BUTTONS.SCSS */
 
-$ButtonBackground:#FFF #F1F1F1;
-$ButtonHoverBackground:#F1F1F1 #E5E5E5;
+$ButtonBackground:#FFF #F3F3F3;
+$ButtonHoverBackground:#F3F3F3 #E5E5E5;
 $ButtonFocusBackground:#E5E5E5 #FFF;
 $ButtonColor:#111; $ButtonBorder:1px solid #CCC;
 $ButtonHoverBorder:1px solid #AAA;
