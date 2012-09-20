@@ -96,6 +96,7 @@ App.load=S.ajax.load=function(url){
 	if(url.sbStartsWith(basedir)) url = url.substr(basedir.length);
 	try{
 		var route=S.router.find(url);
+		if(!route) notFound();
 		//console.log(route);
 		S.history.navigate(url);
 		App.require('c/'+route.controller);

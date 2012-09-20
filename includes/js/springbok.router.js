@@ -89,7 +89,6 @@
 				}
 			});
 			
-			if(!route) notFound();
 			return route;
 		},
 		
