@@ -63,6 +63,8 @@ $ButtonHoverBorder:1px solid #333333 !default;
   	text-shadow:$ButtonTextShadow;
   }
   a.button,a.button:hover{text-decoration:none;display:inline-block;}
+  input.submit.bblock,button.bblock,.button.bblock,a.button.bblock,a.button.bblock:hover{display:block;}
+  
   button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
   button.big, .button.big{
     padding:5px 16px;
