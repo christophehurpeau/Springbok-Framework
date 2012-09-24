@@ -44,8 +44,8 @@ class COAuth2Facebook extends COAuth2Connect{
 	public function updateUserInfo(&$user,$facebookUser){
 		if($this->me===null) $this->retrieveMe();
 		if(!$this->isValidMe()) return false;
-		$user->first_name=$this->me['first_name'];
-		$user->last_name=$this->me['last_name'];
+		if(!empty($this->me['first_name'])) $user->first_name=$this->me['first_name'];
+		if(!empty($this->me['last_name'])) $user->last_name=$this->me['last_name'];
 		$facebookUser->access_token=$this->accessToken;
 		$facebookUser->outdated=false;
 		$facebookUser->facebook_id=$this->me['id'];
