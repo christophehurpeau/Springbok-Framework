@@ -18,10 +18,7 @@ class CRoute{
 	}
 	
 	public static function initRoute($all){
-		$all='/'.trim($all,'/');
-		self::$all=$all;
-
-		$route=CRoute::find($all);
+		$route=CRoute::find(self::$all=$all='/'.trim($all,'/'));
 		if(!$route)
 			/* DEV */ throw new Exception('No route was found for the url : '.$all); /* /DEV */
 			/* PROD */ notFound(); /* /PROD */
