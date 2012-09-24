@@ -5,6 +5,9 @@
 @mixin coreIcon16($name,$iconName){
   .icon.#{$name}{background:url('COREIMG/fatcowIcons_16/#{$iconName}.png');}
 }
+@mixin coreIcon32($name,$iconName){
+  .icon32.#{$name}{background:url('COREIMG/fatcowIcons_32/#{$iconName}.png');}
+}
 
 .iconWrap div{height:30px;padding-left:28px}
 .icon,.icon32{width:16px;height:16px;margin:2px 3px 2px 0;@extend .hiddenText;font-size:0;}/* display inline-block dans global.scss */

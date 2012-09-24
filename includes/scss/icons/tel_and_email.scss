@@ -1,4 +1,4 @@
-@includeCore 'base/icons';
+@includeCore 'base/icon';
 @include coreIcon('tel','telephone');
 @each $iconName in add,delete,edit,error,go,key,link {
   @include coreIcon('tel_'+$iconName,'telephone_'+$iconName);

@@ -1,4 +1,4 @@
-@includeCore 'base/icons';
+@includeCore 'base/icon';
 @each $iconName in table,table_add,table_delete,table_edit,table_error,table_gear,table_go,table_key,table_lightning,
     table_link,table_multiple,table_refresh,table_relationship,table_row_delete,table_row_update,table_row_insert,
     table_save,table_sort {
