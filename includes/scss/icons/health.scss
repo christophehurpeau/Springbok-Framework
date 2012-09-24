@@ -1,0 +1,4 @@
+@includeCore 'base/icon';
+@each $iconName in hospital,health {
+  @include coreIcon16($iconName,$iconName);
+}

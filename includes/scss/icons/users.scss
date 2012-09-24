@@ -1,4 +1,4 @@
-@includeCore 'base/icons';
+@includeCore 'base/icon';
 @each $iconName in user,user_add,user_edit,user_delete,user_go {
   @include coreIcon($iconName);
 }

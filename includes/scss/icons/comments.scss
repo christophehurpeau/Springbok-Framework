@@ -1,4 +1,4 @@
-@includeCore 'base/icons';
+@includeCore 'base/icon';
 @each $iconName in user_comment,comment,comment_add,comment_delete,comment_edit,comments,comments_add,comments_delete {
   @include coreIcon($iconName);
 }

@@ -1,15 +1,27 @@
-$ButtonBackground:#555555 #444444 !default;
+$_BUTTON_OVERRIDE:FALSE !default;
+$BasicButtons:FALSE !default;
 $ButtonBoxShadow:#777777 !default;
-$ButtonBorder:1px solid #111 !default;
-$ButtonColor:#EEE !default;
 $ButtonTextShadow:#999 !default;
-$ButtonHoverBackground:#666666 #555555 !default;
-$ButtonHoverBorder:1px solid #333333 !default;
-$ButtonHoverColor:#FFF !default;
-$ButtonFocusBackground:#555555 #777777!default;
 $ButtonFocusColor:#FFF !default;
 $ButtonTextShadow:#555 !default;
-$_BUTTON_OVERRIDE:FALSE !default;
+
+$ButtonBackground:#555555 #444444 !default;
+$ButtonHoverBackground:#666666 #555555 !default;
+$ButtonFocusBackground:#555555 #777777 !default;
+$ButtonColor:#EEE !default;
+$ButtonBorder:1px solid #111 !default;
+$ButtonHoverColor:#FFF !default;
+$ButtonHoverBorder:1px solid #333333 !default;
+	
+@if $BasicButtons==true{
+	$ButtonBackground:#FFF #F3F3F3;
+	$ButtonHoverBackground:#F3F3F3 #E5E5E5;
+	$ButtonFocusBackground:#E5E5E5 #FFF;
+	$ButtonColor:#111;
+	$ButtonBorder:1px solid #CCC;
+	$ButtonHoverColor:#000;
+	$ButtonHoverBorder:1px solid #AAA;
+}
 
 
 @if $_BUTTON_OVERRIDE==TRUE{
@@ -38,7 +50,7 @@ $_BUTTON_OVERRIDE:FALSE !default;
   	padding:2px 8px;
   	cursor:pointer;
   	transition:all .4s;
-  	box-sizing: border-box;
+  	box-sizing:border-box;
   }
   input.submit:hover,button:hover,.button:hover{
   	@include background($ButtonHoverBackground);
@@ -51,6 +63,8 @@ $_BUTTON_OVERRIDE:FALSE !default;
   	text-shadow:$ButtonTextShadow;
   }
   a.button,a.button:hover{text-decoration:none;display:inline-block;}
+  input.submit.bblock,button.bblock,.button.bblock,a.button.bblock,a.button.bblock:hover{display:block;}
+  
   button::-moz-focus-inner,input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border: 0}
   button.big, .button.big{
     padding:5px 16px;

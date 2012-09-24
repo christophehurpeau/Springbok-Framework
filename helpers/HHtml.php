@@ -304,7 +304,7 @@ s.parentNode.insertBefore(g,s);
 			if(empty($url) || $url==='/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.'/';
 			else{
 				if(strpos($url,'://')>0) return $url;
-				if(substr($url,0,2)==='\/') $url=substr($url,1);
+				if(substr($url,0,2)==='\/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).substr($url,1);
 				elseif($url[0]==='/'){$url=substr($url,1); $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getStringLink($entry,$url);}
 			}
 		}
