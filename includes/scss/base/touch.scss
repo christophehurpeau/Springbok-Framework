@@ -1,5 +1,8 @@
 /* TODO touch override : do not duplicate code ! */
-$_BUTTON_OVERRIDE:TRUE;
+$_BUTTON_OVERRIDE:TRUE !default;
+@if($_BUTTON_OVERRIDE == false){
+  @if $BasicButtons==false{ @warn "You must add $BasicButtons:true; in the top of your scss file."; }
+}
 $IE_COMPATIBILITY:false;
 
 /* PAGER.SCSS */
@@ -9,15 +12,13 @@ ul.pager li a{
   padding:6px 10px;
 }
 
-/* BUTTONS.SCSS */
+$ButtonBackground:false !default; $ButtonHoverBackground:false !default; $ButtonFocusBackground:false !default;
+$ButtonBorder:false !default; 
 
-$ButtonBackground:#FFF #F3F3F3;
-$ButtonHoverBackground:#F3F3F3 #E5E5E5;
-$ButtonFocusBackground:#E5E5E5 #FFF;
-$ButtonColor:#111; $ButtonBorder:1px solid #CCC;
-$ButtonHoverBorder:1px solid #AAA;
-
-@includeCore 'base/buttonsOverride.scss';
+@if($_BUTTON_OVERRIDE == true){
+	$BasicButtons:true;
+	@includeCore 'base/buttonsOverride.scss';
+}
 
 ul.linksList,ul ul.linksList{
   list-style:none;
@@ -46,7 +47,7 @@ ul.linksList{
     text-align:left;
   }
 }
-#page .button{
+.button,.ssButton{
   margin: 2px;
-  padding:6px 8px;
+  padding:6px 8px !important;
 }

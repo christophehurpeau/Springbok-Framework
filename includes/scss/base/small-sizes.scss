@@ -20,10 +20,11 @@
     body{
       font-size:100% !important;
     }
-    h1{font-size:1.42em !important}
-		h2{font-size:1.35em !important}
-		h3{font-size:1.28em !important}
-		h4{font-size:1.16em !important}
+    h1{font-size:1.35em !important}
+		h2{font-size:1.20em !important}
+		h3{font-size:1.18em !important}
+		h4{font-size:1.05em !important}
+		h5{font-size:0.8em !important}
     
     body #container{min-width:0}
     
@@ -38,4 +39,22 @@
     .paddingtop > article{
       padding:0 3px;
     }
+    
+    /* GLOBAL.SCSS */
+   
+    .ssButton{
+    	@include background($ButtonBackground);
+  		border-radius:3px;
+  		border:$ButtonBorder;
+	  	color:$ButtonColor;
+	  	text-shadow:$ButtonTextShadow;
+	  	padding:2px 8px;
+	  	cursor:pointer;
+	  	transition:all .4s;
+	  	box-sizing:border-box;
+	  	display:block;
+	  	text-decoration:none;
+    }
+   
+    .ssHidden{ display:none; }
 }
