@@ -64,7 +64,11 @@ div.input input{ width:250px; }
 @includeCore 'base/buttons.scss';
 input[type=submit],button{margin:5px 0 3px 1px;}
 
-input[type=radio],input[type=checkbox]{vertical-align:bottom; margin:0 3px;}
+input[type=radio],input[type=checkbox]{
+	vertical-align:bottom; margin:0 3px;
+	padding: 0; /* Corrects excess space around these inputs in IE8/9 */
+	*width: 13px; *height: 13px; /* Corrects excess space around these inputs in IE7 */
+}
 input.wp100,div input.wp100,form textarea{
 	box-sizing: border-box;
 	width:100%

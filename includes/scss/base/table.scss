@@ -22,9 +22,9 @@ table.table{
 	clear:both;
 }
 
-table.table td{
-	border-right:1px solid #DDD;
-	border-right:1px solid rgba(0,0,0,0.15);
+table.table tr > * + *{
+	border-left:1px solid #DDD;
+	border-left:1px solid rgba(0,0,0,0.15);
 }
 /*table.table tr:hover{
 	background:INTERACTION_HOVER_COLOR;

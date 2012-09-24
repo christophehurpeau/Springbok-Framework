@@ -25,7 +25,7 @@ html body #springbok-bar{
     top:0; left:0; right:0;
     width: 100%;
 	z-index: 99999;
-	
+	overflow:hidden;
 }
 html body #springbok-bar a,html body #springbok-bar b{
 	padding:0 6px;
@@ -34,6 +34,16 @@ html body #springbok-bar a,html body #springbok-bar b{
 	color:#FFF;
 	text-decoration:none;
 	outline:none;
+}
+@media (max-width: 640px) {
+	html body #springbok-bar,html body .springbok-bar-content *{
+		font:100 8pt 'Ubuntu Condensed','Ubuntu','Droid Sans Condensed','Droid Sans','Segoe UI Condensed','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	}
+	html body #springbok-bar a,html body #springbok-bar b{
+		padding:0 2px;
+		text-shadow:none !important;/* jquery mobile*/
+	}
+	html body #springbok-bar b{ font-size }
 }
 
 html body #springbok-bar a:hover{

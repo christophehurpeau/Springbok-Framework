@@ -10,10 +10,6 @@ class SiteController extends Controller{
 		 renderFile(APP.'web/img/favicon.ico');
 	}
 
-	/** */
-	function robots(){
-		 renderText("User-agent: *\nAllow: /\n");
-	}
 	
 	/** */
 	function login(User $user){

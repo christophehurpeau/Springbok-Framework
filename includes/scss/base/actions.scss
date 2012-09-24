@@ -1,8 +1,2 @@
-a.action,span.action{
-  display: block;display:inline-block;
-  /*height:16px;width:16px;*/
-  margin:0 0 0 1px;padding:0;
-  vertical-align:bottom;
-}
+@includeCore 'base/action';
 a.action.details,span.action.details{background:url('COREIMG/fatcowIcons_16/zoom_selection.png');}
-a.action.vaMid{vertical-align:middle}

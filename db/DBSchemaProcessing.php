@@ -14,7 +14,10 @@ class DBSchemaProcessing{
 		$this->generate=$generate||$this->shouldApply;
 		
 		$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
-		
+		/* DEV */
+			if(!is_writable($baseDir.'/dbEvolutions')) throw new Exception('dbEvolutions is not writable !');
+			if(!is_writable($baseDir.'/dbVersions')) throw new Exception('dbVersions is not writable !');
+		/* /DEV */
 		
 		$currentDbVersion=(int)trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
 	

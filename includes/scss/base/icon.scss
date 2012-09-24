@@ -1,0 +1,18 @@
+@mixin coreIcon($name,$iconName:''){
+  @if $iconName==''{ $iconName:$name; }
+  .icon.#{$name}{background:url('COREIMG/silk_icon_set/#{$iconName}.png');}
+}
+@mixin coreIcon16($name,$iconName){
+  .icon.#{$name}{background:url('COREIMG/fatcowIcons_16/#{$iconName}.png');}
+}
+
+.iconWrap div{height:30px;padding-left:28px}
+.icon,.icon32{width:16px;height:16px;margin:2px 3px 2px 0;@extend .hiddenText;font-size:0;}/* display inline-block dans global.scss */
+.icon26{width:26px;height:26px;}
+.icon32{width:32px;height:32px;}
+li .icon,.button .icon,li .icon32,.button .icon32{margin:0 2px 0 0}
+
+.bIcon .icon{margin:0;}
+.button.bIcon{padding:4px}
+
+.imgLoading{background:url('../img/ajax-loader.gif');width:16px;height:16px}
