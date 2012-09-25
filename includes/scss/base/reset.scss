@@ -47,14 +47,21 @@ hr{
 img{border:0}
 
 textarea, table, td, th, code, pre, samp, div, p, ul {
-    word-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    -o-hyphens: auto;
-    hyphens: auto;
+  word-wrap:break-word;
+  -webkit-hyphens:auto;
+  -moz-hyphens:auto;
+  -ms-hyphens:auto;
+  -o-hyphens:auto;
+  hyphens:auto;
 }
-
+a{
+	word-wrap:normal;
+  -webkit-hyphens:manual;
+  -moz-hyphens:manual;
+  -ms-hyphens:manual;
+  -o-hyphens:manual;
+  hyphens:manual;
+}
 
 
 
