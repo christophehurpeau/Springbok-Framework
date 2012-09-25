@@ -1,7 +1,7 @@
 <?php
 /** http://www.google.com/support/webmasters/bin/answer.py?answer=79812 */
 class HMeta{
-	private static $metas,$canonical,$canonicalEntry,$prev,$next,$altLangs;
+	private static $metas,$canonical,$canonicalEntry,$prev,$next,$smallSizes,$altLangs;
 	
 	public static function keywords($keywords){
 		self::$metas['keywords']=$keywords;
@@ -30,6 +30,8 @@ class HMeta{
 	public static function canonicalEntry($entry){ self::$canonicalEntry=$entry; }
 	public static function prev($url){ self::$prev=$url; }
 	public static function next($url){ self::$next=$url; }
+	public static function smallSizes($url,$entry){ self::$smallSizes=HHtml::urlEscape($url,$entry,true); }
+	public static function smallSizesUrl($url){ self::$smallSizes=h($url); }
 	
 	public static function altlangs($urls){ self::$altLangs=$urls; }
 	
@@ -47,12 +49,16 @@ class HMeta{
 		$result='<link rel="canonical" href="'.HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true).'"/>';
 		if(self::$prev!==null) $result.='<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,true).'"/>';
 		if(self::$next!==null) $result.='<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,true).'"/>';
+		if(self::$smallSizes!==null) $result.='<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
 		return $result;
 	}
 	
 	public static function getCanonical($fullUrl=true){
 		if(empty(self::$canonical)) return false;
         return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl);
+	}
+	public static function getSmallSizesEscapedUrl(){
+		return self::$smallSizes;
 	}
 	
 	public static function displayAltLangs(){
