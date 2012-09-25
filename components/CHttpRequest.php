@@ -4,8 +4,8 @@ class CHttpRequest{
 
 
 	public static function init(){
-		self::$method=$_SERVER['REQUEST_METHOD'];
-		self::$query=$_SERVER['QUERY_STRING'];
+		self::$method=isset($_SERVER['REQUEST_METHOD'])?$_SERVER['REQUEST_METHOD']:null;
+		self::$query=isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:null;
 		if(isset($_GET['url'])){
 			self::$pathInfo=$_GET['url'];
 			unset($_GET['url']);

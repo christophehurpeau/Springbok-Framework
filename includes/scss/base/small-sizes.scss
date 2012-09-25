@@ -3,15 +3,13 @@
     [class*="w160"], [class*="w200"], [class*="w280"],
     [class*="w300"], [class*="w350"], [class*="w380"],
     [class*="w400"], [class*="w420"], [class*="w600"],
-    [class*="wp10"], [class*="wp20"], [class*="wp30"],
-    [class*="wp33"], [class*="wp40"], [class*="wp50"],
-    [class*="wp60"], [class*="wp70"], [class*="wp80"],
-    [class*="wp90"] {
+    [class*="wp1"],[class*="wp2"],[class*="wp3"],[class*="wp4"],[class*="wp5"],
+    [class*="wp6"],[class*="wp7"],[class*="wp8"],[class*="wp9"] {
         width: auto;
     }
+    [class*="wp100"]{width:100%}
     
-    [class*="h600"], [class*="h400"], [class*="h200"],
-    [class*="h300"]{
+    [class*="h600"],[class*="h400"],[class*="h200"],[class*="h300"]{
         height: auto;
     }
     
@@ -29,11 +27,11 @@
     body #container{min-width:0}
     
     .row .col{
-      display: block  !important;
-      margin: 0 !important;
-      border: 0 !important;
-      float: none !important;
-      width: auto !important;
+      display:block  !important;
+      margin:0 !important;
+      border:0 !important;
+      float:none !important;
+      width:auto !important;
     }
     
     .paddingtop > article{
@@ -57,4 +55,20 @@
     }
    */
     .ssHidden{ display:none; }
+    
+    input[type="submit"],button{ margin:0 auto; }
 }
+
+/*
+[class*="_wp10"]{width:10%}
+[class*="_wp20"]{width:20%}
+[class*="_wp30"]{width:30%}
+[class*="_wp33"]{width:33.33%;*width:33.3%}
+[class*="_wp40"]{width:40%}
+[class*="_wp50"]{width:50%}
+[class*="_wp60"]{width:60%}
+[class*="_wp70"]{width:70%}
+[class*="_wp80"]{width:80%}
+[class*="_wp90"]{width:90%}
+*/
+*._wp100{width:100%}
