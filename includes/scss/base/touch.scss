@@ -1,5 +1,5 @@
 /* TODO touch override : do not duplicate code ! */
-$_BUTTON_OVERRIDE:TRUE !default;
+$_BUTTON_OVERRIDE:true !default;
 @if($_BUTTON_OVERRIDE == false){
   @if $BasicButtons==false{ @warn "You must add $BasicButtons:true; in the top of your scss file."; }
 }
