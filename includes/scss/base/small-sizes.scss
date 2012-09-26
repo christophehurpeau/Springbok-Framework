@@ -57,6 +57,14 @@
     .ssHidden{ display:none; }
     
     form div.submit{ text-align:center; }
+    
+    
+    /* MENU.SCSS */
+   
+   #page nav.top ul,#page nav.top li,#page nav.top li a{
+   	 float:none;display:block;
+   	 width:auto !important;
+   }
 }
 
 /*
