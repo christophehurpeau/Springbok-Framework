@@ -39,8 +39,11 @@ html body .hidden{display:none}
    @if $IE_COMPATIBILITY{*border-left:0;}
 }
 
-.aposTR{position:absolute;top:0;right:0}
-.aposR{position:absolute;right:0}
+.aposR,.aposT,.aposTR,.aposB{position:absolute}
+.aposR,.aposTR,.aposB{right:0}
+.aposT,.aposTR{top:0}
+.aposT,.aposB{left:0}
+.aposB{bottom:0}
 /*.iepie{behavior:url(/web/css/PIE.htc);}
 .ieCss3{behavior:url(/web/css/ie-css3.htc);}*/
 .w1{width:1px}
