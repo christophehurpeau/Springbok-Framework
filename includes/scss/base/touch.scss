@@ -42,7 +42,7 @@ ul.linksList,nav.left ul{
     @include background($ButtonFocusBackground);
   }
 }
-ul.linksList>li>a,nav ul>li>a{padding:5px 8px !important;}
+ul.linksList>li>a,nav ul>li>a{ padding:6px 8px !important; }
 
 .col > .linksList, .col.linksList{ margin-right:1px; }
 #page ul.linksList,nav.top ul,nav.left ul{

@@ -115,6 +115,7 @@ class SSqlModel extends SModel{
 			$where[$pkName]=$this->data[$pkName];
 			unset($data[$pkName]);
 		}
+		if(empty($data)) return null;
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
 		$this->afterUpdateCompare($data,$where);
 		return true;

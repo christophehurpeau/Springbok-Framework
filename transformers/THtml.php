@@ -84,7 +84,9 @@ class THtml extends STransformer{
 		foreach($results as $key=>&$model){
 			if(isset($this->component->rowActions) || $this->component->actionClick) $pkValue=$model->_getPkValue();
 			echo '<tr';
-			if($iRow++%2) echo ' class="alternate"';
+			$class=$model->getTableClass();
+			if($iRow++%2) echo ' class="alternate'.($class===null?'':' '.$class).'"';
+			elseif($class!==null) echo ' class="'.$class.'"';
 			if($this->component->actionClick !==null){
 				if(is_array($this->component->actionClick)){
 					$defaultActionUrl=$this->component->actionClick;

@@ -20,7 +20,7 @@ includeCore('ui/slideTo');
 		
 		S.ready=function(callback){ readyCallbacks.add(callback); };
 	});
-	S.redirect=function(url){ S.ajax.load(url); }
+	S.redirect=function(url){ if(url){ url.sHas(':') ? window.location=url : S.ajax.load(url);} }
 	S.setTitle=function(title){ document.title=title; defineDefault('UPDATE_H1_WITH_TITLE',false); if(UPDATE_H1_WITH_TITLE) divVariable.children('h1:first').text(title) }
 	S.ajax={
 		init:function(){
