@@ -232,4 +232,6 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	public static function Form($name=null,$setValuesFromVar=true){
 		return HElementForm::ForModel(static::$__className,$name,$setValuesFromVar);
 	}
+	
+	public function getTableClass(){ return null; }
 }

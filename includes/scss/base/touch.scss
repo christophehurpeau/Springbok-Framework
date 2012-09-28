@@ -1,5 +1,5 @@
 /* TODO touch override : do not duplicate code ! */
-$_BUTTON_OVERRIDE:TRUE !default;
+$_BUTTON_OVERRIDE:true !default;
 @if($_BUTTON_OVERRIDE == false){
   @if $BasicButtons==false{ @warn "You must add $BasicButtons:true; in the top of your scss file."; }
 }
@@ -23,15 +23,17 @@ $ButtonBorder:false !default;
 ul.linksList,ul ul.linksList{
   list-style:none;
   margin:0;padding:0;
-  border-bottom:$ButtonBorder;
 }
-ul.linksList{
+ul.linksList,nav.left ul{
   > li{/* not a */
     margin:0;
     @include background($ButtonBackground);
     border-top:$ButtonBorder;
+    border-bottom:$ButtonBorder;
     transition:all .4s;
-    > a{padding:5px 8px;}
+  }
+  > li + li{
+  	border-top:0;
   }
   > li:hover{
     @include background($ButtonHoverBackground);
@@ -40,14 +42,26 @@ ul.linksList{
     @include background($ButtonFocusBackground);
   }
 }
+ul.linksList>li>a,nav ul>li>a{ padding:6px 8px !important; }
+
 .col > .linksList, .col.linksList{ margin-right:1px; }
-#page ul.linksList{
+#page ul.linksList,nav.top ul,nav.left ul{
   a,a:hover,a:focus{
     display:block;
     text-align:left;
   }
 }
-.button{
+
+nav.left ul{
+	box-shadow:1px 1px 0 rgba(0,0,0,0.3);
+	border-radius:6px;
+}
+nav.left ul>li,nav.top ul>li>a{border:$ButtonBorder;}
+nav.top ul>li + li>a{border-top:0;}
+nav.left ul>:first-child,nav.top ul>:first-child>a{ @include borderRadiusTop(6px); }
+nav.left ul>:last-child,nav.top ul>:last-child>a{ @include borderRadiusBottom(6px); }
+
+input.submit,button,.button{
   margin:3px 2px;
   padding:6px 8px !important;
 }

@@ -158,46 +158,75 @@ class CImages extends CFiles{
 			list($width,$height)=$image_params;
 			$rimage=imagecreatefromjpeg($filenameWithoutExt.'.jpg');
 			foreach($thumbnails as $suffix=>$params){
-				self::createThumbnail($rimage,$filenameWithoutExt.'-'.$suffix.'.jpg',$width,$height,$params['width'],$params['height']);
+				/* TEST */
+                $maxWidth=isset($params['maxWidth']) ? $params['maxWidth'] : -1;
+                $maxHeight=isset($params['maxHeight']) ? $params['maxHeight'] :  -1;
+				self::createThumbnail($rimage,$filenameWithoutExt.'-'.$suffix.'.jpg',$width,$height,$params['width'],$params['height'],$maxWidth,$maxHeight);
 			}
 			imagedestroy($rimage);
 		}
 	}
 
-	public static function createThumbnail($rimage,$filename,$width,$height,$new_width,$new_height){
+	public static function createThumbnail($rimage,$filename,$width,$height,$new_width,$new_height,$maxWidth=-1,$maxHeight=-1){
 		$dst_x=$dst_y=0;
-		if($width > $new_width || $height > $new_height){
-			$originalRatio = floatval($width) / floatval($height);
-			if ($new_width < 0 && $new_height > 0){
-				$new_width=$adjusted_width= (int)($new_height * $originalRatio);
-				$adjusted_height=$new_height;
-			}elseif($new_width > 0 && $new_height < 0){
-				$new_height=$adjusted_height= (int)($new_width / $originalRatio);
-				$adjusted_width=$new_width;
-			}else{
-				$newRatio = floatval($new_width) / floatval($new_height);
-				/*if($newRatio < $originalRatio){
-					$new_height = intval($new_width / $originalRatio);
-					//$dst_y=floor(($new_height-$good_new_height)/2);
-				}else{
-					$new_width = intval($new_height * $originalRatio);
-					//$dst_x=floor(($new_height-$good_new_width)/2);
-				}*/
-				
-				if($newRatio < $originalRatio){
-					$adjusted_height = intval($new_width / $originalRatio);
-					$adjusted_width=$new_width;
-					$dst_y=floor(($new_height-$adjusted_height)/2);
-				}else{
-					$adjusted_width = intval($new_height * $originalRatio);
+		if($maxWidth<1 && $maxHeight<1){
+			if($width > $new_width || $height > $new_height){
+				$originalRatio = (float)($width) / (float)($height);
+				if ($new_width < 0 && $new_height > 0){
+					$new_width=$adjusted_width= (int)($new_height * $originalRatio);
 					$adjusted_height=$new_height;
-					$dst_x=floor(($new_width-$adjusted_width)/2);
+				}elseif($new_width > 0 && $new_height < 0){
+					$new_height=$adjusted_height= (int)($new_width / $originalRatio);
+					$adjusted_width=$new_width;
+				}else{
+					$newRatio = (float)($new_width) / (float)($new_height);
+					/*if($newRatio < $originalRatio){
+						$new_height = intval($new_width / $originalRatio);
+						//$dst_y=floor(($new_height-$good_new_height)/2);
+					}else{
+						$new_width = intval($new_height * $originalRatio);
+						//$dst_x=floor(($new_height-$good_new_width)/2);
+					}*/
+					
+					if($newRatio < $originalRatio){
+						$adjusted_height = (int)($new_width / $originalRatio);
+						$adjusted_width=$new_width;
+						$dst_y=floor(($new_height-$adjusted_height)/2);
+					}else{
+						$adjusted_width = (int)($new_height * $originalRatio);
+						$adjusted_height=$new_height;
+						$dst_x=floor(($new_width-$adjusted_width)/2);
+					}
 				}
+			}else{
+				$adjusted_width=$width; $adjusted_height=$height;
+				$dst_y=floor(($new_height-$height)/2);
+				$dst_x=floor(($new_width-$width)/2);
 			}
 		}else{
-			$adjusted_width=$width; $adjusted_height=$height;
-			$dst_y=floor(($new_height-$height)/2);
-			$dst_x=floor(($new_width-$width)/2);
+			$originalRatio = (float)($width) / (float)($height);
+            if($maxHeight<=0 && $width > $maxWidth){
+                $new_width=$adjusted_width=$maxWidth;
+                $new_height=$adjusted_height= (int)($new_width / $originalRatio) ;
+            }elseif($maxWidth<=0 && $height > $maxHeight){
+                $new_width=$adjusted_width=(int)($new_height * $originalRatio);
+                $new_height=$adjusted_height= $maxHeight ;
+            }elseif($width > $maxWidth || $height > $maxHeight){
+                $maxContainerRatio = (float)($maxWidth) / (float)($maxHeight);
+               
+                if($maxContainerRatio < $originalRatio){
+                    $new_height=$adjusted_height = (int)($maxWidth / $originalRatio);
+                    $new_width=$adjusted_width=$maxWidth;
+                }else{
+                    $new_width=$adjusted_width = (int)($maxHeight * $originalRatio);
+                    $new_height=$adjusted_height= $maxHeight ;
+                }
+               
+            }
+            else{
+                $new_width=$adjusted_width=$width;
+                $new_height=$adjusted_height= $height ;
+            }
 		}
 		if(!($tmp = imagecreatetruecolor($new_width,$new_height))) return false;
 		if($adjusted_width<$new_width || $adjusted_height<$new_height){

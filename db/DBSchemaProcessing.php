@@ -15,17 +15,17 @@ class DBSchemaProcessing{
 		
 		$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
 		/* DEV */
-			if(!is_writable($baseDir.'/dbEvolutions')) throw new Exception('dbEvolutions is not writable !');
-			if(!is_writable($baseDir.'/dbVersions')) throw new Exception('dbVersions is not writable !');
+			if(!is_writable(APP.'dbEvolutions')) throw new Exception('dbEvolutions is not writable !');
+			if(!is_writable(APP.'dbEvolutions/Versions')) throw new Exception('dbEvolutions/Versions is not writable !');
 		/* /DEV */
 		
 		$currentDbVersion=(int)trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
 	
-		$dbVersions=explode("\n",trim(UFile::getContents($baseDir.'dbVersions')));
+		$dbVersions=explode("\n",trim(UFile::getContents(APP.'dbEvolutions/Versions')));
 		if(!empty($dbVersions)){
 			$lastVersion=(int)array_pop($dbVersions);
 			
-			if($currentDbVersion !== $lastVersion){
+			if($currentDbVersion !== $lastVersion && $currentDbVersion < $lastVersion){
 				$this->displayAndLog('currentDbVersion ('.$currentDbVersion.') != lastVersion ('.$lastVersion.')');
 				
 				
@@ -39,7 +39,7 @@ class DBSchemaProcessing{
 						render(CORE.'db/evolutions-view.php',$vars);
 					}else{
 						foreach($versionsToUpdate as $version){
-							$sql=UFile::getContents($baseDir.'dbEvolutions/'.$version.'.sql');
+							$sql=UFile::getContents(APP.'dbEvolutions/'.$version.'.sql');
 							
 							foreach(explode("\n",$sql) as $line){
 								if(empty($line)) continue;
@@ -111,7 +111,7 @@ class DBSchemaProcessing{
 			$vars=array('dbs'=>&$this->logs);
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
 			else{
-				file_put_contents($baseDir.'dbVersions',"\n".$this->time,FILE_APPEND);
+				file_put_contents($baseDir.'src/dbEvolutions/Versions',"\n".$this->time,FILE_APPEND);
 				file_put_contents($baseDir.'currentDbVersion',$this->time);
 				render(CORE.'db/applied-view.php',$vars);
 			}
@@ -162,7 +162,7 @@ class DBSchemaProcessing{
 	}
 	
 	public function query($dbName,$sql){
-		/* DEV */file_put_contents(dirname(APP).'/dbEvolutions/'.$this->time.'.sql',"\n".$dbName."=>".str_replace("\n",' ',$sql),FILE_APPEND);/* /DEV */
+		/* DEV */file_put_contents(dirname(APP).'/src/dbEvolutions/'.$this->time.'.sql',"\n".$dbName."=>".str_replace("\n",' ',$sql),FILE_APPEND);/* /DEV */
 	}
 
 	public function isGenerate(){

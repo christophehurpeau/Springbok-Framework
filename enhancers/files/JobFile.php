@@ -18,7 +18,7 @@ class JobFile extends PhpFile{
 			elseif(preg_match('/^([0-9]+)h$/',$val,$matches))
 				$val=$matches[1]==1?'* 0 * * *':('* */'.(ceil(60/$matches[1])).' * * *');
 			elseif(preg_match('/^([0-9]+)mi?n$/',$val,$matches))
-				$val=$matches[1]==1?'0 * * * *':('*/'.(ceil(60/$matches[1])).' * * * *');
+				$val=$matches[1]==1?'0 * * * *':('*/'.(ceil(60/$matches[1])).' * * * *');/* FAUX */
 
 		}
 		//if($val!==NULL)

@@ -26,18 +26,15 @@ S.stars={
 	},
 	addHandlers:function(item,value){
 		return $(item).click(function(e){
-			var $star = $(this);
-			var $allLinks = $(this).parent();
+			var $star = $(this),$allLinks=$star.parent(),divContainer=$allLinks.parent();
 			// Set the radio button value
-			$allLinks
-			  .parent()
-			  .find('input:radio[value=' + value + ']')
-			  .prop('checked', true);
+			divContainer.find('input:radio[value=' + value + ']').prop('checked', true);
 			// Set the ratings
 			$allLinks.children().removeClass('rating');
 			$star.prevAll().andSelf().addClass('rating');
 			// prevent default link click
 			e.preventDefault();
+			divContainer.trigger('stars.value',[value]);
 			return false;
 		})
 		.hover(function(){
