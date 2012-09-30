@@ -89,9 +89,9 @@ class ConfigFile extends PhpFile{
 					unset($entryRoutes['includesFromEntry']);
 				}
 				foreach($entryRoutes as $url=>$route){
-					$finalRoutes[$entry][$url]['_']=$route[0]; $paramsDef=isset($route[1])?$route[1]:NULL; $langs=isset($route[2])?$route[2]:NULL;
+					$finalRoutes[$entry][$url][0]=$route[0]; $paramsDef=isset($route[1])?$route[1]:NULL; $langs=isset($route[2])?$route[2]:NULL;
 					$finalRoutes[$entry][$url]['ext']=isset($route['ext'])?$route['ext']:NULL;
-					$route=array('en'=>$url); if($langs !== NULL) $route=$route+$langs;
+					$route=array('_'=>$url); if($langs !== NULL) $route=$route+$langs;
 					foreach($route as $lang=>&$routeLang){
 						$paramsNames=array();
 						if($specialEnd=(substr($routeLang,-2)==='/*'))
@@ -120,7 +120,7 @@ class ConfigFile extends PhpFile{
 						$finalRoutes[$entry][$url][$lang]=$routeLang;
 						if(!empty($paramsNames)) $finalRoutes[$entry][$url][':']=$paramsNames;
 					}
-					$finalRoutes[$entry][$url]['paramsCount']=substr_count($finalRoutes[$entry][$url]['en'][1],'%s');
+					$finalRoutes[$entry][$url]['paramsCount']=substr_count($finalRoutes[$entry][$url]['_'][1],'%s');
 				}
 			}
 		
@@ -133,8 +133,8 @@ class ConfigFile extends PhpFile{
 					$finalTranslations=array();
 					foreach($translations as $s=>$t){
 						foreach($t as $lang=>$s2){
-							$finalTranslations['en->'.$lang][strtolower($s)]=$s2;
-							$finalTranslations[$lang.'->en'][strtolower($s2)]=$s;
+							$finalTranslations['->'.$lang][strtolower($s)]=$s2;
+							$finalTranslations[$lang.'->'][strtolower($s2)]=$s;
 						}
 					}
 				}
@@ -143,8 +143,7 @@ class ConfigFile extends PhpFile{
 			$finalProdContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
 			$finalRoutes['index']=array('/dev/:controller(/:action/*)?'=>array('_'=>'Dev!::!',
 				':'=>array('controller','action'),'paramsCount'=>3,'ext'=>null,
-				'en'=>array('\/dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/%s/%s%s'),
-				'fr'=>array('\/dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/%s/%s%s')))+$finalRoutes['index'];
+				'_'=>array('\/dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/%s/%s%s')))+$finalRoutes['index'];
 			$finalDevContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
 			$this->write($configname,$finalProdContent,$devFile,$prodFile,$finalDevContent);
 		}elseif($configname=='routes-langs'||substr($configname,0,13)=='routes-langs_'){
