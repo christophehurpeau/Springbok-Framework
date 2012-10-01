@@ -141,7 +141,7 @@ class ConfigFile extends PhpFile{
 			}
 			
 			$finalProdContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
-			$finalRoutes['index']=array('/dev/:controller(/:action/*)?'=>array('_'=>'Dev!::!',
+			$finalRoutes['index']=array('/dev/:controller(/:action/*)?'=>array('Dev!::!',
 				':'=>array('controller','action'),'paramsCount'=>3,'ext'=>null,
 				'_'=>array('\/dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/%s/%s%s')))+$finalRoutes['index'];
 			$finalDevContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));

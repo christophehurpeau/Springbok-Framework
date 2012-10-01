@@ -28,6 +28,10 @@ class Enhanced{
 	public function getLogger(){ return $this->logger; }
 
 	public function setType($type,$name=''){ $this->type=$type; $this->name=$name; }
+	/*
+	public function getTmpDir(){
+		return $this->getAppDir().'tmp/';
+	}*/
 	
 	private $fileDef;
 	public function loadFileDef($force){

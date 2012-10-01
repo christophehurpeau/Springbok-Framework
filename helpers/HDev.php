@@ -4,11 +4,11 @@ class HDev{
 		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
 		if($includeJquery){
 			echo "<script type=\"text/javascript\">\n//<![CDATA[";
-			readfile(dirname(CORE).'/src/includes/js/libs/jquery-1.8.1.min.js');
+			readfile(CORE_SRC.'includes/js/libs/jquery-1.8.1.min.js');
 			echo "//]]>\n</script>";
 		}
-		echo HHtml::cssInline(file_get_contents(CORE.'includes/springbokBar.css'));
-		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE.'includes/js/jquery/json.js').file_get_contents(CORE.'includes/springbokBar.js').'});');
+		echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/springbokBar.css'));
+		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE_SRC.'includes/js/jquery/json.js').file_get_contents(CORE_SRC.'includes/springbokBar.js').'});');
 		$changes=&App::$changes[0];
 		echo '<div id="springbok-bar"><b onclick="$(\'#springbok-bar\').fadeOut()">Springbok</b>'
 			.' | <a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':
@@ -52,7 +52,7 @@ class HDev{
 	private static function springbokBarQueries(){
 		if(!class_exists('DB',false)) return;
 		
-		echo HHtml::cssInline(file_get_contents(CORE.'includes/debug.css'));
+		echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/debug.css'));
 		foreach(DB::getAll() as $dbname=>$db){
 			$queries=$db->getQueries();
 			echo '<table class="debug">';

@@ -10,7 +10,7 @@ class CssFile extends EnhancerFile{
 		if(!$this->isCore()){
 			if(file_exists($filename=dirname($this->srcFile()->getPath()).DS.'_functions.css'))
 				$srcContent=file_get_contents($filename).$srcContent;
-			$srcContent=file_get_contents(CORE.'includes/_functions.css').$srcContent;
+			$srcContent=file_get_contents(CORE_SRC.'includes/_functions.css').$srcContent;
 		}elseif($this->fileName()!='_functions.css' && $this->fileName()!='_default_const.css')
 			$srcContent=file_get_contents(CORE_SRC.'includes/_functions.css').$srcContent;
 		

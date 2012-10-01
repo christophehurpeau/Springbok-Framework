@@ -25,7 +25,7 @@ class EnhanceSpringbok{
 		if(!$dev->exists()) $dev->mkdir(0775);
 		$prod=new Folder($dirname.'prod');
 		if(!$prod->exists()) $prod->mkdir(0775);
-		$this->recursiveDir(new Folder($dirname.'src'), $dev, $prod);
+		$this->recursiveDir(new Folder(rtrim($dirname,'/').'/src/'), $dev, $prod);
 	
 		$this->enhanced->writeFileDef($force);
 
@@ -52,7 +52,8 @@ class EnhanceSpringbok{
 
 		foreach($dirs as $d){
 			$dirname=$d->getName();
-			if(substr($dirname,0,1)==='.') continue;
+			if($dirname[0]==='.' || $d->getPath()==CORE_SRC.'includes/') continue;
+
 			$newDevDir=new Folder($devDir->getPath().$dirname); $newDevDir->mkdir(0775);
 			if($prodDir===false) $newProdDir=false;
 			else{ $newProdDir=new Folder($prodDir->getPath().$dirname); $newProdDir->mkdir(0775); }
@@ -60,10 +61,10 @@ class EnhanceSpringbok{
 			if($dirname=='enhancers'||$dirname=='controllers'/*||$dirname=='includes'*/){
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newDevDir);
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newProdDir);
-			}elseif($d->getPath()==CORE_SRC.'includes/'){
+			}/*elseif(){
 				$newProdDir=new Folder($prodDir->getPath().$dirname); $newProdDir->delete();
 				$this->recursiveDir($d,$newDevDir,false);
-			}else{
+			}*/else{
 				//$this->enhanceFiles($d,$newDevDir,$newProdDir);
 				$this->recursiveDir($d,$newDevDir,$newProdDir);
 			}
