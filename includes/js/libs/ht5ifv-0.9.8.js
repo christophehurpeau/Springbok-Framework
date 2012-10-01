@@ -397,7 +397,8 @@
 		},	
 		restrictions:{
 			required:function ($node){
-				return $node.val() != ''
+				var val=$node.val();
+				return val != '' && !/^\s*$/.test(val);
 			},
 			pattern: function($node,$ignoreEmpty){ //as this is the same for all types it is defined here
 				var $pattern = $node.attr('pattern');
