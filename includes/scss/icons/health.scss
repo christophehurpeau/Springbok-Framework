@@ -2,3 +2,4 @@
 @each $iconName in hospital,health {
   @include coreIcon16($iconName,$iconName);
 }
+@include coreIcon16('userMedical','user_medical');

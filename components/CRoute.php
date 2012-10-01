@@ -53,7 +53,7 @@ class CRoute{
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
 		foreach(self::$_routes[Springbok::$scriptname] as $route){
-			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['en'][0]).'$/Ui',$all,$matches)){
+			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['_'][0]).'$/Ui',$all,$matches)){
 				/*$ext=isset($matches['ext'])?array_pop($matches):NULL;
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
@@ -61,7 +61,7 @@ class CRoute{
 				$ext=$route['ext']===null?null:substr(array_pop($matches),1);/*$route['ext'];*/
 				unset($matches[0]);
 				
-				list($controller,$action)=explode('::',$route['_'],2);
+				list($controller,$action)=explode('::',$route[0],2);
 				
 				if(isset($route[':'])){
 					$nbNamedParameters=count($route[':']);
@@ -149,20 +149,19 @@ class CRoute{
 		if($action==self::DEFAULT_ACTION)
 			$froute='/'.self::translate($controller,$lang);
 		else
-			$froute=sprintf($route['en'][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
-		
+			$froute=sprintf($route['_'][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
 		return /* DEV */self::$_prefix./* /DEV */$froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
 	}
 
 	public static function translate($string,$lang){
 		$stringT=strtolower($string);
-		if(!isset(self::$_langs['en->'.$lang][$stringT])) return $string;
-		return self::$_langs['en->'.$lang][$stringT];
+		if(!isset(self::$_langs['->'.$lang][$stringT])) return $string;
+		return self::$_langs['->'.$lang][$stringT];
 	}
 
 	public static function untranslate($string,$lang){
 		$stringT=strtolower($string);
-		if(!isset(self::$_langs[$lang.'->en'][$stringT])) return $string;
-		return self::$_langs[$lang.'->en'][$stringT];
+		if(!isset(self::$_langs[$lang.'->'][$stringT])) return $string;
+		return self::$_langs[$lang.'->'][$stringT];
 	}
 }

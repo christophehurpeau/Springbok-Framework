@@ -5,14 +5,14 @@ class HSitemaps{
 		$this->prefix=$prefix;
 		$this->sitemap=new HSitemap('sitemaps/'.$prefix.'1.xml');
 	}
-	public function add($url,$options=array()){
+	public function add($url,$options=array(),$entry='index'){
 		if(++$this->count >49995){
 			$this->count=0;
 			$this->sitemap->end();
 			unset($this->sitemap);
 			$this->sitemap=new HSitemap('sitemaps/'.$this->prefix.($this->sitemapNum++).'.xml');
 		}
-		$this->sitemap->add($url,$options);
+		$this->sitemap->add($url,$options,$entry);
 	}
 	
 	public function end(){
