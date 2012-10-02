@@ -6,6 +6,8 @@ include_once __DIR__.DS.'EnhancedApp.php';
 include_once __DIR__.'/../utils/UColors.php';
 include_once __DIR__.'/../components/CLogger.php';
 
+define('CORE_SRC',dirname(CORE).'/src/');
+
 class EnhanceApp extends AEnhance{
 	public function __construct($dirname){
 		$this->enhanced=new EnhancedApp('app',$dirname);
@@ -105,7 +107,7 @@ define('APP', __DIR__.'/dev/');";
 				if(is_string($includes)){ $includes=explode(',',$includes); $type=''; }
 				else $type=$type.DS;
 				foreach($includes as $filename){
-					$srcFile=CORE.'includes/'.$type.$filename;
+					$srcFile=CORE_SRC.'includes/'.$type.$filename;
 					if(!file_exists($srcFile)) $srcFile=dirname(CORE).'/includes/'.$type.$filename;
 					
 					$dests=array($dev->getPath().'web/'.$type,$prod->getPath().'web/'.$type);

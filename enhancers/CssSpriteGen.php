@@ -129,8 +129,8 @@ class CssSpriteGen {
             
             // grab path information
             if(substr($sFile,0,8)==='COREIMG/')
-            	$sFilePath= $sFilePathTmp=CORE.'includes/img/'.substr($sFile,8);
-			/*elseif(substr($sFile,0,7)==='LIBIMG/') $sFilePath= CORE.'includes/img/'.substr($sFile,7);*/
+            	$sFilePath= $sFilePathTmp=CORE_SRC.'includes/img/'.substr($sFile,8);
+			/*elseif(substr($sFile,0,7)==='LIBIMG/') $sFilePath= CORE_SRC.'includes/img/'.substr($sFile,7);*/
 			else $sFilePath=$imgDir.$sFile;
 			
 			

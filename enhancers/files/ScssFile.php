@@ -6,8 +6,8 @@ class ScssFile extends EnhancerFile{
 		if(!$this->isCore()){
 			if(file_exists($filename=dirname($this->srcFile()->getPath()).'/_mixins.scss'))
 				$srcContent=file_get_contents($filename).$srcContent;
-			$srcContent=file_get_contents(CORE.'includes/scss/mixins.scss').
-						file_get_contents(CORE.'includes/scss/functions.scss').$srcContent;
+			$srcContent=file_get_contents(CORE_SRC.'includes/scss/mixins.scss').
+						file_get_contents(CORE_SRC.'includes/scss/functions.scss').$srcContent;
 		}
 		
 		$currentPath=dirname($this->srcFile()->getPath());
@@ -23,7 +23,7 @@ class ScssFile extends EnhancerFile{
 			elseif(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
 			
-			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;
+			/*if(!empty($matches[1]) && $matches[1]==='Core') */;
 			if(empty($matches[1])) $filename=$currentPath.'/';
 			else{
 				if($matches[1]==='Plugin'){
@@ -31,7 +31,7 @@ class ScssFile extends EnhancerFile{
 					$filename=$enhanced->pluginPathFromKey($pluginKey).'web/css/';
 					$matches[2]=$fileName;
 				}else{
-					$filename=$matches[1]==='Lib' ? dirname($core).'/' : $core;
+					$filename=$matches[1]==='Lib' ? dirname(CORE_SRC).'/' : CORE_SRC;
 					$filename.='includes/';
 					
 					$folderName=$matches[1]==='Lib'?'css/':'scss/';
@@ -107,7 +107,7 @@ class ScssFile extends EnhancerFile{
 	public function callSass($content,$destination){
 		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'scssdest');
 		$tmpfname = tempnam($this->enhanced->getTmpDir(),'scss');
-		$cmd = self::$sassExecutable.' --trace --compass --scss -t compressed -r '.escapeshellarg(CORE.'includes/scss/module.rb')
+		$cmd = self::$sassExecutable.' --trace --compass --scss -t compressed -r '.escapeshellarg(CORE_SRC.'includes/scss/module.rb')
 										.' '.escapeshellarg($tmpfname).' '.escapeshellarg($dest);
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd / && '.$cmd.' 2>&1');

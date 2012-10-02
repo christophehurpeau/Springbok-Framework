@@ -50,9 +50,14 @@ abstract class QSelect extends AQuery{
 	
 	public function groupBy($groupBy){
 		if(is_string($groupBy)) $groupBy=explode(',',$groupBy);
-		$this->groupBy=&$groupBy;
+		$this->groupBy=$groupBy;
 		return $this;
 	}
+	public function addGroupBy($groupBy){
+		$this->groupBy[]=$groupBy;
+		return $this;
+	}
+	
 	public function having($having){$this->having=$having;return $this;}
 	public function addHavingCondition($key,$value){$this->having[$key]=$value;return $this;}
 	

@@ -15,12 +15,12 @@ class UInflector{
 	}
 	
 	public static function pluralize($word){
-		include_once CLIBS.'Inflect.php';
+		include_once CORE.'libs/Inflect.php';
 		return Inflect::pluralize($word);
 	}
 	
 	public static function singularize($word){
-		include_once CLIBS.'Inflect.php';
+		include_once CORE.'libs/Inflect.php';
 		return Inflect::singularize($word);
 	}
 	
