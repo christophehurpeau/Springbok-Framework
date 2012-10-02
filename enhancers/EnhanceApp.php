@@ -59,6 +59,8 @@ define('APP', __DIR__.'/dev/');";
 	
 	
 	private function recursiveCopyDir(&$srcDir,$dests,$recursiveMkdir=true){
+		$logger=$this->enhanced->getLogger();
+		$logger->log('RD: '.$srcDir->getName());
 		$dests=array_map(function(&$d) use(&$srcDir){return $d.$srcDir->getName().'/';},$dests);
 		$isLink=is_link($srcDir->getPath());
 		
@@ -174,7 +176,11 @@ define('APP', __DIR__.'/dev/');";
 			
 			
 			if($dPath===$srcDir.'web/files/' || $dPath===$srcDir.'web/img/icons/'){
-				$this->recursiveCopyDir($d,array($devDir,$prodDir));
+				//$this->recursiveCopyDir($d,array($devDir,$prodDir));
+				//symlink($devDir,$dPath);
+				//symlink($prodDir,$dPath);
+				UExec::exec('ln -s '.escapeshellarg($dPath).' '.escapeshellarg($devDir.$dirname));
+				UExec::exec('ln -s '.escapeshellarg($dPath).' '.escapeshellarg($prodDir.$dirname));
 				continue;
 			}
 			
