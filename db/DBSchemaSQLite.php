@@ -28,18 +28,18 @@ class DBSchemaSQLite extends DBSchema{
 	}
 	
 	public function reorderTable(){
-		list($table,$columns,$modelInfos)=array($this->tableName,$this->columns,$this->modelInfos);
+		list($columns,$modelInfos)=array($this->columns,$this->modelInfos);
 		$schema=&$this;
-		$fields=implode(',',array_map(array($this,'formatColumn'),array_keys($columns)));
+		$fields=implode(',',array_map(array($this->db,'formatColumn'),array_keys($modelInfos['columns'])));
 		$this->db->transaction(function(DB $db) use(&$schema,&$fields){
-			$tableF=$db->formatTable($table);
+			$tableF=$db->formatTable($schema->tableName);
 			$schema->createTable($tempTableName='t'.time().'_backup');
 			//$db->doUpdate('CREATE TEMPORARY TABLE t1_backup AS SELECT '.$fields.' FROM '.$table);
 			$db->doUpdate('INSERT INTO '.$db->formatTable($tempTableName).' SELECT '.$fields.' FROM '.$tableF);
 			$schema->removeTable();
 			$schema->createTable();
 			$db->doUpdate('INSERT INTO '.$tableF.' SELECT '.$fields.' FROM '.$db->formatTable($tempTableName));
-			$db->removeTable($tempTableName);
+			$schema->removeTable($tempTableName);
 		});
 	}
 	
