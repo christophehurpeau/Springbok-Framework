@@ -20,6 +20,7 @@ class View{
 			header('SpringbokAjaxTo: '.$to);
 		}
 		header('SpringbokAppVersion: '.APP_VERSION);
+		HHtml::displayJsHead();
 	}
 	
 	public function set($name,$value=null){

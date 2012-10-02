@@ -18,7 +18,7 @@ class UDate{
 		$day=date('j',$time);
 		$month=date('m',$time) - $months;
 		$year=date('Y',$time);
-		while($month<0){
+		while($month<1){
 			$month+=12;
 			$year--;
 		}
