@@ -77,10 +77,10 @@ abstract class AQuery{
 		return substr($sql,0,-(2+strlen($glue))).($wrap?')':'');
 	}
 	
-	protected function formatField($field,$fieldPrefix){
+	protected function formatField($field,$fieldPrefix=false){
 		if(strpos($field,'(')!==false) return $field;
 		if($pos=strpos($field,'.')){
-			$fieldPrefix=substr($field,0,$pos+1);
+			if($fieldPrefix!=='') $fieldPrefix=substr($field,0,$pos+1);
 			$field=substr($field,$pos+1);
 		}
 		return $fieldPrefix.$this->_db->formatField($field);

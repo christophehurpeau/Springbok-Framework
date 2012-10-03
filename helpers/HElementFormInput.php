@@ -31,6 +31,9 @@ class HElementFormInput extends HElementFormContainable{
 							case 'url': case 'website':
 								$this->type='url';
 								break;
+							case 'phone_number':
+								$this->type='tel';
+								break;
 						} 
 						break;
 				}

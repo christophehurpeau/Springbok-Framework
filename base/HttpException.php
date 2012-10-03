@@ -43,6 +43,7 @@ function methodNotAllowed(){throw new HttpException(405,'Method Not Allowed');}
 function notAcceptable(){throw new HttpException(406,'Not Acceptable');}
 function proxyAuthenticationRequired(){throw new HttpException(407,'Proxy Authentication Required');}
 function requestTimeout(){throw new HttpException(408,'Request Timeout');}
+function pageGone(){throw new HttpException(410,'Gone',_tC('http.410'));}
 function internalServerError(){throw new InternalServerError();}
 function notImplemented(){throw new HttpException(501,'Not Implemented');}
 function serviceUnavailable($details=''){throw new FatalHttpException(503,'Service Unavailable',$details);}

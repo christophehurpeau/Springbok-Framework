@@ -83,11 +83,11 @@ abstract class QSelect extends AQuery{
 		return $sql;
 	}
 	
-	protected function _afterWhere(&$sql,&$fieldPrefix=''){
+	protected function _afterWhere(&$sql,$fieldPrefix=''){
 		if(isset($this->groupBy)){
 			$sql.=' GROUP BY ';
 			foreach($this->groupBy as $field)
-				$sql.=$this->formatField($field,'').',';
+				$sql.=$this->formatField($field,false).',';
 			$sql=substr($sql,0,-1);
 		}
 		if(isset($this->having)){
@@ -97,7 +97,7 @@ abstract class QSelect extends AQuery{
 		if(isset($this->orderBy)){
 			$sql.=' ORDER BY ';
 			if(is_string($this->orderBy))
-				$sql.=strpos($this->orderBy,'(')!==false ? $this->orderBy : $this->_db->formatField($this->orderBy);
+				$sql.=strpos($this->orderBy,'(')!==false ? $this->orderBy : $this->_db->formatField($this->orderBy,false);
 			else{
 				foreach($this->orderBy as $key=>$value){
 					if(is_int($key)){
@@ -106,8 +106,8 @@ abstract class QSelect extends AQuery{
 							if(isset($value[2])) foreach($value[2] as $obK=>&$param) $sqlOrderBy=str_replace('$'.$obK,$this->_db->escape($param),$sqlOrderBy);
 							$sql.=$sqlOrderBy;
 						}elseif(strpos($value,'(')!==false) $sql.=$value.',';
-						else $sql.=$this->formatField($value,$value==='created'||$value==='updated'?$fieldPrefix:'').',';
-					}else $sql.=$this->formatField($key,$key==='created'||$key==='updated'?$fieldPrefix:'').' '.$value.',';
+						else $sql.=$this->formatField($value,$value==='created'||$value==='updated'?$fieldPrefix:false).',';
+					}else $sql.=$this->formatField($key,$key==='created'||$key==='updated'?$fieldPrefix:false).' '.$value.',';
 				}
 				$sql=substr($sql,0,-1);
 			}
