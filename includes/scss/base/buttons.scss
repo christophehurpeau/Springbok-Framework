@@ -52,6 +52,7 @@ $ButtonHoverBorder:1px solid #333333 !default;
   	cursor:pointer;
   	transition:all .4s;
   	box-sizing:border-box;
+  	text-decoration:none;
   }
   input.submit:hover,button:hover,.button:hover{
   	@include background($ButtonHoverBackground);
