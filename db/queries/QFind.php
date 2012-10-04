@@ -320,7 +320,7 @@ abstract class QFind extends QSelect{
 					.$join['modelName']::_fullTableName().' '.$join['alias'];
 				if(!empty($join['onConditions'])){
 					$sql.=' ON ';
-					$sql=$this->_condToSQL($join['onConditions'],'AND',$sql);
+					$sql=$this->_condToSQL($join['onConditions'],'AND',$sql,false);
 				}
 			}
 		}

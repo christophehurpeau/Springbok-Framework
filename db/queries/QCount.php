@@ -2,7 +2,7 @@
 class QCount extends QFindOne{
 	private $countField='1';
 	public function setCountField($field,$isDistinct=false){
-		$this->countField=($isDistinct?'DISTINCT ':'').$this->formatField($field,'');
+		$this->countField=($isDistinct?'DISTINCT ':'').$this->formatField($field,false);
 		return $this;
 	}
 	

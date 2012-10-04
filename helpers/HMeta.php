@@ -53,6 +53,7 @@ class HMeta{
 		return $result;
 	}
 	
+	public static function getCanonicalRaw(){ return self::$canonical; }
 	public static function getCanonical($fullUrl=true){
 		if(empty(self::$canonical)) return false;
         return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl);

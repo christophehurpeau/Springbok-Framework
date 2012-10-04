@@ -42,7 +42,7 @@ class HElementFormInputSelect extends HElementFormContainable{
 	}
 	
 	public function render_select(){
-		$contentSelect=''; $options=array();
+		$contentSelect=''; $options=$this->attributes;
 		if($this->empty !== null){
 			$optionAttributes=array('value'=>'');
 			if($this->selected==='') $optionAttributes['selected']=true;

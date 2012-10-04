@@ -1,4 +1,8 @@
 @includeCore 'base/icon';
-@each $iconName in user_comment,comment,comment_add,comment_delete,comment_edit,comments,comments_add,comments_delete {
-  @include coreIcon($iconName);
-}
+
+@include coreIcon16('userComment','user_comment');
+@include coreIcon16('comment','comment');
+@include coreIcon16('commentAdd','comment_add');
+@include coreIcon16('commentDelete','comment_delete');
+@include coreIcon16('commentEdit','comment_edit');
+@include coreIcon16('comments','comments');

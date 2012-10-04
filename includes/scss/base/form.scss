@@ -77,7 +77,7 @@ input.wp100,div input.wp100,form textarea{
 div input,div textarea{
 	background:#EDEDED;color:#4C4C4C;
 	border:1px solid #ccc;
-	@include boxShadow(#eee,10px);
+	/* @include boxShadow(#eee,10px); */
 	transition:all .3s;
 }
 div input:hover, div textarea:hover{background-color:#FAFAFA}

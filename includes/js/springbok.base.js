@@ -1,24 +1,34 @@
 /*! Springbok */
 /*'use strict';*/
-window.testonerror=function handleError(message,url,line){
+window.onerror=function handleError(message,url,line){
 	if(url && !(url.indexOf('chrome://')===0 || url.indexOf('http://127.0.0.1')===0))
 		$.get(basedir+'site/jsError',{href:window.location.href,jsurl:url,message:message,line:line});
 	//alert("An error has occurred!\n"+e);
 	//if(console) console.log(e);
 	//console.log(arguments);
 	/* DEV */
-	if(console){
+	/*if(console){
 		console.log(arguments,S&&S.StackTrace());
-	}
+	}*/
 	/* /DEV */
-	return true;
+	//return true;
+	return false;
 };
+
+
+/* DEV */
+
+
+/* /DEV */
+
+
+
 
 var arraySliceFunction=Array.prototype.slice;
 
 window.S={
 	ready:function(callback){ $(document).ready(callback); },
-	redirect:function(url){ window.location=url; },
+	redirect:function(url){ url && (window.location=url); },
 	setTitle:function(title){document.title=title;},
 	
 	imgLoading:function(){ return $('<span class="img imgLoading"/>') },
