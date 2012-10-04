@@ -165,16 +165,16 @@ class App{
 			$controllerName::dispatch(Springbok::$suffix,$mdef);
 		}catch(Exception $exception){
 			if(!($exception instanceof HttpException)){
-				if($exception instanceof DBException) $e=new FatalHttpException(503,'Service Temporarily Unavailable');
+				if($exception instanceof DBException) $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
 				elseif($exception instanceof mysqli_sql_exception){
 					/* http://dev.mysql.com/doc/refman//5.5/en/error-messages-server.html */
 					$code=$exception->getCode();
 					if($code===1040)
-						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded'),$exception);
+						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded'),'',$exception);
 					if($code===2002) /* Can't connect to local MySQL server through socket */
-						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The database is currently inaccessible'),$exception);
+						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The database is currently inaccessible'),'',$exception);
 					elseif($code<1022){
-						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded').'',$exception);
+						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded').'','',$exception);
 					}else $e=new FatalHttpException(503,'Service Temporarily Unavailable');
 				}else $e=new InternalServerError();
 			}else $e=$exception;
@@ -193,7 +193,7 @@ class App{
 			/* /DEV */
 			/* PROD */
 			if($e->getDescription()===false) exit;
-			$vars=array('title'=>$e->getHttpCode().' '.$e->getMessage(),'descr'=>$e->getDescription());
+			$vars=array('title'=>$e->getTitle(),'descr'=>$e->getDescription());
 			if(file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){
 				include_once CORE.'mvc/views/View.php';
 				render(APP.'views'.Springbok::$suffix.'/http-exception.php',$vars);
