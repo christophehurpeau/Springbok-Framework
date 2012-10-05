@@ -206,7 +206,7 @@ class Controller{
 		$render=self::_render(APP.'views'.self::$suffix.DS.$folderName.DS.$fileName.'.php');
 	}
 
-	protected static function _render($file){
+	public static function _render($file){
 		include_once CORE.'mvc/views/View.php';
 		if(static::beforeRender()){
 			/* DEV */
