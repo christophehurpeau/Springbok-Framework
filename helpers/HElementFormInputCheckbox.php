@@ -9,6 +9,7 @@ class HElementFormInputCheckbox extends HElementFormContainable{
 	}
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'input checkbox'); }
+	public function checked($isChecked=true){ if($isChecked) $this->attributes['checked']=true; return $this; }
 	
 	public function toString(){
 		return HHtml::tag('input',$this->attributes).$this->_labelToString(' ','');
