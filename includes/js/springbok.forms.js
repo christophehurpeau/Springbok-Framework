@@ -73,7 +73,7 @@ includeCore('libs/jquery-ui-1.8.23.position');
 				if(success) ajaxOptions.success=success;
 				$.ajax(url,ajaxOptions)
 					.success(function(){S.bodyIcon('tick',form);})
-					.error(function(){S.bodyIcon('tick',cross);});
+					.error(function(){S.bodyIcon('cross',form);});
 				return false;
 			})
 			/*.find(':submit').unbind('click').click(function(){
