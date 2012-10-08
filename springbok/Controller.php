@@ -272,7 +272,7 @@ class Controller{
 		flush();
 	}
 	
-	protected static function push($string){
+	public static function push($string){
 		echo str_pad($string,4096);
 		flush();
 	}

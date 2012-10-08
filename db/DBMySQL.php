@@ -1,5 +1,5 @@
 <?php
-/* http://dev.mysql.com/doc/refman/5.6/en/integer-types.html */
+/* http://dev.mysql.com/doc/refman/5.5/en/numeric-types.html */
 mysqli_report(MYSQLI_REPORT_STRICT);
 class DBMySQL extends DBSql{
 	public function _getType(){return 'MySQL';}
@@ -134,8 +134,10 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectSqlCallback($query,$callback,$callbackFields){
 		$r=$this->_query($query);
+		$r->store_result();
 		$callbackFields($this->getFieldsSQL($r));
 		while($row=$r->fetch_row()) $callback($row);
+		$r->free_result();
 		$r->close();
 	}
 	
@@ -148,7 +150,9 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectRowsCallback($query,$callback){
 		$r=$this->_query($query);
+		$r->store_result();
 		while($row=$r->fetch_assoc()) $callback($row);
+		$r->free_result();
 		$r->close();
 	}
 	
@@ -161,7 +165,9 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectRowsCallback_($query,$callback){
 		$r=$this->_query($query);
+		$r->store_result();
 		while($row=$r->fetch_row()) $callback($row);
+		$r->free_result();
 		$r->close();
 	}
 	
@@ -193,7 +199,9 @@ class DBMySQL extends DBSql{
 		$value=false; $res=array();
 		$fields=array(&$value);
 		$r=$this->_query_($query,$fields);
+		$r->store_result();
 		while($r->fetch()) $callback($value);
+		$r->free_result();
 		$r->close();
 	}
 	public function /* DEV */_/* /DEV */doSelectAssocValues($query,$tabResKey){
@@ -249,8 +257,9 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectObjectsCallback($query,$queryObj,$fields,$callback){
 		$r=$this->_query_($query,$fields);
-		$currentConnect=$this->_connect; $this->connect();//open new connect
+		$r->store_result();
 		while($r->fetch()) $callback($queryObj->_createObj());
+		$r->free_result();
 		$r->close();
 	}
 	

@@ -13,6 +13,29 @@ function display($str,$endChar="\n"){
 	echo $str.$endChar;
 	ob_flush();
 }
+class CliColors{
+	/* http://www.if-not-true-then-false.com/2010/php-class-for-coloring-php-command-line-cli-scripts-output-php-output-colorizing-using-bash-shell-colors/ */
+	const black='0;30',
+		darkGray='1;30',
+		blue='0;34',
+		lightBlue='1;34',
+		green='0;32',
+		lightGreen='1;32',
+		cyan='0;36',
+		lightCyan='1;36',
+		red='0;31',
+		lightRed='1;31',
+		purple='0;35',
+		lightPurple='1;35',
+		brown='0;33',
+		yellow='1;33',
+		lightGray='0;37',
+		white='1;37';
+}
+function cliColor($str,$color){
+	return "\033[".$color."m".$str."\033[0m";
+}
+
 
 class CSession{
 	public static function connected($orValue=false){ return $orValue; }
@@ -90,29 +113,31 @@ class App{
 	 * @param Exception $exception
 	 */
 	public static function displayException($exception,$forceDefault){
-		echo ''.get_class($exception)."\n";
-		echo ''.$exception->getMessage()/* DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/* /DEV */.'';
+		display('');
+		display(cliColor(get_class($exception),CliColors::red));
+		display($exception->getMessage()/* DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/* /DEV */.'');
 		/* DEV */
 		if($exception->getFile() && $exception->getLine()){
 			$content=file($exception->getFile());
-			echo PHP_EOL.'Line : '.$content[$exception->getLine()-1];
+			display(cliColor("Line:",CliColors::lightPurple).' '.$content[$exception->getLine()-1]);
 		}
-		echo PHP_EOL.'Backtrace : '.prettyBackTrace(0,$exception->getTrace()).'';
+		display(cliColor("Backtrace:",CliColors::lightPurple));
+		echo prettyBackTrace(0,$exception->getTrace());
 		/* /DEV */
-		echo PHP_EOL;
+		echo "\n";
 	}
 
 	public static function displayError($forceDefault,$code, $message, $file, $line){
-		echo "PHP Error [".Springbok::getErrorText($code)."]\n";
-		echo "$message"/* DEV */." ($file:$line)"/* /DEV */."\n";
+		echo "\nPHP Error [".Springbok::getErrorText($code)."]";
+		echo "\n$message"/* DEV */." ($file:$line)"/* /DEV */;
 		/* DEV */
 		if($file && $line){
 			$content=file($file);
-			echo PHP_EOL.'Line : '.$content[$line-1];
+			echo "\nLine: ".$content[$line-1];
 		}
-		echo 'Backtrace :'.prettyBackTrace().'';
+		echo "\nBacktrace:\n".prettyBackTrace().'';
 		/* /DEV */
-		echo PHP_EOL;
+		echo "\n";
 	}
 }
 

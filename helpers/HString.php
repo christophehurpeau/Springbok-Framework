@@ -165,9 +165,9 @@ class HString{
 		
 		// get common characters
 		$commons1 = self::jaroWinkler_getCommonCharacters( $string1, $string2, $str1_len, $str2_len , $distance );
-		if( ($commons1_len = strlen( $commons1 )) == 0) return 0;
+		if( ($commons1_len = strlen( $commons1 )) === 0) return 0;
 		$commons2 = self::jaroWinkler_getCommonCharacters( $string2, $string1, $str2_len , $str1_len , $distance );
-		if( ($commons2_len = strlen( $commons2 )) == 0) return 0;
+		if( ($commons2_len = strlen( $commons2 )) === 0) return 0;
 		
 		// calculate transpositions
 		$transpositions = 0;
@@ -181,18 +181,19 @@ class HString{
 		return ($commons1_len/($str1_len) + $commons2_len/($str2_len) + ($commons1_len - $transpositions)/($commons1_len)) / 3.0;
 	}
 	
-	private static function jaroWinkler_getCommonCharacters(&$string1, &$string2, &$str1_len, &$str2_len, &$allowedDistance){
+	private static function jaroWinkler_getCommonCharacters($string1,$string2,$str1_len,$str2_len,$allowedDistance){
 		$temp_string2 = $string2;
 		$commonCharacters='';
 		for( $i=0; $i < $str1_len; $i++){
-			$noMatch = true;
+			$ch=$string1[$i];
 			// compare if char does match inside given allowedDistance
 			// and if it does add it to commonCharacters
-			for( $j= max( 0, $i-$allowedDistance ); $noMatch && $j < min( $i + $allowedDistance + 1, $str2_len ); $j++){
-				if( $temp_string2[$j] == $string1[$i] ){
-					$noMatch = false;
-					$commonCharacters .= $string1[$i];
-					$temp_string2[$j] = '';
+			
+			for( $j= max( 0, $i-$allowedDistance ), $minMax=min( $i + $allowedDistance + 1, $str2_len ) ; $j < $minMax; $j++){
+				if( substr($temp_string2,$j,1) === $ch ){//bug if '$temp_string2['.$j.']'
+					$commonCharacters .= $ch;
+					substr_replace($temp_string2,"\0",$j,1);
+					break;
 				}
 			}
 		}

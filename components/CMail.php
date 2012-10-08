@@ -29,7 +29,10 @@ class CMail{
 		$mailer->ClearAttachments();
 		$mailer->ClearReplyTos();
 		$mailer->AltBody='';
-		$mailer->AddAddress($to);
+		if(is_array($to))
+			foreach($to as $address) $mailer->AddBCC($address);
+		else
+			$mailer->AddAddress($to);
 		$mailer->Subject=$subject;
 		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
 		$html=render(APP.'viewsMails/'.$template.'.php',$vars,true);
