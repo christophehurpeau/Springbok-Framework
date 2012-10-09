@@ -198,7 +198,7 @@ class Controller{
 	
 	/* RENDER */
 
-	protected static function beforeRender(){return true;}
+	protected static function beforeRender(){}
 
 	protected static function render($fileName=null,$folderName=null){
 		if($fileName===null) $fileName=self::$methodName;
@@ -208,12 +208,11 @@ class Controller{
 
 	public static function _render($file){
 		include_once CORE.'mvc/views/View.php';
-		if(static::beforeRender()){
-			/* DEV */
-			if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
-			/* /DEV */
-			render($file,self::$viewVars);
-		}
+		static::beforeRender();
+		/* DEV */
+		if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
+		/* /DEV */
+		render($file,self::$viewVars);
 	}
 
 	/* DEV */

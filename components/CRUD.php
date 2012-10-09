@@ -33,7 +33,7 @@ class CRUD{
 	}
 	
 	private static function update($id,$val){
-		if(CValidation::hasErrors()) return;
+		if(CValidation::hasErrors() || empty($val)) return;
 		$val->id=$id;
 		$val->update();
 		Controller::redirect('/'.lcfirst(CRoute::getController()));
@@ -42,13 +42,16 @@ class CRUD{
 		if($val!==null) self::update($id,$val);
 		else{
 			$DATA=null;
-			if(!empty($_POST)) $DATA=&$_POST;
-			elseif(!empty($_GET)) $DATA=&$_GET;
+			if(!empty($_POST)) $DATA=$_POST;
+			elseif(!empty($_GET)) $DATA=$_GET;
 			if(!empty($DATA)){
-				$pName=lcfirst($model); $data=&$DATA[$pName];
-				foreach($data as $key=>&$val) if($val==='') $val=null;
-				$val=CBinder::_bindObject($model,$data,$pName,false);
-				self::update($id,$val);
+				$pName=lcfirst($model);
+				if(!empty($DATA[$pName])){
+					$data=$DATA[$pName];
+					foreach($data as $key=>$val) if($val==='') $val=null;
+					$val=CBinder::_bindObject($model,$data,$pName,$fields);
+					self::update($id,$val);
+				}
 			}
 		}
 		

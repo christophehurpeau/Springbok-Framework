@@ -70,7 +70,7 @@ class CBinder{
 	}
 	//public static function bindLong($val){ return (long)$val; }
 
-	public static function &_bindObject($type,&$val,$withValidation=false,$validProperties=null){
+	public static function _bindObject($type,$val,$withValidation=false,$validProperties=null){
 		$obj=new $type();
 		$propertiesDef= property_exists($type,'__PROP_DEF') ? $type::$__PROP_DEF : array();
 		if(!empty($validProperties)) $validProperties=array_intersect($validProperties,array_keys($propertiesDef));

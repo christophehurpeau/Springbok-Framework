@@ -79,7 +79,7 @@ class CModelTable extends CModelTableAbstract{
 			if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
 			$form=HForm::create($add['modelName'],$add['form'],$add['formContainer']);
 			foreach($add['fields'] as $field=>$label)
-				echo $form->input($field,array('label'=>$label));
+				echo ' '.$form->autoField($field,array('label'=>$label));
 			echo $form->end(_tC('Add'));
 		}
 	}

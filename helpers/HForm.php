@@ -78,7 +78,7 @@ class HForm{
 	}
 	public function autoFields($fields,$attributes=array(),$containerAttributes=array()){
 		if(is_string($fields)) $fields=explode(',',$fields);
-		foreach($fields as &$field) $this->autoField($name,$attributes,$containerAttributes);
+		foreach($fields as $name) $this->autoField($name,$attributes,$containerAttributes);
 	}
 	public function autoField($name,$attributes=array(),$containerAttributes=array(),$def=null){
 		$modelName=$this->modelName;
@@ -90,7 +90,7 @@ class HForm{
 		}*/
 		//foreach($data as $key=>&$val) if($val===null) $val='NULL';
 		if(substr($name,-3)==='_id' && Controller::_isset($vname=UInflector::pluralize(substr($name,0,-3))))
-			echo $this->select($name,Controller::get($vname));
+			echo $this->select($name,Controller::get($vname),$attributes);
 		elseif($def['type']==='boolean'){
 			$attrs=$attributes;
 			if($this->_getValue($name)==='') $attrs['checked']=true;
