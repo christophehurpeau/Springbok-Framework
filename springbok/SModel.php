@@ -190,7 +190,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	}
 	
 	public function __toString(){
-		return UPhp::exportCode($this->data);
+		return var_export($this->data,true);
 	}
 	
 	/* Callbacks */
