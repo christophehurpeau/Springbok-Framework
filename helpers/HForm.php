@@ -78,7 +78,7 @@ class HForm{
 	}
 	public function autoFields($fields,$attributes=array(),$containerAttributes=array()){
 		if(is_string($fields)) $fields=explode(',',$fields);
-		foreach($fields as &$field) $this->autoField($name,$attributes,$containerAttributes);
+		foreach($fields as $name) $this->autoField($name,$attributes,$containerAttributes);
 	}
 	public function autoField($name,$attributes=array(),$containerAttributes=array(),$def=null){
 		$modelName=$this->modelName;
