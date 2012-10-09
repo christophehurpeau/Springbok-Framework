@@ -90,7 +90,7 @@ class HForm{
 		}*/
 		//foreach($data as $key=>&$val) if($val===null) $val='NULL';
 		if(substr($name,-3)==='_id' && Controller::_isset($vname=UInflector::pluralize(substr($name,0,-3))))
-			echo $this->select($name,Controller::get($vname));
+			echo $this->select($name,Controller::get($vname),$attributes);
 		elseif($def['type']==='boolean'){
 			$attrs=$attributes;
 			if($this->_getValue($name)==='') $attrs['checked']=true;
