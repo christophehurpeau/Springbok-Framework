@@ -17,15 +17,14 @@ CPayments::init();
 abstract class Payment{
 	protected $name;
 	
-	protected function beforeRender(){return true;}
+	protected function beforeRender(){}
 
 	protected function _render($file){
-		if($this->beforeRender()){
-			/* DEV */
-			if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
-			/* /DEV */
-			return render($file,self::$viewVars,true);
-		}
+		$this->beforeRender();
+		/* DEV */
+		if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
+		/* /DEV */
+		return render($file,self::$viewVars,true);
 	}
 }
 abstract class CorePayment extends Payment{
