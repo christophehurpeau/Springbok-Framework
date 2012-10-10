@@ -6,11 +6,19 @@ class HMenu{
 	public static function top($links,$options=array()){
 		return self::create($links,$options,'top');
 	}
+	public static function topHtml($links,$options=array()){
+		$options['linkoptions']['escape']=false;
+		return self::create($links,$options,'top');
+	}
 	public static function ajaxTop($links,$options=array()){
 		return self::create($links,$options,'top ajax');
 	}
 	
 	public static function left($links,$options=array()){
+		return self::create($links,$options,'left');
+	}
+	public static function leftHtml($links,$options=array()){
+		$options['linkoptions']['escape']=false;
 		return self::create($links,$options,'left');
 	}
 	public static function ul($links,$options=array()){

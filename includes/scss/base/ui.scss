@@ -110,7 +110,12 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
 .ui-widget-header{
   .ui-state-default{ 
   	@if $HeaderMenuLinkBorder{ border:1px solid $HeaderMenuLinkBorder; }
-  	@include background($HeaderMenuLinkBackground);
+  	@if $HeaderMenuLinkBackground{
+  		/*@if lightness($HeaderMenuLinkBackground) < lightness(#999999){ $HeaderMenuLinkBackground:false;  }*/
+  		@include background($HeaderMenuLinkBackground);
+  	}@else{
+  		background:inherit;
+  	}
   	color:$HeaderMenuLinkColor;
   	font-weight: bold;
   }

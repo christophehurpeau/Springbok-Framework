@@ -210,6 +210,7 @@ class ModelFile extends PhpFile{
 					if(isset($field['Index'])) $indexes[0][]=array($name);
 					if(isset($field['Unique'])) $indexes[1][]=array($name);
 					if(isset($field['Enum'])){ $enums[$name]=$field['Enum']; $field['Enum']=UInflector::pluralizeUnderscoredWords($name); }
+					if(isset($field['Icons'])){ if(count($field['Icons'])===1&&isset($field['Icons'][0])&&is_array($field['Icons'][0])) $field['Icons']=$field['Icons'][0]; }
 					if(isset($field['Json'])){ $specialFields[$name]='Json';}
 					
 					unset($field['Pk'],$field['Boolean'],$field['SqlType'],$field['Null'],$field['NotNull'],$field['DefaultValue'],$field['Default'],$field['AutoIncrement'],

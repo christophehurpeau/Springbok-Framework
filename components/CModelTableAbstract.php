@@ -52,6 +52,8 @@ class CModelTableAbstract{
 						if(isset($propDef['annotations']['Enum'])){
 							$val['tabResult']=call_user_func(array($modelName,$propDef['annotations']['Enum'].'List')); //TODO ou $modelName->{$propDef['annotations']['Enum'].'List'}() ?
 							$val['align']='center';
+							if(!isset($val['filter'])) $val['filter']=$val['tabResult'];
+							if(isset($propDef['annotations']['Icons'])&&!isset($val['icons'])) $val['icons']=$propDef['annotations']['Icons'];
 						}elseif(!isset($val['callback'])){
 							if(isset($propDef['annotations']['Format'])) $val['callback']=array('HFormat',$propDef['annotations']['Format']);
 						}
@@ -86,10 +88,13 @@ class CModelTableAbstract{
 						}
 					}
 					if(isset($val['icons']) && $val['icons']){
-						$tabResult=array();
-						foreach($val['icons'] as $key=>&$icon) $tabResult[$key]='<span class="icon '.$icon.'"></span>';
+						$tabResult=array();$titleIcons=isset($val['tabResult'])?$val['tabResult']:false;
+						foreach($val['icons'] as $key=>&$icon)
+							$tabResult[$key]='<span class="icon '.$icon.'"'
+									.($titleIcons===false||!isset($titleIcons[$key])?'':' title="'.h($titleIcons[$key]).'"').'></span>';
 						$val['tabResult']=$tabResult;
 						$val['escape']=false;
+						$val['align']='center';
 					}
 				}
 	

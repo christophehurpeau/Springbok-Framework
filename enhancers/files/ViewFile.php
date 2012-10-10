@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.4';
+	public static $CACHE_PATH='views_8.5';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -45,6 +45,7 @@ class ViewFile extends PhpFile{
 	public function enhanceFinalContent($content){
 		$content=preg_replace('/{=include ([^}]+)\}/U','<?php echo "<?php include $1 ?>" ?>',$content);
 		
+		$jusqualafin='[^}]+(?:{[^}]+}[^}]*)?'; $t=$this;
 		
 		
 		foreach(array(''=>function($c){return '<?php '.$c.' ?>';},
@@ -97,8 +98,7 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/<\?\s+(.+)\s*;?\s+\?>/Us','<?php echo $1 ?>',$content);
 		
 		//Exception à la règle
-		$jusqualafin='\$[^}]+(?:{[^}]+}[^}]*)?'; $t=$this;
-		$content=preg_replace_callback('/{=('.$jusqualafin.')\}/U',function($m) use($t){return '<?php echo '.$t->enhancePhpContent($m[1]).' ?>';},$content);
+		$content=preg_replace_callback('/{=(\$'.$jusqualafin.')\}/U',function($m) use($t){return '<?php echo '.$t->enhancePhpContent($m[1]).' ?>';},$content);
 		
 		$content=preg_replace('/{\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? $2 : $3 ?>',$content);
 		$content=preg_replace('/{=\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? h($2) : h($3) ?>',$content);
@@ -133,12 +133,12 @@ class ViewFile extends PhpFile{
 		
 		$content=preg_replace('/{(t|tF|tC)\s+([^}]+)\s*}/U','<?php echo h(_$1($2)) ?>',$content);
 		
-		/* HELPERS */
+		/* HELPERS *///TODO use $jusqualafin
 		$content=preg_replace('/{(link|linkHtml|iconLink|iconLinkHtml|iconAction|iconBlockLink|img|imgLink|cutLink)\s+([^}]+)\s*}/U','<?php echo HHtml::$1($2) ?>',$content);
 		$content=preg_replace('/{menuLink\s+([^}]+)\s*}/U','<?php echo HMenu::link($1) ?>',$content);
 		$content=preg_replace('/{price\s+([^}]+)\s*}/U','<?php echo HFormat::price($1) ?>',$content);
-		$content=preg_replace_callback('/{menu(Top|Left|Right)\s*([^\n]*)\n+(.*)}/Us',function(&$m){
-			return'<?php echo HMenu::'.strtolower($m[1]).'(array('.rtrim(implode(',',array_map(function(&$link){return implode('=>',explode(':',trim($link),2));},preg_split('/,\n\s*/',trim($m[3],' \t\n\r\0\x0B,')))),',').')'
+		$content=preg_replace_callback('/{menu(topHtml|Top|LeftHtml|Left|Right)\s*([^\n]*)\n+(.*)}/Us',function(&$m){
+			return'<?php echo HMenu::'.lcfirst($m[1]).'(array('.rtrim(implode(',',array_map(function(&$link){return implode('=>',explode(':',trim($link),2));},preg_split('/,\n\s*/',trim($m[3],' \t\n\r\0\x0B,')))),',').')'
 				.(empty($m[2])?'':',array('.implode('=>',array_map('trim',explode(':',$m[2]))).')').') ?'.'>';
 			},$content);
 		

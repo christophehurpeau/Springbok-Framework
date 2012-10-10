@@ -143,11 +143,11 @@ ul.simpleDouble ul{
   margin:0 0 5px;
 }
 
-ul.cMt10 > li{margin-top:10px}
-ul.cMt15 > li{margin-top:15px}
-ul.cMt10 > li:first-child,ul.cMt15 > li:first-child{margin-top:0}
+.cMt10 > *{margin-top:10px}
+.cMt15 > *{margin-top:15px}
+.cMt10 > :first-child,.cMt15 > :first-child{margin-top:0}
 
-ul.cSepTop > li:first-child{margin-top:0;padding-top:0;border-top:0;}
+.cSepTop > :first-child{margin-top:0;padding-top:0;border-top:0;}
 
 
 $BCOLOR_VALID:#D3DBD3 !default;
