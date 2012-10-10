@@ -7,4 +7,7 @@ class SConsts{
 	public static function gender(){
 		return array(self::UNKNOWN=>'Inconnu',self::MAN=>'Homme',self::WOMAN=>'Femme');
 	}
+	public static function genderIcons(){
+		return array(self::UNKNOWN=>'userSilhouette',self::MAN=>'userM',self::WOMAN=>'userF');
+	}
 }
