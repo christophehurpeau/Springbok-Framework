@@ -13,7 +13,7 @@ class SViewCachedElement extends SViewElement{
 	public static function destroy(){
 		$path=call_user_func_array(get_called_class().'::path',func_get_args()).'_';
 		foreach(static::$views as $view)
-			if(file_exists($path.$view)) unlink($path.$view);
+			if(file_exists($path.$view)) UFile::rm($path.$view);
 	}
 	
 	protected $path,$_file;
@@ -42,12 +42,17 @@ class SViewCachedElement extends SViewElement{
 	}
 	public function exists(){ return true; }
 	public function generateAll(){
-		include_once CORE.'mvc/views/View.php';
-		$this->_file=UFile::open($this->path.'view','w');
-		$this->_file->lockExclusive();
-		foreach(static::$views as $view) $this->write($view,parent::render($view));
-		$this->_file->unlock();
-		$this->_file->close();
+		try{
+			include_once CORE.'mvc/views/View.php';
+			$this->_file=UFile::open($this->path.'view','w');
+			$this->_file->lockExclusive();
+			foreach(static::$views as $view) $this->write($view,parent::render($view));
+			$this->_file->unlock();
+			$this->_file->close();
+		}catch(Exception $e){
+			foreach(static::$views as $view)
+				if(file_exists($this->path.$view)) UFile::rm($this->path.$view);
+		}
 	}
 	
 	
