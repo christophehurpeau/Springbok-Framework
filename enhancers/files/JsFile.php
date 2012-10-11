@@ -161,7 +161,7 @@ class JsFile extends EnhancerFile{
 		return true;
 	}
 	
-	public static function executeCompressor($tmpDir,&$content,$destination,$nomunge=false){
+	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
 		$dest=$destination?$destination:tempnam($tmpDir,'yuidest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'_yuicompressor-2.4.7.jar';

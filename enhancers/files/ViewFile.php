@@ -118,9 +118,8 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/{\*/','<?php /* ',$content);
 		$content=preg_replace('/\*}/',' */ ?>',$content);
 		$tmpDir=$this->enhanced->getTmpDir();
-		$content=preg_replace_callback('/{jsInline}\s*(.*)\s*{\/jsInline}/Us',function(&$m) use(&$tmpDir){return '<script type="text/javascript">
-//<![CDATA[
-'.JsFile::executeCompressor($tmpDir,$m[1],false).'
+		$content=preg_replace_callback('/{jsInline}\s*(.*)\s*{\/jsInline}/Us',function($m) use($tmpDir,$t){return '<script type="text/javascript">//<![CDATA[
+'.JsFile::executeCompressor($tmpDir,preg_replace('/{icon\s+([^}]+)\s*\}/','<span class="icon $1"></span>',$m[1]),false).'
 //]]>
 </script>';},$content);
 		
