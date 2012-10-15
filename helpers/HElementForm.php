@@ -63,6 +63,8 @@ class HElementForm extends HElement{
 	public function ajax($saveOnChange=false){ HHtml::jsReady('$("#'.$this->getAttr('id').'").ht5ifv().ajaxForm()'
 		.($saveOnChange?'.change(function(e){$(this).submit()})':'')); return $this; }
 	
+	public function onSubmit($onSubmit){ $this->attributes['onsubmit']=$onSubmit; return $this; }
+	
 	public function __toString(){
 		return '<form action="'.HHtml::url($this->action===null ? CRoute::getAll() : $this->action,$this->actionEntry,$this->urlfull,true).'"'
 				.' method="'.$this->method.'"'.$this->_attributes().'>';
