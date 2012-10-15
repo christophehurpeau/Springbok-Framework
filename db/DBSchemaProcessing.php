@@ -34,6 +34,7 @@ class DBSchemaProcessing{
 					array_unshift($versionsToUpdate,(int)$version);
 				
 				if($generate){
+					$error=false;
 					$vars=array('versions'=>$versionsToUpdate);
 					if(!$this->shouldApply()){
 						render(CORE.'db/evolutions-view.php',$vars);
@@ -46,17 +47,23 @@ class DBSchemaProcessing{
 								list($dbName,$query) = explode('=>',$line,2);
 								
 								$db=DB::init($dbName);
-								$db->doUpdate($query);
+								try{
+									$db->doUpdate($query);
+								}catch(Exception $ex){
+									$error=true;
+									$this->displayAndLog('ERROR: '.$ex->getMessage());
+								}
 							}
 							
 							file_put_contents($currentDbVersionFilename,$version);
-							$this->displayAndLog('Applied : '.$version);
+							$this->displayAndLog('Applied : '.$version.($error?' WITH ERROR':''));
+							if($error) break;
 						}
 						
 						
 						if(isset($_SERVER['REQUEST_URI'])) render(CORE.'db/applied-evolutions-view.php',$vars);
 					}
-					if(isset($_SERVER['REQUEST_URI'])) exit;
+					if($error || isset($_SERVER['REQUEST_URI'])) exit;
 				}
 			}
 		}
