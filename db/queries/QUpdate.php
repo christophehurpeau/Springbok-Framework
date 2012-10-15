@@ -16,6 +16,7 @@ class QUpdate extends AQuery{
 	}
 	
 	public function values($values){$this->values=$values;return $this;}
+	public function set($values){$this->values=$values;return $this;}
 	public function where($conditions){$this->where=$conditions;return $this;}
 	
 	public function updatedField($field){$this->updatedField=$field;return $this;}
