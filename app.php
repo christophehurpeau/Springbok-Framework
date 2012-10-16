@@ -175,7 +175,7 @@ class App{
 						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The database is currently inaccessible'),'',$exception);
 					elseif($code<1022){
 						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded').'','',$exception);
-					}else $e=new FatalHttpException(503,'Service Temporarily Unavailable');
+					}else $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
 				}else $e=new InternalServerError();
 			}else $e=$exception;
 			

@@ -52,8 +52,8 @@ class CBinder{
 	public static function bindDouble($val){ $val=self::parseDecimalFormat($val); return (double)$val; }
 	public static function parseDecimalFormat($val){
 		$config=App::getLocale()->data('decimalFormat');
-		if($config['thousands_sep'] !== '') $val=str_replace($config['thousands_sep'],'',$val);
-		if($config['decimal_sep'] !== '.') $val=str_replace($config['decimal_sep'],'.',$val);
+		if($config['thousandsSep'] !== '') $val=str_replace($config['thousandsSep'],'',$val);
+		if($config['decimalSep'] !== '.') $val=str_replace($config['decimalSep'],'.',$val);
 		return $val;
 	}
 	public static function bindBool($val){ return self::bindBoolean($val); }

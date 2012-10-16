@@ -453,7 +453,7 @@ abstract class QFind extends QSelect{
 			if($query!==false){
 				$res=$query->execute();
 				if(isset($w['fieldsInModel']) && $w['fieldsInModel']===true){
-					foreach($res as $k=>$v) $obj->_set($k,$v);
+					if($res!==false) foreach($res as $k=>$v) $obj->_set($k,$v);
 				}else $obj->_set($w['dataName'],$res);
 			}
 			unset($with[$key]);
