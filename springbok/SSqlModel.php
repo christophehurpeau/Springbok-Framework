@@ -195,10 +195,13 @@ class SSqlModel extends SModel{
 	public static function QDeleteAll(){return new QDeleteAll(static::$__className);}
 	public static function QDeleteOne(){return new QDeleteOne(static::$__className);}
 	
-	public static function updateOneFieldByPk($pk,$field,$value){
+	public static function updateOneFieldByPk($pk,$field,$value,$updateUpdated=true){
 		return static::QUpdateOne()->values(array($field=>$value))
-			->where(array(static::_getPkName()=>$pk))
-			->execute();
+			->where(array(static::_getPkName()=>$pk))->execute();
+	}
+	public static function updateOneFieldByPkWithoutUpdatingUpdated($pk,$field,$value){
+		return static::QUpdateOne()->doNotUpdateUpdatedField()->values(array($field=>$value))
+			->where(array(static::_getPkName()=>$pk))->execute();
 	}
 	public static function QUpdateOneField($field,$value){
 		return static::QUpdate()->values(array($field=>$value));

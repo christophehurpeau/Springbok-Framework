@@ -14,4 +14,8 @@ class UString{
 		}
 		return $string;
 	}
+	
+	public static function normalize($string){
+		return strtolower(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',$string)));
+	}
 }
