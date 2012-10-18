@@ -18,4 +18,8 @@ class UString{
 	public static function normalize($string){
 		return strtolower(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',$string)));
 	}
+	
+	public static function callbackWords($string,$callback){
+		return preg_replace_callback("/(([\wÉÈÊËÂÄÔÖéèêëâäôöçïî]+)\b)/",function($m) use($callback){ return $callback($m[1]); },$string);
+	}
 }
