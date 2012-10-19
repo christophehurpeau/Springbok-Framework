@@ -1,6 +1,6 @@
 <?php
 class Controller{
-	protected static $methodName,$suffix;
+	protected static $suffix;
 	public static $defaultLayout,$defaultLayoutOverride=null;//init in "app.php"
 
 	private static $viewVars=array(),$layoutVars=array();
@@ -11,7 +11,6 @@ class Controller{
 		self::$suffix=$suffix;
 		static::beforeDispatch();
 		if(!method_exists(get_called_class(),$methodName=CRoute::getAction())) notFound();
-		self::$methodName=$methodName;
 		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		//if(isset(static::$_classAnnotations))
@@ -201,7 +200,7 @@ class Controller{
 	protected static function beforeRender(){}
 
 	protected static function render($fileName=null,$folderName=null){
-		if($fileName===null) $fileName=self::$methodName;
+		if($fileName===null) $fileName=CRoute::getAction();
 		if($folderName===null) $folderName=CRoute::getController();
 		$render=self::_render(APP.'views'.self::$suffix.DS.$folderName.DS.$fileName.'.php');
 	}

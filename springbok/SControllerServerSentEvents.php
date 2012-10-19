@@ -10,7 +10,6 @@ class SControllerServerSentEvents extends Controller{
 		if($method !=='GET') $methodName.=$method;
 		
 		if(!method_exists(get_called_class(),$methodName)) notFound();
-		self::$methodName=$methodName;
 		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		$params=$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations);

@@ -8,7 +8,6 @@ class SControllerREST extends Controller{
 		if($method !=='GET'){ $methodName.=$method; $mdef.=$method; }
 		
 		if(!method_exists(get_called_class(),$methodName)) notFound();
-		self::$methodName=$methodName;
 		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		static::crossDomainHeaders();
