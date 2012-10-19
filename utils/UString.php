@@ -20,6 +20,7 @@ class UString{
 	}
 	
 	public static function callbackWords($string,$callback){
-		return preg_replace_callback("/(([\wÉÈÊËÂÄÔÖéèêëâäôöçïî]+)\b)/",function($m) use($callback){ return $callback($m[1]); },$string);
+		return preg_replace_callback("/(\w\'|(?:[A-Z]\.)+|[\wÉÈÊËÂÄÔÖéèêëâäôöçïî]+(\.)?)\b/",
+					function($m) use($callback){ return $callback($m[1],empty($m[2])?'':'.'); },$string);
 	}
 }
