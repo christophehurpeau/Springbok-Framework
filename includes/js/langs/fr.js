@@ -1,4 +1,11 @@
 S.i18n={
+	decimalFormat:{decimalSep:',',thousandsSep:' '},
+	percentFormat:'%s %%',
+	scientificFormat:'#E0',
+	currencyFormat:'#,##0.00 ¤',
+	
+	isPlural:function(number){ return number>1; },
+	
 	date:{
 		format:'dd/mm/yyyy',
 		today:{full:'Aujourd\'hui',shortened:'Auj.'},
@@ -17,76 +24,78 @@ S.i18n={
 			full:['avant Jésus-Christ','après Jésus-Christ'],
 			shortened:['av. J.-C.','ap. J.-C.'],
 			compact:['av JC.','ap JC.']
-		},
-		formats:{
-			date:{
-				nice:function(date){
-					var now=new Date(),str;
-					if(date.getFullYear() == now.getFullYear()){
-						if(date.getMonth() == now.getMonth()){
-							if(now.getDate() == date.getDate()) str=S.i18n.date.today.full;
-							else if(now.getDate()-1 == date.getDate()) str=S.i18n.date.yesterday.full;
-							else str=S.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate();
-						}else{
-							str=S.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ S.i18n.date.monthNames.full[date.getMonth()];
-						}
-					}else str=S.i18n.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ S.i18n.date.monthNames.full[date.getMonth()] + ' '+ date.getFullYear();
-					return str;
-				},
-				shortened:function(date){
-					var now=new Date(),month=date.getMonth(),str;
-					if(date.getFullYear() == now.getFullYear()){
-						if(month == now.getMonth()){
-							if(now.getDate() == date.getDate()) str=S.i18n.date.today.shortened;
-							else if(now.getDate()-1 == date.getDate()) str=S.i18n.date.yesterday.shortened;
-							else str=S.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate();
-						}else{
-							str=S.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+ (month<9?'0':'')+(month+1);
-						}
-					}else str=S.i18n.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+(month<9?'0':'')+(month+1) + ' '+ date.getFullYear();
-					return str;
-				},
-				simple:function(date){
-					var now=new Date(),
-						str=date.getDate()+' '+ S.i18n.date.monthNames.full[date.getMonth()];
-					if(date.getFullYear() != now.getFullYear()) str+=' '+date.getFullYear();
-					return str;
-				},
-				compact:function(date){
-					var now=new Date(),day=date.getDate(),month=date.getMonth(),
-						str=(day<10?'0':'')+day+'/'+ (month<9?'0':'')+(month+1);
-					if(date.getFullYear() != now.getFullYear()) str+='/'+date.getFullYear();
-					return str;
-				},
-				complete:function(date){
-					var now=new Date(),day=date.getDate(),month=date.getMonth()
-					return (day<10?'0':'')+day+'/'+ (month<9?'0':'')+(month+1)+'/'+date.getFullYear();
-				}
-			},
-			times:{
-				simple:function(date){
-					var hours = date.getHours(), minutes = date.getMinutes();
-					return ((hours < 10)?"0":"") + hours +((minutes < 10)?"h0":"h") + minutes;
-				}
-			},
-			datetime:{
-				nice:function(date){
-					return S.i18n.date.formats.date.nice(date)+' à '+S.i18n.date.formats.times.simple(date);
-				},
-				shortened:function(date){
-					return S.i18n.date.formats.date.shortened(date)+' à '+S.i18n.date.formats.times.simple(date);
-				},
-				simple:function(date){
-					return S.i18n.date.formats.date.simple(date)+' à '+S.i18n.date.formats.times.simple(date);
-				},
-				compact:function(date){
-					return S.i18n.date.formats.date.compact(date)+' à '+S.i18n.date.formats.times.simple(date);
-				},
-				complete:function(date){
-					return S.i18n.date.formats.date.complete(date)+' à '+S.i18n.date.formats.times.simple(date);
-				}
-			}
 		}
+	},
+	formatDateNice:function(date){
+		var now=new Date(),str;
+		if(date.getFullYear() == now.getFullYear()){
+			if(date.getMonth() == now.getMonth()){
+				if(now.getDate() == date.getDate()) str=this.date.today.full;
+				else if(now.getDate()-1 == date.getDate()) str=this.date.yesterday.full;
+				else str=this.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate();
+			}else{
+				str=this.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ this.date.monthNames.full[date.getMonth()];
+			}
+		}else str=this.date.weekDayNames.full[date.getDay()] + ' ' + date.getDate()+' '+ this.date.monthNames.full[date.getMonth()] + ' '+ date.getFullYear();
+		return str;
+	},
+	formatDateShort:function(date){
+		var now=new Date(),month=date.getMonth(),str;
+		if(date.getFullYear() == now.getFullYear()){
+			if(month == now.getMonth()){
+				if(now.getDate() == date.getDate()) str=this.date.today.shortened;
+				else if(now.getDate()-1 == date.getDate()) str=this.date.yesterday.shortened;
+				else str=this.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate();
+			}else{
+				str=this.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+ (month<9?'0':'')+(month+1);
+			}
+		}else str=this.date.weekDayNames.shortened[date.getDay()] + ' ' + date.getDate()+'/'+(month<9?'0':'')+(month+1) + ' '+ date.getFullYear();
+		return str;
+	},
+	formatDateSimple:function(date){
+		var now=new Date(),
+			str=date.getDate()+' '+ this.date.monthNames.full[date.getMonth()];
+		if(date.getFullYear() != now.getFullYear()) str+=' '+date.getFullYear();
+		return str;
+	},
+	formatDateCompact:function(date){
+		var now=new Date(),day=date.getDate(),month=date.getMonth(),
+			str=(day<10?'0':'')+day+'/'+ (month<9?'0':'')+(month+1);
+		if(date.getFullYear() != now.getFullYear()) str+='/'+date.getFullYear();
+		return str;
+	},
+	formatDateComplete:function(date){
+		var now=new Date(),day=date.getDate(),month=date.getMonth()
+		return (day<10?'0':'')+day+'/'+ (month<9?'0':'')+(month+1)+'/'+date.getFullYear();
+	},
+	formatTimeSimple:function(date){
+		var hours = date.getHours(), minutes = date.getMinutes();
+		return ((hours < 10)?"0":"") + hours +((minutes < 10)?"h0":"h") + minutes;
+	},
+	formatTimeComplete:function(date){
+		var hours = date.getHours(), minutes = date.getMinutes();
+		return ((hours < 10)?"0":"") + hours +((minutes < 10)?":0":":") + minutes;
+	},
+	formatDatetimeNice:function(date){
+		return this.formatDateNice(date)+' à '+this.formatTimeSimple(date);
+	},
+	formatDatetimeShort:function(date){
+		return this.formatDateShort(date)+' à '+this.formatTimeSimple(date);
+	},
+	formatDatetimeSimple:function(date){
+		return this.formatDateSimple(date)+' à '+this.formatTimeSimple(date);
+	},
+	formatDatetimeCompact:function(date){
+		return this.formatDateCompact(date)+' à '+this.formatTimeSimple(date);
+	},
+	formatDatetimeComplete:function(date){
+		return this.formatDateComplete(date)+' à '+this.formatTimeComplete(date);
+	},
+	
+	formatMonthAndYearSimple:function(date){
+		var now=new Date(),str=this.date.monthNames.full[date.getMonth()];
+		if(date.getFullYear() != now.getFullYear()) str+=' '+date.getFullYear();
+		return str;
 	}
 };
 includeCore('langs/core-fr');

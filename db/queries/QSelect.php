@@ -23,7 +23,15 @@ abstract class QSelect extends AQuery{
 	const LEFT=' LEFT JOIN ',INNER=' INNER JOIN ',RIGHT=' RIGHT JOIN ';
 	
 	protected $where,$groupBy,$having,$orderBy,$limit;//,$calcFoundRows=false;
-	protected $calcFoundRows=false,$addByConditions=false;
+	protected $sqlStart='',$calcFoundRows=false,$addByConditions=false;
+	
+	
+	public function sqlSmallResult(){ $this->sqlStart.='SQL_SMALL_RESULT '; return $this; }
+	public function sqlBigResult(){ $this->sqlStart.='SQL_BIG_RESULT '; return $this; }
+	public function sqlBufferResult(){ $this->sqlStart.='SQL_BUFFER_RESULT '; return $this; }
+	public function sqlCache(){ $this->sqlStart.='SQL_CACHE '; return $this; }
+	public function sqlNoCache(){ $this->sqlStart.='SQL_NO_CACHE '; return $this; }
+	public function highPriority(){ $this->sqlStart.='HIGH_PRIORITY '; return $this; }
 	
 	public function by($query,$values){
 		$fields=explode('And',$query);
@@ -78,7 +86,7 @@ abstract class QSelect extends AQuery{
     }
 	
 	protected function _SqlStart(){
-		$sql='SELECT ';
+		$sql='SELECT '.$this->sqlStart;
 		if($this->calcFoundRows) $sql.='SQL_CALC_FOUND_ROWS ';
 		return $sql;
 	}

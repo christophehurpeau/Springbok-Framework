@@ -14,6 +14,7 @@ abstract class COAuth2{
 	
 	protected $accessToken,$refreshToken;
 	public function __construct($tokens){
+		if(empty($tokens['access_token'])) throw new Exception('No access token');
 		$this->accessToken=$tokens['access_token'];
 		if(!empty($tokens['refresh_token'])) $this->refreshToken=$tokens['refresh_token'];
 	}

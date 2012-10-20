@@ -114,7 +114,7 @@ class App{
 	 */
 	public static function displayException($exception,$forceDefault){
 		display('');
-		display(cliColor(get_class($exception),CliColors::red));
+		display(cliColor(get_class($exception),CliColors::lightRed));
 		display($exception->getMessage()/* DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/* /DEV */.'');
 		/* DEV */
 		if($exception->getFile() && $exception->getLine()){

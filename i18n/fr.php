@@ -1,5 +1,5 @@
 <?php return array(
-	'decimalFormat'=>array('decimal_sep'=>',','thousands_sep'=>' '),
+	'decimalFormat'=>array('decimalSep'=>',','thousandsSep'=>' '),
 	'percentFormat'=>'%s %%',
 	'scientificFormat' => '#E0',
 	'currencyFormat' => '#,##0.00 ¤',
@@ -22,51 +22,41 @@
 			'short'=>array('av. J.-C.','ap. J.-C.'),
 			'compact'=>array('av JC.','ap JC.'),
 		),
-		'formats'=>array(
-			'date'=>array(
-				'nice'=>function($locale,$time){
-					$res=$locale->weekDayName(date('w',$time),'full').' '.date('j',$time).' '.$locale->monthName(date('n',$time),'full');
-					if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
-					return $res;
-				},
-				'short'=>function($locale,$time){
-					$res=$locale->weekDayName(date('w',$time),'short').' '.date('d/m',$time);
-					if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
-					return $res;
-				},
-				'simple'=>function($locale,$time){
-					$res=date('j',$time).' '.$locale->monthName(date('n',$time),'full');
-					if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
-					return $res;
-				},
-				'compact'=>function($locale,$time){
-					$res=date('d/m',$time);
-					if(($Y=date('Y',$time))!=date('Y')) $res.='/'.$Y;
-					return $res;
-				},
-				'complete'=>function($locale,$time){
-					return date('d/m/Y',$time);
-				}
-			),
-			'time'=>array(
-				'simple'=>function($locale,$time){return date('H\hi',$time);},
-				'complete'=>function($locale,$time){return date('H:i:s',$time);},
-			),
-			'datetime'=>array(
-				'nice'=>function($locale,$time){return $locale->formatDate($time,'nice').' à '.$locale->formatTime($time,'simple');},
-				'short'=>function($locale,$time){return $locale->formatDate($time,'short').' à '.$locale->formatTime($time,'simple');},
-				'simple'=>function($locale,$time){return $locale->formatDate($time,'simple').' à '.$locale->formatTime($time,'simple');},
-				'compact'=>function($locale,$time){return $locale->formatDate($time,'compact').' à '.$locale->formatTime($time,'simple');},
-				'complete'=>function($locale,$time){return $locale->formatDate($time,'complete').' à '.$locale->formatTime($time,'complete');},
-			),
-			
-			'monthAndYear'=>array(
-				'simple'=>function($locale,$time){
-					$res=$locale->monthName(date('n',$time),'full');
-					if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
-					return $res;
-				}
-			)
-		),
-	)
+	),
+	'formatDateNice'=>function($locale,$time){
+		$res=$locale->weekDayName(date('w',$time),'full').' '.date('j',$time).' '.$locale->monthName(date('n',$time),'full');
+		if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
+		return $res;
+	},
+	'formatDateShort'=>function($locale,$time){
+		$res=$locale->weekDayName(date('w',$time),'short').' '.date('d/m',$time);
+		if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
+		return $res;
+	},
+	'formatDateSimple'=>function($locale,$time){
+		$res=date('j',$time).' '.$locale->monthName(date('n',$time),'full');
+		if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
+		return $res;
+	},
+	'formatDateCompact'=>function($locale,$time){
+		$res=date('d/m',$time);
+		if(($Y=date('Y',$time))!=date('Y')) $res.='/'.$Y;
+		return $res;
+	},
+	'formatDateComplete'=>function($locale,$time){
+		return date('d/m/Y',$time);
+	},
+	'formatTimeSimple'=>function($locale,$time){return date('H\hi',$time);},
+	'formatTimeComplete'=>function($locale,$time){return date('H:i:s',$time);},
+	'formatDatetimeNice'=>function($locale,$time){return $locale->formatDate($time,'nice').' à '.$locale->formatTime($time,'simple');},
+	'formatDatetimeShort'=>function($locale,$time){return $locale->formatDateShort($time).' à '.$locale->formatTimeSimple($time);},
+	'formatDatetimeSimple'=>function($locale,$time){return $locale->formatDateSimple($time).' à '.$locale->formatTimeSimple($time);},
+	'formatDatetimeCompact'=>function($locale,$time){return $locale->formatDateCompact($time).' à '.$locale->formatTimeSimple($time);},
+	'formatDatetimeComplete'=>function($locale,$time){return $locale->formatDateComplete($time).' à '.$locale->formatTimeComplete($time);},
+		
+	'formatMonthAndYearSimple'=>function($locale,$time){
+		$res=$locale->monthName(date('n',$time),'full');
+		if(($Y=date('Y',$time))!=date('Y')) $res.=' '.$Y;
+		return $res;
+	}
 );

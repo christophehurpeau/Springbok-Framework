@@ -239,7 +239,7 @@ class ConfigFile extends PhpFile{
 		}
 	}
 
-	private function writeClass(&$configname,&$configArray,&$devFile,&$prodFile){
+	private function writeClass($configname,&$configArray,&$devFile,&$prodFile){
 		$content='<?php class Config{public static ';
 		$afterContent="define('STATIC_URL',";
 		if(isset($configArray['static_url'])){

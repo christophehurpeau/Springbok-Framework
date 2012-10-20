@@ -33,7 +33,7 @@ class HFormat{
 	
 	public static function decimal($val,$decimals=2){
 		$config=App::getLocale()->data('decimalFormat');
-		return number_format($val,$decimals,$config['decimal_sep'],$config['thousands_sep']);
+		return number_format($val,$decimals,$config['decimalSep'],$config['thousandsSep']);
 	}
 	public static function percent($val,$decimals=0){
 		return sprintf(App::getLocale()->data('percentFormat'),self::decimal($val,$decimals));

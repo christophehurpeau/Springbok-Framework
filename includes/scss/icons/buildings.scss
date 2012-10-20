@@ -1,4 +1,10 @@
 @includeCore 'base/icon';
-@each $iconName in building,building_add,building_delete,building_edit,building_error,building_go,building_key,building_link {
-  @include coreIcon($iconName);
-}
+
+@include coreIcon16('building','building');
+@include coreIcon16('buildingAdd','building_add');
+@include coreIcon16('buildingDelete','building_delete');
+@include coreIcon16('buildingEdit','building_edit');
+@include coreIcon16('buildingError','building_error');
+@include coreIcon16('buildingGo','building_go');
+@include coreIcon16('buildingKey','building_key');
+@include coreIcon16('buildingLink','building_link');

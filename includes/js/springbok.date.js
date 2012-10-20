@@ -18,63 +18,63 @@ S.dates={
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.date.nice(date);
+		return S.i18n.formatDateNice(date);
 	},
 	shortDate:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.date.shortened(date);
+		return S.i18n.formatDateShort(date);
 	},
 	compactDate:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.date.compact(date);
+		return S.i18n.formatDateCompact(date);
 	},
 	simpleDate:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.date.simple(date);
+		return S.i18n.formatDateSimple(date);
 	},
 	completeDate:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.date.complete(date);
+		return S.i18n.formatDateComplete(date);
 	},
 	
 	simpleTime:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.times.simple(date);
+		return S.i18n.formatTimeSimple(date);
 	},
 	niceDateTime:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.datetime.nice(date);
+		return S.i18n.formatDatetimeNice(date);
 	},
 	compactDateTime:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.datetime.compact(date);
+		return S.i18n.formatDatetimeCompact(date);
 	},
 	simpleDateTime:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.datetime.simple(date);
+		return S.i18n.formatDatetimeSimple(date);
 	},
 	
 	completeDateTime:function(date){
 		if(!date) date=new Date();
 		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
-		return S.i18n.date.formats.datetime.complete(date);
+		return S.i18n.formatDatetimeComplete(date);
 	}
 };
 Date.prototype.sToSqlDate=function(justDate){

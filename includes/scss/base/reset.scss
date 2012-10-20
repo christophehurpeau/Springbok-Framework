@@ -1,3 +1,6 @@
+$H1Color:#FFF !default;
+$H1Background:false !default;
+$H1_TEXT_SHADOW:false !default;
 
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
 h1{
@@ -69,7 +72,7 @@ pre{
   text-align:left;margin:0;overflow:auto;
   -moz-tab-size:4; -o-tab-size:4; tab-size:4;
 }
-article{
+article p{
 	text-align:justify;
 }
 p{

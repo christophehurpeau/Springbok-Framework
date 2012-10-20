@@ -25,6 +25,9 @@ class CSearch{
 	public function hasSearchWords(){return $this->searchWords!==false;}
 	public function hasFoundKeywords(){ return !empty($this->foundKeywordIds); }
 	
+	public static function listKeywordIds($phraseCleaned){
+		return SearchablesKeyword::listKeywordIds($phraseCleaned);
+	}
 	
 	public function query($query){
 		if(empty($query)){
@@ -34,7 +37,7 @@ class CSearch{
 		}
 		
 		$phraseCleaned=SearchablesKeyword::cleanPhrase($query);
-		$this->foundKeywordIds=SearchablesKeyword::listKeywordIds($phraseCleaned);
+		$this->foundKeywordIds=static::listKeywordIds($phraseCleaned);
 		
 		$words=$this->searchWords=explode(' ',$phraseCleaned);
 		

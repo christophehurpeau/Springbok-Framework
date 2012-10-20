@@ -23,7 +23,7 @@ class QFindAll extends QFind{
 	}
 	
 	public function callback($callback,$callback2=null){
-		$sql=$this->_toSQL();
+		$sql=$this->sqlBigResult()->sqlNoCache()->_toSQL();
 		if($callback2!==null){
 			$callback($this->getModelFields());
 			$callback=$callback2;
