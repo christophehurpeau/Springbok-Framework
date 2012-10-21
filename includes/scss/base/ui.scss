@@ -409,7 +409,7 @@ li.ui-draggable, ul.sortable li{cursor:move}
 	margin: 0;
 	display:block;
 	float: left;
-	background:$PAGE_SHADOWED_BOX_BACKGROUND
+	background:$PageShadowedBowBackground
 }
 .ui-menu .ui-menu {
 	margin-top: -3px;
@@ -422,7 +422,7 @@ li.ui-draggable, ul.sortable li{cursor:move}
 	clear: left;
 	width: 100%;
 }
-.ui-menu a { color:findBestFgColor($PAGE_SHADOWED_BOX_BACKGROUND); }
+.ui-menu a { color:findBestFgColor($PageShadowedBowBackground); }
 .ui-menu .ui-menu-item a {
 	text-decoration:none;
 	display:block;
