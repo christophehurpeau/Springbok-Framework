@@ -10,7 +10,7 @@ abstract class CLogger{
      * @param string $type
      * @return Logger
      */
-    static public function get($name,$type='FileLogger'){
+    static public function get($name,$type='FileLoggerWithScriptName'){
         if(isset(self::$_instances[$name])) return self::$_instances[$name];
         return self::$_instances[$name]=new $type($name);
     }
@@ -20,7 +20,7 @@ class FileLogger extends CLogger{
 	private $_file;
 
 	public function __construct($name='info'){
-		$this->_file=fopen(/* DEV */dirname(APP).'/data/logs/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP.'logs/'/* /PROD */.date('Y-m-')./* DEV */(class_exists('Springbok',false)?/* /DEV */Springbok::$prefix/* DEV */:'')/* /DEV */.$name.'.log', 'a+');
+		$this->_file=fopen(/* DEV */dirname(APP).'/data/logs/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP.'logs/'/* /PROD */.static::name($name), 'a+');
 	}
 
 	public function log($message = ''){
@@ -30,6 +30,17 @@ class FileLogger extends CLogger{
 	public function __destruct(){
 		fclose($this->_file);
    }
+	
+	protected static function name($name){
+		if(stripos($name,'/')===false)
+			return date('Y-m-').$name.'.log';
+		return dirname($name).'/'.date('Y-m-').basename($name).'.log';
+	}
+}
+class FileLoggerWithScriptName extends FileLogger{
+	protected static function name($name){
+		return date('Y-m-')./* DEV */(class_exists('Springbok',false)?/* /DEV */Springbok::$prefix/* DEV */:'')/* /DEV */.$name.'.log';
+	}
 }
 
 class SqliteLogger extends CLogger{
