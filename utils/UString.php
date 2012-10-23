@@ -16,7 +16,8 @@ class UString{
 	}
 	
 	public static function normalize($string){
-		return strtolower(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',$string)));
+		return strtolower(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',
+																HString::transliterate($string))));
 	}
 	
 	public static function callbackWords($string,$callback){
