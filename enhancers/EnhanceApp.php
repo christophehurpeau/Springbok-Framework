@@ -213,6 +213,9 @@ define('APP', __DIR__.'/dev/');";
 	private function createIndexFile(&$dev,&$prod){
 		$entries=$this->enhanced->configNotEmpty('entries') ? $this->enhanced->config('entries') : array();
 
+		file_put_contents($dev->getPath().'env.php','<?php return include dirname(CORE)."/env.php";');
+		file_put_contents($prod->getPath().'env.php','<?php return include dirname(CORE)."/env.php";');
+		
 		$htaccess='<IfModule mod_rewrite.c>
 	Options -Indexes
 	DirectoryIndex disabled
