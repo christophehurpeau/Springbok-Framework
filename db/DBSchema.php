@@ -230,7 +230,7 @@ abstract class DBSchema{
 		// Add fk
 		foreach($a2=array_diff_key($constraints,$currentConstraints) as $col=>$fk){
 			$this->log('Add foreign key on '.$col);
-			if($this->shouldApply()) $this->addForeignKey($col,$fk,false);
+			if($this->shouldApply()) $this->addForeignKey($col,$fk,false,$this->modelInfos['columns'][$col]);
 		}
 		
 		// Remove fk
@@ -248,7 +248,7 @@ abstract class DBSchema{
 				$this->log('Change foreign key on '.$col);
 				if($this->shouldApply()){
 					$this->removeForeignKey($currentConstraints[$col]);
-					$this->addForeignKey($col,$fk,false/*,$currentConstraints[$col]*/);
+					$this->addForeignKey($col,$fk,false,$this->modelInfos['columns'][$col]/*,$currentConstraints[$col]*/);
 				}
 			}
 		}
@@ -513,7 +513,7 @@ abstract class DBSchema{
 	public abstract function changePrimaryKey();
 	
 	
-	public abstract function addForeignKey($colName,$fk,$dropBefore);
+	public abstract function addForeignKey($colName,$fk,$dropBefore,$colInfos);
 	public abstract function removeForeignKey($colName);
 	
 	/** Return if change or not */
