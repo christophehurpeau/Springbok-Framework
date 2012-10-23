@@ -38,6 +38,7 @@ function cliColor($str,$color){
 
 
 class CSession{
+	public static function exists($name){ return false; }
 	public static function connected($orValue=false){ return $orValue; }
 	public static function getOr($name,$orValue=null){ return $orValue; }
 }
