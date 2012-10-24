@@ -19,51 +19,53 @@ class DBSchemaProcessing{
 			if(!is_writable(APP.'dbEvolutions/Versions')) throw new Exception('dbEvolutions/Versions is not writable !');
 		/* /DEV */
 		
-		$currentDbVersion=(int)trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
-	
-		$dbVersions=explode("\n",trim(UFile::getContents(APP.'dbEvolutions/Versions')));
-		if(!empty($dbVersions)){
-			$lastVersion=(int)array_pop($dbVersions);
-			
-			if($currentDbVersion !== $lastVersion && $currentDbVersion < $lastVersion){
-				$this->displayAndLog('currentDbVersion ('.$currentDbVersion.') != lastVersion ('.$lastVersion.')');
+		if(Config::$generate['default']){
+			$currentDbVersion=(int)trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
+		
+			$dbVersions=explode("\n",trim(UFile::getContents(APP.'dbEvolutions/Versions')));
+			if(!empty($dbVersions)){
+				$lastVersion=(int)array_pop($dbVersions);
 				
-				
-				$versionsToUpdate=array($lastVersion);
-				while(($version=array_pop($dbVersions)) && $version > $currentDbVersion)
-					array_unshift($versionsToUpdate,(int)$version);
-				
-				if($generate){
-					$error=false;
-					$vars=array('versions'=>$versionsToUpdate);
-					if(!$this->shouldApply()){
-						render(CORE.'db/evolutions-view.php',$vars);
-					}else{
-						foreach($versionsToUpdate as $version){
-							$sql=UFile::getContents(APP.'dbEvolutions/'.$version.'.sql');
-							
-							foreach(explode("\n",$sql) as $line){
-								if(empty($line)) continue;
-								list($dbName,$query) = explode('=>',$line,2);
+				if($currentDbVersion !== $lastVersion && $currentDbVersion < $lastVersion){
+					$this->displayAndLog('currentDbVersion ('.$currentDbVersion.') != lastVersion ('.$lastVersion.')');
+					
+					
+					$versionsToUpdate=array($lastVersion);
+					while(($version=array_pop($dbVersions)) && $version > $currentDbVersion)
+						array_unshift($versionsToUpdate,(int)$version);
+					
+					if($generate){
+						$error=false;
+						$vars=array('versions'=>$versionsToUpdate);
+						if(!$this->shouldApply()){
+							render(CORE.'db/evolutions-view.php',$vars);
+						}else{
+							foreach($versionsToUpdate as $version){
+								$sql=UFile::getContents(APP.'dbEvolutions/'.$version.'.sql');
 								
-								$db=DB::init($dbName);
-								try{
-									$db->doUpdate($query);
-								}catch(Exception $ex){
-									$error=true;
-									$this->displayAndLog('ERROR: '.$ex->getMessage());
+								foreach(explode("\n",$sql) as $line){
+									if(empty($line)) continue;
+									list($dbName,$query) = explode('=>',$line,2);
+									
+									$db=DB::init($dbName);
+									try{
+										$db->doUpdate($query);
+									}catch(Exception $ex){
+										$error=true;
+										$this->displayAndLog('ERROR: '.$ex->getMessage());
+									}
 								}
+								
+								file_put_contents($currentDbVersionFilename,$version);
+								$this->displayAndLog('Applied : '.$version.($error?' WITH ERROR':''));
+								if($error) break;
 							}
 							
-							file_put_contents($currentDbVersionFilename,$version);
-							$this->displayAndLog('Applied : '.$version.($error?' WITH ERROR':''));
-							if($error) break;
+							
+							if(isset($_SERVER['REQUEST_URI'])) render(CORE.'db/applied-evolutions-view.php',$vars);
 						}
-						
-						
-						if(isset($_SERVER['REQUEST_URI'])) render(CORE.'db/applied-evolutions-view.php',$vars);
+						if($error || isset($_SERVER['REQUEST_URI'])) exit;
 					}
-					if($error || isset($_SERVER['REQUEST_URI'])) exit;
 				}
 			}
 		}
