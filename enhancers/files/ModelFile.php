@@ -74,15 +74,15 @@ class ModelFile extends PhpFile{
 				
 				if(isset($annotations['Created'])){
 					if(isset($modelFile->_fields['created'])) throw new Exception($modelFile->_className.' already contains a field "created"');
-					$modelFile->_fields['created']=array('SqlType'=>array('datetime'),'NotNull'=>false,'NotBindable'=>false);
+					$modelFile->_fields['created']=array('SqlType'=>array('datetime'),'NotNull'=>false,'NotBindable'=>false,'Index'=>false);
 				}
 				if(isset($annotations['CreatedBy'])){
 					if(isset($modelFile->_fields['created_by'])) throw new Exception($modelFile->_className.' already contains a field "created_by"');
-					$modelFile->_fields[$createdByField='created_by']=array('SqlType'=>array('int(10) unsigned'),'Null'=>false,'NotBindable'=>false);
+					$modelFile->_fields[$createdByField='created_by']=array('SqlType'=>array('int(10) unsigned'),'Null'=>false,'NotBindable'=>false,'Index'=>false);
 				}
 				if(isset($annotations['Updated'])){
 					if(isset($modelFile->_fields['updated'])) throw new Exception($modelFile->_className.' already contains a field "updated"');
-					$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL));
+					$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL),'Index'=>false);
 				}
 				
 				

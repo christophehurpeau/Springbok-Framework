@@ -124,7 +124,8 @@ class DBSchemaProcessing{
 			}
 			exit;
 		}
-		if(CHttpRequest::_GETor('apply')==='springbokProcessSchema'){
+		
+		if(substr(APP,-16)!=='/webmanager/dev/' && CHttpRequest::_GETor('apply')==='springbokProcessSchema'){
 			header('Location: '.substr($_SERVER['REQUEST_URI'],0,-strlen('?apply=springbokProcessSchema')));
 			exit;
 		}

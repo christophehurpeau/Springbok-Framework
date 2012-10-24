@@ -76,19 +76,23 @@ class HString{
 	static public function slug($string, $replacement = '-') {
 		//$quotedReplacement=preg_quote($replacement, '/');
 
-		foreach(self::$_transliteration as $pattern=>$r)
-			$string=preg_replace($pattern,$r,$string);
+		$string=self::transliterate($string);
 		$string=preg_replace('/[^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]/mu', ' ', $string);
-		$string=preg_replace('/\\s+/',$replacement,$string);
+		$string=preg_replace('/\s+/',$replacement,$string);
 		//return preg_replace('/^['.$quotedReplacement.']+|['.$quotedReplacement.']+$/','',$string);
 		return trim($string,$replacement);
 	}
 
 	static public function removeSpecialChars($string){
+		$string=self::transliterate($string);
+		return trim(preg_replace('/[^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+/mu',' ',$string));
+	}
+	
+	public static function transliterate($string){
 		//return preg_replace(array_keys(self::$_transliteration), array_values(self::$_transliteration), $string);
 		foreach(self::$_transliteration as $pattern=>$replacement)
-			$string=preg_replace($pattern, $replacement, $string);
-		return trim(preg_replace('/[^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+/mu',' ',$string));
+			$string=preg_replace($pattern,$replacement,$string);
+		return $string;
 	}
 	
 	/** http://tonyarchambeau.com/blog/developpement/php/php-coefficient-de-dice-400/ */

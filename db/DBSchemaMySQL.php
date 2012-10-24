@@ -199,14 +199,15 @@ class DBSchemaMySQL extends DBSchema{
 	public function disableForeignKeyChecks(){$this->doUpdate('SET FOREIGN_KEY_CHECKS=0',true);}
 	public function activeForeignKeyChecks(){$this->doUpdate('SET FOREIGN_KEY_CHECKS=1',true);}
 	
-	public function addForeignKey($colName,$fk,$dropBefore){
+	public function addForeignKey($colName,$fk,$dropBefore,$colInfos){
 		list($refTableName,$refColName,$onDelete,$onUpdate)=array(
 							($fk[0]::$__dbName != $this->db->_getName() ? $fk[0]::$__modelDb->getDbName().'.' : '').$this->db->formatTable($fk[0]::_fullTableName()),$fk[1],
 							isset($fk['onDelete'])?$fk['onDelete']:false,isset($fk['onUpdate'])?$fk['onUpdate']:false);
 		$constraintname='fk_'.$this->tableName.'_'.$colName;
 		$sql='ALTER TABLE '.$this->db->formatTable($this->tableName)
 			.($dropBefore!==false?' DROP FOREIGN KEY `'.$dropBefore['name'].'`,':'')
-			.' ADD CONSTRAINT `'.$constraintname.'` FOREIGN KEY ('.$this->db->formatColumn($colName).') REFERENCES '.$refTableName.' ('.$this->db->formatColumn($refColName).')';
+			.' ADD '.($colInfos['unique']?'':'CONSTRAINT `'.$constraintname.'` ')
+				.'FOREIGN KEY ('.$this->db->formatColumn($colName).') REFERENCES '.$refTableName.' ('.$this->db->formatColumn($refColName).')';
 		if($onDelete) $sql.=' ON DELETE '.$onDelete;
 		if($onUpdate) $sql.=' ON UPDATE '.$onUpdate;
 		$this->doUpdate($sql,true);

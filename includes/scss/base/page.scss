@@ -19,7 +19,7 @@ $PageBackground:false !default;
 $FixedVariableShadow:false !default;
 $FixedBackground:false !default;
 $FixedBorder:false !default;
-$FixedVariableMargin:$FixedVariableShadow !default;
+$FixedVariableMargin:false !default;
 $VariableBackground:false !default;
 $VariableBorder:false !default;
 $VariableShadow:false !default;
@@ -30,13 +30,13 @@ $VariableAutoContentPadding:true !default;
       
 $IE6_VARIABLE_WIDTH:700px !default;
 
-$PAGE_SHADOWED_BOX_BACKGROUND:#FFF !default;
-$PAGE_SHADOWED_BOX_BORDER:false !default;
-$PAGE_SHADOWED_BOX_SHADOW_COLOR:#888 !default;
+$PageShadowedBowBackground:#FFF !default;
+$PageShadowedBowBorder:false !default;
+$PageShadowedBowShadowColor:#888 !default;
 
-$BREADCRUMBS_IN_VARIABLE:false !default;
-$BREADCRUMBS_BACKGROUND:false !default;
-$BREADCRUMBS_FONTSIZE:0.88em !default;
+$BreadcrumbsInVariable:false !default;
+$BreadcrumbsBackground:false !default;
+$BreadcrumbsFontSize:0.88em !default;
 
 
 html{
@@ -136,16 +136,16 @@ footer,div.footer{
 footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 
 #breadcrumbs{
-	@if $BREADCRUMBS_BACKGROUND{ margin:3px 3px 5px;padding:2px 3px 3px; background:$BREADCRUMBS_BACKGROUND; }
-	@if false==$BREADCRUMBS_IN_VARIABLE{
+	@if $BreadcrumbsBackground{ margin:3px 3px 5px;padding:2px 3px 3px; background:$BreadcrumbsBackground; }
+	@if false==$BreadcrumbsInVariable{
 		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
 		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
-		@if false==$BREADCRUMBS_BACKGROUND{
+		@if false==$BreadcrumbsBackground{
 			@if $FixedVariableBackground{ margin:3px 3px 5px;padding:2px 3px 3px; background:$FixedVariableBackground; }
 			@else{ margin:0 0 5px; }
 		}
 	}
-	@if $BREADCRUMBS_FONTSIZE{ font-size:$BREADCRUMBS_FONTSIZE; }
+	@if $BreadcrumbsFontSize{ font-size:$BreadcrumbsFontSize; }
 }
 #breadcrumbs span.last{
 	cursor:default;
@@ -285,9 +285,9 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 div.shadowed-box{
 	padding:4px 6px; margin:0 5px 10px;
 	border-radius:4px;
-	@include boxShadow($PAGE_SHADOWED_BOX_SHADOW_COLOR,4px);
-	background:$PAGE_SHADOWED_BOX_BACKGROUND;
-	@if $PAGE_SHADOWED_BOX_BORDER{ border:$PAGE_SHADOWED_BOX_BORDER; }
+	@include boxShadow($PageShadowedBowShadowColor,4px);
+	background:$PageShadowedBowBackground;
+	@if $PageShadowedBowBorder{ border:$PageShadowedBowBorder; }
 	
 	h2{font-size:1.3em; margin-top:2px;}
 }

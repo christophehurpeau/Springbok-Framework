@@ -1,6 +1,6 @@
 <?php
-$parentCore=dirname(CORE).DS;
-define('ENV',include $parentCore.'env.php');
+/* DEV */define('ENV',include dirname(CORE).'/env.php');/* /DEV */
+/* PROD */define('ENV',include APP.'env.php');/* /PROD */
 require 'base/base.php';
 define('ALIBS',APP.'libs/');
 //define('CLIBS',CORE.'libs'.DS);

@@ -189,7 +189,7 @@ class DBSchemaSQLite extends DBSchema{
 	public function getForeignKeys(){return array();}
 	public function removeForeignKeys(){return false;}
 	
-	public function addForeignKey($colName,$fk,$dropBefore){
+	public function addForeignKey($colName,$fk,$dropBefore,$colInfos){
 	}
 	public function removeForeignKey($colName){
 	}
