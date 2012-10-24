@@ -21,7 +21,8 @@ class UString{
 	}
 	
 	public static function callbackWords($string,$callback){
-		return preg_replace_callback("/(\w\'|(?:[A-Z]\.)+|[\wÉÈÊËÂÄÔÖéèêëâäôöçïî]+(\.)?)\b/",
-					function($m) use($callback){ return $callback($m[1],empty($m[2])?'':'.'); },$string);
+		return preg_replace_callback("/(\w\'|(?:[A-Z]\.){2,}|[A-Za-z0-9ÉÈÊËÂÄÔÖéèêëâäôöçïî]+(\.|\b))/",
+					function($m) use($callback){ $dot=empty($m[2])?'':'.';
+						return $callback($dot===''?$m[1]:substr($m[1],0,-1),$dot); },$string);
 	}
 }

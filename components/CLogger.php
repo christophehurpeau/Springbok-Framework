@@ -24,17 +24,20 @@ class FileLogger extends CLogger{
 	}
 
 	public function log($message = ''){
-		fwrite($this->_file, date('m-d H:i:s')."\t".$message."\r\n");
+		$this->write(date('m-d H:i:s')."\t".$message);
+	}
+	public function write($message){
+		fwrite($this->_file, $message."\r\n");
 	}
 
 	public function __destruct(){
 		fclose($this->_file);
    }
 	
-	protected static function name($name){
+	protected static function name($name,$ext='log'){
 		if(stripos($name,'/')===false)
-			return date('Y-m-').$name.'.log';
-		return dirname($name).'/'.date('Y-m-').basename($name).'.log';
+			return date('Y-m-').$name.'.'.$ext;
+		return dirname($name).'/'.date('Y-m-').basename($name).'.'.$ext;
 	}
 }
 class FileLoggerWithScriptName extends FileLogger{

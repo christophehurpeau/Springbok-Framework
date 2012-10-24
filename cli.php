@@ -11,7 +11,7 @@ include CORE.'springbok.php';
 
 function display($str,$endChar="\n"){
 	echo $str.$endChar;
-	ob_flush();
+	if(ob_get_length()>0) ob_flush();
 }
 class CliColors{
 	/* http://www.if-not-true-then-false.com/2010/php-class-for-coloring-php-command-line-cli-scripts-output-php-output-colorizing-using-bash-shell-colors/ */
