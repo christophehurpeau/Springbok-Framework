@@ -17,7 +17,7 @@ br.clear{display:block;line-height:0;font-size:0;height:0}
 .faR{float:right;text-align:right}
 .context{ overflow:auto; overflow-x:hidden; position:relative }
 .nowrap,.w1{white-space:nowrap}
-html body .hidden{display:none !important}
+html body .hidden{display:none}
 .dblock{display:block}
 .hiddenText{text-indent:-99999px; @if $IE_COMPATIBILITY{ *text-indent:0; *font-size:0; *line-height:0; *overflow:hidden;} }
 

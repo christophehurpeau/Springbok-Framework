@@ -72,8 +72,23 @@ includeCore('libs/jquery-ui-1.8.23.position');
 				};
 				if(success) ajaxOptions.success=success;
 				$.ajax(url,ajaxOptions)
-					.success(function(){S.bodyIcon('tick',form);})
-					.error(function(){S.bodyIcon('cross',form);});
+					.error(function(){S.bodyIcon('cross',form);})
+					.success(function(data){
+						S.bodyIcon('tick',form);
+						if(S.isObject(data) && data.update){
+							var u=data.update;
+							if(S.isObject(u)){
+								for(var key in u){
+									var d=u[key];
+									for(var k in d){
+										var name=k;
+										if(key) name=key+'['+k+']';
+										form.find('[name="'+name+'"]').val(d[k]);
+									}
+								}
+							}
+						}
+					});
 				return false;
 			})
 			/*.find(':submit').unbind('click').click(function(){
