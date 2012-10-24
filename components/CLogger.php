@@ -41,8 +41,8 @@ class FileLogger extends CLogger{
 	}
 }
 class FileLoggerWithScriptName extends FileLogger{
-	protected static function name($name){
-		return date('Y-m-')./* DEV */(class_exists('Springbok',false)?/* /DEV */Springbok::$prefix/* DEV */:'')/* /DEV */.$name.'.log';
+	protected static function name($name,$ext='log'){
+		return date('Y-m-')./* DEV */(class_exists('Springbok',false)?/* /DEV */Springbok::$prefix/* DEV */:'')/* /DEV */.$name.'.'.$ext;
 	}
 }
 
