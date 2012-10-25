@@ -92,6 +92,13 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 		return $this;
 	}
 	
+	public function compareData($originalData=null){
+		$keys=array_keys(array_diff_assoc($this->data,$originalData===null?$this->originalData:$originalData));
+		if(empty($keys)) return false;
+		return $this->_getSaveData($keys);
+	}
+	
+	
 	
 	/* Iterator */
 	/*

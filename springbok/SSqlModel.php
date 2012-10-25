@@ -105,12 +105,6 @@ class SSqlModel extends SModel{
 	}
 	
 	
-	public function compareData($originalData=null){
-		$keys=array_keys(array_diff_assoc($this->data,$originalData===null?$this->originalData:$originalData));
-		if(empty($keys)) return false;
-		return $this->_getSaveData($keys);
-	}
-	
 	public function updateCompare($originalData=null){
 		if(!$this->_beforeUpdate()) return false;
 		/* DEV */if($originalData===null && $this->originalData===null) throw new Exception('Model needed to be prepared'); /* /DEV */
