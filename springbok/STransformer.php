@@ -16,7 +16,7 @@ class STransformer{
 	}
 	
 	public static function getValueFromModel($model,$field,$i){
-		return isset($field['key']) && $model->__isset($field['key']) ? $model->_get($field['key']) : false;
+		return isset($field['key']) && $model->isKeyExists($field['key']) ? $model->_get($field['key']) : false;
 	}
 	
 	public function startHead(){}
