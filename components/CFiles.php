@@ -12,7 +12,7 @@ class CFiles{
 			move_uploaded_file($_FILES[$name]['tmp_name'], $tmpFile);
 			if($file===null) $file=static::createObject();
 			$file->name=$_FILES[$name]['name'];
-			self::add($tmpFile,$file);
+			static::add($tmpFile,$file);
 			return $file;
 		}else throw new Exception($errorMessage);
 		return false;
@@ -28,7 +28,7 @@ class CFiles{
 				$file=static::createObject();
 				$file->name=$_FILES[$name]['name'][$key];
 				try{
-					self::add($tmpFile,$file);
+					static::add($tmpFile,$file);
 					$files[]=$file;
 				}catch(Exception $ex){
 					$errors[$_FILES[$name]['name'][$key]]=$ex->getMessage();
