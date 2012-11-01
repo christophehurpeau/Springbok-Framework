@@ -217,7 +217,7 @@ define('APP', __DIR__.'/dev/');";
 		file_put_contents($prod->getPath().'env.php','<?php return include dirname(CORE)."/env.php";');
 		
 		$htaccess='<IfModule mod_rewrite.c>
-	Options -Indexes
+	Options -Indexes -MultiViews
 	DirectoryIndex disabled
 	DirectorySlash Off
 	RewriteEngine on
