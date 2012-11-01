@@ -208,10 +208,12 @@ function dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
 
 /* PROD */
 function prettyDebug($message,$skipLength=2){}
+function short_debug_var($var,$MAX_DEPTH=3,$html=null,$currentDepth=0){}
 function debug($object){}
 function debugCode($code){}
 function debugVar($var){}
 function debugVarNoFlush(){}
+function debugPrintr($var){}
 /* /PROD */
 
 function h($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
