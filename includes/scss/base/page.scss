@@ -136,16 +136,18 @@ footer,div.footer{
 footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 
 #breadcrumbs{
-	@if $BreadcrumbsBackground{ margin:3px 3px 5px;padding:2px 3px 3px; background:$BreadcrumbsBackground; }
+	@if $BreadcrumbsBackground{ $BreadcrumbsPadding:2px 3px 3px !default; margin:3px 3px 5px;padding:$BreadcrumbsPadding; background:$BreadcrumbsBackground; }
+	$BreadcrumbsPadding:false !default;
 	@if false==$BreadcrumbsInVariable{
 		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
 		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
 		@if false==$BreadcrumbsBackground{
-			@if $FixedVariableBackground{ margin:3px 3px 5px;padding:2px 3px 3px; background:$FixedVariableBackground; }
+			@if $FixedVariableBackground{margin:3px 3px 5px; @if false==$BreadcrumbsPadding{padding:2px 3px 3px;} background:$FixedVariableBackground; }
 			@else{ margin:0 0 5px; }
 		}
 	}
 	@if $BreadcrumbsFontSize{ font-size:$BreadcrumbsFontSize; }
+	@if $BreadcrumbsPadding{ padding:$BreadcrumbsPadding; }
 }
 #breadcrumbs span.last{
 	cursor:default;
@@ -234,8 +236,9 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	div.variablep{margin:0;padding:0;float:left; }
 }
 .content,#page .content{padding:5px 10px;}
+$VariablePaddingValue:8px 10px !default;
 #page{
-	div.variable.padding{padding:8px 10px}
+	div.variable.padding{padding:$VariablePaddingValue}
 	div.variable.paddingtop{padding:8px 0 0}
 	@if $VariableAutoContentPadding{
 	  @if false==$VariableBackground{

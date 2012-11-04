@@ -216,17 +216,18 @@ define('APP', __DIR__.'/dev/');";
 		file_put_contents($dev->getPath().'env.php','<?php return include dirname(CORE)."/env.php";');
 		file_put_contents($prod->getPath().'env.php','<?php return include dirname(CORE)."/env.php";');
 		
-		$htaccess='<IfModule mod_rewrite.c>
-	Options -Indexes -MultiViews
-	DirectoryIndex disabled
-	DirectorySlash Off
+		$htaccess=
+'Options -Indexes
+DirectoryIndex disabled
+DirectorySlash Off
+<IfModule mod_rewrite.c>
 	RewriteEngine on
 	RewriteRule ^web/(.*)$ web/$1 [NE,L]';
 
 		foreach($entries as $entry)
 			$htaccess.='
-	RewriteRule ^'.$entry.'/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,L]
-	RewriteRule ^'.$entry.'.php/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,L]';
+	RewriteRule ^'.$entry.'/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,NS,L]
+	RewriteRule ^'.$entry.'.php/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,NS,L]';
 	
 	
 		/*foreach($entries as $entry)

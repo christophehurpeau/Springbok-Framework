@@ -5,7 +5,7 @@ $.widget( "ui.combobox", {
 			select = this.element.hide(),
 			selected = select.children( ":selected" ),
 			value = selected.val() ? selected.text() : "";
-		var input = this.input = $( "<input>" ).addClass('ui-combobox ui-widget ui-widget-content ui-corner-left')
+		var input = this.input = $( "<input>" ).addClass('ui-combobox ui-corner-left')
 			.insertAfter( select )
 			.val( value ),countOptions=select.children( "option" ).length;
 		if(orgWidth) input.css({'width':orgWidth});
