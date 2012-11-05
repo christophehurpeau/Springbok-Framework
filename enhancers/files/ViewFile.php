@@ -128,7 +128,7 @@ class ViewFile extends PhpFile{
 			return '<?php UPhp::recursive(function(&$callback,&'.$m[1].')'.(empty($m[2])?'':' use(&'.implode(',&',explode(',',$m[2])).')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
 		},$content);
 		
-		$content=preg_replace('/{icon\s+([^}]+)\s*\}/','<span class="icon $1"></span>',$content);
+		$content=preg_replace('/{icon(32|)\s+([^}]+)\s*\}/','<span class="icon$1 $2"></span>',$content);
 		
 		$content=preg_replace('/{(t|tF|tC)\s+([^}]+)\s*}/U','<?php echo h(_$1($2)) ?>',$content);
 		

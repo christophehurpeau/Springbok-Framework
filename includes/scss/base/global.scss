@@ -52,10 +52,10 @@ html body .hidden{display:none}
 
 .sepTop,ul.cSepTop li{margin-top:8px;padding-top:8px;}
 .sepBot{margin-bottom:8px;padding-bottom:8px;}
-.sepTop,.sepT,ul.cSepTop li{border-top:$SEP_BORDER;}
+.sepTop,.sepT,.sepTB,ul.cSepTop li{border-top:$SEP_BORDER;}
 .sepL{border-left:$SEP_BORDER;}
 .sepR{border-right:$SEP_BORDER;}
-.sepBot,.sepB{border-bottom:$SEP_BORDER;}
+.sepBot,.sepB,.sepTB{border-bottom:$SEP_BORDER;}
 
 .clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after,nav.top ul:after{ 
   /*clear: both; 

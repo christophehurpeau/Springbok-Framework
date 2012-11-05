@@ -24,6 +24,10 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	public function __isset($name){
 		return isset($this->data[$name]);
 	}
+	public function isKeyExists($key){
+		return array_key_exists($key,$this->data);
+	}
+	
 	public function __get($name){
 		/* DEV */
 		if(!/*isset($this->data[$name])*/array_key_exists($name,$this->data)){//isset does'nt work if the value is null
@@ -91,6 +95,13 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 		$this->originalData=$this->data;
 		return $this;
 	}
+	
+	public function compareData($originalData=null){
+		$keys=array_keys(array_diff_assoc($this->data,$originalData===null?$this->originalData:$originalData));
+		if(empty($keys)) return false;
+		return $this->_getSaveData($keys);
+	}
+	
 	
 	
 	/* Iterator */

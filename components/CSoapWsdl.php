@@ -7,6 +7,10 @@ class CSoapWsdl{
 		$this->types[]=new PhpWsdlComplex($type.'Array',array(/*new PhpWsdlElement('item',$type)*/),array('isarray'=>true));
 	}
 	
+	public function addIntArray(){
+		$this->types[]=new PhpWsdlComplex('IntArray','int');
+	}
+	
 	public function addModel($modelName,$fields,$relations=array(),$dataName=null){
 		if($dataName===null) $dataName=$modelName;
 		$el=array();

@@ -125,7 +125,7 @@ class App{
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			/* DEV */
-			if(isset(Config::$dev_prefixed_routes) && !Config::$dev_prefixed_routes){
+			if(rtrim(Config::$siteUrl['index'],'/')!=='http://localhost'){
 				Springbok::$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
 				if(Springbok::$scriptname==='www') Springbok::$scriptname='index';
 			}
@@ -138,7 +138,7 @@ class App{
 				Springbok::$suffix='.'.Springbok::$scriptname;
 				
 				/* DEV */
-				CRoute::init(!isset(Config::$dev_prefixed_routes)||Config::$dev_prefixed_routes?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
+				CRoute::init(rtrim(Config::$siteUrl['index'],'/')==='http://localhost'?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
 				if(CRoute::getController()==='Web'){
 					Controller::renderFile(APP.substr(CRoute::getAll(),1));
 				}

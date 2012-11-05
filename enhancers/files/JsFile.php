@@ -85,7 +85,7 @@ class JsFile extends EnhancerFile{
 			else $entries=array();
 			if(in_array($this->fileName(),$jsFiles))
 				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'')
-					.(!$this->enhanced->devConfigExist('dev_prefixed_routes') && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
+					.(rtrim($this->enhanced->devConfig['siteUrl']['index'],'/')==='http://localhost' && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
 					/*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/
 					.",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webUrl+'img/'"
 					.($this->fileName()==='admin.js'?',entryUrl='.json_encode($this->enhanced->devConfig['siteUrl'],JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE):'')

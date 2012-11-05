@@ -107,7 +107,10 @@ class CValidation{
 		return self::_addError($key,self::email($val));
 	}
 	private static function validEmail($val){
-		return preg_match('/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@'.self::PATTERN_HOSTNAME.'$/i',$val) ? false : _tC('This is not a valid email');
+		return self::isValidEmail($val) ? false : _tC('This is not a valid email');
+	}
+	public static function isValidEmail($val){
+		return preg_match('/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@'.self::PATTERN_HOSTNAME.'$/i',$val);
 	}
 	
 	public static function match($key,$val,$match){
