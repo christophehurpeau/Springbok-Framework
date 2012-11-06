@@ -12,8 +12,9 @@ class DBSchemaProcessing{
 		
 		$this->force=$force; $schemas=array();
 		/* DEV */
-			$this->shouldApply=$force?true:($apply=CHttpRequest::_GETor('apply'))==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema';
-			$this->writeDbEvolution=$apply==='springbok_Evolu_Schema';
+			$apply=CHttpRequest::_GETor('apply');
+			$this->shouldApply=$force?true:$apply==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema';
+			$this->writeDbEvolution=$force?false:$apply==='springbok_Evolu_Schema';
 		/* /DEV */
 		$this->generate=$generate||$this->shouldApply;
 		
