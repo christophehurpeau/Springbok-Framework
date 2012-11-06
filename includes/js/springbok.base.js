@@ -32,7 +32,7 @@ window.S={
 	setTitle:function(title){document.title=title;},
 	
 	imgLoading:function(){ return $('<span class="img imgLoading"/>') },
-	imgLongLoading:function(){ return $('<span class="img imgLongLoading"/>') },
+	imgLongLoading:function(){ return this.imgLoading(); /* return $('<span class="img imgLongLoading"/>')*/ },
 	bodyIcon:function(iconName,of,my,at){
 		if(!my) my='right center';
 		if(!at) at='right center';

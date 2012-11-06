@@ -1,8 +1,35 @@
 S.dialogs={
 	alert:function(title,message){
 		var div=$('<div/>'),buttons={};
-		buttons[i18nc['Close']]=function(){$(this).dialog( "close" );};
+		buttons[i18nc['Close']]=function(){$(this).dialog('close');};
 		S.isString(message) ? div.text(message) : div.html(message);
+		div.dialog({
+		    autoOpen: true,
+		    title:title,
+		    position:['center',150],
+		    width:450,
+		    modal:true,
+		    buttons:buttons,
+		    close:function(){ div.remove(); },
+		    zIndex:9000 //fancybox : 8030
+		});
+	},
+	confirm:function(title,message,okButtonName,callbackOk,callbackCancel){
+		var div=$('<div/>'),buttons={};
+		S.isString(message) ? div.text(message) : div.html(message);
+		
+		
+		buttons[i18nc.Cancel]=function(){
+			div.hide();
+			callbackCancel&&callbackCancel();
+			div.dialog('close');
+		};
+		buttons[okButtonName]=function(){
+			div.html(S.imgLongLoading());
+			callbackOk();
+			div.dialog('close');
+		};
+		
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
@@ -26,17 +53,17 @@ S.dialogs={
 			if(e.keyCode == '13'){
 				e.preventDefault();
 				e.stopImmediatePropagation();
-				div.dialog( "close" );
+				div.dialog('close');
 				callback($(this).val());
 				return false;
 			}
 		}));
 		
-		buttons[i18nc.Cancel]=function(){$(this).dialog( "close" );};
+		buttons[i18nc.Cancel]=function(){$(this).dialog('close');};
 		buttons[okButtonName]=function(){
 			div.hide();
 			callback(div.find('input').val());
-			div.dialog( "close" );
+			div.dialog('close');
 		};
 		
 		div.dialog({
@@ -55,11 +82,11 @@ S.dialogs={
 		var div=$('<div/>'),buttons={};
 		div.html(content);
 		
-		buttons[i18nc.Cancel]=function(){div.dialog( "close" );};
+		buttons[i18nc.Cancel]=function(){div.dialog('close');};
 		buttons[okButtonName]=function(){
 			div.hide();
 			callback();
-			div.dialog( "close" );
+			div.dialog('close');
 		};
 		
 		div.dialog({
