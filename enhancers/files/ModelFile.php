@@ -55,6 +55,7 @@ class ModelFile extends PhpFile{
 				if(!isset($annotations['TableAlias'])) throw new Exception('Table Alias is missing for : '.$modelFile->_className);
 				$dbName=isset($annotations['Db'])?$annotations['Db'][0][0]:false;
 				if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
+				if(isset($annotations['Engine'])) $contentInfos['Engine']=$annotations['Engine'][0][0];
 				$createdField=isset($annotations['CreatedField'])?$annotations['CreatedField'][0][0]:false;
 				$updatedField=isset($annotations['UpdatedField'])?$annotations['UpdatedField'][0][0]:false;
 				$createdByField=isset($annotations['CreatedByField'])?$annotations['CreatedByField'][0][0]:false;
