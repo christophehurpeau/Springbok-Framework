@@ -133,7 +133,7 @@ class DBSchemaProcessing{
 			exit;
 		}
 		
-		if(substr(APP,-16)!=='/webmanager/dev/' && ($apply==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema')){
+		if(isset($_SERVER['REQUEST_URI']) && substr(APP,-16)!=='/webmanager/dev/' && ($apply==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema')){
 			header('Location: '.substr($_SERVER['REQUEST_URI'],0,-strlen('?apply=springbokProcessSchema')));
 			exit;
 		}
