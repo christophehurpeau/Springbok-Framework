@@ -1,7 +1,8 @@
 <?php
 class DBSchemaProcessing{
 	public static $isProcessing=false;
-	private $force,$generate,$shouldApply/* PROD */ =true/* /PROD */,$dbs=array(),$columns=array(),$schemas=array(),$logs,$logger,$time;
+	private $force,$generate,$shouldApply/* PROD */ =true/* /PROD */,/* DEV */$writeDbEvolution=false,/* /DEV */
+			$dbs=array(),$columns=array(),$schemas=array(),$logs,$logger,$time;
 	
 	public function __construct(Folder $modelDir,Folder $triggersDir,$force=false,$generate=true){
 		if(!$modelDir->exists()) return false;
@@ -10,7 +11,11 @@ class DBSchemaProcessing{
 		self::$isProcessing=true;
 		
 		$this->force=$force; $schemas=array();
-		/* DEV */ $this->shouldApply=$force?true:CHttpRequest::_GETor('apply')==='springbokProcessSchema'; /* /DEV */
+		/* DEV */
+			$apply=CHttpRequest::_GETor('apply');
+			$this->shouldApply=$force?true:$apply==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema';
+			$this->writeDbEvolution=$force?false:$apply==='springbok_Evolu_Schema';
+		/* /DEV */
 		$this->generate=$generate||$this->shouldApply;
 		
 		$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
@@ -120,14 +125,16 @@ class DBSchemaProcessing{
 			$vars=array('dbs'=>&$this->logs);
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
 			else{
-				file_put_contents($baseDir.'src/dbEvolutions/Versions',"\n".$this->time,FILE_APPEND);
-				file_put_contents($baseDir.'currentDbVersion',$this->time);
+				if($this->writeDbEvolution){
+					file_put_contents($baseDir.'src/dbEvolutions/Versions',"\n".$this->time,FILE_APPEND);
+					file_put_contents($baseDir.'currentDbVersion',$this->time);
+				}
 				render(CORE.'db/applied-view.php',$vars);
 			}
 			exit;
 		}
 		
-		if(substr(APP,-16)!=='/webmanager/dev/' && CHttpRequest::_GETor('apply')==='springbokProcessSchema'){
+		if(isset($_SERVER['REQUEST_URI']) && substr(APP,-16)!=='/webmanager/dev/' && ($apply==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema')){
 			header('Location: '.substr($_SERVER['REQUEST_URI'],0,-strlen('?apply=springbokProcessSchema')));
 			exit;
 		}
@@ -172,7 +179,10 @@ class DBSchemaProcessing{
 	}
 	
 	public function query($dbName,$sql){
-		/* DEV */file_put_contents(dirname(APP).'/src/dbEvolutions/'.$this->time.'.sql',"\n".$dbName."=>".str_replace("\n",' ',$sql),FILE_APPEND);/* /DEV */
+		/* DEV */
+			if($this->writeDbEvolution)
+				file_put_contents(dirname(APP).'/src/dbEvolutions/'.$this->time.'.sql',"\n".$dbName."=>".str_replace("\n",' ',$sql),FILE_APPEND);
+		/* /DEV */
 	}
 
 	public function isGenerate(){

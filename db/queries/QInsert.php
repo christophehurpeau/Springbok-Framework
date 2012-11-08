@@ -52,7 +52,19 @@ class QInsert extends AQuery{
 	}
 	
 	public function orUpdate($onDuplicateKeyUpdate){
-		$this->onDuplicateKeyUpdate=$onDuplicateKeyUpdate;
+		if(is_array($onDuplicateKeyUpdate)){
+			$sql='';
+			foreach($onDuplicateKeyUpdate as $key=>$value){
+				$sql.=$this->_db->formatField($key).'=';
+				if($value===NULL) $sql.='NULL';
+				elseif(is_int($value) || is_float($value)) $sql.=$value;
+				elseif(is_bool($value)) $sql.=($value===true?'""':'NULL');
+				else $sql.=$this->_db->escape($value);
+				
+				$sql.=',';
+			}
+			$this->onDuplicateKeyUpdate=substr($sql,0,-1);
+		}else $this->onDuplicateKeyUpdate=$onDuplicateKeyUpdate;
 		return $this;
 	}
 	

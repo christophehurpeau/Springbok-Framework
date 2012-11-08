@@ -68,7 +68,7 @@ class App{
 		//$t=microtime(true);
 		if($shouldEnhance){
 			$updateCookie=false;
-			$generateSchema=($changes && !empty($changes['Model'])) || CHttpRequest::_GETor('apply')==='springbokProcessSchema';
+			$generateSchema=($changes && !empty($changes['Model'])) || ($apply=CHttpRequest::_GETor('apply'))==='springbokProcessSchema' || $apply==='springbok_Evolu_Schema';
 			$cookie=CCookie::get('springbok');
 			if(!$generateSchema){
 				/*if(!CCookie::exists('springbok') || !isset($cookie->check)){

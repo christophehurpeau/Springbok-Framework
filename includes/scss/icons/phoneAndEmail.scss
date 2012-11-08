@@ -1,0 +1,21 @@
+@includeCore 'base/icon';
+@include coreIcon16('phone','phone');
+@include coreIcon16('phoneAdd','phone_add');
+/*@ include coreIcon('phoneEdit','phone_edit');*/
+@include coreIcon16('phoneDel','phone_delete');
+/*@include coreIcon16('phoneGo','phone_go');*/
+@include coreIcon16('phoneAndroid','phone_Android');
+@include coreIcon16('phoneIphone','iphone');
+
+@include coreIcon16('telephone','telephone');
+@include coreIcon16('telephoneAdd','telephone_add');
+@include coreIcon16('telephoneEdit','telephone_edit');
+@include coreIcon16('telephoneDel','telephone_delete');
+@include coreIcon16('telephoneGo','telephone_go');
+
+
+@include coreIcon16('emails','emails');
+@include coreIcon16('email','email');
+@include coreIcon16('emailAdd','email_add');
+@include coreIcon16('emailEdit','email_edit');
+@include coreIcon16('emailDel','email_delete');
