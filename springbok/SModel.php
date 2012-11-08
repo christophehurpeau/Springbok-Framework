@@ -6,9 +6,6 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	public static function init($modelName){
 		$modelName::$__modelDb=DB::init(static::$__dbName);
 		self::$__loadedModels[]=$modelName;
-		$modelName::$__modelInfos=include Config::$models_infos.$modelName;
-		$modelName::$_relations=&$modelName::$__modelInfos['relations'];
-		$modelName::$__PROP_DEF=&$modelName::$__modelInfos['props'];
 	}
 	public static function updateAllDB(){
 		foreach(self::$__loadedModels as $model) $model::updateDB();

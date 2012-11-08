@@ -5,6 +5,7 @@ class DBMongo extends DB{
 	private $_db;
 	
 	public function connect(){
+		/* DEV */ if(!class_exists('Mongo',false)) throw new Exception('Please install MongoDB extension : http://www.mongodb.org/display/DOCS/PHP+Language+Center'); /* /DEV */
 		$this->_connect=new Mongo('mongodb://'.$this->_config['host'].':'.$this->_config['port'],array('connect'=>true));
 		$this->_db=$this->_connect->selectDB($this->_config['dbname']);
 	}
@@ -20,6 +21,10 @@ class DBMongo extends DB{
 	
 	public function ping(){
 		return true;
+	}
+	
+	public function db(){
+		return $this->_db;
 	}
 	
 	

@@ -1,5 +1,13 @@
 <?php
 class SSqlModel extends SModel{
+	public static function init($modelName){
+		parent::init($modelName);
+		$modelName::$__modelInfos=include Config::$models_infos.$modelName;
+		$modelName::$_relations=&$modelName::$__modelInfos['relations'];
+		$modelName::$__PROP_DEF=&$modelName::$__modelInfos['props'];
+	}
+	
+	
 	public static function _getPkName(){
 		/* DEV */if(empty(static::$__modelInfos['primaryKeys'])) throw new Exception(static::$__className.' does not have any primary keys');/* /DEV */
 		return static::$__modelInfos['primaryKeys'][0];
