@@ -176,6 +176,11 @@ class App{
 					elseif($code<1022){
 						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The server is currently overloaded').'','',$exception);
 					}else $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
+				}elseif($exception instanceof MongoCursorException){
+					$code=$exception->getCode();
+					if($code===13||$code===10||$code===8||$code===7||$code===6||$code===4||$code===14)
+						$e=$exception=new FatalHttpException(503,'Service Temporarily Unavailable',_tC('The database is currently inaccessible'),'',$exception);
+					else $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
 				}else $e=new InternalServerError();
 			}else $e=$exception;
 			
