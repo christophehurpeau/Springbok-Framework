@@ -63,10 +63,18 @@ class SMongoModel extends SModel{
 	}
 	
 	
-	public static function InsertOne($data){
+	public static function InsertOne($data,$options=array()){
 		$data['created']=new MongoDate();
-		static::$__collection->insert($data);
+		static::$__collection->insert($data,$options=array());
 		return $data;
+	}
+	public static function InsertOneSafe($data,$options=array()){
+		$options['safe']=true;
+		return static::InsertOne($data,$options);
+	}
+	public static function InsertOneUnsafe($data,$options=array()){
+		$options['safe']=false;
+		return static::InsertOne($data,$options);
 	}
 	
 	public static function UpdateOne($criteria,$newObject){

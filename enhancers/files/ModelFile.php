@@ -302,13 +302,21 @@ class ModelFile extends PhpFile{
 						return '';
 					},$content);
 				}
-				$this->_contentInfos='<?php return '.UPhp::exportCode($contentInfos).';';
 			}else{
 				// MongoDB
-				$content=preg_replace_callback(self::REGEXP_CLASS,function($matches) use(&$modelFile){
+				$contentInfos=array('indexes'=>array());
+				$content=preg_replace_callback(self::REGEXP_CLASS,function($matches) use(&$modelFile,&$contentInfos){
 					$annotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1],true);
 					$modelFile->_className=$matches[2];
 					$dbName=isset($annotations['Db'])?$annotations['Db'][0][0]:false;
+					
+					$indexes=&$contentInfos['indexes'];
+					if(isset($annotations['Index'])){
+						foreach($annotations['Index'] as $index) $indexes[0][]=$index;
+					}
+					if(isset($annotations['IndexUnique'])){
+						foreach($annotations['IndexUnique'] as $index) $indexes[1][]=$index;
+					}
 					
 					return 'class '.$matches[2].$matches[3].'{public static $__className=\''.$matches[2].'\',$__collection'
 								.($dbName?',$__dbName=\''.$dbName.'\',$__modelDb':'')
@@ -316,6 +324,7 @@ class ModelFile extends PhpFile{
 					;
 				},$content);
 			}
+			$this->_contentInfos='<?php return '.UPhp::exportCode($contentInfos).';';
 			$content.=/*'define(\''.$matches[2].'\',\''.$matches[2].'\');'.*/$matches[2].'::init("'.$matches[2].'");';
 		}
 		return $this->addExecuteToQueries($content,true);

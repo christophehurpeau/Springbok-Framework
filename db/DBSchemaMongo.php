@@ -1,5 +1,66 @@
 <?php
 class DBSchemaMongo extends DBSchema{
+	
+	public function compareIndexes(){
+		//debug('compareIndexes');
+		if(!$this->isGenerateSchema()) return;
+		$__modelInfos=include Config::$models_infos.$this->modelName;
+		
+		$modelIndexes=array(0=>array(),1=>array()); $currentIndexes=array(0=>array(),1=>array());
+		
+		foreach($__modelInfos['indexes'] as $key=>$indexes){
+			$changedIndexes=array();
+			foreach($indexes as $index){
+				$indexName='';
+				foreach($index as $field=>$way) $indexName.=$field.'='.$way.'|';
+				$indexName=substr($indexName,0,-1);
+				$changedIndexes[$indexName]=$index;
+			}
+		}
+				
+		$indexes=$this->getIndexes();
+		foreach($indexes as $index) $currentIndexes[isset($index['unique'])&&$index['unique']?1:0][$index['name']]=$index['key'];
+		
+		$modelIndexes[0]['_id_']=array('_id'=>1);
+		
+		if(!isset($modelIndexes[0])) $modelIndexes[0]=array();
+		if(!isset($modelIndexes[1])) $modelIndexes[1]=array();
+		
+		
+		debug([$currentIndexes,$modelIndexes]);
+		
+		// 0 = non unique, 1 =unique
+		$iPrefix=array(0=>'',1=>'unique');
+		foreach(array(array($modelIndexes[0],$currentIndexes[0]),array($modelIndexes[1],$currentIndexes[1])) as $key=>$array){
+			list($modelIndexes,$currentIndexes)=$array;
+			// Add index
+			foreach($a2=array_diff_key($modelIndexes,$currentIndexes) as $indexName=>$fields){
+				$this->log('Add index '.$indexName);
+				if($this->shouldApply()) $this->addIndex($indexName,$fields,$iPrefix[$key]);
+			}
+			
+			// Remove index
+			foreach($a1=array_diff_key($currentIndexes,$modelIndexes) as $indexName=>$fields){
+				$this->log('Remove index '.$indexName);
+				if($this->shouldApply()) $this->removeIndex($indexName);
+			}
+			
+			// Change index
+			foreach($a3=array_diff_key($modelIndexes,$a1,$a2) as $indexName=>$fields){
+				if($fields!==$currentIndexes[$indexName]){
+					$this->log('Change index '.$indexName);
+					if($this->shouldApply()){
+						$this->removeIndex($indexName);
+						$this->addIndex($indexName,$fields,$iPrefix[$key]);
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	
 	public function col(){
 		$m=$this->modelName;
 		return $m::$__collection;
@@ -39,8 +100,8 @@ class DBSchemaMongo extends DBSchema{
 	public function removePrimaryKey(){}
 	public function addPrimaryKey(){}
 	public function changePrimaryKey(){}
-	public function disableForeignKeyChecks(){$this->db->doUpdate('PRAGMA foreign_keys = OFF');}
-	public function activeForeignKeyChecks(){$this->db->doUpdate('PRAGMA foreign_keys = ON');}
+	public function disableForeignKeyChecks(){ }
+	public function activeForeignKeyChecks(){ }
 	
 	
 	public function getForeignKeys(){return array();}
@@ -62,8 +123,11 @@ class DBSchemaMongo extends DBSchema{
 	public function applyColumnsModifications(){}
 	
 	public function addIndex($name,$columns,$type=''){
-		
+		return $this->col()->ensureIndex($columns,array('unique'=>$type==='unique','safe'=>true));
 	}
-	public function removeIndex($name){}
+	public function removeIndex($name){
+		/* http://www.php.net/manual/en/mongocollection.deleteindex.php */
+		return $this->db->db()->command(array("deleteIndexes"=>$this->tableName, "index"=>$name));
+	}
 	
 }
