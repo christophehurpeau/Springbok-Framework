@@ -6,11 +6,14 @@ class DBSchemaMongo extends DBSchema{
 	}
 	
 	public function tableExist(){
-		return $this->db->getTables();
+		foreach($this->db->getTables() as $collection)
+			if($collection->getName()===$this->tableName) return true;
+		return false;
 	}
 	
 	public function createTable(){
-		$m::$__collection=$this->db->createCollection($this->tableName);
+		$m=$this->modelName;
+		$m::$__collection=$this->db->db()->createCollection($this->tableName);
 	}
 	public function removeTable(){
 		$this->col()->drop();

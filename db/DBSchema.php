@@ -33,8 +33,8 @@ abstract class DBSchema{
 	
 	public function process(){
 		$modelName=$this->modelName;
-		$this->modelInfos=&$modelName::$__modelInfos;
-		$db=&$this->db;
+		if(isset($modelName::$__modelInfos)) $this->modelInfos=&$modelName::$__modelInfos;
+		else $this->modelInfos=false;
 		
 		if($this->isGenerateSchema() && $this->schemaProcessing->isGenerate()){
 			if(!($this->tableExist=$this->tableExist())){
@@ -70,12 +70,13 @@ abstract class DBSchema{
 	
 	
 	public function isGenerateSchema(){
-		return Config::$generate[$this->modelInfos['generate']];
+		return isset($this->modelInfos['generate'])?Config::$generate[$this->modelInfos['generate']]:true;
 	}
 	
 	public function shouldApply(){return $this->schemaProcessing->shouldApply(); }
 	
 	public function compareTableAndApply(){
+		if($this->modelInfos===false) return;
 		if($this->columns===null) $this->columns=$this->getColumns();
 		$columns=&$this->columns;$modelInfos=$this->modelInfos;
 		$icolumns=array(); $prev=false; $allPrev=array();
@@ -219,7 +220,7 @@ abstract class DBSchema{
 	
 	
 	public function compareForeignKeys(){
-		if(!$this->isGenerateSchema()) return;
+		if(!$this->isGenerateSchema() || $this->modelInfos===false) return;
 		$modelName=&$this->modelName;
 		$currentConstraints=$this->getForeignKeys();
 		$constraints=array();
@@ -256,7 +257,7 @@ abstract class DBSchema{
 	
 	
 	public function generatePropDefs(){
-		if(!$this->tableExist) return;
+		if(!$this->tableExist || $this->modelInfos===false) return;
 		if($this->columns===false) $this->columns=$this->getColumns();
 		$modelName=&$this->modelName;
 		$properties=$this->createModelPropDef();
@@ -350,6 +351,7 @@ abstract class DBSchema{
 	private static $hasManyThrough=array();
 	public function addForeignKeysRelations(){
 		$modelName=&$this->modelName;
+		if($this->modelInfos===false) return;
 		$relations=&$modelName::$__modelInfos['relations'];
 		$addedRelations=array();
 		
@@ -410,6 +412,7 @@ abstract class DBSchema{
 	
 	public function createRelations(){
 		$modelName=&$this->modelName;
+		if($this->modelInfos===false) return;
 		$contentInfos=&$modelName::$__modelInfos;
 		
 		if($contentInfos['relations']){

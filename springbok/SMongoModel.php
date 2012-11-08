@@ -2,15 +2,28 @@
 class SMongoModel extends SModel{
 	public static function init($modelName){
 		parent::init($modelName);
-		$modelName::$__collection=$modelName::$__modelDb->collection(static::$__tableName);
+		$modelName::$__collection=$modelName::$__modelDb->collection($modelName);
 	}
+	
+	public static function _fullTableName(){
+		return static::$__className;
+	}
+	public function _getPkName(){
+		return '_id';
+	}
+	public function _getPkValue(){
+		return $this->data['_id'];
+	}
+	public function _pkExists(){
+		return isset($this->data['_id']);
+	}
+	
+	
 	
 	/* http://us2.php.net/manual/en/mongocollection.insert.php */
 	public function insert(){
 		if(!$this->_beforeInsert()) return false;
-		$data=$this->_getData();
-		$data['created']=new MongoDate();
-		static::$__collection->insert($data);
+		$data=$this->data=static::InsertOne($data=$this->_getData());
 		$this->_afterInsert($data);
 		return $data['_id'];
 	}
@@ -24,8 +37,7 @@ class SMongoModel extends SModel{
 		if(isset($data['_id']))
 			static::$__collection->save(array('_id'=>$data['_id']),$data);
 		else{
-			$data['created']=new MongoDate();
-			static::$__collection->insert($data);
+			$data=$this->data=static::InsertOne($data);
 		}
 		$this->afterSave($data);
 	}
@@ -48,6 +60,13 @@ class SMongoModel extends SModel{
 	
 	public function updateField($fieldName,$value){
 		static::$__collection->update(array('_id'=>$this->data['_id']),array($fieldName=>$value));
+	}
+	
+	
+	public static function InsertOne($data){
+		$data['created']=new MongoDate();
+		static::$__collection->insert($data);
+		return $data;
 	}
 	
 	public static function UpdateOne($criteria,$newObject){
