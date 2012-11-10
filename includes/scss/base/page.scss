@@ -7,20 +7,23 @@ $HeaderBackground:false !default;
 $HeaderColor:false !default;
 $HeaderBorderRadius:false !default;
 $HeaderPadding:false !default;
-
+$HeaderBorder:false !default;
 
 $ContainerWidth:false !default;
 $ContainerBackground:false !default;
 $ContainerShadow:false !default;
+$ContainerContext:false !default;
 
 $PageWidth:false !default;
 $PageBackground:false !default;
-      
+$PagePaddingBottom:true !default;
+
 $FixedVariableShadow:false !default;
 $FixedBackground:false !default;
 $FixedBorder:false !default;
 $FixedVariableMargin:false !default;
 $VariableBackground:false !default;
+$VariableColor:false !default;
 $VariableBorder:false !default;
 $VariableShadow:false !default;
 $FixedVariableBackground:#FFF !default;
@@ -75,8 +78,9 @@ body #container{
 	}@else{
 		/*width:100%; */min-width:1000px;
 	}
-	@if $ContainerBackground{ @include background($ContainerBackground); }
+	@include background($ContainerBackground);
 	@if $ContainerShadow{ @include boxShadow($ContainerShadow); }
+	@if $ContainerContext{ @extend .context; }
 }
 @if $ContainerWidth==true{
 	@media(min-width:1200px){
@@ -91,6 +95,7 @@ header,div.header{
 	@if $HeaderShadow{ @include boxShadow($HeaderShadow,5px); }
 	@if $HeaderBorderRadius{ @include borderRadiusBottom(5px); }
 	@if $HeaderPadding{ padding:$HeaderPadding; }
+	@if $HeaderBorder{ @include border($HeaderBorder); }
 	display:block;
 	/*width:98%;
 	margin:0 auto; padding:1px 0;*/
@@ -159,7 +164,7 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	/*float:left;*/
 	/*overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
 	/*overflow-x: hidden;*/
-	padding-bottom:20px;
+	@if $PagePaddingBottom{ padding-bottom:20px; }
 	@if $PageWidth{
 	  width:$PageWidth;
 	  margin:0 auto;
@@ -228,7 +233,8 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	div.fixed h2{ text-align:center;}
 	
 	div.variable{
-		@if $VariableBackground{ background:$VariableBackground; }
+		@include background($VariableBackground);
+		@if $VariableColor{ color:$VariableColor; }
 		@if $VariableBorder{ border:1px solid $VariableBorder; }
 		@if $VariableShadow{ @include boxShadow($VariableShadow); }
 	}
@@ -250,7 +256,10 @@ $VariablePaddingValue:8px 10px !default;
 	div.variable.padding > div.content{padding:5px 0;}
 	
 	div.variable > h1{ margin:0; }
-	div.variable.content div.content,div.variable .content div.content{clear:both;position:relative; @if $VariableContentBackground{ background:$VariableContentBackground; }}
+	div.variable.content div.content,div.variable .content div.content{
+		clear:both;position:relative;
+		@if $VariableContentBackground{ background:$VariableContentBackground; }
+	}
 	div.variable.content div.content.float_left,div.variable .content div.content.float_left{clear:none}
 	div.variable div.content.float_left.noclear{clear:none}
 	/*div.variable div.content h2{ margin:2px 0; }*/
