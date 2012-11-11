@@ -11,13 +11,13 @@ class StylusFile extends EnhancerFile{
 	
 	
 	public static function includes($content,$currentPath,&$includes,&$enhanced){
-		$content=preg_replace_callback('/@import?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,&$includes,&$enhanced){
-			if(!endsWith($matches[1],'.css') && !endsWith($matches[1],'.styl')) $matches[1].='.styl';
-			if($matches[1]==='base/buttonsOverride.styl') $matches[1]='base/buttons.styl';
-			elseif(isset($includes[$matches[1]])) return '';
+		$content=preg_replace_callback('/@include(Core|Lib|Plugin)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches) use($currentPath,&$includes,&$enhanced){
+			/*if(!endsWith($matches[1],'.css') && !endsWith($matches[1],'.styl')) $matches[1].='.styl';
+			//if($matches[1]==='base/buttonsOverride.styl') $matches[1]='base/buttons.styl';
+			//elseif(isset($includes[$matches[1]])) return '';
 			$includes[$matches[1]]=1;
 			
-			/*if(!empty($matches[1]) && $matches[1]==='Core') */$core=defined('CORE')?CORE:CORE_SRC;
+			/*if(!empty($matches[1]) && $matches[1]==='Core') *//*$core=defined('CORE')?CORE:CORE_SRC;
 			if(strpos($matches[1],'/')!==false){
 				list($first,$fileName)=explode('/',$matches[1],2);
 				if($first==='plugin'){
@@ -31,7 +31,29 @@ class StylusFile extends EnhancerFile{
 				elseif(file_exists(dirname($core).'/includes/'.$matches[1])) $filename=dirname($core).'/includes/';
 				else $filename=$core.'includes/styl/';
 			}
-			$filename.=$matches[1];
+			$filename.=$matches[1];*/
+			
+			if(!endsWith($matches[2],'.css') && !endsWith($matches[2],'.styl')) $matches[2].='.styl';
+			if($matches[2]==='base/buttonsOverride.styl') $matches[2]='base/buttons.styl';
+			elseif(isset($includes[$matches[1]][$matches[2]])) return '';
+			$includes[$matches[1]][$matches[2]]=1;
+			
+			/*if(!empty($matches[1]) && $matches[1]==='Core') */;
+			if(empty($matches[1])) $filename=$currentPath.'/';
+			else{
+				if($matches[1]==='Plugin'){
+					list($pluginKey,$fileName)=explode('/',$matches[2],2);
+					$filename=$enhanced->pluginPathFromKey($pluginKey).'web/css/';
+					$matches[2]=$fileName;
+				}else{
+					$filename=$matches[1]==='Lib' ? dirname(CORE_SRC).'/' : CORE_SRC;
+					$filename.='includes/';
+					
+					$folderName=$matches[1]==='Lib'?'css/':'styl/';
+					if(file_exists($filename.$folderName.$matches[2])) $filename.=$folderName;
+				}
+			}
+			$filename.=$matches[2];
 			
 			return StylusFile::includes(file_get_contents($filename),$currentPath,$includes,$enhanced);
 		},$content);
@@ -57,9 +79,8 @@ class StylusFile extends EnhancerFile{
 
 	public function callStylus($content,$destination,$debug){
 		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'styldest');
-		$res=exec($cmd='cd / && echo '.escapeshellarg($content).' 2>&1 | stylus --include-css -c -I '.escapeshellarg(dirname($this->srcFile()->getPath()))
-																		.' -I '.escapeshellarg(CORE.'includes/styl')
-				.' 2>&1 | cleancss'.($destination?' > '.escapeshellarg($dest):' 2>&1'),$output,$status);
+		$res=exec($cmd='cd / ; echo '.escapeshellarg($content).' | stylus --include-css -c'
+				.' | cleancss'/*.($destination?' > '.escapeshellarg($dest):'')*/,$output,$status);
 		debugPrintr($cmd);
 		debugVar($res,$output,$status);
 		if(!empty($res)){
