@@ -42,6 +42,14 @@ class CRoute{
 		/* DEV */self::$_prefix=$prefix;/* /DEV */
 	}
 	
+	public static function getCompleteArrayRoute(){
+		return array(
+			'controller'=>self::$controller,
+			'action'=>self::$action,
+			'params'=>self::$params,
+			'ext'=>self::$ext
+		);
+	}
 	public static function getAll(){return self::$all;}
 	public static function getController(){return self::$controller;}
 	public static function getAction(){return self::$action;}

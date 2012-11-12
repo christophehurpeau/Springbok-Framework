@@ -77,14 +77,19 @@ class HPagination{
 		}
 		return $str.'</ul>';
 	}
-
-	public static function simple($pagination,$pageName='page'){
-		if($pagination->hasPager()) 
-			return $pager='<div class="pager">'.self::createPager($pagination->getPage(),$pagination->getTotalPages(),
+	
+	
+	public static function simple_($page,$totalPages,$pageName='page'){
+		if($totalPages>1) 
+			return $pager='<div class="pager">'.self::createPager($page,$totalPages,
 			function($page) use($pageName){
 				return ' href="'.HHtml::url(CRoute::getAll()).'?'.$pageName.'='.$page.'"';
 			}).'</div>';
 		return '';
+	}
+
+	public static function simple($pagination,$pageName='page'){
+		return self::simple_($pagination->getPage(),$pagination->getTotalPages(),$pageName);
 	}
 	
 	public static function simpleAjax($pagination,$callbackName,$callbackPage='#'){
