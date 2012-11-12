@@ -27,7 +27,7 @@ class DBSchemaMongo extends DBSchema{
 		if(!isset($modelIndexes[1])) $modelIndexes[1]=array();
 		
 		
-		debug([$currentIndexes,$modelIndexes]);
+		//debug([$currentIndexes,$modelIndexes]);
 		
 		// 0 = non unique, 1 =unique
 		$iPrefix=array(0=>'',1=>'unique');
