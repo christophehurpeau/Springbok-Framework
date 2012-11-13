@@ -77,17 +77,44 @@ class SMongoModel extends SModel{
 		return static::InsertOne($data,$options);
 	}
 	
-	public static function UpdateOne($criteria,$newObject){
-		return static::$__collection->update($criteria,$newObject,array('multiple'=>false));
+	public static function UpdateOneUnsafe($criteria,$newObject){
+		return static::$__collection->update($criteria,$newObject,array('multiple'=>false,'safe'=>false));
 	}
-	public static function UpdateOneById($id,$newObject){
-		return static::$__collection->update(array('_id'=>$id),$newObject,array('multiple'=>false));
+	public static function UpdateByIdUnsafe($id,$newObject){
+		return static::UpdateOneUnsafe(array('_id'=>$id),$newObject);
 	}
-	public static function UpdateOneByMongoId($id,$newObject){
-		return static::UpdateOneById(new MongoId($id),$newObject);
+	public static function UpdateByMongoIdUnsafe($id,$newObject){
+		return static::UpdateByIdUnsafe(new MongoId($id),$newObject);
 	}
-	public static function UpdateAll($criteria,$newObject){
-		return static::$__collection->update($criteria,$newObject,array('multiple'=>true));
+	
+	
+	public static function UpdateOneSafe($criteria,$newObject){
+		return static::$__collection->update($criteria,$newObject,array('multiple'=>false,'safe'=>true));
+	}
+	public static function UpdateByIdSafe($id,$newObject){
+		return static::UpdateOneSafe(array('_id'=>$id),$newObject);
+	}
+	public static function UpdateByMongoIdSafe($id,$newObject){
+		return static::UpdateByIdSafe(new MongoId($id),$newObject);
+	}
+	
+	
+	
+	public static function UpdateAllUnsafe($criteria,$newObject){
+		return static::$__collection->update($criteria,$newObject,array('multiple'=>true,'safe'=>false));
+	}
+	public static function UpdateAllSafe($criteria,$newObject){
+		return static::$__collection->update($criteria,$newObject,array('multiple'=>true,'safe'=>true));
+	}
+	
+	public static function UpsertOneUnsafe($criteria,$newObject){
+		return static::$__collection->update($criteria,$newObject,array('multiple'=>false,'safe'=>false,'upsert'=>true));
+	}
+	public static function UpsertByIdUnsafe($id,$newObject){
+		return static::UpsertOneUnsafe(array('_id'=>$id),$newObject);
+	}
+	public static function UpsertByMongoIdUnsafe($id,$newObject){
+		return static::UpsertByIdUnsafe(new Mongo($id),$newObject);
 	}
 	
 	public static function Group($keys,$initial,$reduce,$options=array()){
