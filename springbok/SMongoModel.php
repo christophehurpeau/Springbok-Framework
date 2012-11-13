@@ -80,6 +80,12 @@ class SMongoModel extends SModel{
 	public static function UpdateOne($criteria,$newObject){
 		return static::$__collection->update($criteria,$newObject,array('multiple'=>false));
 	}
+	public static function UpdateOneById($id,$newObject){
+		return static::$__collection->update(array('_id'=>$id),$newObject,array('multiple'=>false));
+	}
+	public static function UpdateOneByMongoId($id,$newObject){
+		return static::UpdateOneById(new MongoId($id),$newObject);
+	}
 	public static function UpdateAll($criteria,$newObject){
 		return static::$__collection->update($criteria,$newObject,array('multiple'=>true));
 	}
@@ -91,6 +97,12 @@ class SMongoModel extends SModel{
 	public static function FindOne($query=array(),$fields=array()){
 		return static::$__collection->findOne($query,$fields);
 	}
+	public static function FindOneById($id,$fields=array()){
+		return static::$__collection->findOne(array('_id'=>$id),$fields);
+	}
+	public static function FindOneByMongoId($id){
+		return static::FindOneById(new MongoId($id));
+	}
 	
 	public static function FindAll($query=array(),$fields=array()){
 		return static::$__collection->find($query,$fields);
@@ -101,5 +113,27 @@ class SMongoModel extends SModel{
 	}
 	public static function RemoveAll($criteria){
 		return static::$__collection->remove($criteria,array('justOne'=>false));
+	}
+	
+	
+	public static function Paginate($query=array(),$fields=array(),$pageSize=35,$page=null){
+		if($page===null) $page=isset($_REQUEST['page']) ? (int)$_REQUEST['page'] : 1;
+		$skip = (int)($pageSize * ($page - 1));
+		
+		$cursor=static::$__collection->find($query,$fields)->limit($pageSize)->skip($skip);
+		$count=$cursor->count();
+		if($count===0) return false;
+		
+		return array(
+			'total'=>$count,
+			'totalPages'=>ceil($count / $pageSize),
+			'page'=>$page,
+			'cursor'=>$cursor
+		);
+	}
+	
+	
+	public static function Table(){
+		
 	}
 }

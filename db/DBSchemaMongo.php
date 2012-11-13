@@ -12,10 +12,11 @@ class DBSchemaMongo extends DBSchema{
 			$changedIndexes=array();
 			foreach($indexes as $index){
 				$indexName='';
-				foreach($index as $field=>$way) $indexName.=$field.'='.$way.'|';
+				foreach($index as $field=>$way) $indexName.=str_replace('.','_',$field).'_'.$way.'_';
 				$indexName=substr($indexName,0,-1);
 				$changedIndexes[$indexName]=$index;
 			}
+			$modelIndexes[$key]=$changedIndexes;
 		}
 				
 		$indexes=$this->getIndexes();
@@ -27,7 +28,7 @@ class DBSchemaMongo extends DBSchema{
 		if(!isset($modelIndexes[1])) $modelIndexes[1]=array();
 		
 		
-		debug([$currentIndexes,$modelIndexes]);
+		//debug([$currentIndexes,$modelIndexes]);
 		
 		// 0 = non unique, 1 =unique
 		$iPrefix=array(0=>'',1=>'unique');
@@ -36,13 +37,13 @@ class DBSchemaMongo extends DBSchema{
 			// Add index
 			foreach($a2=array_diff_key($modelIndexes,$currentIndexes) as $indexName=>$fields){
 				$this->log('Add index '.$indexName);
-				if($this->shouldApply()) $this->addIndex($indexName,$fields,$iPrefix[$key]);
+				if($this->shouldApply()) debug($this->addIndex($indexName,$fields,$iPrefix[$key]));
 			}
 			
 			// Remove index
 			foreach($a1=array_diff_key($currentIndexes,$modelIndexes) as $indexName=>$fields){
 				$this->log('Remove index '.$indexName);
-				if($this->shouldApply()) $this->removeIndex($indexName);
+				if($this->shouldApply()) debug($this->removeIndex($indexName));
 			}
 			
 			// Change index

@@ -19,6 +19,7 @@ $HeaderMenuLinkTextShadow:false !default;
 $HeaderMenuLinkCurrentBackground:false !default;
 $HeaderMenuLinkCurrentColor:false !default;
 $HeaderMenuLinkCurrentBorderBottom:false !default;
+$HeaderMenuLinkCurrentTextUnderlined:false !default;
 $HeaderMenuLinkHoverBackground:false !default;
 $HeaderMenuLinkHoverColor:false !default;
 $HeaderMenuLinkHoverShadow:false !default;
@@ -112,12 +113,13 @@ ul.pager .selected a{
 	@include background($HeaderMenuLinkCurrentBackground);
 	@if $HeaderMenuLinkCurrentColor{ color:$HeaderMenuLinkCurrentColor; }
 	@if $HeaderMenuLinkCurrentBorderBottom{ border-bottom:$HeaderMenuLinkCurrentBorderBottom; }
+	@if $HeaderMenuLinkCurrentTextUnderlined{ text-decoration:underline; }
 }
 
 header nav li a:hover,
 div.header nav li a:hover,
 ul.pager a:hover{
-	text-decoration: none;
+	text-decoration:none;
 	@include background($HeaderMenuLinkHoverBackground);
 	@if $HeaderMenuLinkHoverColor{ color:$HeaderMenuLinkHoverColor; }
 	@if $HeaderMenuLinkHoverShadow{ text-shadow: -1px 0 1px $HeaderMenuLinkHoverShadow,0 1px 1px $HeaderMenuLinkHoverShadow,1px 0 1px $HeaderMenuLinkHoverShadow,0 -1px 1px $HeaderMenuLinkHoverShadow; }
