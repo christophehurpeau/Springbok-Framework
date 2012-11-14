@@ -117,7 +117,19 @@ class SMongoModel extends SModel{
 		return static::UpsertByIdUnsafe(new Mongo($id),$newObject);
 	}
 	
-	public static function Group($keys,$initial,$reduce,$options=array()){
+	
+	public static function UpsertOneSafe($criteria,$newObject){
+		return static::$__collection->update($criteria,$newObject,array('multiple'=>false,'safe'=>true,'upsert'=>true));
+	}
+	public static function UpsertByIdSafe($id,$newObject){
+		return static::UpsertOneSafe(array('_id'=>$id),$newObject);
+	}
+	public static function UpsertByMongoIdSafe($id,$newObject){
+		return static::UpsertByIdSafe(new Mongo($id),$newObject);
+	}
+	
+	
+	public static function Group($keys,$initial,$reduce,$options=null){
 		return static::$__collection->group($keys,$initial,$reduce,$options);
 	}
 	
@@ -142,6 +154,17 @@ class SMongoModel extends SModel{
 		return static::$__collection->remove($criteria,array('justOne'=>false));
 	}
 	
+	public static function ExistsById($id){
+		$res=static::$__collection->findOne(array('_id'=>$id),array('_id'));
+		return $res!==null;
+	}
+	public static function ExistsByMongoId($id){
+		return static::ExistsById(new MongoId($id));
+	}
+	
+	public static function Aggregate(){
+		return static::$__collection->aggregate(func_get_args());
+	}
 	
 	public static function Paginate($query=array(),$fields=array(),$pageSize=35,$page=null){
 		if($page===null) $page=isset($_REQUEST['page']) ? (int)$_REQUEST['page'] : 1;
