@@ -182,7 +182,8 @@ $.fn.ajaxCRDSelectFiltrable=function(url,options){
 
 $.fn.ajaxCRDInputAutocomplete=function(url,options){
 	ajaxCRDCommonFunction(this,url,options,function(div,options){
-		var input=div.find('input'),hidden=$('<input type="hidden"/>').appendTo(input);
+		var input=div.find('input'),hidden=$('<input type="hidden"/>');
+		input.after(hidden);
 		input.autocomplete({
 			source:url+'/autocomplete'+options.url,
 			minLength:1,
@@ -203,7 +204,8 @@ $.fn.ajaxCRDInputAutocomplete=function(url,options){
 /* Create - Select */
 $.fn.ajaxCSInputAutocomplete=function(url,options,redirect){
 	ajaxC_CommonFunction(this,url,options,function(div,options){
-		var input=div.find('input'),hidden=$('<input type="hidden"/>').appendTo(input);
+		var input=div.find('input'),hidden=$('<input type="hidden"/>');
+		input.after(hidden);
 		input.autocomplete({
 			source:url+'/autocomplete'+options.url,
 			minLength:1,

@@ -39,7 +39,7 @@ abstract class EnhancerFile{
 			$this->enhanceContent();
 		
 			//$t=microtime(true);
-			if($this->writeDevFile($devFile)!==false && $cacheActive) copy($devFile->getPath(),$cachefile.'_dev');
+			if($this->writeDevFile($devFile)!==false && $cacheActive) $this->copyDevToCache($devFile,$cachefile);
 			if(!$justDev && $prodFile!==false){
 				if(is_string($prodFile)) $prodFile=new File($prodFile);
 				$this->currentDestFile=$prodFile; $this->_isProd=true;
@@ -52,6 +52,10 @@ abstract class EnhancerFile{
 		//echo('copy : '.$cachefile.'<br/>');ob_flush();
 		copy($cachefile.'_dev',$devFile->getPath());
 		if(!$justDev && $prodFile!==false) copy($cachefile.'_prod',is_string($prodFile) ? $prodFile : $prodFile->getPath());
+	}
+	
+	protected function copyDevToCache($devFile,$cachefile){
+		copy($devFile->getPath(),$cachefile.'_dev');
 	}
 	
 	protected function isJustDev(){return false;} 
