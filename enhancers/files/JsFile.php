@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.1';
+	public static $CACHE_PATH='js_8.2.9';
 
 	private $devProdDiff;
 	public function loadContent($srcContent){
@@ -114,7 +114,7 @@ class JsFile extends EnhancerFile{
 			}
 			
 			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
-			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath());
+			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath(),true);
 			
 			
 			
@@ -160,6 +160,18 @@ class JsFile extends EnhancerFile{
 		}
 		return true;
 	}
+
+	protected function copyFromCache($cachefile,$devFile,$prodFile,$justDev){
+		if(file_exists($cachefile.'_src')) copy($cachefile.'_src',substr($devFile->getPath(),0,-3).'.src.js');
+		parent::copyFromCache($cachefile,$devFile,$prodFile,$justDev);
+	}
+	
+	protected function copyDevToCache($devFile,$cachefile){
+		parent::copyDevToCache($devFile,$cachefile);
+		$srcFile=substr($devFile->getPath(),0,-3).'.src.js';
+		if(file_exists($srcFile)) copy($srcFile,$cachefile.'_src');
+		else UFile::rm($cachefile.'_src');
+	}
 	
 	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
 		$dest=$destination?$destination:tempnam($tmpDir,'yuidest');
@@ -185,14 +197,17 @@ class JsFile extends EnhancerFile{
 		}
 	}
 	
-	public static function executeGoogleCompressor($tmpDir,$enhancer,&$content,$destination){
+	public static function executeGoogleCompressor($tmpDir,$enhancer,&$content,$destination,$createSourceMap=false){
 		$dest=$destination?$destination:tempnam($tmpDir,'gclosuredest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
-		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --compilation_level SIMPLE_OPTIMIZATIONS --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' --js ';
-		$tmpfname = tempnam($tmpDir,'gclosure');
-		file_put_contents($tmpfname,$content);
-		$res=shell_exec('cd / && '.$cmd.' '.escapeshellarg($tmpfname).' 2>&1');
+		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --compilation_level SIMPLE_OPTIMIZATIONS --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' ';
+		if($createSourceMap){
+			$rawSrcFile=substr($destination,0,-3).'.src.js';
+			$cmd.='--create_source_map '.escapeshellarg($destination.'.map').' --source_map_format=V3';
+		}else $rawSrcFile=tempnam($tmpDir,'gclosure');
+		file_put_contents($rawSrcFile,$content);
+		$res=shell_exec('cd '.escapeshellarg(dirname($rawSrcFile)).' && '.$cmd.' --js '.escapeshellarg(basename($rawSrcFile)).' 2>&1');
 		if(!empty($res)){
 			if(preg_match('/:\s+ERROR\s+-\s+(.*)\n(.*)\n/',$res,$m)){
 				debugCode($destination."\n".$res,false);
@@ -203,7 +218,8 @@ class JsFile extends EnhancerFile{
 				foreach($m[0] as $i=>$abcd)$enhancer->warnings[]=array($m[1][$i],$m[2][$i]);
 			}
 		}
-		unlink($tmpfname);
+		if($createSourceMap) file_put_contents($destination,'//@ sourceMappingURL='./*(defined('BASE_URL')?BASE_URL.'/web/js/':'').*/basename($destination).'.map',FILE_APPEND);//(defined('BASE_URL')?BASE_URL:'')
+		else unlink($rawSrcFile);
 		chmod($dest,0777);
 		if(!$destination){
 			$destination=file_get_contents($dest);

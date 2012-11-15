@@ -43,7 +43,7 @@ html body #springbok-bar a,html body #springbok-bar b{
 		padding:0 2px;
 		text-shadow:none !important;/* jquery mobile*/
 	}
-	html body #springbok-bar b{ font-size }
+	/*html body #springbok-bar b{ font-size }*/
 }
 
 html body #springbok-bar a:hover{
