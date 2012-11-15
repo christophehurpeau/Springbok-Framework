@@ -32,7 +32,7 @@ class CBinder{
 
 	public static function bindSimple($type,&$val,$annotations=array()){
 		switch($type){
-			case 'string': return (string)$val;
+			case 'string': return self::bindString($val);
 			case 'int': return (int)$val;
 			case 'float': return (float)$val;
 			case 'double': return (double)$val;
@@ -46,7 +46,7 @@ class CBinder{
 		}
 	}
 	
-	public static function bindString($val){ return (string)$val; }
+	public static function bindString($val){ return UEncoding::convertToUtf8((string)$val); }
 	public static function bindInt($val){ return (int)$val; }
 	public static function bindFloat($val){ $val=self::parseDecimalFormat($val); return (float)$val; }
 	public static function bindDouble($val){ $val=self::parseDecimalFormat($val); return (double)$val; }
