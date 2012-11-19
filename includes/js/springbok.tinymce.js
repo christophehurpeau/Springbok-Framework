@@ -38,7 +38,7 @@ S.tinymce={
 				
 			],
 			formats:{
-				bold:{inline:'strong'},italic:{inline:'em'},
+				bold:{inline:'strong'},italic:{inline:'em'},underline:{inline:'span','classes':'underline'},
 				alignleft:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignLeft'},
 				aligncenter:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'center'},
 				alignright:{selector:'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes:'alignRight'},
