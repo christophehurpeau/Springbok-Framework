@@ -30,4 +30,33 @@ class UDate{
 		while($month>12){ $month-=12; $year++; }
 		return array($month,$year);
 	}
+	
+	
+	public static function addDays($time,$days){
+		list($day,$month,$year,$thisMonthMaxDays)=explode('-',date('j-m-Y-t',$time),4);
+		$day=(int)$day; $month=(int)$month; $year=(int)$year; $thisMonthMaxDays=(int)$thisMonthMaxDays;
+		$day+=$days;
+		while($day > $thisMonthMaxDays){
+			$month++;
+			if($month===12){ $month=1; $year++; }
+			$day-=$thisMonthMaxDays;
+			$thisMonthMaxDays=cal_days_in_month(CAL_GREGORIAN,$month,$year);
+		}
+		return array($year,$month,$day);
+	}
+	public static function removeDays($time,$days){
+		list($day,$month,$year)=explode('-',date('j-m-Y',$time),3);
+		$day=(int)$day; $month=(int)$month; $year=(int)$year;
+		$day-=$days;
+		while($day < 1){
+			$month--;
+			if($month===0){ $month=12; $year--; }
+			$day=cal_days_in_month(CAL_GREGORIAN,$month,$year)-$day;
+		}
+		return array($year,$month,$day);
+	}
+	public static function removeDaysTime($time,$days){
+		$date=self::removeDays($time,$days);
+		return strtotime(implode('-',$date));
+	}
 }
