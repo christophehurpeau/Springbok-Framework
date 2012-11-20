@@ -60,7 +60,7 @@ class QLoadData extends AQuery{
 	
 	public function _toSQL(){
 		$modelName=$this->modelName;
-		$sql='LOAD DATA LOCAL INFILE '.$this->_db->escape($this->fileName).' ';
+		$sql='LOAD DATA '/* LOCAL */.'INFILE '.$this->_db->escape($this->fileName).' ';
 		if($this->replace) $sql.='REPLACE ';
 		elseif($this->ignore) $sql.='IGNORE ';
 		$sql.='INTO TABLE '.$modelName::_fullTableName();
