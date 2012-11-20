@@ -13,6 +13,9 @@ class DBMongo extends DB{
 	public function getVersion(){return '?'; }
 	
 	public function lastInsertID($name=null){}
+	public function lastError(){
+		return $this->_db->lastError();
+	}
 	
 	public function close(){
 		$this->_connect->close();

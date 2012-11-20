@@ -301,12 +301,28 @@ class CHttpRequest{
 		return $_SERVER['HTTP_HOST'];
 	}
 
+
+	public static function _GET($name){
+		return UEncoding::convertToUtf8($_GET[$name]);
+	}
+	public static function _POST($name){
+		return UEncoding::convertToUtf8($_POST[$name]);
+	}
 	public static function _GETor($name,$orValue=null){/* do not change orValue ! */
-		return isset($_GET[$name]) ? $_GET[$name] : $orValue;
+		return isset($_GET[$name]) ? self::_GET($name) : $orValue;
 	}
 	
+	
+	public static function _GETint($name){
+		return (int)($_GET[$name]);
+	}
+	public static function _GETintOr($name,$orValue=0){
+		return isset($_GET[$name]) ? (int)($_GET[$name]) : $orValue;
+	}
+	
+	
 	public static function _GETorPOSTor($name,$orValue=null){
-		return isset($_GET[$name]) ? $_GET[$name] : (isset($_POST[$name]) ? $_POST[$name] : $orValue);
+		return isset($_GET[$name]) ? self::_GET($name) : (isset($_POST[$name]) ? self::_POST($name) : $orValue);
 	}
 	
 	
