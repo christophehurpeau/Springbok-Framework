@@ -122,7 +122,10 @@ abstract class QFind extends QSelect{
 		$foptions=$options+$relation;
 	
 		if(isset($foptions['fields']) && is_string($foptions['fields'])) $foptions['fields']=explode(',',$foptions['fields']);
-		if(isset($foptions['with'])) foreach($foptions['with'] as $kW=>&$opW){ if(is_int($kW)){unset($foptions['with'][$kW]); $kW=$opW;$opW=array();} self::_addWith($foptions['with'],$kW,$opW,$foptions['modelName']); }
+		if(isset($foptions['with'])){
+			/* DEV */ if(!is_array($foptions['with'])) throw new Exception('options is not array : '.print_r($options,true)); /* /DEV */
+			foreach($foptions['with'] as $kW=>&$opW){ if(is_int($kW)){unset($foptions['with'][$kW]); $kW=$opW;$opW=array();} self::_addWith($foptions['with'],$kW,$opW,$foptions['modelName']); }
+		}
 		return $withArray[$key]=$foptions;
 	}
 	
