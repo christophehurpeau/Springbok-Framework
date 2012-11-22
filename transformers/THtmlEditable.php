@@ -30,7 +30,7 @@ class THtmlEditable extends THtml{
 			$def=$modelName::$__PROP_DEF[$fieldKey];
 			$infos=$modelName::$__modelInfos['columns'][$fieldKey];
 			
-			$attributes=array('onchange'=>'editableTable.updateField(\''.$name.'\','.$jsonPkValue.',this)','value'=>$value);
+			$attributes=array('id'=>$modelName.'_'.$name.'_'.$jsonPkValue,'onchange'=>'editableTable.updateField(\''.$name.'\','.$jsonPkValue.',this)','value'=>$value);
 			$containerAttributes=array('sytle'=>'width:100%;position:relative');
 			
 			if($this->currentFormModelName!==$modelName)
