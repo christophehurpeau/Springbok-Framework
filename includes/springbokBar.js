@@ -43,7 +43,7 @@ log=function(type,args){
 	jsConsoleLink.stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
 
 	jsConsoleSpanCount.text(new Number(jsConsoleSpanCount.text())+1);
-	jsConsoleContent.append($('<li/>').text(Array.prototype.join.call($.map(args,function(v){try{ return $.toJSON(v);},', ') }catch(err){ return err })));
+	jsConsoleContent.append($('<li/>').text(Array.prototype.join.call($.map(args,function(v){try{ return $.toJSON(v); }catch(err){ return err } },', '))));
 };
 window.console={
 	assert:function(){},
