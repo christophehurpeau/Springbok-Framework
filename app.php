@@ -31,7 +31,7 @@ class App{
 	
 	public static function run(){
 		/* DEV */
-		if(!file_exists(dirname(APP).'/src/config/_'.ENV.'.php')) exit('The config for your environnement: "'.ENV.'" does NOT exist !');
+		if(!file_exists(dirname(APP).'/dev/config/_'.ENV.'.php')) exit('The config for your environnement: "'.ENV.'" does NOT exist !');
 		
 		include CORE.'enhancers/EnhanceApp.php';
 		$shouldEnhance=!isset($_GET['springbokNoEnhance']) && !CHttpRequest::isAjax() && !CHttpRequest::isFlash() && empty($_SERVER['HTTP_ORIGIN']) && !file_exists(dirname(APP).'/block_deploy');

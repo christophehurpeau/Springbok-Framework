@@ -12,7 +12,8 @@ class ConfigFile extends PhpFile{
 		}
 		
 		if($this->enhanced->isApp() && substr($this->fileName(),0,1) === '_'){
-			if($this->fileName()!=='_.php') $md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.php');
+			if($this->fileName()!=='_.php'&&$this->fileName()!=='_.json')
+				$md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.'.UFile::extension($this->fileName()));
 			
 			if(!empty($this->enhanced->appConfig['plugins']))
 				foreach($this->enhanced->appConfig['plugins'] as $key=>$plugin){
@@ -33,7 +34,8 @@ class ConfigFile extends PhpFile{
 	}
 	
 	public function processEhancing($devFile,$prodFile,$justDev=false,$isCore=false){
-		$configname=substr($this->fileName(),0,-4);
+		$ext=UFile::extension($srcFilePath=$this->srcFile()->getPath());
+		$configname=substr($this->fileName(),0,-(strlen($ext)+1));
 		/*if(substr($configname,0,2)=='db'){
 			$env='';
 			if(strpos($configname,'_')>0){
@@ -76,7 +78,7 @@ class ConfigFile extends PhpFile{
 			throw new Exception('Define all routes in routes.php, now.');
 		}elseif($configname=='routes'){
 			/* ROUTES */
-			$routes=include $this->srcFile()->getPath();
+			$routes=self::incl($this->srcFile()->getPath());
 			if(!isset($routes['index'])) $routes=array('index'=>$routes);
 			$finalRoutes=array();
 			foreach($routes as $entry=>$entryRoutes){
@@ -168,7 +170,7 @@ class ConfigFile extends PhpFile{
 			//$this->enhanced->appConfig['enhance_time']=time();
 			//$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}elseif($configname[0]==='_'){
-			$configArray=include $this->srcFile()->getPath();
+			$configArray=self::incl($srcFilePath,$ext);
 			if($this->enhanced->isApp()){
 				foreach(array('siteUrl') as $attr)
 					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
@@ -189,8 +191,10 @@ class ConfigFile extends PhpFile{
 							$configArray['autoload_default']=$pluginPath.'models/';
 						}
 						$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
-						if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$configname.'.php')))
-							$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
+						foreach(array('php','json') as $extPlugin){
+							if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$configname.'.'.$extPlugin)))
+								$configArray=UArray::union_recursive($configArray,self::incl($pluginConfigPath,$extPlugin));
+						}
 					}
 				
 				$configArray=$this->mergeWithPluginsConfig('_',$configArray);
@@ -224,8 +228,10 @@ class ConfigFile extends PhpFile{
 		if($this->enhanced->configNotEmpty('plugins'))
 			foreach($this->enhanced->config['plugins'] as $key=>$plugin){
 				$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1];
-				if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$configname.'.php')))
-					$configArray=UArray::union_recursive($configArray,include $pluginConfigPath);
+				foreach(array('php','json') as $extPlugin){
+					if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$configname.'.'.$extPlugin)))
+						$configArray=UArray::union_recursive($configArray,self::incl($pluginConfigPath,$extPlugin));
+				}
 			}
 		return $configArray;
 	}
@@ -259,6 +265,7 @@ class ConfigFile extends PhpFile{
 			if(isset($configArray[$configK]))
 				$afterContent.="define('".$constN."',".$this->replaceAppAndData(UPhp::exportString(rtrim($configArray[$configK],'/').'/')).");";
 		
+		$configArray['db']['_lang']=$configname==='_'.ENV ? dirname(APP).'/db/' : APP.'db/';
 		
 		foreach($configArray as $key=>$val){
 			$code=UPhp::exportCode($val);
@@ -287,5 +294,10 @@ class ConfigFile extends PhpFile{
 	
 	private function replaceAppAndData($code){
 		return str_replace("'".APP,"APP.'",str_replace("'".DATA,"DATA.'",$code));
+	}
+	
+	public static function incl($path,$ext=null){
+		if($ext===null) $ext=UFile::extension($path);
+		return $ext==='php' ? include $path : UFile::getJSON($path);
 	}
 }

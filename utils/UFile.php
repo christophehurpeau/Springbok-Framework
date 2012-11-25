@@ -6,6 +6,16 @@ class UFile{
 		}catch(ErrorException $e){}
 		return false;
 	}
+	public static function getJSON($path){
+		try{
+			$content=file_get_contents($path);
+		}catch(ErrorException $e){
+			return false;
+		}
+		$jsonDecoded=json_decode($content,true);
+		if($jsonDecoded===null) throw new Exception('Bad JSON '.$path);
+		return $jsonDecoded;
+	}
 	
 	public static function rm($path){
 		try{
