@@ -130,7 +130,7 @@ S.tinymce={
 	},
 	
 	validXHTML:function(){
-		this.attrs.entity_encoding='named';
+		//this.attrs.entity_encoding='named';
 		this.attrs.valid_elements =""
 +"a[accesskey|charset|class|coords|dir<ltr?rtl|href|hreflang|id|lang|name|rel|rev|shape<circle?default?poly?rect|style|tabindex|title|target|type],"
 +"abbr[class|dir<ltr?rtl|id|lang|title],"
@@ -306,12 +306,14 @@ S.tinymce={
 	switchtoHtml:function(editorId){
 		var ed=tinyMCE.get(editorId),dom=tinymce.DOM,txtarea_el = dom.get(editorId);
 		//tinyMCE.execCommand('mceRemoveControl',false,1);
-		if(!ed || ed.isHidden()) return false;
+		if(!ed || ed.isHidden() || $('#'+editorId).data('editorHtml')) return false;
 	    ed.hide();
 		var editorHtml=CodeMirror.fromTextArea(document.getElementById(editorId), {
 			lineNumbers:true,indentWithTabs:true,indentUnit:8,
 	        mode: 'htmlmixed',
-	        tabMode: 'indent'
+	        tabMode: 'indent',
+	        theme:'sb',
+	        lineWrapping:true
 	     });
 	    /*CodeMirror.commands["selectAll"](editorHtml);
 	    var from=editorHtml.getCursor(true),to=editorHtml.getCursor(false);
