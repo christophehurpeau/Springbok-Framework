@@ -7,7 +7,7 @@ abstract class DB{
 		/* DEV */ if($force || !App::$enhancing) /* /DEV */ self::$_allConfigs=Config::$db;
 	}
 	public static function langDir(){
-		return /* DEV */empty(self::$_allConfigs['_lang'])?dirname(APP).'/db/':/* /DEV */self::$_allConfigs['_lang'];
+		return self::$_allConfigs['_lang'];
 	}
 	
 	/** @return DB */

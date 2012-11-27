@@ -53,34 +53,42 @@ abstract class AFolderEnhancer{
 			}
 			$ext=$file->getExt();
 			
-			$found=$this->findEnhancer($filename,$ext);
-			$justDev=$dirHasDev;
-			if($found===false){
-				$destFilename=false;
-				$copy=$ext!=='php';
-				$justSrc= !$allowUnderscoredFiles && $this->enhanced instanceof EnhancedApp ? $filename[0]==='_' : false;
+			if($class==='ConfigFile'){
+				if($filename==='enhance.php'||$filename==='_.php'||$filename==='_.json'
+						||startsWith($filename,'routes-langs')) continue;
+				$justDev=false;
+				$destFilename=substr($filename,0,strrpos($filename,'.')+1).'php';
 			}else{
-				list($class,$justSrc,$destFilename,$copy)=$found;
-			}
-			
-			if($justSrc) continue;
-			if($destFilename===false) $destFilename=$filename;
-			
-			if($copy){
-				$srcMD5=md5_file($file->getPath());
-				
-				if(!(file_exists($devDir.$destFilename) && file_exists($prodDir.$destFilename)
-						&& isset($this->enhanced->oldDef['files'][$file->getPath()])
-						&& $this->enhanced->oldDef['files'][$file->getPath()]==$srcMD5)){
-					//debugVar('file changed :',$file->getPath(),file_exists($devDir.$filename),file_exists($prodDir.$filename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
-					$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
-					copy($file->getPath(),$devDir.$destFilename);
-					if($justDev===false) copy($file->getPath(),$prodDir.$destFilename);
-					$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>false,'dev'=>$devDir.$destFilename,'prod'=>$prodDir.$destFilename);
+				$found=$this->findEnhancer($filename,$ext);
+				$justDev=$dirHasDev;
+				if($found===false){
+					$destFilename=false;
+					$copy=$ext!=='php';
+					$justSrc= !$allowUnderscoredFiles && $this->enhanced instanceof EnhancedApp ? $filename[0]==='_' : false;
+				}else{
+					list($class,$justSrc,$destFilename,$copy)=$found;
 				}
-				$this->enhanced->newDef['files'][$file->getPath()]=$srcMD5;
-				continue;
+				
+				if($justSrc) continue;
+				if($destFilename===false) $destFilename=$filename;
+				
+				if($copy){
+					$srcMD5=md5_file($file->getPath());
+					
+					if(!(file_exists($devDir.$destFilename) && file_exists($prodDir.$destFilename)
+							&& isset($this->enhanced->oldDef['files'][$file->getPath()])
+							&& $this->enhanced->oldDef['files'][$file->getPath()]==$srcMD5)){
+						//debugVar('file changed :',$file->getPath(),file_exists($devDir.$filename),file_exists($prodDir.$filename),isset($this->oldDef['files'][$file->getPath()]),!isset($this->oldDef['files'][$file->getPath()])?null:$this->oldDef['files'][$file->getPath()]==$srcMD5);
+						$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath());
+						copy($file->getPath(),$devDir.$destFilename);
+						if($justDev===false) copy($file->getPath(),$prodDir.$destFilename);
+						$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>false,'dev'=>$devDir.$destFilename,'prod'=>$prodDir.$destFilename);
+					}
+					$this->enhanced->newDef['files'][$file->getPath()]=$srcMD5;
+					continue;
+				}
 			}
+			
 			
 			
 			
@@ -103,8 +111,6 @@ abstract class AFolderEnhancer{
 				
 			}
 			*/
-			if($class==='ConfigFile' && ($filename==='enhance.php'||$filename==='_.php'||startsWith($filename,'routes-langs'))) continue;
-			
 			if($class==='ControllerFile'){
 				if(($entry=basename(dirname($file->getPath()))) != 'controllers') $key=$entry.DS;
 				else $key='';

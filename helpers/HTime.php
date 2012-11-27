@@ -64,10 +64,10 @@ class HTime{
 	}
 	
 	
-	public static function toRSS($dateString){ return self::toRSSTime(strtotime($date)); }
+	public static function toRSS($dateString){ return self::toRSSTime(strtotime($dateString)); }
 	public static function toRSSTime($date){ return date('r',$date); }
 	
-	public static function toAtom($dateString){ return self::toAtomTime(strtotime($date));  }
+	public static function toAtom($dateString){ return self::toAtomTime(strtotime($dateString));  }
 	public static function toAtomTime($date){ return date('Y-m-d\TH:i:s\Z',$date); }
 	
 	public static function toRFC3339Time($date){ return date('Y-m-d\TH:i:sP',$date); }

@@ -74,7 +74,7 @@ class DBSchemaMySQL extends DBSchema{
 	
 	public function addColumn($colName,$prev=null){
 		$colDef=&$this->modelInfos['columns'][$colName];
-		$this->_alterOperations[]='ADD '.($fCol=$this->db->formatColumn($colName)).' '.self::_getColumnDef($colDef).($prev!==null?($prev?' AFTER '.$this->db->formatColumn($prev):' FIRST'):'');
+		$this->_alterOperations[]='ADD '.($fCol=$this->db->formatColumn($colName)).' '.self::_getColumnDef($colDef,true).($prev!==null?($prev?' AFTER '.$this->db->formatColumn($prev):' FIRST'):'');
 		//.($colDef['autoincrement']?(',ADD PRIMARY KEY ('.$fCol.')'):($colDef['unique']?', ADD '.$this->_getIndexDef(array($fCol),'UNIQUE',false):($colDef['index']?', ADD '.$this->_getIndexDef(array($fCol),'',false):'')));
 		if($colDef['unique']) $this->_alterOperations[]='ADD '.$this->_getIndexDef(array($colName),'UNIQUE',false);
 		elseif($colDef['index']) $this->_alterOperations[]='ADD '.$this->_getIndexDef(array($colName),'',false);
@@ -110,12 +110,12 @@ class DBSchemaMySQL extends DBSchema{
 		$this->_alterOperations[]='DROP '.$this->db->formatColumn($colName);
 	}
 	
-	private static function _getColumnDef($col){
+	private static function _getColumnDef($col,$aiPk=false){
 		$colType=strtolower($col['type']);
 		return $col['type']
 			.(substr($colType,0,7)==='varchar' || substr($colType,0,4)==='char' || substr($colType,0,4)==='enum'  ?' CHARACTER SET utf8 COLLATE utf8_general_ci':'')
 			.($col['notnull']?' NOT NULL':'')
-			.($col['autoincrement']?' AUTO_INCREMENT':'')
+			.($col['autoincrement']?($aiPk?' PRIMARY KEY':'').' AUTO_INCREMENT':'')
 			.($col['default']?' DEFAULT '.(is_numeric($col['default']) || $col['default']==='CURRENT_TIMESTAMP'?$col['default']:'"'.trim($col['default'],'"').'"'):'')
 			.($col['comment']?' COMMENT "'.$col['comment'].'"':'');
 	}

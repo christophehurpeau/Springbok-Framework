@@ -5,10 +5,16 @@ class EnhancedApp extends Enhanced{
 	
 	public function __construct($type,&$dirname){
 		parent::__construct($type,$dirname);
-		if(file_exists($this->getAppDir().'src/config/_.php')) $this->appConfig=include $this->getAppDir().'src/config/_.php';
-		if(file_exists($this->getAppDir().'src/config/_'.ENV.'.php')) $this->devConfig=include $this->getAppDir().'src/config/_'.ENV.'.php';
+		$appDir=$this->getAppDir();
+		if(file_exists($appDir.'src/config/_.php')) $this->appConfig=include $appDir.'src/config/_.php';
+		elseif(file_exists($appDir.'src/config/_.json')) $this->appConfig=UFile::getJSON($appDir.'src/config/_.json');
+		else throw new Exception('Missing "_" config file !');
+		
+		if(file_exists($appDir.'src/config/_'.ENV.'.php')) $this->devConfig=include $appDir.'src/config/_'.ENV.'.php';
+		elseif(file_exists($appDir.'src/config/_'.ENV.'.json')) $this->devConfig=UFile::getJSON($appDir.'src/config/_'.ENV.'.json');
+		
 		$this->md5EnhanceConfig=empty($this->config['config'])?'':md5(implode('~',$this->config['config']));
-		$this->isJsApp=file_exists($this->getAppDir().'src/web/jsapp.js');
+		$this->isJsApp=file_exists($appDir.'src/web/jsapp.js');
 		
 		if(empty($this->devConfig['pluginsPaths'])) $this->devConfig['pluginsPaths']=array();
 		$this->devConfig['pluginsPaths']['SpringbokCore']=dirname(CORE).'/plugins/';
