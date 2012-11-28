@@ -3,11 +3,13 @@ S.Model=function(){
 	
 };
 S.Model.prototype={
-	findAll:function(){
-		return this._mapAll(App.api.get('models/'+this.Name+'/all'));
+	findAll:function(callback){
+		var t=this;
+		App.api.get('models/'+t.Name+'/all',function(result){callback(t._mapAll(result))});
 	},
-	findOne:function(){
-		return App.api.get('models/'+this.Name+'/one');
+	findOne:function(callback){
+		var t=this;
+		App.api.get('models/'+t.Name+'/one',callback);
 	},
 	findAllBy:function(){
 		
