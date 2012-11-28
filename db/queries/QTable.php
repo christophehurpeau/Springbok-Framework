@@ -55,7 +55,7 @@ class QTable extends QFindAll{
 		
 		$relationsMap=array();
 		foreach($this->joins as $alias=>$join){
-			if(!empty($join['fields'])) foreach($join['fields'] as $keyField=>$field) $relationsMap[$field]=$alias;
+			if(!empty($join['fields'])) foreach($join['fields'] as $keyField=>$field) if(is_int($keyField)) $relationsMap[$field]=$alias;//ex ; 'name'=>'user_id' (auto belongs to) if needed : could try is_int($keyField)?$field:$keyField
 		}
 		
 		$SESSION_SUFFIX=$this->modelName.CRoute::getAll();
@@ -67,6 +67,7 @@ class QTable extends QFindAll{
 			
 			if($orderByField !==null){
 				if(isset($relationsMap[$orderByField])) $orderByField=$relationsMap[$orderByField].'.'.$orderByField;
+				elseif(!empty($relationsMap)) $orderByField=$this->alias.'.'.$orderByField;
 				$this->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
 				if($this->defaultOrder!==null && isset($this->defaultOrder[1])) $this->addOrder($this->defaultOrder[1]);
 			}
