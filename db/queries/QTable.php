@@ -67,7 +67,7 @@ class QTable extends QFindAll{
 			
 			if($orderByField !==null){
 				if(isset($relationsMap[$orderByField])) $orderByField=$relationsMap[$orderByField].'.'.$orderByField;
-				elseif(!empty($relationsMap)) $orderByField=$this->alias.'.'.$orderByField;
+				elseif(!empty($this->joins)) $orderByField=$this->alias.'.'.$orderByField;
 				$this->orderBy(array($orderByField=>CSession::get('CTableOrderByWay'.$SESSION_SUFFIX)));
 				if($this->defaultOrder!==null && isset($this->defaultOrder[1])) $this->addOrder($this->defaultOrder[1]);
 			}
