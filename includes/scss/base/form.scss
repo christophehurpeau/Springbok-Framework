@@ -80,6 +80,9 @@ div input,div textarea{
 	/* @include boxShadow(#eee,10px); */
 	transition:all .3s;
 }
+textarea{
+	resize:vertical;
+}
 div input:hover, div textarea:hover{background-color:#FAFAFA}
 div input:focus, div textarea:focus{background-color:#FFF}
 
