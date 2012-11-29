@@ -1,4 +1,4 @@
-S.HEltForm=function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>'); t._defaultLabel=true; };
+S.HEltForm=function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>')/*.data('sElt',this)*/; t._defaultLabel=true; };
 
 S.HEltForm.Post=function(){ return new S.HEltForm('post'); }
 S.HEltForm.Get=function(){ return new S.HEltForm('get'); }

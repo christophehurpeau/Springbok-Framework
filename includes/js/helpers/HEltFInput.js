@@ -36,5 +36,6 @@ S.HEltFInput=function(form,name,largeSize){
 	this._setAttrId(); this._setAttrName();
 };
 S.extendsClass(S.HEltFInput,S.HEltFContble,{
-	container:function(){ var type=this.elt.attr('type'); return new S.HEltFCont(this,'input '+(type!='text'?'text ':'')+type); }
+	container:function(){ var type=this.elt.attr('type'); return new S.HEltFCont(this,'input '+(type!='text'?'text ':'')+type); },
+	wp100:function(){ this.addClass('wp100'); return this; }
 });

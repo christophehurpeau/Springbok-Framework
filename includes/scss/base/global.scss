@@ -3,7 +3,7 @@ $SEP_BORDER:1px solid #BBB !default;
 @includeCore 'base/reset.scss';
 
 .center{text-align:center}
-.centered{margin:0 auto}
+.centered{margin:0 auto !important}
 .clear{clear:both}
 .noclear{clear:none}
 br.clear{display:block;line-height:0;font-size:0;height:0}
@@ -58,7 +58,7 @@ html body .hidden{display:none}
 .sepR{border-right:$SEP_BORDER;}
 .sepBot,.sepB,.sepTB{border-bottom:$SEP_BORDER;}
 
-.clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after,nav.top ul:after{ 
+.clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after,nav.top ul:after,form:after{ 
   /*clear: both; 
   display: block; 
   height: 0; 
@@ -71,7 +71,7 @@ html body .hidden{display:none}
 }
 /** html .clearfix,*:first-child+html .clearfix*/
 @if $IE_COMPATIBILITY{
-	.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top,nav.top ul{ zoom: 1 }
+	.clearfix,header,.header,.fixed,.variable,ul.mosaic,nav.top,nav.top ul,form{ zoom: 1 }
 }
 
 

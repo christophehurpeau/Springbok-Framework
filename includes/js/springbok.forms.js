@@ -1,4 +1,4 @@
-includeCore('libs/jquery-ui-1.8.23.position');
+includeCore('libs/jquery-ui-1.9.2.position');
 (function(){
 	var methods={
 		beforeSubmit:function(){

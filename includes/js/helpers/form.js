@@ -4,3 +4,4 @@ includeCore('helpers/HEltFCont');
 includeCore('helpers/HEltFContble');
 includeCore('helpers/HEltFInput');
 includeCore('helpers/HEltFInputSubmit');
+includeCore('helpers/HEltFInputHidden');

@@ -1,6 +1,6 @@
 S.HEltFCont=function(contained,defaultClass){
 	this._form=contained._form;
-	this.elt=$('<'+(contained._form._tagContainer||'div')+'/>').addClass(defaultClass).append(contained.toElt());
+	this.elt=$('<'+(contained._form._tagContainer||'div')+'/>')/*.data('sElt',this)*/.addClass(defaultClass).append(contained.toElt());
 };
 S.extendsClass(S.HEltFCont,S.HElt,{
 	//tagContainer:function(tag){ this.elt=$('<'+tag+'/>').attr(this.attr()) return this; }
