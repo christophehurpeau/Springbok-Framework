@@ -1,7 +1,7 @@
 includeLib('jquery-1.7.2.min');
 includeCore('springbok.base');
 
-S.loadSyncScript(webUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
+S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
 
 (function(){
 	var readyCallbacks=$.Callbacks(),loadedRequired={};
@@ -29,44 +29,49 @@ S.loadSyncScript(webUrl+'js/i18n-'+(S.lang=$('meta[name="language"]').attr('cont
 			$.each(arguments,function(k,fileName){
 				if(!loadedRequired[fileName]){
 					loadedRequired[fileName]=true;
-					S.loadSyncScript(webUrl+'js/app/'+fileName+'.js'/* DEV */+'?'+(new Date().getTime())/* /DEV */);
+					S.loadSyncScript(webUrl+'js/'+INCLPREFIX+fileName+'.js'/* DEV */+'?'+(new Date().getTime())/* /DEV */);
 				}
 			});
 		},
 		
 		api:{
 			//List,Retrieve
-			get:function(url,data,type){
-				var result,headers={};
-				if(S.CSecure.isConnected()) headers.SAUTH=S.CSecure._token;
+			get:function(url,data,callback,type,async){
+				if(S.isFunc(data)){ callback=data; data=undefined; }
+				var headers={};
+				if(S.CSecure&&S.CSecure.isConnected()) headers.SAUTH=S.CSecure._token;
 				jQuery.ajax({
 					type:type,
 					headers:headers,
 					url:basedir+'api/'+url,
 					data:data,
-					success:function(r){result=r;},
+					success:function(r){ callback(r); },
 					error:function(jqXHR, textStatus, errorThrown){
 						console.log('Error:',jqXHR);
 						if(jqXHR.status===403){
-							if(S.CSecure.isConnected()) S.CSecure.reconnect();
+							if(S.CSecure&&S.CSecure.isConnected()) S.CSecure.reconnect();
 						}
 					},
-					dataType:'json', cache:false,
-					async:false
+					dataType:'json', cache:false, async:async
 				});
+			},
+			getSync:function(url,data,type){
+				var result;
+				this.get(url,data,function(r){result=r},type,false);
 				return result;
 			},
+			
 			//Create
-			post:function(url,data){
-				this.get(url,data,'POST');
+			post:function(url,data,callback){
+				return this.get(url,data,callback,'POST');
 			},
 			//Replace
 			put:function(url,data){
-				this.get(url,data,'PUT');
+				return this.get(url,data,callback,'PUT');
 			},
 			//Delete
 			del:function(url,data){
-				this.get(url,data,'DELETE');
+				return this.get(url,data,callback,'DELETE');
 			}
 		}
 	};

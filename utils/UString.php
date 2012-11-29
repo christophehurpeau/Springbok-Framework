@@ -25,4 +25,12 @@ class UString{
 					function($m) use($callback){ $dot=empty($m[2])?'':'.';
 						return $callback($dot===''?$m[1]:substr($m[1],0,-1),$dot); },$string);
 	}
+	
+	
+	
+	public static function firstLine($string){
+		$line=strpos($string,"\n");
+		if($line!==false) $line=substr($string,0,$line);
+		return $line;
+	}
 }

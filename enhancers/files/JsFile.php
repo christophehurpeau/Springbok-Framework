@@ -5,12 +5,14 @@ class JsFile extends EnhancerFile{
 
 	private $devProdDiff;
 	public function loadContent($srcContent){
-		if($this->fileName()==='jsapp.js'){
-			$srcContent="includeCore('springbok.jsapp');"
-				.'App.jsapp('.json_encode($this->enhanced->appConfig('projectName')).','.time().');' // force également à toujours refaire le fichier
-				.('S.router.init(includeJsAppConfig(\'routes\')'/*.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1)*/.','
-						.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes-langs.js'),6,-1).');')
-				.$srcContent
+		if(UString::firstLine($srcContent)==="includeCore('springbok.jsapp');"){
+			$filename=substr($this->fileName(),0,-3);
+			$prefix=$filename==='jsapp'?'':$filename.'/';
+			$srcContent="var INCLPREFIX='".$prefix."';includeCore('springbok.jsapp');"
+				.'App.jsapp('.json_encode($this->enhanced->appConfig('projectName')).',__SPRINGBOK_COMPILED_TIME__);'
+				.('S.router.init(includeJsAppConfig(\''.$prefix.'routes\')'/*.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/routes.js'),7,-1)*/.','
+						.substr(file_get_contents($this->enhanced->getAppDir().'src/jsapp/'.$prefix.'routes-langs.js'),6,-1).');')
+				.substr($srcContent,strpos($srcContent,"\n")+1)
 				.'App.run();';
 			//debugCode($srcContent);
 		}
@@ -66,6 +68,7 @@ class JsFile extends EnhancerFile{
 				$c=str_replace($const,$replacement,$c);
 			$c=$this->hardConfig($c);
 			
+			$c=str_replace('__SPRINGBOK_COMPILED_TIME__',time(),$c);
 			
 			//if(preg_match('/\'{t(c)? (.*)}\'/',$c,$mI))
 			//	debugVar($mI);

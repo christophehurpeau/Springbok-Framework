@@ -10,7 +10,7 @@ div.startloading{
 	@include background($HeaderMenuLinkBackground);
 	@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,8px); }
 	border-radius:16px;
-	color:$HeaderMenuLinkColor;
+	color:findBestFgColor($HeaderMenuLinkColor);
 	text-align:center;
 	font-size:1.4em;
 }
