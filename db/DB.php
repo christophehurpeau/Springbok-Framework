@@ -12,17 +12,15 @@ abstract class DB{
 	
 	/** @return DB */
 	public static function init($configName,$config=false){
-		if(!isset(self::$_INSTANCES[$configName])){
-			if($config===false){
-				/* DEV */
-				if(!isset(self::$_allConfigs[$configName])) throw new Exception('DB Config is missing : '.$configName);
-				/* /DEV */
-				$config=self::$_allConfigs[$configName]+array('prefix'=>'','type'=>'MySQL','host'=>'localhost','port'=>3306);
-			}
-			$className='DB'.$config['type'];
-			self::$_INSTANCES[$configName]=new $className($configName,$config);
+		if(isset(self::$_INSTANCES[$configName])) return self::$_INSTANCES[$configName];
+		if($config===false){
+			/* DEV */
+			if(!isset(self::$_allConfigs[$configName])) throw new Exception('DB Config is missing : '.$configName);
+			/* /DEV */
+			$config=self::$_allConfigs[$configName]+array('prefix'=>'','type'=>'MySQL','host'=>'localhost','port'=>3306);
 		}
-		return self::$_INSTANCES[$configName];
+		$className='DB'.$config['type'];
+		return self::$_INSTANCES[$configName]=new $className($configName,$config);
 	}
 	
 	/** @return DB */
