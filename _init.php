@@ -6,5 +6,5 @@ if(isset($_SERVER['HTTP_HOST'])) define('FULL_BASE_URL','http'.( IS_HTTPS ? 's':
 
 /* DEV */
 if (version_compare(PHP_VERSION, '5.4.0')===-1)
-    die('PHP Version 5.4.0 is REQUIRED');
+	die('PHP Version 5.4.0 is REQUIRED');
 /* /DEV */
