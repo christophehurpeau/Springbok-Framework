@@ -65,7 +65,6 @@ class JsFile extends EnhancerFile{
 			
 			$includes=$this->includes;
 			$c=preg_replace_callback('/\bincluded(Core|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)/Ui',function($matches) use($includes){
-				debug([$matches,isset($includes[$matches[1]][$matches[2]])]);
 				return isset($includes[$matches[1]][$matches[2]]) ? 'true' : 'false';
 			},$c);
 			
