@@ -1,4 +1,4 @@
-S.HElt=function(tag){ this.elt=$('<'+tag+'>').data('sElt',this); };
+S.HElt=function(tag){ this.elt=$('<'+tag+'>')/*.data('sElt',this)*/; };
 S.HElt.prototype={
 	attrs:function(attrs){this.elt.attr(attrs); return this; },
 	attr:function(attrName,value){this.elt.attr(attrName,value); return this; },
