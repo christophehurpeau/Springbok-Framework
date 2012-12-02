@@ -43,7 +43,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			var list=url.list;
 			if(S.isObject(list)){
 				list=[];
-				S.oForeach(url.list,function(k,v){ list.push(v) });
+				S.oForEach(url.list,function(k,v){ list.push(v) });
 			}
 			
 			onChange=function(term,onSuccess){
