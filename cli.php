@@ -5,8 +5,8 @@ if(!defined('STDIN')) exit;
 error_reporting(E_ALL | E_STRICT);
 
 /* PROD */
-if (version_compare(PHP_VERSION, '5.4.0')===-1)
-	die('PHP Version 5.4.0 is REQUIRED');
+if (version_compare(PHP_VERSION, '5.3.0')===-1)
+	die('PHP Version 5.3.0 is REQUIRED');
 /* /PROD */
 
 set_time_limit(0);
