@@ -232,7 +232,7 @@ class ModelFile extends PhpFile{
 							$res.='public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){return array(';
 							foreach($array as $key=>$value)
 								$res.=UPhp::exportCode($key).'=>_tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).'),';
-							$res=substr($res,0,-1).');}';
+							$res=(empty($array)?$res:substr($res,0,-1)).');}';
 							$res.='public function '.$fieldName.'(){$v=$this->'.$fieldName.';';
 							foreach($array as $key=>$value) $res.='if($v==='.UPhp::exportCode($key).')return _tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).');';
 							$res.='return \'\';}';

@@ -23,12 +23,22 @@ class EnhancedApp extends Enhanced{
 		//if($this->configNotEmpty('plugins')){
 		if(empty($this->config['plugins'])) $this->config['plugins']=array();
 		$this->config['plugins']['Springbok']=array('SpringbokCore','base');
-		foreach($this->config['plugins'] as &$plugin){
+		$i=0;
+		$plugins=&$this->config['plugins'];
+		foreach($plugins as &$plugin){
 			if(!isset($plugin[2])){
 				$pluginPath=$this->pluginPath($plugin);
+				if(file_exists($pluginPath.'config/dependencies.php')){
+					$dependencies=include $pluginPath.'config/dependencies.php';
+					foreach($dependencies as $keyDep=>$dependency)
+						if(!isset($plugins[$keyDep]))
+							$plugins=UArray::splice($plugins,$i,array($keyDep=>$dependency));
+				}
+				
 				if(file_exists($pluginPath.'config/defaultConfig.php'))
 					foreach((include $pluginPath.'config/defaultConfig.php') as $k=>$v) if(!isset($this->config['config'][$k])) $this->config['config'][$k]=$v;
 			}
+			$i++;
 		}
 		//}
 	}
