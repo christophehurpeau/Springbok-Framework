@@ -22,7 +22,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
 		if(!S.isObject(options)) options={minLength:options==null?3:options};
-		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
+		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json',delay:180, keyevent:'keyup' },options);
 		display=display||defaultDisplayList;
 		$(window).on('beforeunload',function(){
 			
@@ -78,14 +78,17 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				}
 			});*/
 			//.bind('dispose',function(){ })
-			.keyup(function(e){
+			[options.keyevent](function(e){
 				var eKeyCode=e.keyCode;
 				if(
 					(eKeyCode>=keyCodes.SHIFT && eKeyCode<=keyCodes.CAPS_LOCK)
 					|| (eKeyCode>=keyCodes.PAGE_UP && eKeyCode<=keyCodes.HOME)
 				) return;
 				var val=input.val();
-				if(options.keyup && options.keyup(val,eKeyCode)===false) return;
+				if(options.keyup && options.keyup(val,eKeyCode,input)===false){
+					e.stopPropagation(); e.preventDefault(); //usefull for autocomplete
+					return false;
+				}
 				
 				input.trigger('sSearch',[val])
 			}).bind('sSearch',function(e,val){
@@ -107,18 +110,55 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			displayResult=options;
 			options={};
 		}
-		var divResult=this.el=$('<div class="divAutocomplete widget hidden"/>').appendTo($('#page')),
+		var active=false,
+			divResult=this.el=$('<div class="divAutocomplete widget hidden"/>').appendTo($('#page')),
 			showDivResult=function(){
-				divResult.css('width',input.width()).sShow()
+				active=true;
+				return divResult.css('width',input.width()).sShow()
 					.position({my:"left top",at:"left bottom",of:input,collision:"none"});
+			},hideDivResult=function(){
+				active=false;
+				return divResult.sHide();
+			},divResultFindLi=function(selector){
+				return divResult.find('li'+selector);
 			};
-		divResult.on('click','li',options.select ? function(){ options.select.call(this,input); divResult.empty().sHide(); }
-							 : function(){ input.val($(this).text()); divResult.empty().sHide(); });
+		divResult.on('click','li',options.select ? function(){ options.select.call(this,input); hideDivResult().empty(); }
+							 : function(){ input.val($(this).text()); hideDivResult().empty(); });
+		divResult.on('hover','li',function(){
+			divResult.find('li.current').removeClass('current');
+		});
 		options=S.extendsObj({
 			navigate:false,
-			keyup:function(val,eKeyCode){
-				if(eKeyCode===keyCodes.ESCAPE){
-					divResult.sHide();
+			keyup:function(val,eKeyCode,input){
+				if(active){
+					switch(eKeyCode){
+						case keyCodes.ESCAPE:
+							hideDivResult();
+							return false;
+						case keyCodes.DOWN:
+							var current=divResultFindLi('.current');
+							if(current.length) current.removeClass('current').next().addClass('current');
+							else divResultFindLi(':first').addClass('current');
+							return false;
+						case keyCodes.UP:
+							var current=divResultFindLi('.current');
+							if(current.length) current.removeClass('current').prev().addClass('current');
+							else divResultFindLi(':last').addClass('current');
+							return false;
+						case keyCodes.ENTER: case keyCodes.NUMPAD_ENTER:
+							divResultFindLi('.current').click();
+							return false;
+						case keyCodes.PAGE_UP: case keyCodes.HOME:
+							divResultFindLi('.current').removeClass('current');
+							divResultFindLi(':first').addClass('current');
+							return false;
+						case keyCodes.PAGE_DOWN: case keyCodes.END:
+							divResultFindLi('.current').removeClass('current');
+							divResultFindLi(':last').addClass('current');
+							return false;
+					}
+				}else if(eKeyCode==keyCodes.UP){
+					showDivResult();
 					return false;
 				}
 			},
@@ -127,9 +167,10 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				showDivResult();
 			},
 			error:function(data){
-				divResult.empty().sHide();
+				hideDivResult().empty();
 			}
 		},options||{});
+		options.keyevent='keydown'; //ajaxSearch default key event is 'keyup' but we need here 'keydown' to be able to prevent default and stop propagation
 		var hasFocus=false;
 		input
 			.data('sAutocomplete',this)
@@ -140,7 +181,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			}).blur(function(){
 				hasFocus=false;
 				setTimeout(function(){
-					if(!hasFocus) divResult.sHide();
+					if(!hasFocus) hideDivResult();
 				},200);
 			});
 	};
