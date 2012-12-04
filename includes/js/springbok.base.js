@@ -167,7 +167,7 @@ window.S={
 			});
 		return objectOrArray;
 	},
-	oForeach:function(o,callback){
+	oForEach:function(o,callback){
 		var keys=Object.keys(o),length=keys.length;
 		for(var i=0;i<length;i++){
 			var k=keys[i];
