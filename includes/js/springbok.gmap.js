@@ -17,7 +17,6 @@ var gmap={
 			options.center=new google.maps.LatLng(min_lat + (max_lat - min_lat) / 2,min_lng + (max_lng - min_lng) / 2);
 			
 			var miles = (3958.75 * Math.acos(Math.sin(min_lat / 57.2958) * Math.sin(max_lat / 57.2958) + Math.cos(min_lat / 57.2958) * Math.cos(max_lat / 57.2958) * Math.cos(max_lng / 57.2958 - min_lng / 57.2958)));
-			if(console) console.log(miles);
 			if(miles < .05) zoom=17;
 			else if(miles < .08) zoom=16;
 			else if(miles < .15) zoom=15;

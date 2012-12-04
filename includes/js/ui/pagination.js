@@ -1,6 +1,8 @@
 S.HPagination=function(container,options,callback){
 	if(S.isFunc(options)){ callback=options; options={}; }
-	this.callback=callback;
+	this.callback=callback || function(page){
+		//TODO : default behavior
+	};
 	this.$pager=$('<ul class="pager">').appendTo($('<div class="pager">').appendTo(container));
 	
 	//this.totalPages=pager.find('li.page:last').text();
@@ -11,19 +13,17 @@ S.HPagination=function(container,options,callback){
 
 S.HPagination.prototype={
 	init:function(result,page){
+		this.$pager.empty();
 		this.totalPages=result.totalPages;
 		this.update(page||1);
 	},
 	load:function(page){
-		if(this.callback){
-			this.callback(page);
-			this.update(page);
-			return;
-		}
-		//TODO : default behavior
+		this.$pager.empty();
+		this.callback(page);
+		this.update(page);
 	},
 	update:function(page){
-		var t=this,options=t.options,pager=t.$pager.empty(),totalPages=this.totalPages,
+		var t=this,options=t.options,pager=t.$pager,totalPages=this.totalPages,
 			createLink=function(page,text){ return $('<a/>').click(function(){t.load(page)}).html(text||page); }
 		if(options.withText){
 			if(page==1){
@@ -35,7 +35,8 @@ S.HPagination.prototype={
 			}
 		}
 
-		var start=page-options.nbBefore; 
+		var start=page-options.nbBefore;
+
 		if(start <= 1) start=1;
 		else{
 			var i=1; pager.append($('<li class="page">').html(createLink(i)));
@@ -50,10 +51,9 @@ S.HPagination.prototype={
 		var end=page+options.nbAfter; if(end > totalPages) end=totalPages;
 		
 		var i=start;
-		while(i<=end){
+		while(i<=end)
 			pager.append($('<li class="page'+(i==page?' selected':'')+'">').html(createLink(i++)));
-		}
-		
+
 		if(end < totalPages){
 			i=Math.floor((totalPages-i)/2+end);
 			if(i != end){

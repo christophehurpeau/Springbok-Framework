@@ -2,18 +2,17 @@ includeCore('ui/base');
 includeCore('libs/jquery-ui-1.9.2.position');
 /* https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.autocomplete.js */
 (function(){
-	var defaultDisplayList=function(data,ulAttrs,callback){
+	var defaultDisplayList=function(data,ulAttrs,callback,escape){
 		var li,result=$('<ul>').attr(ulAttrs),key='text';
 		if( callback && S.isString(callback) ){
 			key=callback;
 			callback=undefined;
 		}
-		console.log(key);
 		$.each(data,function(i,v){
 			li=$('<li/>');
 			if(S.isString(v)) li.html(v);
 			else{
-				li.html(callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
+				li[escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
 			}
 			result.append(li);
 		});
@@ -30,8 +29,8 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		});
 		
 		var inputIsNotEditable=function(){return input.is(':disabled')||input.prop('readonly')},
-			onSuccess=options.success? function(data,oKey){ options.success.call(destContent,data,oKey) }
-										 : function(data,oKey){ destContent.html(display(data,undefined,oKey)) },
+			onSuccess=options.success? function(data,oKey){ options.success.call(destContent,data,oKey||options.display||options.oKey) }
+										 : function(data,oKey){ destContent.html(display(data,undefined,oKey||options.display||options.oKey,options.escape)) },
 			onChange;
 		if(S.isFunc(url)) onChange=url;
 		else if(S.isArray(url)) onChange=function(term,onSuccess){
@@ -108,7 +107,11 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			displayResult=options;
 			options={};
 		}
-		var divResult=this.el=$('<div class="divAutocomplete widget hidden"/>').appendTo($('#page'));
+		var divResult=this.el=$('<div class="divAutocomplete widget hidden"/>').appendTo($('#page')),
+			showDivResult=function(){
+				divResult.css('width',input.width()).sShow()
+					.position({my:"left top",at:"left bottom",of:input,collision:"none"});
+			};
 		divResult.on('click','li',options.select ? function(){ options.select.call(this,input); divResult.empty().sHide(); }
 							 : function(){ input.val($(this).text()); divResult.empty().sHide(); });
 		options=S.extendsObj({
@@ -120,11 +123,11 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				}
 			},
 			success:function(data,oKey){
-				divResult.html(defaultDisplayList(data,{'class':'clickable spaced'},displayResult||oKey))
-					.css('width',input.width()).position({my:"left top",at:"left bottom",of:input}).sShow();
+				divResult.html(defaultDisplayList(data,{'class':'clickable spaced'},displayResult||oKey,options.escape));
+				showDivResult();
 			},
 			error:function(data){
-				divResult.html('').sHide();
+				divResult.empty().sHide();
 			}
 		},options||{});
 		var hasFocus=false;
@@ -133,7 +136,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			.bind('dispose',function(){ divResult.remove(); })
 			.sAjaxSearch(url,options,divResult).focus(function(){
 				hasFocus=true;
-				if(!divResult.is(':empty,:visible')) divResult.sShow();
+				if(!divResult.is(':empty,:visible')) showDivResult();
 			}).blur(function(){
 				hasFocus=false;
 				setTimeout(function(){
