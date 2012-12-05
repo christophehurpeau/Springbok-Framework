@@ -107,7 +107,7 @@ class ModelFile extends PhpFile{
 						$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$annotations['Child'][0][0],'foreignKey'=>$idField,
 										'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
 						$classBeforeContent.='public function insert(){ $this->data["'.$idField.'"]=$this->insertParent(); $res=parent::insert(); return $res ? $this->data["'.$idField.'"] : $res; }';
-						$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->'.$idField.'=$idParent; return parent::insert();} }';
+						$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->data["'.$idField.'"]=$idParent; return parent::insertIgnore();} }';
 						$typesParent=$enhanceConfig['modelParents'][$annotations['Child'][0][0]];
 						$typeForParent=array_search($modelFile->_className,$typesParent);
 						if($typeForParent===false) throw new Exception("Type parent not found: ".print_r($typesParent,true).' ('.$modelFile->_className.')');
@@ -292,7 +292,9 @@ class ModelFile extends PhpFile{
 				foreach(array('hasMany','belongsTo','hasOne','hasOneThrough','hasManyThrough','belongsToType') as $relType){
 					$content=preg_replace_callback('/\s*public\s*(?:static)?\s*\$'.$relType.'\s*=\s*(array\(.*\);)/Us',function($matches2) use(&$relations,&$relType,&$contentInfos){
 						$matches2[1]=preg_replace('/\s*\b([A-Z][A-Za-z\_]+)\s*\=\>/','"$1"=>',$matches2[1]);
-						$eval=eval('return '.$matches2[1]);
+						$eval=dev_eval('return '.$matches2[1]);
+						if(empty($eval) && !empty($matches2[1]) && !is_array($eval))
+							throw new Exception('Failed to eval :'."\n".$matches2[1]);
 						foreach($eval as $key=>&$relation){
 							if(is_numeric($key)){ $key=$relation; $relation=array(); }
 							$relation['reltype']=$relType;

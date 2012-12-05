@@ -109,6 +109,7 @@ class PhpFile extends EnhancerFile{
 			$content=preg_replace('/\bpreg_replace\(/','dev_preg_replace(',$content);
 			$content=preg_replace('/\bpreg_replace_callback\(/','dev_preg_replace_callback(',$content);
 			$content=preg_replace('/\bpreg_split\(/','dev_preg_split(',$content);
+			$content=preg_replace('/\eval\(/','dev_eval(',$content);
 		}
 		return $content;
 	}
