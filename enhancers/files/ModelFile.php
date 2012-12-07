@@ -5,28 +5,42 @@ class ModelFile extends PhpFile{
 	
 	const REGEXP_FIELDS='/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums';
 	const REGEXP_CLASS='/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)([^{]*){/s';
+	const REGEXP_CONSTS='/const\s+[^;]+\s*;/i';
+	
+	
+	public static function _getPath($m,&$controllersSrc,$enhanced){
+		eval('$eval=array('.$m[1].');');
+		if(!isset($eval))
+			throw new Exception('Error eval : '.$m[1]);
+		$countEval=count($eval);
+		if($countEval===2 && ($eval[0]==='core')||($eval[0]==='springbok')){
+			array_shift($eval);
+			$modelPath=CORE.'models/'.$eval[0].'.php';
+			if(!isset($controllersSrc[$countEval.$modelPath]))
+				$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
+		}else{
+			$parentPath=$countEval===2 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
+			$modelPath='models/'.($eval[0]).'.php';
+			if(!isset($controllersSrc[$countEval.$modelPath]))
+				$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
+		}
+		return $controllersSrc[$countEval.$modelPath];
+	}
 	
 	protected function loadContent($srcContent){//TODO mettre en commun le code avec ControllerFile dans PhpFile.
 		$controllersSrc=array(); $enhanced=$this->enhanced;
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,$controllersSrc){
-			eval('$eval=array('.$m[1].');');
-			if(!isset($eval))
-				throw new Exception('Error eval : '.$m[1]);
-			$countEval=count($eval);
-			if($countEval===2 && ($eval[0]==='core')||($eval[0]==='springbok')){
-				array_shift($eval);
-				$modelPath=CORE.'models/'.$eval[0].'.php';
-				if(!isset($controllersSrc[$countEval.$modelPath]))
-					$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
-			}else{
-				$parentPath=$countEval===2 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
-				$modelPath='models/'.($eval[0]).'.php';
-				if(!isset($controllersSrc[$countEval.$modelPath]))
-					$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
-			}
-			if(!preg_match(ModelFile::REGEXP_FIELDS,$controllersSrc[$countEval.$modelPath],$mFields))
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!preg_match(ModelFile::REGEXP_FIELDS,$path,$mFields))
 				throw new Exception('Import fields : unable to find '.$modelPath);
 			return $mFields[0];
+		},$srcContent);
+		
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportConsts\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts))
+				throw new Exception('Import consts : unable to find '.$modelPath);
+			return implode("\n",$mConsts[0]);
 		},$srcContent);
 		$this->_srcContent=$srcContent;
 	}
