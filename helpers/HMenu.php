@@ -51,7 +51,7 @@ class HMenu{
 		if(self::$tagName!=='ul') $res.='</ul>';
 		return $res.HHtml::closeTag(self::$tagName);
 	}
-	public static function link($title,$value,$linkoptions=array(),$options=array(),$lioptions=false){
+	public static function link($title,$value,$linkoptions=array(),$options=array(),$lioptions=array()){
 		if(!isset($options['startsWith'])) $options['startsWith']=false;
 		$isValueArray=is_array($value);
 		if($isValueArray && isset($value['lioptions'])){
