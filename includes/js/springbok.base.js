@@ -22,6 +22,9 @@ window.onerror=function handleError(message,url,line){
 
 /* /DEV */
 
+if(!Object.keys){//http://kangax.github.com/es5-compat-table/
+	$.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+}
 
 
 

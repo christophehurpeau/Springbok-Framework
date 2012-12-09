@@ -20,14 +20,6 @@ class HHtml{
 		return '<meta name="language" content="'.$lang.'"/><meta http-equiv="content-language" content="'.$lang.'"/>';
 	}
 	
-	public static function jsCompat(){
-		if(($version=CHttpRequest::IE_version())!==false){
-			if($version < 9) return '<!--[if lt IE 9]>'.HHtml::jsLink('/ie-lt9').'<![endif]-->';
-			//if($version < 10) return '<!--[if lt IE 10]>'.HHtml::jsLink('/ie-lt10').'<![endif]-->';
-		}
-		return '';
-	}
-	
 	public static function cssLink($url='/main',$media=false){
 		echo '<link rel="stylesheet" type="text/css" href="'.self::staticUrl(strpos($url,'?')?$url:($url.'.css'),'css').'"'.($media?' media="'.$media.'"':'').'/>';
 	}
