@@ -3,8 +3,7 @@ class SJsAppController extends Controller{
 	protected static function renderStartPage($jsappScript='/jsapp',$cssLink='/main'){
 		echo '<!DOCTYPE html><html><head>'
 			.HHtml::metaCharset().HHtml::metaLanguage()
-			.'<title>'.Config::$projectName.' - '.($loading=_tC('Loading...')).'</title>'
-			.HHtml::jsCompat();
+			.'<title>'.Config::$projectName.' - '.($loading=_tC('Loading...')).'</title>';
 		HHtml::cssLink($cssLink);
 		echo HHtml::jsInline(
 			'window.onload=function(){'
