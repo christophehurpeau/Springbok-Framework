@@ -254,6 +254,12 @@ class Controller{
 		if($exit) exit;
 	}
 	
+	protected static function renderXml($content,$exit=true){
+		header('Content-type: application/xml; charset=UTF-8');
+		echo $content;
+		if($exit) exit;
+	}
+	
 	protected static function allowFlush(){
 		apache_setenv('no-gzip',1); ini_set('zlib.output_compression',0); ini_set('implicit_flush',1);
 		for($i = 0; $i < ob_get_level(); $i++){ ob_end_flush(); }
