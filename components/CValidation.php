@@ -1,6 +1,6 @@
 <?php
 class CValidation{
-	const PATTERN_HOSTNAME='(?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,4}|museum|travel)';
+	const PATTERN_HOSTNAME='((?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62}))\.((?:(?:[a-z]{2,3}\.)?[a-z]{2,4}|museum|travel))';
 	
 	private static $_hasErrors=false;
 	private static $_errors=array();

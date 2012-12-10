@@ -3,6 +3,11 @@ class PhpFile extends EnhancerFile{
 	public static $CACHE_PATH=false;
 	protected $_devContent,$_prodContent;
 	
+	public static function regexpFunction($name){
+		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.preg_quote($name).'\s*\((.*)\)\s*{'
+																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Us';
+	}
+	
 	protected function loadContent($srcContent){
 		if($this->isCore() && !$this->isInLibDir()){
 			$currentPath=dirname($this->srcFile()->getPath());

@@ -35,9 +35,7 @@ class ControllerFile extends PhpFile{
 					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 				return $mAction[0];
 			}else{
-				if(!preg_match('/(?:public|private|protected)\s+(?:static\s+)?function\s+'.preg_quote($eval[1]).'\s*\((.*)\)\s*{'
-																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Ums',
-								$controllersSrc[$countEval.$controllerPath],$mAction))
+				if(!preg_match(self::regexpFunction($eval[1]),$controllersSrc[$countEval.$controllerPath],$mAction))
 					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 				return $mAction[0];
 			}
