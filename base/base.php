@@ -97,7 +97,7 @@ function short_debug_var($var,$MAX_DEPTH=3,$html=null,$currentDepth=0){
 				$res=_debug_color('size='.$count,'AAA',$html);
 				if($count > 100){
 					$res.=' (> 100)';
-					$var=array_slice($var,0,100);
+					$var=array_slice($var,0,100,true);
 				}
 			}
 			if($currentDepth<$MAX_DEPTH){
