@@ -13,9 +13,12 @@ S.HPagination=function(container,options,callback){
 
 S.HPagination.prototype={
 	init:function(result,page){
-		this.$pager.empty();
+		this.empty();
 		this.totalPages=result.totalPages;
 		this.update(page||1);
+	},
+	empty:function(){
+		this.$pager.empty();
 	},
 	load:function(page){
 		this.$pager.empty();
