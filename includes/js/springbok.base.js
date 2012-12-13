@@ -178,6 +178,12 @@ window.S={
 		}
 	},
 	
+	aHasAmong:function(a,searchElements,i){
+		for(var j=0, l=searchElements.length; j<l ; j++)
+			if(a.indexOf(searchElements[j],i) !== -1) return true;
+		return false;
+	},
+	
 	tableClick:function(){
 		S.eltClick('table.pointer tr');
 	},

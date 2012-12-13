@@ -8,7 +8,7 @@ S.HElt.prototype={
 	rmClass:function(value){this.elt.removeClass(value); return this; },
 	style:function(value){this.attr('style',value); return this; },
 	click:function(value){this.elt.click(value); return this; },
-	rmAttr:function(name){this.attr(name,undefined); return this; },
+	rmAttr:function(name){this.elt.attr(name,undefined); return this; },
 	
 	append:function(){ this.elt.append.apply(this.elt,arguments); return this; }
 };
