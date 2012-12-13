@@ -124,7 +124,8 @@ class CHttpRequest{
 			'www.galaxy.com','appie', 'FAST', 'WebBug', 'Spade', 'ZyBorg', 'rabaz',
 			'Baiduspider', 'Feedfetcher-Google', 'TechnoratiSnoop',
 			'Mediapartners-Google', 'Sogou web spider',
-			'Butterfly','Twitturls','Me.dium','Twiceler'
+			'Butterfly','Twitturls','Me.dium','Twiceler',
+			'SiteSucker'
 		)) /EVAL */''.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 	
