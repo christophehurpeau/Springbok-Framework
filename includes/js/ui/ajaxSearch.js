@@ -22,7 +22,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
 		if(!S.isObject(options)) options={minLength:options==null?3:options};
-		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json',delay:180, keyevent:'keyup' },options);
+		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
 		display=display||defaultDisplayList;
 		$(window).on('beforeunload',function(){
 			
@@ -78,18 +78,18 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				}
 			});*/
 			//.bind('dispose',function(){ })
-			[options.keyevent](function(e){
+			.keydown(function(e){
 				var eKeyCode=e.keyCode;
 				if(
 					(eKeyCode>=keyCodes.SHIFT && eKeyCode<=keyCodes.CAPS_LOCK)
 					|| (eKeyCode>=keyCodes.PAGE_UP && eKeyCode<=keyCodes.HOME)
 				) return;
-				var val=input.val();
-				if(options.keyup && options.keyup(val,eKeyCode,input)===false){
+				if(options.keydown && options.keydown(eKeyCode,input)===false){
 					e.stopPropagation(); e.preventDefault(); //usefull for autocomplete
 					return false;
 				}
-				
+			}).keyup(function(e){
+				var val=input.val();
 				input.trigger('sSearch',[val])
 			}).bind('sSearch',function(e,val){
 				if(inputIsNotEditable()) return;
@@ -129,7 +129,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		});
 		options=S.extendsObj({
 			navigate:false,
-			keyup:function(val,eKeyCode,input){
+			keydown:function(eKeyCode,input){
 				if(active){
 					switch(eKeyCode){
 						case keyCodes.ESCAPE:
@@ -170,7 +170,6 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				hideDivResult().empty();
 			}
 		},options||{});
-		options.keyevent='keydown'; //ajaxSearch default key event is 'keyup' but we need here 'keydown' to be able to prevent default and stop propagation
 		var hasFocus=false;
 		input
 			.data('sAutocomplete',this)
