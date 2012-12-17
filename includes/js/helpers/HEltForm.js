@@ -42,6 +42,7 @@ S.extendsClass(S.HEltForm,S.HElt,{
 	textarea:function(name){ return new S.HEltFTextarea(this,name); },
 	hidden:function(name,value){ return new S.HEltFInputHidden(this,name,value); },
 	submit:function(title){ return new S.HEltFInputSubmit(this,title); },
+	reset:function(title){ return new S.HEltFInputReset(this,title); },
 	checkbox:function(name){ return new S.HEltFInputCheckbox(this,name); },
 	select:function(name,list,selected){ return S.HEltFInputSelect(this,name,list,selected); },
 	
@@ -56,19 +57,21 @@ S.addSetMethods(S.HEltForm,'tagContainer');
 
 
 $.fn.sSubmit=function(callback,beforeSubmit){
-	var form=this,submit;
+	var form=this,submit,hasPlaceholder=form.hasClass('hasPlaceholders');
 	this.unbind('submit').submit(function(evt){
 		evt.preventDefault();
 		evt.stopPropagation();
 		submit=form.find(':submit');
 		form.fadeTo(180,0.4);
 		if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
+		hasPlaceholder && form.defaultInput('beforeSubmit');
 		if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid')))
-			form.stop().fadeTo(0,1);
+			form.stop().fadeTo(0,1) && hasPlaceholder && form.defaultInput('afterSubmit');
 		else{
 			submit.hide();submit.parent().append(S.imgLoading());
 			callback(form,function(){
-				submit.show().blur(); form.find('.img.imgLoading').remove(); form.fadeTo(150,1)
+				submit.show().blur(); form.find('.img.imgLoading').remove(); form.fadeTo(150,1);
+				hasPlaceholder && form.defaultInput('afterSubmit');
 			});
 		}
 		return false;

@@ -2,19 +2,22 @@ includeCore('libs/jquery-ui-1.9.2.position');
 (function(){
 	var methods={
 		beforeSubmit:function(){
-			this.find('input.default').removeClass('default').val('');
+			this.find('input.default').val('');
 			return this;
 		},
 		afterSubmit:function(){
-			this.find('input.default').each(function(){this.val(this.title);});
+			this.find('input.default').each(function(){ var t=$(this); t.val() ? t.removeClass('default') : t.val(this.title);});
 			return this;
 		}
 	};
 	$.fn.defaultInput = function(method){
 		if(!method){
-			var inputs,selectorInput='input.default,input[placeholder]';
+			var inputs,selectorInput='input.default,input[placeholder]',form;
 			if(this.is('input')) inputs=this.addClass('default');
-			else inputs=this.find(selectorInput);
+			else{
+				if(this.is('form')) form=this;
+				inputs=this.find(selectorInput);
+			}
 			
 			inputs.each(function(){
 				var $this=$(this),placeholder=$this.attr('placeholder');
@@ -27,18 +30,17 @@ includeCore('libs/jquery-ui-1.9.2.position');
 					.change(function(e){ if($this.hasClass('default')){ if($this.val()!='') $this.removeClass('default'); else $this.val($this.attr('title')); }
 												else if($this.val()==''){ $this.addClass('default').val($this.attr('title')); }});
 			});
-			inputs.closest('form').each(function(){
-				var form=$(this);
-				form.submit(function(){ form.defaultInput('beforeSubmit'); return true; });
+			(form||inputs.closest('form')).addClass('hasPlaceholders').each(function(){
+				$(this).submit(methods.beforeSubmit);
 			});
 			return inputs;
 		}else if(methods[method]){
 			//return methods[method].apply(this,Array.prototype.slice.call(arguments,1));
-			return methods[method].apply(this);
+			return methods[method].call(this);
 		}
 	};
 	$.fn.reset=function(){
-		this.find('input[type=text],input[type=email],input[type=url],input[type=number],input[type=search],input[type=password],input[type=file],textarea,select').val('').change();
+		this.find('input[type=text],input[type=email],input[type=url],input[type=number],input[type=search],input[type=password],input[type=file],input[type=hidden],textarea,select').val('').change();
 		return this;
 	};
 	
