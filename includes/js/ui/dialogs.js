@@ -33,7 +33,7 @@ S.dialogs={
 		var dialog,buttons={};
 		buttons[i18nc['Close']]=function(){dialog.close();};
 		dialog=new S.WDialog(title,message,buttons,{
-			position:{my:'center',at:'center'},
+			position:{my:'center top+99',at:'center top'},
 			width:450,
 			modal:true
 		});
@@ -46,7 +46,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position:['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
@@ -73,7 +73,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position:['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
@@ -109,7 +109,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position: ['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
@@ -132,7 +132,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position: ['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
