@@ -49,8 +49,9 @@ class Springbok{
 
 	/** @param Exception $exception */
 	public static function handleException($exception){
-		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
-		self::$inError=true;
+		$previousError=self::$inError;
+		$forceDefault=self::$inError!==null/* DEV */||App::$enhancing/* /DEV */;
+		self::$inError=/* DEV */$exception/* /DEV *//* HIDE */||/* /HIDE *//* PROD */true/* /PROD */;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		while(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
@@ -70,6 +71,12 @@ class Springbok{
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
 		/* DEV */elseif(App::$enhancing){debug($log); exit;}else die($log);/* /DEV */
 		
+		
+		if($previousError!==null){
+			$exception=new Exception($exception->getMessage()."\nPrevious error : ".$previousError->getMessage(),0,$exception);
+		}
+		
+		
 		if(!$isHttpException && !headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500); // ????
 		App::displayException($exception,$forceDefault);
 		exit(1);
@@ -79,8 +86,9 @@ class Springbok{
 	public static function handleError($code,$message,$file,$line,&$context=null,$fromShutdown=false){//debugCode(print_r($context,true));
 		if($fromShutdown===false && !($code & (E_STRICT|E_NOTICE)))
 			throw new ErrorException($message,$code,0,$file,$line);
-		$forceDefault=self::$inError===true/* DEV */||App::$enhancing/* /DEV */;
-		self::$inError=true;
+		$previousError=self::$inError;
+		$forceDefault=self::$inError!==null/* DEV */||App::$enhancing/* /DEV */;
+		self::$inError=/* DEV */new ErrorException($message,$code,0,$file,$line)/* /DEV *//* HIDE */||/* /HIDE *//* PROD */true/* /PROD */;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		$log=self::getErrorText($code)." : $message ($file:$line)\n";
 		//echo $log; ob_flush();
@@ -105,6 +113,10 @@ class Springbok{
 		/* PROD */ if($code & (E_STRICT|E_NOTICE)) return true; /* /PROD */
 		
 		while(ob_get_length()>0) ob_end_clean();
+		
+		if($previousError!==null){
+			$message.="\nPrevious error : ".$previousError->getMessage();
+		}
 		
 		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
 		App::displayError($forceDefault,$code, $message, $file, $line,$context);

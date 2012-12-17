@@ -53,10 +53,10 @@
 		
 		find:function(all){
 			all=this.all='/'+all.sbTrim('/');
-			console.log('router: find: "'+all+'"');
+			/* DEV */ console.log('router: find: "'+all+'"'); /* /DEV */
 			var t=this,route=false,lang=S.langs.get(),m;
 			$.each(routes,function(i,r){
-				console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all));
+				/* DEV */ console.log('try: ',(r[lang]||r['en'])[0],(r[lang]||r['en'])[0].exec(all)); /* /DEV */
 				if(m=(r[lang]||r['en'])[0].exec(all)){
 					//console.log('match : ',m,r);
 					var c_a=r['_'].split('::'),params={};

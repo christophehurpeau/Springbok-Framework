@@ -1,4 +1,4 @@
-includeLib('jquery-1.7.2.min');
+includeCore('libs/jquery-1.8.3');
 includeCore('springbok.base');
 
 S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
@@ -47,7 +47,7 @@ S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"
 					data:data,
 					success:function(r){ callback(r); },
 					error:function(jqXHR, textStatus, errorThrown){
-						console.log('Error:',jqXHR);
+						console&&console.log('Error:',jqXHR);
 						if(jqXHR.status===403){
 							if(S.CSecure&&S.CSecure.isConnected()) S.CSecure.reconnect();
 						}
@@ -106,15 +106,15 @@ App.load=S.ajax.load=function(url){
 		S.history.navigate(url);
 		App.require('c/'+route.controller);
 		var c=C[route.controller];
-		/* DEV */ if(!c) console.log('This action doesn\'t exists: '+route.action); /* /DEV */
+		/* DEV */ if(!c) console&&console.log('This action doesn\'t exists: '+route.action); /* /DEV */
 		if(!c) notFound();
 		c.dispatch(route);
 	}catch(err){
 		if(err instanceof S.Controller.Stop) return;
 		if(err instanceof HttpException){
-			console.log("APP : catch HttpException :",err);
+			console&&console.log("APP : catch HttpException :",err);
 		}
-		console.log("APP : catch error :",err);
+		console&&console.log("APP : catch error :",err);
 		throw err;
 	}
 };

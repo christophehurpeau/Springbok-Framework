@@ -2,9 +2,9 @@ S.extendsPrototype(String,{
 	sbLcFirst:function(){return this.charAt(0).toLowerCase()+this.substr(1);},
 	sbUcFirst:function(){return this.charAt(0).toUpperCase()+this.substr(1);},
 	sbStartsWith:function(str){return this.indexOf(str)===0;},
-	sbEndsWith:function(str){return this.match(RegExp.sbEscape(str)+"$")==str;},
+	sbEndsWith:function(str){return this.match(RegExp.sEscape(str)+"$")==str;},
 	sHas:function(str){return this.indexOf(str)!==-1},
-	sbTrim:function(pattern){return this.sbLtrim(pattern).sbRtrim(pattern);},
+	sbTrim:function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp('^'+pattern+'|'+pattern+'$','g'),'');},
 	sbLtrim:function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp('^'+pattern,'g'),'');},
 	sbRtrim:function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp(pattern+'$','g'),'');},
 	sbRepeat:function(m){return new Array(m + 1).join(this)},
@@ -39,12 +39,12 @@ S.extendsPrototype(String,{
 	sbSlug:function(replacement){
 		if(replacement===undefined) replacement='-';
 		var returnval=this;
-		return returnval.sbTrim().sbRemoveSpecialChars()
+		return returnval.trim().sbRemoveSpecialChars()
 			.replace(/([^\d\.])\.+([^\d\.]|$)/g,'$1 $2')
 			.replace(/[^\w\d\.]/g,' ')
-			.sbTrim()
+			.trim()
 			.replace(/\s+/g,replacement)
-			.replace(new RegExp('^'+RegExp.sbEscape(replacement)+'+|'+RegExp.sbEscape(replacement)+'+$'),'');
+			.replace(new RegExp('^'+RegExp.sEscape(replacement)+'+|'+RegExp.sEscape(replacement)+'+$'),'');
 	},
 
 	/* http://phpjs.org/functions/strip_tags:535 */

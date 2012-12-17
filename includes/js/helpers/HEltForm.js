@@ -1,4 +1,4 @@
-S.HEltForm=function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>'); t._defaultLabel=true; };
+S.HEltForm=function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>')/*.data('sElt',this)*/; t._defaultLabel=true; };
 
 S.HEltForm.Post=function(){ return new S.HEltForm('post'); }
 S.HEltForm.Get=function(){ return new S.HEltForm('get'); }
@@ -45,6 +45,10 @@ S.extendsClass(S.HEltForm,S.HElt,{
 	checkbox:function(name){ return new S.HEltFInputCheckbox(this,name); },
 	select:function(name,list,selected){ return S.HEltFInputSelect(this,name,list,selected); },
 	
+	append:function(){ this.elt.append.apply(this.elt,arguments); return this; },
+	
+	placeholder:function(){ this.elt.defaultInput(); return this; },
+	
 	_getValue:function(name){ return this._value && this._value[name]; }
 });
 S.addSetMethods(S.HEltForm,'tagContainer');
@@ -52,7 +56,7 @@ S.addSetMethods(S.HEltForm,'tagContainer');
 
 
 $.fn.sSubmit=function(callback,beforeSubmit){
-	var form=this,submit,imgLoadingSubmit;
+	var form=this,submit;
 	this.unbind('submit').submit(function(evt){
 		evt.preventDefault();
 		evt.stopPropagation();
@@ -62,9 +66,9 @@ $.fn.sSubmit=function(callback,beforeSubmit){
 		if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid')))
 			form.stop().fadeTo(0,1);
 		else{
-			submit.hide();submit.parent().append(imgLoadingSubmit=S.imgLoading());
+			submit.hide();submit.parent().append(S.imgLoading());
 			callback(form,function(){
-				submit.show().blur();imgLoadingSubmit.remove();form.fadeTo(150,1)
+				submit.show().blur(); form.find('.img.imgLoading').remove(); form.fadeTo(150,1)
 			});
 		}
 		return false;

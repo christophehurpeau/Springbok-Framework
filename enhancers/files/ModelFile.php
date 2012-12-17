@@ -5,28 +5,54 @@ class ModelFile extends PhpFile{
 	
 	const REGEXP_FIELDS='/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums';
 	const REGEXP_CLASS='/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)([^{]*){/s';
+	const REGEXP_CONSTS='/const\s+[^;]+\s*;/i';
+	
+	
+	public static function _getPath($m,&$controllersSrc,$enhanced,$withParam=false){
+		eval('$eval=array('.$m[1].');');
+		if(!isset($eval))
+			throw new Exception('Error eval : '.$m[1]);
+		$countEval=count($eval); $param=null;
+		if($countEval===($withParam?3:2) && ($eval[0]==='core')||($eval[0]==='springbok')){
+			array_shift($eval);
+			$modelPath=CORE.'models/'.$eval[0].'.php';
+			if(!isset($controllersSrc[$countEval.$modelPath]))
+				$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
+		}else{
+			$parentPath=$countEval===($withParam?3:2) ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
+			$modelPath='models/'.($eval[0]).'.php';
+			if(!isset($controllersSrc[$countEval.$modelPath]))
+				$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
+		}
+		return $withParam? array($controllersSrc[$countEval.$modelPath],$eval[1]) : $controllersSrc[$countEval.$modelPath];
+	}
 	
 	protected function loadContent($srcContent){//TODO mettre en commun le code avec ControllerFile dans PhpFile.
 		$controllersSrc=array(); $enhanced=$this->enhanced;
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,$controllersSrc){
-			eval('$eval=array('.$m[1].');');
-			if(!isset($eval))
-				throw new Exception('Error eval : '.$m[1]);
-			$countEval=count($eval);
-			if($countEval===2 && ($eval[0]==='core')||($eval[0]==='springbok')){
-				array_shift($eval);
-				$modelPath=CORE.'models/'.$eval[0].'.php';
-				if(!isset($controllersSrc[$countEval.$modelPath]))
-					$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
-			}else{
-				$parentPath=$countEval===2 ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
-				$modelPath='models/'.($eval[0]).'.php';
-				if(!isset($controllersSrc[$countEval.$modelPath]))
-					$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
-			}
-			if(!preg_match(ModelFile::REGEXP_FIELDS,$controllersSrc[$countEval.$modelPath],$mFields))
-				throw new Exception('Import fields : unable to find '.$modelPath);
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!preg_match(ModelFile::REGEXP_FIELDS,$path,$mFields))
+				throw new Exception('Import fields : unable to find '.$path);
 			return $mFields[0];
+		},$srcContent);
+		
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportConsts\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts))
+				throw new Exception('Import consts : unable to find '.$path);
+			return implode("\n",$mConsts[0]);
+		},$srcContent);
+		
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportFunction\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+			list($path,$functionNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
+			if(is_string($functionNames)) $functionNames=array($functionNames);
+			$res='';
+			foreach($functionNames as $functionName){
+				if(!preg_match(self::regexpFunction($functionName),$path,$mFunction))
+					throw new Exception('Import Function : unable to find '.$path.' '.$functionName);
+				$res.=$mFunction[0]."\n";
+			}
+			return $res;
 		},$srcContent);
 		$this->_srcContent=$srcContent;
 	}
@@ -107,7 +133,7 @@ class ModelFile extends PhpFile{
 						$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$annotations['Child'][0][0],'foreignKey'=>$idField,
 										'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
 						$classBeforeContent.='public function insert(){ $this->data["'.$idField.'"]=$this->insertParent(); $res=parent::insert(); return $res ? $this->data["'.$idField.'"] : $res; }';
-						$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->'.$idField.'=$idParent; return parent::insert();} }';
+						$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->data["'.$idField.'"]=$idParent; return parent::insertIgnore();} }';
 						$typesParent=$enhanceConfig['modelParents'][$annotations['Child'][0][0]];
 						$typeForParent=array_search($modelFile->_className,$typesParent);
 						if($typeForParent===false) throw new Exception("Type parent not found: ".print_r($typesParent,true).' ('.$modelFile->_className.')');
@@ -232,7 +258,7 @@ class ModelFile extends PhpFile{
 							$res.='public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){return array(';
 							foreach($array as $key=>$value)
 								$res.=UPhp::exportCode($key).'=>_tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).'),';
-							$res=substr($res,0,-1).');}';
+							$res=(empty($array)?$res:substr($res,0,-1)).');}';
 							$res.='public function '.$fieldName.'(){$v=$this->'.$fieldName.';';
 							foreach($array as $key=>$value) $res.='if($v==='.UPhp::exportCode($key).')return _tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).');';
 							$res.='return \'\';}';
@@ -292,7 +318,9 @@ class ModelFile extends PhpFile{
 				foreach(array('hasMany','belongsTo','hasOne','hasOneThrough','hasManyThrough','belongsToType') as $relType){
 					$content=preg_replace_callback('/\s*public\s*(?:static)?\s*\$'.$relType.'\s*=\s*(array\(.*\);)/Us',function($matches2) use(&$relations,&$relType,&$contentInfos){
 						$matches2[1]=preg_replace('/\s*\b([A-Z][A-Za-z\_]+)\s*\=\>/','"$1"=>',$matches2[1]);
-						$eval=eval('return '.$matches2[1]);
+						$eval=dev_eval('return '.$matches2[1]);
+						if(empty($eval) && !empty($matches2[1]) && !is_array($eval))
+							throw new Exception('Failed to eval :'."\n".$matches2[1]);
 						foreach($eval as $key=>&$relation){
 							if(is_numeric($key)){ $key=$relation; $relation=array(); }
 							$relation['reltype']=$relType;

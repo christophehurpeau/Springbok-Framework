@@ -1,5 +1,6 @@
 /*! Springbok */
 /*'use strict';*/
+/* PROD */
 window.onerror=function handleError(message,url,line){
 	if(url && !(url.indexOf('chrome://')===0 || url.indexOf('http://127.0.0.1')===0))
 		$.get(basedir+'site/jsError',{href:window.location.href,jsurl:url,message:message,line:line});
@@ -14,13 +15,16 @@ window.onerror=function handleError(message,url,line){
 	//return true;
 	return false;
 };
-
+/* /PROD */
 
 /* DEV */
 
 
 /* /DEV */
 
+if(!Object.keys){//http://kangax.github.com/es5-compat-table/
+	$.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+}
 
 
 
@@ -166,6 +170,19 @@ window.S={
 			});
 		return objectOrArray;
 	},
+	oForEach:function(o,callback){
+		var keys=Object.keys(o),length=keys.length;
+		for(var i=0;i<length;i++){
+			var k=keys[i];
+			callback(k,o[k]);
+		}
+	},
+	
+	aHasAmong:function(a,searchElements,i){
+		for(var j=0, l=searchElements.length; j<l ; j++)
+			if(a.indexOf(searchElements[j],i) !== -1) return true;
+		return false;
+	},
 	
 	tableClick:function(){
 		S.eltClick('table.pointer tr');
@@ -189,7 +206,7 @@ window.S={
 includeCore('springbok.ext.string');
 includeCore('springbok.ext.arrays');
 
-RegExp.sbEscape=function(value){
+RegExp.sEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
@@ -209,6 +226,13 @@ $(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1
 		else if(xhr.status===500) alert(i18nc['http.500']);
 		else if(xhr.status===403) alert(i18nc['http.403']);
 	});
+
+var jqueryCleanData=$.cleanData;
+$.cleanData=function(elems){
+	for ( var i=0,elem ; (elem = elems[i]) != null; i++ )
+		$.event.trigger('dispose',undefined,elem,true);
+	return jqueryCleanData.apply(this,arguments);
+}
 
 S.extendsObj($.fn,{
 	/* https://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js */

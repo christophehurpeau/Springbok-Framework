@@ -10,7 +10,7 @@ class CSession{
 		}*/
 	}
 	public static function start(){
-		/* DEV */if(!(Springbok::$inError && headers_sent()))/* /DEV */session_start();
+		/* DEV */if(!(Springbok::$inError!==null && headers_sent()))/* /DEV */session_start();
 		self::$_SESSION=&$_SESSION;
 	}
 	

@@ -1,5 +1,5 @@
 <?php
-abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,JsonSerializable*/{
+abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,JsonSerializable{
 	public static $__dbName='default',$__modelDb,$__displayField='name',$__orderByField=null;
 	public static $__loadedModels=array();
 	
@@ -66,6 +66,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 	public function _set($name,$value){
 		$this->data[$name]=$value;
 		/*$this->$name=$this->data[$name];*/
+		return $this;
 	}
 	public function _setRef($name,&$value){
 		$this->data[$name]=&$value;
@@ -180,7 +181,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable/*,Js
 		return json_encode($this->toArray());
 	}
 	public function jsonSerialize(){
-		return json_encode($this->_getData());
+		return $this->_getData();
 	}
 	
 	public static function json_encode($models,$suffix=''){

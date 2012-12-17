@@ -20,6 +20,8 @@ _tC('Create');
 _tC('Modify');
 _tC('Rename');
 _tC('View');
+_tC('Disable');
+_tC('Enable');
 
 _tC('Date');
 _tC('Name');

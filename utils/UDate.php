@@ -51,7 +51,7 @@ class UDate{
 		while($day < 1){
 			$month--;
 			if($month===0){ $month=12; $year--; }
-			$day=cal_days_in_month(CAL_GREGORIAN,$month,$year)-$day;
+			$day=cal_days_in_month(CAL_GREGORIAN,$month,$year)+$day;
 		}
 		return array($year,$month,$day);
 	}

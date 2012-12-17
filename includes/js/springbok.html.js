@@ -58,7 +58,7 @@ S.html={
 	*/
 	url:function(url,full){
 		if(S.isString(url) || !url){
-			if(url) url=url.sbTrim();
+			if(url) url=url.trim();
 			if(!url || url==='/') return (full || '') + this.baseurl + '/';
 			else{
 				if(url.sHas('://')) return url;

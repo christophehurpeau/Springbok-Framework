@@ -4,6 +4,11 @@ if(!defined('STDIN')) exit;
 /* PROD */ini_set('display_errors',0);/* /PROD */
 error_reporting(E_ALL | E_STRICT);
 
+/* PROD */
+if (version_compare(PHP_VERSION, '5.3.0')===-1)
+	die('PHP Version 5.3.0 is REQUIRED');
+/* /PROD */
+
 set_time_limit(0);
 
 define('BASE_URL',''); define('APP_VERSION',''); define('WEB_FOLDER','');

@@ -121,4 +121,10 @@ class UArray {
 	    $karr = $ksortedarr;
 	    return true;
 	}
+	
+	
+	
+	public static function splice($array,$offset,$values){
+		return array_slice($array,0,$offset,true) + $values + array_slice($array,$offset,null,true);
+	}
 }

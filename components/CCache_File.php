@@ -8,7 +8,7 @@ class CCache_File extends CCache{
 	public function read($key){
 		if(!file_exists($filename=($this->_path.$key))) return null;
 		if($this->_expiration && filemtime($filename) < (time() - $this->_expiration)){
-			unlink($filename);
+			UFile::rm($filename);
 			return null;
 		}
 		

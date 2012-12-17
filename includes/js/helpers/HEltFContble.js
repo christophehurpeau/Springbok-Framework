@@ -6,6 +6,7 @@ S.extendsClass(S.HEltFContble,S.HElt,{
 	label:function(value){ this._label=value; return this; },
 	htmlLabel:function(value){ this._label=value; this._labelEscape=0; return this; },
 	noLabel:function(){ this._label=false; return this; },
+	noName:function(){ this.rmAttr('name'); return this; },
 	
 	between:function(content){ this._between=content; return this; },
 	

@@ -1,9 +1,9 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.2.9';
+	public static $CACHE_PATH='js_8.3.1';
 
-	private $devProdDiff;
+	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
 		if(UString::firstLine($srcContent)==="includeCore('springbok.jsapp');"){
 			$filename=substr($this->fileName(),0,-3);
@@ -19,8 +19,7 @@ class JsFile extends EnhancerFile{
 		
 		
 		//$this->_realSrcContent=$srcContent;
-		$includes=array();
-		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$includes,$this->enhanced);
+		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$this->includes,$this->enhanced);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
 		$this->devProdDiff= (strpos($srcContent,'/* DEV */')!==false||strpos($this->_srcContent,'/* PROD */')!==false);
@@ -63,6 +62,11 @@ class JsFile extends EnhancerFile{
 				return '';
 			},$c);
 			uksort($constantes,function($k1,$k2){return strlen($k1)<strlen($k2);}); // trie les constantes du plus grd au moins grd pour éviter de remplacer des bouts de constantes
+			
+			$includes=$this->includes;
+			$c=preg_replace_callback('/\bincluded(Core|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)/Ui',function($matches) use($includes){
+				return isset($includes[$matches[1]][$matches[2]]) ? 'true' : 'false';
+			},$c);
 			
 			foreach($constantes as $const=>$replacement)
 				$c=str_replace($const,$replacement,$c);

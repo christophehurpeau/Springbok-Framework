@@ -97,7 +97,7 @@ function short_debug_var($var,$MAX_DEPTH=3,$html=null,$currentDepth=0){
 				$res=_debug_color('size='.$count,'AAA',$html);
 				if($count > 100){
 					$res.=' (> 100)';
-					$var=array_slice($var,0,100);
+					$var=array_slice($var,0,100,true);
 				}
 			}
 			if($currentDepth<$MAX_DEPTH){
@@ -204,6 +204,15 @@ function dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
 	return $res;
 }
 
+function dev_eval($code){
+	try{
+		$code=eval($code);
+		return $code;
+	}catch(Exception $e){
+		throw new Exception('Unable to eval code : '.$e->getMessage()."\n".$code,0,$e);
+	}
+}
+
 /* /DEV */
 
 /* PROD */
@@ -214,6 +223,7 @@ function debugCode($code){}
 function debugVar($var){}
 function debugVarNoFlush(){}
 function debugPrintr($var){}
+function dev_eval($code){return eval($code);}
 /* /PROD */
 
 function h($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
