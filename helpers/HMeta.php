@@ -22,6 +22,14 @@ class HMeta{
 		self::$metas['googlebot']=$content;
 	}
 	
+	public static function noindex_follow(){
+		self::$metas['robots']='noindex, follow';
+	}
+	public static function noindex_nofollow(){
+		self::$metas['robots']='noindex, nofollow';
+	}
+	
+	
 	public static function google_notranslate(){
 		self::$metas['google']='notranslate';
 	}
