@@ -96,7 +96,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				if(val===undefined) val=input.val();
 				val=val.trim();
 				if(options.navigate) S.history.navigate(url+'/'+val);
-				if(val == '' || val.length < options.minLength) options.reset ? options.reset() : destContent.empty();
+				if(!val || val.length < options.minLength) options.reset ? options.reset() : destContent.empty();
 				else if(val!=lastVal){
 					lastVal=val;
 					onChange(val,onSuccess);
@@ -123,7 +123,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				return divResult.find('li'+selector);
 			};
 		divResult.on('click','li',options.select ? function(){ options.select.call(this,input); hideDivResult().empty(); }
-							 : function(){ input.val($(this).text()); hideDivResult().empty(); });
+							 : function(){ input.val($(this).text()).change(); hideDivResult().empty(); });
 		divResult.on('hover','li',function(){
 			divResult.find('li.current').removeClass('current');
 		});
