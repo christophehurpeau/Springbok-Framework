@@ -101,7 +101,7 @@ class CHttpRequest{
 			//'Googlebot',
 			'Google Web Preview', // Google - www.google.com
 			'Bing Preview', // Bing
-			//'msnbot',
+			'msnptc',//'msnbot',
 			'Yahoo',
 			//'VoilaBot',
 			//'WebCrawler',
