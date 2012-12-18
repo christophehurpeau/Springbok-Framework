@@ -21,9 +21,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			
 			inputs.each(function(){
 				var $this=$(this),placeholder=$this.attr('placeholder');
-				if(placeholder){
-					$this.attr('title',placeholder).removeAttr('placeholder').addClass('default');
-				}
+				if(placeholder) $this.attr('title',placeholder).removeAttr('placeholder').addClass('default');
 				$this.val(function(i,v){if(!$this.is(':focus') && (v=='' || v==this.title)) return this.title; $this.removeClass('default');return v;})
 					.focusin(function(){if($this.hasClass('default') || $this.val()===this.title) $this.removeClass('default').val('');})
 					.focusout(function(e){if(!$this.hasClass('default') && $this.val()=='') $this.addClass('default').val($this.attr('title'));})
@@ -31,7 +29,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 												else if($this.val()==''){ $this.addClass('default').val($this.attr('title')); }});
 			});
 			(form||inputs.closest('form')).addClass('hasPlaceholders').each(function(){
-				$(this).submit(methods.beforeSubmit);
+				$(this).submit(function(){ methods.beforeSubmit.call($(this)) });
 			});
 			return inputs;
 		}else if(methods[method]){
@@ -58,7 +56,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			form.unbind('submit').submit(function(evt){
 				evt.preventDefault();
 				evt.stopPropagation();
-				submit=form.find(':submit');
+				submit=form.find('[type="submit"]');
 				form.fadeTo(180,0.4);
 				if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
 				if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid'))){

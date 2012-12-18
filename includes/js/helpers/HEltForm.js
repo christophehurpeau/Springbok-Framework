@@ -61,7 +61,7 @@ $.fn.sSubmit=function(callback,beforeSubmit){
 	this.unbind('submit').submit(function(evt){
 		evt.preventDefault();
 		evt.stopPropagation();
-		submit=form.find(':submit');
+		submit=form.find('[type="submit"]');
 		form.fadeTo(180,0.4);
 		if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
 		hasPlaceholder && form.defaultInput('beforeSubmit');
