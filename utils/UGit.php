@@ -248,7 +248,7 @@ class GitRepository{
 						|| preg_match('/^:\d+\s+\d+\s+[0-9a-f.]+\s+[0-9a-f.]+\s+(\w)\d+\s+(\S+)\t(.+)$/',$line,$m))
 					){
 				$parsing_state=2;
-                $revision->files[$m[2]]=$m[1];
+				$revision->files[$m[2]]=$m[1];
 			}elseif($parsing_state===1 && $line===''){
 				$parsing_state=2;
 			}elseif($parsing_state===1){
