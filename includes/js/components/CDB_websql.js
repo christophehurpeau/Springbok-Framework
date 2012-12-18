@@ -3,7 +3,7 @@ adapters.webSQL=function(name,config,callback){
 	t.name=name; t.config=config; t.collections={};
 		
 };
-S.extendsObj(adapters.webSQL,{
+S.extObj(adapters.webSQL,{
 	isAvailable:function(){
 		return !!window.openDatabase;
 	},

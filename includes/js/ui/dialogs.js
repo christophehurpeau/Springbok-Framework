@@ -1,7 +1,7 @@
 includeCore('ui/base');
 includeCore('libs/jquery-ui-1.9.2.position');
 S.WDialog=function(title,htmlOrText,buttons,options){
-	options=S.extendsObj({
+	options=S.extObj({
 		open:true,
 		closeOnEscape:true,
 		zIndex:9000 //fancybox : 8030
