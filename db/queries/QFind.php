@@ -520,10 +520,14 @@ abstract class QFind extends QSelect{
 					if(!empty($values)){
 						$resField = $w['associationForeignKey'];
 						
-						$oneField=count($w['fields'])===1?$w['fields'][0]:false;
+						if(count($w['fields'])===1){
+							$keyFirstField=key($w['fields']);
+							$oneField=is_int($keyFirstField) ? $w['fields'][$keyFirstField] : $keyFirstField;
+							if(substr($oneField,0,8)==='DISTINCT') $oneField=substr($oneField,9);
+						}else $oneField=false;
 						if(isset($w['tabResKey'])){ $tabResKey=$w['tabResKey']; unset($w['tabResKey']); }
 						else $tabResKey=false;
-						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,true)->execute();
+						$listRes=self::_createHasManyQuery(new QFindAll($w['modelName']),$w,$values,$resField,true)->execute();
 						if($listRes) foreach($objs as $key=>$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){

@@ -22,33 +22,37 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
 		if(!S.isObject(options)) options={minLength:options==null?3:options};
-		options=S.extendsObj({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
+		options=S.extObj({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
 		display=display||defaultDisplayList;
-		$(window).on('beforeunload',function(){
+		/*$(window).on('beforeunload',function(){
 			
-		});
+		});*/
 		
 		var inputIsNotEditable=function(){return input.is(':disabled')||input.prop('readonly')},
 			onSuccess=options.success? function(data,oKey){ options.success.call(destContent,data,oKey||options.display||options.oKey) }
 										 : function(data,oKey){ destContent.html(display(data,undefined,oKey||options.display||options.oKey,options.escape)) },
 			onChange;
 		if(S.isFunc(url)) onChange=url;
-		else if(S.isArray(url)) onChange=function(term,onSuccess){
-			var matcher = new RegExp( RegExp.sEscape(term), "i" );
-			var data=url.filter(function(v){ return matcher.test(v) });
-			if(data) onSuccess(data);
-		}
-		else if(S.isObject(url)){
-			var list=url.list;
-			if(S.isObject(list)){
-				list=[];
-				S.oForEach(url.list,function(k,v){ list.push(v) });
+		else if(S.isArray(url) || S.isObject(url)){
+			var list=url,filter,oKey,listValues;
+			
+			filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
+			
+			if(S.isObject(url)){
+				list=url.list;
+				if(S.isObject(list)){
+					oKey=url.key;
+					list=[]; listValues=[];
+					S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
+					filter=function(matcher){ return list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
+				}
 			}
 			
+			if(listValues===undefined) listValues=list.map(S.sNormalize);
+			
 			onChange=function(term,onSuccess){
-				var matcher = new RegExp( RegExp.sEscape(term), "i" );
-				var data=list.filter(function(v){ return matcher.test(v[url.key]) });
-				if(data) onSuccess(data,url.key);
+				var matcher = new RegExp( S.sNormalize(term) ), data=filter(matcher);
+				if(data) onSuccess(data,oKey);
 			}
 		}else onChange=function(val,onSuccess){
 			if(xhr){xhr.abort(); xhr=null;}
@@ -96,7 +100,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				if(val===undefined) val=input.val();
 				val=val.trim();
 				if(options.navigate) S.history.navigate(url+'/'+val);
-				if(val == '' || val.length < options.minLength) options.reset ? options.reset() : destContent.empty();
+				if(!val || val.length < options.minLength) options.reset ? options.reset() : destContent.empty();
 				else if(val!=lastVal){
 					lastVal=val;
 					onChange(val,onSuccess);
@@ -123,11 +127,11 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				return divResult.find('li'+selector);
 			};
 		divResult.on('click','li',options.select ? function(){ options.select.call(this,input); hideDivResult().empty(); }
-							 : function(){ input.val($(this).text()); hideDivResult().empty(); });
+							 : function(){ input.val($(this).text()).change(); hideDivResult().empty(); });
 		divResult.on('hover','li',function(){
 			divResult.find('li.current').removeClass('current');
 		});
-		options=S.extendsObj({
+		options=S.extObj({
 			navigate:false,
 			keydown:function(eKeyCode,input){
 				if(active){

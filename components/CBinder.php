@@ -12,15 +12,18 @@ class CBinder{
 			if($withValidation && $annotations) CValidation::valid($withValidation,$annotations,$val);
 			return $val;
 		}
-		if(!empty($val) && is_array($val)){
+		if(!empty($val)){
 			if($type=='array') return $val;
 			if(substr($type,0,5)=='array'){//ex : array[]int
 				$typeArray=substr($type,7);
-				foreach($val as $key=>$value) $val[$key]=self::bind($typeArray,$value);
+				if(!empty($val)){
+					if(is_array($val)) foreach($val as $key=>$value) $val[$key]=self::bind($typeArray,$value);
+					else $val=array(self::bind($typeArray,$val));
+				}
 				if($withValidation && $annotations) CValidation::valid($withValidation,$annotations,$val);
 				return $val;
 			}
-			if(class_exists($type)){
+			if(is_array($val) && class_exists($type)){
 				$val=self::_bindObject($type,$val,$withValidation && isset($annotations['Valid']) ? $withValidation : false,isset($annotations['Valid']) ? $annotations['Valid'] : null);
 				if($withValidation && $annotations) CValidation::valid($withValidation,$annotations,$val);
 				return $val;

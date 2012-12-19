@@ -1,6 +1,6 @@
 (function(){
 	S.Route=function(attrs){
-		S.extendsObj(this,attrs);
+		S.extObj(this,attrs);
 	};
 	S.Route.prototype={
 		

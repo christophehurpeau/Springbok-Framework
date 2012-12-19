@@ -2,43 +2,43 @@ includeCore('libs/jquery-ui-1.9.2.position');
 (function(){
 	var methods={
 		beforeSubmit:function(){
-			this.find('input.default').removeClass('default').val('');
+			this.find('input.default').val('');
 			return this;
 		},
 		afterSubmit:function(){
-			this.find('input.default').each(function(){this.val(this.title);});
+			this.find('input.default').each(function(){ var t=$(this); t.val() ? t.removeClass('default') : t.val(this.title);});
 			return this;
 		}
 	};
 	$.fn.defaultInput = function(method){
 		if(!method){
-			var inputs,selectorInput='input.default,input[placeholder]';
+			var inputs,selectorInput='input.default,input[placeholder]',form;
 			if(this.is('input')) inputs=this.addClass('default');
-			else inputs=this.find(selectorInput);
+			else{
+				if(this.is('form')) form=this;
+				inputs=this.find(selectorInput);
+			}
 			
 			inputs.each(function(){
 				var $this=$(this),placeholder=$this.attr('placeholder');
-				if(placeholder){
-					$this.attr('title',placeholder).removeAttr('placeholder').addClass('default');
-				}
+				if(placeholder) $this.attr('title',placeholder).removeAttr('placeholder').addClass('default');
 				$this.val(function(i,v){if(!$this.is(':focus') && (v=='' || v==this.title)) return this.title; $this.removeClass('default');return v;})
 					.focusin(function(){if($this.hasClass('default') || $this.val()===this.title) $this.removeClass('default').val('');})
 					.focusout(function(e){if(!$this.hasClass('default') && $this.val()=='') $this.addClass('default').val($this.attr('title'));})
 					.change(function(e){ if($this.hasClass('default')){ if($this.val()!='') $this.removeClass('default'); else $this.val($this.attr('title')); }
 												else if($this.val()==''){ $this.addClass('default').val($this.attr('title')); }});
 			});
-			inputs.closest('form').each(function(){
-				var form=$(this);
-				form.submit(function(){ form.defaultInput('beforeSubmit'); return true; });
+			(form||inputs.closest('form')).addClass('hasPlaceholders').each(function(){
+				$(this).submit(function(){ methods.beforeSubmit.call($(this)) });
 			});
 			return inputs;
 		}else if(methods[method]){
 			//return methods[method].apply(this,Array.prototype.slice.call(arguments,1));
-			return methods[method].apply(this);
+			return methods[method].call(this);
 		}
 	};
 	$.fn.reset=function(){
-		this.find('input[type=text],input[type=email],input[type=url],input[type=number],input[type=search],input[type=password],input[type=file],textarea,select').val('').change();
+		this.find('input[type=text],input[type=email],input[type=url],input[type=number],input[type=search],input[type=password],input[type=file],input[type=hidden],textarea,select').val('').change();
 		return this;
 	};
 	
@@ -56,7 +56,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			form.unbind('submit').submit(function(evt){
 				evt.preventDefault();
 				evt.stopPropagation();
-				submit=form.find(':submit');
+				submit=form.find('[type="submit"]');
 				form.fadeTo(180,0.4);
 				if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
 				if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid'))){
@@ -128,7 +128,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 
 
 S.HForm=function(modelName,formAttributes,tagContainer,options){
-	formAttributes=S.extendsObj({action:'',method:'post'},formAttributes);
+	formAttributes=S.extObj({action:'',method:'post'},formAttributes);
 	this.$=$('<form/>').attr(formAttributes);
 	this.modelName=modelName||false;
 	this.name=modelName?modelName.sbLcFirst():false;
@@ -141,7 +141,7 @@ S.HForm.prototype={
 	},
 	_container:function(res,defaultClass,attributes,labelFor,label,appendLabel){
 		if(this.tagContainer && (attributes || attributes===undefined)){
-			attributes=S.extendsObj({'class':defaultClass},attributes);
+			attributes=S.extObj({'class':defaultClass},attributes);
 			res=$('<'+this.tagContainer+'/>').html(res);
 			if(attributes.before){ res.prepend(attributes.before); delete attributes.before; }
 			if(attributes.after){ res.append(attributes.after); delete attributes.after; }
@@ -151,7 +151,7 @@ S.HForm.prototype={
 		return res;
 	},
 	_input:function(name,type,label,inputAttributes,containerAttributes){
-		inputAttributes=S.extendsObj({
+		inputAttributes=S.extObj({
 			id:(this.modelName ? this.modelName : 'Input')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
@@ -204,8 +204,8 @@ S.HForm.prototype={
 
 
 	select:function(name,list,options,inputAttributes,containerAttributes){
-		options=S.extendsObj({empty:undefined},options);
-		inputAttributes=S.extendsObj({
+		options=S.extObj({empty:undefined},options);
+		inputAttributes=S.extObj({
 			id:(this.modelName ? this.modelName : 'Select')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
@@ -257,7 +257,7 @@ S.HForm.prototype={
 	
 	
 	textarea:function(name,label,inputAttributes,containerAttributes){
-		inputAttributes=S.extendsObj({
+		inputAttributes=S.extObj({
 			id:(this.modelName ? this.modelName : 'Textarea')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
@@ -279,7 +279,7 @@ S.HForm.prototype={
 
 
 	checkbox:function(name,label,attributes,containerAttributes){
-		attributes=S.extendsObj({
+		attributes=S.extObj({
 			type:'checkbox',
 			id:(this.modelName ? this.modelName : 'Checkbox')+name.sbUcFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
@@ -298,7 +298,7 @@ S.HForm.prototype={
 	
 	submit:function(title,attributes,containerAttributes){
 		if(title===undefined) title=i18nc.Save;
-		attributes=S.extendsObj({'class':'submit'},attributes);
+		attributes=S.extObj({'class':'submit'},attributes);
 		var str=$('<input type="submit"/>').attr('value',title).attr(attributes);
 		if(this.tagContainer !== 'div' || containerAttributes!==undefined)
 			str=$('<'+this.tagContainer+' class="submit"/>').attr(containerAttributes||{}).html(str); 

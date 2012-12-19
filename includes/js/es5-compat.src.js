@@ -969,4 +969,4 @@ var toObject = function (o) {
     return Object(o);
 };
 
-});
+})();

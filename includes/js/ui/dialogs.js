@@ -1,7 +1,7 @@
 includeCore('ui/base');
 includeCore('libs/jquery-ui-1.9.2.position');
 S.WDialog=function(title,htmlOrText,buttons,options){
-	options=S.extendsObj({
+	options=S.extObj({
 		open:true,
 		closeOnEscape:true,
 		zIndex:9000 //fancybox : 8030
@@ -33,7 +33,7 @@ S.dialogs={
 		var dialog,buttons={};
 		buttons[i18nc['Close']]=function(){dialog.close();};
 		dialog=new S.WDialog(title,message,buttons,{
-			position:{my:'center',at:'center'},
+			position:{my:'center top+99',at:'center top'},
 			width:450,
 			modal:true
 		});
@@ -46,7 +46,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position:['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
@@ -73,7 +73,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position:['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
@@ -109,7 +109,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position: ['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,
@@ -132,7 +132,7 @@ S.dialogs={
 		div.dialog({
 		    autoOpen: true,
 		    title:title,
-		    position: ['center',150],
+		    position:{my:'center top+99',at:'center top'},
 		    width:450,
 		    modal:true,
 		    buttons:buttons,

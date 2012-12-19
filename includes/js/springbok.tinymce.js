@@ -107,7 +107,7 @@ S.tinymce={
 	},
 
 	forEmail:function(){
-		S.extendsObj(this.attrs,{
+		S.extObj(this.attrs,{
 			/* border=0 for img */
 			extended_valid_elements: "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]"
 		});
