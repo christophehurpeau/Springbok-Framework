@@ -1,11 +1,15 @@
 <?php
 class PhpFile extends EnhancerFile{
 	public static $CACHE_PATH=false;
-	protected $_devContent,$_prodContent;
+	protected $_devContent,$_prodContent,$_traits;
 	
 	public static function regexpFunction($name){
 		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.preg_quote($name).'\s*\((.*)\)\s*{'
 																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Us';
+	}
+	
+	public static function regexpArrayField($name){
+		return '/\s*public\s*(?:static)?\s*\$'.preg_quote($name).'\s*=\s*(array\(.*\);)/Us';
 	}
 	
 	protected function loadContent($srcContent){
@@ -48,7 +52,65 @@ class PhpFile extends EnhancerFile{
 	}
 
 	public function getMd5Content(){
-		return $this->md5=(md5($this->_srcContent).$this->enhanced->md5EnhanceConfig());
+		$srcContent=$this->_srcContent;
+		
+		if(!$this->isCore()){
+			$tokens=token_get_all($srcContent);
+			
+			/* http://stackoverflow.com/questions/9895502/easiest-way-to-detect-remove-unused-use-statements-from-php-codebase */
+			$useStatements = array();
+			$level = 0; $useNumber=0;
+			
+			foreach($tokens as $key => $token) {
+				if(is_string($token)){
+					if ($token === '{') $level++;
+					elseif ($token === '}') $level--;
+				}elseif($token[0] == T_USE && $level === 1){
+					$i = $key; $useStatements[$useNumber] = '';
+					$stopChar=';';
+					
+					do{
+						++$i;
+						$char = is_string($tokens[$i]) ? $tokens[$i] : $tokens[$i][1];
+						
+						if ($char == '(') {
+							unset($useStatements[$useNumber]);
+							goto endTokenUse;
+						}elseif($char==='{') $stopChar='}';
+						//elseif($char==='}') $stopChar=';';
+						
+						$useStatements[$useNumber] .= $char;
+					}while(/*$stopChar===true || */$char != $stopChar);
+					$useNumber++;
+				}
+				endTokenUse:
+			}
+			
+			$allUses = array();
+			
+			foreach($useStatements as $fullStmt) {
+				$fullStmt = rtrim($fullStmt, ';');
+				$fullStmt = explode(',', $fullStmt);
+				foreach($fullStmt as $singleStmt)
+					$this->_traits[] = array_map('trim',explode('{',$singleStmt,2));
+			}
+			
+			if(!empty($this->_traits)){
+				foreach($this->_traits as &$trait){
+					$trait['path']=$path=Springbok::findPath($trait[0]);
+					if(!file_exists($path)) throw new Exception('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists');
+					
+					$srcContent.=$trait['content']=file_get_contents($path);
+				}
+			}
+		}
+		
+		return $this->md5=(md5($srcContent).$this->enhanced->md5EnhanceConfig());
+	}
+
+	protected function loadTraits(){
+		foreach($this->_traits as $trait)
+			if(!class_exists($trait[0],false)) include $trait['path'];
 	}
 	
 	public function enhanceContent(){

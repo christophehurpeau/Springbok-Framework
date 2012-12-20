@@ -17,32 +17,36 @@ class Springbok{
 	const VERSION=/* EVAL time() /EVAL */0;
 	public static $scriptname='index',$prefix='',$suffix='';
 
-	public static function load($class_name,$path,$default_path){
+	public static function findPath($className){
+		return self::_findPath($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */);
+	}
+	
+	public static function _findPath($class_name,$path,$default_path){
 		if(ctype_upper($class_name[1])){
 			switch($class_name[0]){
-	    		case 'C': include $path.'components/'.$class_name.'.php'; break;
-	    		case 'H': include $path.'helpers/'.$class_name.'.php'; break;
-	    		case 'Q': include $path.'db/queries/'.$class_name.'.php'; break;
-	    		case 'U': include $path.'utils/'.$class_name.'.php'; break;
-	    		case 'D': include $path.'db/'.$class_name.'.php'; break;
-				case 'A': self::load(substr($class_name,1),APP,ALIBS); break;
+				case 'C': return $path.'components/'.$class_name.'.php';
+				case 'H': return $path.'helpers/'.$class_name.'.php';
+				case 'Q': return $path.'db/queries/'.$class_name.'.php';
+				case 'U': return $path.'utils/'.$class_name.'.php';
+				case 'D': return $path.'db/'.$class_name.'.php';
+				case 'A': return self::_findPath(substr($class_name,1),APP,ALIBS);
 				
-	    		case 'B': include $path.'behaviors/'.$class_name.'.php'; break;
-	    		case 'T': include $path.'transformers/'.$class_name.'.php'; break;
-				case 'R': include $path.'ressources/'.$class_name.'.php'; break;
+				case 'B': return $path.'behaviors/'.$class_name.'.php';
+				case 'T': return $path.'transformers/'.$class_name.'.php';
+				case 'R': return $path.'ressources/'.$class_name.'.php';
 				
-				case 'V': include APP.'viewsElements/'.substr($class_name,1).'/'.$class_name.'.php'; break;
-	    		case 'E': include APP.'models/'.$class_name[1].DS.substr($class_name,2).'.php'; break; //Entity...
-				case 'M': include APP.'modules/'.$class_name.'.php'; break;
-				//case 'S': include APP.'services/'.$class_name.'.php'; break;
-				case 'S': include CORE.'springbok/'.$class_name.'.php'; break;
+				case 'V': return APP.'viewsElements/'.substr($class_name,1).'/'.$class_name.'.php';
+				case 'E': return APP.'models/'.$class_name[1].DS.substr($class_name,2).'.php'; //Entity...
+				case 'M': return APP.'modules/'.$class_name.'.php';
+				//case 'S': return APP.'services/'.$class_name.'.php';
+				case 'S': return CORE.'springbok/'.$class_name.'.php';
 				
 				case 'P': $plugin=explode('_',$class_name,3);
-					self::load($plugin[1],CPlugins::path(substr($plugin[0],1)),NULL);
+					return self::_findPath($plugin[1],CPlugins::path(substr($plugin[0],1)),NULL);
 				
-				//case 'P': include CLIBS.str_replace('_',DS,$class_name).'.php';
-	    	}
-		}else include $default_path.$class_name.'.php';
+				//case 'P': return CLIBS.str_replace('_',DS,$class_name).'.php';
+			}
+		}else return $default_path.$class_name.'.php';
 	}
 
 	public static $inError;
@@ -165,4 +169,4 @@ function __autoload($className){ /* DEV */
 		debug('CSecure is loaded');
 		return true;
 	}*/
-/* /DEV */ Springbok::load($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */); }
+/* /DEV */ include Springbok::findPath($className); }

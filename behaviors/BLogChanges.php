@@ -1,6 +1,16 @@
 <?php
-class BLogChanges{
-	public static function onUpdateCompare($model,$data){
-		$mlc=new ModelLogChanges;
+trait BLogChanges{
+	public static $afterUpdateCompare=array('logUpdate');
+	public static $afterInsert=array('logInsert');
+	
+	
+	public function logUpdate($data,$primaryKeys){
+		ModelLogChanges::logUpdate($primaryKeys,$data);
+		return true;
+	}
+	
+	public function logInsert($data){
+		ModelLogChanges::logInsert($data);
+		return true;
 	}
 }
