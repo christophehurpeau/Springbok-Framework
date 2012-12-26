@@ -12,6 +12,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			li=$('<li/>');
 			if(S.isString(v)) li.html(v);
 			else{
+				/* DEV */if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayLsit]','text is empty',v,key);/* /DEV */
 				li[escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
 			}
 			result.append(li);
@@ -63,7 +64,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 					url:url,
 					data:{term:val},
 					dataType:options.dataType,
-					success:onSuccess,
+					success:function(data){onSuccess(data)},
 					error:options.error||options.reset||function(){
 						destContent.empty();
 					}
