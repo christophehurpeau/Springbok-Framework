@@ -1,7 +1,9 @@
 <?php
 class PhpFile extends EnhancerFile{
 	public static $CACHE_PATH=false;
-	protected $_devContent,$_prodContent,$_traits;
+	protected $_devContent,$_prodContent,
+		/** [0:'className', 1:'params', path:'path', content:'content'] */
+		$_traits;
 	
 	public static function regexpFunction($name){
 		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.preg_quote($name).'\s*\((.*)\)\s*{'
@@ -71,16 +73,18 @@ class PhpFile extends EnhancerFile{
 					
 					do{
 						++$i;
-						$char = is_string($tokens[$i]) ? $tokens[$i] : $tokens[$i][1];
-						
-						if ($char == '(') {
+						if(is_array($tokens[$i])){
+							list($tn,$string)=$tokens[$i];
+							if($tn == T_COMMENT || $tn == T_DOC_COMMENT) continue;
+						}else $string=$tokens[$i];
+						if ($string == '(') {
 							unset($useStatements[$useNumber]);
 							goto endTokenUse;
-						}elseif($char==='{') $stopChar='}';
+						}elseif($string==='{') $stopChar='}';
 						//elseif($char==='}') $stopChar=';';
 						
-						$useStatements[$useNumber] .= $char;
-					}while(/*$stopChar===true || */$char != $stopChar);
+						$useStatements[$useNumber] .= $string;
+					}while(/*$stopChar===true || */$string != $stopChar);
 					$useNumber++;
 				}
 				endTokenUse:
@@ -98,7 +102,7 @@ class PhpFile extends EnhancerFile{
 			if(!empty($this->_traits)){
 				foreach($this->_traits as &$trait){
 					$trait['path']=$path=Springbok::findPath($trait[0]);
-					if(!file_exists($path)) throw new Exception('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists');
+					if(!file_exists($path)) throw new Exception('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists ('.$path.')');
 					
 					$srcContent.=$trait['content']=file_get_contents($path);
 				}
@@ -109,8 +113,9 @@ class PhpFile extends EnhancerFile{
 	}
 
 	protected function loadTraits(){
+		throw new Exception;
 		foreach($this->_traits as $trait)
-			if(!class_exists($trait[0],false)) include $trait['path'];
+			if(!trait_exists($trait[0],false)) include $trait['path'];
 	}
 	
 	public function enhanceContent(){

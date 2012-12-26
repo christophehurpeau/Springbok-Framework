@@ -4,16 +4,6 @@
  * http://www.phpro.org/tutorials/Managing-Hierarchical-Data-with-PHP-and-MySQL.html#2
  */
 trait BTree{
-	protected function setLevelDepth(){
-		if(empty($this->parent_id)){
-			//$edge=self::_getMax();
-			$this->level_depth=1;
-		}else{
-			self::QValue()->field('level_depth')->byId($this->parent_id)->execute()+1;
-		}
-		return true;
-	}
-	
 	public function insert(){
 		throw new Exception('Use insertChild($parentId) or insertAfter($nodeId)');
 	}
@@ -25,23 +15,72 @@ trait BTree{
 	
 	public function insertAfter($nodeId){
 		self::beginTransaction();
-		$leftNode=self::QRow()->fields('right,level_depth,parent_id')->byId($nodeId);
-		$this->right=$leftNode['right'];
-		$this->parent_id=$leftNode['parent_id'];
-		$this->level_depth=$leftNode['level_depth'];
-		parent::insert();
-		self::commit()
-		//TODO : rebuild
+		try{
+			$leftNode=self::QRow()->fields('right,level_depth,parent_id')->byId($nodeId)->execute();
+			self::QUpdateOneField('right','(right +2)')->where(array('right >'=>$leftNode['right']))->execute();
+			self::QUpdateOneField('left','(left +2)')->where(array('left >'=>$leftNode['right']))->execute();
+			$this->left=$leftNode['right']+1;
+			$this->right=$leftNode['right']+2;
+			$this->parent_id=$leftNode['parent_id'];
+			$this->level_depth=$leftNode['level_depth'];
+			parent::insert();
+			self::commit();
+		}catch(Exception $e){
+			self::rollBack();
+			throw $e;
+		}
 	}
 	
 	
 	public function insertChild($parentId){
-		$parentNode=self::QRow()->fields('right,level_depth')->byId($parentId);
-		$this->level_depth=$parentNode['level_depth']+1;
-		//TODO left, right, insert, rebuild
+		self::beginTransaction();
+		try{
+			$parentNode=self::QRow()->fields('left,level_depth')->byId($parentId)->execute();
+			self::QUpdateOneField('right','(right +2)')->where(array('right >'=>$leftNode['right']))->execute();
+			self::QUpdateOneField('left','(left +2)')->where(array('left >'=>$leftNode['right']))->execute();
+			$this->left=$parentNode['left']+1;
+			$this->right=$parentNode['left']+2;
+			$this->parent_id=$parentId;
+			$this->level_depth=$parentNode['level_depth']+1;
+			parent::insert();
+			self::commit();
+		}catch(Exception $e){
+			self::rollBack();
+			throw $e;
+		}
+	}
+	
+	public function delete(){
+		if($this->beforeDelete()){
+			try{
+				$width=$this->right-$this->left+1;
+				parent::QDeleteAll()->where(array('left BETWEEN'=>array($this->left,$this->right)))->execute();
+				self::QUpdateOneField('right','(right -'.$width.')')->where(array('right >'=>$this->right))->execute();
+				self::QUpdateOneField('left','(left -'.$width.')')->where(array('left >'=>$this->right))->execute();
+				self::commit();
+			}catch(Exception $e){
+				self::rollBack();
+				throw $e;
+			}
+			return true;
+		}
+	}
+	
+	/* Override Queries */
+	
+	public static function QDeleteAll(){throw new Exception('Use $node->delete() or ::deleteNode($nodeId)');}
+	public static function QDeleteOne(){throw new Exception('Use $node->delete() or ::deleteNode($nodeId)');}
+	
+	public static function deleteNode($nodeId){
+		$node=self::ById($nodeId)->fields('left,right')->execute();
+		$node->delete();
 	}
 	
 	
+	
+	public function hasChildren(){
+		return $this->right !== $this->left+1;
+	}
 	
 	public function isDescendantOf($id){
 		return false;//TODO
@@ -50,6 +89,8 @@ trait BTree{
 	public function isAncestorOf($id){
 		return false;//TODO
 	}
+	
+	
 	
 	
 	/**
@@ -162,45 +203,20 @@ trait BTree{
 		return $tree;
 	}
 	
-	public static function _getMax($created=false){
-		$query=self::QValue()->field('MAX(`right`)')->execute();
-		if($created){
-			$where=static::$where;
-			$where['id !=']=$model->id;
-			$query->where($where);
-		}
-		return $query->execute();
-	}
-	public static function _getMin(){
-		return self::QValue()->field('MIN(`left`)')->where($where)->execute();
-	}
-	
-	public static function sync($shift,$dir='+',$cond=array(),$created=false,$field='both'){
-		if($field==='both'){
-			self::sync($shift,$dir,$cond,$created,'left');
-			$field='right';
-		}
-		
-		$where=NULL;
-		if(is_string($cond)){
-			$where=array('`'.$field.'` '.$cond);
-			if($created) $where['id !=']=$model->id;
-		}elseif($created){
-			$where=array('id !='=>$model->id);
-		}
-		return self::QUpdateOneField($field,array('`'.$field.'` '.$dir.$shift))->where($where)->execute();
-	}
-	
-	
 	public static function rebuild($parent=1,$left=1){
 		$right = $left+1;
 		$children=self::QValues()->field('id')->byParent_id($parent);
 		foreach($children as $childId) $right=self::rebuild($modelName,$childId,$right);
-		$model=new $modelName;
-		$model->id=$parent;
-		$model->left=$left;
-		$model->right=$right;
-		$model->update();
+		if($parent!==0){
+			$model=new $modelName;
+			$model->id=$parent;
+			$model->left=$left;
+			$model->right=$right;
+			$model->update();
+		}
 		return $right+1;
+	}
+	public static function rebuildNoRootParent(){
+		self::rebuild(0,0);
 	}
 }
