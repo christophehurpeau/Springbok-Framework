@@ -97,6 +97,7 @@ trait BTree{
 	 * @param int|bool $number how many places to move the node or true to move to last position
 	 */
 	public function moveDown($number=1){
+		throw new Exception;
 		if(!$number) return false;
 		if($this->parent_id){
 			$parent=$this->parent('id,left,right');
@@ -187,7 +188,7 @@ trait BTree{
 		return array();
 	}
 	
-	public static function generateSimpleTreeList($query=NULL,$parentId='parent_id'){
+	public static function generateSimpleTreeList($query=NULL){
 		if($query===NULL) $query=static::QAll();
 		
 		$result=$query->tabResKey(self::_getPkName())->execute();
@@ -195,12 +196,17 @@ trait BTree{
 		$tree=array();
 		
 		foreach($result as &$res){
-			if($res->$parentId){
-				$result[$res->$parentId]->children[]=$res;
+			if($res->parent_id){
+				$result[$res->parent_id]->children[]=$res;
 			}else $tree[]=$res;
 		}
 		
 		return $tree;
+	}
+	
+	
+	public static function TreeView(){
+		return new HTree(self::generateSimpleTreeList());
 	}
 	
 	public static function rebuild($parent=1,$left=1){

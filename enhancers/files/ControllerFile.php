@@ -7,6 +7,8 @@ class ControllerFile extends PhpFile{
 	private $_className,$_annotations=array(),$_classAnnotations;
 	private $_methodDefFiles=array();//,$_methodAnnotations=array();
 	
+	protected function findTraitPath($traitName){ return CORE.'controllers/'.$traitName.'.php'; }
+	
 	protected function loadContent($srcContent){
 		$controllersSrc=array(); $enhanced=$this->enhanced;
 		if($this->fileName()==='SiteController.php'){
@@ -51,7 +53,16 @@ class ControllerFile extends PhpFile{
 		if(empty($matches[2])) return parent::enhancePhpContent($phpContent);
 		$this->_className=$matches[2];
 		self::_delAclPermissions($this->_className);
-        $this->_classAnnotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1]);
+		$this->_classAnnotations=empty($matches[1])?array():PhpFile::parseAnnotations($matches[1]);
+		
+		if(!empty($this->_traits)){
+			$phpContent=trim(substr(trim($phpContent),5));
+			
+			foreach($this->_traits as $trait)
+				$phpContent=trim(substr(trim($trait['content']),5))."\n".$phpContent;
+			
+			$phpContent='<?php '.$phpContent;
+		}
 		
 		//$content=preg_replace_callback('/(?:\/\*\*(.*)\*\/)?[\s]+public[\s]+function[\s]+([a-zA-Z0-9_ \$]+)[\s]*\((.*)\)[\s]*{([^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{[^{]*(?:{.*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*})*[^{]*)}/Ums',array($this,'enhanceMethodParams'),$content);
 		$phpContent=preg_replace_callback(self::REGEXP_ACTION,array($this,'enhanceMethodParams'),$phpContent);
@@ -76,6 +87,7 @@ class ControllerFile extends PhpFile{
 		//$phpContent=preg_replace('/(extends [A-Za-z_]*Controller{)/','$1 protected static $_methodAnnotations='.UPhp::exportCode($this->_methodAnnotations).';', $phpContent);
 		
 		unset($this->_classAnnotations['Check'],$this->_classAnnotations['Post'],$this->_classAnnotations['Ajax']);
+		
 		
 		return parent::enhancePhpContent($phpContent,$this->_classAnnotations);
 	}

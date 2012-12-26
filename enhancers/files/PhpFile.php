@@ -101,7 +101,7 @@ class PhpFile extends EnhancerFile{
 			
 			if(!empty($this->_traits)){
 				foreach($this->_traits as &$trait){
-					$trait['path']=$path=Springbok::findPath($trait[0]);
+					$trait['path']=$path=$this->findTraitPath($trait[0]);
 					if(!file_exists($path)) throw new Exception('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists ('.$path.')');
 					
 					$srcContent.=$trait['content']=file_get_contents($path);
@@ -111,6 +111,8 @@ class PhpFile extends EnhancerFile{
 		
 		return $this->md5=(md5($srcContent).$this->enhanced->md5EnhanceConfig());
 	}
+
+	protected function findTraitPath($traitName){ return Springbok::findPath($traitName); }
 
 	protected function loadTraits(){
 		throw new Exception;
