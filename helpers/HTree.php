@@ -14,13 +14,20 @@ class HTree{
 	}
 	
 	private function _display($tree){
-		$res='<ul>';
+		$id='tree'.uniqid();
+		$res='<ul id="'.$id.'">';
 		foreach($tree as $elt){
 			$res.='<li>';
-			$res.=$this->actionView === null ? h($elt->name()) :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>';
+			$res.=$this->actionView === null ? h($elt->name()) :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>'
+				.'<span class="actions">'
+					.'<a href="#" class="action icon add"></a>'
+					.'<a href="#" class="action icon edit"></a>'
+					.'<a href="#" class="action icon delete"></a>'
+				.'</span>';
 			if(!empty($elt->children)) $res.=$this->_display($elt->children);
 			$res.='</li>';
 		}
+		HHtml::jsReady('S.tree.prepare("'.$id.'","/'.lcfirst(CRoute::getController()).'")');
 		return $res.'<ul>';
 	}
 	
