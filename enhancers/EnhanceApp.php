@@ -164,7 +164,7 @@ define('APP', __DIR__.'/dev/');";
 		$dirs=$dir->listDirs(false);
 		$devFolder=new Folder($devDir); $prodFolder=new Folder($prodDir);
 		
-		$this->enhanced->newDef['enhancedFolders'][$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
+		$this->enhanced->newDef['enhancedFolders'][$currentDirPath=$dir->getPath()]=array('dev'=>$devDir,'prod'=>$prodDir);
 		
 		$defaultClass=$class;
 		foreach($dirs as $d){
@@ -172,7 +172,11 @@ define('APP', __DIR__.'/dev/');";
 			//$t=microtime(true);
 			if(is_link($dPath)) continue;
 			$dirname=$d->getName();
-			if($dirname[0]==='.' || $dPath===$srcDir.'web/tinymce/' || $dPath===$srcDir.'db/' || $dPath===$srcDir.'sql/') continue;
+			if($dirname[0]==='.' || $dPath===$srcDir.'web/tinymce/') continue;
+			
+			if($currentDirPath===$srcDir){
+				if($dPath===$srcDir.'db/' || $dPath===$srcDir.'sql/') continue;
+			}
 			
 			
 			if($dPath===$srcDir.'web/files/' || $dPath===$srcDir.'web/img/icons/'){
@@ -188,18 +192,21 @@ define('APP', __DIR__.'/dev/');";
 			$newOverride=$override===true ? true : array_map(function($override) use($dirname){return $override.$dirname.DS;},$override);
 			$allowUnderscoredFiles=false;
 			
-			if($defaultClass===false){
-				$class='PhpFile';
-				
-				if($dPath===$srcDir.'config/'){ $class='ConfigFile'; $allowUnderscoredFiles=true; }
-				elseif(startsWith($dPath,$srcDir.'controllers')){ $class='ControllerFile'; }
-				elseif($dPath===$srcDir.'jobs/') $class='JobFile';
-				elseif($dPath===$srcDir.'daemons/') $class='DaemonFile';
-				elseif($dPath===$srcDir.'models/'){ $class='ModelFile'; }
-				elseif($dPath===$srcDir.'modules/') $class='ModuleFile';
-				elseif(startsWith($dPath,$srcDir.'views')) $class='ViewFile';
-				elseif($dPath===$srcDir.'jsapp/') $class='UselessFile'; // ne concerne que les .php
-				
+			if($currentDirPath===$srcDir){
+				if($defaultClass===false){
+					$class='PhpFile';
+					
+					if($dPath===$srcDir.'config/'){ $class='ConfigFile'; $allowUnderscoredFiles=true; }
+					elseif(startsWith($dPath,$srcDir.'controllers')){ $class='ControllerFile'; }
+					elseif($dPath===$srcDir.'jobs/') $class='JobFile';
+					elseif($dPath===$srcDir.'daemons/') $class='DaemonFile';
+					elseif($dPath===$srcDir.'models/'){ $class='ModelFile'; }
+					elseif($dPath===$srcDir.'modules/') $class='ModuleFile';
+					elseif(startsWith($dPath,$srcDir.'views')) $class='ViewFile';
+					elseif($dPath===$srcDir.'jsapp/') $class='UselessFile'; // ne concerne que les .php
+					elseif($dPath===$srcDir.'dbEvolutions/') $class='MergeTxtFile';
+					
+				}else $class=$defaultClass;
 			}else $class=$defaultClass;
 			
 			$folderEnhancer=new DefaultFolderEnhancer($this->enhanced,$d, $newDevDir,$newProdDir);
