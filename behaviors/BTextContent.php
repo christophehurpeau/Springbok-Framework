@@ -6,4 +6,8 @@ trait BTextContent{
 		if(!empty($this->text)) VSeo::generate(static::$__className,$this->id);
 		return true;
 	}
+	
+	public static function findOneForSeo($id){
+		return self::QOne()->where(array('id'=>$id));
+	}
 }
