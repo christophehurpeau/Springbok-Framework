@@ -113,7 +113,7 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 			action='create';
 			data={val:input.val()};
 			if(S.isFunc(options.allowNew)){
-				options.allowNew.call(this,val,function(d){onAdd(select,action,data,d,val)},input,url,options);
+				options.allowNew.call(this,data.val,function(d){onAdd(select,action,data,d,val);input.val('');},input,url,options);
 				return false;
 			}
 		}else action='add/'+val;

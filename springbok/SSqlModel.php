@@ -308,8 +308,8 @@ class SSqlModel extends SModel{
 	
 	/* */
 	
-	public function name(){
-		return $this->name;
+	public function id(){
+		return $this->_getPkValue();
 	}
 	
 }

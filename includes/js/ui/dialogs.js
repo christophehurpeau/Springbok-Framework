@@ -83,38 +83,46 @@ S.dialogs={
 	},
 	
 	prompt:function(title,message,okButtonName,defaultVal,callback){
-		var div=$('<div>'),buttons={};
+		var div=$('<div>'),buttons={},findInput;
 		if($.isFunction(defaultVal)){
 			callback=defaultVal;
 			defaultVal='';
 		}
 		S.isString(message) ? div.text(message) : div.html(message);
-		div.append($('<input type="text" class="wp100">').val(defaultVal).keydown(function(e){
-			if(e.keyCode == '13'){
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				div.dialog('close');
-				callback($(this).val());
-				return false;
-			}
-		}));
+		if(S.isObj(defaultVal)){
+			findInput='select';
+			div.append($('<select class="wp100">').html(
+				S.oImplode(defaultVal,function(k,v){ return '<option value="'+k+'">'+S.escape(v)+'</option>'; })
+			));
+		}else{
+			findInput='input';
+			div.append($('<input type="text" class="wp100">').val(defaultVal).keydown(function(e){
+				if(e.keyCode == '13'){
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					div.dialog('close');
+					callback($(this).val());
+					return false;
+				}
+			}));
+		}
 		
 		buttons[i18nc.Cancel]=function(){$(this).dialog('close');};
 		buttons[okButtonName]=function(){
 			div.hide();
-			callback(div.find('input').val());
+			callback(div.find(findInput).val());
 			div.dialog('close');
 		};
 		
 		div.dialog({
-		    autoOpen: true,
-		    title:title,
-		    position:{my:'center top+99',at:'center top'},
-		    width:450,
-		    modal:true,
-		    buttons:buttons,
-		    close:function(){ div.remove(); },
-		    zIndex:9000 //fancybox : 8030
+			autoOpen: true,
+			title:title,
+			position:{my:'center top+99',at:'center top'},
+			width:450,
+			modal:true,
+			buttons:buttons,
+			close:function(){ div.remove(); },
+			zIndex:9000 //fancybox : 8030
 		});
 	},
 	

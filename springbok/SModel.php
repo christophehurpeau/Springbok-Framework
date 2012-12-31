@@ -234,6 +234,14 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 	protected function afterUpdate(){}
 	protected function afterDelete(){}
 	
+	/* */
+	
+	public function name(){
+		return $this->data['name'];
+	}
+	public function id(){
+		return $this->data['id'];
+	}
 	
 	
 	/* Helpers */

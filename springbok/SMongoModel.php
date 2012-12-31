@@ -186,4 +186,8 @@ class SMongoModel extends SModel{
 	public static function Table(){
 		
 	}
+	
+	public function id(){
+		return $this->_get('_id');
+	}
 }

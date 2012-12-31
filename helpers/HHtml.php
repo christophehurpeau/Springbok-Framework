@@ -280,7 +280,7 @@ s.parentNode.insertBefore(g,s);
 		if(!empty($list)){
 			if(is_object(current($list))){
 				foreach($list as $model)
-					$res.=HHtml::_option($model->_getPkValue(),$model->name(),$selected,$selectedText);
+					$res.=HHtml::_option($model->id(),$model->name(),$selected,$selectedText);
 			}else{
 				foreach($list as $key=>$value)
 					$res.=HHtml::_option($key,$value,$selected,$selectedText);
@@ -398,7 +398,7 @@ s.parentNode.insertBefore(g,s);
 		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
 		if(is_object(current($items))){
 			$list=$items; $items=array();
-			foreach($list as $model) $items[$model->_getPkValue()]=$model->{$options['modelFunctionName']}();
+			foreach($list as $model) $items[$model->id()]=$model->{$options['modelFunctionName']}();
 		}	
 		$res.=HHtml::openTag('ul',$options['ulAttributes']);
 		foreach($items as $id=>&$name)

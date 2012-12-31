@@ -319,7 +319,7 @@ class HForm{
 				if(!empty($list)){
 					if(is_object(current($list))){
 						foreach($list as $model)
-							$contentSelect.=self::__radio($optionName,$model->_getPkValue(),$selected,$model->name());
+							$contentSelect.=self::__radio($optionName,$model->id(),$selected,$model->name());
 					}else{
 						foreach($list as $key=>$value)
 							$contentSelect.=self::__radio($optionName,$key,$selected,$value);
@@ -338,7 +338,7 @@ class HForm{
 				if(!empty($list)){
 					if(is_object(current($list))){
 						foreach($list as $model)
-							$contentSelect.=HHtml::_option($model->_getPkValue(),$model->name(),$selected);
+							$contentSelect.=HHtml::_option($model->id(),$model->name(),$selected);
 					}else{
 						foreach($list as $key=>$value)
 							$contentSelect.=HHtml::_option($key,$value,$selected);

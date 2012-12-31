@@ -82,7 +82,7 @@ class THtml extends STransformer{
 	public function displayResults($results,$fields){
 		$iRow=0;
 		foreach($results as $key=>&$model){
-			if(isset($this->component->rowActions) || $this->component->actionClick) $pkValue=$model->_getPkValue();
+			if(isset($this->component->rowActions) || $this->component->actionClick) $id=$model->id();
 			echo '<tr';
 			$class=$model->getTableClass();
 			if($iRow++%2) echo ' class="alternate'.($class===null?'':' '.$class).'"';
@@ -90,11 +90,11 @@ class THtml extends STransformer{
 			if($this->component->actionClick !==null){
 				if(is_array($this->component->actionClick)){
 					$defaultActionUrl=$this->component->actionClick;
-					$defaultActionUrl[]=$pkValue;
-				}elseif(is_string($this->component->actionClick)) $defaultActionUrl=$this->component->actionClick.'/'.$pkValue;
+					$defaultActionUrl[]=$id;
+				}elseif(is_string($this->component->actionClick)) $defaultActionUrl=$this->component->actionClick.'/'.$id;
 				else{
 					$callback=&$this->component->actionClick;
-					$defaultActionUrl=$callback($pkValue,$model);
+					$defaultActionUrl=$callback($id,$model);
 				}
 				//echo ' onclick="S.redirect(\''.HHtml::urlEscape($defaultActionUrl).'\')"'; //event.target.nodeName
 				echo ' rel="'.HHtml::urlEscape($defaultActionUrl).'"'; //event.target.nodeName
@@ -108,7 +108,7 @@ class THtml extends STransformer{
 			if($this->component->rowActions !==null){
 				echo '<td>';
 				foreach($this->component->rowActions as &$action)
-					echo HHtml::link('',$action[1].'/'.$pkValue,$action[0]);
+					echo HHtml::link('',$action[1].'/'.$id,$action[0]);
 				echo '</td>';
 			}
 			echo '</tr>';

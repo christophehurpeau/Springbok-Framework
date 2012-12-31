@@ -49,10 +49,12 @@ class CCookie{
 		$this->name=$name; $this->config=$config;
 		if(isset($_COOKIE[$name])){
 			$decrytpeddata=USecure::decryptAES($_COOKIE[$name],$config['key']);
+			//if($name!=='springbok') debugVar([$name,substr($decrytpeddata,0,40),sha1(substr($decrytpeddata,0,40)),substr($decrytpeddata,40),$_COOKIE[$name]]);
 			if(empty($decrytpeddata)) $this->data=array();
 			else{
 				$jsondata=substr($decrytpeddata,40);
 				if(substr($decrytpeddata,0,40)!==sha1($jsondata)){
+					/* DEV */ throw new Exception('CCookie : decrypted data does not match sha1'); /* /DEV */
 					$this->data=array();
 				}else{
 					$this->data=json_decode($jsondata,true);

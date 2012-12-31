@@ -117,6 +117,7 @@ window.S={
 	isString:function(varName){ return typeof(varName)==='string'; },
 	isArray:Array.isArray || $.isArray,
 	isObject:function(varName){ return typeof(varName)==='object' },
+	isObj:function(varName){ return typeof(varName)==='object' },
 	isFunc:function(varName){ return typeof(varName)==='function' },
 	
 	extObj:function(target,object){
@@ -175,11 +176,21 @@ window.S={
 		return objectOrArray;
 	},
 	oForEach:function(o,callback){
-		var keys=Object.keys(o),length=keys.length;
-		for(var i=0;i<length;i++){
+		for(var keys=Object.keys(o),length=keys.length,i=0;i<length;i++){
 			var k=keys[i];
 			callback(k,o[k]);
 		}
+	},
+	oImplode:function(o,glue,callback){
+		if(S.isFunc(glue)){ callback=glue; glue=''; }
+		if(!callback) callback=function(k,v){ return v };
+		var res='',keys=Object.keys(o),length=keys.length,i=0;
+		for(;i<length;i++){
+			var k=keys[i];
+			if(i!==0) res+=glue;
+			res+=callback(k,o[k]);
+		}
+		return res;
 	},
 	
 	/* ARRAY */
@@ -232,6 +243,17 @@ window.S={
 					.trim().toLowerCase();
 	},
 	
+	/* HTML */
+	escape:function(html){
+		return String(html)
+			.replace(/&(?!\w+;)/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;');
+	},
+	escapeUrl:function(html){
+		return html.replace('&','&amp;');
+	},
 	
 	/* OTHERS */
 	
