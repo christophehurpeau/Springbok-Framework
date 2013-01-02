@@ -211,7 +211,12 @@ class DBSchemaMySQL extends DBSchema{
 				.'FOREIGN KEY ('.$this->db->formatColumn($colName).') REFERENCES '.$refTableName.' ('.$this->db->formatColumn($refColName).')';
 		if($onDelete) $sql.=' ON DELETE '.$onDelete;
 		if($onUpdate) $sql.=' ON UPDATE '.$onUpdate;
-		$this->doUpdate($sql,true);
+		try{
+			$this->doUpdate($sql,true);
+		}catch(DBException $e){
+			$this->removeForeignKey(array('name'=>$constraintname));
+			$this->doUpdate($sql,false);
+		}
 	}
 	public function removeForeignKey($fk){
 		$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$fk['name'].'`',true);

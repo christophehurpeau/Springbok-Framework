@@ -31,7 +31,10 @@ class DBSchemaProcessing{
 		
 			$dbVersions=explode("\n",trim(UFile::getContents(APP.'dbEvolutions/Versions.php')));
 			if(!empty($dbVersions)){
+				$dbVersionToFilename=$dbVersions;
 				foreach($dbVersions as &$version) $version=strpos($version,'-')!==false ? strtotime($version) : (int)$version;
+				$dbVersionToFilename=array_combine($dbVersions,$dbVersionToFilename);
+				
 				$lastVersion=(int)array_pop($dbVersions);
 				
 				if($currentDbVersion !== $lastVersion && $currentDbVersion < $lastVersion){
@@ -48,7 +51,7 @@ class DBSchemaProcessing{
 							render(CORE.'db/evolutions-view.php',$vars);
 						}else{
 							foreach($versionsToUpdate as $version){
-								$sql=UFile::getContents(APP.'dbEvolutions/'.$version.'.sql');
+								$sql=file_get_contents(APP.'dbEvolutions/'.$dbVersionToFilename[$version].'.sql');
 								
 								foreach(explode("\n",$sql) as $line){
 									if(empty($line)) continue;
