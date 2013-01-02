@@ -32,7 +32,7 @@ class HElementFormInputSelect extends HElementFormContainable{
 		if(!empty($this->list)){
 			if(is_object(current($this->list))){
 				foreach($this->list as $model)
-					$contentSelect.=self::__radio($optionName,$model->_getPkValue(),$this->selected,$model->name());
+					$contentSelect.=self::__radio($optionName,$model->id(),$this->selected,$model->name());
 			}else{
 				foreach($this->list as $key=>$value)
 					$contentSelect.=self::__radio($optionName,$key,$this->selected,$value);

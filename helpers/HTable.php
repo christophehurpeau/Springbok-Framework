@@ -120,17 +120,17 @@ class HTable{
 	protected static function displayResults($component,$results){
 		$iRow=0;
 		foreach($results as $key=>$model){
-			if(isset($component->rowActions) || $component->defaultAction) $pkValue=$model->_getPkValue();
+			if(isset($component->rowActions) || $component->defaultAction) $id=$model->id();
 			$class=$iRow++%2 ? 'alternate' : '';
 			echo '<tr';
 			if($component->defaultAction !==null){
 				if(is_array($component->defaultAction)){
 					$defaultActionUrl=$component->defaultAction;
-					$defaultActionUrl[]=$pkValue;
-				}elseif(is_string($component->defaultAction)) $defaultActionUrl=$component->defaultAction.'/'.$pkValue;
+					$defaultActionUrl[]=$id;
+				}elseif(is_string($component->defaultAction)) $defaultActionUrl=$component->defaultAction.'/'.$id;
 				else{
 					$callback=&$component->defaultAction;
-					$defaultActionUrl=$callback($pkValue,$model);
+					$defaultActionUrl=$callback($id,$model);
 				}
 				$class.=' pointer';
 				echo ' onclick="S.redirect(\''.HHtml::urlEscape($defaultActionUrl).'\')"'; //event.target.nodeName
@@ -144,7 +144,7 @@ class HTable{
 			if($component->rowActions !==null){
 				echo '<td>';
 				foreach($component->rowActions as &$action)
-					echo HHtml::link('',$action['url'].'/'.$pkValue,array('class'=>'action '.$action['icon']));
+					echo HHtml::link('',$action['url'].'/'.$id,array('class'=>'action '.$action['icon']));
 				echo '</td>';
 			}
 			echo '</tr>';

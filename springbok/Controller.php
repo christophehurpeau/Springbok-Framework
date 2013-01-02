@@ -47,8 +47,8 @@ class Controller{
 			$num++;
 		}
 		if(isset($methodAnnotations['ValidParams']) && CValidation::hasErrors()){
-			if($methodAnnotations['ValidParams']===false) /* PROD */notFound();/* /PROD */
-			/* HIDE */elseif(true)/* /HIDE *//* DEV */throw new Exception('Not valid params : '.print_r(CValidation::errors(),true)."\n\n".print_r($params,true));/* /DEV */
+			/* DEV */throw new Exception('Not valid params : '.print_r(CValidation::errors(),true)."\n\n".print_r($params,true));/* /DEV */
+			if($methodAnnotations['ValidParams']===false) notFound();
 			else{
 				self::header404();
 				self::redirect($methodAnnotations['ValidParams'][0]);

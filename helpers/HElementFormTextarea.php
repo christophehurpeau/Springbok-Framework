@@ -26,6 +26,7 @@ class HElementFormTextarea extends HElementFormContainable{
 		$this->value=$this->form->_getValue($name);
 	}
 	
+	public function noName(){ unset($this->attributes['name']); return $this; }
 	public function value($value){ $this->value=$value; return $this; }
 	public function value_(&$value){ $this->value=$value; return $this; }
 	public function readOnly(){ $this->attributes['readonly']=true; return $this; }
@@ -33,6 +34,7 @@ class HElementFormTextarea extends HElementFormContainable{
 	public function required(){ $this->attributes['required']=true; return $this; }
 	public function rows($rows){ $this->attributes['rows']=$rows; return $this; }
 	public function cols($cols){ $this->attributes['cols']=$cols; return $this; }
+	public function wp100(){ $this->attributes['class']='wp100'; return $this; }
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'textarea'); }
 	

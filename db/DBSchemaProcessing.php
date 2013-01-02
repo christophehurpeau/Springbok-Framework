@@ -6,7 +6,7 @@ class DBSchemaProcessing{
 	
 	public function __construct(Folder $modelDir,Folder $triggersDir,$force=false,$generate=true){
 		if(!$modelDir->exists()) return false;
-		$this->time=time();
+		$this->time=date('Y-m-d H:i:s');
 		$issetCurrentFileEnhanced=(class_exists('App',false) && isset(App::$currentFileEnhanced));
 		self::$isProcessing=true;
 		
@@ -21,19 +21,21 @@ class DBSchemaProcessing{
 		$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
 		/* DEV */
 			if(!is_writable(APP.'dbEvolutions')) throw new Exception('dbEvolutions is not writable !');
-			if(!is_writable(APP.'dbEvolutions/Versions')) throw new Exception('dbEvolutions/Versions is not writable !');
+			if(file_exists(APP.'dbEvolutions/Versions.php') && !is_writable(APP.'dbEvolutions/Versions.php'))
+					throw new Exception('dbEvolutions/Versions.php is not writable !');
 		/* /DEV */
 		
 		if(Config::$generate['default']){
-			$currentDbVersion=(int)trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
+			$currentDbVersion=trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
+			$currentDbVersion=strpos($currentDbVersion,'-')!==false ? strtotime($currentDbVersion) : (int)$currentDbVersion;
 		
-			$dbVersions=explode("\n",trim(UFile::getContents(APP.'dbEvolutions/Versions')));
+			$dbVersions=explode("\n",trim(UFile::getContents(APP.'dbEvolutions/Versions.php')));
 			if(!empty($dbVersions)){
+				foreach($dbVersions as &$version) $version=strpos($version,'-')!==false ? strtotime($version) : (int)$version;
 				$lastVersion=(int)array_pop($dbVersions);
 				
 				if($currentDbVersion !== $lastVersion && $currentDbVersion < $lastVersion){
 					$this->displayAndLog('currentDbVersion ('.$currentDbVersion.') != lastVersion ('.$lastVersion.')');
-					
 					
 					$versionsToUpdate=array($lastVersion);
 					while(($version=array_pop($dbVersions)) && $version > $currentDbVersion)
@@ -126,7 +128,7 @@ class DBSchemaProcessing{
 			if(!$this->shouldApply()) render(CORE.'db/confirm-view.php',$vars);
 			else{
 				if($this->writeDbEvolution){
-					file_put_contents($baseDir.'src/dbEvolutions/Versions',"\n".$this->time,FILE_APPEND);
+					file_put_contents($baseDir.'src/dbEvolutions/Versions.php',$this->time."\n",FILE_APPEND);
 					file_put_contents($baseDir.'currentDbVersion',$this->time);
 				}
 				render(CORE.'db/applied-view.php',$vars);

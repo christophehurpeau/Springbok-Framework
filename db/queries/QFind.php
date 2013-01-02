@@ -102,6 +102,12 @@ abstract class QFind extends QSelect{
 		$this->_addWithToQuery($with,$options);
 		return $this;
 	}
+	public function withField($with,$field,$options=array()){
+		$options['fields']=array($field);
+		$options['fieldsInModel']=true;
+		$this->_addWithToQuery($with,$options);
+		return $this;
+	}
 	public function withParent($options=array()){
 		return $this->with('Parent',$options);
 	}
