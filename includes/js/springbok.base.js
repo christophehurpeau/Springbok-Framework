@@ -45,6 +45,14 @@ window.S={
 		return icon;
 	},
 	
+	loadCss:function(url){
+		var link=document.createElement("link");
+		link.rel='stylesheet';
+		link.type='text/css';
+		link.href=url;
+		document.head.appendChild(link);
+	},
+	
 	loadScript:function(url,lang){
 		var script = document.createElement("script");
 		script.type = "text/javascript";
