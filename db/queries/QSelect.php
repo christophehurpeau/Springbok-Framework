@@ -46,6 +46,7 @@ abstract class QSelect extends AQuery{
 	public function where($where){$this->where=$where;return $this;}
 	public function addCondition($key,$value){$this->where[$key]=$value;return $this;}
 	public function addCond($key,$value){$this->where[$key]=$value;return $this;}
+	public function addMCond($value){$this->where[]=$value;return $this;}
 	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
 	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
 	public function addOrder($value){ $this->orderBy[]=$value; return $this; }
