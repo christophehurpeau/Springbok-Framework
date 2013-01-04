@@ -33,17 +33,21 @@ class App{
 		/* DEV */
 		if(!file_exists(dirname(APP).'/dev/config/_'.ENV.'.php')) exit('The config for your environnement: "'.ENV.'" does NOT exist !');
 		
-		include CORE.'enhancers/EnhanceApp.php';
-		$shouldEnhance=!isset($_GET['springbokNoEnhance']) && !CHttpRequest::isAjax() && !CHttpRequest::isFlash() && empty($_SERVER['HTTP_ORIGIN']) && !file_exists(dirname(APP).'/block_deploy');
-		if($shouldEnhance){
+		$shouldEnhance=!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'ApacheBench')===false && !isset($_GET['springbokNoEnhance'])
+				&& !CHttpRequest::isAjax() && !CHttpRequest::isFlash()
+				&& empty($_SERVER['HTTP_ORIGIN']) && !file_exists(dirname(APP).'/block_deploy');
+		if(!$shouldEnhance){
+			define('CORE_SRC',dirname(CORE).'/src/');
+		}else{
+			include CORE.'enhancers/EnhanceApp.php';
+			
 			$pathInfo=CHttpRequest::getPathInfo();
 			$pathInfo=basename($pathInfo);
 			$ext=strrpos($pathInfo,'.');
 			if($ext!==false) $ext=substr($pathInfo,$ext+1);
 			if($ext!==false && in_array($ext,array('png','jpg','css','js','gif'))) $shouldEnhance=false;
-		}
 		
-		if($shouldEnhance){
+		
 			$t=microtime(true);
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
 			$process=$enhanceApp->process();
@@ -127,7 +131,7 @@ class App{
 			/* DEV */
 			if(rtrim(Config::$siteUrl['index'],'/')!=='http://localhost'){
 				Springbok::$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
-				if(Springbok::$scriptname==='www') Springbok::$scriptname='index';
+				if(Springbok::$scriptname==='www' || empty(Springbok::$scriptname)) Springbok::$scriptname='index';
 			}
 			/* /DEV */
 			if(Springbok::$scriptname==='index'){
