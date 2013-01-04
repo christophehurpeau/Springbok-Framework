@@ -45,7 +45,8 @@ ul.linksList,nav.left ul{
 ul.linksList>li>a,nav ul>li>a{ padding:6px 8px !important; }
 
 .col > .linksList, .col.linksList{ margin-right:1px; }
-#page ul.linksList,nav.top ul,nav.left ul{
+/* cf smallsizes */
+#page ul.linksList,nav.left ul{
   a,a:hover,a:focus{
     display:block;
     text-align:left;
@@ -58,8 +59,10 @@ nav.left ul{
 }
 nav.left ul>li,nav.top ul>li>a{border:$ButtonBorder;}
 nav.top ul>li + li>a{border-top:0;}
-nav.left ul>:first-child,nav.top ul>:first-child>a{ @include borderRadiusTop(6px); }
-nav.left ul>:last-child,nav.top ul>:last-child>a{ @include borderRadiusBottom(6px); }
+
+/* cf smallsizes */
+nav.left ul>:first-child{ @include borderRadiusTop(6px); }
+nav.left ul>:last-child{ @include borderRadiusBottom(6px); }
 
 input.submit,button,.button{
   margin:3px 2px;

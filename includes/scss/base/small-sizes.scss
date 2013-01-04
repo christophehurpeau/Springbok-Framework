@@ -65,6 +65,16 @@
    	 float:none;display:block;
    	 width:auto !important;
    }
+   
+   /* cf touch */
+  nav.top ul{
+    a,a:hover,a:focus{
+      display:block;
+      text-align:left;
+    }
+  }
+  nav.top ul>:first-child>a{ @include borderRadiusTop(6px); }
+  nav.top ul>:last-child>a{ @include borderRadiusBottom(6px); }
 }
 
 /*

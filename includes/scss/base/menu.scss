@@ -16,6 +16,7 @@ $HeaderMenuLinkBackground:false !default;
 $HeaderMenuLinkBorderRadius:3px !default;
 $HeaderMenuLinkShadow:false !default;
 $HeaderMenuLinkTextShadow:false !default;
+$HeaderMenuLinkAlign:false !default;
 $HeaderMenuLinkCurrentBackground:false !default;
 $HeaderMenuLinkCurrentColor:false !default;
 $HeaderMenuLinkCurrentBorderBottom:false !default;
@@ -47,7 +48,7 @@ $HeaderNavTopFloat:true !default;
 @if $HeaderNavTopFloat{ header nav.top,nav.top ul{float:left} }
 
 nav.top li{float:left;display:block;display:inline-block;}
-nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;display:inline-block;}
+nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;}
 /*menu.right li a, menu.left li a{padding:5px;}*/
 nav.right li,nav.left li{margin:2px 0}
 nav.right.nomarg li,menu.left.nomarg li{margin:0}
@@ -74,7 +75,6 @@ header nav,div.header nav,ul.pager a,table.table tr.head{
 
 header nav li a,div.header nav li a,ul.pager a{
 	/*background-color: rgba(0,0,0,0.3);*/
-	@if $HeaderMenuLinkWidth{ width:$HeaderMenuLinkWidth; }
 	@include border($HeaderMenuLinkBorder,true);
 	@if $HeaderMenuLinkBorderBottom{ border-bottom:$HeaderMenuLinkBorderBottom; }
 	@include background($HeaderMenuLinkBackground);
@@ -85,6 +85,7 @@ header nav li a,div.header nav li a,ul.pager a{
 	@if $HeaderMenuLinkShadow{ text-shadow: -1px 0 1px $HeaderMenuLinkShadow,0 1px 1px $HeaderMenuLinkShadow,1px 0 1px $HeaderMenuLinkShadow,0 -1px 1px $HeaderMenuLinkShadow; }
 	@if $HeaderMenuLinkTextShadow{ text-shadow:$HeaderMenuLinkTextShadow; }
 	@if $HeaderMenuLinkBold{ font-weight: bold; }
+	@if $HeaderMenuLinkAlign{ text-align:$HeaderMenuLinkAlign; }
 }
 header nav.top li.separator{
 	/* padding:3px 6px 4px + margin:1px 2px; + border */
