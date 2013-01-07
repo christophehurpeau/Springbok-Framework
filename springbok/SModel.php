@@ -242,7 +242,12 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 	public function id(){
 		return $this->data['id'];
 	}
-	
+	public function isEditable(){
+		return true;
+	}
+	public function isDeletable(){
+		return true;
+	}
 	
 	/* Helpers */
 	

@@ -398,11 +398,19 @@ s.parentNode.insertBefore(g,s);
 		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
 		if(is_object(current($items))){
 			$list=$items; $items=array();
-			foreach($list as $model) $items[$model->id()]=$model->{$options['modelFunctionName']}();
-		}	
+			foreach($list as $model) $items[$model->id()]=array($model->{$options['modelFunctionName']}(),'editable'=>$model->isEditable(),'deletable'=>$model->isDeletable());
+		}else foreach($items as $id=>&$name) $name=array($name,'editable'=>true,'deletable'=>true);
 		$res.=HHtml::openTag('ul',$options['ulAttributes']);
-		foreach($items as $id=>&$name)
-			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$name,$options['escape']).' '.self::iconAction('delete','#'),false);
+		$actions= isset($options['actions']) && !empty($options['actions']) ? $options['actions'] : array();
+		$actions[]='delete';
+		$actions=array_combine($actions,$actions);
+		foreach($actions as &$action) $action=' '.self::iconAction($action,'#');
+		foreach($items as $id=>$item){
+			$itemActions=$actions;
+			if(!$item['editable']) unset($itemActions['edit']);
+			if(!$item['deletable']) unset($itemActions['delete']);
+			$res.=HHtml::tag('li',array('rel'=>$id),HHtml::tag('span',array(),$item[0],$options['escape']).implode('',$itemActions),false);
+		}
 		$res.='</ul>';
 		//unset($options['inputAttributes'],$options['ulAttributes'],$options['modelFunctionName'],$options['escape']);
 		if(isset($options['allowNew'])) $options['js']='{allowNew:1}';

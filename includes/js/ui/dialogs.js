@@ -41,17 +41,17 @@ S.dialogs={
 	
 	alert:function(title,message){
 		var div=$('<div>'),buttons={};
-		buttons[i18nc['Close']]=function(){$(this).dialog('close');};
+		buttons[i18nc['Close']]=function(){div.dialog('close');};
 		S.isString(message) ? div.text(message) : div.html(message);
 		div.dialog({
-		    autoOpen: true,
-		    title:title,
-		    position:{my:'center top+99',at:'center top'},
-		    width:450,
-		    modal:true,
-		    buttons:buttons,
-		    close:function(){ div.remove(); },
-		    zIndex:9000 //fancybox : 8030
+			autoOpen: true,
+			title:title,
+			position:{my:'center top+99',at:'center top'},
+			width:450,
+			modal:true,
+			buttons:buttons,
+			close:function(){ div.remove(); },
+			zIndex:9000 //fancybox : 8030
 		});
 	},
 	confirm:function(title,message,okButtonName,callbackOk,callbackCancel){
@@ -71,14 +71,14 @@ S.dialogs={
 		};
 		
 		div.dialog({
-		    autoOpen: true,
-		    title:title,
-		    position:{my:'center top+99',at:'center top'},
-		    width:450,
-		    modal:true,
-		    buttons:buttons,
-		    close:function(){ div.remove(); },
-		    zIndex:9000 //fancybox : 8030
+			autoOpen:true,
+			title:title,
+			position:{my:'center top+99',at:'center top'},
+			width:450,
+			modal:true,
+			buttons:buttons,
+			close:function(){ div.remove(); },
+			zIndex:9000 //fancybox : 8030
 		});
 	},
 	
@@ -107,10 +107,17 @@ S.dialogs={
 			}));
 		}
 		
-		buttons[i18nc.Cancel]=function(){$(this).dialog('close');};
+		this.form(title,div,okButtonName,function(){ callback(div.find(findInput).val()) });
+	},
+	
+	form:function(title,content,okButtonName,callback){
+		var div=$('<div>'),buttons={};
+		S.isArray(content) ? div.append.apply(div,content) : div.html(content);
+		
+		buttons[i18nc.Cancel]=function(){div.dialog('close');};
 		buttons[okButtonName]=function(){
 			div.hide();
-			callback(div.find(findInput).val());
+			callback(div);
 			div.dialog('close');
 		};
 		
@@ -123,29 +130,6 @@ S.dialogs={
 			buttons:buttons,
 			close:function(){ div.remove(); },
 			zIndex:9000 //fancybox : 8030
-		});
-	},
-	
-	form:function(title,content,okButtonName,callback){
-		var div=$('<div>'),buttons={};
-		div.html(content);
-		
-		buttons[i18nc.Cancel]=function(){div.dialog('close');};
-		buttons[okButtonName]=function(){
-			div.hide();
-			callback();
-			div.dialog('close');
-		};
-		
-		div.dialog({
-		    autoOpen: true,
-		    title:title,
-		    position:{my:'center top+99',at:'center top'},
-		    width:450,
-		    modal:true,
-		    buttons:buttons,
-		    close:function(){ div.remove(); },
-		    zIndex:9000 //fancybox : 8030
 		});
 	}
 };
