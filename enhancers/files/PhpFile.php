@@ -5,13 +5,13 @@ class PhpFile extends EnhancerFile{
 		/** [0:'className', 1:'params', path:'path', content:'content'] */
 		$_traits;
 	
-	public static function regexpFunction($name){
-		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.preg_quote($name).'\s*\((.*)\)\s*{'
+	public static function regexpFunction($name='#'){
+		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).'\s*\((.*)\)\s*{'
 																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Us';
 	}
 	
-	public static function regexpArrayField($name){
-		return '/\s*public\s*(?:static)?\s*\$'.preg_quote($name).'\s*=\s*(array\(.*\);)/Us';
+	public static function regexpArrayField($name='#'){
+		return '/\s*public\s*(?:static)?\s*\$'.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).'\s*=\s*(array\(.*\);)/Us';
 	}
 	
 	protected function loadContent($srcContent){
