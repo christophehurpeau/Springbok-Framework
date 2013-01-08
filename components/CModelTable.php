@@ -51,22 +51,26 @@ class CModelTable extends CModelTableAbstract{
 		return $this;
 	}
 	
-	public function render($title,$add=false,$layout=null){
+	public function render($title,$add=false,$layout=null,$transformerClass='THtml'){
 		include_once CORE.'mvc/views/View.php';
 		$v=new AjaxContentView($title,$layout);
 		$this->_add($add);
-		$this->display();
+		$this->display(true,$transformerClass);
 		$v->render();
 		return $this;
 	}
 	
-	public function renderEditable($title,$pkField,$url,$add=false,$layout=null){
+	public function renderEditable($title,$pkField,$url,$add=false,$layout=null,$transformerClass='THtml'){
 		include_once CORE.'mvc/views/View.php';
 		$v=new AjaxContentView($title,$layout);
 		$this->_add($add);
-		$this->displayEditable($pkField,$url);
+		$this->displayEditable($pkField,$url,true,$transformerClass);
 		$v->render();
 		return $this;
+	}
+
+	public function renderTransformer($transformerClass,$title,$add=false,$layout=null){
+		return $this->render($title,$add,$layout,$transformerClass);
 	}
 	
 	private function _add($add){
@@ -85,13 +89,13 @@ class CModelTable extends CModelTableAbstract{
 	}
 	
 	public $editablePkField,$editableUrl;
-	public function displayEditable($pkField,$url,$displayTotalResults=true){
+	public function displayEditable($pkField,$url,$displayTotalResults=true,$transformerClass='THtmlEditable'){
 		/* DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
 		/* DEV */ if($this->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
 		
 		$this->editablePkField=$pkField;
 		$this->editableUrl=$url;
-		$this->display($displayTotalResults,'THtmlEditable');
+		$this->display($displayTotalResults,$transformerClass);
 	}
 	
 	public function display($displayTotalResults=true,$transformerClass='THtml'){

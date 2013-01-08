@@ -214,14 +214,18 @@ class DBSchemaMySQL extends DBSchema{
 		try{
 			$this->doUpdate($sql,true);
 		}catch(DBException $e){
-			$this->removeForeignKey(array('name'=>$constraintname));
-			$this->doUpdate($sql,false);
+			try{
+				$this->removeForeignKey(array('name'=>$constraintname),false);
+				$this->doUpdate($sql,false);
+			}catch(DBException $e2){
+				throw $e2;
+			}
 		}
 	}
-	public function removeForeignKey($fk){
-		$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$fk['name'].'`',true);
+	public function removeForeignKey($fk,$keepQuery=true){
+		$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP FOREIGN KEY `'.$fk['name'].'`',$keepQuery);
 		try{
-			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$fk['name'].'`',true);
+			$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP INDEX `'.$fk['name'].'`',$keepQuery);
 		}catch(DBException $ex){}
 	}
 

@@ -36,6 +36,13 @@ class ModelFile extends PhpFile{
 			return $mFields[0];
 		},$srcContent);
 		
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportArrayFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+			list($path,$fieldsNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
+			if(!preg_match_all(self::regexpArrayField($fieldsNames),$path,$mFields))
+				throw new Exception('Import array fields : unable to find '.$path);
+			return implode("\n",$mFields[0]);
+		},$srcContent);
+		
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportConsts\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
 			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts))
@@ -48,9 +55,9 @@ class ModelFile extends PhpFile{
 			if(is_string($functionNames)) $functionNames=array($functionNames);
 			$res='';
 			foreach($functionNames as $functionName){
-				if(!preg_match(self::regexpFunction($functionName),$path,$mFunction))
+				if(!preg_match_all(self::regexpFunction($functionName),$path,$mFunction))
 					throw new Exception('Import Function : unable to find '.$path.' '.$functionName);
-				$res.=$mFunction[0]."\n";
+				$res.=implode("\n",$mFunction[0])."\n";
 			}
 			return $res;
 		},$srcContent);

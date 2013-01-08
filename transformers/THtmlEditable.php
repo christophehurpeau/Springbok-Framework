@@ -4,9 +4,13 @@ class THtmlEditable extends THtml{
 	protected $form,$pkValue,$modelName,$currentFormModelName;
 	
 	public function __construct($component){
-		$this->form=new HForm($this->currentFormModelName=$this->modelName=$component->getModelName(),null,'get','div',false,false);
-		echo HHtml::jsInline('window.editableTable=new S.HTableEditable('.json_encode(HHtml::url($component->editableUrl)).')');
+		/*echo */$this->form=new HForm($this->currentFormModelName=$this->modelName=$component->getModelName(),null,'get','div',false,false);
+		HHtml::jsReady('window.editableTable=new S.HTableEditable('.json_encode(HHtml::url($component->editableUrl)).')');
 		parent::__construct($component);
+	}
+	public function end(){
+		parent::end();
+		echo $this->form->end(false);
 	}
 	
 	public function displayValue($field,$value,$obj){
@@ -15,10 +19,16 @@ class THtmlEditable extends THtml{
 		parent::displayValue($field,$value,$obj);
 	}
 	
+	public function isEditable($field,$value,$obj){
+		return isset($field['editable']) && $field['editable'];
+	}
+	
 	public function getDisplayableValue($field,$value,$obj){
-		if(isset($field['editable']) && $field['editable']){
+		if($this->isEditable($field,$value,$obj)){
 			$name=$fieldKey=$field['key'];
-			if(is_array($field['editable'])){
+			if(!isset($field['editable'])){
+				$modelName=$this->modelName;
+			}elseif(is_array($field['editable'])){
 				$modelName=$field['editable'][0];
 				$fieldKey=$field['editable'][1];
 			}else{

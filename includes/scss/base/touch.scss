@@ -42,7 +42,7 @@ ul.linksList,nav.left ul{
     @include background($ButtonFocusBackground);
   }
 }
-ul.linksList>li>a,nav ul>li>a{ padding:6px 8px !important; }
+ul.linksList>li>a,nav ul>li>a{ padding:6px 8px !important; text-decoration:none; }
 
 .col > .linksList, .col.linksList{ margin-right:1px; }
 /* cf smallsizes */

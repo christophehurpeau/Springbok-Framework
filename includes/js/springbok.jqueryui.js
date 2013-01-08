@@ -102,30 +102,35 @@ $.widget( "ui.combobox", {
 });
 
 var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
-	url+='/'; options=options || {}; options.url=options.url || '';
+	url=url.sbRtrim('/')+'/'; options=options || {}; options.url=options.url || '';
 	var select=prepare(div,options), t, o, input=div.find('input');
 	
 	div.find('a.action.add').click(function(e){
 		e.preventDefault();
-		var val=select&&select.val(),action,data={};
+		var val=select&&select.val(),action,data={},onAddCurrent,
+			onAdd_current=function(d,objectResponse){ onAdd(select,action,data,d,val,objectResponse); input.val(''); };
 		if(!val){
 			if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
 			action='create';
 			data={val:input.val()};
+			onAddCurrent=function(d){ if(d==='1') onAdd_current(d); else if(S.isObj(d) && d.ok) onAdd_current('1',d); };
 			if(S.isFunc(options.allowNew)){
-				options.allowNew.call(this,data.val,function(d){onAdd(select,action,data,d,val);input.val('');},input,url,options);
+				options.allowNew.call(this,data.val,onAddCurrent,input,url,options);
 				return false;
 			}
-		}else action='add/'+val;
-		
-		$.get(url+action+options.url,data,function(d){
-			if(d=='1' || (action=='create' && $.isNumeric(d))){
-				onAdd(select,action,data,d,val);
-				input.val('');
+		}else{
+			action='add/'+val;
+			onAddCurrent=function(d){ if($.isNumeric(d)) onAdd_current(d); else if(S.isObj(d) && d.id) onAdd_current(d.id,d) };
+			if(options.add){
+				options.add.call(this,val,onAddCurrent,input,url,options);
+				return false;
 			}
-		});
+		}
+		
+		$.get(url+action+options.url,data,onAddCurrent);
 		return false;
 	});
+	
 	input.keydown(function(e){
 		if(e.keyCode == '13'){
 			e.preventDefault();
@@ -139,8 +144,20 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 
 
 var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
-	options=options || {}; options.url=options.url || '';
-	var ul=div.find('ul'),select=ajaxC_CommonFunction(div,url,options,prepare,function(select,action,data,d,val){
+	url=url.sbRtrim('/')+'/'; options=options || {}; options.url=options.url || '';
+	
+	options.actions||(options.actions={});
+	options.actions['delete']=function(li,val){
+		$.get(url+'/del/'+val+options.url,function(d){
+			if(d=='1'){
+				onDelete(select,li,val)
+				li.animate({opacity:0,height:'toggle'},'slow',function(){li.remove();ul.change();});
+			}
+		});
+	};
+	var actions=Object.keys(options.actions).map(function(aName){ return ' <a href="#" class="icon action '+aName+'"></a>'; }).join('');
+	
+	var ul=div.find('ul'),select=ajaxC_CommonFunction(div,url,options,prepare,function(select,action,data,d,val,objectResponse){
 		var t;
 		if(action=='create'){
 			t=data.val;
@@ -149,21 +166,20 @@ var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
 			t=onAdd(select,val);
 		}
 		if(!(ul.has('li[rel='+val+']').length)){
-			$('<li style="display:none;opacity:0"/>').attr('rel',val).html($('<span/>').text(t))
-				.append(' <a href="#" class="icon action delete"></a>').appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
+			$('<li style="display:none;opacity:0"/>').attr('rel',val).html(options.createLi?options.createLi(t,val,objectResponse):objectResponse&&objectResponse.html||$('<span/>').text(t))
+				.append(actions)
+				.appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
 			ul.change();
 		}/* DEV */else alert('already has this line !'); /* /DEV */
 	});
-	ul.on('click','a.delete',function(e){
-		e.preventDefault();
-		var li=$(this).closest('li'),val=li.attr('rel');
-		$.get(url+'/del/'+val+options.url,function(d){
-			if(d=='1'){
-				onDelete(select,li,val)
-				li.animate({opacity:0,height:'toggle'},'slow',function(){li.remove();ul.change();});
-			}
+	
+	S.oForEach(options.actions,function(actionName,fn){
+		ul.on('click','a.'+actionName,function(e){
+			e.preventDefault();
+			var li=$(this).closest('li'),val=li.attr('rel');
+			fn(li,val,url,options,actions,ul);
+			return false;
 		});
-		return false;
 	});
 };
 
