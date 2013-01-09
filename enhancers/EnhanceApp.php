@@ -229,13 +229,11 @@ DirectoryIndex disabled
 DirectorySlash Off
 <IfModule mod_rewrite.c>
 	RewriteEngine on
-#	RewriteRule ^web/(.*)$ web/$1 [NE,L]';
+	RewriteRule ^web/(.*)$ web/$1 [NE,L]';
 
 		foreach($entries as $entry)
 			$htaccess.='
-	RewriteCond %{REQUEST_URI} !^/web/
 	RewriteRule ^'.$entry.'/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,NS,L]
-	RewriteCond %{REQUEST_URI} !^/web/
 	RewriteRule ^'.$entry.'.php/(.*)$ '.$entry.'.php?url=$1 [QSA,NE,NS,L]';
 	
 	
@@ -243,7 +241,6 @@ DirectorySlash Off
 			$htaccess.='
 	RewriteCond %{REQUEST_URI} !'.$entry.'.php';*/
 		$htaccess.='
-	RewriteCond %{REQUEST_URI} !^/web/
 	RewriteRule ^(.*)$ index.php?url=$1 [QSA,NE,NS,L]
  </IfModule>';
 		file_put_contents($dev->getPath().'.htaccess',$htaccess);
