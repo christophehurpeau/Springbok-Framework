@@ -44,9 +44,9 @@ class QFindAll extends QFind{
 	}
 	
 	public function createCountQuery(){
-		$countQuery = new QCount($this->modelName);
+		$countQuery = new QCount($modelName=$this->modelName);
 		$this->_copyJoinsAndConditions($countQuery);
-		if($this->groupBy) $countQuery->setCountField((!empty($this->where)&&($join/*||$with*/)
+		if($this->groupBy) $countQuery->setCountField((!empty($this->where)&&($this->joins/*||$with*/)
 					 && strpos($this->groupBy[0],'.')===false?$modelName::$__alias.'.':'').$this->groupBy[0],true);
 		return $countQuery;
 	}
