@@ -20,10 +20,12 @@ class SControllerREST extends Controller{
 	
 	
 	protected static function renderModels($models){
-		self::render(SModel::mToArray($models));
+		// PHP 5.3 : self::render(SModel::mToArray($models));
+		self::render($models);
 	}
 	protected static function renderModel($model){
-		self::render($model===false?false:$model->toArray());
+		// PHP 5.3 : self::render($model===false?false:$model->toArray());
+		self::render($models);
 	}
 	
 	protected static function render($content=null,$exit=true){

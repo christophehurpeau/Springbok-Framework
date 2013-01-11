@@ -262,14 +262,26 @@ class ModelFile extends PhpFile{
 					else{
 						$res='';
 						foreach($enums as $fieldName=>$array){
-							if(count($array)===1 && is_array($array[0])) $array=$array[0];
-							$res.='public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){return array(';
-							foreach($array as $key=>$value)
-								$res.=UPhp::exportCode($key).'=>_tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).'),';
-							$res=(empty($array)?$res:substr($res,0,-1)).');}';
-							$res.='public function '.$fieldName.'(){$v=$this->'.$fieldName.';';
-							foreach($array as $key=>$value) $res.='if($v==='.UPhp::exportCode($key).')return _tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).');';
-							$res.='return \'\';}';
+							if(count($array)===1 && is_array($array[0])){ $array=$array[0]; $isFromClass=count($array)===2 && isset($array[0]) && isset($array[1]); }else $isFromClass=false;
+							$res.='public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){';
+							if($isFromClass){
+								$res.='return '.$array[0].'::'.$array[1].'();';
+							}else{
+								$res.='return array(';
+								foreach($array as $key=>$value)
+									$res.=UPhp::exportCode($key).'=>_tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).'),';
+								$res=(empty($array)?$res:substr($res,0,-1)).');';
+							}
+							$res.='}public function '.$fieldName.'(){';
+							if($isFromClass){
+								//$res.='$list='.$array[0].'::'.$array[1].'();return $list[$this->'.$fieldName.'];';
+								$res.='return '.$array[0].'::'.$array[1].'()[$this->'.$fieldName.'];';
+							}else{
+								$res.='$v=$this->'.$fieldName.';';
+								foreach($array as $key=>$value) $res.='if($v==='.UPhp::exportCode($key).')return _tF('.UPhp::exportCode($matches[2]).','.UPhp::exportCode($fieldName.'.Enum.'.$value).','.UPhp::exportCode($value).');';
+								$res.='return \'\';';
+							}
+							$res.='}';
 							/*foreach($array as $key=>$value){
 								$res.='public function is'.ucfirst($fieldName).'{return $this->'.$fieldName.'==='.$key.'}';
 							}*/

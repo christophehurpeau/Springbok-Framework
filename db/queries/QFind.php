@@ -211,6 +211,24 @@ abstract class QFind extends QSelect{
 		return $this->execute();
 	}
 	
+	public function _copyJoinsAndConditions($newQuery){
+		$join=$this->joins;//$with=$this->with;
+		if(!empty($this->where)){
+		if($join)
+			foreach($join as &$j) $j['fields']=false;
+		/*if($with)
+			foreach($with as &$w){
+				$w['fields']=false;
+				if(isset($w['with'])) foreach($w['with'] as &$w2) $w2['fields']=false;
+			}
+		*/
+			$newQuery->where($this->where)->_setJoin($join);
+				//->_setWith($with);
+		}
+		$newQuery->having($this->having);
+	}
+	
+	
 	public function _toSQL($currentDb=NULL){
 		$modelName=$this->modelName;
 		

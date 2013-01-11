@@ -57,6 +57,10 @@ div.input.select label,div.radio label{vertical-align:middle}
   width:auto;
 }
 
+.labelAuto div.input label, .labelAuto div.textarea label{
+  width:auto;
+}
+
 
 /*
 div.input input{ width:250px; }

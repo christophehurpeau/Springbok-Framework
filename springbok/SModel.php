@@ -181,7 +181,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 		return json_encode($this->toArray());
 	}
 	public function jsonSerialize(){
-		return $this->_getData();
+		return $this->toArray();
 	}
 	
 	public static function json_encode($models,$suffix=''){

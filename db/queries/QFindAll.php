@@ -31,6 +31,11 @@ class QFindAll extends QFind{
 		$this->_db->doSelectObjectsCallback($sql,$this,$this->queryResultFields,$callback);
 	}
 	
+	public function iterator($size=50,$limit=false){
+		return new QFindAllIterator($this,$size,$limit);
+	}
+	
+	
 	public function toArray(){
 		return SModel::mToArray($this->execute());
 	}
@@ -39,24 +44,9 @@ class QFindAll extends QFind{
 	}
 	
 	public function createCountQuery(){
-		$modelName=$this->modelName;
-		$countQuery = new QCount($modelName);
-		
-		$join=$this->joins;$with=$this->with;
-		if(!empty($this->where)){
-		if($join)
-			foreach($join as &$j) $j['fields']=false;
-		/*if($with)
-			foreach($with as &$w){
-				$w['fields']=false;
-				if(isset($w['with'])) foreach($w['with'] as &$w2) $w2['fields']=false;
-			}
-		*/
-			$countQuery->where($this->where)->_setJoin($join);
-				//->_setWith($with);
-		}
-		$countQuery->having($this->having);
-		if($this->groupBy) $countQuery->setCountField((!empty($this->where)&&($join/*||$with*/)
+		$countQuery = new QCount($modelName=$this->modelName);
+		$this->_copyJoinsAndConditions($countQuery);
+		if($this->groupBy) $countQuery->setCountField((!empty($this->where)&&($this->joins/*||$with*/)
 					 && strpos($this->groupBy[0],'.')===false?$modelName::$__alias.'.':'').$this->groupBy[0],true);
 		return $countQuery;
 	}

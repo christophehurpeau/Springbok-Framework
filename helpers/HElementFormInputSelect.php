@@ -1,6 +1,6 @@
 <?php
 class HElementFormInputSelect extends HElementFormContainable{
-	private $list,$selected,$style='select',$empty;
+	private $list,$selected,$style='select',$empty,$addBr=false;
 	public function __construct($form,$name,$list,$selected){
 		parent::__construct($form,$name);
 		if($list===null) $list=call_user_func(array($this->form->modelName,$this->name.'List'));
@@ -14,6 +14,7 @@ class HElementFormInputSelect extends HElementFormContainable{
 	
 	public function radio(){ $this->style='radio'; return $this; }
 	public function emptyValue($value){ $this->empty=$value; return $this; }
+	public function addBr(){ $this->addBr=true; return $this; }
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'input './*$this->type.' '.*/$this->style); }
 	
@@ -30,12 +31,13 @@ class HElementFormInputSelect extends HElementFormContainable{
 		}
 		$optionName=$this->_name($this->name);
 		if(!empty($this->list)){
+			$end=($this->addBr===true) ? '<br/>' :'' ;
 			if(is_object(current($this->list))){
 				foreach($this->list as $model)
-					$contentSelect.=self::__radio($optionName,$model->id(),$this->selected,$model->name());
+					$contentSelect.=self::__radio($optionName,$model->id(),$this->selected,$model->name()).$end;
 			}else{
 				foreach($this->list as $key=>$value)
-					$contentSelect.=self::__radio($optionName,$key,$this->selected,$value);
+					$contentSelect.=self::__radio($optionName,$key,$this->selected,$value).$end;
 			}
 		}
 		return $contentSelect;

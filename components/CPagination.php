@@ -27,10 +27,15 @@ class CPagination{
 	public function hasPager(){ return $this->pageSize < $this->totalResults;}
 	public function setReturn($return){$this->return=$return;}
 	
+	protected function _countQuery(){
+		return $this->query->createCountQuery()->execute();
+	}
+	public function _getQuery(){ return $this->query; }
+	
 	public function execute(){
 		/* HIDE *//* DEV */ try{ /* /DEV *//* /HIDE */
 		if(!($hFR=$this->query->hasCalcFoundRows())){
-			$count=$this->totalResults=$this->query->createCountQuery()->execute();
+			$count=$this->totalResults=$this->_countQuery();
 			if($count > 0) $this->totalPages=(int)ceil((double)$count / $this->pageSize);
 		}
 		/* HIDE *//* DEV */ }catch(Exception $ex){
