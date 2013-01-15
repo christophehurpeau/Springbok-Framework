@@ -33,6 +33,10 @@
       float:none !important;
       width:auto !important;
     }
+    ul.linksList.col + ul.linksList.col > li:first-child{
+      border-top:0;
+    }
+    
     
     .paddingtop > article{
       padding:0 3px;
