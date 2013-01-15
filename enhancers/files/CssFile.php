@@ -456,7 +456,7 @@ class CssFile extends EnhancerFile{
 				if(!empty($cssImgs)){
 					$cssImgs=array_unique($cssImgs);
 					ksort($md5CssImgs);
-					$md5CssImgs=md5(implode('#',$md5CssImgs));
+					$md5CssImgs=md5(implode('#',array_keys($md5CssImgs)).'###'.implode('#',$md5CssImgs));
 					
 					$spritePath=$enhanced->getAppDir().'src/web/sprites/'.$spritename;
 					
