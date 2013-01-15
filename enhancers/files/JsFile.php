@@ -90,7 +90,7 @@ class JsFile extends EnhancerFile{
 
 			if(!empty($this->enhanced->config['entries'])) foreach(($entries=$this->enhanced->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
 			else $entries=array();
-			if(in_array($this->fileName(),$jsFiles))
+			if(in_array($this->fileName(),$jsFiles) || $this->fileName()==='dev.js')
 				$this->_srcContent="var basedir='".(defined('BASE_URL')?BASE_URL:'')
 					.(rtrim($this->enhanced->devConfig['siteUrl']['index'],'/')==='http://localhost' && in_array(substr($this->fileName(),0,-3),$entries)?'/'.substr($this->fileName(),0,-3):'')."/'"
 					/*",baseurl=basedir".($this->fileName()==='admin.js'?'admin/':'').*/
