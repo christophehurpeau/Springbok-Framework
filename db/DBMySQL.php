@@ -150,9 +150,9 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectRowsCallback($query,$callback){
 		$r=$this->_query($query);
-		$r->store_result();
+		//$r->store_result();
 		while($row=$r->fetch_assoc()) $callback($row);
-		$r->free_result();
+		//$r->free_result();
 		$r->close();
 	}
 	
@@ -165,9 +165,9 @@ class DBMySQL extends DBSql{
 	}
 	public function /* DEV */_/* /DEV */doSelectRowsCallback_($query,$callback){
 		$r=$this->_query($query);
-		$r->store_result();
+		//$r->store_result();
 		while($row=$r->fetch_row()) $callback($row);
-		$r->free_result();
+		//$r->free_result();
 		$r->close();
 	}
 	
