@@ -419,8 +419,8 @@ class CssFile extends EnhancerFile{
 		if(self::$spriteGenDone===NULL/* && ($enhanced->hasChanges('Css') || $enhanced->hasChanges('Img') || $enhanced->hasChanges('Scss'))*/){
 			self::$spriteGenDone=true;
 			$compiledCssFolder=($tmpDir=$enhanced->getTmpDir()).'compiledcss/';//prod/';
-			if(!file_exists($cacheFolder=$tmpDir.'sprites_8.0.3/')) mkdir($cacheFolder,0775);
-			if(!file_exists($tmpFolder=$tmpDir.'imgssprites/')) mkdir($tmpFolder,0755,true);
+			if(!file_exists($cacheFolder=$tmpDir.'sprites_8.0.4/')) mkdir($cacheFolder,0775);
+			if(!file_exists($tmpFolder=$tmpDir.'imgssprites_8.0.4/')) mkdir($tmpFolder,0755,true);
 			
 			$logger=$enhanced->getLogger();
 			
