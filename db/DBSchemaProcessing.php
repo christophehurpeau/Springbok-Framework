@@ -54,7 +54,7 @@ class DBSchemaProcessing{
 								$sql=file_get_contents(APP.'dbEvolutions/'.$dbVersionToFilename[$version].'.sql');
 								
 								foreach(explode("\n",$sql) as $line){
-									if(empty($line)) continue;
+									if(empty($line) || $line[0]==='#') continue;
 									list($dbName,$query) = explode('=>',$line,2);
 									
 									$db=DB::init($dbName);

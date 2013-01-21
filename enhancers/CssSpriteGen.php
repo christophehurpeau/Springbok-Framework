@@ -331,206 +331,204 @@ class CssSpriteGen {
          /*******************************************/
          
          // if $i is greater than 1 then we managed to generate enough info to create a sprite
-         if ($i > 1) {
-            // if Imagick throws an exception we want the script to terminate cleanly so that 
-            // temporary files are cleaned up
-            try {
-               // get the sprite width and height
-               if ($this->aFormValues['build-direction'] == 'horizontal') {
-                  $iSpriteWidth = $iMaxWidth - $this->aFormValues['horizontal-offset'];
-                  $iSpriteHeight = array_sum($aMaxRowHeight) + $iMaxVOffset;
-               } else {
-                  $iSpriteHeight = $iMaxHeight - $this->aFormValues['vertical-offset'];
-                  $iSpriteWidth = array_sum($aMaxColumnWidth) + $iMaxHOffset;
-               }
-            
-               // get background colour - remove # if added
-               $sBgColour = str_replace('#', '', $this->aFormValues['background']);
-               // convert 3 digit hex values to 6 digit equivalent
-               if (strlen($sBgColour) == 3) {
-                  $sBgColour = substr($sBgColour, 0, 1).
-                     substr($sBgColour, 0, 1).
-                     substr($sBgColour, 1, 1).
-                     substr($sBgColour, 1, 1).
-                     substr($sBgColour, 2, 1).
-                     substr($sBgColour, 2, 1);
-               }
-               // should the image be transparent
-               $this->bTransparent = (
-                  !empty($this->aFormValues['use-transparency']) && 
-                  in_array($this->aFormValues['image-output'], array('GIF', 'PNG'))
-               );
-               
-               // if using Imagick library create new instance of library class
-               if ($this->sImageLibrary == 'imagick') {
-                  $oSprite = new Imagick();
-                  
-                  // create a new image - set background according to transparency
-                  if (!empty($this->aFormValues['background'])) {
-                     $oSprite->newImage($iSpriteWidth, $iSpriteHeight, new ImagickPixel("#$sBgColour"), $sOutputFormat);
-                  } else {
-                     if ($this->bTransparent) {
-                        $oSprite->newImage($iSpriteWidth, $iSpriteHeight, new ImagickPixel('#000000'), $sOutputFormat);
-                     } else {
-                        $oSprite->newImage($iSpriteWidth, $iSpriteHeight, new ImagickPixel('#ffffff'), $sOutputFormat);
-                     }
-                  }
-               } else { // using GD - do the same thing
-                  if ($this->bTransparent && !empty($this->aFormValues['background'])) {
-                     $oSprite = imagecreate($iSpriteWidth, $iSpriteHeight);
-                  } else {
-                     $oSprite = imagecreatetruecolor($iSpriteWidth, $iSpriteHeight);
-                  }
-               }
-               
-               // check for transparency option
-               if ($this->bTransparent) {
-                  if ($this->sImageLibrary == 'imagick') {
-                     // set background colour to transparent
-                     // if no background colour use black
-                     if (!empty($this->aFormValues['background'])) {
-                        $oSprite->paintTransparentImage(new ImagickPixel("#$sBgColour"), 0.0, 0);
-                     } else {
-                        $oSprite->paintTransparentImage(new ImagickPixel("#000000"), 0.0, 0);
-                     }
-                  } else { // using GD - do the same thing
-                     if (!empty($this->aFormValues['background'])) {
-                        $iBgColour = hexdec($sBgColour);
-                        $iBgColour = imagecolorallocate(
-                           $oSprite, 
-                           0xFF & ($iBgColour >> 0x10), 
-                           0xFF & ($iBgColour >> 0x8), 
-                           0xFF & $iBgColour
-                        );
-                     } else {
-                        $iBgColour = imagecolorallocate($oSprite, 0, 0, 0);
-                     }
-                     imagecolortransparent($oSprite, $iBgColour);
-                  }
-               } else {
-                  // set background colour if not using transparency and using GD
-                  if ($this->sImageLibrary != 'imagick') {
-                     if (empty($sBgColour)) {
-                        $sBgColour = 'ffffff';
-                     }
-                     $iBgColour = hexdec($sBgColour);
-                     $iBgColour = imagecolorallocate(
-                        $oSprite, 0xFF & ($iBgColour >> 0x10), 
-                        0xFF & ($iBgColour >> 0x8), 
-                        0xFF & $iBgColour
-                     );
-                     imagefill($oSprite, 0, 0, $iBgColour);
-                  }
-               }
-            
-               // initalise variable to store CSS rules
-               //$this->sCss = '';
-            
-               // loop through file info for valid images
-               for ($i = 0; $i < count($aFilesInfo); $i++) {
-                  // create a new image object for current file
-                  if (!$oCurrentImage = $this->CreateImage($aFilesInfo[$i]['path'], $aFilesInfo[$i]['ext'])) {
-                     // if we've got here then a valid but corrupt image was found
-                     // at this stage we've already allocated space for the image so create 
-                     // a blank one to fill the space instead
-                     // this should happen very rarely
-                     $oCurrentImage = new Imagick();
-                     
-                     $oCurrentImage->newImage(
-                        $aFilesInfo[$i]['original-width'], 
-                        $aFilesInfo[$i]['original-height'], 
-                        new ImagickPixel('#ffffff')
-                     );
-                  }
-               
-                  // if resizing get image width and height and resample to new dimensions (percentage of original)
-                  // and copy to sprite image
-                  if ($bResize) {
-                     if ($this->sImageLibrary == 'imagick') {
-                        // resample image should work but doesn't seem to - using thumbnailImage instead 
-                        // which achieves the same effect
-                        $oCurrentImage->thumbnailImage($aFilesInfo[$i]['width'], $aFilesInfo[$i]['height']);
-                     } else {
-                        imagecopyresampled(
-                           $oSprite, 
-                           $oCurrentImage, 
-                           $aFilesInfo[$i]['x'], 
-                           $aFilesInfo[$i]['y'], 0, 0, 
-                           $aFilesInfo[$i]['width'], 
-                           $aFilesInfo[$i]['height'], 
-                           $aFilesInfo[$i]['original-width'], 
-                           $aFilesInfo['original-height']
-                        );
-                     }
-                  }
-                  
-                  // copy image to sprite
-                  if ($this->sImageLibrary == 'imagick') {
-                     $oSprite->compositeImage(
-                        $oCurrentImage, 
-                        $oCurrentImage->getImageCompose(), 
-                        $aFilesInfo[$i]['x'], 
-                        $aFilesInfo[$i]['y']
-                     );
-                  } else {
-                     // if using GD and already resized the image will have been copied as part of the resize
-                     if (!$bResize) {
-                        imagecopy(
-                           $oSprite, 
-                           $oCurrentImage, 
-                           $aFilesInfo[$i]['x'], 
-                           $aFilesInfo[$i]['y'], 
-                           0, 0, 
-                           $aFilesInfo[$i]['width'],  
-                           $aFilesInfo[$i]['height']
-                        );
-                     }
-                  }
-               
-                  // get CSS x & y values
-                  $iX = $aFilesInfo[$i]['x'] != 0 ? '-'.$aFilesInfo[$i]['x'].'px' : '0';
-                  $iY = $aFilesInfo[$i]['y'] != 0 ? '-'.$aFilesInfo[$i]['y'].'px' : '0';
-               
-                  // create CSS rules and append to overall CSS rules
-                  //$this->sCss .= "{$this->aFormValues['selector-prefix']}{$aFilesInfo[$i]['class']} {$this->aFormValues['selector-suffix']}{ background-position: $iX $iY; ";
-                  $cssRules[$aFilesInfo[$i]['key']]=array(
-                  	'position'=>"$iX $iY",
-                  	'width'=>$aFilesInfo[$i]['width'].'px',
-                  	'height'=>$aFilesInfo[$i]['height'].'px'
-				  );
-             
-                  // If add widths and heights the sprite image width and height are added to the CSS
-                  /*if ($this->aFormValues['add-width-height-to-css'] == 'on'){
+         if ($i < 1) throw new Exception('No images in sprite');
+        // if Imagick throws an exception we want the script to terminate cleanly so that 
+        // temporary files are cleaned up
+        try {
+           // get the sprite width and height
+           if ($this->aFormValues['build-direction'] == 'horizontal') {
+              $iSpriteWidth = $iMaxWidth - $this->aFormValues['horizontal-offset'];
+              $iSpriteHeight = array_sum($aMaxRowHeight) + $iMaxVOffset;
+           } else {
+              $iSpriteHeight = $iMaxHeight - $this->aFormValues['vertical-offset'];
+              $iSpriteWidth = array_sum($aMaxColumnWidth) + $iMaxHOffset;
+           }
+        
+           // get background colour - remove # if added
+           $sBgColour = str_replace('#', '', $this->aFormValues['background']);
+           // convert 3 digit hex values to 6 digit equivalent
+           if (strlen($sBgColour) == 3) {
+              $sBgColour = substr($sBgColour, 0, 1).
+                 substr($sBgColour, 0, 1).
+                 substr($sBgColour, 1, 1).
+                 substr($sBgColour, 1, 1).
+                 substr($sBgColour, 2, 1).
+                 substr($sBgColour, 2, 1);
+           }
+           // should the image be transparent
+           $this->bTransparent = (
+              !empty($this->aFormValues['use-transparency']) && 
+              in_array($this->aFormValues['image-output'], array('GIF', 'PNG'))
+           );
+           
+           // if using Imagick library create new instance of library class
+           if ($this->sImageLibrary == 'imagick') {
+              $oSprite = new Imagick();
+              
+              // create a new image - set background according to transparency
+              if (!empty($this->aFormValues['background'])) {
+                 $oSprite->newImage($iSpriteWidth, $iSpriteHeight, new ImagickPixel("#$sBgColour"), $sOutputFormat);
+              } else {
+                 if ($this->bTransparent) {
+                    $oSprite->newImage($iSpriteWidth, $iSpriteHeight, new ImagickPixel('#000000'), $sOutputFormat);
+                 } else {
+                    $oSprite->newImage($iSpriteWidth, $iSpriteHeight, new ImagickPixel('#ffffff'), $sOutputFormat);
+                 }
+              }
+           } else { // using GD - do the same thing
+              if ($this->bTransparent && !empty($this->aFormValues['background'])) {
+                 $oSprite = imagecreate($iSpriteWidth, $iSpriteHeight);
+              } else {
+                 $oSprite = imagecreatetruecolor($iSpriteWidth, $iSpriteHeight);
+              }
+           }
+           
+           // check for transparency option
+           if ($this->bTransparent) {
+              if ($this->sImageLibrary == 'imagick') {
+                 // set background colour to transparent
+                 // if no background colour use black
+                 if (!empty($this->aFormValues['background'])) {
+                    $oSprite->paintTransparentImage(new ImagickPixel("#$sBgColour"), 0.0, 0);
+                 } else {
+                    $oSprite->paintTransparentImage(new ImagickPixel("#000000"), 0.0, 0);
+                 }
+              } else { // using GD - do the same thing
+                 if (!empty($this->aFormValues['background'])) {
+                    $iBgColour = hexdec($sBgColour);
+                    $iBgColour = imagecolorallocate(
+                       $oSprite, 
+                       0xFF & ($iBgColour >> 0x10), 
+                       0xFF & ($iBgColour >> 0x8), 
+                       0xFF & $iBgColour
+                    );
+                 } else {
+                    $iBgColour = imagecolorallocate($oSprite, 0, 0, 0);
+                 }
+                 imagecolortransparent($oSprite, $iBgColour);
+              }
+           } else {
+              // set background colour if not using transparency and using GD
+              if ($this->sImageLibrary != 'imagick') {
+                 if (empty($sBgColour)) {
+                    $sBgColour = 'ffffff';
+                 }
+                 $iBgColour = hexdec($sBgColour);
+                 $iBgColour = imagecolorallocate(
+                    $oSprite, 0xFF & ($iBgColour >> 0x10), 
+                    0xFF & ($iBgColour >> 0x8), 
+                    0xFF & $iBgColour
+                 );
+                 imagefill($oSprite, 0, 0, $iBgColour);
+              }
+           }
+        
+           // initalise variable to store CSS rules
+           //$this->sCss = '';
+        
+           // loop through file info for valid images
+           for ($i = 0; $i < count($aFilesInfo); $i++) {
+              // create a new image object for current file
+              if (!$oCurrentImage = $this->CreateImage($aFilesInfo[$i]['path'], $aFilesInfo[$i]['ext'])) {
+                 // if we've got here then a valid but corrupt image was found
+                 // at this stage we've already allocated space for the image so create 
+                 // a blank one to fill the space instead
+                 // this should happen very rarely
+                 $oCurrentImage = new Imagick();
+                 
+                 $oCurrentImage->newImage(
+                    $aFilesInfo[$i]['original-width'], 
+                    $aFilesInfo[$i]['original-height'], 
+                    new ImagickPixel('#ffffff')
+                 );
+              }
+           
+              // if resizing get image width and height and resample to new dimensions (percentage of original)
+              // and copy to sprite image
+              if ($bResize) {
+                 if ($this->sImageLibrary == 'imagick') {
+                    // resample image should work but doesn't seem to - using thumbnailImage instead 
+                    // which achieves the same effect
+                    $oCurrentImage->thumbnailImage($aFilesInfo[$i]['width'], $aFilesInfo[$i]['height']);
+                 } else {
+                    imagecopyresampled(
+                       $oSprite, 
+                       $oCurrentImage, 
+                       $aFilesInfo[$i]['x'], 
+                       $aFilesInfo[$i]['y'], 0, 0, 
+                       $aFilesInfo[$i]['width'], 
+                       $aFilesInfo[$i]['height'], 
+                       $aFilesInfo[$i]['original-width'], 
+                       $aFilesInfo['original-height']
+                    );
+                 }
+              }
+              
+              // copy image to sprite
+              if ($this->sImageLibrary == 'imagick') {
+                 $oSprite->compositeImage(
+                    $oCurrentImage, 
+                    $oCurrentImage->getImageCompose(), 
+                    $aFilesInfo[$i]['x'], 
+                    $aFilesInfo[$i]['y']
+                 );
+              } else {
+                 // if using GD and already resized the image will have been copied as part of the resize
+                 if (!$bResize) {
+                    imagecopy(
+                       $oSprite, 
+                       $oCurrentImage, 
+                       $aFilesInfo[$i]['x'], 
+                       $aFilesInfo[$i]['y'], 
+                       0, 0, 
+                       $aFilesInfo[$i]['width'],  
+                       $aFilesInfo[$i]['height']
+                    );
+                 }
+              }
+           
+              // get CSS x & y values
+              $iX = $aFilesInfo[$i]['x'] != 0 ? '-'.$aFilesInfo[$i]['x'].'px' : '0';
+              $iY = $aFilesInfo[$i]['y'] != 0 ? '-'.$aFilesInfo[$i]['y'].'px' : '0';
+           
+              // create CSS rules and append to overall CSS rules
+              //$this->sCss .= "{$this->aFormValues['selector-prefix']}{$aFilesInfo[$i]['class']} {$this->aFormValues['selector-suffix']}{ background-position: $iX $iY; ";
+              $cssRules[$aFilesInfo[$i]['key']]=array(
+              	'position'=>"$iX $iY",
+              	'width'=>$aFilesInfo[$i]['width'].'px',
+              	'height'=>$aFilesInfo[$i]['height'].'px'
+			  );
+         
+              // If add widths and heights the sprite image width and height are added to the CSS
+              /*if ($this->aFormValues['add-width-height-to-css'] == 'on'){
                      $this->sCss .= "width: {$aFilesInfo[$i]['width']}px; height: {$aFilesInfo[$i]['height']}px;";
                   }
 
                   $this->sCss .= " } \n";
 */
-                  // destroy object created for current image to save memory
-                  if ($this->sImageLibrary == 'imagick') {
-                     $oCurrentImage->destroy();
-                  } else {
-                     imagedestroy($oCurrentImage);
-                  }
-               }
-            
-               // create a unqiue filename for sprite image
-               //$this->sTempSpriteName =  ConfigHelper::Get('/cache/sprite_dir').uniqid('csg-').".$sOutputFormat";
-               // write image to file (deleted by cron script after a limited time period)
-               $this->WriteImage($oSprite,$sOutputFormat,$outputFile);
-               // destroy object created for sprite image to save memory
-               if ($this->sImageLibrary == 'imagick') {
-                  $oSprite->destroy();
-               } else {
-                  imagedestroy($oSprite);
-               }
-               
-               // set flag to indicate valid images created
-               $this->bValidImages = true;
-            } catch (ImagickException $e) {
-               error_log($e->getMessage());
-            }
-
+              // destroy object created for current image to save memory
+              if ($this->sImageLibrary == 'imagick') {
+                 $oCurrentImage->destroy();
+              } else {
+                 imagedestroy($oCurrentImage);
+              }
+           }
+        
+           // create a unqiue filename for sprite image
+           //$this->sTempSpriteName =  ConfigHelper::Get('/cache/sprite_dir').uniqid('csg-').".$sOutputFormat";
+           // write image to file (deleted by cron script after a limited time period)
+           $this->WriteImage($oSprite,$sOutputFormat,$outputFile);
+           // destroy object created for sprite image to save memory
+           if ($this->sImageLibrary == 'imagick') {
+              $oSprite->destroy();
+           } else {
+              imagedestroy($oSprite);
+           }
+           
+           // set flag to indicate valid images created
+           $this->bValidImages = true;
+        } catch (ImagickException $e) {
+           error_log($e->getMessage());
         }
 
 		return $cssRules;
@@ -624,7 +622,8 @@ class CssSpriteGen {
             /*shell_exec('pngcrush -rem alla -reduce -brute '.escapeshellarg($sFilename).' '.escapeshellarg($sFilename.'_pngcrush'));
 			if(filesize($sFilename.'_pngcrush') < filesize($sFilename)) shell_exec('mv -f '.escapeshellarg($sFilename.'_pngcrush').' '.escapeshellarg($sFilename));
 			else unlink($sFilename.'_pngcrush');*/
-			ImgFile::compressImg($sFilename,basename($sFilename),$this->tmpFolder);
+			$smallerTmpImgPath=ImgFile::compressImg($sFilename,basename($sFilename),$this->tmpFolder);
+			if($smallerTmpImgPath!==false) copy($smallerTmpImgPath,$sFilename);
          }
       }
       

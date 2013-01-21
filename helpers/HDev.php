@@ -1,5 +1,8 @@
 <?php
 class HDev{
+	
+	
+	
 	public static function springbokBar($includeJquery=false){
 		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
 		if($includeJquery){
@@ -47,6 +50,15 @@ class HDev{
 				echo '</ul>';
 			}
 		}
+	}
+	
+	public static function queries(){
+		$queries=array();
+		foreach(DB::getAll() as $dbname=>$db){
+			$dbqueries=$db->getQueries();
+			foreach($dbqueries as $query) $queries[$dbname][]=$query['query'];
+		}
+		return $queries;
 	}
 	
 	private static function springbokBarQueries(){

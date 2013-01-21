@@ -14,11 +14,11 @@ $ButtonHoverColor:#FFF !default;
 $ButtonHoverBorder:1px solid #333333 !default;
 	
 @if $BasicButtons==true{
-	$ButtonBackground:#FFF #F3F3F3;
-	$ButtonHoverBackground:#F3F3F3 #E5E5E5;
-	$ButtonFocusBackground:#E5E5E5 #FFF;
+	$ButtonBackground:#FFF #F8F8F8;
+	$ButtonHoverBackground:#F3F3F3 #E9E9E9;
+	$ButtonFocusBackground:#E9E9E9 #FFF;
 	$ButtonColor:#222;
-	$ButtonBorder:1px solid #CCC;
+	$ButtonBorder:1px solid #D0D0D0;
 	$ButtonHoverColor:#000;
 	$ButtonHoverBorder:1px solid #AAA;
 	$ButtonBoxShadow:false;
@@ -53,11 +53,17 @@ $ButtonHoverBorder:1px solid #333333 !default;
   	transition:all .4s;
   	box-sizing:border-box;
   	text-decoration:none;
-  }
-  input.submit:hover,button:hover,.button:hover{
-  	@include background($ButtonHoverBackground);
-  	@if $ButtonHoverBorder{ border:$ButtonHoverBorder; }
-  	@if $ButtonHoverColor{ color:$ButtonHoverColor; }
+  	
+  	&.wp100{
+  		width:100%;
+  		text-align:center;
+  	}
+  	
+	  &:hover{
+	  	@include background($ButtonHoverBackground);
+	  	@if $ButtonHoverBorder{ border:$ButtonHoverBorder; }
+	  	@if $ButtonHoverColor{ color:$ButtonHoverColor; }
+	  }
   }
   body input.submit:focus,body button:focus,body .button:focus{
   	@include background($ButtonFocusBackground);
