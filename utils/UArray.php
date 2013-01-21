@@ -127,4 +127,11 @@ class UArray {
 	public static function splice($array,$offset,$values){
 		return array_slice($array,0,$offset,true) + $values + array_slice($array,$offset,null,true);
 	}
+	
+	public static function hasAmong($array1,$array2){
+		foreach($array1 as $v1){
+			if(in_array($v1,$array2)) return true;
+		}
+		return false;
+	}
 }
