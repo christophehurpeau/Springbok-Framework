@@ -242,7 +242,7 @@ class DBSchemaMySQL extends DBSchema{
 		//preg_match_all('/CONSTRAINT `(.*)` FOREIGN KEY \(`(.*)`\) REFERENCES `(.*)` \(`(.*)`\)/',$createTable,$matches);
 		//debug($createTable);
 		$foreignsKeys=array();
-		if(preg_match_all('/\sCONSTRAINT `(\w+)` FOREIGN KEY \(`(\w+)`\) REFERENCES (?:`(\w+)`.)?`(\w+)` \(`(\w+)`\)(?: ON DELETE (RESTRICT|CASCADE|SET NULL|NO ACTION))?(?: ON UPDATE (RESTRICT|CASCADE|SET NULL|NO ACTION))?,?\n/s', $createTable, $matches, PREG_SET_ORDER)){
+		if(preg_match_all('/\sCONSTRAINT `([\w\-]+)` FOREIGN KEY \(`([\w\-]+)`\) REFERENCES (?:`([\w\-]+)`.)?`([\w\-]+)` \(`([\w\-]+)`\)(?: ON DELETE (RESTRICT|CASCADE|SET NULL|NO ACTION))?(?: ON UPDATE (RESTRICT|CASCADE|SET NULL|NO ACTION))?,?\n/s', $createTable, $matches, PREG_SET_ORDER)){
 			for ($i = 0; ($i < count($matches)); $i++){
 				list($constraint,$name,$column,$referenced_database, $referenced_table,$referenced_column) = $matches[$i];
 				$onDelete=empty($matches[$i][6])?'RESTRICT':$matches[$i][6];
