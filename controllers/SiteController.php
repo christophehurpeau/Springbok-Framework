@@ -33,8 +33,7 @@ class SiteController extends Controller{
 	/** @ValidParams @Required('jsurl') */
 	function jsError($href,$jsurl,$message,$line){
 		if($jsurl!=='http://www.google-analytics.com/ga.js'
-			&&$jsurl!=='http://connect.facebook.net/fr_FR/all.js#xfbml=1'&&$jsurl!=='http://platform.twitter.com/widgets.js'
-			&&$message!=="ReferenceError: Strict mode forbids implicit creation of global property 'flags'")
+			&&$jsurl!=='http://connect.facebook.net/fr_FR/all.js#xfbml=1'&&$jsurl!=='http://platform.twitter.com/widgets.js')
 			JsLog::create($href,$jsurl,$message,$line);
 	}
 	

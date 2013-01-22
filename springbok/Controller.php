@@ -113,6 +113,15 @@ class Controller{
 		return self::$layoutVars[$name];
 	}
 	
+	
+	protected static function callController($controllerName,$actionName,$params){
+		CRoute::setControllerAndAction($controllerName,$actionName);
+		$controllerName.='Controller';
+		include APP.'controllers'.self::$suffix.'/'.$controllerName.'.php';
+		call_user_func_array(array($controllerName,$actionName),$params);
+		exit;
+	}
+	
 	/* */
 	
 	/**
