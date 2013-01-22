@@ -263,6 +263,7 @@ class PhpFile extends EnhancerFile{
 			,$phpContent);
 		$phpContent=preg_replace('/\/\*\s+HIDE\s+\*\/.*\/\*\s+\/HIDE\s+\*\//Ums','',$phpContent);
 		$phpContent=preg_replace('/return !new [^;]+;/','',$phpContent);
+		$phpContent=preg_replace('/\bSF\:\:onlyOnce\(\)\;/','',$phpContent);
 		
 		// short methods
 		$phpContent=preg_replace('/notFoundIfFalse\(([^)]+)\);/','if($1===false)notFound();',$phpContent);

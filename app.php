@@ -231,7 +231,7 @@ class App{
 			if(!empty(CRoute::$TESTED_ROUTES)){
 				$setGroup=true; CFirebug::group('Routes',array('Collapsed'=>true));
 				CFirebug::table('Current Route',array(array('All','Controller','Action','Ext','Params'),
-						array(CRoute::getAll(),CRoute::getController(),CRoute::getAction(),short_debug_var(CRoute::getExt()),print_r(CRoute::getParams(),true)))	);
+						array(CRoute::getAll(),CRoute::getController(),CRoute::getAction(),UVarDump::dump(CRoute::getExt()),print_r(CRoute::getParams(),true)))	);
 				$testedRoutes=CRoute::$TESTED_ROUTES;
 				array_unshift($testedRoutes,'Regexp');
 				CFirebug::table('Tested routes',array_map(function($r){return array($r);},$testedRoutes));
@@ -262,7 +262,8 @@ class App{
 				'e_line'=>$exception->getLine(),
 				'e_trace'=>$exception->getTrace(),
 			);
-			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/exception.php')){
+			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/exception.php')
+					/* DEV */ && class_exists('CRoute',false) && substr(CRoute::getAll(),0,5)!=='/Dev/'/* /DEV */){
 				include_once CORE.'mvc/views/View.php';
 				render(APP.'views'.Springbok::$suffix.'/exception.php',$vars);
 			}else render(CORE.'mvc/views/exception.php',$vars);

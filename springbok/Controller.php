@@ -106,6 +106,9 @@ class Controller{
 		return self::$viewVars[$name];
 	}
 	
+	public static function getViewVars(){
+		return self::$viewVars;
+	}
 	public static function getLayoutVars(){
 		return self::$layoutVars;
 	}

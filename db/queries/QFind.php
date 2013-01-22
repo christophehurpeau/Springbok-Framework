@@ -403,7 +403,7 @@ abstract class QFind extends QSelect{
 				}
 			}else{
 				$type=$join['modelName'];
-				/* DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.short_debug_var($type)); /* /DEV */
+				/* DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.UVarDump::dump($type)); /* /DEV */
 				$joinObj=new $type();
 				$joinObj->_copyData($joinData);
 				$obj->$join['dataName']=$joinObj;
@@ -551,16 +551,25 @@ abstract class QFind extends QSelect{
 						}else $oneField=false;
 						if(isset($w['tabResKey'])){ $tabResKey=$w['tabResKey']; unset($w['tabResKey']); }
 						else $tabResKey=false;
-						$listRes=self::_createHasManyQuery(new QFindAll($w['modelName']),$w,$values,$resField,true)->execute();
+						if(isset($w['groupResBy'])){ $groupResBy=$w['groupResBy']; unset($w['groupResBy']); }
+						else $groupResBy=false;
+						$query=self::_createHasManyQuery(new QFindAll($w['modelName']),$w,$values,$resField,true);
+						$listRes=$query->execute();
 						if($listRes) foreach($objs as $key=>$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
 								if($res->_get($resField) == $obj->_get($objField)){
 									if($oneField===false){
-										if($tabResKey===false) $listObjsRes[]=$res;
-										else $listObjsRes[$res->_get($tabResKey)]=$res;
+										if($tabResKey!==false) $listObjsRes[$res->_get($tabResKey)]=$res;
+										else $listObjsRes[]=$res;
 									}else $listObjsRes[]=$res->_get($oneField);
 								}
+							}
+							if($groupResBy!==false){
+								$finalRes=array();
+								if(is_array($groupResBy)) foreach($listObjsRes as $key=>&$row) $finalRes[$row->{$groupResBy[0]}][$key]=$row->{$groupResBy[1]};
+								else foreach($listObjsRes as $key=>&$row) $finalRes[$row->$groupResBy][$key]=$row;
+								$listObjsRes=$finalRes;
 							}
 							$obj->_set($w['dataName'],$listObjsRes);
 						}
@@ -664,38 +673,41 @@ abstract class QFind extends QSelect{
 		$values=array();
 		foreach($objs as &$obj){
 			$value=$obj->_get($objField);
-			if($value !== NULL) $values[]=$value;
+			if($value !== null) $values[]=$value;
 		}
 		return array_unique($values);
 	}
 	
-	private static function _createBelongsToAndHasOneQuery($query,$w,$values,&$resField,$addResField=false,$moreWith=NULL,$fieldTableAlias=NULL){
+	private static function _createBelongsToAndHasOneQuery($query,$w,$values,&$resField,$addResField=false,$moreWith=null,$fieldTableAlias=null){
 		if($query===null) $query=new QFindOne($w['modelName']);
 		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
 		if(isset($w['where'])) $where=$w['where']; else $where=array();
-		if($fieldTableAlias !== NULL) $resField=$fieldTableAlias.'.'.$resField;
+		if($fieldTableAlias !== null) $resField=$fieldTableAlias.'.'.$resField;
 		$where[$resField]=$values;
 		$query->where($where);
 		if(isset($w['with'])) $query->_setWith($w['with']);
-		if($moreWith!==NULL) $query->setAllWith($moreWith);
+		if($moreWith!==null) $query->setAllWith($moreWith);
 		return $query;
 	}
 	
-	private static function _createHasManyQuery($query,$w,$values,$resField,$addResField=false,$moreWith=NULL,$fieldTableAlias=NULL){
+	private static function _createHasManyQuery($query,$w,$values,$resField,$addResField=false,$moreWith=null,$fieldTableAlias=null){
 		if($query===null){
 			if($addResField===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
 			else $query = new QFindAll($w['modelName']);
 		}
 		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
 		if(isset($w['where'])) $where=$w['where']; else $where=array();
-		if($fieldTableAlias !== NULL) $resField=$fieldTableAlias.'.'.$resField;
+		if($fieldTableAlias !== null) $resField=$fieldTableAlias.'.'.$resField;
 		$where[$resField]=$values;
 		$query->where($where);
 		if(isset($w['orderBy'])) $query->orderBy($w['orderBy']);
-		if(isset($w['groupBy'])) $query->groupBy($w['groupBy']);
+		if(isset($w['groupBy'])){
+			if($addResField===true) $w['groupBy'][]=$resField;
+			$query->groupBy($w['groupBy']);
+		}
 		if(isset($w['with'])) $query->_setWith($w['with']);
 		if(isset($w['limit'])) $query->limit($w['limit']);
-		if($moreWith!==NULL) $query->setAllWith($moreWith);
+		if($moreWith!==null) $query->setAllWith($moreWith);
 		if(isset($w['groupResBy'])) $query->groupResBy($w['groupResBy']);
 		if(isset($w['tabResKey'])) $query->tabResKey($w['tabResKey']);
 		return $query;

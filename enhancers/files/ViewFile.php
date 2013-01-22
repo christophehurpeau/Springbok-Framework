@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.5';
+	public static $CACHE_PATH='views_8.5.1';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -124,8 +124,8 @@ class ViewFile extends PhpFile{
 </script>';},$content);
 		
 		
-		$content=preg_replace_callback('/{recursiveFunction\s+([^}]+)\s*(?:use\(([^)]+)\)\s*)\}(.*){\/recursiveFunction}/Us',function(&$m){
-			return '<?php UPhp::recursive(function(&$callback,&'.$m[1].')'.(empty($m[2])?'':' use(&'.implode(',&',explode(',',$m[2])).')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
+		$content=preg_replace_callback('/{recursiveFunction\s+([^}]+)\s*(?:use\(([^)]+)\)\s*)?\}(.*){\/recursiveFunction}/Us',function($m){
+			return '<?php UPhp::recursive(function($callback,'.$m[1].')'.(empty($m[2])?'':' use('.implode(',',$m[2]).')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
 		},$content);
 		
 		$content=preg_replace('/{icon(32|)\s+([^}]+)\s*\}/','<span class="icon$1 $2"></span>',$content);
