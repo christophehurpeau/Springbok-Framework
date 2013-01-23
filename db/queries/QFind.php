@@ -702,7 +702,10 @@ abstract class QFind extends QSelect{
 		$query->where($where);
 		if(isset($w['orderBy'])) $query->orderBy($w['orderBy']);
 		if(isset($w['groupBy'])){
-			if($addResField===true) $w['groupBy'][]=$resField;
+			if($addResField===true){
+				if(is_string($w['groupBy'])) $w['groupBy']=array($w['groupBy']);
+				$w['groupBy'][]=$resField;
+			}
 			$query->groupBy($w['groupBy']);
 		}
 		if(isset($w['with'])) $query->_setWith($w['with']);
