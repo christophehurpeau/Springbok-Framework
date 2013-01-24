@@ -55,7 +55,7 @@ class Springbok{
 	public static function handleException($exception){
 		$previousError=self::$inError;
 		$forceDefault=self::$inError!==null/* DEV */||App::$enhancing/* /DEV */;
-		self::$inError=/* DEV */$exception/* /DEV *//* HIDE */||/* /HIDE *//* PROD */true/* /PROD */;
+		self::$inError=$exception;
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		while(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
