@@ -132,9 +132,7 @@ footer,div.footer{
 	color:$FooterColor;
 	font-size:$FooterFontSize;
 	@if $FooterPadding{ padding:$FooterPadding; }
-	@else{
-		@if $FooterPaddingBottom{ padding-bottom:$FooterPaddingBottom; }
-	}
+	@else if $FooterPaddingBottom{ padding-bottom:$FooterPaddingBottom; }
 	text-align:center;
 	width:100%;
 	clear:both;
