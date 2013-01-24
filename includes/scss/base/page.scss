@@ -123,10 +123,18 @@ header div.right{
 }
 header div.right a{font-size:8.5pt}
 
+$FooterBackground:false !default;
+$FooterFontSize:0.7em !default;
+$FooterPadding:false !default;
+$FooterPaddingBottom:5px !default;
 footer,div.footer{
+	@include background($FooterBackground);
 	color:$FooterColor;
-	font-size:0.7em;
-	padding-bottom:5px;
+	font-size:$FooterFontSize;
+	@if $FooterPadding{ padding:$FooterPadding; }
+	@else{
+		@if $FooterPaddingBottom{ padding-bottom:$FooterPaddingBottom; }
+	}
 	text-align:center;
 	width:100%;
 	clear:both;
