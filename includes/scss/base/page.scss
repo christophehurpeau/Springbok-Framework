@@ -2,6 +2,7 @@
 
 $PAGE_100:true !default;
 $PAGE_FIXED:false !default;
+$PAGE_VERSION:1 !default;
 
 $HeaderBackground:false !default;
 $HeaderColor:false !default;
@@ -30,16 +31,17 @@ $FixedVariableBackground:#FFF !default;
 $FixedVariableBorder:false !default;
 $VariableContentBackground:false !default;
 $VariableAutoContentPadding:true !default;
-      
+$VariablePadding:-1 !default;
+@if $VariablePadding==-1{
+	@if $PAGE_VERSION==1{ $VariablePadding:false; }
+	@else{ $VariablePadding:8px 10px; }
+}
+
 $IE6_VARIABLE_WIDTH:700px !default;
 
 $PageShadowedBowBackground:#FFF !default;
 $PageShadowedBowBorder:false !default;
 $PageShadowedBowShadowColor:#888 !default;
-
-$BreadcrumbsInVariable:false !default;
-$BreadcrumbsBackground:false !default;
-$BreadcrumbsFontSize:0.88em !default;
 
 
 html{
@@ -48,7 +50,7 @@ html{
   -ms-text-size-adjust: 100%; /* 2 */
 }
 html,body{ @if $PAGE_100{ height:100%; } @else { min-height:100%; }}
-body{
+body/*,.mceContentBody*/{
 	font:normal /*62.5%*/80% Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 	@include background($BodyBackground); color:$BodyColor;
 	margin:0;padding:0;
@@ -57,8 +59,13 @@ body{
 input,textarea{
 	font:normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 }
-@if $FixedVariableBackground{
-  body.mceContentBody{background:$FixedVariableBackground;}
+body.mceContentBody{
+	@if $VariableBackground{background:$VariableBackground;}
+	@else if $FixedVariableBackground{background:$FixedVariableBackground;}
+	@else if $PageBackground{background:$PageBackground;}
+	@else if $ContainerBackground{background:$ContainerBackground;}
+	
+	@if $VariableColor{ color:$VariableColor; }
 }
 
 @includeCore 'base/interactions.scss';
@@ -124,12 +131,14 @@ header div.right{
 header div.right a{font-size:8.5pt}
 
 $FooterBackground:false !default;
-$FooterFontSize:0.7em !default;
+$FooterColor:false !default;
+$FooterFontSize:0.75em !default;
 $FooterPadding:false !default;
-$FooterPaddingBottom:5px !default;
+$FooterPaddingBottom:4px !default;
+$FooterLinkColor:false !default;
 footer,div.footer{
 	@include background($FooterBackground);
-	color:$FooterColor;
+	@if $FooterColor{ color:$FooterColor; }
 	font-size:$FooterFontSize;
 	@if $FooterPadding{ padding:$FooterPadding; }
 	@else if $FooterPaddingBottom{ padding-bottom:$FooterPaddingBottom; }
@@ -143,26 +152,39 @@ footer,div.footer{
 		bottom:0;
 	}
 }
+@if $FooterLinkColor{
+	footer a{ color:$FooterLinkColor !important; }
+}
 
-footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
+footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 
+
+$BreadcrumbsInVariable:false !default;
+$BreadcrumbsBackground:false !default;
+$BreadcrumbsFontSize:0.88em !default;
+$BreadcrumbsShadow:-1 !default;
+$BreadcrumbsColor:false !default;
 #breadcrumbs{
-	@if $BreadcrumbsBackground{ $BreadcrumbsPadding:2px 3px 3px !default; margin:3px 3px 5px;padding:$BreadcrumbsPadding; background:$BreadcrumbsBackground; }
-	$BreadcrumbsPadding:false !default;
+	$BreadcrumbsPadding:-1 !default;
+	$BreadcrumbsMargin:-1 !default;
+	@if $BreadcrumbsBackground{  @if -1==$BreadcrumbsPadding{$BreadcrumbsPadding:2px 3px 3px 5px;} $BreadcrumbsMargin:3px 3px 5px; padding:$BreadcrumbsPadding; background:$BreadcrumbsBackground; }
 	@if false==$BreadcrumbsInVariable{
-		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
+		$BreadcrumbsMargin:0 0 5px;
+		@if $FixedVariableShadow and $BreadcrumbsShadow==-1{ $BreadcrumbsShadow:$FixedVariableShadow; }
 		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
 		@if false==$BreadcrumbsBackground{
-			@if $FixedVariableBackground{margin:3px 3px 5px; @if false==$BreadcrumbsPadding{padding:2px 3px 3px;} background:$FixedVariableBackground; }
-			@else{ margin:0 0 5px; }
+			@if $FixedVariableBackground{ @if -1==$BreadcrumbsPadding{padding:2px 3px 3px 5px;} background:$FixedVariableBackground; }
 		}
 	}
+	@if $BreadcrumbsShadow!=-1 and $BreadcrumbsShadow!=false{ @include boxShadow($BreadcrumbsShadow,3px); }
+	@if $BreadcrumbsMargin!=-1 and $BreadcrumbsMargin{ margin:$BreadcrumbsMargin; }
 	@if $BreadcrumbsFontSize{ font-size:$BreadcrumbsFontSize; }
 	@if $BreadcrumbsPadding{ padding:$BreadcrumbsPadding; }
+	@if $BreadcrumbsColor{ color:$BreadcrumbsColor; a{ color:$BreadcrumbsColor !important;} }
 }
 #breadcrumbs span.last{
 	cursor:default;
-	color:$InteractionCurrentColor;
+	@if $BreadcrumbsColor==false{ color:$InteractionCurrentColor; }
 }
 
 
@@ -179,7 +201,7 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 	
 	@if $PAGE_FIXED{
   	@if $PageWidth==false{ margin:0 3px; }
-  	padding-top:38px;
+  	padding-top:40px;
     position:relative;
     overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
     overflow-x: hidden;
@@ -189,125 +211,168 @@ footer a,div.footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
     margin-top:8px;
 	}
 	
-	div.fixed,div.variable{
-	  @if $PAGE_FIXED{
-  	  position:relative;
-      @if $FixedVariableMargin{ margin:3px; }
-      /*position:absolute;right:0;top:0;left:0;bottom:0;*/
-	  }@else{
-  	  overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
-      overflow-x: hidden;
-      position:relative;
-      @if $FixedVariableMargin{ margin:0 10px; }
-	  }
-		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
-		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
-		@if $FixedVariableBackground{ background:$FixedVariableBackground; }
-		@if $FixedVariableBorder{ border:$FixedVariableBorder; }
-	}
-	
-	@if $PAGE_FIXED{
-  	div.fixed.right{float:left}
-  	div.fixed.left{float:right}
-	}
-	
-	$__pageFixed_or_fixedBackground_or_fixedBorder:false;
-	@if $PAGE_FIXED{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
-	@else if $FixedBackground{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
-	@else if $FixedBorder{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
-	@if $__pageFixed_or_fixedBackground_or_fixedBorder{
-  	div.fixed{
-  		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
-  		overflow-x: hidden;
-  		@if $FixedBackground{ background:$FixedBackground; }
-  		@if $FixedBorder{ border:1px solid $FixedBorder; }
-  		@if $PAGE_FIXED{
-  			position:fixed; _position:absolute; z-index:6;
-  			top:40px; left:0; right:0; bottom:20px;
-  		}
-  	}
-	}
-	
-	@if $PAGE_FIXED{
-	  div.fixed.right{left:auto; *float:left;/* for ie7 */}
-    div.fixed.left{right:auto; *float:right;/* for ie7 */}
+	@if $PAGE_VERSION==1{
+		div.fixed,div.variable{
+		  @if $PAGE_FIXED{
+	  	  position:relative;
+	      @if $FixedVariableMargin{ margin:3px; }
+	      /*position:absolute;right:0;top:0;left:0;bottom:0;*/
+		  }@else{
+	  	  overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+	      overflow-x: hidden;
+	      position:relative;
+	      @if $FixedVariableMargin{ margin:0 10px; }
+		  }
+			@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
+			@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
+			@if $FixedVariableBackground{ background:$FixedVariableBackground; }
+			@if $FixedVariableBorder{ border:$FixedVariableBorder; }
+		}
 	}@else{
-  	div.fixed.right{float:right;}
-  	div.fixed.left{float:left;}
+		//@extend .row;
+		display:table; table-layout:fixed; width:100%;
+		
+		.col.fixed, .col.variable{
+			@if $PAGE_FIXED{
+				position:relative;
+				@if $FixedVariableMargin{ margin:3px; }
+			}@else{
+				overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+				overflow-x: hidden;
+				position:relative;
+				@if $FixedVariableMargin{ margin:0 10px; }
+			}
+		}
 	}
 	
-	div.fixed h2{ text-align:center;}
 	
-	div.variable{
-		@include background($VariableBackground);
-		@if $VariableColor{ color:$VariableColor; }
-		@if $VariableBorder{ border:1px solid $VariableBorder; }
-		@if $VariableShadow{ @include boxShadow($VariableShadow); }
+	@if $PAGE_VERSION==1{
+		@if $PAGE_FIXED{
+	  	div.fixed.right{float:left}
+	  	div.fixed.left{float:right}
+		}
+	
+		$__pageFixed_or_fixedBackground_or_fixedBorder:false;
+		@if $PAGE_FIXED{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
+		@else if $FixedBackground{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
+		@else if $FixedBorder{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
+		@if $__pageFixed_or_fixedBackground_or_fixedBorder{
+	  	div.fixed{
+	  		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+	  		overflow-x: hidden;
+	  		@if $FixedBackground{ background:$FixedBackground; }
+	  		@if $FixedBorder{ border:1px solid $FixedBorder; }
+	  		@if $PAGE_FIXED{
+	  			position:fixed; _position:absolute; z-index:6;
+	  			top:40px; left:0; right:0; bottom:20px;
+	  		}
+	  	}
+		}
+	}@else{
+		.col.fixed{
+			@if $FixedBackground{ background:$FixedBackground; }
+			@if $FixedBorder{ border:1px solid $FixedBorder; }
+		}
 	}
 	
-	div.variablep{margin:0;padding:0;float:left; }
-}
-.content,#page .content{padding:5px 10px;}
-$VariablePaddingValue:8px 10px !default;
-#page{
-	div.variable.padding{padding:$VariablePaddingValue}
-	div.variable.paddingtop{padding:8px 0 0}
-	@if $VariableAutoContentPadding{
-	  @if false==$VariableBackground{
-	    @if false==$FixedVariableBackground{
-	      div.variable > div.content{padding:5px 5px 0 0}
-	    }
-	  }
-	}
-	div.variable.padding > div.content{padding:5px 0;}
 	
-	div.variable > h1{ margin:0; }
-	div.variable.content div.content,div.variable .content div.content{
-		clear:both;position:relative;
-		@if $VariableContentBackground{ background:$VariableContentBackground; }
+	@if $PAGE_VERSION==1{
+		@if $PAGE_FIXED{
+		  div.fixed.right{left:auto; *float:left;/* for ie7 */}
+	    div.fixed.left{right:auto; *float:right;/* for ie7 */}
+		}@else{
+	  	div.fixed.right{float:right;}
+	  	div.fixed.left{float:left;}
+		}
+		
+		div.fixed h2{ text-align:center; }
+	}@else{
+		.col.fixed h2{ text-align:center; }
 	}
-	div.variable.content div.content.float_left,div.variable .content div.content.float_left{clear:none}
-	div.variable div.content.float_left.noclear{clear:none}
-	/*div.variable div.content h2{ margin:2px 0; }*/
+	
+	@if $PAGE_VERSION==1{
+		div.variable{
+			@include background($VariableBackground);
+			@if $VariableColor{ color:$VariableColor; }
+			@if $VariableBorder{ border:1px solid $VariableBorder; }
+			@if $VariableShadow{ @include boxShadow($VariableShadow); }
+			@if $VariablePadding{ padding:$VariablePadding; }
+		}
+	}@else{
+		.col.variable{
+			@include background($VariableBackground);
+			@if $VariableColor{ color:$VariableColor; }
+			@if $VariableBorder{ border:1px solid $VariableBorder; }
+			@if $VariableShadow{ @include boxShadow($VariableShadow); }
+			@if $VariablePadding{ padding:$VariablePadding; }
+		}
+	}
+	
+	@if $PAGE_VERSION==1{
+		div.variablep{margin:0;padding:0;float:left; }
+	}
 	
 	div.overflow{margin:0;padding:0;width:100%;overflow:auto;clear:both}
-	
 	div.newContext{ position:relative }
-	
-	#dynamictabsContent{
-		position:relative;
+}
+.content,#page .content{padding:5px 10px;}
+@if $PAGE_VERSION==1{
+	$VariablePaddingValue:8px 10px !default;
+	#page{
+		div.variable.padding{padding:$VariablePaddingValue}
+		div.variable.paddingtop{padding:8px 0 0}
+		@if $VariableAutoContentPadding{
+		  @if false==$VariableBackground{
+		    @if false==$FixedVariableBackground{
+		      div.variable > div.content{padding:5px 5px 0 0}
+		    }
+		  }
+		}
+		div.variable.padding > div.content{padding:5px 0;}
+		
+		div.variable > h1{ margin:0; }
+		div.variable.content div.content,div.variable .content div.content{
+			clear:both;position:relative;
+			@if $VariableContentBackground{ background:$VariableContentBackground; }
+		}
+		div.variable.content div.content.float_left,div.variable .content div.content.float_left{clear:none}
+		div.variable div.content.float_left.noclear{clear:none}
+		/*div.variable div.content h2{ margin:2px 0; }*/
+		
+		#dynamictabsContent{
+			position:relative;
+		}
 	}
-}
-
-#page.absolute{
-	position:absolute;top:0;bottom:0;left:5px;right:5px;
-	
-	div.variable{
-		position:absolute;right:0;top:38px;left:0;bottom:20px;
-		overflow:auto;
+	#page.absolute{
+		position:absolute;top:0;bottom:0;left:5px;right:5px;
+		
+		div.variable{
+			position:absolute;right:0;top:38px;left:0;bottom:20px;
+			overflow:auto;
+		}
 	}
-}
 
-@if false==$PAGE_FIXED{
-  /* IE <= 6 */
-  * html body #page div.variable{
-  	float:left;
-  	width:$IE6_VARIABLE_WIDTH;
-  }
-  /*
-  * html body #page > .content{
-  	overflow:hidden;
-  }*/
-}
+	@if false==$PAGE_FIXED{
+	  /* IE <= 6 */
+	  * html body #page div.variable{
+	  	float:left;
+	  	width:$IE6_VARIABLE_WIDTH;
+	  }
+	  /*
+	  * html body #page > .content{
+	  	overflow:hidden;
+	  }*/
+	}
 
-div.shadowed-box{
-	padding:4px 6px; margin:0 5px 10px;
-	border-radius:4px;
-	@include boxShadow($PageShadowedBowShadowColor,4px);
-	background:$PageShadowedBowBackground;
-	@if $PageShadowedBowBorder{ border:$PageShadowedBowBorder; }
-	
-	h2{font-size:1.3em; margin-top:2px;}
+	div.shadowed-box{
+		padding:4px 6px; margin:0 5px 10px;
+		border-radius:4px;
+		@include boxShadow($PageShadowedBowShadowColor,4px);
+		background:$PageShadowedBowBackground;
+		@if $PageShadowedBowBorder{ border:$PageShadowedBowBorder; }
+		
+		h2{font-size:1.3em; margin-top:2px;}
+	}
 }
 
 /* Width & Height */
@@ -342,42 +407,43 @@ div.shadowed-box{
 .h200{height:200px}
 .h300{height:300px}
 
-@if $PAGE_FIXED{
-  #page div.variable.l160{left:170px}
-  #page div.variable.l200{left:210px}
-  #page div.variable.l280{left:290px}
-  #page div.variable.l300{left:320px}
-  #page div.variable.l350{left:360px}
-  #page div.variable.l380{left:390px}
-  #page div.variable.l400{left:410px}
-  #page div.variable.l420{left:430px}
-  
-  #page div.variable.r160{right:170px}
-  #page div.variable.r200{right:210px}
-  #page div.variable.r300{right:310px}
-  #page div.variable.r350{right:360px}
-  #page div.variable.r380{right:390px}
-  #page div.variable.r400{right:410px}
-  #page div.variable.r420{right:430px}
+@if $PAGE_VERSION==1{
+	@if $PAGE_FIXED{
+	  #page div.variable.l160{left:170px}
+	  #page div.variable.l200{left:210px}
+	  #page div.variable.l280{left:290px}
+	  #page div.variable.l300{left:320px}
+	  #page div.variable.l350{left:360px}
+	  #page div.variable.l380{left:390px}
+	  #page div.variable.l400{left:410px}
+	  #page div.variable.l420{left:430px}
+	  
+	  #page div.variable.r160{right:170px}
+	  #page div.variable.r200{right:210px}
+	  #page div.variable.r300{right:310px}
+	  #page div.variable.r350{right:360px}
+	  #page div.variable.r380{right:390px}
+	  #page div.variable.r400{right:410px}
+	  #page div.variable.r420{right:430px}
+	}
+	#page.ml160{margin-left:170px}
+	#page.ml200,.ml200{margin-left:210px}
+	#page.ml280,.ml280{margin-left:290px}
+	#page.ml300{margin-left:320px}
+	#page.ml350{margin-left:360px}
+	#page.ml380{margin-left:390px}
+	#page.ml400{margin-left:410px}
+	#page.ml420{margin-left:430px}
+	
+	#page.mr160{margin-right:170px}
+	#page.mr200,.mr200{margin-right:210px}
+	#page.mr280,.mr280{margin-right:290px}
+	#page.mr300,.mr300{margin-right:310px}
+	#page.mr350{margin-right:360px}
+	#page.mr380{margin-right:390px}
+	#page.mr400{margin-right:410px}
+	#page.mr420{margin-right:430px}
 }
-
-#page.ml160{margin-left:170px}
-#page.ml200,.ml200{margin-left:210px}
-#page.ml280,.ml280{margin-left:290px}
-#page.ml300{margin-left:320px}
-#page.ml350{margin-left:360px}
-#page.ml380{margin-left:390px}
-#page.ml400{margin-left:410px}
-#page.ml420{margin-left:430px}
-
-#page.mr160{margin-right:170px}
-#page.mr200,.mr200{margin-right:210px}
-#page.mr280,.mr280{margin-right:290px}
-#page.mr300,.mr300{margin-right:310px}
-#page.mr350{margin-right:360px}
-#page.mr380{margin-right:390px}
-#page.mr400{margin-right:410px}
-#page.mr420{margin-right:430px}
 
 html body .mr10{margin-right:10px}/* DO NOT put this in #page */
 .mr20{margin-right:20px}
