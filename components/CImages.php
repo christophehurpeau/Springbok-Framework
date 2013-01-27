@@ -19,6 +19,10 @@ class CImages extends CFiles{
 		return parent::upload($name,$image);
 	}
 	
+	public static function folderPath(){
+		return DATA.static::$folderPrefix.'images/';
+	}
+	
 	public static function plupload($image=null,$result=null){
 		Controller::noCache();
 		$targetDir=DATA.'tmp/plupload/';
@@ -120,14 +124,14 @@ class CImages extends CFiles{
 		// in case it's interesting
 		$image->width=$width;
 		$image->height=$height;
-		
+		$image->ext=substr($ext,1);
 		
 		if($image->_pkExists()){
 			$id=$image->_getPkValue();
 			$image->update();
 		}else $id=$image->insert();
 		
-		$filename=DATA.static::$folderPrefix.'images/'.$id;
+		$filename=static::folderPath().$id;
 		rename($tmpFile,$filename.$ext);
 		chmod($filename.$ext,0755);	
 		
@@ -141,7 +145,7 @@ class CImages extends CFiles{
 				$image->delete();
 				return false;
 			}
-			unlink($filename.$ext);
+			//unlink($filename.$ext);
 		}
 		
 		self::generateThumbnails($id,null);
@@ -152,7 +156,7 @@ class CImages extends CFiles{
 	public static function generateThumbnails($filenameWithoutExt,$thumbnails=null){
 		if($thumbnails===null) $thumbnails=self::$_config[static::$folderPrefix.'thumbnails'];
 		if($thumbnails){
-			$filenameWithoutExt=DATA.static::$folderPrefix.'images/'.$filenameWithoutExt;
+			$filenameWithoutExt=static::folderPath().$filenameWithoutExt;
 			if(!($image_params = getimagesize($filenameWithoutExt.'.jpg')))
 				throw new Exception(_tC('Invalid image'));
 			list($width,$height)=$image_params;
@@ -241,15 +245,15 @@ class CImages extends CFiles{
 	
 	
 	public static function deleteFiles($id){
-		$filename=DATA.static::$folderPrefix.'images/'.$id;
-		if(file_exists($cfilename=$filename.'.jpg')) unlink($cfilename);
+		$filename=static::folderPath().$id;
+		UFile::rm($filename.'.jpg');
 		foreach(self::$_config['thumbnails'] as $suffix=>$params)
-			if(file_exists($cfilename=$filename.'-'.$suffix.'.jpg')) unlink($cfilename);
+			UFile::rm($filename.'-'.$suffix.'.jpg');
 	}
 	
 	
 	public static function crop($srcFileName,$destFileName,$crop_width,$crop_height){
-		$images_dir=DATA.static::$folderPrefix.'images/';
+		$images_dir=static::folderPath();
 		return self::cropFile($images_dir.$srcFileName,$images_dir.$destFileName,$crop_width,$crop_height);
 	}
 	
