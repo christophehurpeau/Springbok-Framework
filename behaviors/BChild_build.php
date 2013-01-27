@@ -12,7 +12,7 @@ class BChild_build{
 		$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->data["'.$idField.'"]=$idParent; return parent::insertIgnore();} }';
 		$typesParent=$enhanceConfig['modelParents'][$annotations['Child'][0][0]];
 		$typeForParent=array_search($modelFile->_className,$typesParent);
-		if($typeForParent===false) throw new Exception("Type parent not found: ".print_r($typesParent,true).' ('.$modelFile->_className.')');
+		if($typeForParent===false) throw new Exception("Type parent not found for ".$modelFile->_className.": ".print_r($typesParent,true));
 		
 		$classBeforeContent.='public function insertParent(){ $parent=new '.$annotations['Child'][0][0].';'
 									.'$data=$this->data;'.($idField==='id' ? '' : 'unset($data["id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
