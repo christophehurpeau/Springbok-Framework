@@ -21,4 +21,10 @@ class QFindOne extends QFind{
 		$res=$this->execute();
 		return $res===false?$res:$res->toArray();
 	}
+	
+	public function notFoundIfFalse(){
+		$res=$this->execute();
+		if($res===false) notFound();
+		return $res;
+	}
 }
