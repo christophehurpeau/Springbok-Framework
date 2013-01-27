@@ -1,4 +1,5 @@
 <?php
+class FileUploadException extends Exception{}
 class CFiles{
 	protected static $folderPrefix;
 	
@@ -8,14 +9,22 @@ class CFiles{
 	public static function upload($name='file',$file=null){
 		$errorMessage=self::fileErrorMessage($_FILES[$name]['error']);
 		if($errorMessage===true){
-			$tmpFile=tempnam('/tmp','img');
+			$tmpFile=tempnam('/tmp','uploadFile');
 			move_uploaded_file($_FILES[$name]['tmp_name'], $tmpFile);
 			if($file===null) $file=static::createObject();
-			$file->name=$_FILES[$name]['name'];
+			static::_cleanName($file,$_FILES[$name]['name']);
 			static::add($tmpFile,$file);
 			return $file;
-		}else throw new Exception($errorMessage);
+		}else throw new FileUploadException($errorMessage);
 		return false;
+	}
+	
+	public static function uploadAndDetect($name='file',$classIfImage,$file=null){
+		if(!empty($_FILES[$name]['name'])){
+			$ext=UFile::extension($_FILES[$name]['name']);
+			if(in_array($ext,$classIfImage::$imagesExtensions)) return $classIfImage::upload($name,$file);
+		}
+		return static::upload($name,$file);
 	}
 	
 	public static function uploadM($name){
@@ -23,19 +32,24 @@ class CFiles{
 		foreach($_FILES[$name]['error'] as $key=>$error){
 			$errorMessage=self::fileErrorMessage($error);
 			if($errorMessage===true){
-				$tmpFile=tempnam('/tmp','img');
+				$tmpFile=tempnam('/tmp','uploadFile');
 				move_uploaded_file($_FILES[$name]['tmp_name'][$key], $tmpFile);
 				$file=static::createObject();
-				$file->name=$_FILES[$name]['name'][$key];
+				static::_cleanName($file,$_FILES[$name]['name'][$key]);
 				try{
 					static::add($tmpFile,$file);
 					$files[]=$file;
-				}catch(Exception $ex){
+				}catch(FileUploadException $ex){
 					$errors[$_FILES[$name]['name'][$key]]=$ex->getMessage();
 				}
 			}else $errors[$_FILES[$name]['name'][$key]]=$errorMessage;
 		}
 		return array($files,$errors);
+	}
+	
+	
+	public static function _cleanName($file,$name){
+		$file->name=trim($name);
 	}
 
 	private static function fileErrorMessage($error){
@@ -50,6 +64,9 @@ class CFiles{
 	}
 	
 	
+	public static function folderPath(){
+		return DATA.static::$folderPrefix.'files/';
+	}
 	public static function add($tmpFile,$file){
 		$file->ext=UFile::extension($file->name);
 		
@@ -58,9 +75,9 @@ class CFiles{
 			$file->update();
 		}else $id=$file->insert();
 		
-		$filename=DATA.static::$folderPrefix.'files/'.$id;
+		$filename=static::folderPath().$id;
 		rename($tmpFile,$fullFilename=($filename.'.'.$file->ext));
-		chmod($fullFilename,0755);	
+		chmod($fullFilename,0755);
 		
 		return $id;
 	}

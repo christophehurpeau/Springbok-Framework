@@ -1,7 +1,7 @@
 <?php
 class CImages extends CFiles{
 	private static $_config;
-	protected static $toJpeg=true;
+	protected static $toJpeg=true,$imagesExtensions=array('jpg','png','gif','jpeg');
 	
 	public static function init(){
 		self::$_config=&Config::$images;
@@ -93,13 +93,22 @@ class CImages extends CFiles{
 		// Return JSON-RPC response
 		if($chunks==0 || $chunk+1==$chunks){
 			if($image===NULL) $image=static::createImage();
-			$image->name=trim($_REQUEST['name']);
-			if(in_array(strtolower(substr($image->name,-4)),array('.jpg','.png','.gif'))) $image->name=substr($image->name,0,-4);
-			elseif(strtolower(substr($image->name,-5))==='.jpeg') $image->name=substr($image->name,0,-5);
+			static::_cleanName($image,$_REQUEST['name']);
 			
 			$idImage=self::add($targetDir.DS.$fileName,$image);
 			echo '{"jsonrpc" : "2.0", "result": '.($result===null?'null':$result($image)).', "id" :'.$idImage.'}';
 		}else echo '{"jsonrpc" : "2.0", "result": null, "id": null}';
+	}
+
+	public static function _cleanName($image,$name){
+		$image->name=trim($name);
+		$liname=strtolower($image->name);
+		foreach(static::$imagesExtensions as $ext){
+			if(endsWith($liname,'.'.$ext)){
+				$image->name=substr($image->name,0,-strlen($ext)-1);
+				break;
+			}
+		}
 	}
 	
 	public static function importImage($url,$image){
