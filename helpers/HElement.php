@@ -10,6 +10,7 @@ abstract class HElement{
 	public function style($style){ $this->attributes['style']=$style; return $this; }
 	public function onClick($onClick){ $this->attributes['onclick']=$onClick; return $this; }
 	public function unsetAttr($attrName){ unset($this->attributes[$attrName]); return $this; }
+	public function rmAttr($attrName){ unset($this->attributes[$attrName]); return $this; }
 	public function getAttr($attrName){ return $this->attributes[$attrName]; }
 	public function hasAttr($attrName){ return isset($this->attributes[$attrName]); }
 	

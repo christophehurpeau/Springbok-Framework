@@ -134,6 +134,9 @@ class HElementForm extends HElement{
 	public function input($name,$largeSize=1){
 		return new HElementFormInput($this,$name,$largeSize);
 	}
+	public function inputFile($name){
+		return $this->input($name)->setType('file');
+	}
 	public function textarea($name){
 		return new HElementFormTextarea($this,$name);
 	}

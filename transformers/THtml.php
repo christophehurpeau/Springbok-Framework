@@ -42,7 +42,7 @@ class THtml extends STransformer{
 					$attrs['class']='action icon '.$action[0];
 					$action=array($attrs,isset($action[1]) ? $action[1] : $action[0]);
 				}
-				if($action[1] !== '/') $action[1]='/'.$this->component->controller.'/'.$action[1];
+				if($action[1][0] !== '/') $action[1]='/'.$this->component->controller.'/'.$action[1];
 			}
 		}
 		echo '</tr>';

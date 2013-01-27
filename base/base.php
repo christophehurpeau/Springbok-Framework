@@ -196,6 +196,8 @@ function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
 function isTrue($cond,$then,$else=''){ return $cond===true ? $then : $else; }
 function isFalse($cond,$then,$else=''){ return $cond===false ? $then : $else; }
 
+function is_function($f){ return is_object($f) && $f instanceof Closure; }
+
 function render($file,$vars,$return=false){
 	extract($vars);
 	if($return){
