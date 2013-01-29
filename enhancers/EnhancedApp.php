@@ -1,6 +1,6 @@
 <?php
 class EnhancedApp extends Enhanced{
-	private $controllers,$controllersDeleted,$md5EnhanceConfig,$isJsApp;
+	private $controllers,$controllersDeleted,$md5EnhanceConfig,$allPluginPaths=array();
 	public $appConfig,$devConfig,$warnings;
 	
 	public function __construct($type,&$dirname){
@@ -14,7 +14,6 @@ class EnhancedApp extends Enhanced{
 		elseif(file_exists($appDir.'src/config/_'.ENV.'.json')) $this->devConfig=UFile::getJSON($appDir.'src/config/_'.ENV.'.json');
 		
 		$this->md5EnhanceConfig=empty($this->config['config'])?'':md5(implode('~',$this->config['config']));
-		$this->isJsApp=file_exists($appDir.'src/web/jsapp.js');
 		
 		if(empty($this->devConfig['pluginsPaths'])) $this->devConfig['pluginsPaths']=array();
 		$this->devConfig['pluginsPaths']['SpringbokCore']=dirname(CORE).'/plugins/';
@@ -40,6 +39,13 @@ class EnhancedApp extends Enhanced{
 			}
 			$i++;
 		}
+		unset($plugins,$plugin);
+		
+		$pluginsPaths=$this->devConfig('pluginsPaths');
+		foreach($this->config['plugins'] as $key=>$plugin){
+			if(!isset($plugin[2])) $this->allPluginPaths[$key]=$pluginsPaths[$plugin[0]].$plugin[1].'/';
+		}
+		
 		//}
 	}
 	
@@ -60,8 +66,6 @@ class EnhancedApp extends Enhanced{
 	public function md5EnhanceConfig(){ return $this->md5EnhanceConfig; }
 	
 	
-	public function isJsApp(){ return $this->isJsApp; }
-	
 	public function pluginPath($plugin){
 		$pluginsPaths=$this->devConfig('pluginsPaths');
 		return $pluginsPaths[$plugin[0]].$plugin[1].'/';
@@ -71,5 +75,9 @@ class EnhancedApp extends Enhanced{
 		$pluginsPaths=$this->devConfig('pluginsPaths');
 		$plugin=$this->config['plugins'][$key];
 		return $pluginsPaths[$plugin[0]].$plugin[1].'/';
+	}
+
+	public function allPluginPaths(){
+		return $this->allPluginPaths;
 	}
 }

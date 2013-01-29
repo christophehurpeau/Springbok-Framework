@@ -5,7 +5,19 @@ class DBMySQL extends DBSql{
 	public function _getType(){return 'MySQL';}
 	
 	public function connect(){
-		$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],$this->_config['dbname'],$this->_config['port']);
+		/* DEV */
+		try{
+		/* /DEV */
+			$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],$this->_config['dbname'],$this->_config['port']);
+		/* DEV */
+		}catch(mysqli_sql_exception $e){
+			if($e->getMessage()==="Unknown database '{$this->_config['dbname']}'"){
+				$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],'mysql',$this->_config['port']);
+				$this->_connect->query('CREATE DATABASE '.$this->formatTable($this->_config['dbname']));
+				$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],$this->_config['dbname'],$this->_config['port']);
+			}else throw $e;
+		}
+		/* /DEV */
 		//if($this->_connect->connect_errno) throw new DBException('Unable to connect: '.$this->_connect->connect_error); => WARNING 
 		$this->_connect->query('SET NAMES utf8');
 	}

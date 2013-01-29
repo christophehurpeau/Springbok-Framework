@@ -55,7 +55,7 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 				$args=empty($t['args']) ? $t['params'] : $t['args'];
 				foreach($args as $num=>$arg){ 
 					$prettyMessage.='<i style="color:#AAA;font-size:7pt;">Arg '.$num.'</i> ';
-					$prettyMessage.=short_debug_var($arg);
+					$prettyMessage.=UVarDump::dump($arg);
 					$prettyMessage.="\n";
 				}
 				//echo "\t".str_replace("\n", "\n\t",print_r($t['args'],true))."\n";
@@ -70,49 +70,6 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 		else $prettyMessage.='<br />';
 	}
 	return $prettyMessage;
-}
-function _debug_color($content,$color,$html=true){ return $html?'<span style="color:#'.$color.';">'.htmlentities($content,ENT_QUOTES,'UTF-8',true).'</span>':$content; }
-//define('SHORTDEBUGVAR_KEY','short_debug_var_recursion_protection_scheme'); define('SHORTDEBUGVAR_KEYNAME','short_debug_var_referenced_object_name');
-function short_debug_var($var,$MAX_DEPTH=3,$html=null,$currentDepth=0){
-	if($html===null) $html=!defined('STDIN');
-	if(is_object($var)){
-		$res=_debug_color("Object: ",'BD74BE',$html)._debug_color(get_class($var),'BD74BE;font-weight:bold',$html);
-		if($currentDepth<$MAX_DEPTH){
-			$objectVars = get_object_vars($var);
-			if($var instanceof SModel) $objectVars=array_merge($objectVars,$var->_getData());
-			if(!empty($objectVars)) $res.="\n";
-			foreach($objectVars as $key=>&$value)
-				$res.=str_repeat(_debug_color('| ','666',$html),$currentDepth+1).$key.'= '.short_debug_var($value,$MAX_DEPTH,$html,$currentDepth+1)."\n";
-		}
-		return $res;
-	}elseif(is_resource($var)){
-		return '[ressource]';
-	}elseif(is_array($var)){
-		//if(isset($var[SHORTDEBUGVAR_KEYVAR])) $res=_debug_color('= & '.$var[SHORTDEBUGVAR_KEYNAME],'e87800',$html);
-		//else{
-			reset($var);
-			if(empty($var)) $res=_debug_color('empty','FFF;font-weight:bold',$html);
-			else{
-				$count=count($var);
-				$res=_debug_color('size='.$count,'AAA',$html);
-				if($count > 100){
-					$res.=' (> 100)';
-					$var=array_slice($var,0,100,true);
-				}
-			}
-			if($currentDepth<$MAX_DEPTH){
-				$res.="\n";
-				foreach($var as $k=>&$v)
-					$res.=str_repeat(_debug_color('| ','666',$html),$currentDepth+1)._debug_color($k,'6BCEDE',$html).'=>'.short_debug_var($v,$MAX_DEPTH,$html,$currentDepth+1)."\n";
-				$res=rtrim($res);
-			}
-		//}
-		return _debug_color('Array: ','BD74BE',$html).$res;
-	}elseif(is_string($var)) return _debug_color(UPhp::exportString($var),'EC7600',$html);
-	elseif(is_numeric($var)) return _debug_color($var,'FFCD22',$html);
-	elseif(is_bool($var)) return _debug_color($var?'true':'false','93C763;font-weight:bold',$html);
-	elseif(is_null($var)) return _debug_color('null','93C763;font-weight:bold',$html);
-	else return 'UNKNOWN : '.print_r($var,true);
 }
 
 function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
@@ -133,7 +90,7 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 	}
 }
 function debug($object,$flush=true,$MAX_DEPTH=5){
-	prettyDebug(short_debug_var($object,$MAX_DEPTH),2,$flush,true);
+	prettyDebug(UVarDump::dump($object,$MAX_DEPTH),2,$flush,true);
 }
 function debugCode($code,$withBacktrace=true){
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
@@ -217,7 +174,6 @@ function dev_eval($code){
 
 /* PROD */
 function prettyDebug($message,$skipLength=2){}
-function short_debug_var($var,$MAX_DEPTH=3,$html=null,$currentDepth=0){}
 function debug($object){}
 function debugCode($code){}
 function debugVar($var){}
@@ -239,6 +195,8 @@ function isE(&$var,$then,$else='ReplaceWithVar'){ return empty($var) ? $then : (
 function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
 function isTrue($cond,$then,$else=''){ return $cond===true ? $then : $else; }
 function isFalse($cond,$then,$else=''){ return $cond===false ? $then : $else; }
+
+function is_function($f){ return is_object($f) && $f instanceof Closure; }
 
 function render($file,$vars,$return=false){
 	extract($vars);

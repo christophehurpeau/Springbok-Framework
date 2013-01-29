@@ -74,18 +74,18 @@ class CModelTable extends CModelTableAbstract{
 	}
 	
 	private function _add($add){
-		if($add!==false){
-			if($add===true) $add=array('modelName'=>$this->getModelName());
-			elseif(is_string($add)) $add=array('modelName'=>$add);
-			elseif(!isset($add['modelName'])) $add['modelName']=$this->getModelName();
-			if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
-			if(!isset($add['formContainer'])) $add['formContainer']=false;
-			if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
-			$form=HForm::create($add['modelName'],$add['form'],$add['formContainer']);
-			foreach($add['fields'] as $field=>$label)
-				echo ' '.$form->autoField($field,array('label'=>$label));
-			echo $form->end(_tC('Add'));
-		}
+		if($add===false) return;
+		if($add===true) $add=array('modelName'=>$this->getModelName());
+		elseif(is_string($add)) $add=array('modelName'=>$add);
+		elseif(is_object($add) && $add instanceof Closure) return $add();
+		elseif(!isset($add['modelName'])) $add['modelName']=$this->getModelName();
+		if(!isset($add['form']['action'])) $add['form']['action']='/'.lcfirst($add['modelName']::$__pluralized).'/add';
+		if(!isset($add['formContainer'])) $add['formContainer']=false;
+		if(!isset($add['fields'])) $add['fields']=array($add['modelName']::$__displayField=>_tF($add['modelName'],'New').' :');
+		$form=HForm::create($add['modelName'],$add['form'],$add['formContainer']);
+		foreach($add['fields'] as $field=>$label)
+			echo ' '.$form->autoField($field,array('label'=>$label));
+		echo $form->end(_tC('Add'));
 	}
 	
 	public $editablePkField,$editableUrl;

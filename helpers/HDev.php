@@ -80,7 +80,7 @@ class HDev{
 					.'<td><div class="query"><a href="javascript:;" onclick="$(this).parent().parent().find(\'.result\').slideToggle()">'.h($query['query']).'</a></div>'
 						.'<div class="result"><pre>'.prettyBackTrace(0,$query['backtrace']).'</pre>';
 				if(!empty($query['result']))
-					echo '<pre>'.short_debug_var($query['result']).'</pre>';
+					echo '<pre>'.UVarDump::dump($query['result']).'</pre>';
 				echo '</div></td><td class="time">'.number_format($query['time']*1000,0,'',' ').' ms</td></tr>';
 			}
 			echo '</table>';
@@ -91,7 +91,7 @@ class HDev{
 		echo '<h2>Route</h2>';
 		echo '<div>Controller = "'.CRoute::getController().'"</div>';
 		echo '<div>Action = "'.CRoute::getAction().'"</div>';
-		echo '<div>Ext = '.short_debug_var(CRoute::getExt()).'</div>';
+		echo '<div>Ext = '.UVarDump::dump(CRoute::getExt()).'</div>';
 		echo '<div>Params = '.print_r(CRoute::getParams(),true).'</div>';
 		echo '<div>Tested routes = <pre>'."\n\t"
 			.implode("\n\t",CRoute::$TESTED_ROUTES)
@@ -103,7 +103,7 @@ class HDev{
 		if(!class_exists('CSession',false)) echo "not started";
 		elseif(!isset($_SESSION)) echo "closed";
 		else{
-			echo short_debug_var($_SESSION);
+			echo UVarDump::dump($_SESSION);
 		}
 	}
 	
@@ -116,7 +116,7 @@ class HDev{
 		}
 		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre>'.prettyHtmlBackTrace(3).'</pre>';
 		
-		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre>'.short_debug_var($e_context).'</pre>';
+		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre>'.UVarDump::dump($e_context).'</pre>';
 	}
 	
 	public static function exception(&$e_message,&$e_file,&$e_line,&$e_trace){

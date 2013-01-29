@@ -14,6 +14,8 @@ set_time_limit(0);
 define('BASE_URL',''); define('APP_VERSION',''); define('WEB_FOLDER','');
 include CORE.'springbok.php';
 
+Springbok::$prefix='cli_';
+
 function display($str,$endChar="\n"){
 	echo $str.$endChar;
 	if(ob_get_length()>0) ob_flush();

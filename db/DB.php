@@ -45,6 +45,29 @@ abstract class DB{
 			$instance->ping();
 		}
 	}
+	
+	public static function setTestEnvironment(){
+		foreach(self::$_allConfigs as $configName=>&$config){
+			if($configName==='_lang') continue;
+			/* DEV */
+			if(empty($config['dbname-test'])) $config['dbname-test']=$config['dbname'].'-test';
+			if($config['dbname']===$config['dbname-test']) throw new Exception('DB Config for "'.$configName.'" has the same dbname for test');
+			/* /DEV */
+			$config['dbname']=$config['dbname-test'];
+		}
+		foreach(self::$_INSTANCES as $instance) $instance->switchToTestEnvironment();
+		class_exists('UFile',true);
+		$schemaProcessing=new DBSchemaProcessing(new Folder(APP.'models'),new Folder(APP.'triggers'),true);
+		
+		foreach(self::$_INSTANCES as $instance)
+			if($instance instanceof DBMySQL) $instance->doUpdate('SET FOREIGN_KEY_CHECKS=0');
+		
+		foreach(SModel::$__loadedModels as $loadedModel)
+			$loadedModel::truncate();
+			
+		foreach(self::$_INSTANCES as $instance)
+			if($instance instanceof DBMySQL) $instance->doUpdate('SET FOREIGN_KEY_CHECKS=1');
+	}
 
 	public static function reset(){
 		foreach(self::$_INSTANCES as $instance){
@@ -95,6 +118,16 @@ abstract class DB{
 	
 	public function getDatabaseName(){
 		return $this->_config['dbname'];
+	}
+	
+	public function switchToTestEnvironment(){
+		if($this->_name==='_lang') return;
+		/* DEV */
+		if(empty($this->_config['dbname-test'])) $this->_config['dbname-test']=$this->_config['dbname'].'-test';
+		if($this->_config['dbname']===$this->_config['dbname-test']) throw new Exception('DB Config for "'.$this->_name.'" has the same dbname for test');
+		/* /DEV */
+		$this->_config['dbname']=$this->_config['dbname-test'];
+		$this->connect();
 	}
 	
 	//public function lastInsertID($name=null) { return $this->_connect->lastInsertID($name); }

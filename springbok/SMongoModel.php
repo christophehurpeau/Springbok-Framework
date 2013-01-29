@@ -154,6 +154,10 @@ class SMongoModel extends SModel{
 		return static::$__collection->remove($criteria,array('justOne'=>false));
 	}
 	
+	public static function truncate(){
+		return self::RemoveAll(array());
+	}
+	
 	public static function ExistsById($id){
 		$res=static::$__collection->findOne(array('_id'=>$id),array('_id'));
 		return $res!==null;

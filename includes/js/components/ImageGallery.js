@@ -1,12 +1,7 @@
-includeCore('springbok.storage');
-includeCore('base/arraysort');
-includeCore('ui/dialogs');
-includeCore('springbok.date');
-includeCore('springbok.contextmenu');
-includeLib('fancyapps.fancybox/jquery.fancybox.pack');
+includeCore('components/FileGallery');
 
 
-function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
+S.ImageGallery=function(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	var t=this;
 	t.$=to;
 	t.init=false;
@@ -36,7 +31,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 		.append($('<div class="floatR mr10"/>')
 			.append($('<a href="#" class="action icon folder_add"/>').click(function(){
 				S.dialogs.prompt(i18nc.Create,i18nc.Name,i18nc.Create,'',function(newAlbumName){
-					$.getJSON(t.albumLink+'/addAlbum',{parentId:t.selectedAlbum,name:newAlbumName},function(data){
+					$.getJSON(t.albumLink+'/addFolder',{parentId:t.selectedAlbum,name:newAlbumName},function(data){
 						var album={id:data.id,name:newAlbumName,created:new Date().sToSqlDate(),images:0},
 							albums=t.albumsMap[t.selectedAlbum].children,
 							albumsLength=albums.length;
@@ -65,7 +60,7 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 		.append(t.$ul).append('<br class="clear"/>');
 	
 	var uploader=t.prepareUploader({
-		autoUpload:true,browseButton:'pickfiles'+id,dropElement:'EntryText',url:albumLink+'/upload/',
+		autoUpload:true,browseButton:'pickfiles'+id,dropElement:'EntryText',url:albumLink+'/uploadImage/',
 		onFilesAdded:function(files){
 			$fileList.show();
 			$.each(files,function(i,file){
@@ -97,10 +92,10 @@ function Gallery(to,albumLink,imageLink,onSelectImage,imageAttrs){
 		}
 	});
 	uploader.bind('BeforeUpload',function(){
-		uploader.settings.url=albumLink+'/upload/'+t.selectedAlbum;
+		uploader.settings.url=albumLink+'/uploadImage/'+t.selectedAlbum;
 	});
 };
-Gallery.prototype={
+S.ImageGallery.prototype={
 	setOnSelectImage:function(callback){this.onSelectImage=callback;},
 	load:function(){
 		this.selectAlbum(0);
@@ -113,7 +108,7 @@ Gallery.prototype={
 	selectAlbum:function(idAlbum){
 		if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].sHas(idAlbum)!==-1) return false;
 		if(this.albumsMap[idAlbum]===undefined)
-			this.albumsMap[idAlbum]=S.syncJson(this.albumLink,{id:idAlbum});
+			this.albumsMap[idAlbum]=S.syncJson(this.albumLink+'/images',{id:idAlbum});
 		this.selectedAlbum=idAlbum;
 		this.sort(true);
 	},
@@ -158,7 +153,7 @@ Gallery.prototype={
 				S.dialogs.prompt(i18nc.Rename,i18nc['New name ?'],i18nc.Rename,image.name,function(newName){
 					image.name=newName;
 					li.attr('title',newName).find('div:first').text(newName);
-					$.get(t.albumLink+'/renameImage',{id:image.id,newName:newName});
+					$.get(t.albumLink+'/renameFile',{id:image.id,newName:newName});
 				});
 			}}}
 		]});
@@ -181,7 +176,7 @@ Gallery.prototype={
 				S.dialogs.prompt(i18nc.Rename,i18nc['New name ?'],i18nc.Rename,album.name,function(newName){
 					album.name=newName;
 					li.attr('title',newName).find('div:first').text(newName+' ('+album.images+')');
-					$.get(t.albumLink+'/renameAlbum',{id:album.id,newName:newName});
+					$.get(t.albumLink+'/renameFolder',{id:album.id,newName:newName});
 				});
 			}}}
 		]});

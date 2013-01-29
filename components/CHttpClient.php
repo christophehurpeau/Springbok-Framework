@@ -42,6 +42,10 @@ class CHttpClient{
 		);
 		self::$USER_AGENT=$browsers[array_rand($browsers)];
 	}
+	
+	public static function userAgentIphone(){
+		self::$USER_AGENT='Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3';
+	}
 
 	public function __construct(){
 		$this->cookiePath=uniqid();

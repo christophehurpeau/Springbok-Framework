@@ -1,17 +1,18 @@
 <?php
 class QFindAll extends QFind{
-	private $tabResKey,$groupResBy;
+	private $tabResKey,$groupResBy,$res;
 	
 	public function execute(){
 		//$res=$this->_db->doSelectRows_($query);
-		if($this->tabResKey !== null) $res=$this->_db->doSelectAssocObjects($this->_toSQL(),$this,$this->queryResultFields,$this->tabResKey);
-		else $res=$this->_db->doSelectObjects($this->_toSQL(),$this,$this->queryResultFields);
+		if($this->tabResKey !== null) $this->res=$res=$this->_db->doSelectAssocObjects($this->_toSQL(),$this,$this->queryResultFields,$this->tabResKey);
+		else $this->res=$res=$this->_db->doSelectObjects($this->_toSQL(),$this,$this->queryResultFields);
 		
 		if($res){
 			if($this->groupResBy!==null){
 				$grbf=$this->groupResBy;
 				$finalRes=array();
-				foreach($res as $key=>&$row) $finalRes[$row->$grbf][$key]=$row;
+				if(is_array($grbf)) foreach($res as $key=>&$row) $finalRes[$row->{$grbf[0]}][$key]=$row->{$grbf[1]};
+				else foreach($res as $key=>&$row) $finalRes[$row->$grbf][$key]=$row;
 				$res=$finalRes;
 			}
 		}

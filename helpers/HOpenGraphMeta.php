@@ -7,20 +7,24 @@ class HOpenGraphMeta{
 		if(self::$metas===null)return'';
 		$res='';
 		foreach(self::$metas as $key=>&$content)
-			$res.= '<meta property="og:'.h($key).'" content="'.h($content).'"/>';
+			$res.= '<meta property="'.h($key).'" content="'.h($content).'"/>';
 		return $res;
 	}
 	
 	public static function title($title){
-		self::$metas['title']=$title;
+		self::$metas['og:title']=$title;
 	}
 	
 	/** That image should be at least 50x50 in any of the usually supported image forms (JPG, PNG, etc.) */
 	public static function image($url){
-		self::$metas['image']=$url;
+		self::$metas['og:image']=$url;
 	}
 	
 	public static function siteName($siteName){
-		self::$metas['site_name']=$siteName;
+		self::$metas['og:site_name']=$siteName;
+	}
+	
+	public static function fbApp($appId){
+		self::$metas['fb:app_id']=$appId;
 	}
 }

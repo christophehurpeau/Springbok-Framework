@@ -34,6 +34,9 @@ class HElementFormInput extends HElementFormContainable{
 							case 'phone_number':
 								$this->type='tel';
 								break;
+							case 'file':
+								$this->type='file';
+								break;
 						} 
 						break;
 				}
@@ -56,6 +59,7 @@ class HElementFormInput extends HElementFormContainable{
 		}
 	}
 	
+	public function setType($type){ $this->type=$type; return $this; }
 	public function value($value){ $this->attributes['value']=$value; return $this; }
 	public function value_(&$value){ $this->attributes['value']=$value; return $this; }
 	public function readOnly(){ $this->attributes['readonly']=true; return $this; }

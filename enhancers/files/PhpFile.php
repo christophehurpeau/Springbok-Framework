@@ -263,6 +263,7 @@ class PhpFile extends EnhancerFile{
 			,$phpContent);
 		$phpContent=preg_replace('/\/\*\s+HIDE\s+\*\/.*\/\*\s+\/HIDE\s+\*\//Ums','',$phpContent);
 		$phpContent=preg_replace('/return !new [^;]+;/','',$phpContent);
+		$phpContent=preg_replace('/\bSF\:\:onlyOnce\(\)\;/','',$phpContent);
 		
 		// short methods
 		$phpContent=preg_replace('/notFoundIfFalse\(([^)]+)\);/','if($1===false)notFound();',$phpContent);
@@ -322,7 +323,7 @@ class PhpFile extends EnhancerFile{
 				if($matches[4]=='callback') return str_replace($matches[5],$phpFile->addExecuteToQueries($matches[5],$isModelFile),$matches[1]);
 			}
 			if((!empty($matches[2]) && substr($matches[2],0,5)=='query')||
-						(!empty($matches[4]) && ($matches[4]=='execute'||$matches[4]==='toArray'/*||$matches[4]==='paginate'*/)) || (!empty($matches[3]))) return $matches[1];
+						(!empty($matches[4]) && ($matches[4]=='execute'||$matches[4]==='toArray'||$matches[4]==='notFoundIfFalse'/*||$matches[4]==='paginate'*/)) || (!empty($matches[3]))) return $matches[1];
 			return $matches[1].'->execute()';
 		},$phpContent);
 /*		if($newPhpContent===NULL) echo "NULL !!!";
