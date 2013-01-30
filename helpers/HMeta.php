@@ -69,7 +69,7 @@ class HMeta{
 	public static function altlangs($urls){ self::$altLangs=$urls; }
 	
 	public static function display(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 	}
 	
 	public static function displayCanonical(){

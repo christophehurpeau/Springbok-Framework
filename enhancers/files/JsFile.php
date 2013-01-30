@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.1';
+	public static $CACHE_PATH='js_8.3.2';
 
 	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
@@ -86,7 +86,7 @@ class JsFile extends EnhancerFile{
 				$this->_srcContent="(function(window,document,Object,Array,Math,undefined){".$c.'})(window,document,Object,Array,Math);'/*.$after*/;
 			}else $this->_srcContent=$c;
 			
-			$jsFiles=array('global.js','jsapp.js');
+			$jsFiles=array('global.js','index.js','jsapp.js');
 
 			if(!empty($this->enhanced->config['entries'])) foreach(($entries=$this->enhanced->config['entries']) as $entry) $jsFiles[]=$entry.'.js';
 			else $entries=array();

@@ -22,25 +22,25 @@ class HHtml{
 	}
 	
 	public static function cssLink($url='/main',$media=false){
-		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* /DEV */
 		return HHead::linkCss($url,$media);
 	}
 	
 	public static function favicon($imgUrl='favicon.png'){
-		/* DEV */throw new Exception('Use HHead::favicon() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::favicon() now'); /* /DEV */
 		return HHead::favicon($imgUrl);
 	}
 
 	public static function logoMobile($imgNamePrefix='logo'){
-		/* DEV */throw new Exception('Use HHead::logoMobile() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::logoMobile() now'); /* /DEV */
 		return HHead::logoMobile($imgNamePrefix);
 	}
 	
 	public static function cssLinks(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 	}
 	public static function addCSS($url,$media=false){
-		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* /DEV */
 		HHead::linkCss($url,$media);
 	}
 	public static function cssInline($content,$attributes=array()){
@@ -85,13 +85,13 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	
 	
 	public static function jsLink($url='/global'){
-		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
 		return HHead::linkJs($url);
 	}
 	
 	private static $_JS;
 	public static function jsLinks(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 		if(isset(self::$_JS['all']))
 			foreach(self::$_JS['all'] as $url) self::jsLink($url);
 		if(isset(self::$_JS['ie']))
@@ -119,11 +119,11 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 			}
 	}
 	public static function addJS($url){
-		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
 		return HHead::linkJs($url);
 	}
 	public static function jsI18n(){
-		/* DEV */throw new Exception('Use HHead::jsI18n() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::jsI18n() now'); /* /DEV */
 		return self::jsLink('/i18n-'.CLang::get());
 	}
 	
@@ -145,7 +145,7 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	}
 	
 	public static function addJS4IE($url,$for){
-		/* DEV */throw new Exception('Use HHead::linkJsIe($ieVersion,$operator,$url) now. Note : if you have several scripts use HHead::startIeIf($ieVersion,$operator);HHead::linkJs($url);... HHead::endIeIf();'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::linkJsIe($ieVersion,$operator,$url) now. Note : if you have several scripts use HHead::startIeIf($ieVersion,$operator);HHead::linkJs($url);... HHead::endIeIf();'); /* /DEV */
 		$for=explode(' ',$for);
 		HHead::linkJsIe($for[1],$for[0],$url);
 	}
