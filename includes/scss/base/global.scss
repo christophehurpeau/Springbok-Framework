@@ -26,7 +26,7 @@ html body .hidden{display:none}
 .floatL{float:left}
 
 .row{ @extend .clear; display:table; table-layout:fixed; width:100%; }
-.col{ display:table-cell; vertical-align:top; /* Opera */  @if $IE_COMPATIBILITY{*float:left; /* IE <7 */ }}
+.col{ display:table-cell; vertical-align:top; /* Opera */  @if $IE_COMPATIBILITY{ *float:left; /* IE <= 7 */ }}
 
 .line.gut > * + * { 
     margin-left:1em;

@@ -229,8 +229,11 @@ $BreadcrumbsColor:false !default;
 			@if $FixedVariableBorder{ border:$FixedVariableBorder; }
 		}
 	}@else{
-		//@extend .row;
-		display:table; table-layout:fixed; width:100%;
+		@if $PAGE_FIXED==false{
+			$PageFixedLayout:false !default;
+			//@extend .row;
+			display:table; @if $PageFixedLayout{ table-layout:fixed; }@else{ table-layout:auto; } width:100%;
+		}
 		
 		.col.fixed, .col.variable{
 			@if $PAGE_FIXED{
@@ -242,6 +245,8 @@ $BreadcrumbsColor:false !default;
 				position:relative;
 				@if $FixedVariableMargin{ margin:0 10px; }
 			}
+			/* IE <= 7 */
+			*float:left;
 		}
 	}
 	
@@ -305,6 +310,8 @@ $BreadcrumbsColor:false !default;
 			@if $VariableBorder{ border:1px solid $VariableBorder; }
 			@if $VariableShadow{ @include boxShadow($VariableShadow); }
 			@if $VariablePadding{ padding:$VariablePadding; }
+			/* IE <= 7 */
+			*width:$IE6_VARIABLE_WIDTH;
 		}
 	}
 	
@@ -316,6 +323,22 @@ $BreadcrumbsColor:false !default;
 	div.newContext{ position:relative }
 }
 .content,#page .content{padding:5px 10px;}
+
+
+@if false==$PAGE_FIXED{
+	@if $PAGE_VERSION==1{
+		/* IE <= 6 */
+		* html body #page div.variable{
+			float:left;
+			width:$IE6_VARIABLE_WIDTH;
+		}
+	}
+	/*
+	* html body #page > .content{
+		overflow:hidden;
+	}*/
+}
+
 @if $PAGE_VERSION==1{
 	$VariablePaddingValue:8px 10px !default;
 	#page{
@@ -350,18 +373,6 @@ $BreadcrumbsColor:false !default;
 			position:absolute;right:0;top:38px;left:0;bottom:20px;
 			overflow:auto;
 		}
-	}
-
-	@if false==$PAGE_FIXED{
-	  /* IE <= 6 */
-	  * html body #page div.variable{
-	  	float:left;
-	  	width:$IE6_VARIABLE_WIDTH;
-	  }
-	  /*
-	  * html body #page > .content{
-	  	overflow:hidden;
-	  }*/
 	}
 
 	div.shadowed-box{
