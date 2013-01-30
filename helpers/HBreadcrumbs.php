@@ -18,7 +18,7 @@ class HBreadcrumbs{
 	
 	public static function display($homeLink,$lastTitle,$options=array()){
 		if(!isset($options['class'])) $options['class']='breadcrumbs';
-		if(empty(self::$_links) && empty($lastTitle)) return;
+		if(empty(self::$_links) && (self::$_lastTitle===false || empty($lastTitle))) return;
 		if(isset($options['spanAttributes'])) $spanAttributes=$options['spanAttributes'];
 		else $spanAttributes=array();
 		if(isset($options['linkoptions'])) $linkoptions=$options['linkoptions'];
