@@ -13,7 +13,8 @@ class HHead{
 			.'<link rel="shortcut icon" type="image/x-icon" href="'.$href.'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::favicon()</div>'; /* /DEV */
 	}
-	public static function logoMobile($imgNamePrefix='logo'){
+	public static function icons($imgNamePrefix='logo'){
+		/* http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#rel-icon */
 		$href=STATIC_URL.'img/'.$imgNamePrefix;
 		self::$head.=
 			//<!-- For third-generation iPad with high-resolution Retina display: -->

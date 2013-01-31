@@ -32,8 +32,8 @@ class HHtml{
 	}
 
 	public static function logoMobile($imgNamePrefix='logo'){
-		/* DEV */throw new Exception('Use HHead::logoMobile() now'); /* /DEV */
-		return HHead::logoMobile($imgNamePrefix);
+		/* DEV */throw new Exception('Use HHead::icons() now'); /* /DEV */
+		return HHead::icons($imgNamePrefix);
 	}
 	
 	public static function cssLinks(){
