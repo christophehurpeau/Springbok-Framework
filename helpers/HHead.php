@@ -111,7 +111,7 @@ class HHead{
 	public static function display(){
 		/* DEV */
 		if(self::$_IE_started===true) throw new Exception('ie is started');
-		if(self::$_displayed===true) throw new Exception('Already displayed');
+		if(Springbok::$inError===null && self::$_displayed===true) throw new Exception('Already displayed');
 		self::$_displayed=true;
 		/* /DEV */
 		echo self::$head;
