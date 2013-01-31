@@ -2,7 +2,7 @@
 /** http://ogp.me/ */
 class HOpenGraphMeta{
 	public static function display(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* DEV */
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 	}
 	
 	public static function title($title){
