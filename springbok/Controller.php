@@ -166,7 +166,7 @@ class Controller{
 		if(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
 				self::renderHtml(HHtml::jsInline('S.ajax._load(\'container\','.json_encode(HHtml::url($to)).')'));
-			else*/if(isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])){
+			else*/if(isset($_SERVER['HTTP_SPRINGBOKAJAXPAGE'])||isset($_SERVER['HTTP_SPRINGBOKAJAXFORMSUBMIT'])){
 				header('SpringbokRedirect: '.HHtml::url($to,$entry));
 				if($exit) exit;
 				return;

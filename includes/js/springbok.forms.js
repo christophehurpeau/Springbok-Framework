@@ -65,6 +65,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				}
 				var ajaxOptions={
 					type:'post',cache:false,
+					headers:{'SpringbokAjaxFormSubmit':'1'},
 					beforeSend:function(){submit.hide();submit.parent().append(imgLoadingSubmit);},
 					data:form.serialize(),
 					complete:function(){submit.show().blur();form.find('.img.imgLoading').remove();form.fadeTo(150,1)},
@@ -73,7 +74,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				if(success) ajaxOptions.success=success;
 				$.ajax(url,ajaxOptions)
 					.error(function(){S.bodyIcon('cross',form);})
-					.success(function(data){
+					.success(function(data,textStatus,jqXHR){
 						S.bodyIcon('tick',form);
 						if(S.isObject(data) && data.update){
 							var u=data.update;
@@ -88,6 +89,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 								}
 							}
 						}
+						form.trigger('sAjaxFormSubmittedSuccess',[data,jqXHR]);
 					});
 				return false;
 			})
