@@ -1,37 +1,62 @@
 <?php
 /** http://www.google.com/support/webmasters/bin/answer.py?answer=79812 */
 class HMeta{
-	private static $metas,$canonical,$canonicalEntry,$prev,$next,$smallSizes,$altLangs;
+	private static $canonical,$canonicalEntry,$prev,$next,$smallSizes,$altLangs;
 	
 	public static function keywords($keywords){
-		self::$metas['keywords']=$keywords;
+		HHead::meta('keywords',$keywords);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::keywords()</div>'; /* /DEV */
 	}
 	public static function description($description){
-		self::$metas['description']=$description;
+		HHead::meta('description',$description);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::description()</div>'; /* /DEV */
 	}
 	
 	public static function set($metas){
-		self::$metas['keywords']=$metas['keywords'];
-		self::$metas['description']=$metas['description'];
+		HHead::meta('keywords',$metas['keywords']);
+		HHead::meta('description',$metas['description']);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::set()</div>'; /* /DEV */
 	}
 	
 	public static function robots($content){
-		self::$metas['robots']=$content;
+		HHead::meta('robots',$content);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::robots()</div>'; /* /DEV */
 	}
 	public static function googlebot($content){
-		self::$metas['googlebot']=$content;
+		HHead::meta('googlebot',$content);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::googlebot()</div>'; /* /DEV */
 	}
 	
 	public static function noindex_follow(){
-		self::$metas['robots']='noindex, follow';
+		HHead::meta('robots','noindex, follow');
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_follow()</div>'; /* /DEV */
 	}
 	public static function noindex_nofollow(){
-		self::$metas['robots']='noindex, nofollow';
+		HHead::meta('robots','noindex, nofollow');
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_nofollow()</div>'; /* /DEV */
 	}
 	
 	
 	public static function google_notranslate(){
-		self::$metas['google']='notranslate';
+		HHead::meta('google','notranslate');
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::google_notranslate()</div>'; /* /DEV */
+	}
+	
+	public static function viewport(){
+		HHead::meta('viewport','target-densitydpi=device-dpi, width=device-width, initial-scale=1');
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::viewport()</div>'; /* /DEV */
+	}
+	
+	public static function msApp($color,$entryStart=null){
+		HHead::meta("application-name",Config::$projectName);
+		HHead::meta("msapplication-starturl",Config::$siteUrl[$entryStart===null ? Springbok::$scriptname : 'index']);
+		HHead::meta("msapplication-window","width=1024;height=768");
+		HHead::meta("msapplication-navbutton-color",$color);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msApp()</div>'; /* /DEV */
+	}
+	public static function msAppAction($name,$url,$entry=null,$icon='favicon.ico'){
+		HHead::meta("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /* /DEV */
 	}
 	
 	public static function canonical($url){ self::$canonical=$url; }
@@ -44,36 +69,25 @@ class HMeta{
 	public static function altlangs($urls){ self::$altLangs=$urls; }
 	
 	public static function display(){
-		if(self::$metas===null)return'';
-		$res='';
-		foreach(self::$metas as $key=>&$content)
-			$res.= '<meta name="'.h($key).'" content="'.h($content).'"/>';
-		return $res;
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 	}
 	
 	public static function displayCanonical(){
 		/* DEV */ if(self::$canonical===null && Springbok::$inError===null) throw new Exception("canonical is not defined"); /* /DEV */
 		if(self::$canonical===false) return '';
-		$result='<link rel="canonical" href="'.HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true).'"/>';
-		if(self::$prev!==null) $result.='<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,true).'"/>';
-		if(self::$next!==null) $result.='<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,true).'"/>';
-		if(self::$smallSizes!==null) $result.='<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
-		return $result;
+		echo '<link rel="canonical" href="'.HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true).'"/>';
+		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,true).'"/>';
+		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,true).'"/>';
+		if(self::$smallSizes!==null) echo '<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::displayCanonical()</div>'; /* /DEV */
 	}
 	
 	public static function getCanonicalRaw(){ return self::$canonical; }
 	public static function getCanonical($fullUrl=true){
 		if(empty(self::$canonical)) return false;
-        return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl);
+		return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl);
 	}
 	public static function getSmallSizesEscapedUrl(){
 		return self::$smallSizes;
-	}
-	
-	public static function displayAltLangs(){
-		if(empty(self::$altLangs)) return '';
-		$result='';
-		foreach(self::$altLangs as $lang=>$url) '<link rel="alternate" hreflang="'.$lang.'" href="'.HHtml::urlEscape($url).'"/>';
-		
 	}
 }

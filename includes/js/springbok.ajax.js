@@ -1,6 +1,6 @@
 includeCore('springbok.history');
 includeCore('ui/slideTo');
-(function($){
+(function(){
 	var lastConfirmResult=true,readyCallbacks=$.Callbacks();
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
 	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref,
@@ -59,19 +59,23 @@ includeCore('ui/slideTo');
 				
 				S.ajax.load(url);
 				return false;
-			});
-			$(document).on('click','ul.clickable li[rel]',function(evt){
+			})
+			.on('click','ul.clickable li[rel]',function(evt){
 				var li=$(this),ul=li.closest('ul');
 				ul.find('li').removeClass('current');
 				li.addClass('current');
 				S.ajax.load(li.attr('rel'));
 				return false;
-			});
-			$(document).on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([enctype]):not([action^="http://"])',function(){
+			})
+			.on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([enctype]):not([action^="http://"])',function(){
 				var form=$(this),isGet=form.attr('method')==='get',action=form.attr('action'),params=form.serialize();
 				if(isGet){ action+=(action.sHas('?')?'&':'?')+params; params=undefined; }
 				S.ajax.load(action,params,isGet?0:'post',form.has('input[type="password"]'));
 				return false;
+			})
+			.on('sAjaxFormSubmittedSuccess','form',function(evt,data,jqXHR){
+				var h=jqXHR.getResponseHeader('SpringbokRedirect');
+				if(h) S.ajax.load(h,false,false,true,true);
 			});
 		},
 		
@@ -170,4 +174,4 @@ includeCore('ui/slideTo');
 			}
 		}
 	};
-})(jQuery);
+})();

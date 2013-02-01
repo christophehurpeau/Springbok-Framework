@@ -1,30 +1,28 @@
 <?php
 /** http://ogp.me/ */
 class HOpenGraphMeta{
-	private static $metas;
-	
 	public static function display(){
-		if(self::$metas===null)return'';
-		$res='';
-		foreach(self::$metas as $key=>&$content)
-			$res.= '<meta property="'.h($key).'" content="'.h($content).'"/>';
-		return $res;
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 	}
 	
 	public static function title($title){
-		self::$metas['og:title']=$title;
+		HHead::meta('og:title',$title);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::title()</div>'; /* /DEV */
 	}
 	
 	/** That image should be at least 50x50 in any of the usually supported image forms (JPG, PNG, etc.) */
 	public static function image($url){
-		self::$metas['og:image']=$url;
+		HHead::meta('og:image',$url);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::image()</div>'; /* /DEV */
 	}
 	
 	public static function siteName($siteName){
-		self::$metas['og:site_name']=$siteName;
+		HHead::meta('og:site_name',$siteName);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::siteName()</div>'; /* /DEV */
 	}
 	
 	public static function fbApp($appId){
-		self::$metas['fb:app_id']=$appId;
+		HHead::meta('fb:app_id',$appId);
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::fbApp()</div>'; /* /DEV */
 	}
 }

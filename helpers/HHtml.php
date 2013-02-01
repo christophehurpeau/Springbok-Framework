@@ -13,6 +13,7 @@ class HHtml{
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
+		/* DEV */if(self::$isIElt8===null) throw new Exception('Call HHtml::doctype() to know if request is IE < 8'); /* /DEV */
 		return self::$isIElt8 ? '<meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>' : '<meta charset="'.$encoding.'">';
 	}
 	public static function metaLanguage($lang=null){
@@ -21,36 +22,26 @@ class HHtml{
 	}
 	
 	public static function cssLink($url='/main',$media=false){
-		echo '<link rel="stylesheet" type="text/css" href="'.self::staticUrl(strpos($url,'?')?$url:($url.'.css'),'css').'"'.($media?' media="'.$media.'"':'').'/>';
+		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* /DEV */
+		return HHead::linkCss($url,$media);
 	}
 	
 	public static function favicon($imgUrl='favicon.png'){
-		$href=STATIC_URL.'img/'.$imgUrl;
-		return '<link rel="icon" type="image/vnd.microsoft.icon" href="'.$href.'"/>'
-			.'<link rel="shortcut icon" type="image/x-icon" href="'.$href.'"/>';
+		/* DEV */throw new Exception('Use HHead::favicon() now'); /* /DEV */
+		return HHead::favicon($imgUrl);
 	}
 
 	public static function logoMobile($imgNamePrefix='logo'){
-		$href=STATIC_URL.'img/'.$imgNamePrefix;
-		return
-			//<!-- For third-generation iPad with high-resolution Retina display: -->
-			 '<link rel="apple-touch-icon-precomposed" sizes="144x144" href="'.$href.'-144.png">'
-			//<!-- For iPhone with high-resolution Retina display: -->
-			.'<link rel="apple-touch-icon-precomposed" sizes="114x114" href="'.$href.'-114.png">'
-			//<!-- For first- and second-generation iPad: -->
-			.'<link rel="apple-touch-icon-precomposed" sizes="72x72" href="'.$href.'-72.png">'
-			//<!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
-			.'<link rel="apple-touch-icon-precomposed" href="'.$href.'-57.png">'
-			.'<link rel="apple-touch-icon" href="'.$href.'-57.png"/>';
+		/* DEV */throw new Exception('Use HHead::icons() now'); /* /DEV */
+		return HHead::icons($imgNamePrefix);
 	}
 	
-	private static $_CSS;
 	public static function cssLinks(){
-		if(self::$_CSS) foreach(self::$_CSS as $url=>$media)
-			self::cssLink($url,$media);
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 	}
 	public static function addCSS($url,$media=false){
-		self::$_CSS[$url]=$media;
+		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* /DEV */
+		HHead::linkCss($url,$media);
 	}
 	public static function cssInline($content,$attributes=array()){
 		return '<style type="text/css"'.self::_echoAttributes($attributes).'>'.$content.'</style>';
@@ -94,11 +85,13 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	
 	
 	public static function jsLink($url='/global'){
-		echo '<script type="text/javascript" src="'.self::staticUrl($url.'.js','js').'"></script>';
+		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
+		return HHead::linkJs($url);
 	}
 	
 	private static $_JS;
 	public static function jsLinks(){
+		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
 		if(isset(self::$_JS['all']))
 			foreach(self::$_JS['all'] as $url) self::jsLink($url);
 		if(isset(self::$_JS['ie']))
@@ -126,9 +119,11 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 			}
 	}
 	public static function addJS($url){
-		self::$_JS['all'][]=$url;
+		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
+		return HHead::linkJs($url);
 	}
 	public static function jsI18n(){
+		/* DEV */throw new Exception('Use HHead::jsI18n() now'); /* /DEV */
 		return self::jsLink('/i18n-'.CLang::get());
 	}
 	
@@ -150,7 +145,9 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	}
 	
 	public static function addJS4IE($url,$for){
-		self::$_JS['ie'][$for][]=$url;
+		/* DEV */throw new Exception('Use HHead::linkJsIe($ieVersion,$operator,$url) now. Note : if you have several scripts use HHead::startIeIf($ieVersion,$operator);HHead::linkJs($url);... HHead::endIeIf();'); /* /DEV */
+		$for=explode(' ',$for);
+		HHead::linkJsIe($for[1],$for[0],$url);
 	}
 	
 	

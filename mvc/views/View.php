@@ -174,4 +174,3 @@ class AjaxContentView extends AbstractAjaxView{
 		}	
 	}
 }
-

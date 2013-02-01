@@ -17,7 +17,6 @@ class TestNavigator extends CHttpClient{
 		return $url.(strpos($url,'?')===false?'?':'&').'springbokNoEnhance=true&springbokNoDevBar=true';
 	}
 	
-	
 	public function assertStatus200(){
 		assert($this->getStatus()===200);
 	}

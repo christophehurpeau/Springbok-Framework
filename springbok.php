@@ -73,7 +73,7 @@ class Springbok{
 			return;
 		}
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
-		/* DEV */elseif(App::$enhancing){debug($log); exit;}else die($log);/* /DEV */
+		/* DEV */elseif(App::$enhancing){debugPrintr($log); exit;}else die($log);/* /DEV */
 		
 		
 		if($previousError!==null){

@@ -78,6 +78,9 @@ class UFileOpened{
 		//return null;
 		return stream_get_contents($this->_file);
 	}
+	public function readLine($length=8192,$ending="\n"){
+		return stream_get_line($this->_file,$length,$ending);
+	}
 	
 	public function lockShared(){
 		return flock($this->_file,LOCK_SH);
