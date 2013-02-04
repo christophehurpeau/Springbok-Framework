@@ -161,6 +161,7 @@ abstract class QFind extends QSelect{
 				/* DEV */if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
 				$options+=$lastModelName::$_relations[$relName];
 				
+				/* DEV */if(!isset($options['foreignKey'])) throw new Exception('$options[\'foreignKey\'] is not defined: '.print_r($options,true)); /* /DEV */
 				$onConditions=array($lastAlias.'.'.$options['foreignKey'].'='.$options['alias'].'.'.$options['associationForeignKey']);
 				if(isset($options['onConditions'])) $options['onConditions']=array_merge($options['onConditions'],$onConditions);
 				else $options['onConditions']=$onConditions;
