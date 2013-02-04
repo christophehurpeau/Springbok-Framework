@@ -43,6 +43,7 @@ class UVarDump{
 			//}
 			return self::color('Array: ','BD74BE',$this->html).$res;
 		}elseif(is_string($var)) return $this->color(UPhp::exportString($var),'EC7600');
+		elseif(is_float($var)) return $this->color(strpos($var,'.')===false ? $var.'.0' : $var,'FFCD22');
 		elseif(is_numeric($var)) return $this->color($var,'FFCD22');
 		elseif(is_bool($var)) return $this->color($var?'true':'false','93C763;font-weight:bold');
 		elseif(is_null($var)) return $this->color('null','93C763;font-weight:bold');

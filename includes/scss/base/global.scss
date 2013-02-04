@@ -149,6 +149,11 @@ ul.simpleDouble ul{
 .cSepTop > :first-child{margin-top:0;padding-top:0;border-top:0;}
 
 
+pre.wrap{
+	word-wrap: break-word; /* IE 5.5-7 */
+	white-space: pre-wrap; /* current browsers */
+}
+
 $BCOLOR_VALID:#D3DBD3 !default;
 $BCOLOR_INVALID:#CEBBBB !default;
 
