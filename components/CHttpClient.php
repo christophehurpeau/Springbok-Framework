@@ -43,6 +43,9 @@ class CHttpClient{
 		self::$USER_AGENT=$browsers[array_rand($browsers)];
 	}
 	
+	public static function userAgentDefault(){
+		self::$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
+	}
 	public static function userAgentIphone(){
 		self::$USER_AGENT='Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3';
 	}
@@ -156,7 +159,9 @@ class CHttpClient{
 	}
 
 
+	protected function _beforeCurlCreate(){}
 	protected function _curl_create($method,$target,$params){
+		$this->_beforeCurlCreate();
 		if(!empty($params)){
 			$queryString=http_build_query($params,null,'&');
 			if($method==='GET') $target.='?'.$queryString;

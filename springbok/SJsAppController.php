@@ -4,7 +4,7 @@ class SJsAppController extends Controller{
 		echo '<!DOCTYPE html><html><head>'
 			.HHtml::metaCharset().HHtml::metaLanguage()
 			.'<title>'.Config::$projectName.' - '.($loading=_tC('Loading...')).'</title>';
-		HHtml::cssLink($cssLink);
+		HHead::linkCss($cssLink);
 		echo HHtml::jsInline(
 			'window.onload=function(){'
 				.'var s=document.createElement("script");'
@@ -13,6 +13,7 @@ class SJsAppController extends Controller{
 				.'document.body.appendChild(s);'
 			.'};'
 		);
+		HHead::display();
 		echo '</head><body>'
 			.'<div id="container"><div class="startloading"><b>'.Config::$projectName.'</b><div id="jsAppLoadingMessage">'.($loading).'</div></div></div>'
 			.'</body>';

@@ -31,7 +31,8 @@ class App{
 	
 	public static function run(){
 		/* DEV */
-		if(!file_exists(dirname(APP).'/dev/config/_'.ENV.'.php')) exit('The config for your environnement: "'.ENV.'" does NOT exist !');
+		if(!file_exists($pathConfigFile=dirname(APP).'/src/config/_'.ENV.'.php'))
+			exit('The config for your environnement: "'.ENV.'" does NOT exist ! Please create '.$pathConfigFile);
 		
 		$shouldEnhance=!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'ApacheBench')===false && !isset($_GET['springbokNoEnhance'])
 				&& !CHttpRequest::isAjax() && !CHttpRequest::isFlash()

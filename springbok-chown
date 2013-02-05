@@ -1,0 +1,15 @@
+#!/bin/sh
+
+sudo chown www-data:$USER .
+sudo chmod 775 .
+mkdir dev/ prod/ tmp/ data/ data/logs/ db/
+sudo chown -R www-data:$USER dev/ prod/ tmp/ data/ db/
+sudo chmod -R 775 dev/ prod/ tmp/ data/ db/
+sudo chown www-data:$USER . *.json *.php
+mkdir src/web/sprites
+sudo chown -R www-data src/web/sprites
+mkdir src/dbEvolutions
+touch src/dbEvolutions/Versions.php
+sudo chown -R www-data src/dbEvolutions
+sudo chmod -R 775 src/dbEvolutions
+
