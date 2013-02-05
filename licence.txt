@@ -2,7 +2,7 @@ Springbok incorporates some third-party source. These sources have a separate li
 
 The rest of Springbok is licensed as follows:
 
-Copyright (c) 2011-2012 Christophe Hurpeau
+Copyright (c) 2011-2013 Christophe Hurpeau
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
