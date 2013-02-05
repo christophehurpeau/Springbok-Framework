@@ -218,7 +218,7 @@ class DBSchemaMySQL extends DBSchema{
 				$this->removeForeignKey(array('name'=>$constraintname),false);
 				$this->doUpdate($sql,false);
 			}catch(DBException $e2){
-				throw $e2;
+				throw $e;
 			}
 		}
 	}
