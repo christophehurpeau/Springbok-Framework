@@ -21,7 +21,8 @@ class TestNavigator extends CHttpClient{
 	}
 	
 	public function assertStatus200(){
-		assert($this->getStatus()===200);
+		if($this->getStatus()!==200)
+			throw new Exception($this->getLastUrl().' : '.$this->getStatus());
 	}
 	
 	protected function _beforeCurlCreate(){
