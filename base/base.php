@@ -56,7 +56,7 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 				foreach($args as $num=>$arg){ 
 					$prettyMessage.='<i style="color:#AAA;font-size:7pt;">Arg '.$num.'</i> ';
 					$prettyMessage.=UVarDump::dump($arg);
-					$prettyMessage.="\n";
+					$prettyMessage.="<br />";
 				}
 				//echo "\t".str_replace("\n", "\n\t",print_r($t['args'],true))."\n";
 			}
