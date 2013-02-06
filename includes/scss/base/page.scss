@@ -9,6 +9,14 @@ $HeaderColor:false !default;
 $HeaderBorderRadius:false !default;
 $HeaderPadding:false !default;
 $HeaderBorder:false !default;
+$HeaderHeight:0 !default;
+@if $HeaderHeight==0{
+	@if $PAGE_FIXED{
+		$HeaderHeight:33px;
+	}@else{
+		$HeaderHeight:false;
+	}
+}
 
 $ContainerWidth:false !default;
 $ContainerBackground:false !default;
@@ -103,6 +111,7 @@ header,div.header{
 	@if $HeaderBorderRadius{ @include borderRadiusBottom(5px); }
 	@if $HeaderPadding{ padding:$HeaderPadding; }
 	@if $HeaderBorder{ @include border($HeaderBorder); }
+	@if $HeaderHeight{ height:$HeaderHeight; }
 	display:block;
 	/*width:98%;
 	margin:0 auto; padding:1px 0;*/
@@ -186,7 +195,11 @@ $BreadcrumbsColor:false !default;
 	cursor:default;
 	@if $BreadcrumbsColor==false{ color:$InteractionCurrentColor; }
 }
-
+@if $PAGE_FIXED{
+	::-webkit-scrollbar{ width: 8px; }
+	::-webkit-scrollbar-track{ background:#555; border-radius:4px; -webkit-box-shadow:inset 0 0 2px #999; }
+	::-webkit-scrollbar-thumb{ background:#000; border-radius:4px; -webkit-box-shadow:inset 0 0 3px #666; }
+}
 
 #page{
 	/*float:left;*/
@@ -208,6 +221,17 @@ $BreadcrumbsColor:false !default;
 			position:absolute;
 			top:40px; bottom:15px;
 			left:0; right:0;
+			/* http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-styling-scrollbars-to-match-your-ui-design/ */
+			/* http://css-tricks.com/custom-scrollbars-in-webkit/ */
+			scrollbar-face-color:#111; /* IE */
+			/*
+			scrollbar-highlight-color: #fff;
+			scrollbar-3dlight-color: #ccc;
+			scrollbar-darkshadow-color: #fff;
+			scrollbar-shadow-color: #aaa;
+			scrollbar-arrow-color: #000000;
+			scrollbar-track-color: #eee;
+			*/
 		}
 		overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
 		overflow-x: hidden;
@@ -259,7 +283,7 @@ $BreadcrumbsColor:false !default;
 	@if $PAGE_FIXED{
 		.col.fixed{
 			position:fixed; _position:absolute; z-index:6;
-			left:0; right:0; top:40px; bottom:20px;
+			left:0; right:0; top:$HeaderHeight; bottom:20px;
 			&.right{left:auto; *float:left;/* for ie7 */}
 	    &.left{right:auto; *float:right;/* for ie7 */}
 		}
