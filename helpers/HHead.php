@@ -134,7 +134,7 @@ class HHead{
 	/* DEV */
 		private static $_displayed=false;
 		private static function testDisplayed(){
-			if(self::$_displayed) throw new Exception('HHead::display() has already been called');
+			if(Springbok::$inError===null && self::$_displayed) throw new Exception('HHead::display() has already been called');
 		}
 	/* /DEV */
 	public static function display(){
