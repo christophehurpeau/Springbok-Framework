@@ -12,6 +12,7 @@ class HElementFormContainer extends HElement{
 	public function tagContainer($tagContainer){ $this->tagContainer=$tagContainer; return $this; }
 	public function before($content){ $this->before=$content; return $this; }
 	public function after($content){ $this->after=$content; return $this; }
+	public function addAfter($content){ $this->after.=$content; return $this; }
 	public function error($message){ $this->error=$message; return $this; }
 	public function noError(){ $this->error=false; return $this; }
 	
