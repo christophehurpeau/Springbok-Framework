@@ -200,15 +200,21 @@ $BreadcrumbsColor:false !default;
 	@if $PageBackground{ @include background($PageBackground); }
 	
 	@if $PAGE_FIXED{
-  	@if $PageWidth==false{ margin:0 3px; }
-  	padding-top:40px;
-    position:relative;
-    overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
-    overflow-x: hidden;
-    /*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
+		@if $PageWidth==false and $PAGE_VERSION==1{ margin:0 3px; }
+		@if $PAGE_VERSION==1{
+			position:relative;
+			padding-top:40px;
+		}@else{
+			position:absolute;
+			top:40px; bottom:15px;
+			left:0; right:0;
+		}
+		overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
+		overflow-x: hidden;
+		/*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
 	}@else{
-	  position:relative;
-    margin-top:8px;
+		position:relative;
+		margin-top:8px;
 	}
 	
 	@if $PAGE_VERSION==1{
@@ -234,29 +240,34 @@ $BreadcrumbsColor:false !default;
 			//@extend .row;
 			display:table; @if $PageFixedLayout{ table-layout:fixed; }@else{ table-layout:auto; } width:100%;
 		}
-		
-		.col.fixed, .col.variable{
-			@if $PAGE_FIXED{
-				position:relative;
-				@if $FixedVariableMargin{ margin:3px; }
-			}@else{
-				overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
-				overflow-x: hidden;
-				position:relative;
-				@if $FixedVariableMargin{ margin:0 10px; }
-			}
-			/* IE <= 7 */
-			*float:left;
+	}
+}
+@if $PAGE_VERSION==2{
+	.col.fixed, .col.variable{
+		@if $PAGE_FIXED{
+			position:absolute;
+			@if $FixedVariableMargin{ margin:3px; }
+		}@else{
+			overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+			overflow-x: hidden;
+			position:relative;
+			@if $FixedVariableMargin{ margin:0 10px; }
+		}
+		/* IE <= 7 */
+		*float:left;
+	}
+	@if $PAGE_FIXED{
+		.col.fixed{
+			position:fixed; _position:absolute; z-index:6;
+			left:0; right:0; top:40px; bottom:20px;
+			&.right{left:auto; *float:left;/* for ie7 */}
+	    &.left{right:auto; *float:right;/* for ie7 */}
 		}
 	}
-	
-	
+}
+
+#page{
 	@if $PAGE_VERSION==1{
-		@if $PAGE_FIXED{
-	  	div.fixed.right{float:left}
-	  	div.fixed.left{float:right}
-		}
-	
 		$__pageFixed_or_fixedBackground_or_fixedBorder:false;
 		@if $PAGE_FIXED{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
 		@else if $FixedBackground{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
@@ -418,8 +429,8 @@ $BreadcrumbsColor:false !default;
 .h200{height:200px}
 .h300{height:300px}
 
-@if $PAGE_VERSION==1{
-	@if $PAGE_FIXED{
+@if $PAGE_FIXED{
+	@if $PAGE_VERSION==1{
 	  #page div.variable.l160{left:170px}
 	  #page div.variable.l200{left:210px}
 	  #page div.variable.l280{left:290px}
@@ -436,24 +447,33 @@ $BreadcrumbsColor:false !default;
 	  #page div.variable.r380{right:390px}
 	  #page div.variable.r400{right:410px}
 	  #page div.variable.r420{right:430px}
+	}@else{
+		.l160{left:170px}
+		.l200{left:210px}
 	}
-	#page.ml160{margin-left:170px}
-	#page.ml200,.ml200{margin-left:210px}
-	#page.ml280,.ml280{margin-left:290px}
-	#page.ml300{margin-left:320px}
-	#page.ml350{margin-left:360px}
-	#page.ml380{margin-left:390px}
-	#page.ml400{margin-left:410px}
-	#page.ml420{margin-left:430px}
+}
+@if $PAGE_VERSION==1 or $PAGE_FIXED{
+	.ml160{margin-left:170px}
+	.ml200{margin-left:210px}
+	@if $PAGE_VERSION==1{
+		#page.ml280,.ml280{margin-left:290px}
+		#page.ml300{margin-left:320px}
+		#page.ml350{margin-left:360px}
+		#page.ml380{margin-left:390px}
+		#page.ml400{margin-left:410px}
+		#page.ml420{margin-left:430px}
+	}
 	
-	#page.mr160{margin-right:170px}
-	#page.mr200,.mr200{margin-right:210px}
-	#page.mr280,.mr280{margin-right:290px}
-	#page.mr300,.mr300{margin-right:310px}
-	#page.mr350{margin-right:360px}
-	#page.mr380{margin-right:390px}
-	#page.mr400{margin-right:410px}
-	#page.mr420{margin-right:430px}
+	.mr160{margin-right:170px}
+	.mr200{margin-right:210px}
+	@if $PAGE_VERSION==1{
+		#page.mr280,.mr280{margin-right:290px}
+		#page.mr300,.mr300{margin-right:310px}
+		#page.mr350{margin-right:360px}
+		#page.mr380{margin-right:390px}
+		#page.mr400{margin-right:410px}
+		#page.mr420{margin-right:430px}
+	}
 }
 
 html body .mr10{margin-right:10px}/* DO NOT put this in #page */

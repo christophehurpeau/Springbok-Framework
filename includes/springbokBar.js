@@ -1,12 +1,17 @@
-if($('#container').length===0) $('body').css('paddingTop','33px');
+if($('#container').length===0 && $('#page').css('position')!=='fixed') $('body').css('paddingTop','33px');
 
-var checkedDivFixedPosition=false;
+var checkedDivFixedPosition=false,checkedDivPagePosition=false;
 function checkDivFixedPosition(){
 	$('#container').addClass('devEnvironnement');
-	var divFixed=$('div.fixed');
-	if(divFixed.length!==0){
+	var divFixed=$('div.fixed'),divPage=$('#page');
+	if(divPage.length!==0 && checkedDivPagePosition===false){
+		checkedDivPagePosition=true;
+		if(divPage.css('position')==='absolute') $('head').append('<style type="text/css">html body #container{margin-top:0 !important;}#container #page{top:'+(parseInt(divPage.css('top'))+28)+'px;}</style>')
+	}
+	if(divFixed.length!==0 && checkedDivFixedPosition===false){
 		checkedDivFixedPosition=true;
-		if(divFixed.css('position')==='fixed') $('head').append('<style type="text/css">#container #page div.fixed{top:'+(parseInt(divFixed.css('top'))+28)+'px;}</style>')
+		if(divFixed.css('position')==='fixed')
+			$('head').append('<style type="text/css">#container #page div.fixed{top:'+(parseInt(divFixed.css('top'))+28)+'px;}</style>')
 	}
 }
 checkDivFixedPosition();
@@ -18,7 +23,7 @@ function displaySpringbokBarPopup(content){
 var jsConsoleLink=$('#springbok-bar a[rel="js-console"]'),jsConsoleSpanCount=jsConsoleLink.find('span'),
 			ajaxLink=$('#springbok-bar a[rel=ajax]'),ajaxSpanCount=ajaxLink.find('span');
 $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
-	if(!checkedDivFixedPosition) checkDivFixedPosition();
+	if(!checkedDivFixedPosition || !checkedDivPagePosition) checkDivFixedPosition();
 	//console.log(e,xhr,settings);
 	ajaxLink.stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
 	ajaxSpanCount.text(new Number(ajaxSpanCount.text())+1);
