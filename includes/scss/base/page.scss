@@ -477,26 +477,32 @@ $BreadcrumbsColor:false !default;
 	}
 }
 @if $PAGE_VERSION==1 or $PAGE_FIXED{
-	.ml160{margin-left:170px}
-	.ml200{margin-left:210px}
 	@if $PAGE_VERSION==1{
+		#page.ml160,.ml160{margin-left:170px}
+		#page.ml200,.ml200{margin-left:210px}
 		#page.ml280,.ml280{margin-left:290px}
 		#page.ml300{margin-left:320px}
 		#page.ml350{margin-left:360px}
 		#page.ml380{margin-left:390px}
 		#page.ml400{margin-left:410px}
 		#page.ml420{margin-left:430px}
+	}@else{
+		.ml160{margin-left:170px}
+		.ml200{margin-left:210px}
 	}
 	
-	.mr160{margin-right:170px}
-	.mr200{margin-right:210px}
 	@if $PAGE_VERSION==1{
+		#page.mr160,.mr160{margin-right:170px}
+		#page.mr200,.mr200{margin-right:210px}
 		#page.mr280,.mr280{margin-right:290px}
 		#page.mr300,.mr300{margin-right:310px}
 		#page.mr350{margin-right:360px}
 		#page.mr380{margin-right:390px}
 		#page.mr400{margin-right:410px}
 		#page.mr420{margin-right:430px}
+	}@else{
+		.mr160{margin-right:170px}
+		.mr200{margin-right:210px}
 	}
 }
 
