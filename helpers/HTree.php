@@ -21,9 +21,9 @@ class HTree{
 	private function _display($tree,$ulAttributes=array()){
 		$res='<ul'.HHtml::_attributes($ulAttributes).'>';
 		foreach($tree as $elt){
-			$res.='<li>';
+			$res.='<li data-id="'.$elt->id.'">';
 			$res.=$this->actionView === null ? '<span class="name">'.h($elt->name()).'</span>' :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>'
-				.'<span class="actions">'
+				.' <span class="actions">'
 					.'<a href="#" class="action icon add"></a>'
 					.'<a href="#" class="action icon edit"></a>'
 					.'<a href="#" class="action icon delete"></a>'

@@ -1,7 +1,7 @@
 includeCore('ui/dialogs');
 S.tree={
 	prepare:function(id,url){
-		var tree=$('#'+id);
+		var tree=$('#'+id); url+='/';
 		tree.find('a.action.add').click(function(){
 			var li=$(this).closest('li'),ul=li.children('ul');
 			if(!ul.length) ul=$('<ul>').appendTo(li);
@@ -15,15 +15,17 @@ S.tree={
 				a=li.children('a:first');
 				a.sHide().after(span=$('<span>').text(a.text()));
 			}
-			span.attr('contenteditable',true).after(actionOk.click(function(){
-				//TODO Save
+			span.attr('contenteditable',true).focus().after(actionOk.click(function(){
+				actionOk.sHide();
 				var text=span.text();
-				if(a){
-					a.sShow().text(text);
-					span.remove();
-				}
-				actionOk.remove();
-				actions.sShow();
+				$.post(url+'edit/'+li.data('id'),{text:text},function(data){
+					if(a){
+						a.sShow().text(text);
+						span.remove();
+					}
+					actionOk.remove();
+					actions.sShow();
+				});
 			}));
 		});
 		tree.find('a.action.delete').click(function(){ });

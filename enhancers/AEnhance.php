@@ -56,7 +56,7 @@ abstract class AEnhance{
 		//debug('initEnhanceApp took : '.(microtime(true) - $t).' s');
 		
 		//$t=microtime(true);
-		$this->removeOldFiles();
+		$this->removeOldFiles($dev,$prod);
 		$this->removeOldFolders();
 		//debug('removeOldFiles & removeOldFolders took : '.(microtime(true) - $t).' s');
 		
@@ -95,7 +95,7 @@ abstract class AEnhance{
 				$this->enhanced->addDeleteChange($enhancedFile);
 				if($devAndProd['dev'] && file_exists($devAndProd['dev'])) unlink($devAndProd['dev']);
 				if($devAndProd['prod'] && file_exists($devAndProd['prod'])) unlink($devAndProd['prod']);
-				if($devAndProd['class'] && $devAndProd['class'] !== 'PhpFile') $devAndProd['class']::fileDeleted(new File($enhancedFile));
+				if($devAndProd['class'] && $devAndProd['class'] !== 'PhpFile') $devAndProd['class']::fileDeleted(new File($enhancedFile),$devAndProd);
 				$this->enhanced->removeOldEnhancedFile($enhancedFile);
 			}
 			/*foreach(array_diff_key($devFolder->listFiles(false),$files) as $f){
