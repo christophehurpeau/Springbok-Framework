@@ -1,0 +1,23 @@
+[contenteditable]:hover:after{
+	content:' click to edit';
+	font-style: italic;
+	font-size: 12px;
+	background:#fff;
+	color:#ccc;
+}
+
+[contenteditable]:hover, [contenteditable]:focus {
+	background:#FFFFD3;
+}
+
+[contenteditable]:focus{
+	outline:1px dotted;
+	padding:5px;
+}
+[contenteditable]:focus:after{ content: ''; }
+
+span[contenteditable]{
+	display:inline-block;
+	padding:5px; margin:1px 2px;
+	outline:1px dashed;
+}

@@ -421,6 +421,19 @@ class ModelFile extends PhpFile{
 		//if($d->exists()) $d->moveTo($tmpFolder.'models/infos');
 		if(!$d->exists()) $d->mkdirs(0775);
 	}
+	public static function fileDeleted($file,$devAndProd=null){
+		$fileName=$file->getName(); $fileNameWithoutExt=substr($fileName,0,-4);
+		$devAndProdFiles=array();
+		if(isset($devAndProd['dev'])) $devAndProdFiles[]=$devAndProd['dev'];
+		if(isset($devAndProd['prod'])) $devAndProdFiles[]=$devAndProd['prod'];
+		
+		foreach($devAndProdFiles as $devOrProdFile){
+			$modelsFolder=dirname($devOrProdFile).'/';
+			UFile::rm($modelsFolder.'infos/'.$fileNameWithoutExt);
+			UExec::exec('rm '.UExec::rmEscape($modelsFolder.$fileNameWithoutExt.'__').'*');
+			UExec::exec('rm '.UExec::rmEscape($modelsFolder.'infos/'.$fileNameWithoutExt.'__').'*');
+		}
+	}
 	
 	/*public static function afterEnhanceApp($hasOldDef,$newDef,$appDir,$dev,$prod){
 		if($hasOldDef){

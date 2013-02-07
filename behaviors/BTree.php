@@ -194,10 +194,10 @@ trait BTree{
 		$result=$query->tabResKey(self::_getPkName())->execute();
 		
 		$tree=array();
-		
+		foreach($result as &$res) $res->_set('children',array());
 		foreach($result as &$res){
 			if($res->parent_id){
-				$result[$res->parent_id]->children[]=$res;
+				$result[$res->parent_id]->_getRef('children')[]=$res;
 			}else $tree[]=$res;
 		}
 		

@@ -121,7 +121,7 @@ class Controller{
 	}
 	
 	
-	protected static function callController($controllerName,$actionName,$params){
+	protected static function callController($controllerName,$actionName,$params=array()){
 		CRoute::setControllerAndAction($controllerName,$actionName);
 		$controllerName.='Controller';
 		include APP.'controllers'.self::$suffix.'/'.$controllerName.'.php';

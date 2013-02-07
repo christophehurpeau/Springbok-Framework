@@ -125,11 +125,16 @@ class HHead{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linksLangs()</div>'; /* /DEV */
 	}
 	
+	public static function linkGoogleWebStore($itemId){
+		self::$head4.='<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/'.$itemId.'"/>';
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkGoogleWebStore()</div>'; /* /DEV */
+	}
+	
 	
 	/* DEV */
 		private static $_displayed=false;
 		private static function testDisplayed(){
-			if(self::$_displayed) throw new Exception('HHead::display() has already been called');
+			if(Springbok::$inError===null && self::$_displayed) throw new Exception('HHead::display() has already been called');
 		}
 	/* /DEV */
 	public static function display(){

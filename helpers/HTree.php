@@ -6,20 +6,24 @@ class HTree{
 		$this->tree=$tree;
 	}
 	
-	public function actionView($url){ $this->actionView=$url; return $this; }
+	public function actionView($url){
+		if(rtrim($url,'/')!==$url) throw new Exception('Please provide the url without the trailing "/"');
+		$this->actionView=$url; return $this;
+	}
 	
 	
 	public function render(){
-		return $this->_display($this->tree);
+		$id='tree'.uniqid();
+		HHtml::jsReady('S.tree.prepare("'.$id.'","/'.lcfirst(CRoute::getController()).'")');
+		return $this->_display($this->tree,array('id'=>$id));
 	}
 	
-	private function _display($tree){
-		$id='tree'.uniqid();
-		$res='<ul id="'.$id.'">';
+	private function _display($tree,$ulAttributes=array()){
+		$res='<ul'.HHtml::_attributes($ulAttributes).'>';
 		foreach($tree as $elt){
-			$res.='<li>';
-			$res.=$this->actionView === null ? h($elt->name()) :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>'
-				.'<span class="actions">'
+			$res.='<li data-id="'.$elt->id.'">';
+			$res.=$this->actionView === null ? '<span class="name">'.h($elt->name()).'</span>' :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>'
+				.' <span class="actions">'
 					.'<a href="#" class="action icon add"></a>'
 					.'<a href="#" class="action icon edit"></a>'
 					.'<a href="#" class="action icon delete"></a>'
@@ -27,8 +31,7 @@ class HTree{
 			if(!empty($elt->children)) $res.=$this->_display($elt->children);
 			$res.='</li>';
 		}
-		HHtml::jsReady('S.tree.prepare("'.$id.'","/'.lcfirst(CRoute::getController()).'")');
-		return $res.'<ul>';
+		return $res.'</ul>';
 	}
 	
 	public static function display($tree){
@@ -39,6 +42,6 @@ class HTree{
 			if(!empty($elt->children)) $res.=self::display($elt->children);
 			$res.='</li>';
 		}
-		return $res.'<ul>';
+		return $res.'</ul>';
 	}
 }

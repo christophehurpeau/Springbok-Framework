@@ -9,6 +9,14 @@ $HeaderColor:false !default;
 $HeaderBorderRadius:false !default;
 $HeaderPadding:false !default;
 $HeaderBorder:false !default;
+$HeaderHeight:0 !default;
+@if $HeaderHeight==0{
+	@if $PAGE_FIXED{
+		$HeaderHeight:33px;
+	}@else{
+		$HeaderHeight:false;
+	}
+}
 
 $ContainerWidth:false !default;
 $ContainerBackground:false !default;
@@ -83,7 +91,7 @@ body #container{
 	  @else{ width:$ContainerWidth; }
 	  margin:0 auto;
 	}@else{
-		/*width:100%; */min-width:1000px;
+		/*width:100%; */min-width:998px;
 	}
 	@include background($ContainerBackground);
 	@if $ContainerShadow{ @include boxShadow($ContainerShadow); }
@@ -103,6 +111,7 @@ header,div.header{
 	@if $HeaderBorderRadius{ @include borderRadiusBottom(5px); }
 	@if $HeaderPadding{ padding:$HeaderPadding; }
 	@if $HeaderBorder{ @include border($HeaderBorder); }
+	@if $HeaderHeight{ height:$HeaderHeight; }
 	display:block;
 	/*width:98%;
 	margin:0 auto; padding:1px 0;*/
@@ -159,7 +168,7 @@ footer,div.footer{
 footer a,#breadcrumbs a,h1 a,h2 a{text-decoration:none}
 
 
-$BreadcrumbsInVariable:false !default;
+$BreadcrumbsInVariable:true !default;
 $BreadcrumbsBackground:false !default;
 $BreadcrumbsFontSize:0.88em !default;
 $BreadcrumbsShadow:-1 !default;
@@ -186,13 +195,17 @@ $BreadcrumbsColor:false !default;
 	cursor:default;
 	@if $BreadcrumbsColor==false{ color:$InteractionCurrentColor; }
 }
-
+@if $PAGE_FIXED{
+	::-webkit-scrollbar{ width: 8px; }
+	::-webkit-scrollbar-track{ background:#555; border-radius:4px; -webkit-box-shadow:inset 0 0 2px #999; }
+	::-webkit-scrollbar-thumb{ background:#000; border-radius:4px; -webkit-box-shadow:inset 0 0 3px #666; }
+}
 
 #page{
 	/*float:left;*/
 	/*overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
 	/*overflow-x: hidden;*/
-	@if $PagePaddingBottom{ padding-bottom:20px; }
+	@if $PagePaddingBottom and $PAGE_FIXED==false { padding-bottom:20px; }
 	@if $PageWidth{
 	  width:$PageWidth;
 	  margin:0 auto;
@@ -200,15 +213,32 @@ $BreadcrumbsColor:false !default;
 	@if $PageBackground{ @include background($PageBackground); }
 	
 	@if $PAGE_FIXED{
-  	@if $PageWidth==false{ margin:0 3px; }
-  	padding-top:40px;
-    position:relative;
-    overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
-    overflow-x: hidden;
-    /*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
+		@if $PageWidth==false and $PAGE_VERSION==1{ margin:0 3px; }
+		@if $PAGE_VERSION==1{
+			position:relative;
+			padding-top:40px;
+		}@else{
+			position:absolute;
+			top:37px; bottom:16px;
+			left:0; right:0;
+			/* http://webdesign.tutsplus.com/tutorials/htmlcss-tutorials/quick-tip-styling-scrollbars-to-match-your-ui-design/ */
+			/* http://css-tricks.com/custom-scrollbars-in-webkit/ */
+			scrollbar-face-color:#111; /* IE */
+			/*
+			scrollbar-highlight-color: #fff;
+			scrollbar-3dlight-color: #ccc;
+			scrollbar-darkshadow-color: #fff;
+			scrollbar-shadow-color: #aaa;
+			scrollbar-arrow-color: #000000;
+			scrollbar-track-color: #eee;
+			*/
+		}
+		overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
+		overflow-x: hidden;
+		/*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
 	}@else{
-	  position:relative;
-    margin-top:8px;
+		position:relative;
+		margin-top:8px;
 	}
 	
 	@if $PAGE_VERSION==1{
@@ -234,29 +264,40 @@ $BreadcrumbsColor:false !default;
 			//@extend .row;
 			display:table; @if $PageFixedLayout{ table-layout:fixed; }@else{ table-layout:auto; } width:100%;
 		}
+	}
+}
+@if $PAGE_VERSION==2{
+	.col.fixed, .col.variable{
+		@if $PAGE_FIXED{
+			position:absolute;
+			left:2px; right:2px; top:0; bottom:0;
+			@if $FixedVariableMargin{ margin:3px; }
+			overflow: auto; overflow-x: hidden;
+		}@else{
+			overflow: auto; overflow-x: hidden; /* nouveau contexte => pour les clear à l'interieur */
+			position:relative;
+			@if $FixedVariableMargin{ margin:0 10px; }
+		}
+		/* IE <= 7 */
+		*float:left;
 		
-		.col.fixed, .col.variable{
-			@if $PAGE_FIXED{
-				position:relative;
-				@if $FixedVariableMargin{ margin:3px; }
-			}@else{
-				overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
-				overflow-x: hidden;
-				position:relative;
-				@if $FixedVariableMargin{ margin:0 10px; }
-			}
-			/* IE <= 7 */
-			*float:left;
+			@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
+			@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
+			@if $FixedVariableBackground{ background:$FixedVariableBackground; }
+			@if $FixedVariableBorder{ border:$FixedVariableBorder; }
+	}
+	@if $PAGE_FIXED{
+		.col.fixed{
+			position:fixed; _position:absolute; z-index:6;
+			top:$HeaderHeight; bottom:14px; _top:0; _bottom:0;
+			&.right{left:auto; *float:left;/* for ie7 */}
+	    &.left{right:auto; *float:right;/* for ie7 */}
 		}
 	}
-	
-	
+}
+
+#page{
 	@if $PAGE_VERSION==1{
-		@if $PAGE_FIXED{
-	  	div.fixed.right{float:left}
-	  	div.fixed.left{float:right}
-		}
-	
 		$__pageFixed_or_fixedBackground_or_fixedBorder:false;
 		@if $PAGE_FIXED{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
 		@else if $FixedBackground{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
@@ -418,8 +459,8 @@ $BreadcrumbsColor:false !default;
 .h200{height:200px}
 .h300{height:300px}
 
-@if $PAGE_VERSION==1{
-	@if $PAGE_FIXED{
+@if $PAGE_FIXED{
+	@if $PAGE_VERSION==1{
 	  #page div.variable.l160{left:170px}
 	  #page div.variable.l200{left:210px}
 	  #page div.variable.l280{left:290px}
@@ -436,24 +477,42 @@ $BreadcrumbsColor:false !default;
 	  #page div.variable.r380{right:390px}
 	  #page div.variable.r400{right:410px}
 	  #page div.variable.r420{right:430px}
+	}@else{
+		#page .l160{left:170px}
+		#page .l200{left:210px}
+	  #page .l280{left:290px}
+	  #page .r160{right:170px}
+	  #page .r200{right:210px}
 	}
-	#page.ml160{margin-left:170px}
-	#page.ml200,.ml200{margin-left:210px}
-	#page.ml280,.ml280{margin-left:290px}
-	#page.ml300{margin-left:320px}
-	#page.ml350{margin-left:360px}
-	#page.ml380{margin-left:390px}
-	#page.ml400{margin-left:410px}
-	#page.ml420{margin-left:430px}
+}
+@if $PAGE_VERSION==1 or $PAGE_FIXED{
+	@if $PAGE_VERSION==1{
+		#page.ml160,.ml160{margin-left:170px}
+		#page.ml200,.ml200{margin-left:210px}
+		#page.ml280,.ml280{margin-left:290px}
+		#page.ml300{margin-left:320px}
+		#page.ml350{margin-left:360px}
+		#page.ml380{margin-left:390px}
+		#page.ml400{margin-left:410px}
+		#page.ml420{margin-left:430px}
+	}@else{
+		.ml160{margin-left:170px}
+		.ml200{margin-left:210px}
+	}
 	
-	#page.mr160{margin-right:170px}
-	#page.mr200,.mr200{margin-right:210px}
-	#page.mr280,.mr280{margin-right:290px}
-	#page.mr300,.mr300{margin-right:310px}
-	#page.mr350{margin-right:360px}
-	#page.mr380{margin-right:390px}
-	#page.mr400{margin-right:410px}
-	#page.mr420{margin-right:430px}
+	@if $PAGE_VERSION==1{
+		#page.mr160,.mr160{margin-right:170px}
+		#page.mr200,.mr200{margin-right:210px}
+		#page.mr280,.mr280{margin-right:290px}
+		#page.mr300,.mr300{margin-right:310px}
+		#page.mr350{margin-right:360px}
+		#page.mr380{margin-right:390px}
+		#page.mr400{margin-right:410px}
+		#page.mr420{margin-right:430px}
+	}@else{
+		.mr160{margin-right:170px}
+		.mr200{margin-right:210px}
+	}
 }
 
 html body .mr10{margin-right:10px}/* DO NOT put this in #page */

@@ -113,4 +113,9 @@ $IE_COMPATIBILITY:true !default;
   -webkit-text-stroke: .04pt black;
 }
 
+@mixin textStroke($color:#000){
+	-webkit-text-stroke: 1px $color;
+	text-shadow:2px 2px 0 $color, -1px -1px 0 $color, 1px -1px 0 $color, -1px 1px 0 $color, 1px 1px 0 $color;
+}
+
 @includeCore 'mixins/types.scss';

@@ -264,7 +264,7 @@ class SSqlModel extends SModel{
 		return CCache::get('models_firstLetters')->readOrWrite($className.'_firstLetters',function() use($className,$fieldName){return $className::QValues()->field('DISTINCT SUBSTRING('.$fieldName.',1,1)');});
 	}
 	
-	public static function findValues($field){return self::QValues()->fields($field)->execute();}
+	public static function findValues($field){return self::QValues()->field($field)->execute();}
 	
 	public static function insertAll($data,$cols=null){ return self::saveAll($data,$cols,'insert'); }
 	public static function insertIgnoreAll($data,$cols=null){ return self::saveAll($data,$cols,'insertIgnore'); }
