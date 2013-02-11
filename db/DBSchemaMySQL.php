@@ -161,6 +161,7 @@ class DBSchemaMySQL extends DBSchema{
 		return $this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' ADD PRIMARY KEY ('.'`'.implode('`,`',$this->modelInfos['primaryKeys']).'`)',true);
 	}
 	public function changePrimaryKey(){
+		if(empty($this->modelInfos['primaryKeys'])) return $this->removePrimaryKey();
 		return $this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName).' DROP PRIMARY KEY,ADD PRIMARY KEY ('.'`'.implode('`,`',$this->modelInfos['primaryKeys']).'`)',true);
 	}
 	
