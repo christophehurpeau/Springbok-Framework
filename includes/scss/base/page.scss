@@ -283,7 +283,8 @@ $BreadcrumbsColor:false !default;
 		
 			@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
 			@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
-			@if $FixedVariableBackground{ background:$FixedVariableBackground; }
+			@include background($FixedVariableBackground);
+			@if $FixedVariableColor{ color:$FixedVariableColor; }
 			@if $FixedVariableBorder{ border:$FixedVariableBorder; }
 	}
 	@if $PAGE_FIXED{
@@ -306,7 +307,8 @@ $BreadcrumbsColor:false !default;
 	  	div.fixed{
 	  		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
 	  		overflow-x: hidden;
-	  		@if $FixedBackground{ background:$FixedBackground; }
+				@include background($FixedBackground);
+				@if $FixedColor{ color:$FixedColor; }
 	  		@if $FixedBorder{ border:1px solid $FixedBorder; }
 	  		@if $PAGE_FIXED{
 	  			position:fixed; _position:absolute; z-index:6;
@@ -316,7 +318,8 @@ $BreadcrumbsColor:false !default;
 		}
 	}@else{
 		.col.fixed{
-			@if $FixedBackground{ background:$FixedBackground; }
+			@include background($FixedBackground);
+			@if $FixedColor{ color:$FixedColor; }
 			@if $FixedBorder{ border:1px solid $FixedBorder; }
 		}
 	}
