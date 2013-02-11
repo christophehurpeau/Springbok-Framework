@@ -304,17 +304,17 @@ $BreadcrumbsColor:false !default;
 		@else if $FixedBackground{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
 		@else if $FixedBorder{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
 		@if $__pageFixed_or_fixedBackground_or_fixedBorder{
-	  	div.fixed{
-	  		overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
-	  		overflow-x: hidden;
+			div.fixed{
+				overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+				overflow-x: hidden;
 				@include background($FixedBackground);
 				@if $FixedColor{ color:$FixedColor; }
-	  		@if $FixedBorder{ border:1px solid $FixedBorder; }
-	  		@if $PAGE_FIXED{
-	  			position:fixed; _position:absolute; z-index:6;
-	  			top:40px; left:0; right:0; bottom:20px;
-	  		}
-	  	}
+				@if $FixedBorder{ border:1px solid $FixedBorder; }
+				@if $PAGE_FIXED{
+					position:fixed; _position:absolute; z-index:6;
+					top:40px; left:0; right:0; bottom:20px;
+				}
+			}
 		}
 	}@else{
 		.col.fixed{
@@ -327,11 +327,11 @@ $BreadcrumbsColor:false !default;
 	
 	@if $PAGE_VERSION==1{
 		@if $PAGE_FIXED{
-		  div.fixed.right{left:auto; *float:left;/* for ie7 */}
-	    div.fixed.left{right:auto; *float:right;/* for ie7 */}
+			div.fixed.right{left:auto; *float:left;/* for ie7 */}
+			div.fixed.left{right:auto; *float:right;/* for ie7 */}
 		}@else{
-	  	div.fixed.right{float:right;}
-	  	div.fixed.left{float:left;}
+			div.fixed.right{float:right;}
+			div.fixed.left{float:left;}
 		}
 		
 		div.fixed h2{ text-align:center; }
@@ -389,11 +389,11 @@ $BreadcrumbsColor:false !default;
 		div.variable.padding{padding:$VariablePaddingValue}
 		div.variable.paddingtop{padding:8px 0 0}
 		@if $VariableAutoContentPadding{
-		  @if false==$VariableBackground{
-		    @if false==$FixedVariableBackground{
-		      div.variable > div.content{padding:5px 5px 0 0}
-		    }
-		  }
+			@if false==$VariableBackground{
+				@if false==$FixedVariableBackground{
+					div.variable > div.content{padding:5px 5px 0 0}
+				}
+			}
 		}
 		div.variable.padding > div.content{padding:5px 0;}
 		
@@ -464,28 +464,28 @@ $BreadcrumbsColor:false !default;
 
 @if $PAGE_FIXED{
 	@if $PAGE_VERSION==1{
-	  #page div.variable.l160{left:170px}
-	  #page div.variable.l200{left:210px}
-	  #page div.variable.l280{left:290px}
-	  #page div.variable.l300{left:320px}
-	  #page div.variable.l350{left:360px}
-	  #page div.variable.l380{left:390px}
-	  #page div.variable.l400{left:410px}
-	  #page div.variable.l420{left:430px}
-	  
-	  #page div.variable.r160{right:170px}
-	  #page div.variable.r200{right:210px}
-	  #page div.variable.r300{right:310px}
-	  #page div.variable.r350{right:360px}
-	  #page div.variable.r380{right:390px}
-	  #page div.variable.r400{right:410px}
-	  #page div.variable.r420{right:430px}
+		#page div.variable.l160{left:170px}
+		#page div.variable.l200{left:210px}
+		#page div.variable.l280{left:290px}
+		#page div.variable.l300{left:320px}
+		#page div.variable.l350{left:360px}
+		#page div.variable.l380{left:390px}
+		#page div.variable.l400{left:410px}
+		#page div.variable.l420{left:430px}
+		
+		#page div.variable.r160{right:170px}
+		#page div.variable.r200{right:210px}
+		#page div.variable.r300{right:310px}
+		#page div.variable.r350{right:360px}
+		#page div.variable.r380{right:390px}
+		#page div.variable.r400{right:410px}
+		#page div.variable.r420{right:430px}
 	}@else{
 		#page .l160{left:170px}
 		#page .l200{left:210px}
-	  #page .l280{left:290px}
-	  #page .r160{right:170px}
-	  #page .r200{right:210px}
+		#page .l280{left:290px}
+		#page .r160{right:170px}
+		#page .r200{right:210px}
 	}
 }
 @if $PAGE_VERSION==1 or $PAGE_FIXED{
