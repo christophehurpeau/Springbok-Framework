@@ -140,7 +140,7 @@ abstract class DBSql extends DB{
 	
 	private function _logQuery($qr){
 		$this->_nbQueries++;
-		if($this->_nbQueries < 3000){
+		if($this->_nbQueries < 1000){
 			$qr['backtrace']=array_slice(debug_backtrace(),1);
 			$this->_queries[]=$qr;
 			CLogger::get('queries-'.date('Y-m-d-H'))->log($qr['query']);
