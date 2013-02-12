@@ -44,7 +44,7 @@ class THtml extends STransformer{
 				}
 				if($action[1][0] !== '/') $action[1]='/'.$this->component->controller.'/'.$action[1];
 			}
-		}
+		}elseif($this->component->addInTable===true) echo '<td style="width:80px"></td>';
 		echo '</tr>';
 	}
 
@@ -67,7 +67,25 @@ class THtml extends STransformer{
 			}
 			echo '<td>'.$filterField.'</td>';
 		}
-		if(isset($this->component->rowActions)) echo '<td></td>';
+		if(isset($this->component->rowActions)) echo '<td>'.$form->submit(_tC('Add')).'</td>';
+		echo '</tr>';
+	}
+	
+	public function addInTable($form,$fields){
+		echo '<tr class="form">';
+		foreach($fields as &$field){
+			$filterField=null; $attributes=array(); $filterName='add['.$field['key'].']';
+			if($field['key']==='created' || $field['key']==='updated') $fielterField='';
+			elseif(isset($field['tabResult'])){
+				$attributes['empty']='';
+				$filterField=$form->select($filterName,$field['tabResult'],$attributes);
+			}
+			if($filterField===null){
+				$filterField=$form->input($filterName,$attributes);
+			}
+			echo '<td>'.$filterField.'</td>';
+		}
+		echo '<td>'.$form->submit(_tC('Add')).'</td>';
 		echo '</tr>';
 	}
 
@@ -79,27 +97,29 @@ class THtml extends STransformer{
 		echo '<tbody>';
 	}
 	
+	public function startLine($model,$id){
+		$class=$model->getTableClass();
+		if($iRow++%2) echo ' class="alternate'.($class===null?'':' '.$class).'"';
+		elseif($class!==null) echo ' class="'.$class.'"';
+		if($this->component->actionClick !==null){
+			if(is_array($this->component->actionClick)){
+				$defaultActionUrl=$this->component->actionClick;
+				$defaultActionUrl[]=$id;
+			}elseif(is_string($this->component->actionClick)) $defaultActionUrl=$this->component->actionClick.'/'.$id;
+			else{
+				$callback=&$this->component->actionClick;
+				$defaultActionUrl=$callback($id,$model);
+			}
+			//echo ' onclick="S.redirect(\''.HHtml::urlEscape($defaultActionUrl).'\')"'; //event.target.nodeName
+			echo ' rel="'.HHtml::urlEscape($defaultActionUrl).'"'; //event.target.nodeName
+		}
+	}
+	
 	public function displayResults($results,$fields){
 		$iRow=0;
 		foreach($results as $key=>&$model){
 			if(isset($this->component->rowActions) || $this->component->actionClick) $id=$model->id();
-			echo '<tr';
-			$class=$model->getTableClass();
-			if($iRow++%2) echo ' class="alternate'.($class===null?'':' '.$class).'"';
-			elseif($class!==null) echo ' class="'.$class.'"';
-			if($this->component->actionClick !==null){
-				if(is_array($this->component->actionClick)){
-					$defaultActionUrl=$this->component->actionClick;
-					$defaultActionUrl[]=$id;
-				}elseif(is_string($this->component->actionClick)) $defaultActionUrl=$this->component->actionClick.'/'.$id;
-				else{
-					$callback=&$this->component->actionClick;
-					$defaultActionUrl=$callback($id,$model);
-				}
-				//echo ' onclick="S.redirect(\''.HHtml::urlEscape($defaultActionUrl).'\')"'; //event.target.nodeName
-				echo ' rel="'.HHtml::urlEscape($defaultActionUrl).'"'; //event.target.nodeName
-			}
-			echo '>';
+			echo '<tr'; $this->startLine($model,$id); echo '>';
 			foreach($fields as $i=>&$field){
 				$value=static::getValueFromModel($model,$field,$i);
 				$this->displayValue($field,$value,$model);
@@ -110,7 +130,7 @@ class THtml extends STransformer{
 				foreach($this->component->rowActions as &$action)
 					echo HHtml::link('',$action[1].'/'.$id,$action[0]);
 				echo '</td>';
-			}
+			}elseif($this->component->addInTable===true) echo '<td></td>';
 			echo '</tr>';
 		}
 	}

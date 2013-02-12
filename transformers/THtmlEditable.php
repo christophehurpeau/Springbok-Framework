@@ -1,7 +1,7 @@
 <?php
 class THtmlEditable extends THtml{
 	
-	protected $form,$pkValue,$modelName,$currentFormModelName;
+	protected $form,$jsonPkValue,$modelName,$currentFormModelName;
 	
 	public function __construct($component){
 		/*echo */$this->form=new HForm($this->currentFormModelName=$this->modelName=$component->getModelName(),null,'get','div',false,false);
@@ -13,9 +13,12 @@ class THtmlEditable extends THtml{
 		echo $this->form->end(false);
 	}
 	
+	public function startLine($model,$id){
+		$this->jsonPkValue=json_encode($id);
+	}
+	
 	public function displayValue($field,$value,$obj){
 		if(isset($field['editable']) && $field['editable']) $field['escape']=false;
-		if($field['key']===$this->component->editablePkField) $this->pkValue=$value;
 		parent::displayValue($field,$value,$obj);
 	}
 	
@@ -34,13 +37,13 @@ class THtmlEditable extends THtml{
 			}else{
 				$modelName=is_string($field['editable']) ? $field['editable'] : $this->modelName;
 			}
-			$jsonPkValue=json_encode($this->pkValue);
 			
 			//<input type="text" value="'.h($value).'" style="width:98%" onchange=""/>
 			$def=$modelName::$__PROP_DEF[$fieldKey];
 			$infos=$modelName::$__modelInfos['columns'][$fieldKey];
 			
-			$attributes=array('id'=>$modelName.'_'.$name.'_'.$jsonPkValue,'onchange'=>'editableTable.updateField(\''.$name.'\','.$jsonPkValue.',this)','value'=>$value);
+			$attributes=array('id'=>$modelName.'_'.$name.'_'.$this->jsonPkValue,
+				'onchange'=>'editableTable.updateField(\''.$name.'\','.$this->jsonPkValue.',this)','value'=>$value);
 			$containerAttributes=array('sytle'=>'width:100%;position:relative');
 			
 			if($this->currentFormModelName!==$modelName)
