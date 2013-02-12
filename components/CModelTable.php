@@ -88,9 +88,6 @@ class CModelTable extends CModelTableAbstract{
 		echo $form->end(_tC('Add'));
 	}
 	
-	public $addInTable=false;
-	public function addInTable(){ $this->addInTable=true; return $this; }
-	
 	public $editableUrl;
 	public function displayEditable($url,$displayTotalResults=true,$transformerClass='THtmlEditable'){
 		/* DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
@@ -104,11 +101,11 @@ class CModelTable extends CModelTableAbstract{
 		$pagination=$this->query->getPagination();
 		$results=$pagination->getResults();
 		
-		if($pagination->getTotalResults() !== 0 || $this->isFiltersAllowed() || $this->addInTable===true) $this->_setFields();
+		if($pagination->getTotalResults() !== 0 || $this->mustDisplayTable()) $this->_setFields();
 		
 		$this->initController();
 		
-		if($this->isFiltersAllowed() || $this->addInTable===true){
+		if($this->hasForm()){
 			$formId=uniqid();
 			$form=HForm::create(NULL,array('id'=>$formId,'rel'=>'content'),false,false);
 		}else $form=null;
@@ -159,14 +156,14 @@ class CModelTable extends CModelTableAbstract{
 
 	protected function callTransformer($transformerClass,$results,$form=null){
 		$transformer=new $transformerClass($this);
-		if(!$this->isFiltersAllowed() && $this->addInTable===false && empty($results)){
+		if(empty($results) && !$this->mustDisplayTable()){
 			$transformer->startBody();
 			$transformer->noResults();
 		}else{
 			$transformer->startHead();
 			$transformer->titles($this->fields,$this->query->getFields());
 			if($this->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters(),$this->query->isFilterAdvancable());
-			elseif($this->addInTable===true) $transformer->addInTable($form,$this->fields);
+			elseif($this->hasAddInTable()) $transformer->addInTable($form,$this->fields);
 			$transformer->endHead();
 			$transformer->startBody();
 			if(empty($results)) $transformer->noResults(count($this->fields));

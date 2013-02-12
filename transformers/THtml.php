@@ -44,7 +44,7 @@ class THtml extends STransformer{
 				}
 				if($action[1][0] !== '/') $action[1]='/'.$this->component->controller.'/'.$action[1];
 			}
-		}elseif($this->component->addInTable===true) echo '<td style="width:80px"></td>';
+		}elseif($this->component->hasAddInTable()) echo '<td style="width:80px"></td>';
 		echo '</tr>';
 	}
 
@@ -130,7 +130,7 @@ class THtml extends STransformer{
 				foreach($this->component->rowActions as &$action)
 					echo HHtml::link('',$action[1].'/'.$id,$action[0]);
 				echo '</td>';
-			}elseif($this->component->addInTable===true) echo '<td></td>';
+			}elseif($this->component->hasAddInTable()) echo '<td></td>';
 			echo '</tr>';
 		}
 	}

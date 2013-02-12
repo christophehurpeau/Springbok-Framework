@@ -4,7 +4,8 @@ class QTable extends QFindAll{
 		$allowFilters=false,$FILTERS,
 		$allowOrder=true,$defaultOrder,
 		$autoRelations=true,$belongsToFields=array(),
-		$exportable=false
+		$exportable=false,
+		$addInTable=false
 		;
 	
 	public function allowFilters(){$this->allowFilters=true; return $this; }
@@ -24,6 +25,13 @@ class QTable extends QFindAll{
 	public function isExportable(){ return $this->exportable!==false; }
 	public function getExportableTypes(){ return explode(',',$this->exportable[0]); }
 	public function getBelongsToFields(){ return $this->belongsToFields; }
+	
+	public function addInTable(){ $this->addInTable=true; return $this; }
+	
+	public function mustDisplayTable(){ return $this->allowFilters!==false || $this->addInTable!==false; }
+	public function hasForm(){ return $this->allowFilters!==false || $this->addInTable!==false; }
+	public function hasAddInTable(){ return $this->addInTable!==false; }
+	
 	
 	private $_fieldsForTable;
 	public function getFieldsForTable(){ return $this->_fieldsForTable; }

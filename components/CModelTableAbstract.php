@@ -20,6 +20,9 @@ class CModelTableAbstract{
 	public function isFiltersAllowed(){ return $this->query->isFiltersAllowed(); }
 	public function isOrderAllowed(){ return $this->query->isOrderAllowed(); }
 	public function isExportable(){ return $this->query->isExportable(); }
+	public function mustDisplayTable(){ return $this->query->mustDisplayTable(); }
+	public function hasForm(){ return $this->query->hasForm(); }
+	public function hasAddInTable(){ return $this->query->hasAddInTable(); }
 	
 	public function displayIfExport(){ return $this; }
 	
