@@ -1,12 +1,5 @@
-S.HEltForm=function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>')/*.data('sElt',this)*/; t._defaultLabel=true; };
-
-S.HEltForm.Post=function(){ return new S.HEltForm('post'); }
-S.HEltForm.Get=function(){ return new S.HEltForm('get'); }
-
-S.HEltForm.ForModel=function(modelName,name,value){ return (new S.HEltForm('post')).setModelName(modelName,name,value); }
-S.HEltForm.ForModelGET=function(modelName,name,value){ return (new S.HEltForm('get')).setModelName(modelName,name,value); }
-
-S.extendsClass(S.HEltForm,S.HElt,{
+S.HEltForm=S.extClass(S.HElt,{
+	ctor:function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>')/*.data('sElt',this)*/; t._defaultLabel=true; },
 	setModelName:function(modelName,name,value){
 		if(!name && modelName!=null) name=modelName.sbLcFirst();
 		if(modelName!=null) App.require('m/'+modelName);
@@ -51,6 +44,12 @@ S.extendsClass(S.HEltForm,S.HElt,{
 	placeholder:function(){ this.elt.defaultInput(); return this; },
 	
 	_getValue:function(name){ return this._value && this._value[name]; }
+},{
+	Post:function(){ return new S.HEltForm('post'); },
+	Get:function(){ return new S.HEltForm('get'); },
+	
+	ForModel:function(modelName,name,value){ return (new S.HEltForm('post')).setModelName(modelName,name,value); },
+	ForModelGET:function(modelName,name,value){ return (new S.HEltForm('get')).setModelName(modelName,name,value); }
 });
 S.addSetMethods(S.HEltForm,'tagContainer');
 

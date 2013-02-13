@@ -1,16 +1,16 @@
 includeCore('ui/base');
 includeCore('libs/jquery-ui-1.9.2.position');
-S.WDialog=function(title,htmlOrText,buttons,options){
-	options=S.extObj({
-		open:true,
-		closeOnEscape:true,
-		zIndex:9000 //fancybox : 8030
-	},options);
-	this.elt=$('<div>')[S.isString(htmlOrText)?'text':'html'](htmlOrText)
-			.addClass('ui-dialog-content ui-widget-content');
-	
-};
-S.extendsClass(S.WDialog,S.Widget,{
+S.WDialog=S.extClass(S.Widget,{
+	ctor:function(title,htmlOrText,buttons,options){
+		options=S.extObj({
+			open:true,
+			closeOnEscape:true,
+			zIndex:9000 //fancybox : 8030
+		},options);
+		this.elt=$('<div>')[S.isString(htmlOrText)?'text':'html'](htmlOrText)
+				.addClass('ui-dialog-content ui-widget-content');
+		
+	},
 	dispose:function(){
 		this.uiDialog.remove();
 	},

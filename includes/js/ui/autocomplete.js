@@ -1,1 +1,1 @@
-includeCore('ui/ajaxSearch');
+includeCore('ui/_inputAjaxSearch');

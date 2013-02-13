@@ -1,6 +1,3 @@
-S.Widget=function(){
-	
-};
-S.extendsClass(S.Widget,S.Listenable,{
+S.Widget=S.extClass(S.Listenable,{
 	dispose:function(){}
 });

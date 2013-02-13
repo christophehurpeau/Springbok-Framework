@@ -12,7 +12,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			li=$('<li/>');
 			if(S.isString(v)) li.html(v);
 			else{
-				/* DEV */if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayLsit]','text is empty',v,key);/* /DEV */
+				/* DEV */if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayList]','text is empty',v,key);/* /DEV */
 				li[escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
 			}
 			result.append(li);
@@ -110,86 +110,88 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		return this;
 	};
 	
-	S.ui.Autocomplete=function(input,url,options,displayResult){
-		if($.isFunction(options)){
-			displayResult=options;
-			options={};
-		}
-		var active=false,
-			divResult=this.el=$('<div class="divAutocomplete widget hidden"/>').appendTo($('#page')),
-			showDivResult=function(){
-				active=true;
-				return divResult.css('width',input.width()).sShow()
-					.position({my:"left top",at:"left bottom",of:input,collision:"none"});
-			},hideDivResult=function(){
-				active=false;
-				return divResult.sHide();
-			},divResultFindLi=function(selector){
-				return divResult.find('li'+selector);
-			};
-		divResult.on('click','li',options.select ? function(){ options.select.call(this,input); hideDivResult().empty(); }
-							 : function(){ input.val($(this).text()).change(); hideDivResult().empty(); });
-		divResult.on('hover','li',function(){
-			divResult.find('li.current').removeClass('current');
-		});
-		options=S.extObj({
-			navigate:false,
-			keydown:function(eKeyCode,input){
-				if(active){
-					switch(eKeyCode){
-						case keyCodes.ESCAPE:
-							hideDivResult();
-							return false;
-						case keyCodes.DOWN:
-							var current=divResultFindLi('.current');
-							if(current.length) current.removeClass('current').next().addClass('current');
-							else divResultFindLi(':first').addClass('current');
-							return false;
-						case keyCodes.UP:
-							var current=divResultFindLi('.current');
-							if(current.length) current.removeClass('current').prev().addClass('current');
-							else divResultFindLi(':last').addClass('current');
-							return false;
-						case keyCodes.ENTER: case keyCodes.NUMPAD_ENTER:
-							divResultFindLi('.current').click();
-							return false;
-						case keyCodes.PAGE_UP: case keyCodes.HOME:
-							divResultFindLi('.current').removeClass('current');
-							divResultFindLi(':first').addClass('current');
-							return false;
-						case keyCodes.PAGE_DOWN: case keyCodes.END:
-							divResultFindLi('.current').removeClass('current');
-							divResultFindLi(':last').addClass('current');
-							return false;
-					}
-				}else if(eKeyCode==keyCodes.UP){
-					showDivResult();
-					return false;
-				}
-			},
-			success:function(data,oKey){
-				divResult.html(defaultDisplayList(data,{'class':'clickable spaced'},displayResult||oKey,options.escape));
-				showDivResult();
-			},
-			error:function(data){
-				hideDivResult().empty();
+	S.ui.Autocomplete=S.extClass(S.Widget,{
+		ctor:function(input,url,options,displayResult){
+			if($.isFunction(options)){
+				displayResult=options;
+				options={};
 			}
-		},options||{});
-		var hasFocus=false;
-		input
-			.data('sAutocomplete',this)
-			.bind('dispose',function(){ divResult.remove(); })
-			.sAjaxSearch(url,options,divResult).focus(function(){
-				hasFocus=true;
-				if(!divResult.is(':empty,:visible')) showDivResult();
-			}).blur(function(){
-				hasFocus=false;
-				setTimeout(function(){
-					if(!hasFocus) hideDivResult();
-				},200);
+			var active=false,
+				divResult=this.el=$('<div class="divAutocomplete widget hidden"/>').appendTo($('#page')),
+				showDivResult=function(){
+					active=true;
+					return divResult.css('width',input.width()).sShow()
+						.position({my:"left top",at:"left bottom",of:input,collision:"none"});
+				},hideDivResult=function(){
+					active=false;
+					return divResult.sHide();
+				},divResultFindLi=function(selector){
+					return divResult.find('li'+selector);
+				};
+			divResult.on('click','li',options.select ? function(){ options.select.call(this,input); hideDivResult().empty(); }
+								 : function(){ input.val($(this).text()).change(); hideDivResult().empty(); });
+			divResult.on('hover','li',function(){
+				divResult.find('li.current').removeClass('current');
 			});
-	};
-	S.extendsClass(S.ui.Autocomplete,S.Widget);
+			options=S.extObj({
+				navigate:false,
+				keydown:function(eKeyCode,input){
+					if(active){
+						switch(eKeyCode){
+							case keyCodes.ESCAPE:
+								hideDivResult();
+								return false;
+							case keyCodes.DOWN:
+								var current=divResultFindLi('.current');
+								if(current.length) current.removeClass('current').next().addClass('current');
+								else divResultFindLi(':first').addClass('current');
+								return false;
+							case keyCodes.UP:
+								var current=divResultFindLi('.current');
+								if(current.length) current.removeClass('current').prev().addClass('current');
+								else divResultFindLi(':last').addClass('current');
+								return false;
+							case keyCodes.ENTER: case keyCodes.NUMPAD_ENTER:
+								divResultFindLi('.current').click();
+								return false;
+							case keyCodes.PAGE_UP: case keyCodes.HOME:
+								divResultFindLi('.current').removeClass('current');
+								divResultFindLi(':first').addClass('current');
+								return false;
+							case keyCodes.PAGE_DOWN: case keyCodes.END:
+								divResultFindLi('.current').removeClass('current');
+								divResultFindLi(':last').addClass('current');
+								return false;
+						}
+					}else if(eKeyCode==keyCodes.UP){
+						showDivResult();
+						return false;
+					}
+				},
+				success:function(data,oKey){
+					divResult.html(defaultDisplayList(data,{'class':'clickable spaced'},displayResult||oKey,options.escape));
+					showDivResult();
+				},
+				error:function(data){
+					hideDivResult().empty();
+				}
+			},options||{});
+			var hasFocus=false;
+			input
+				.data('sAutocomplete',this)
+				.bind('dispose',function(){ divResult.remove(); })
+				.sAjaxSearch(url,options,divResult)
+				.focus(function(){
+					hasFocus=true;
+					if(!divResult.is(':empty,:visible')) showDivResult();
+				}).blur(function(){
+					hasFocus=false;
+					setTimeout(function(){
+						if(!hasFocus) hideDivResult();
+					},200);
+				});
+		}
+	});
 	
 	$.fn.sAutocomplete=function(url,options,displayResult){ return new S.ui.Autocomplete(this,url,options,displayResult); };
 	if(includedCore('helpers/HEltFInput')) S.HEltFInput.prototype.autocomplete=function(url,options,displayResult){
