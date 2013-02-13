@@ -14,6 +14,7 @@ class THtmlEditable extends THtml{
 	}
 	
 	public function startLine($iRow,$model,$id){
+		if($id===null) $id=$model->id();
 		$this->jsonPkValue=json_encode($id);
 		parent::startLine($iRow,$model,$id);
 	}

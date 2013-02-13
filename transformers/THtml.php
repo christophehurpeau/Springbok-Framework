@@ -119,7 +119,7 @@ class THtml extends STransformer{
 	public function displayResults($results,$fields){
 		$iRow=0;
 		foreach($results as $key=>&$model){
-			if(isset($this->component->rowActions) || $this->component->actionClick) $id=$model->id();
+			if(isset($this->component->rowActions) || $this->component->actionClick) $id=$model->id(); else $id=null;
 			echo '<tr'; $this->startLine($iRow++,$model,$id); echo '>';
 			foreach($fields as $i=>&$field){
 				$value=static::getValueFromModel($model,$field,$i);
