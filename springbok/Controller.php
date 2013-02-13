@@ -229,6 +229,15 @@ class Controller{
 		/* /DEV */
 		render($file,self::$viewVars);
 	}
+	
+	protected static function renderContent($title,$content,$exit=true){
+		include_once CORE.'mvc/views/View.php';
+		static::beforeRender();
+		$v=new AjaxContentView($title);
+		echo $content;
+		$v->render();
+		if($exit===true) exit;
+	}
 
 	/* DEV */
 	protected static function renderTable($title,&$table,$add=false,$layout=null){
