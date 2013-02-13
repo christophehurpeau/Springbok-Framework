@@ -34,8 +34,9 @@ class CBinder{
 	}
 
 	public static function bindSimple($type,&$val,$annotations=array()){
-		switch($type){
-			case 'string': return self::bindString($val);
+		if($type==='string') return self::bindString($val);
+		if($val==='') return null;
+		switch($type){ 
 			case 'int': return (int)$val;
 			case 'float': return (float)$val;
 			case 'double': return (double)$val;
@@ -50,9 +51,9 @@ class CBinder{
 	}
 	
 	public static function bindString($val){ return UEncoding::convertToUtf8((string)$val); }
-	public static function bindInt($val){ return (int)$val; }
-	public static function bindFloat($val){ $val=self::parseDecimalFormat($val); return (float)$val; }
-	public static function bindDouble($val){ $val=self::parseDecimalFormat($val); return (double)$val; }
+	public static function bindInt($val){ return $val===''?null:(int)$val; }
+	public static function bindFloat($val){ if($val==='') return null; $val=self::parseDecimalFormat($val); return (float)$val; }
+	public static function bindDouble($val){ if($val==='') return null; $val=self::parseDecimalFormat($val); return (double)$val; }
 	public static function parseDecimalFormat($val){
 		$config=App::getLocale()->data('decimalFormat');
 		if($config['thousandsSep'] !== '') $val=str_replace($config['thousandsSep'],'',$val);

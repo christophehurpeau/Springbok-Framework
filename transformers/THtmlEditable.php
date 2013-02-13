@@ -13,8 +13,9 @@ class THtmlEditable extends THtml{
 		echo $this->form->end(false);
 	}
 	
-	public function startLine($model,$id){
+	public function startLine($iRow,$model,$id){
 		$this->jsonPkValue=json_encode($id);
+		parent::startLine($iRow,$model,$id);
 	}
 	
 	public function displayValue($field,$value,$obj){

@@ -70,6 +70,8 @@ abstract class DBSchema{
 	
 	
 	public function isGenerateSchema(){
+		$modelName=$this->modelName;$dbName=$modelName::$__dbName;
+		if(isset(Config::$db[$dbName]['generate'])) return Config::$db[$dbName]['generate'];
 		return isset($this->modelInfos['generate'])?Config::$generate[$this->modelInfos['generate']]:true;
 	}
 	

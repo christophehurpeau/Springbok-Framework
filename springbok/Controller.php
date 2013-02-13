@@ -40,9 +40,9 @@ class Controller{
 			if($rParams && isset($rParams[$paramName])) $val=$rParams[$paramName];
 			elseif($rParams && isset($rParams[$num])) $val=$rParams[$num];
 			elseif(isset($DATA[$paramName])) $val=$DATA[$paramName];
-			else $val=NULL;
-			if($val !== NULL) $val=CBinder::bind($def['type'],$val,isset($def['annotations'])?$def['annotations']:false,$paramName);
-			elseif(isset($def['annotations']['Required']) || (isset($def['annotations']['Valid']) && $def['annotations']['Valid']===false)) CValidation::required($paramName,false);
+			else $val=null;
+			if($val !== null) $val=CBinder::bind($def['type'],$val,isset($def['annotations'])?$def['annotations']:false,$paramName);
+			if($val===null && isset($def['annotations']['Required']) || (isset($def['annotations']['Valid']) && $def['annotations']['Valid']===false)) CValidation::required($paramName,false);
 			$params[]=$val;
 			$num++;
 		}

@@ -38,7 +38,7 @@ class CModelTableAbstract{
 		
 		$this->fields=array(); $belongsToFields=$this->query->getBelongsToFields();
 		foreach($fields as $key=>&$val){
-			if($fromQuery || is_string($val)){ $key=$val; $val=array(); }
+			if($fromQuery || is_string($val)){ $key=$val; $val=array(); }//debug([$key,$val,$belongsToFields[$key]]);
 			if(is_int($key)){
 			}else{
 				$val['key']=$key;
@@ -76,6 +76,8 @@ class CModelTableAbstract{
 						break;
 				}
 				if($export===false){
+					$infos=$modelName !== NULL && isset($modelName::$__modelInfos['columns'][$key]) ? $modelName::$__modelInfos['columns'][$key] : null;
+					if(!isset($val['required'])) $val['required']=$infos['notnull']===true;
 					if($type==='int'){
 						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='60';
 					}elseif($type==='boolean'){
@@ -84,8 +86,7 @@ class CModelTableAbstract{
 						$val['filter']=array('1'=>_tC('Yes'),'0'=>_tC('No'));
 					}elseif($type==='float'){
 						if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='130';
-					}elseif($modelName !== NULL && isset($modelName::$__modelInfos['columns'][$key])){
-						$infos=$modelName::$__modelInfos['columns'][$key];
+					}elseif($infos!==null){
 						if($infos['type']==='datetime'){
 							if(!isset($val['widthPx']) && !isset($val['width%'])) $val['widthPx']='160';
 						}

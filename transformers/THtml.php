@@ -67,7 +67,7 @@ class THtml extends STransformer{
 			}
 			echo '<td>'.$filterField.'</td>';
 		}
-		if(isset($this->component->rowActions)) echo '<td>'.$form->submit(_tC('Add')).'</td>';
+		if(isset($this->component->rowActions)) echo '<td>'.$form->submit(_tC('Filter')).'</td>';
 		echo '</tr>';
 	}
 	
@@ -77,10 +77,11 @@ class THtml extends STransformer{
 			$filterField=null; $attributes=array(); $filterName='add['.$field['key'].']';
 			if($field['key']==='created' || $field['key']==='updated') $fielterField='';
 			elseif(isset($field['tabResult'])){
-				$attributes['empty']='';
+				if($field['required']===false) $attributes['empty']='NULL';
 				$filterField=$form->select($filterName,$field['tabResult'],$attributes);
 			}
 			if($filterField===null){
+				if($field['required']===false) $attributes['required']=true;
 				$filterField=$form->input($filterName,$attributes);
 			}
 			echo '<td>'.$filterField.'</td>';
@@ -97,9 +98,9 @@ class THtml extends STransformer{
 		echo '<tbody>';
 	}
 	
-	public function startLine($model,$id){
+	public function startLine($iRow,$model,$id){
 		$class=$model->getTableClass();
-		if($iRow++%2) echo ' class="alternate'.($class===null?'':' '.$class).'"';
+		if($iRow%2) echo ' class="alternate'.($class===null?'':' '.$class).'"';
 		elseif($class!==null) echo ' class="'.$class.'"';
 		if($this->component->actionClick !==null){
 			if(is_array($this->component->actionClick)){
@@ -119,7 +120,7 @@ class THtml extends STransformer{
 		$iRow=0;
 		foreach($results as $key=>&$model){
 			if(isset($this->component->rowActions) || $this->component->actionClick) $id=$model->id();
-			echo '<tr'; $this->startLine($model,$id); echo '>';
+			echo '<tr'; $this->startLine($iRow++,$model,$id); echo '>';
 			foreach($fields as $i=>&$field){
 				$value=static::getValueFromModel($model,$field,$i);
 				$this->displayValue($field,$value,$model);

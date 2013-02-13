@@ -42,7 +42,7 @@ class QTable extends QFindAll{
 		if($fields===null) $fields=$modelName::$__modelInfos['colsName'];
 		$this->_fieldsForTable=$fields;
 		
-		$belongsToFields=$this->belongsToFields; $belongsToRel=array();
+		$belongsToFields=&$this->belongsToFields; $belongsToRel=array();
 		if($this->autoRelations!==false){
 			if($belongsToFields!==false && empty($this->belongsToFields)){
 				$modelRelations=$modelName::$__modelInfos['relations'];
@@ -55,9 +55,16 @@ class QTable extends QFindAll{
 				$belongsToRel[$field]=$modelName::$_relations[$relKey];
 				$relModelName=$belongsToRel[$field]['modelName'];
 				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
-				elseif(is_array($this->autoRelations) && isset($this->autoRelations[$field]))
-					$belongsToFields[$field]=$relModelName::QList()->setFields(array('id',$relModelName::$__displayField))->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
-				else $this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+				elseif(is_array($this->autoRelations) && isset($this->autoRelations[$field])){
+					$withArray=array();
+					if($this->autoRelations[$field]!==true){
+						$relModelName=$this->autoRelations[$field];
+						if(is_array($relModelName)){ $withArray=$relModelName['with']; $relModelName=$relModelName[0]; }
+					}
+					$query=new QFindList($relModelName); $query->setAllWith($withArray)->setFields(array($relModelName::_getPkName(),$relModelName::$__displayField));
+					if($this->addInTable===false) $query->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
+					$belongsToFields[$field]=$query->execute();
+				}else $this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
 			}
 		}
 		
@@ -172,8 +179,16 @@ class QTable extends QFindAll{
 			if($filter) $this->calcFoundRows();
 		}else{
 			if($this->autoRelations!==false) foreach($belongsToFields as $field=>$relKey){
-				$relModelName=$modelName::$_relations[$relKey]['modelName'];
-				$this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+				if(is_string($relKey)){
+					/* DEV */
+					//throw new Exception(print_r(array($relKey,'relations'=>$modelName::$_relations),true));
+					if(!isset($modelName::$_relations[$relKey]))
+						throw new Exception($modelName.' does not have a relation named "'.$relKey.'"'."\n"
+									.'Known relations : '.implode(', ',array_keys($modelName::$_relations)));
+					/* /DEV */
+					$relModelName=$modelName::$_relations[$relKey]['modelName'];
+					$this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+				}
 			}
 		}
 		
