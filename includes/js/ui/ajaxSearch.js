@@ -1,1 +1,0 @@
-includeCore('ui/_inputAjaxSearch');
