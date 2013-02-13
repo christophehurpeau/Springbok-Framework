@@ -21,8 +21,7 @@ S.Model.prototype={
 };
 
 S.Model.add=function(name,extendsMainObj,extendsDataObj,superclass){
-	var f=function(){};
-	S.extendsClass(f,superclass||S.Model,extendsMainObj);
+	var f=S.extClass(superclass||S.Model,extendsMainObj);
 	var model=new f();
 	model.Name=name;
 	M[name]=function(data){ if(data){ this.data=data; S.extObj(this,data); } };

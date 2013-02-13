@@ -1,11 +1,11 @@
 /* http://www.jankoatwarpspeed.com/post/2010/01/26/dynamic-tabs-jquery.aspx */
-
-(function($){
+includeCore('springbok.base');
+(function(){
 	var oldFunctionInit=S.ajax.init,oldFunctionSetTitle=S.setTitle,ajaxFunctionUpdateVariable=S.ajax.updateVariable,
 		dynamictabsMenu,dynamictabsContent,dynamictabsId=1;
 	S.ajax.init=function(){
 		S.dynamictabs.init();
-		$(document).bind('click',function(e){
+		$document.bind('click',function(e){
 			if(e.which==2){
 				if(target.is('a[target]') || target.is('a[href="#"]') || target.is('a[href*=":"]')) return true;
 				var target=$(e.target);
@@ -82,4 +82,4 @@
 			a.parent().remove();
 		}
 	};
-})(jQuery);
+})();

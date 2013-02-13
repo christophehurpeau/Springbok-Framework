@@ -1,6 +1,6 @@
 includeCore('jquery/outerHTML');
-S.HEltFContble=function(form,name){this._form=form; this._name=name; this._labelEscape=1; };
-S.extendsClass(S.HEltFContble,S.HElt,{
+S.HEltFContble=S.extClass(S.HElt,{
+	ctor:function(form,name){this._form=form; this._name=name; this._labelEscape=1; },
 	placeholder:function(value){ this.attr('placeholder',value); return this; },
 	
 	label:function(value){ this._label=value; return this; },

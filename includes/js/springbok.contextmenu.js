@@ -1,4 +1,5 @@
 /* https://github.com/gokercebeci/contextmenu/blob/master/contextmenu.js */
+includeCore('springbok.base');
 (function($){
     // Methods
     var methods= {
@@ -33,7 +34,7 @@
                     });
                     
                     // Set position
-                    var ww = $(document).width(),wh = $(document).height();
+                    var ww = $document.width(),wh = $document.height();
                     var w = c.outerWidth(1),h = c.outerHeight(1);
                     c.css({
                         display : 'block',
@@ -42,7 +43,7 @@
                     });
                 }
             });
-            $(document)
+            $document
             .click(function(){
                 $this.finish(contextmenu); 
             })

@@ -27,8 +27,8 @@ S.Controller.prototype={
 	}
 };
 S.Controller.extend=function(name,methods,superclass){
-	var target=App[name+"Controller"]=function(methods){ this.methods=methods; };
-	S.extendsClass(target,superclass||S.Controller,methods);
+	methods.ctor=function(methods){ this.methods=methods; };
+	target=App[name+"Controller"]=S.extClass(superclass||S.Controller,methods);
 	target.add=function(name,methods){ C[name]=new target(methods) };
 };
 S.Controller.add=function(name,methods){ C[name]=new S.Controller(methods); }

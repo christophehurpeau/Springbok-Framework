@@ -1,3 +1,4 @@
+includeCore('springbok.base');
 includeCore('springbok.history');
 includeCore('ui/slideTo');
 (function(){
@@ -24,7 +25,7 @@ includeCore('ui/slideTo');
 	S.setTitle=function(title){ document.title=title; defineDefault('UPDATE_H1_WITH_TITLE',false); if(UPDATE_H1_WITH_TITLE) divVariable.children('h1:first').text(title) }
 	S.ajax={
 		init:function(){
-			$(document).on('click',
+			$document.on('click',
 						//'a[href]:not([href="javascript:;"]):not([href="#"]):not([href^="mailto:"]):not([target]):not([href^="http://"])'
 						'a[href]:not([href^="#"]):not([target]):not([href*=":"])'
 				,function(evt){

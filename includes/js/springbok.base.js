@@ -28,10 +28,10 @@ if(!Object.keys){//http://kangax.github.com/es5-compat-table/
 
 
 
-var arraySliceFunction=Array.prototype.slice;
+var arraySliceFunction=Array.prototype.slice,$document=$(document);
 
 window.S={
-	ready:function(callback){ $(document).ready(callback); },
+	ready:function(callback){ $document.ready(callback); },
 	redirect:function(url){ url && (window.location=url); },
 	setTitle:function(title){document.title=title;},
 	
@@ -114,7 +114,7 @@ window.S={
 	},
 	
 	preventMiddleClick:function(){
-		$(document).bind('click',function(e){
+		$document.bind('click',function(e){
 			if(e.which==2){
 				e.preventDefault();
 				return false;
@@ -134,6 +134,12 @@ window.S={
 				target[i]=object[i];
 		return target;
 	},
+	oUnion:function(target,object){
+		if(object)
+			for(var i in object)
+				if(target[i]===undefined) target[i]=object[i];
+		return target;
+	},
 	oClone:function(o){
 		return S.extObj({},o);
 	},
@@ -147,28 +153,60 @@ window.S={
 	deepClone:function(object){
 		return $.extend(true,{},object);
 	},
-	extendsClass:function(subclass,superclass,methods){
-		var f=function (){};
-		f.prototype=superclass.prototype;
-		subclass.prototype=new f();
-		subclass.prototype.constructor=subclass;
-		subclass.superctor=superclass;
-		subclass.superclass=superclass.prototype;
-		
-		if(methods) S.extendsPrototype(subclass,methods);
-	},
-	/*extendsMClass:function(subclass,superclass,methods){
-		superclass=arraySliceFunction.call(arguments,1,-1);
-		for(var i in superclass){
-			
-		}
-		if(methods) S.extendsPrototype(subclass,methods);
-	},*/
-	extendsPrototype:function(targetclass,methods){
-		for(var i in methods)
-			targetclass.prototype[i]=methods[i];
+	
+	
+	/* Inheritance & Classes */
+	
+	extProto:function(targetclass,methods){
+		if(methods)
+			for(var i in methods)
+				targetclass.prototype[i]=methods[i];
 		return targetclass;
 	},
+	
+	
+	/* http://backbonejs.org/backbone.js */
+	inherits:function(parent,protoProps,classProps){
+		// The constructor function for the new subclass is either defined by you
+		// (the "constructor" property in your `extend` definition), or defaulted
+		// by us to simply call the parent's constructor.
+		var child = protoProps && protoProps.hasOwnProperty('ctor') ?
+				protoProps.ctor
+				: function(){ parent.apply(this,arguments); };
+		
+		// Set the prototype chain to inherit from `parent`, without calling `parent`'s constructor function.
+		// + Set a convenience property in case the parent's prototype is needed later.
+		child.prototype=Object.create(child.super_ = parent.prototype);
+		child.superCtor = parent;
+		
+		// Add prototype properties (instance properties) to the subclass,
+		// if supplied.
+		S.extProto(child,protoProps);
+		
+		// Add static properties to the constructor function, if supplied.
+		S.extObj(child,classProps);
+		
+		child.prototype.self = child;
+		//child.prototype.super_ = child.super_;
+		//child.prototype.superCtor = parent;
+		
+		return child;
+	},
+	
+	extThis:function(protoProps,classProps){ return S.extClass(this,protoProps,classProps); },
+	extClass:function(parent,protoProps,classProps){
+		var child = S.inherits(parent,protoProps,classProps);
+		child.extend = S.extThis;
+		return child;
+	},
+	extClasses:function(parents,protoProps,classProps){
+		var parent=parents[0];
+		for(var i=1,l=parents.length;i<l;i++) S.oUnion(protoProps,parents[i].prototype);
+		return S.extClass(parent,protoProps,classProps);
+	},
+	
+	
+	
 	addSetMethods:function(targetclass,methods){
 		for(var i in methods.split(',')){
 			var methodName=methods[i];
@@ -301,7 +339,7 @@ S.ready(function(){
 });
 /* /DEV */
 
-$(document).on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() })
+var $document=$document.on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() })
 	.ajaxError(function(e, xhr, settings, thrownError){
 		if(xhr.status===503) alert(i18nc['http.503.maintenance']);
 		else if(xhr.status===500) alert(i18nc['http.500']);
