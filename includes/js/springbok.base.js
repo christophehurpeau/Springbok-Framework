@@ -53,12 +53,12 @@ window.S={
 		document.head.appendChild(link);
 	},
 	
-	loadScript:function(url,lang){
+	loadScript:function(url,lang,to){
 		var script = document.createElement("script");
 		script.type = "text/javascript";
 		script.src = url;
 		if(lang) script.lang=lang;
-		document.body.appendChild(script);
+		(to||document.body).appendChild(script);
 	},
 	loadSyncScript:function(url){
 		return $.ajax({
