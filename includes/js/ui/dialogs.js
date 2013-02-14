@@ -1,6 +1,6 @@
 includeCore('ui/base');
 includeCore('libs/jquery-ui-1.9.2.position');
-S.WDialog=S.extClass(S.Widget,{
+S.WDialog=S.Widget.extend({
 	ctor:function(title,htmlOrText,buttons,options){
 		options=S.extObj({
 			open:true,

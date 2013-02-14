@@ -1,6 +1,6 @@
 S.HEltFInput=S.extClass(S.HEltFContble,{
 	ctor:function(form,name,largeSize){
-		S.HEltFInput.superctor.call(this,form,name);
+		S.HEltFInput.superCtor.call(this,form,name);
 		
 		if(form._modelName){
 			var model=M[form._modelName],fModel=model.Fields[name],v,e;

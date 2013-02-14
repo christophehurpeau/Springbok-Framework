@@ -164,6 +164,18 @@ window.S={
 		return targetclass;
 	},
 	
+	extChild:function(child,parent,protoProps){
+		// Set the prototype chain to inherit from `parent`, without calling `parent`'s constructor function.
+		// + Set a convenience property in case the parent's prototype is needed later.
+		child.prototype=Object.create(child.super_ = parent.prototype);
+		child.superCtor = parent;
+		
+		// Add prototype properties (instance properties) to the subclass,
+		// if supplied.
+		S.extProto(child,child._inheritsproto_=protoProps);
+		
+		return child;
+	},
 	
 	/* http://backbonejs.org/backbone.js */
 	inherits:function(parent,protoProps,classProps){
@@ -173,7 +185,7 @@ window.S={
 		var child = protoProps && protoProps.hasOwnProperty('ctor') ?
 				protoProps.ctor
 				: function(){ parent.apply(this,arguments); };
-		
+		/*
 		// Set the prototype chain to inherit from `parent`, without calling `parent`'s constructor function.
 		// + Set a convenience property in case the parent's prototype is needed later.
 		child.prototype=Object.create(child.super_ = parent.prototype);
@@ -181,7 +193,9 @@ window.S={
 		
 		// Add prototype properties (instance properties) to the subclass,
 		// if supplied.
-		S.extProto(child,protoProps);
+		S.extProto(child,child._inheritsproto_=protoProps);
+		*/
+		S.extChild(child,parent,protoProps);
 		
 		// Add static properties to the constructor function, if supplied.
 		S.extObj(child,classProps);
