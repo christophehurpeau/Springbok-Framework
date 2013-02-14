@@ -106,7 +106,7 @@ App.load=S.ajax.load=function(url){
 		S.history.navigate(url);
 		App.require('c/'+route.controller);
 		var c=C[route.controller];
-		/* DEV */ if(!c) console&&console.log('This action doesn\'t exists: '+route.action); /* /DEV */
+		/* DEV */ if(!c) console&&console.log('This controller doesn\'t exists: "'+route.controller+'".'); /* /DEV */
 		if(!c) notFound();
 		c.dispatch(route);
 	}catch(err){
