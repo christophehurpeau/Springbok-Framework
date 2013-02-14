@@ -10,19 +10,24 @@ div.totalResults{
 	font-size:0.88em; font-style:italic;
 	text-align:center; clear:both;
 }
-
+/*
 div.filterHelp{
 	float:left;
 	font-size: 0.88em;
 	padding:1px 5px;
 }
 .filterHelp input{margin:0 2px 0 0}
-
-span.exportLinks{
-	padding:1px 3px 2px;
-	display:inline-block;
+*/
+div.filterHelp{
+	font-size: 0.88em;
+	padding:1px 5px;
 }
-span.exportLinks a{margin:0 1px}
+
+div.exportLinks{
+	padding:1px 3px 2px;
+	float:left;
+}
+div.exportLinks a{margin:0 1px}
 
 div.pager{
 	margin:5px 0 0;

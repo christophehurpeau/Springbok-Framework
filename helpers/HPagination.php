@@ -31,10 +31,10 @@ class HPagination{
 			$i=ceil(($start)/2);
 			if($i != 1){
 				if($tiny===false){
-					if($i != 2) $str.='<li>&nbsp</li>';
+					if($i != 2) $str.='<li>&nbsp;</li>';
 					$str.='<li class="page"><a '.$callback($i).'>'.$i.'</a></li>';
 				}
-				if($i+1 != $start) $str.='<li>&nbsp</li>';
+				if($i+1 != $start) $str.='<li>&nbsp;</li>';
 			}
 		}
 		
@@ -49,11 +49,11 @@ class HPagination{
 			if($tiny===false || $i===$start){
 				$i=floor(($totalPages-$i)/2+$end);
 				if($i != $end){
-					if($end+1 != $i) $str.='<li>&nbsp</li>';
+					if($end+1 != $i) $str.='<li>&nbsp;</li>';
 					$str.='<li class="page'; $str.='"><a '.$callback($i).'>'.$i.'</a></li>';
 				}
 			}
-			if($i!=$totalPages-1) $str.='<li>&nbsp</li>';
+			if($i!=$totalPages-1) $str.='<li>&nbsp;</li>';
 			$i=$totalPages; $str.='<li class="page'; $str.='"><a '.$callback($i).'>'.$i.'</a></li>';
 		}
 

@@ -1,4 +1,5 @@
-(function($){
+includeCore('springbok.base');
+(function(){
 	/* https://github.com/jquerytools/jquerytools/blob/master/src/toolbox/toolbox.expose.js */
 	function viewport(){
 		if($.browser.msie){
@@ -11,7 +12,7 @@
 				d - w < 20 ? w : d
 			];
 		}
-		return [$(document).width(),$(document).height()]; 
+		return [$document.width(),$document.height()]; 
 	}
 	
 	function call(fn){ if(fn) return fn.call($.mask); }
@@ -40,4 +41,4 @@
 			if(options.color) mask.css('background',options.color);
 		}
 	};
-})(jQuery);
+})();
