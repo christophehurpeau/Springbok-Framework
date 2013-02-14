@@ -8,7 +8,7 @@ class THtml extends STransformer{
 		if($component->hasForm())
 			echo HHtml::jsInline('S.ready(function(){'
 				.'if(!window.inputDataBoxHandlerIncluded){ var m="You must include \'ui/THtml\' in your js file"; alert(m); console.error(m); }'
-				.'if($(".divInputBox").css("position")!=="absolute"){ var m="You must include \'widgets/THtml\' in your scss file"; alert(m); console.error(m); }'
+				.'if($(".divInputBox").length && $(".divInputBox").css("position")!=="absolute"){ var m="You must include \'widgets/THtml\' in your scss file"; alert(m); console.error(m); }'
 			.'});');
 		/* /DEV */
 		//if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';

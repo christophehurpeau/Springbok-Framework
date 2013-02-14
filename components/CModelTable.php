@@ -112,10 +112,10 @@ class CModelTable extends CModelTableAbstract{
 		
 		
 		if($this->isExportable()){
-			echo '<span class="exportLinks">'; 
+			echo '<div class="exportLinks">'; 
 			foreach($this->query->getExportableTypes() as $exportType)
 				echo HHtml::iconAction('file'.ucfirst($exportType),'?export='.$exportType,array('target'=>'_blank'));//target : springbok.ajax
-			echo '</span>';
+			echo '</div>';
 		}
 		
 		//if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
