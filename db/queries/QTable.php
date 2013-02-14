@@ -26,7 +26,8 @@ class QTable extends QFindAll{
 	public function getExportableTypes(){ return explode(',',$this->exportable[0]); }
 	public function getBelongsToFields(){ return $this->belongsToFields; }
 	
-	public function addInTable(){ $this->addInTable=true; return $this; }
+	public function addInTable($addInTable=true){ $this->addInTable=$addInTable; return $this; }
+	public function getAddInTable(){ return $this->addInTable; }
 	
 	public function mustDisplayTable(){ return $this->allowFilters!==false || $this->addInTable!==false; }
 	public function hasForm(){ return $this->allowFilters!==false || $this->addInTable!==false; }

@@ -23,6 +23,7 @@ class CModelTableAbstract{
 	public function mustDisplayTable(){ return $this->query->mustDisplayTable(); }
 	public function hasForm(){ return $this->query->hasForm(); }
 	public function hasAddInTable(){ return $this->query->hasAddInTable(); }
+	public function getAddInTable(){ return $this->query->getAddInTable(); }
 	
 	public function displayIfExport(){ return $this; }
 	
