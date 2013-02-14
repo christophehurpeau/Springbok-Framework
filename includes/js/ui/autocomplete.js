@@ -14,7 +14,7 @@ S.ui.Autocomplete=S.ui.InputSearch.extend({
 		t.div.on('hover','li',function(){ t.div.find('li.current').removeClass('current'); });
 		input.data('sAutocomplete',this);
 	},
-	createDiv:function(){ return $('<div class="divAutocomplete widget hidden"/>'); },
+	createDiv:function(){ return $('<div class="divAutocomplete divInputBox widget hidden"/>'); },
 	divFindLi:function(selector){
 		return this.div.find('li'+selector);
 	},

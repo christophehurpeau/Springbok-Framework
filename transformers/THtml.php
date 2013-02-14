@@ -1,9 +1,20 @@
 <?php
 class THtml extends STransformer{
 	private static $tAligns=array('center'=>'center','right'=>'alignRight');
-	protected $component;
+	protected $component,$idTableFilterInputBox;
 	
 	public function __construct($component){
+		/* DEV */
+		if($component->hasForm())
+			echo HHtml::jsInline('S.ready(function(){'
+				.'if(!window.inputDataBoxHandlerIncluded){ var m="You must include \'ui/THtml\' in your js file"; alert(m); console.error(m); }'
+				.'if($(".divInputBox").css("position")!=="absolute"){ var m="You must include \'widgets/THtml\' in your scss file"; alert(m); console.error(m); }'
+			.'});');
+		/* /DEV */
+		//if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
+		if($component->isFiltersAllowed()){
+			echo '<div class="widget divInputBox hidden filterHelp" id="'.($this->idTableFilterInputBox='table-filter-'.uniqid()).'">'._tC('filter.help').'</div>';
+		}
 		echo '<table class="table'.($component->actionClick!==null?' pointer':'').'">';
 		$this->component=$component;
 	}
@@ -63,6 +74,7 @@ class THtml extends STransformer{
 			}
 			if($filterField===NULL){
 				if(isset($FILTERS[$field['key']])) $attributes['value']=$FILTERS[$field['key']];
+				if($field['type']==='string') $attributes['data-box']='#'.$this->idTableFilterInputBox;
 				$filterField=$form->input($filterName,$attributes);
 			}
 			echo '<td>'.$filterField.'</td>';

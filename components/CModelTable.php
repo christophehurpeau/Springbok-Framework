@@ -118,7 +118,7 @@ class CModelTable extends CModelTableAbstract{
 			echo '</span>';
 		}
 		
-		if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
+		//if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
 		
 		if($pagination->hasPager()){
 			if($this->isFiltersAllowed()){
