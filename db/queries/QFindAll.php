@@ -28,6 +28,9 @@ class QFindAll extends QFind{
 		if($callback2!==null){
 			$callback($this->getModelFields());
 			$callback=$callback2;
+		}elseif(is_string($callback)){
+			$callback=create_function('$m','$m->'.$callback.';');
+			/* DEV */if($callback===false) throw new Exception('Failed to create lambda function : $m->'.$callback.';'); /* /DEV */
 		}
 		$this->_db->doSelectObjectsCallback($sql,$this,$this->queryResultFields,$callback);
 	}

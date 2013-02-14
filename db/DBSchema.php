@@ -70,6 +70,8 @@ abstract class DBSchema{
 	
 	
 	public function isGenerateSchema(){
+		$modelName=$this->modelName;$dbName=$modelName::$__dbName;
+		if(isset(Config::$db[$dbName]['generate'])) return Config::$db[$dbName]['generate'];
 		return isset($this->modelInfos['generate'])?Config::$generate[$this->modelInfos['generate']]:true;
 	}
 	
@@ -165,7 +167,7 @@ abstract class DBSchema{
 		if(!$this->isGenerateSchema()) return;
 		$indexes=$this->getIndexes();
 		$currentIndex=$currentUniqueIndex=array();
-		foreach(array('nonunique'=>'currentIndex','unique'=>'currentUniqueIndex') as $keyI=>	$tabIN){
+		foreach(array('nonunique'=>'currentIndex','unique'=>'currentUniqueIndex') as $keyI=>$tabIN){
 			$tabI=$$tabIN;
 			if(!empty($indexes[$keyI])) 
 				foreach($indexes[$keyI] as $iName=>$iFields) if(substr($iName,0,3)!=='fk_') $tabI[$iName]=$iFields;

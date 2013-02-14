@@ -64,9 +64,12 @@ class UExec{
 			return self::exec($sshCommand);
 		
 		file_put_contents($filename=(DATA.'ssh/tmp'),$ssh['passphrase']);
-		$res=self::exec('eval `ssh-agent` > /dev/null'
-				. ' && '. 'ssh-add '.escapeshellarg($ssh['key_file']).' < '.escapeshellarg($filename)
-				. ' && '. $sshCommand .' 2>&1');
+		$res='';
+		do{
+			$res=self::exec('eval `ssh-agent` > /dev/null'
+					. ' && '. 'ssh-add '.escapeshellarg($ssh['key_file']).' < '.escapeshellarg($filename)
+					. ' && '. $sshCommand .' 2>&1');
+		}while(strpos($res,'Connection timed out during banner exchange')!==false);
 		file_put_contents($filename,'');
 		return $res;
 	}

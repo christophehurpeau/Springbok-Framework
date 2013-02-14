@@ -107,8 +107,11 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 	
 	div.find('a.action.add').click(function(e){
 		e.preventDefault();
-		var val=select&&select.val(),action,data={},onAddCurrent,
-			onAdd_current=function(d,objectResponse){ onAdd(select,action,data,d,val,objectResponse); input.val(''); };
+		var imgLoading=S.imgLoading(),t=$(this).sHide().after(imgLoading),val=select&&select.val(),action,data={},onAddCurrent,
+			onAdd_current=function(d,objectResponse){
+				onAdd(select,action,data,d,val,objectResponse); input.val('');
+				imgLoading.remove(); t.sShow();
+			};
 		if(!val){
 			if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
 			action='create';

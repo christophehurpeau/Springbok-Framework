@@ -60,11 +60,11 @@ class CModelTable extends CModelTableAbstract{
 		return $this;
 	}
 	
-	public function renderEditable($title,$pkField,$url,$add=false,$layout=null,$transformerClass='THtml'){
+	public function renderEditable($title,$url,$add=false,$layout=null,$transformerClass='THtml'){
 		include_once CORE.'mvc/views/View.php';
 		$v=new AjaxContentView($title,$layout);
 		$this->_add($add);
-		$this->displayEditable($pkField,$url,true,$transformerClass);
+		$this->displayEditable($url,true,$transformerClass);
 		$v->render();
 		return $this;
 	}
@@ -88,12 +88,11 @@ class CModelTable extends CModelTableAbstract{
 		echo $form->end(_tC('Add'));
 	}
 	
-	public $editablePkField,$editableUrl;
-	public function displayEditable($pkField,$url,$displayTotalResults=true,$transformerClass='THtmlEditable'){
+	public $editableUrl;
+	public function displayEditable($url,$displayTotalResults=true,$transformerClass='THtmlEditable'){
 		/* DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
 		/* DEV */ if($this->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
 		
-		$this->editablePkField=$pkField;
 		$this->editableUrl=$url;
 		$this->display($displayTotalResults,$transformerClass);
 	}
@@ -102,11 +101,11 @@ class CModelTable extends CModelTableAbstract{
 		$pagination=$this->query->getPagination();
 		$results=$pagination->getResults();
 		
-		if($pagination->getTotalResults() !== 0 || $this->isFiltersAllowed()) $this->_setFields();
+		if($pagination->getTotalResults() !== 0 || $this->mustDisplayTable()) $this->_setFields();
 		
 		$this->initController();
 		
-		if($this->isFiltersAllowed()){
+		if($this->hasForm()){
 			$formId=uniqid();
 			$form=HForm::create(NULL,array('id'=>$formId,'rel'=>'content'),false,false);
 		}else $form=null;
@@ -147,7 +146,7 @@ class CModelTable extends CModelTableAbstract{
 			echo '<div class="totalResults">'.$pagination->getTotalResults().' '.($pagination->getTotalResults()===1?_tC('result'):_tC('results')).'</div>';
 		
 		$this->callTransformer($transformerClass,$results,$form);
-		if($this->isFiltersAllowed()) $form->end(false);
+		if($form!==null) $form->end(false);
 		echo $pager.$this->afterContent;
 	}
 	protected function initController(){
@@ -157,16 +156,18 @@ class CModelTable extends CModelTableAbstract{
 
 	protected function callTransformer($transformerClass,$results,$form=null){
 		$transformer=new $transformerClass($this);
-		if(!$this->isFiltersAllowed() && empty($results)){
+		if(empty($results) && !$this->mustDisplayTable()){
 			$transformer->startBody();
 			$transformer->noResults();
 		}else{
 			$transformer->startHead();
 			$transformer->titles($this->fields,$this->query->getFields());
 			if($this->isFiltersAllowed()) $transformer->filters($form,$this->fields,$this->query->getFilters(),$this->query->isFilterAdvancable());
+			elseif($this->hasAddInTable()) $transformer->addInTable($form,$this->fields);
 			$transformer->endHead();
 			$transformer->startBody();
-			empty($results) ? $transformer->noResults(count($this->fields)) : $transformer->displayResults($results,$this->fields);
+			if(empty($results)) $transformer->noResults(count($this->fields));
+			else $transformer->displayResults($results,$this->fields);
 		}
 		$transformer->end();
 	}
