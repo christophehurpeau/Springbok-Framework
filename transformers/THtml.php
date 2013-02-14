@@ -84,17 +84,18 @@ class THtml extends STransformer{
 	}
 	
 	public function addInTable($form,$fields){
+		$addInTable=$this->component->getAddInTable();
 		echo '<tr class="form">';
 		foreach($fields as &$field){
-			$filterField=null; $attributes=array(); $filterName='add['.$field['key'].']';
+			$filterField=null; $attributes=$addInTable===true ? array() : $addInTable['attributes']; $addName='add['.$field['key'].']';
 			if($field['key']==='created' || $field['key']==='updated') $fielterField='';
 			elseif(isset($field['tabResult'])){
 				if($field['required']===false) $attributes['empty']='NULL';
-				$filterField=$form->select($filterName,$field['tabResult'],$attributes);
+				$filterField=$form->select($addName,$field['tabResult'],$attributes);
 			}
 			if($filterField===null){
 				if($field['required']===false) $attributes['required']=true;
-				$filterField=$form->input($filterName,$attributes);
+				$filterField=$form->input($addName,$attributes);
 			}
 			echo '<td>'.$filterField.'</td>';
 		}

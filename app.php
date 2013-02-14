@@ -36,7 +36,7 @@ class App{
 			exit('The config for your environnement: "'.ENV.'" does NOT exist ! Please create '.$pathConfigFile);
 		
 		$shouldEnhance=!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'ApacheBench')===false && !isset($_GET['springbokNoEnhance'])
-				&& !CHttpRequest::isAjax() && !CHttpRequest::isFlash()
+				&& !(CHttpRequest::isAjax()&&!isset($_GET['AJAX'])) && !CHttpRequest::isFlash()
 				&& empty($_SERVER['HTTP_ORIGIN']) && !file_exists(dirname(APP).'/block_deploy');
 		if(!$shouldEnhance){
 			define('CORE_SRC',dirname(CORE).'/src/');
