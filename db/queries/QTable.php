@@ -63,8 +63,11 @@ class QTable extends QFindAll{
 						if(is_array($relModelName)){ $queryOptions=$relModelName; $relModelName=$relModelName[0]; }
 					}
 					$query=new QFindList($relModelName);
-					if(!empty($queryOptions['with'])) $query->setAllWith($queryOptions['with']);
-					if(!empty($queryOptions['where'])) $query->where($queryOptions['where']);
+					if(!empty($queryOptions)){
+						if(!empty($queryOptions['with'])) $query->setAllWith($queryOptions['with']);
+						if(!empty($queryOptions['where'])) $query->where($queryOptions['where']);
+						if(!empty($queryOptions['orderBy'])) $query->orderBy($queryOptions['orderBy']);
+					}
 					$query->setFields(array($relModelName::_getPkName(),$relModelName::$__displayField));
 					if($this->addInTable===false) $query->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
 					$belongsToFields[$field]=$query->execute();
