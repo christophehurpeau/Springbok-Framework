@@ -1,17 +1,17 @@
 <?php
 class HHead{
-	private static $head1='',$head2='',$head3='',$head4='';
+	private static $head=array('title'=>'','icons'=>'','css'=>'','js'=>'','endjs'=>'','linksrel'=>'');
 	
 	
 	public static function title($title){
 		/* DEV */ self::testDisplayed(); /* /DEV */
-		self::$head1='<title>'.h($title).'</title>'.self::$head1;
+		self::$head['title']='<title>'.h($title).'</title>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::title()</div>'; /* /DEV */
 	}
 	public static function favicon($imgUrl='favicon.png'){
 		/* DEV */ self::testDisplayed(); /* /DEV */
 		$href=STATIC_URL.'img/'.$imgUrl;
-		self::$head1.='<link rel="icon" type="image/vnd.microsoft.icon" href="'.$href.'"/>'
+		self::$head['icons']='<link rel="icon" type="image/vnd.microsoft.icon" href="'.$href.'"/>'
 			.'<link rel="shortcut icon" type="image/x-icon" href="'.$href.'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::favicon()</div>'; /* /DEV */
 	}
@@ -19,7 +19,7 @@ class HHead{
 		/* DEV */ self::testDisplayed(); /* /DEV */
 		/* http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#rel-icon */
 		$href=STATIC_URL.'img/'.$imgNamePrefix;
-		self::$head1.=
+		self::$head['icons'].=
 			//<!-- For third-generation iPad with high-resolution Retina display: -->
 			 '<link rel="apple-touch-icon-precomposed" sizes="144x144" href="'.$href.'-144.png">'
 			//<!-- For iPhone with high-resolution Retina display: -->
@@ -32,10 +32,25 @@ class HHead{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::logoMobile()</div>'; /* /DEV */
 	}
 	
-	public static function meta($property,$content){
-		/* DEV */ self::testDisplayed(); /* /DEV */
-		/* DEV */if($property!==h($property)) throw new Exception('Please escape property'); /* /DEV */
-		self::$head1.='<meta property="'.$property.'" content="'.h($content).'"/>';
+	public static function metaName($name,$content){
+		/* DEV */
+		self::testDisplayed();
+		if($name!==h($name)) throw new Exception('Please escape name');
+		//if(Springbok::$inError===null && isset(self::$_metasName[$name])) throw new Exception('Meta already defined : '.$name);
+		//self::$_metasName[$name]=true;
+		/* /DEV */
+		self::$head['metaname.'.$name]='<meta name="'.$name.'" content="'.h($content).'"/>';
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /* /DEV */
+	}
+	
+	public static function metaProperty($property,$content){
+		/* DEV */
+		self::testDisplayed();
+		if($property!==h($property)) throw new Exception('Please escape property');
+		//if(Springbok::$inError===null && isset(self::$_metasProperty[$property])) throw new Exception('Meta already defined : '.$property);
+		//self::$_metasProperty[$property]=true;
+		/* /DEV */
+		self::$head['metaprop.'.$property]='<meta property="'.$property.'" content="'.h($content).'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /* /DEV */
 	}
 	
@@ -59,6 +74,7 @@ class HHead{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::startIeIf()</div>'; /* /DEV */
 	}
 	public static function endIeIf(){
+		throw new Exception;
 		/* DEV */ self::testDisplayed(); /* /DEV */
 		/* DEV */ if(self::$_IE_started!==true) throw new Exception('ie is not started');
 		self::$_IE_started=false; /* /DEV */
@@ -77,18 +93,18 @@ class HHead{
 		/* DEV */ self::testDisplayed(); /* /DEV */
 		/* DEV */ if(self::$_IE_started===true) throw new Exception('ie is started. Css is not added in IE if'); /* /DEV */
 		/* Keep css up */
-		self::$head2.='<link rel="stylesheet" type="text/css" href="'.HHtml::staticUrl(strpos($url,'?')?$url:($url.'.css'),'css').'"'.($media?' media="'.$media.'"':'').'/>';
+		self::$head['css'].='<link rel="stylesheet" type="text/css" href="'.HHtml::staticUrl(strpos($url,'?')?$url:($url.'.css'),'css').'"'.($media?' media="'.$media.'"':'').'/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkCss()</div>'; /* /DEV */
 	}
 	
 	public static function linkJs($url='/global'){
 		/* DEV */ self::testDisplayed(); /* /DEV */
-		self::$head3.='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
+		self::$head['js'].='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkJs()</div>'; /* /DEV */
 	}
 	public static function linkAddJs($url='/global'){
 		/* DEV */ self::testDisplayed(); /* /DEV */
-		self::$head4.='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
+		self::$head['endjs'].='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkAddJs()</div>'; /* /DEV */
 	}
 	public static function linkJsIe($ieVersion,$operator,$url){
@@ -107,7 +123,7 @@ class HHead{
 	public static function linkRel($rel,$url,$entry=null){
 		/* DEV */ self::testDisplayed(); /* /DEV */
 		/* DEV */if($rel!==h($rel)) throw new Exception('Please escape rel'); /* /DEV */
-		self::$head4.='<link rel="'.$rel.'" href="'.HHtml::urlEscape($url,$entry,true).'"/>';
+		self::$head['linksrel'].='<link rel="'.$rel.'" href="'.HHtml::urlEscape($url,$entry,true).'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkRel()</div>'; /* /DEV */
 	}
 	public static function linkPrev($url,$entry=null){ self::linkRel('prev',$url,$entry);
@@ -116,17 +132,17 @@ class HHead{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkNext()</div>'; /* /DEV */ }
 	public static function linkSmallSizes($url,$entry=null){
 		/* DEV */ self::testDisplayed(); /* /DEV */
-		self::$head4.='<link rel="alternate" media="only screen and (max-width: 640px)" href="'.HHtml::urlEscape($url,$entry,true).'"/>';
+		self::$head['linksrel'].='<link rel="alternate" media="only screen and (max-width: 640px)" href="'.HHtml::urlEscape($url,$entry,true).'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkSmallSizes()</div>'; /* /DEV */
 	}
 	public static function linksLangs($altLangs){
 		/* DEV */ self::testDisplayed(); /* /DEV */
-		foreach($altLangs as $lang=>$url) self::$head4.='<link rel="alternate" hreflang="'.$lang.'" href="'.HHtml::urlEscape($url).'"/>';
+		foreach($altLangs as $lang=>$url) self::$head['linksrel'].='<link rel="alternate" hreflang="'.$lang.'" href="'.HHtml::urlEscape($url).'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linksLangs()</div>'; /* /DEV */
 	}
 	
 	public static function linkGoogleWebStore($itemId){
-		self::$head4.='<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/'.$itemId.'"/>';
+		self::$head['linksrel'].='<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/'.$itemId.'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkGoogleWebStore()</div>'; /* /DEV */
 	}
 	
@@ -143,7 +159,7 @@ class HHead{
 		if(Springbok::$inError===null && self::$_displayed===true) throw new Exception('Already displayed');
 		self::$_displayed=true;
 		/* /DEV */
-		echo self::$head1.self::$head2.self::$head3.self::$head4;
+		echo implode('',self::$head);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::display()</div>'; /* /DEV */
 	}
 }

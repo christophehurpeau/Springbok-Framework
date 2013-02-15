@@ -48,6 +48,14 @@ class TestNavigator extends CHttpClient{
 		}
 		$this->parsedHtml=$parsedHtml;
 	}
+	public function checkMetas(){
+		$metas=$parsedHtml->find('head meta[name="description"]');
+		assert(count($metas)===1);
+		$metas=$parsedHtml->find('head meta[name="keywords"]');
+		assert(count($metas)===1);
+		$metas=$parsedHtml->find('head meta[property="og:site_name"]');
+		assert(count($metas)===1);
+	}
 }
 
 class STest{
