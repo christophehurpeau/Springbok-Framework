@@ -11,10 +11,8 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		
 		var t=this,xhr,lastVal='',currentTimeout;
 		if(S.isFunc(url)) this.onChange=url;
-		else if(S.isArray(url) || S.isObject(url)){
-			var list=url,filter,listValues;
-			
-			filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
+		else if(S.isArray(url) || S.isObject(url) || url instanceof $){
+			var list=url,filter=undefined,listValues;
 			
 			if(S.isObject(url)){
 				list=url.list;
@@ -24,8 +22,20 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
 					filter=function(matcher){ return list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
 				}
+			}else if(url instanceof $){
+				list=url.find('option').each(function(i,option){
+					option=$(option);
+					option.attr('data-value-normalized',S.sNormalize(option.attr('value')));
+				});
+				filter=function(matcher){
+					return list.filter(function(){ return matcher.test($(this).attr('data-value-normalized')); });
+								//.map(function(){ return $(this).attr('value'); }).get();
+				};
+				listValues=null;
+				this.displayLi=this.displayLi||function(v){ return v.attr('value'); };
 			}
 			
+			if(filter===undefined) filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
 			if(listValues===undefined) listValues=list.map(S.sNormalize);
 			
 			this.onChange=function(term){

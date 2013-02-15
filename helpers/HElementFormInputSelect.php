@@ -1,6 +1,6 @@
 <?php
 class HElementFormInputSelect extends HElementFormContainable{
-	private $list,$selected,$style='select',$empty,$addBr=false;
+	private $list,$selected,$style='select',$empty,$addBr=false,$autoAutocomplete=false;
 	public function __construct($form,$name,$list,$selected){
 		parent::__construct($form,$name);
 		if($list===null) $list=call_user_func(array($this->form->modelName,$this->name.'List'));
@@ -15,6 +15,7 @@ class HElementFormInputSelect extends HElementFormContainable{
 	public function radio(){ $this->style='radio'; return $this; }
 	public function emptyValue($value){ $this->empty=$value; return $this; }
 	public function addBr(){ $this->addBr=true; return $this; }
+	public function autoAutocomplete(){ $this->autoAutocomplete=true; return $this; }
 	
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.$this->style); }
 	

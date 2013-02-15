@@ -146,7 +146,7 @@ includeCore('ui/slideTo');
 					$(window).scrollTop(0);
 					
 					var OnReadyCallbacks=readyCallbacks;
-					S.ajax.loadContent(div,jqXHR.responseText,function(){OnReadyCallbacks.fire();$(document).trigger('springbokAjaxPageLoaded',div);},to,data || forceNotAddDataToGetORdoNotDoTheEffect);
+					S.ajax.loadContent(div,jqXHR.responseText,function(){OnReadyCallbacks.fire();$document.trigger('springbokAjaxPageLoaded',div);},to,data || forceNotAddDataToGetORdoNotDoTheEffect);
 					readyCallbacks=$.Callbacks();
 					
 					changeLinkFavicon(normalFaviconHref);

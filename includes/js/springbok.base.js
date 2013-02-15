@@ -343,16 +343,6 @@ RegExp.sEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
-/* DEV */
-S.ready(function(){
-	$('[id]').each(function(){
-		var ids = $('[id="'+this.id+'"]');
-		if(ids.length>1 && ids[0]==this)
-			alert('Multiple IDs #'+this.id);
-	});
-});
-/* /DEV */
-
 var $document=$document.on('focus','input.submit,button,.button',function(){ $(this).delay(1200).blur() })
 	.ajaxError(function(e, xhr, settings, thrownError){
 		if(xhr.status===503) alert(i18nc['http.503.maintenance']);
@@ -411,3 +401,28 @@ S.extObj($.fn,{
 	for(var i in basicsuperclass.prototype)
 		subclass.prototype[i]=function(){return basicsuperclass.prototype[i].apply(this[varName],arguments);}
 }*/
+
+
+
+
+/* DEV */
+(function(){
+	var f=function(){
+		$('[id]').each(function(){
+			var ids = $('[id="'+this.id+'"]');
+			if(ids.length>1 && ids[0]==this)
+				alert('Multiple IDs #'+this.id);
+		});
+		
+		if(!window.inputListHandlerIncluded && $('input[list]').length)
+			{ var m="You must include \'ui/inputListHandler\' in your js file to be able to handle input[list]"; alert(m); console.error(m); }
+		if(!window.inputDataBoxHandlerIncluded && $('input[data-box]').length)
+			{ var m="You must include \'ui/inputDataBoxHandler\' in your js file to be able to handle input[data-box]"; alert(m); console.error(m); }
+		
+	};
+	S.ready(f);
+	$document.bind('springbokAjaxPageLoaded',f);
+})();
+/* /DEV */
+
+
