@@ -4,58 +4,58 @@ class HMeta{
 	private static $canonical,$canonicalEntry,$prev,$next,$smallSizes,$altLangs;
 	
 	public static function keywords($keywords){
-		HHead::meta('keywords',$keywords);
+		HHead::metaName('keywords',$keywords);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::keywords()</div>'; /* /DEV */
 	}
 	public static function description($description){
-		HHead::meta('description',$description);
+		HHead::metaName('description',$description);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::description()</div>'; /* /DEV */
 	}
 	
 	public static function set($metas){
-		HHead::meta('keywords',$metas['keywords']);
-		HHead::meta('description',$metas['description']);
+		HHead::metaName('keywords',$metas['keywords']);
+		HHead::metaName('description',$metas['description']);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::set()</div>'; /* /DEV */
 	}
 	
 	public static function robots($content){
-		HHead::meta('robots',$content);
+		HHead::metaName('robots',$content);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::robots()</div>'; /* /DEV */
 	}
 	public static function googlebot($content){
-		HHead::meta('googlebot',$content);
+		HHead::metaName('googlebot',$content);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::googlebot()</div>'; /* /DEV */
 	}
 	
 	public static function noindex_follow(){
-		HHead::meta('robots','noindex, follow');
+		HHead::metaName('robots','noindex, follow');
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_follow()</div>'; /* /DEV */
 	}
 	public static function noindex_nofollow(){
-		HHead::meta('robots','noindex, nofollow');
+		HHead::metaName('robots','noindex, nofollow');
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_nofollow()</div>'; /* /DEV */
 	}
 	
 	
 	public static function google_notranslate(){
-		HHead::meta('google','notranslate');
+		HHead::metaName('google','notranslate');
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::google_notranslate()</div>'; /* /DEV */
 	}
 	
 	public static function viewport(){
-		HHead::meta('viewport','target-densitydpi=device-dpi, width=device-width, initial-scale=1');
+		HHead::metaName('viewport','target-densitydpi=device-dpi, width=device-width, initial-scale=1');
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::viewport()</div>'; /* /DEV */
 	}
 	
 	public static function msApp($color,$entryStart=null){
-		HHead::meta("application-name",Config::$projectName);
-		HHead::meta("msapplication-starturl",Config::$siteUrl[$entryStart===null ? Springbok::$scriptname : 'index']);
-		HHead::meta("msapplication-window","width=1024;height=768");
-		HHead::meta("msapplication-navbutton-color",$color);
+		HHead::metaName("application-name",Config::$projectName);
+		HHead::metaName("msapplication-starturl",Config::$siteUrl[$entryStart===null ? Springbok::$scriptname : 'index']);
+		HHead::metaName("msapplication-window","width=1024;height=768");
+		HHead::metaName("msapplication-navbutton-color",$color);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msApp()</div>'; /* /DEV */
 	}
 	public static function msAppAction($name,$url,$entry=null,$icon='favicon.ico'){
-		HHead::meta("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
+		HHead::metaName("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /* /DEV */
 	}
 	
