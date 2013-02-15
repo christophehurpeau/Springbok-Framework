@@ -30,7 +30,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 			
 			this.onChange=function(term){
 				var matcher = new RegExp( S.sNormalize(term) ), data=filter(matcher);
-				if(data) t.success(data);
+				if(data) t.onSuccess(data);
 			}
 		}else this.onChange=function(val){
 			if(xhr){ xhr.abort(); xhr=null;}
@@ -41,7 +41,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					url:url,
 					data:{term:val},
 					dataType:options.dataType,
-					success:function(data){ t.success(data); /* don't let other arguments */ },
+					success:function(data){ t.onSuccess(data); /* don't let other arguments */ },
 					error:(t.error||t.reset).bind(t)
 				});
 			},options.delay);
@@ -75,11 +75,17 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				}
 			});
 	},
+	onSuccess:function(data){
+		!data||data.length===0 ? this.emptyResult() : this.success(data);
+	},
 	reset:function(){
 		this.div.empty();
 	},
 	success:function(data){
 		this.div.html(this.display(data,undefined));
+	},
+	emptyResult:function(){
+		this.div.empty();
 	}
 },{
 	defaultDisplayList:function(data,ulAttrs,callback){
