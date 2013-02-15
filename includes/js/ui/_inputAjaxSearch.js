@@ -11,10 +11,8 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		
 		var t=this,xhr,lastVal='',currentTimeout;
 		if(S.isFunc(url)) this.onChange=url;
-		else if(S.isArray(url) || S.isObject(url)){
-			var list=url,filter,listValues;
-			
-			filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
+		else if(S.isArray(url) || S.isObject(url) || url instanceof $){
+			var list=url,filter=undefined,listValues;
 			
 			if(S.isObject(url)){
 				list=url.list;
@@ -24,13 +22,25 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
 					filter=function(matcher){ return list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
 				}
+			}else if(url instanceof $){
+				list=url.find('option').each(function(i,option){
+					option=$(option);
+					option.attr('data-value-normalized',S.sNormalize(option.attr('value')));
+				});
+				filter=function(matcher){
+					return list.filter(function(){ return matcher.test($(this).attr('data-value-normalized')); });
+								//.map(function(){ return $(this).attr('value'); }).get();
+				};
+				listValues=null;
+				this.displayLi=this.displayLi||function(v){ return v.attr('value'); };
 			}
 			
+			if(filter===undefined) filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
 			if(listValues===undefined) listValues=list.map(S.sNormalize);
 			
 			this.onChange=function(term){
 				var matcher = new RegExp( S.sNormalize(term) ), data=filter(matcher);
-				if(data) t.success(data);
+				if(data) t.onSuccess(data);
 			}
 		}else this.onChange=function(val){
 			if(xhr){ xhr.abort(); xhr=null;}
@@ -41,7 +51,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					url:url,
 					data:{term:val},
 					dataType:options.dataType,
-					success:function(data){ t.success(data); /* don't let other arguments */ },
+					success:function(data){ t.onSuccess(data); /* don't let other arguments */ },
 					error:(t.error||t.reset).bind(t)
 				});
 			},options.delay);
@@ -75,11 +85,17 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				}
 			});
 	},
+	onSuccess:function(data){
+		!data||data.length===0 ? this.emptyResult() : this.success(data);
+	},
 	reset:function(){
 		this.div.empty();
 	},
 	success:function(data){
 		this.div.html(this.display(data,undefined));
+	},
+	emptyResult:function(){
+		this.div.empty();
 	}
 },{
 	defaultDisplayList:function(data,ulAttrs,callback){

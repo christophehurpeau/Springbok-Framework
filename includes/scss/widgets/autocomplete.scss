@@ -1,2 +1,6 @@
 @includeCore 'widgets/widgets';
 @includeCore 'widgets/inputBox';
+
+.divAutocomplete > ul.spaced > li{
+	padding:3px 2px;
+}

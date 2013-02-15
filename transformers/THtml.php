@@ -62,20 +62,20 @@ class THtml extends STransformer{
 	public function filters($form,$fields,$FILTERS){
 		echo '<tr class="form">';
 		foreach($fields as &$field){
-			$filterField=NULL; $attributes=array(); $filterName='filters['.$field['key'].']';
+			$filterField=null; $attributes=array(); $filterName='filters['.$field['key'].']';
 			if(isset($field['filter']) && is_array($field['filter'])){
-				$attributes['empty']='';
-				if(isset($FILTERS[$field['key']])) $attributes['selected']=$FILTERS[$field['key']];
-				$filterField=$form->select($filterName,$field['filter'],$attributes);
+				$filterField=$form->select($filterName,$field['filter'],
+						isset($FILTERS[$field['key']])?$FILTERS[$field['key']]:null)
+					->emptyValue('');
 			}elseif(isset($field['tabResult'])){
-				$attributes['empty']='';
-				if(isset($FILTERS[$field['key']])) $attributes['selected']=$FILTERS[$field['key']];
-				$filterField=$form->select($filterName,$field['tabResult'],$attributes);
+				$filterField=$form->select($filterName,$field['tabResult'],
+						isset($FILTERS[$field['key']])?$FILTERS[$field['key']]:null)
+					->emptyValue('');
 			}
-			if($filterField===NULL){
-				if(isset($FILTERS[$field['key']])) $attributes['value']=$FILTERS[$field['key']];
-				if($field['type']==='string') $attributes['data-box']='#'.$this->idTableFilterInputBox;
+			if($filterField===null){
 				$filterField=$form->input($filterName,$attributes);
+				if(isset($FILTERS[$field['key']])) $filterField->value($FILTERS[$field['key']]);
+				if($field['type']==='string') $filterField->attr('data-box','#'.$this->idTableFilterInputBox);
 			}
 			echo '<td>'.$filterField.'</td>';
 		}
@@ -90,12 +90,14 @@ class THtml extends STransformer{
 			$filterField=null; $attributes=$addInTable===true ? array() : $addInTable['attributes']; $addName='add['.$field['key'].']';
 			if($field['key']==='created' || $field['key']==='updated') $fielterField='';
 			elseif(isset($field['tabResult'])){
-				if($field['required']===false) $attributes['empty']='NULL';
-				$filterField=$form->select($addName,$field['tabResult'],$attributes);
+				$filterField=$form->select($addName,$field['tabResult']);
+				if($field['required']===false) $filterField->emptyValue('NULL');
+				if($addInTable!==true && !empty($addInTable['attributes']))
+					foreach($addInTable['attributes'] as $kAttr=>$vAttr) $filterField->attr($kAttr,$vAttr);
 			}
 			if($filterField===null){
-				if($field['required']===false) $attributes['required']=true;
-				$filterField=$form->input($addName,$attributes);
+				$filterField=$form->input($addName);
+				if($field['required']===false) $filterField->required();
 			}
 			echo '<td>'.$filterField.'</td>';
 		}
