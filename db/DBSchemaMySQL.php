@@ -44,10 +44,17 @@ class DBSchemaMySQL extends DBSchema{
 	}
 	
 	public function correctTable(){
-		$this->doUpdate('ALTER TABLE '.$this->db->formatTable($this->tableName)
-					.' COMMENT='.(empty($this->modelInfos['comment'])?'""':$this->db->escape($this->modelInfos['comment']))
-					.' ENGINE='.(empty($this->modelInfos['Engine'])?'InnoDB':$this->modelInfos['Engine'])
-					.' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',true);
+		$sql='ALTER TABLE '.$this->db->formatTable($this->tableName)
+			.' COMMENT='.(empty($this->modelInfos['comment'])?'""':$this->db->escape($this->modelInfos['comment']))
+			.' ENGINE='.(empty($this->modelInfos['Engine'])?'InnoDB':$this->modelInfos['Engine'])
+			.' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
+		//try{
+			$this->doUpdate($sql,true);
+		/*}catch(Exception $e){
+			$foreignKeys=$this->getForeignKeys();
+			foreach($foreignKeys as $col=>$fk) $this->removeForeignKey($fk);
+			$this->doUpdate($sql,false);
+		}*/
 	}
 	
 	
