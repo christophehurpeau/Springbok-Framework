@@ -71,6 +71,17 @@ html body #springbok-bar b{
 	text-shadow:1px 1px #666;
 }
 
+html body #springbok-bar a.warning{
+	background:#ad2d00;
+	color:#FFDDAA;
+}
+
+html body #springbok-bar a.error{
+	background:#8A0000;
+	color:#efafaf;
+}
+
+
 html body .springbok-bar-content/*,#springbok-bar-popup*/{
 	position:fixed;_position:absolute;
 	top:28px; left:0; right:0; bottom:0;

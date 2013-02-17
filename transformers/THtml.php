@@ -66,11 +66,11 @@ class THtml extends STransformer{
 			if(isset($field['filter']) && is_array($field['filter'])){
 				$filterField=$form->select($filterName,$field['filter'],
 						isset($FILTERS[$field['key']])?$FILTERS[$field['key']]:null)
-					->emptyValue('');
+					->autoAutocomplete()->emptyValue('');
 			}elseif(isset($field['tabResult'])){
 				$filterField=$form->select($filterName,$field['tabResult'],
 						isset($FILTERS[$field['key']])?$FILTERS[$field['key']]:null)
-					->emptyValue('');
+					->autoAutocomplete()->emptyValue('');
 			}
 			if($filterField===null){
 				$filterField=$form->input($filterName,$attributes);
@@ -90,7 +90,7 @@ class THtml extends STransformer{
 			$filterField=null; $attributes=$addInTable===true ? array() : $addInTable['attributes']; $addName='add['.$field['key'].']';
 			if($field['key']==='created' || $field['key']==='updated') $fielterField='';
 			elseif(isset($field['tabResult'])){
-				$filterField=$form->select($addName,$field['tabResult']);
+				$filterField=$form->select($addName,$field['tabResult'])->autoAutocomplete();
 				if($field['required']===false) $filterField->emptyValue('NULL');
 				if($addInTable!==true && !empty($addInTable['attributes']))
 					foreach($addInTable['attributes'] as $kAttr=>$vAttr) $filterField->attr($kAttr,$vAttr);

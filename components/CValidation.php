@@ -47,7 +47,7 @@ class CValidation{
 		return self::_addError($key,self::validRequired($val));
 	}
 	private static function validRequired($val){
-		return ($val===false || $val===null || trim($val)==='') ? _tC('This field is required') : false;
+		return ($val===false || $val===null || trim($val)==='') ? _tC('validation.required') : false;
 	}
 
 	
@@ -55,7 +55,7 @@ class CValidation{
 		return self::_addError($key,self::validNotEmpty($val));
 	}
 	private static function validNotEmpty($val){
-		return empty($val) ? _tC('This field is required') : false;
+		return empty($val) ? _tC('validation.required') : false;
 	}
 	
 	

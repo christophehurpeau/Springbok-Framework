@@ -59,7 +59,8 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				submit=form.find('[type="submit"]');
 				form.fadeTo(180,0.4);
 				if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
-				if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid'))){
+				if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid'))
+							|| (S.FormValidator && !S.FormValidator.checkForm(form))){// TODO remove ht5ifv that and force validation
 					form.stop().fadeTo(0,1)
 					return false;
 				}

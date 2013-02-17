@@ -45,10 +45,11 @@ $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 
 var oldConsoleVar=window.console,jsConsoleContent=$('#springbok-bar-js-console ul'),
 log=function(type,args){
-	jsConsoleLink.stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
+	jsConsoleLink.addClass(type).stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
 
 	jsConsoleSpanCount.text(new Number(jsConsoleSpanCount.text())+1);
-	jsConsoleContent.append($('<li/>').text(Array.prototype.join.call($.map(args,function(v){try{ return $.toJSON(v); }catch(err){ return err } },', '))));
+	jsConsoleContent.append($('<li/>').addClass(type)
+			.text(Array.prototype.join.call($.map(args,function(v){try{ return $.toJSON(v); }catch(err){ return err } },', '))));
 };
 window.console={
 	assert:function(){},
@@ -62,7 +63,7 @@ window.console={
 	groupCollapsed:function(){},
 	groupEnd:function(){},
 	info:function(){},
-	log:function(){log('info',arguments);},
+	log:function(){ log('info',arguments);},
 	profile:function(){},
 	profileEnd:function(){},
 	table:function(){},
@@ -70,7 +71,7 @@ window.console={
 	timeEnd:function(){},
 	timeStamp:function(){},
 	trace:function(){},
-	warn:function(){log('warn',arguments);}
+	warn:function(){ log('warn',arguments); }
 };
 oldConsoleVar && !$.browser.msie && $.each(console,function(k,v){
 	var f=window.console[k];

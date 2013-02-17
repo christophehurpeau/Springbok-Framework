@@ -15,24 +15,26 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 			var list=url,filter=undefined,listValues;
 			
 			if(S.isObject(url)){
-				list=url.list;
-				if(S.isObject(list)){
-					this.oKey=url.key;
-					list=[]; listValues=[];
-					S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
-					filter=function(matcher){ return list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
+				if(url instanceof $){
+					list=url.find('option').each(function(i,option){
+						option=$(option);
+						option.attr('data-value-normalized',S.sNormalize(option.attr('value')));
+					});
+					filter=function(matcher){
+						return !matcher ? list : list.filter(function(){ return matcher.test($(this).attr('data-value-normalized')); });
+									//.map(function(){ return $(this).attr('value'); }).get();
+					};
+					listValues=null;
+					this.displayLi=this.displayLi||function(v){ return $(v).attr('value'); };
+				}else{
+					list=url.list;
+					if(S.isObject(list)){
+						this.oKey=url.key;
+						list=[]; listValues=[];
+						S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
+						filter=function(matcher){ return !matcher ? list : list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
+					}
 				}
-			}else if(url instanceof $){
-				list=url.find('option').each(function(i,option){
-					option=$(option);
-					option.attr('data-value-normalized',S.sNormalize(option.attr('value')));
-				});
-				filter=function(matcher){
-					return list.filter(function(){ return matcher.test($(this).attr('data-value-normalized')); });
-								//.map(function(){ return $(this).attr('value'); }).get();
-				};
-				listValues=null;
-				this.displayLi=this.displayLi||function(v){ return v.attr('value'); };
 			}
 			
 			if(filter===undefined) filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
@@ -42,20 +44,23 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				var matcher = new RegExp( S.sNormalize(term) ), data=filter(matcher);
 				if(data) t.onSuccess(data);
 			}
-		}else this.onChange=function(val){
-			if(xhr){ xhr.abort(); xhr=null;}
-			if(currentTimeout) clearTimeout(currentTimeout);
-			currentTimeout=setTimeout(function(){
-				if(t.isNotEditable()) return;
-				xhr=$.ajax({
-					url:url,
-					data:{term:val},
-					dataType:options.dataType,
-					success:function(data){ t.onSuccess(data); /* don't let other arguments */ },
-					error:(t.error||t.reset).bind(t)
-				});
-			},options.delay);
-		};
+		}else{
+			/* DEV */if(!this.minLength) S.error('minLength=0 with url is not recommanded'); /* /DEV */
+			this.onChange=function(val){
+				if(xhr){ xhr.abort(); xhr=null;}
+				if(currentTimeout) clearTimeout(currentTimeout);
+				currentTimeout=setTimeout(function(){
+					if(t.isNotEditable()) return;
+					xhr=$.ajax({
+						url:url,
+						data:{term:val},
+						dataType:t.dataType,
+						success:function(data){ t.onSuccess(data); /* don't let other arguments */ },
+						error:(t.error||t.reset).bind(t)
+					});
+				},t.delay);
+			};
+		}
 		
 		input.attr('autocomplete','off')
 			// turning off autocomplete prevents the browser from remembering the
@@ -70,7 +75,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					e.stopPropagation(); e.preventDefault(); //usefull for autocomplete
 					return false;
 				}
-			}).keyup(function(e){
+			}).bind('keyup focus',function(e){
 				var val=input.val();
 				input.trigger('sSearch',[val])
 			}).bind('sSearch',function(e,val){
@@ -78,24 +83,25 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				if(val===undefined) val=t.input.val();
 				val=val.trim();
 				if(t.navigate) S.history.navigate(url+'/'+val);
-				if(!val || val.length < t.minLength) t.reset();
+				if(/*!val ||*/ t.minLength && val.length < t.minLength) t.reset();
 				else if(val!=lastVal){
 					lastVal=val;
 					t.onChange(val);
 				}
 			});
 	},
+	_div:function(){ return this.div; },
 	onSuccess:function(data){
 		!data||data.length===0 ? this.emptyResult() : this.success(data);
 	},
 	reset:function(){
-		this.div.empty();
+		this._div().empty();
 	},
 	success:function(data){
-		this.div.html(this.display(data,undefined));
+		this._div().html(this.display(data));
 	},
 	emptyResult:function(){
-		this.div.empty();
+		this._div().empty();
 	}
 },{
 	defaultDisplayList:function(data,ulAttrs,callback){

@@ -85,7 +85,7 @@ form.oneline input
 
 div input,div textarea{
 	background:#EDEDED;color:#4C4C4C;
-	border:1px solid #ccc;
+	border:1px solid #B4B4B4;
 	/* @include boxShadow(#eee,10px); */
 	transition:all .3s;
 }
@@ -98,7 +98,6 @@ div input:focus, div textarea:focus{background-color:#FFF}
 div .input{ margin:1px 0; position:relative }
 div .textarea{ margin: 2px 0 }
 
-div .input.text input,div .textarea textarea{border:1px solid #B4B4B4; margin:0;}
 div .input.text input[disabled="disabled"],form .text input[readonly="readonly"]{color:#333; background-color:#D5D5D5;}
 
 input.default,.input.text input.default{color:#777;font-style:italic}
@@ -171,8 +170,7 @@ tr.form td{border:1px solid #C4C4C4; padding:0}
 input.bigInput, .big .text input{
 	font-size:1.1em;
 	height:28px; line-height:28px;
-	background:#F5F5F5;color:#4C4C4C;
-	border:1px solid #ccc;
+	background:#F5F5F5; color:#4C4C4C;
 	box-shadow:0 0 10px #eee inset;
 	border-radius:6px;
 }
@@ -229,13 +227,16 @@ form div.input.text input.invalid,
 form div.text.invalid input,
 form div.text.invalid textarea,
 form input.ht5ifv-show-invalid, form textarea.ht5ifv-show-invalid,
-form div.input input.ht5ifv-show-invalid, form div.input textarea.ht5ifv-show-invalid{
-	border: 1px solid #F33;
-	color : #000;
+form div.input input.ht5ifv-show-invalid, form div.input textarea.ht5ifv-show-invalid,
+input.validation-invalid, textarea.validation-invalid{
+	border:1px solid #F33;
+	color:#000;
+	box-shadow:0 0 1.5px 1px #f1cccc;
 }
 form input.ht5ifv-show-valid, form textarea.ht5ifv-show-valid,
 form .input.text input.ht5ifv-show-valid,
-form div.input input.ht5ifv-show-valid, form div.input textarea.ht5ifv-show-valid{
+form div.input input.ht5ifv-show-valid, form div.input textarea.ht5ifv-show-valid,
+input.validation-valid:focus,textarea.validation-valid:focus{
 	border: 1px solid #2EB82E
 }
 .ht5ifv-show-required{background-color: #f1cccc}

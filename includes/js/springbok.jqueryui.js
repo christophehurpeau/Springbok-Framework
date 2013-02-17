@@ -113,7 +113,7 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 				imgLoading.remove(); t.sShow();
 			};
 		if(!val){
-			if(!options.allowNew){ alert(i18nc['This field is required']); return false; }
+			if(!options.allowNew){ alert(i18nc['validation.required']); return false; }
 			action='create';
 			data={val:input.val()};
 			onAddCurrent=function(d){ if(d==='1') onAdd_current(d); else if(S.isObj(d) && d.ok) onAdd_current('1',d); };

@@ -5,14 +5,13 @@ S.ui.Autocomplete=S.ui.InputSearch.extend({
 	navigate:false,
 	ctor:function(input,url,options){
 		var t=this;
-		S.ui.InputBox.call(t,input);
+		S.ui.InputBox.call(t,input,'sAutocomplete');
 		if(S.isFunc(options)) options={displayCallback:options};
 		S.ui.InputSearch.call(t,input,url,t.div,options);
 		
-		t.div.on('click','li',options.select ? function(){ options.select.call(this,input); t.hideDiv().empty(); }
+		t.div.on('click','li',t.select ? function(){ t.select.call(t,$(this)); t.hideDiv().empty(); }
 							 : function(){ input.val($(this).text()).change(); t.hideDiv().empty(); });
 		t.div.on('hover','li',function(){ t.div.find('li.current').removeClass('current'); });
-		input.data('sAutocomplete',this);
 	},
 	createDiv:function(){ return $('<div class="divAutocomplete divInputBox widget hidden"/>'); },
 	divFindLi:function(selector){

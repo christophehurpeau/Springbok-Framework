@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.2';
+	public static $CACHE_PATH='js_8.3.3';
 
 	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
@@ -208,18 +208,26 @@ class JsFile extends EnhancerFile{
 		$dest=$destination?$destination:tempnam($tmpDir,'gclosuredest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
-		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --compilation_level SIMPLE_OPTIMIZATIONS --language_in=ECMASCRIPT5_STRICT --js_output_file '.escapeshellarg($dest).' ';
+		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --compilation_level SIMPLE_OPTIMIZATIONS --language_in=ECMASCRIPT5_STRICT'
+					//.' --jscomp_error undefinedVars'
+					//--jscomp_off
+					.' --js_output_file '.escapeshellarg($dest).' ';
 		if($createSourceMap){
 			$rawSrcFile=substr($destination,0,-3).'.src.js';
 			$cmd.='--create_source_map '.escapeshellarg($destination.'.map').' --source_map_format=V3';
 		}else $rawSrcFile=tempnam($tmpDir,'gclosure');
+		//$content='/*jshint asi:true boss:true eqnull:true es5:true evil:true funcscope:true globalstrict:true lastsemic:true laxbreak:true shadow:true sub:true */'."\n".$content;
 		file_put_contents($rawSrcFile,$content);
+		//debug($rawSrcFile.' :'."\n".shell_exec('jshint '.escapeshellarg($rawSrcFile)));
+		
 		$res=shell_exec('cd '.escapeshellarg(dirname($rawSrcFile)).' && '.$cmd.' --js '.escapeshellarg(basename($rawSrcFile)).' 2>&1');
 		if(!empty($res)){
-			if(preg_match('/:\s+ERROR\s+-\s+(.*)\n(.*)\n/',$res,$m)){
+			if(preg_match('/(?:\:([0-9]+))?:\s+ERROR\s+-\s+(.*)\n(.*)\n/',$res,$m)){
 				debugCode($destination."\n".$res,false);
-				prettyDebug(HText::highlightLine($content,null,(int)$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
+				prettyDebug(HText::highlightLine($content,'js',(int)$m[1],false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:9pt;')),false);
+				throw new Exception('Error in js file '.$destination);
 			}/*else h($content);*/
+			//else debugCode($destination."\n".$res,false);
 			
 			if(preg_match_all('/:\s+WARNING\s+-\s+(.*)\n(.*)\n/',$res,$m)){
 				foreach($m[0] as $i=>$abcd)$enhancer->warnings[]=array($m[1][$i],$m[2][$i]);

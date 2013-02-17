@@ -16,6 +16,17 @@ class HText{
 				$content=preg_replace('/\$([A-Za-z0-9\_]+)\b/im','<span style="color:#33A"><b>\$</b>$1</span>',$content);
 				$content=preg_replace('/\bself::/im','<i style="color:#33A">self</i>::',$content);
 				//array()
+			case 'js':
+				$content=h($content);
+				// https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Reserved_Words
+				$content=preg_replace('/\b(break|case|catch|continue|debugger|default|delete|do|else|'
+					.'finally|for|function|if|in|instanceof|new|return|switch|'
+					.'this|throw|try|typeof|var|void|while|with|'
+					.'class|enum|export|extends|import|super|'
+					.'implements|interface|let|package|private|protected|public|static|yield|'
+					.'const)\b/im','<b style="color:#CC0033">$1</b>',$content);
+				$content=preg_replace('/\b(true|false|null|undefined)\b/im',
+					'<b style="color:#606">$1</b>',$content);
 				break;
 			default: $content=h($content); break;
 		}

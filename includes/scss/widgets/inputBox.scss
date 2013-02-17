@@ -8,3 +8,13 @@
 }
 
 * html .divInputBox { width:1px; } /* without this, the menu expands to 100% in IE6 */
+
+/* ne marche pas http://jsfiddle.net/hyH48/
+.topArrow:before{
+	content:"";
+	border:20px solid;
+	width:0; height:0;
+	position:absolute;
+	top:-40px; left:20px
+}
+*/

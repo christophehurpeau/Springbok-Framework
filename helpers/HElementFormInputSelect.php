@@ -45,13 +45,15 @@ class HElementFormInputSelect extends HElementFormContainable{
 	}
 	
 	public function render_select(){
+		if(($listNotEmpty=!empty($this->list)) && $this->autoAutocomplete===true && count($this->list)>15)
+			return $this->render_autocompleteSelect();
 		$contentSelect=''; $options=$this->attributes;
 		if($this->empty !== null){
 			$optionAttributes=array('value'=>'');
 			if($this->selected==='') $optionAttributes['selected']=true;
 			$contentSelect.=HHtml::tag('option',$optionAttributes,$this->empty);
 		}
-		if(!empty($this->list)){
+		if($listNotEmpty){
 			if(is_object(current($this->list))){
 				foreach($this->list as $model)
 					$contentSelect.=HHtml::_option($model->_getPkValue(),$model->name(),$this->selected);
@@ -62,6 +64,32 @@ class HElementFormInputSelect extends HElementFormContainable{
 		}
 		$options['name']=$this->_name($this->name);
 		return 	HHtml::tag('select',$options,$contentSelect,false);
+	}
+	
+	public function render_autocompleteSelect(){
+		$contentDatalist=''; $options=$this->attributes; $selectedValue=null;
+		if($this->empty !== null){
+			$optionAttributes=array('value'=>$this->empty);
+			if(empty($this->selected) && $this->selected!=='0') $selectedValue=$this->empty;
+			$contentDatalist.=HHtml::tag('option',$optionAttributes);
+		}
+		if(is_object(current($this->list))){
+			foreach($this->list as $model){
+				$contentDatalist.=HHtml::tag('option',array('data-key'=>$key=$model->id(),'value'=>$value=$model->name()));
+				if($key===$this->selected) $selectedValue=$value;
+			}
+		}else{
+			foreach($this->list as $key=>$value)
+				$contentDatalist.=HHtml::tag('option',array('data-key'=>$key,'value'=>$value));
+			if(isset($this->list[$this->selected])) $selectedValue=$this->list[$this->selected];
+		}
+		$options['list']=$options['id'].'_datalist';
+		if(!empty($selectedValue)) $options['value']=$selectedValue;
+		if($this->empty===null) $options['required']=true;
+		return HHtml::tag('datalist',array('id'=>$options['list']),$contentDatalist,false)
+			.HHtml::tag('input',$options)
+			.HHtml::tag('input',array('id'=>$options['id'].'_hidden',
+				'type'=>'hidden','name'=>$this->_name($this->name),'value'=>$this->selected));
 	}
 	
 	

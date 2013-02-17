@@ -2,13 +2,16 @@ includeCore('ui/_inputFollow');
 includeCore('libs/jquery-ui-1.9.2.position');
 
 S.ui.InputBox=S.ui.InputFollow.extend({
-	ctor:function(input){
+	ctor:function(input,dataName){
 		var t=this;
 		S.ui.InputFollow.call(t,input);
-		this.initDiv();
-		if(this.hasFocus=input.is(':focus')) t.showDiv();
+		this.init();
+		if(this.hasFocus=input.is(':focus')){
+			t.showDiv();
+			t.div.data('currentFocus',input);
+		}
 		input
-			.data('sInputBox',this)
+			.data(dataName||'sInputBox',this)
 			.bind('dispose',function(){ t.dispose(); })
 			.focus(function(){
 				t.div.data('currentFocus',input);
@@ -25,7 +28,10 @@ S.ui.InputBox=S.ui.InputFollow.extend({
 			});
 		;
 	},
-	initDiv:function(){ this.div=this.createDiv().appendTo($('#page')); },
+	init:function(){
+		this.initDiv();
+	},
+	initDiv:function(){ this.div=this.createDiv().appendTo($('#container')); },
 	createDiv:function(){ return $('<div class="widget divInputBox hidden"/>'); },
 	showDiv:function(){
 		this.active=true;
