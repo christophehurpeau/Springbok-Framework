@@ -56,7 +56,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 						data:{term:val},
 						dataType:t.dataType,
 						success:function(data){ t.onSuccess(data); /* don't let other arguments */ },
-						error:(t.error||t.reset).bind(t)
+						error:function(){ lastVal=null; (t.error||t.reset)(); }
 					});
 				},t.delay);
 			};
@@ -83,7 +83,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				if(val===undefined) val=t.input.val();
 				val=val.trim();
 				if(t.navigate) S.history.navigate(url+'/'+val);
-				if(/*!val ||*/ t.minLength && val.length < t.minLength) t.reset();
+				if(/*!val ||*/ t.minLength && val.length < t.minLength){ t.reset(); lastVal=null; }
 				else if(val!=lastVal){
 					lastVal=val;
 					t.onChange(val);
