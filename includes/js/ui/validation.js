@@ -168,15 +168,14 @@ S.ready(function(){
 				var val=elt.val(),error;
 				if(val==''){
 					if(elt.prop('required')) return this.checkFailed(elt,'required',checkAllAndFirstError);
-				}else{
+				}else if(type!=='hidden'){
 					/* DEV */
 					if(isInput && !restrictions.input.type[type]) S.error('Unknown input type: '+type);
 					if(isInput && !S.isFunc(restrictions.input.type[type])) S.error('input type: '+type+' is not a function');
 					/* /DEV */
 					error=isInput ? restrictions.input.type[type](elt,val)
 							: restrictions[tagName](elt,val);
-					if(error!==false) return type==='hidden'?undefined
-											:this.checkFailed(elt,error===true?type||'required':error,checkAllAndFirstError);
+					if(error!==false) return this.checkFailed(elt,error===true?type||'required':error,checkAllAndFirstError);
 					if(isInput){
 						var restrictionsInput=restrictions.input.restrictions;
 						for(var i=0,l=restrictionsInput.length,r,attr;i<l;i++){
