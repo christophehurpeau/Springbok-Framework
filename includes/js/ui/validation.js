@@ -1,3 +1,5 @@
+includeCore('ui/inputbox');
+
 /* DEV */
 S.ready(function(){
 	if($.ht5ifv) alert('Please do not use ht5ifv !');
@@ -89,12 +91,8 @@ S.ready(function(){
 				price:function($node,val){ return !/^\d+(\.\d{2})?$/.test(val) || checkMinAndMax($node,val,Number); },
 				//latlng pattern : /^\-?\d{1,3}\.\d+$/
 			},
+			
 			restrictions:['pattern','minlength','maxlength','data-same'],
-			addRestriction:function(name,f){
-				/* DEV */ if(restrictions.input[name]) S.error('restriction '+name+' already exists'); /* /DEV */
-				restrictions.input.restrictions.push(name);
-				restrictions.input[name]=f;
-			},
 			pattern:function(pattern,val,$node){ return !(new RegExp('^'+pattern+'$')).test($val); },
 			minlength:function(maxlength,val,$node){ return val.length <= maxlength; },
 			maxlength:function(minlength,val,$node){ return val.length >= minlength; },
@@ -115,19 +113,26 @@ S.ready(function(){
 			},
 			createDiv:function(){ return $('<div class="divInputBox hidden boxError"/>'); },//TODO : add an arrow, remove css validation-error
 		});
-	S.FormValidator=function(form){
+	S.FormValidator=function(form,eventsName){
 		this.form=form.attr('novalidate','novalidate').data('sValidator',this);
 		var t=this;
 		//form.on('sValidation.clear',selectorAllElements,this.check);
-		form.on('blur focus change keyup validation.check',selectorAllElements,this.listenFormF=function(){ t.checkElement($(this)) })
-			.submit(this.listenSubmitF=this.check.bind(this))
-			.bind('dispose',this.listenDispose=function(){ t.dispose(true); });
+		form.on(this.eventsName=((eventsName||S.FormValidator.eventsName)+' validation.check'),
+			selectorAllElements,this.listenFormF=function(){ t.checkElement($(this)) })
+				.submit(this.listenSubmitF=this.check.bind(this))
+				.bind('dispose',this.listenDispose=function(){ t.dispose(true); });
+	};
+	S.FormValidator.eventsName='blur focus change keyup';
+	S.FormValidator.addRestriction=function(name,f){
+		/* DEV */ if(restrictions.input[name]) S.error('restriction '+name+' already exists'); /* /DEV */
+		restrictions.input.restrictions.push(name);
+		restrictions.input[name]=f;
 	};
 	S.FormValidator.prototype={
 		dispose:function(removedForm){
 			if(this.form){
 				if(!removedForm){ //TODO : do that in widget or listenable
-					this.form.off('blur focus change keyup validation.check',selectorAllElements,this.listenFormF)
+					this.form.off(this.eventsName,selectorAllElements,this.listenFormF)
 						.unbind('submit',this.listenSubmitF)
 						.unbind('dispose',this.listtenDispose);
 				}
@@ -164,16 +169,21 @@ S.ready(function(){
 				if(val==''){
 					if(elt.prop('required')) return this.checkFailed(elt,'required',checkAllAndFirstError);
 				}else{
+					/* DEV */
+					if(isInput && !restrictions.input.type[type]) S.error('Unknown input type: '+type);
+					if(isInput && !S.isFunc(restrictions.input.type[type])) S.error('input type: '+type+' is not a function');
+					/* /DEV */
 					error=isInput ? restrictions.input.type[type](elt,val)
 							: restrictions[tagName](elt,val);
-					if(error) return this.checkFailed(elt,error===true?type||'required':error,checkAllAndFirstError);
+					if(error!==false) return type==='hidden'?undefined
+											:this.checkFailed(elt,error===true?type||'required':error,checkAllAndFirstError);
 					if(isInput){
 						var restrictionsInput=restrictions.input.restrictions;
 						for(var i=0,l=restrictionsInput.length,r,attr;i<l;i++){
 							r=restrictionsInput[i]; attr=elt.attr(r);
 							if(attr!=null){
 								error=restrictions.input[r](attr,val,elt);
-								if(error) return this.checkFailed(elt,error===true?[r,attr]:error,checkAllAndFirstError);//probleme : must not be in function => use for
+								if(error!==false) return this.checkFailed(elt,error===true?[r,attr]:error,checkAllAndFirstError);//probleme : must not be in function => use for
 							}
 						}
 					}
@@ -186,8 +196,10 @@ S.ready(function(){
 			elt.removeClass('validation-valid').addClass('validation-invalid');
 			var ib=elt.data('sValidationMessage'),attrs;
 			if(S.isArray(error)) error=i18nc['validation.'+error[0]].sbVFormat(S.aSlice1(error));
-			else error=i18nc['validation.'+error];
-			/* DEV */ if(!error) S.error('Unknown validation translation error: '+error); /* /DEV */
+			else if(error!=null){
+				error=i18nc['validation.'+error];
+				/* DEV */ if(!error) S.error('Unknown validation translation error: '+error); /* /DEV */
+			}
 			if(error){
 				!ib && (ib=new validationBox(elt));
 				ib.div.html($('<div class="content">').text(error));

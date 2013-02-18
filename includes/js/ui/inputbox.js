@@ -31,7 +31,7 @@ S.ui.InputBox=S.ui.InputFollow.extend({
 	init:function(){
 		this.initDiv();
 	},
-	initDiv:function(){ this.div=this.createDiv().appendTo($('#container')); },
+	initDiv:function(){ this.div=this.createDiv().appendTo($('#container')); }, //http://api.jqueryui.com/zIndex/
 	createDiv:function(){ return $('<div class="widget divInputBox hidden"/>'); },
 	showDiv:function(){
 		this.active=true;
