@@ -32,11 +32,11 @@ class ControllerFile extends PhpFile{
 					$controllersSrc[$countEval.$controllerPath]=file_get_contents($parentPath.$controllerPath);
 			}
 			if($m[1]==='Action'){
-				if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('
+				if(!preg_match_all(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('
 									.($eval[1]==='#'?'[a-zA-Z_]+':preg_quote($eval[1])).')',
 							ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
 					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
-				return $mAction[0];
+				return implode("\n",$mAction[0])."\n";
 			}else{
 				if(!preg_match_all(self::regexpFunction($eval[1]),$controllersSrc[$countEval.$controllerPath],$mFunction))
 					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
