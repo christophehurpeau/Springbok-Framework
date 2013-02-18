@@ -76,6 +76,7 @@
 'validation.range'=>'',
 'validation.text'=>'',
 'validation.url'=>'Entrez une url sous la forme http://www.example.com/',
+'validation.checkbox'=>'Cochez la case',
 'Incorrect captcha'=>'Captcha incorrect',
 'The uploaded file exceeds the maximum size allowed by the configuration.'=>'Le fichier uploadé dépasse la taille maximum autorisée par la configuration.',
 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.'=>'Le fichier uploadé dépasse la taille maximum autorisé par le formulaire HTML.',

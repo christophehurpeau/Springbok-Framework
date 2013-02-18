@@ -130,4 +130,5 @@ _tC('validation.number');
 _tC('validation.range');
 _tC('validation.text');
 _tC('validation.url');
+_tC('validation.checkbox');
 */
