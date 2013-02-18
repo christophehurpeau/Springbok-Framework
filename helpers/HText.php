@@ -16,6 +16,7 @@ class HText{
 				$content=preg_replace('/\$([A-Za-z0-9\_]+)\b/im','<span style="color:#33A"><b>\$</b>$1</span>',$content);
 				$content=preg_replace('/\bself::/im','<i style="color:#33A">self</i>::',$content);
 				//array()
+				break;
 			case 'js':
 				$content=h($content);
 				// https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Reserved_Words

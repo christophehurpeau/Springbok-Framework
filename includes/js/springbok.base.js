@@ -255,6 +255,8 @@ window.S={
 	
 	/* ARRAY */
 	
+	ASlice:Array.prototype.slice,
+	aSlice1:function(a){ return S.ASlice.call(a,1); },
 	aHasAmong:function(a,searchElements,i){
 		for(var j=0, l=searchElements.length; j<l ; j++)
 			if(a.indexOf(searchElements[j],i) !== -1) return true;

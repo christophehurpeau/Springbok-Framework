@@ -4,7 +4,7 @@ includeCore('ui/validation');
 (function(){
 	var inputListHandler=S.ui.Autocomplete.extend({
 		minLength:0,
-		select:function(li){ this.input.val(li.text()); this.inputValue.val($(li.data('item')).attr('data-key')); console.log($(li.data('item')).attr('data-key')); }
+		select:function(li){ this.input.val(li.text()); this.inputValue.val($(li.data('item')).attr('data-key')); console.log(this.inputValue,$(li.data('item')).attr('data-key')); }
 	});
 	/* DEV */window.inputListHandlerIncluded=true;/* /DEV */
 	$document.on('focus','input[list]',function(e){
@@ -12,9 +12,11 @@ includeCore('ui/validation');
 			datalist=$('datalist[id="'+input.attr('list')+'"]'),
 			handler=new inputListHandler(input.removeAttr('list'),datalist);
 		
-		handler.inputValue=$('#'+input.attr('id')+'_hidden');
+		handler.inputValue=$(document.getElementById(input.attr('id')+'_hidden'));
+		
+		
 		// TODO check value
 		// TODO on blur|focus|keyup|change check if value correspond to the key selected in the list. If not : validation fail.
-		
+		// TODO remove default behavior of check
 	});
 })();

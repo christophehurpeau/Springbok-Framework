@@ -16,8 +16,8 @@ S.ready(function(){
 					&& d;
 	},checkMinAndMax=function($node,val,callback){
 		var min=$node.attr('min'),max=$node.attr('max');
-		if(min && (callback?callback(min):min) > val) return 'min';
-		return (max && val > (callback?callback(max):max)) ? 'max' : false;
+		if(min && (callback?callback(min):min) > val) return ['min',min];
+		return (max && val > (callback?callback(max):max)) ? ['max',max] : false;
 	};
 	var restrictions={
 		input:{
@@ -72,30 +72,35 @@ S.ready(function(){
 					return !/^-?[0-9]+(\.[0-9]*)?(E(-|\+)?[0-9]+)?$/i.test(val) || !(val=parseInt(val,10))
 						|| checkMinAndMax($node,val,function(v){ return parseInt(v,10); });
 				},
-				range:function($node,val){ return restrictions.number.text($node,val); },
+				range:function($node,val){ return restrictions.input.type.number.text($node,val); },
 				
 				//http://www.w3.org/TR/html5/states-of-the-type-attribute.html#text-state-and-search-state
 				text:function($node,val){ return false; },
-				password:function($node,val){ return restrictions.input.text($node,val); },
-				search:function($node,val){ return restrictions.input.text($node,val); },
-				tel:function($node,val){ return restrictions.input.text($node,val); },
+				password:function($node,val){ return restrictions.input.type.text($node,val); },
+				search:function($node,val){ return restrictions.input.type.text($node,val); },
+				tel:function($node,val){ return restrictions.input.type.text($node,val); },
 				
 				url:function($node,val){
 					if(val.indexOf('www.') === 0) $node.val(val='http://'+val);
 					return !/^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(val)
-				}
+				},
+				
+				//ip:function($node,val){ },
+				price:function($node,val){ return !/^\d+(\.\d{2})?$/.test(val) || checkMinAndMax($node,val,Number); },
+				//latlng pattern : /^\-?\d{1,3}\.\d+$/
 			},
-			restrictions:['pattern',,'data-same'],
+			restrictions:['pattern','minlength','maxlength','data-same'],
 			addRestriction:function(name,f){
 				/* DEV */ if(restrictions.input[name]) S.error('restriction '+name+' already exists'); /* /DEV */
 				restrictions.input.restrictions.push(name);
 				restrictions.input[name]=f;
 			},
 			pattern:function(pattern,val,$node){ return !(new RegExp('^'+pattern+'$')).test($val); },
-			minlength:function(maxlength,val,$node){ return val.length > maxlength; },
-			maxlength:function(minlength,val,$node){ return val.length < minlength; },
+			minlength:function(maxlength,val,$node){ return val.length <= maxlength; },
+			maxlength:function(minlength,val,$node){ return val.length >= minlength; },
 			'data-same':function(dataSame,val,$node){ return val != $(dataSame).val(); }
 		},
+		select:function($node){ return $node.val() == null; },
 		textarea:function($node){ return true; },
 		checkbox:function($node){ return $node.is(':checked'); },
 		radio:function($radioGroup,$node){ return $radioGroup.filter(':checked').length > 0 },
@@ -114,11 +119,21 @@ S.ready(function(){
 		this.form=form.attr('novalidate','novalidate').data('sValidator',this);
 		var t=this;
 		//form.on('sValidation.clear',selectorAllElements,this.check);
-		form.on('blur focus change keyup',selectorAllElements,function(){ t.checkElement($(this)) })
-			.submit(this.check.bind(this))
-			.bind('dispose',function(){ t.dispose(); });
+		form.on('blur focus change keyup validation.check',selectorAllElements,this.listenFormF=function(){ t.checkElement($(this)) })
+			.submit(this.listenSubmitF=this.check.bind(this))
+			.bind('dispose',this.listenDispose=function(){ t.dispose(true); });
 	};
 	S.FormValidator.prototype={
+		dispose:function(removedForm){
+			if(this.form){
+				if(!removedForm){ //TODO : do that in widget or listenable
+					this.form.off('blur focus change keyup validation.check',selectorAllElements,this.listenFormF)
+						.unbind('submit',this.listenSubmitF)
+						.unbind('dispose',this.listtenDispose);
+				}
+				delete this.form;
+			}
+		},
 		/*updateElements:function(){
 			this.elements=form.find()
 				.unbind('sValidation.clear',this.clear).bind('sValidation.clear',this.clear);
@@ -151,14 +166,14 @@ S.ready(function(){
 				}else{
 					error=isInput ? restrictions.input.type[type](elt,val)
 							: restrictions[tagName](elt,val);
-					if(error) return this.checkFailed(elt,error,checkAllAndFirstError);
+					if(error) return this.checkFailed(elt,error===true?type||'required':error,checkAllAndFirstError);
 					if(isInput){
 						var restrictionsInput=restrictions.input.restrictions;
 						for(var i=0,l=restrictionsInput.length,r,attr;i<l;i++){
 							r=restrictionsInput[i]; attr=elt.attr(r);
 							if(attr!=null){
 								error=restrictions.input[r](attr,val,elt);
-								if(error) return this.checkFailed(elt,error===true?r:error,checkAllAndFirstError);//probleme : must not be in function => use for
+								if(error) return this.checkFailed(elt,error===true?[r,attr]:error,checkAllAndFirstError);//probleme : must not be in function => use for
 							}
 						}
 					}
@@ -169,8 +184,9 @@ S.ready(function(){
 		},
 		checkFailed:function(elt,error,checkAllAndFirstError){
 			elt.removeClass('validation-valid').addClass('validation-invalid');
-			var ib=elt.data('sValidationMessage');
-			error=i18nc['validation.'+error];
+			var ib=elt.data('sValidationMessage'),attrs;
+			if(S.isArray(error)) error=i18nc['validation.'+error[0]].sbVFormat(S.aSlice1(error));
+			else error=i18nc['validation.'+error];
 			/* DEV */ if(!error) S.error('Unknown validation translation error: '+error); /* /DEV */
 			if(error){
 				!ib && (ib=new validationBox(elt));

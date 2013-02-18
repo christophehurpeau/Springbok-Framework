@@ -9,7 +9,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		this.div=destContent;
 		this.display=this.display||S.ui.InputSearch.defaultDisplayList;
 		
-		var t=this,xhr,lastVal='',currentTimeout;
+		var t=this,xhr,lastVal=null,currentTimeout;
 		if(S.isFunc(url)) this.onChange=url;
 		else if(S.isArray(url) || S.isObject(url) || url instanceof $){
 			var list=url,filter=undefined,listValues;
@@ -76,6 +76,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					return false;
 				}
 			}).bind('keyup focus',function(e){
+				//e.stopPropagation();
 				var val=input.val();
 				input.trigger('sSearch',[val])
 			}).bind('sSearch',function(e,val){
@@ -89,6 +90,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					t.onChange(val);
 				}
 			});
+		if(this.hasFocus) input.trigger('sSearch')
 	},
 	_div:function(){ return this.div; },
 	onSuccess:function(data){
