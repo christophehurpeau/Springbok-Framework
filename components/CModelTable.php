@@ -129,7 +129,7 @@ class CModelTable extends CModelTableAbstract{
 				if(!empty($_POST)) $hrefQuery=http_build_query($_POST,'','&').'&';
 				if(!empty($_GET)){
 					$get=$_GET;
-					unset($get['page'],$get['ajax']);
+					unset($get['page'],$get['ajax'],$get['add']);
 					if(!empty($get)) $hrefQuery=http_build_query($get,'','&').'&';
 				}
 				$href=HHtml::urlEscape(array(true,CRoute::getAll(),'?'=>$hrefQuery));
