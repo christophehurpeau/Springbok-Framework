@@ -62,9 +62,6 @@ class HElementFormInput extends HElementFormContainable{
 	public function setType($type){ $this->type=$type; return $this; }
 	public function value($value){ $this->attributes['value']=$value; return $this; }
 	public function value_(&$value){ $this->attributes['value']=$value; return $this; }
-	public function readOnly(){ $this->attributes['readonly']=true; return $this; }
-	public function disabled(){ $this->attributes['disabled']=true; return $this; }
-	public function required(){ $this->attributes['required']=true; return $this; }
 	public function size($size){ $this->attributes['size']=$size; return $this; }
 	public function name($value){ $this->attributes['name']=$value; return $this; }
 	public function noName(){ unset($this->attributes['name']); return $this; }
@@ -78,6 +75,6 @@ class HElementFormInput extends HElementFormContainable{
 	public function toString(){
 		/* DEV */ if(Springbok::$inError) return '[HElementFormInput]'; /* /DEV */
 		$this->attributes['type']=$this->type;
-		return $this->_labelToString().$this->between.HHtml::tag('input',$this->attributes);
+		return $this->_labelToString().(empty($this->between)?'':$this->between).HHtml::tag('input',$this->attributes);
 	}
 }

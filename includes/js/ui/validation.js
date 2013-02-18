@@ -98,9 +98,9 @@ S.ready(function(){
 			maxlength:function(minlength,val,$node){ return val.length >= minlength; },
 			'data-same':function(dataSame,val,$node){ return val != $(dataSame).val(); }
 		},
+		checkbox:function($node){ return !(!$node.prop('required') || $node.is(':checked')); },
 		select:function($node){ return $node.val() == null; },
-		textarea:function($node){ return true; },
-		checkbox:function($node){ return $node.is(':checked'); },
+		textarea:function($node){ return false; },
 		radio:function($radioGroup,$node){ return $radioGroup.filter(':checked').length > 0 },
 	};
 	
@@ -161,11 +161,14 @@ S.ready(function(){
 			return !error;
 		},
 		checkElement:function(elt,checkAllAndFirstError){
-			var tagName=elt.prop('tagName').toLowerCase(),isInput=tagName==='input',type=isInput ? elt.attr('type')||'text' : undefined;
+			var tagName=elt.prop('tagName').toLowerCase(),isInput=tagName==='input',type=isInput ? elt.attr('type')||'text' : undefined,error;
 			if(isInput && type==='radio'){
 				
+			}else if(isInput && type==='checkbox'){
+				error=restrictions.checkbox(elt);
+				if(error!==false) return this.checkFailed(elt,'checkbox',checkAllAndFirstError);
 			}else{
-				var val=elt.val(),error;
+				var val=elt.val();
 				if(val==''){
 					if(elt.prop('required')) return this.checkFailed(elt,'required',checkAllAndFirstError);
 				}else if(type!=='hidden'){

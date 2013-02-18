@@ -14,6 +14,9 @@ abstract class HElementFormContainable extends HElement{
 	public function label($label){ $this->label=$label; return $this; }
 	public function htmlLabel($label){ $this->label=$label; $this->labelEscape=false; return $this; }
 	public function noLabel(){ $this->label=false; return $this; }
+	public function required(){ $this->attributes['required']=true; return $this; }
+	public function readOnly(){ $this->attributes['readonly']=true; return $this; }
+	public function disabled(){ $this->attributes['disabled']=true; return $this; }
 	
 	public function between($content){ $this->between=$content; return $this; }
 	
