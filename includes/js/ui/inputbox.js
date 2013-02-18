@@ -21,7 +21,7 @@ S.ui.InputBox=S.ui.InputFollow.extend({
 				if(t.div.data('currentFocus')===input){
 					t.div.removeData('currentFocus')
 					setTimeout(function(){
-						if(!t.hasFocus && !t.div.data('currentFocus')) t.hideDiv();
+						if(!t.hasFocus && t.div /* t.div can be deleted before the timeout */ && !t.div.data('currentFocus')) t.hideDiv();
 					},200);
 				}
 				t.hasFocus=false;

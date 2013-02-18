@@ -28,7 +28,10 @@ abstract class HElementFormContainable extends HElement{
 		return $prefix.HHtml::tag('label',array('for'=>$this->attributes['id']),$label,$this->labelEscape).$suffix;
 	}
 	
-	public function __toString(){ return $this->form->isContainable() ? $this->container()->__toString() : $this->toString(); }
+	public function __toString(){
+		/* DEV */ if(Springbok::$inError) return '[HElementFormContainable]'; /* /DEV */
+		return $this->form->isContainable() ? $this->container()->__toString() : $this->toString();
+	}
 
 
 	protected function _setAttrValue(){

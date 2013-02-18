@@ -1,13 +1,13 @@
 <?php
 class UPhp{
-	public static function exportCode($var,$ifEmptyArray=false){
+	public static function exportCode($var,$ifEmptyArray=false,$addLine=''){
 		$content='';
-		$content=self::exportCode_recursiveArray($content,$var,true);
+		$content=self::exportCode_recursiveArray($content,$var,true,$addLine);
 		if($ifEmptyArray!==false && ($content==='false' || $content==='array()')) return $ifEmptyArray;
 		return $content;
 	}
 	
-	public static function exportCode_recursiveArray($content,$array,$start){
+	public static function exportCode_recursiveArray($content,$array,$start,$addLine=''){
 		if(!is_array($array)) self::exportCode_addVar($content,$array);
 		else{
 			$content.='array(';
@@ -18,8 +18,8 @@ class UPhp{
 					$content.='=>';
 				}
 				$content=self::exportCode_recursiveArray($content,$val,false);
-				$content=rtrim($content,',');
-				$content.=',';
+				$content=rtrim($content,','.$addLine);
+				$content.=','.$addLine;
 				$prevKey=$key;
 			}
 			$content=rtrim($content,',');
