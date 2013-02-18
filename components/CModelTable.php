@@ -107,7 +107,7 @@ class CModelTable extends CModelTableAbstract{
 		
 		if($this->hasForm()){
 			$formId=uniqid();
-			echo $form=HForm::Post()->id($formId)->attr('rel','content')->noContainer()->noDefaultLabel();
+			echo $form=HForm::Post()->id($formId)->noContainer()->noDefaultLabel();
 		}else $form=null;
 		
 		

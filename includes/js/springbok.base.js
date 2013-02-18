@@ -94,7 +94,7 @@ window.S={
 	tools:{
 		preg_replace:function(array_pattern, array_pattern_replace, my_string){
 			var new_string = String (my_string);
-			for (i=0; i<array_pattern.length; i++){
+			for (var i=0; i<array_pattern.length; i++){
 				var reg_exp= RegExp(array_pattern[i], "gi");
 				var val_to_replace = array_pattern_replace[i];
 				new_string = new_string.replace (reg_exp, val_to_replace);
@@ -406,18 +406,22 @@ S.extObj($.fn,{
 
 
 /* DEV */
+S.error=function(m){
+	console.error(m);
+	alert(m);
+};
 (function(){
 	var f=function(){
 		$('[id]').each(function(){
 			var ids = $('[id="'+this.id+'"]');
 			if(ids.length>1 && ids[0]==this)
-				alert('Multiple IDs #'+this.id);
+				S.error('Multiple IDs #'+this.id);
 		});
 		
 		if(!window.inputListHandlerIncluded && $('input[list]').length)
-			{ var m="You must include \'ui/inputListHandler\' in your js file to be able to handle input[list]"; alert(m); console.error(m); }
+			S.error("You must include \'ui/inputListHandler\' in your js file to be able to handle input[list]");
 		if(!window.inputDataBoxHandlerIncluded && $('input[data-box]').length)
-			{ var m="You must include \'ui/inputDataBoxHandler\' in your js file to be able to handle input[data-box]"; alert(m); console.error(m); }
+			S.error("You must include \'ui/inputDataBoxHandler\' in your js file to be able to handle input[data-box]");
 		
 	};
 	S.ready(f);

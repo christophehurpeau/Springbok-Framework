@@ -137,12 +137,6 @@ includeCore('ui/slideTo');
 					else if(to === 'page') div=divPage.attr('class',jqXHR.getResponseHeader('SpringbokAjaxPageClass'));
 					else if(to === 'base') div=divContainer;
 					
-					div.find('span.mceEditor').each(function(){
-						var ed=tinymce.get(this.id.substr(0,this.id.length-7));
-						ed.focus(); ed.remove();
-						/* if(tinymce.isGecko) */
-					});
-					
 					$(window).scrollTop(0);
 					
 					var OnReadyCallbacks=readyCallbacks;
@@ -166,6 +160,11 @@ includeCore('ui/slideTo');
 			});
 		},
 		loadContent:function(div,content,OnReadyCallbacks,to,forceNotAddDataToGetORdoNotDoTheEffect){
+			div.find('span.mceEditor').each(function(){
+				var ed=tinymce.get(this.id.substr(0,this.id.length-7));
+				ed.focus(); ed.remove();
+			});
+			
 			defineDefault('AJAX_CONTENT_EFFECT',true);
 			if(AJAX_CONTENT_EFFECT && to === 'content' && !forceNotAddDataToGetORdoNotDoTheEffect){
 				divContent=div.sSlideTo(content,OnReadyCallbacks);
