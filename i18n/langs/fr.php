@@ -61,7 +61,7 @@
 'validation.required'=>'Veuillez remplir ce champ',
 'This field should be a valid id'=>'Ce champ devrait être un ID valide',
 'validation.maxlength'=>'Ce champ doit avoir une taille maximum de %s caractères',
-'This field must have a length of %s'=>'',
+'This field must have a length of %s'=>'Ce champ doit avoir une taille de %s',
 'validation.minlength'=>'Ce champ doit avoir une taille minimum de %s caractères',
 'validation.maxsize'=>'La valeur ne doit pas être supérieure à %s',
 'validation.minsize'=>'La valeur ne doit pas être inférieure à %s',

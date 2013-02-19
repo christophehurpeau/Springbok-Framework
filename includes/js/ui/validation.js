@@ -94,8 +94,8 @@ S.ready(function(){
 			
 			restrictions:['pattern','minlength','maxlength','data-same'],
 			pattern:function(pattern,val,$node){ return !(new RegExp('^'+pattern+'$')).test($val); },
-			minlength:function(maxlength,val,$node){ return val.length <= maxlength; },
-			maxlength:function(minlength,val,$node){ return val.length >= minlength; },
+			minlength:function(maxlength,val,$node){ return val.length < maxlength; },
+			maxlength:function(minlength,val,$node){ return val.length > minlength; },
 			'data-same':function(dataSame,val,$node){ return val != $(dataSame).val(); }
 		},
 		checkbox:function($node){ return !(!$node.prop('required') || $node.is(':checked')); },
@@ -229,8 +229,12 @@ S.ready(function(){
 		return validator.check();
 	}
 	
-	$document.on('focus','form:not([novalidate])',function(){
-		new S.FormValidator($(this));
+	$document.on('focus','form:not([novalidate])',function(e){
+		var v=new S.FormValidator($(this)),target;
+		if(e.target){
+			target=$(e.target);
+			if(target.is(selectorAllElements)) target.trigger('validation.check');
+		}
 	});
 	$document.on('submit','form:not([novalidate])',function(){
 		return (new S.FormValidator($(this))).check();
