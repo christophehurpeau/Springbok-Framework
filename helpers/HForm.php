@@ -293,6 +293,15 @@ class HForm{
 		if($label) $content=HHtml::tag('label',array('for'=>$options['id']),$label).' ';
 		else $content='';
 		
+		
+		if($this->modelName !== NULL){
+			$modelName=$this->modelName;
+			if(isset($modelName::$__PROP_DEF[$name])){
+				$propDef=$modelName::$__PROP_DEF[$name];
+				if(isset($propDef['annotations']['Required'])) $options['required']=true;
+			}
+		}
+		
 		switch($style){
 			/*case 'checkbox':
 				$class='checkboxes';()

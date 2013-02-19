@@ -229,9 +229,8 @@ form div.text.invalid input,
 form div.text.invalid textarea,
 form input.ht5ifv-show-invalid, form textarea.ht5ifv-show-invalid,
 form div.input input.ht5ifv-show-invalid, form div.input textarea.ht5ifv-show-invalid,
-input.validation-invalid, textarea.validation-invalid{
+input.validation-invalid, textarea.validation-invalid, select.validation-invalid{
 	border:1px solid #F33;
-	color:#000;
 	box-shadow:0 0 1.5px 1px #f1cccc;
 }
 form input.ht5ifv-show-valid, form textarea.ht5ifv-show-valid,

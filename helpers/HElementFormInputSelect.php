@@ -9,6 +9,14 @@ class HElementFormInputSelect extends HElementFormContainable{
 		$this->list=$list;
 		$this->selected=$selected;
 		
+		
+		if($this->form->modelName !== null){
+			$modelName=$this->form->modelName;
+			if(isset($modelName::$__PROP_DEF[$name])){
+				$propDef=$modelName::$__PROP_DEF[$name];
+				if(isset($propDef['annotations']['Required'])) $this->attributes['required']=true;
+			}
+		}
 		$this->_setAttrId();
 	}
 	
