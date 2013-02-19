@@ -81,6 +81,8 @@ span.right_val{
 }
 
 li a img{vertical-align:bottom}
+img.center{display:block;margin:0 auto;}
+img.floatL + h2,img.floatL + h3{clear:none;}
 table img,img.icon,span.icon,.vaMiddle,.row .vaMiddle{vertical-align:middle}
 span.img,span.icon{display:block;display:inline-block}
 .iconWrap{

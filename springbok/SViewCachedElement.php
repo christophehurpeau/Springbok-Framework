@@ -28,8 +28,7 @@ class SViewCachedElement extends SViewElement{
 			$this->_file=UFile::open($this->path.'view','rb');
 		}catch(ErrorException $e){
 			parent::__construct($vars);
-			$this->generateAll();
-			$this->_file=UFile::open($this->path.'view','rb');
+			$this->generateAll(false);
 		}
 		$this->_file->lockShared();
 		
@@ -40,19 +39,18 @@ class SViewCachedElement extends SViewElement{
 			$this->_file->close();
 		}
 	}
-	public function exists(){ return true; }
-	public function generateAll(){
+	public function exists(){ return file_exists($this->path.'view'); }
+	public function generateAll($close=true){
 		try{
 			include_once CORE.'mvc/views/View.php';
 			$this->_file=UFile::open($this->path.'view','w');
 			$this->_file->lockExclusive();
 			foreach(static::$views as $view) $this->write($view,parent::render($view));
 			$this->_file->unlock();
-			$this->_file->close();
+			if($close===true) $this->_file->close();
 		}catch(Exception $e){
 			/* DEV */ throw $e; /* /DEV */
-			foreach(static::$views as $view)
-				if(file_exists($this->path.$view)) UFile::rm($this->path.$view);
+			foreach(static::$views as $view) UFile::rm($this->path.$view);
 		}
 	}
 	

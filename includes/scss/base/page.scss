@@ -274,7 +274,7 @@ $BreadcrumbsColor:false !default;
 			position:absolute;
 			left:2px; right:2px; top:0; bottom:0;
 			@if $FixedVariableMargin{ margin:3px; }
-			overflow: auto; overflow-x: hidden;
+			overflow: auto;
 		}@else{
 			overflow: auto; overflow-x: hidden; /* nouveau contexte => pour les clear à l'interieur */
 			position:relative;

@@ -53,25 +53,30 @@ class QTable extends QFindAll{
 							&& empty($modelName::$__PROP_DEF[$rel['foreignKey']]['annotations']['Enum'])) $belongsToFields[$rel['foreignKey']]=$relKey;}
 			}
 			foreach($belongsToFields as $field=>$relKey){
+				//if(!isset($belongsToFields[$field])) continue;
 				$belongsToRel[$field]=$modelName::$_relations[$relKey];
 				$relModelName=$belongsToRel[$field]['modelName'];
 				if($relModelName::$__cacheable) $belongsToFields[$field]=$relModelName::findCachedListName();
 				elseif(is_array($this->autoRelations) && isset($this->autoRelations[$field])){
-					$queryOptions=array();
-					if($this->autoRelations[$field]!==true){
-						$relModelName=$this->autoRelations[$field];
-						if(is_array($relModelName)){ $queryOptions=$relModelName; $relModelName=$relModelName[0]; }
+					if($this->autoRelations[$field]!==false){
+						$queryOptions=array();
+						if($this->autoRelations[$field]!==true){
+							$relModelName=$this->autoRelations[$field];
+							if(is_array($relModelName)){ $queryOptions=$relModelName; $relModelName=$relModelName[0]; }
+						}
+						$query=new QFindList($relModelName);
+						if(!empty($queryOptions)){
+							if(!empty($queryOptions['with'])) $query->setAllWith($queryOptions['with']);
+							if(!empty($queryOptions['where'])) $query->where($queryOptions['where']);
+							if(!empty($queryOptions['orderBy'])) $query->orderBy($queryOptions['orderBy']);
+						}
+						$query->setFields(array($relModelName::_getPkName(),$relModelName::$__displayField));
+						if($this->addInTable===false) $query->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
+						$belongsToFields[$field]=$query->execute();
 					}
-					$query=new QFindList($relModelName);
-					if(!empty($queryOptions)){
-						if(!empty($queryOptions['with'])) $query->setAllWith($queryOptions['with']);
-						if(!empty($queryOptions['where'])) $query->where($queryOptions['where']);
-						if(!empty($queryOptions['orderBy'])) $query->orderBy($queryOptions['orderBy']);
-					}
-					$query->setFields(array($relModelName::_getPkName(),$relModelName::$__displayField));
-					if($this->addInTable===false) $query->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
-					$belongsToFields[$field]=$query->execute();
-				}else $this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+				}else{
+					$this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+				}
 			}
 		}
 		
