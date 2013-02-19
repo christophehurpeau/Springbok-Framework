@@ -109,21 +109,21 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 		e.preventDefault();
 		var imgLoading=S.imgLoading(),t=$(this).sHide().after(imgLoading),val=select&&select.val(),action,data={},onAddCurrent,
 			onAdd_current=function(d,objectResponse){
-				onAdd(select,action,data,d,val,objectResponse); input.val('');
+				if(d){ onAdd(select,action,data,d,val,objectResponse); input.val(''); }
 				imgLoading.remove(); t.sShow();
 			};
 		if(!val){
 			if(!options.allowNew){ alert(i18nc['validation.required']); return false; }
 			action='create';
-			data={val:input.val()};
-			onAddCurrent=function(d){ if(d==='1') onAdd_current(d); else if(S.isObj(d) && d.ok) onAdd_current('1',d); };
+			data={val:input.val()};//TODO onAddCurrent create et add inversé ?
+			onAddCurrent=function(d){ if($.isNumeric(d)) onAdd_current(d); else if(S.isObj(d) && d.ok) onAdd_current('1',d); else onAdd_current(false) };
 			if(S.isFunc(options.allowNew)){
 				options.allowNew.call(this,data.val,onAddCurrent,input,url,options);
 				return false;
 			}
 		}else{
 			action='add/'+val;
-			onAddCurrent=function(d){ if($.isNumeric(d)) onAdd_current(d); else if(S.isObj(d) && d.id) onAdd_current(d.id,d) };
+			onAddCurrent=function(d){ if($.isNumeric(d)) onAdd_current(d); else if(S.isObj(d) && d.id) onAdd_current(d.id,d); else onAdd_current(false) };
 			if(options.add){
 				options.add.call(this,val,onAddCurrent,input,url,options);
 				return false;
