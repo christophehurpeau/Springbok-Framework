@@ -1,9 +1,15 @@
 <?php
+mb_internal_encoding('utf-8');
+/*ini_set('mbstring.language', 'UTF-8');
+ini_set('mbstring.internal_encoding', 'UTF-8');
+ini_set('mbstring.http_input', 'UTF-8');
+ini_set('mbstring.http_output', 'UTF-8');*/
+
 class UString{
 	public static function checkAllLowerOrAllUpperCase($string){
 		if(!empty($string)){
-			if($string===strtolower($string)) $string=ucfirst($string);
-			elseif($string===strtoupper($string)) $string=ucfirst(strtolower($string));
+			if($string===self::low($string)) $string=self::ucFirst($string);
+			elseif($string===self::up($string)) $string=self::ucFirst(self::low($string));
 			// http://stackoverflow.com/questions/1649015/check-if-at-least-75-of-a-string-is-uppercase
 			/*else{
 				preg_replace('/\p{Lu}/', '', $str,-1,$countUppercaseLetters);
@@ -16,21 +22,25 @@ class UString{
 	}
 	
 	public static function normalize($string){
-		return strtolower(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',
+		return self::low(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',
 																HString::transliterate($string))));
 	}
 	
 	public static function callbackWords($string,$callback){
-		return preg_replace_callback("/(\w\'|(?:[A-Z]\.){2,}|[A-Za-z0-9ÉÈÊËÂÄÔÖéèêëâäôöçïî]+(\.|\b))/",
+		/* http://www.php.net/manual/en/regexp.reference.unicode.php */
+		return preg_replace_callback("/(\w\'|(?:[A-Z]\.){2,}|\p{L}+(\.|\b))/u", //u=unicode != U
 					function($m) use($callback){ $dot=empty($m[2])?'':'.';
 						return $callback($dot===''?$m[1]:substr($m[1],0,-1),$dot); },$string);
 	}
-	
-	
 	
 	public static function firstLine($string){
 		$line=strpos($string,"\n");
 		if($line!==false) $line=substr($string,0,$line);
 		return $line;
 	}
+	
+	
+	public static function low($str){ return mb_strtolower($str); }
+	public static function up($str){ return mb_strtoupper($str); }
+	public static function ucFirst($str){ return mb_strtoupper(mb_substr($str,0,1)) . mb_substr($str,1); }
 }
