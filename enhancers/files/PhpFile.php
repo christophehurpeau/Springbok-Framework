@@ -57,47 +57,7 @@ class PhpFile extends EnhancerFile{
 		$srcContent=$this->_srcContent;
 		
 		if(!$this->isCore()){
-			$tokens=token_get_all($srcContent);
-			
-			/* http://stackoverflow.com/questions/9895502/easiest-way-to-detect-remove-unused-use-statements-from-php-codebase */
-			$useStatements = array();
-			$level = 0; $useNumber=0;
-			
-			foreach($tokens as $key => $token) {
-				if(is_string($token)){
-					if ($token === '{') $level++;
-					elseif ($token === '}') $level--;
-				}elseif($token[0] == T_USE && $level === 1){
-					$i = $key; $useStatements[$useNumber] = '';
-					$stopChar=';';
-					
-					do{
-						++$i;
-						if(is_array($tokens[$i])){
-							list($tn,$string)=$tokens[$i];
-							if($tn == T_COMMENT || $tn == T_DOC_COMMENT) continue;
-						}else $string=$tokens[$i];
-						if ($string == '(') {
-							unset($useStatements[$useNumber]);
-							goto endTokenUse;
-						}elseif($string==='{') $stopChar='}';
-						//elseif($char==='}') $stopChar=';';
-						
-						$useStatements[$useNumber] .= $string;
-					}while(/*$stopChar===true || */$string != $stopChar);
-					$useNumber++;
-				}
-				endTokenUse:
-			}
-			
-			$allUses = array();
-			
-			foreach($useStatements as $fullStmt) {
-				$fullStmt = rtrim($fullStmt, ';');
-				$fullStmt = explode(',', $fullStmt);
-				foreach($fullStmt as $singleStmt)
-					$this->_traits[] = array_map('trim',explode('{',$singleStmt,2));
-			}
+			$this->findAllTraits($srcContent);
 			
 			if(!empty($this->_traits)){
 				foreach($this->_traits as &$trait){
@@ -105,11 +65,62 @@ class PhpFile extends EnhancerFile{
 					if(!file_exists($path)) throw new Exception('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists ('.$path.')');
 					
 					$srcContent.=$trait['content']=file_get_contents($path);
+					$srcContent.=$trait['content_build']=UFile::getContents(substr($path,0,-4).'_build.php');
 				}
 			}
 		}
 		
 		return $this->md5=(md5($srcContent).$this->enhanced->md5EnhanceConfig());
+	}
+
+	public function findAllTraits($srcContent,$check=false){
+		if($check){ $oldTraits=$this->_traits; $this->_traits=array(); }
+		$tokens=token_get_all($this->_srcContent);
+			
+		/* http://stackoverflow.com/questions/9895502/easiest-way-to-detect-remove-unused-use-statements-from-php-codebase */
+		$useStatements = array();
+		$level = 0; $useNumber=0;
+		
+		foreach($tokens as $key => $token) {
+			if(is_string($token)){
+				if ($token === '{') $level++;
+				elseif ($token === '}') $level--;
+			}elseif($token[0] == T_USE && $level === 1){
+				$i = $key; $useStatements[$useNumber] = '';
+				$stopChar=';';
+				
+				do{
+					++$i;
+					if(is_array($tokens[$i])){
+						list($tn,$string)=$tokens[$i];
+						if($tn == T_COMMENT || $tn == T_DOC_COMMENT) continue;
+					}else $string=$tokens[$i];
+					if ($string == '(') {
+						unset($useStatements[$useNumber]);
+						goto endTokenUse;
+					}elseif($string==='{') $stopChar='}';
+					//elseif($char==='}') $stopChar=';';
+					
+					$useStatements[$useNumber] .= $string;
+				}while(/*$stopChar===true || */$string != $stopChar);
+				$useNumber++;
+			}
+			endTokenUse:
+		}
+		
+		foreach($useStatements as $fullStmt) {
+			$fullStmt = rtrim($fullStmt, ';');
+			$fullStmt = explode(',', $fullStmt);
+			foreach($fullStmt as $singleStmt){
+				$trait=array_map('trim',explode('{',$singleStmt,2));
+				$this->_traits[$trait[0]] = $trait;
+				if($check){
+					foreach(array('path','content','content_build') as $key)
+						$this->_traits[$trait[0]][$key]=$oldTraits[$trait[0]][$key];
+				}
+			}
+		}
+		
 	}
 
 	protected function findTraitPath($traitName){ return Springbok::findPath($traitName); }
@@ -129,6 +140,9 @@ class PhpFile extends EnhancerFile{
 			$this->_devContent=$this->_prodContent=false;
 			return;
 		}
+		if(!$this->isCore()) $this->findAllTraits($this->_srcContent,true);
+		
+		
 		$tokens=token_get_all($this->_srcContent); $isPhp=false; $phpContent=$finalDevContent=$finalProdContent=$finalContent=''; 
 		foreach($tokens as $token){
 			if(is_array($token)){

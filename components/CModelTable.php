@@ -123,7 +123,7 @@ class CModelTable extends CModelTableAbstract{
 		if($pagination->hasPager()){
 			if($this->hasForm()){
 				$idPage='page'.$formId;
-				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
+				echo '<input id="'.$idPage.'" type="hidden" name="page" value="'.$pagination->getPage().'"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
 				$hrefQuery='';
 				if(!empty($_POST)){

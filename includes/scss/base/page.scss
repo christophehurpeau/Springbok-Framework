@@ -198,9 +198,9 @@ $BreadcrumbsColor:false !default;
 	@if $BreadcrumbsColor==false{ color:$InteractionCurrentColor; }
 }
 @if $PAGE_FIXED{
-	::-webkit-scrollbar{ width: 8px; }
-	::-webkit-scrollbar-track{ background:#555; border-radius:4px; -webkit-box-shadow:inset 0 0 2px #999; }
-	::-webkit-scrollbar-thumb{ background:#000; border-radius:4px; -webkit-box-shadow:inset 0 0 3px #666; }
+	::-webkit-scrollbar{ width:6px; height:8px ; }
+	::-webkit-scrollbar-track{ background:#777; border-radius:2px; -webkit-box-shadow:0 0 1px #000, inset 0 0 1px #CCC; }
+	::-webkit-scrollbar-thumb{ background:#000; border-radius:2px; -webkit-box-shadow:inset 0 0 2px #666; }
 }
 
 #page{
@@ -283,11 +283,13 @@ $BreadcrumbsColor:false !default;
 		/* IE <= 7 */
 		*float:left;
 		
-			@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
-			@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
-			@include background($FixedVariableBackground);
-			@if $FixedVariableColor{ color:$FixedVariableColor; }
-			@if $FixedVariableBorder{ border:$FixedVariableBorder; }
+		z-index:1;
+		
+		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
+		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
+		@include background($FixedVariableBackground);
+		@if $FixedVariableColor{ color:$FixedVariableColor; }
+		@if $FixedVariableBorder{ border:$FixedVariableBorder; }
 	}
 	@if $PAGE_FIXED{
 		.col.fixed{
