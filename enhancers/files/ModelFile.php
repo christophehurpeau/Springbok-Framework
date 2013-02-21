@@ -121,7 +121,6 @@ class ModelFile extends PhpFile{
 						$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL),'Index'=>false);
 					}
 					
-					
 					if(!empty($this->_traits)){
 						foreach($this->_traits as $trait){
 							$loaded=true; $pathBuild=substr($trait['path'],0,-4).'_build.php';
@@ -134,26 +133,16 @@ class ModelFile extends PhpFile{
 					
 					// check
 					$traitsClassNames=empty($this->_traits) ? array() : array_map(function($t){return $t[0];},$this->_traits);
-					foreach(['Parent'=>'BParent','ParentBigintId'=>'BParent','Child'=>'BChild'] as $annotation=>$traitName){
+					foreach(['Parent'=>'BParent','ParentBigintId'=>'BParent','Child'=>'BChild','Slug'=>'BSlug','Seo'=>'BSeo'] as $annotation=>$traitName){
 						if(isset($annotations[$annotation]) && !in_array($traitName,$traitsClassNames))
 							throw new Exception($modelFile->_className.' need to use trait "'.$traitName.'"');
 					}
-					
-					if(isset($annotations['Seo'])){
-						$annotations['Slug']=true;
-						$modelFile->_fields['meta_title']=array( 'SqlType'=>array('varchar(100)'), 'Null'=>false );
-						$modelFile->_fields['meta_descr']=array( 'SqlType'=>array('varchar(200)'), 'Null'=>false, 'Text'=>false );
-						$modelFile->_fields['meta_keywords']=array( 'SqlType'=>array('text'), 'Null'=>false, 'MaxLength'=>array(1000) );
-					}
-	
-					if(isset($annotations['Slug']) && !isset($modelFile->_fields['slug']))
-						$modelFile->_fields['slug']=array( 'SqlType'=>array($modelFile->_fields[isset($annotations['DisplayField'][0][0])?$annotations['DisplayField'][0][0]:'name']['SqlType'][0]), 'NotNull'=>false, 'MinLenth'=>array(3));
 					
 					if(isset($annotations['LogChanges'])) throw new Exception('LogChanges : Use trait "BLogChanges" now.');
 					
 					
 					
-					$eventsArray=empty($this->_traits) ? array() : array_map(function($t){ return $t['content']; },$this->_traits);
+					$eventsArray=empty($this->_traits) ? array() : array_map(function($t){ return $t['content_build']; },$this->_traits);
 					$eventsArray[]=$content;
 					
 					foreach(['beforeSave'=>'','beforeInsert'=>'','beforeUpdate'=>'','beforeDelete'=>'',
