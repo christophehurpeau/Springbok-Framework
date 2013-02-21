@@ -121,21 +121,25 @@ class CModelTable extends CModelTableAbstract{
 		//if($this->isFiltersAllowed()) echo '<div class="filterHelp">'.$form->submit(_tC('Filter')).' (<i>'._tC('filter.help').'</i>)</div>';
 		
 		if($pagination->hasPager()){
-			if($this->isFiltersAllowed()){
+			if($this->hasForm()){
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
 			}else{
 				$hrefQuery='';
-				if(!empty($_POST)) $hrefQuery=http_build_query($_POST,'','&').'&';
+				if(!empty($_POST)){
+					$post=$_POST;
+					unset($post['page'],$post['add']);
+					$hrefQuery.=http_build_query($_POST,'','&').'&';
+				}
 				if(!empty($_GET)){
 					$get=$_GET;
 					unset($get['page'],$get['ajax'],$get['add']);
-					if(!empty($get)) $hrefQuery=http_build_query($get,'','&').'&';
+					if(!empty($get)) $hrefQuery.=http_build_query($get,'','&').'&';
 				}
 				$href=HHtml::urlEscape(array(true,CRoute::getAll(),'?'=>$hrefQuery));
 			}
 			echo $pager='<div class="pager">'.HPagination::createPager($pagination->getPage(),$pagination->getTotalPages(),
-				$this->isFiltersAllowed()?function($page){
+				$this->hasForm()?function($page){
 					return ' href="#" onclick="return changePage('.$page.');"';
 				}:function($page) use($href){
 					return ' href="'.$href.'page='.$page.'"';
