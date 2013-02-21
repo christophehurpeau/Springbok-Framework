@@ -101,9 +101,24 @@ abstract class DBSchema{
 			
 		}
 		// Remove cols
-		foreach($a1=array_diff_key($icolumns,$modelInfos['columns']) as $name=>$col){
-			$this->log('Remove col : '.$name);
-			if($this->shouldApply()) $this->removeColumn($name);
+		$a1=array_diff_key($icolumns,$modelInfos['columns']);
+		if(!empty($a1)){
+			$pks=$this->getPrimaryKeys();
+			foreach($a1 as $name=>$col){
+				$this->log('Remove col : '.$name);
+				if($this->shouldApply()){
+					if(in_array($name,$pks)){
+						$currentConstraints=$this->getForeignKeys();
+						foreach($currentConstraints as $fk)
+							$this->removeForeignKey($fk);
+						$allIndexes=$this->getIndexes();
+						foreach($allIndexes as $indexes)
+							foreach($indexes as $iName=>$iFields) $this->removeIndex($iName);
+						$this->removePrimaryKey();
+					}
+					$this->removeColumn($name);
+				}
+			}
 		}
 		// Change cols
 		$a3=array();
