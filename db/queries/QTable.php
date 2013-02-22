@@ -70,7 +70,9 @@ class QTable extends QFindAll{
 							if(!empty($queryOptions['where'])) $query->where($queryOptions['where']);
 							if(!empty($queryOptions['orderBy'])) $query->orderBy($queryOptions['orderBy']);
 						}
-						$query->setFields(array($relModelName::_getPkName(),$relModelName::$__displayField));
+						$fields=array($relModelName::_getPkName()); $displayField=$relModelName::$__displayField;
+						is_array($displayField) ? $fields['v']=$displayField : $fields[]=$displayField;
+						$query->setFields($fields);
 						if($this->addInTable===false) $query->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
 						$belongsToFields[$field]=$query->execute();
 					}
