@@ -77,7 +77,9 @@ class QTable extends QFindAll{
 						$belongsToFields[$field]=$query->execute();
 					}
 				}else{
-					$this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+					$displayField=$relModelName::$__displayField;
+					$this->with($relKey,array('fields'=>is_array($displayField) ? array($field=>$relModelName::$__displayField)
+										: array($relModelName::$__displayField=>$field) ,'fieldsInModel'=>true));
 				}
 			}
 		}

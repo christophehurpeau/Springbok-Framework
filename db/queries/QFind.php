@@ -307,8 +307,8 @@ abstract class QFind extends QSelect{
 								$_a=$field; $field=$alias; $alias=$_a; $isArrayField=true;
 								$sql.='CONCAT(';
 								foreach($field as $concatField)
-									$sql.= is_numeric($concatField) || $concatField[0]==='"' ? $concatField : $fieldPrefix.$this->_db->formatField($concatField);
-								$sql.=')';
+									$sql.= (is_numeric($concatField) || $concatField[0]==='"' ? $concatField : $join['alias'].'.'.$this->_db->formatField($concatField)) .',';
+								$sql=substr($sql,0,-1).')';
 							}elseif($fpos=strpos($field,'(')){
 								$sql.=$field;
 							}else{
