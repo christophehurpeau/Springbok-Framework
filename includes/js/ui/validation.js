@@ -158,7 +158,7 @@ S.ready(function(){
 				var elt=$(this);
 				if(elt.is('input[type="radio"]')){
 					var name=elt.attr('name');
-					if(radioNames.sHas(name)) return;
+					if(UArray.has(radioNames,name)) return;
 					radioNames.push(name);
 				}
 				if(!t.checkElement(elt,error==undefined)) error=true;
@@ -202,7 +202,7 @@ S.ready(function(){
 		checkFailed:function(elt,error,checkAllAndFirstError){
 			elt.removeClass('validation-valid').addClass('validation-invalid');
 			var ib=elt.data('sValidationMessage'),attrs;
-			if(S.isArray(error)) error=i18nc['validation.'+error[0]].sbVFormat(S.aSlice1(error));
+			if(S.isArray(error)) error=i18nc['validation.'+error[0]].sbVFormat(UArray.slice1(error));
 			else if(error!=null){
 				error=i18nc['validation.'+error];
 				/* DEV */ if(!error) S.error('Unknown validation translation error: '+error); /* /DEV */

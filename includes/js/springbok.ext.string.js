@@ -1,14 +1,4 @@
 S.extProto(String,{
-	sbLcFirst:function(){return this.charAt(0).toLowerCase()+this.substr(1);},
-	sbUcFirst:function(){return this.charAt(0).toUpperCase()+this.substr(1);},
-	sbStartsWith:function(str){return this.indexOf(str)===0;},
-	sbEndsWith:function(str){return this.match(RegExp.sEscape(str)+"$")==str;},
-	sHas:function(str){return this.indexOf(str)!==-1},
-	sbTrim:function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp('^'+pattern+'|'+pattern+'$','g'),'');},
-	sbLtrim:function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp('^'+pattern,'g'),'');},
-	sbRtrim:function(pattern){if(pattern===undefined) pattern='\\s+'; return this.replace(new RegExp(pattern+'$','g'),'');},
-	sbRepeat:function(m){return new Array(m + 1).join(this)},
-	sbIsEmpty:function(){return /^\s*$/.test(this)},
 	sbRemoveSpecialChars:function(){
 		var t=this;
 		[
@@ -31,9 +21,9 @@ S.extProto(String,{
 			[/Ŵ/g,'W'],[/ŵ/g,'w'],
 			[/Ź|Ż|Ž/g,'Z'],[/ź|ż|ž/g,'z'],
 			[/Æ|Ǽ/g,'AE'],[/ß/g,'ss'],[/Ĳ/g,'IJ'],[/ĳ/g,'ij'],[/Œ/g,'OE'],[/ƒ/g,'f'],[/&/g,'et'],[/þ/,'th'],[/Þ/,'TH']
-		].sEach(function(i,pattern){
+		].forEach(function(pattern){
 			t=t.replace(pattern[0],pattern[1]);
-		});
+		});//TODO use map here
 		return t;
 	},
 	sbSlug:function(replacement){
@@ -57,7 +47,7 @@ S.extProto(String,{
 	    	blockTags='article,aside,blockquote,br,dd,div,dl,dt,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,li,menu,nav,ol,output,p,pre,section,table,tbody,textarea,tfoot,th,thead,tr,ul'.split(',');
 		return input.replace(commentsAndPhpTags, '').replace(tags,function($0,$1){
 			var tag=$1.toLowerCase();
-			return allowed.indexOf('<' + tag + '>') > -1 ? $0 : blockTags.sHas(tag) ? "\n":'';
+			return allowed.indexOf('<' + tag + '>') > -1 ? $0 : UArray.has(blockTags,tag) ? "\n":'';
 		}).replace(/\n+\s*\n*/,"\n");
 	},
 	sbWordsCount:function(){

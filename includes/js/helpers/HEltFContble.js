@@ -33,7 +33,7 @@ S.HEltFContble=S.extClass(S.HElt,{
 		if(value != null) this.elt.val(value);
 	},
 	_setAttrId:function(){
-		this.id(this._form._modelName != null ? this._form._modelName+this._name.sbUcFirst() : this._name);
+		this.id(this._form._modelName != null ? this._form._modelName+UString.ucFirst(this._name) : this._name);
 	},
 	_setAttrName:function(){
 		this.attr('name',this._attrName());

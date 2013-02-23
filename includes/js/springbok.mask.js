@@ -23,7 +23,7 @@ includeCore('springbok.base');
 		mask:false,
 		
 		load:function(options){
-			options=options?S.extObj(this.options,options):this.options;
+			options=options?UObj.extend(this.options,options):this.options;
 			
 			var mask=$("#"+options.maskId),size=viewport();
 			if(mask.length===0){

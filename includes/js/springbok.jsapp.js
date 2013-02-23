@@ -98,7 +98,7 @@ includeCore('springbok.ajax');
 includeCore('springbok.storage');
 
 App.load=S.ajax.load=function(url){
-	if(url.sbStartsWith(basedir)) url = url.substr(basedir.length);
+	if(url.startsWith(basedir)) url = url.substr(basedir.length);
 	try{
 		var route=S.router.find(url);
 		if(!route) notFound();

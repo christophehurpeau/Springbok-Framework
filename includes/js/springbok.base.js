@@ -28,7 +28,11 @@ if(!Object.keys){//http://kangax.github.com/es5-compat-table/
 
 
 
-var arraySliceFunction=Array.prototype.slice,$document=$(document);
+var global=window,arraySliceFunction=Array.prototype.slice,$document=$(document);
+
+includeCoreUtils('UObj');
+includeCoreUtils('UArray');
+includeCoreUtils('UString');
 
 window.S={
 	ready:function(callback){ $document.ready(callback); },
@@ -128,32 +132,6 @@ window.S={
 	isObj:function(varName){ return typeof(varName)==='object' },
 	isFunc:function(varName){ return typeof(varName)==='function' },
 	
-	extObj:function(target,object){
-		if(object)
-			for(var i in object)
-				target[i]=object[i];
-		return target;
-	},
-	oUnion:function(target,object){
-		if(object)
-			for(var i in object)
-				if(target[i]===undefined) target[i]=object[i];
-		return target;
-	},
-	oClone:function(o){
-		return S.extObj({},o);
-	},
-	
-	
-	clone:function(object){
-		// clone like _.clone : Shallow copy
-		//return $.extend({},object);
-		return S.extObj({},object);
-	},
-	deepClone:function(object){
-		return $.extend(true,{},object);
-	},
-	
 	
 	/* Inheritance & Classes */
 	
@@ -198,7 +176,7 @@ window.S={
 		S.extChild(child,parent,protoProps);
 		
 		// Add static properties to the constructor function, if supplied.
-		S.extObj(child,classProps);
+		UObj.extend(child,classProps);
 		
 		child.prototype.self = child;
 		//child.prototype.super_ = child.super_;
@@ -215,7 +193,7 @@ window.S={
 	},
 	extClasses:function(parents,protoProps,classProps){
 		var parent=parents[0];
-		for(var i=1,l=parents.length;i<l;i++) S.oUnion(protoProps,parents[i].prototype);
+		for(var i=1,l=parents.length;i<l;i++) UObj.union(protoProps,parents[i].prototype);
 		return S.extClass(parent,protoProps,classProps);
 	},
 	
@@ -234,33 +212,6 @@ window.S={
 				objectOrArray[i]=callback(v,i);
 			});
 		return objectOrArray;
-	},
-	oForEach:function(o,callback){
-		for(var keys=Object.keys(o),length=keys.length,i=0;i<length;i++){
-			var k=keys[i];
-			callback(k,o[k]);
-		}
-	},
-	oImplode:function(o,glue,callback){
-		if(S.isFunc(glue)){ callback=glue; glue=''; }
-		if(!callback) callback=function(k,v){ return v };
-		var res='',keys=Object.keys(o),length=keys.length,i=0;
-		for(;i<length;i++){
-			var k=keys[i];
-			if(i!==0) res+=glue;
-			res+=callback(k,o[k]);
-		}
-		return res;
-	},
-	
-	/* ARRAY */
-	
-	ASlice:Array.prototype.slice,
-	aSlice1:function(a){ return S.ASlice.call(a,1); },
-	aHasAmong:function(a,searchElements,i){
-		for(var j=0, l=searchElements.length; j<l ; j++)
-			if(a.indexOf(searchElements[j],i) !== -1) return true;
-		return false;
 	},
 	
 	/* STRING */
@@ -339,7 +290,6 @@ window.S={
 /* DEV */includeCore('libs/stacktrace');/* /DEV */
 
 includeCore('springbok.ext.string');
-includeCore('springbok.ext.arrays');
 
 RegExp.sEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
@@ -359,7 +309,7 @@ $.cleanData=function(elems){
 	return jqueryCleanData.apply(this,arguments);
 }
 
-S.extObj($.fn,{
+UObj.extend($.fn,{
 	/* https://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js */
 	delayedBind:function(delay,eventType,eventData,handler,throttle){
 		if($.isFunction(eventData)){

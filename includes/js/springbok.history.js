@@ -7,7 +7,7 @@
 		start:function(){
 			if (historyStarted) throw new Error("history has already been started");
 			historyStarted = true;
-			this.options=S.extObj({root:basedir.substr(1)},this.options);
+			this.options=UObj.extend({root:basedir.substr(1)},this.options);
 			this._wantsPushState= !!this.options.pushState;
 			this._hasPushState= !!(this.options.pushState && window.history && window.history.pushState);
 			var fragment=this.getFragment(),docMode=document.documentMode,oldIE=(isIE.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
@@ -58,8 +58,8 @@
 					///if(fragment.indexOf(this.options.root) == 0) fragment = fragment.substr(this.options.root.length);
 				}else fragment=this.getHash();
 			}
-			if(fragment.sbStartsWith(basedir)) fragment=fragment.substr(basedir.length);
-			else if(fragment.sbStartsWith(this.options.root)) fragment=fragment.substr(this.options.root.length);
+			if(fragment.startsWith(basedir)) fragment=fragment.substr(basedir.length);
+			else if(fragment.startsWith(this.options.root)) fragment=fragment.substr(this.options.root.length);
 			return fragment.replace(routeStripper,'');
 		},
 		
@@ -88,8 +88,8 @@
 			if(this.fragment == frag) return;
 			if(window._gaq) _gaq.push(['_trackPageview',frag]);
 			
-			if(frag.sbStartsWith(basedir)) frag=frag.substr(basedir.length);
-			else if(frag.sbStartsWith(this.options.root)) frag=frag.substr(this.options.root.length);
+			if(frag.startsWith(basedir)) frag=frag.substr(basedir.length);
+			else if(frag.startsWith(this.options.root)) frag=frag.substr(this.options.root.length);
 			if(this.fragment == frag) return;
 			
 			this.fragment=frag;

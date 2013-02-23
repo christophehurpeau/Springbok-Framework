@@ -61,7 +61,7 @@ S.ui.Autocomplete=S.ui.InputSearch.extend({
 	}
 });
 
-S.oUnion(S.ui.Autocomplete.prototype,S.ui.InputBox._inheritsproto_);
+UObj.union(S.ui.Autocomplete.prototype,S.ui.InputBox._inheritsproto_);
 
 $.fn.sAutocomplete=function(url,options,displayResult){ return new S.ui.Autocomplete(this,url,options,displayResult); };
 if(includedCore('helpers/HEltFInput')) S.HEltFInput.prototype.autocomplete=function(url,options,displayResult){

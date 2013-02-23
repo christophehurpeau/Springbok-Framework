@@ -5,7 +5,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 	navigate:true, minLength:3, dataType:'json',delay:180,
 	ctor:function(input,url,destContent,options){
 		S.ui.InputFollow.call(this,input);
-		S.extObj(this,options);
+		UObj.extend(this,options);
 		this.div=destContent;
 		this.display=this.display||S.ui.InputSearch.defaultDisplayList;
 		
@@ -31,7 +31,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					if(S.isObject(list)){
 						this.oKey=url.key;
 						list=[]; listValues=[];
-						S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
+						UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
 						filter=function(matcher){ return !matcher ? list : list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
 					}
 				}

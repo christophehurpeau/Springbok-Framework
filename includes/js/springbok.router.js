@@ -1,6 +1,6 @@
 (function(){
 	S.Route=function(attrs){
-		S.extObj(this,attrs);
+		UObj.extend(this,attrs);
 	};
 	S.Route.prototype={
 		
@@ -18,8 +18,8 @@
 				route['en']=url;
 				$.each(route,function(lang,routeLang){
 					var paramsNames=[],specialEnd,specialEnd2,routeLangPreg;
-					if(specialEnd=routeLang.sbEndsWith('/*')) routeLangPreg=routeLang.substr(0,-2);
-					else if(specialEnd2=routeLang.sbEndsWith('/*)?')) routeLangPreg=routeLang.substr(0,routeLang.length-4)+routeLang.substr(routeLang.length-2);
+					if(specialEnd=routeLang.endsWith('/*')) routeLangPreg=routeLang.substr(0,-2);
+					else if(specialEnd2=routeLang.endsWith('/*)?')) routeLangPreg=routeLang.substr(0,routeLang.length-4)+routeLang.substr(routeLang.length-2);
 					else routeLangPreg=routeLang;
 					
 					routeLangPreg=routeLangPreg.replace('/','\/').replace('-','\-').replace('*','(.*)').replace('(','(?:');
@@ -30,10 +30,10 @@
 						if(p1) return str;
 						paramsNames.push(p2);
 						if(paramsDef && paramsDef[p2]) return paramsDef[p2]==='id' ? '([0-9]+)' : '('+paramsDef[p2]+')';
-						if(['id'].sHas(p2)) return '([0-9]+)';
+						if(UArray.has(['id'],p2)) return '([0-9]+)';
 						return '([^\/]+)';
 					}) + (routes[url].ext ? (routes[url].ext==='html' ? '(?:\.html)?':'\.'+routes[url].ext) : '')+"$"),
-						routeLang.replace(/(\:[a-zA-Z_]+)/g,'%s').replace(/[\?\(\)]/g,'').replace('/*','%s').sbRtrim()];
+						routeLang.replace(/(\:[a-zA-Z_]+)/g,'%s').replace(/[\?\(\)]/g,'').replace('/*','%s').trimRight()];
 					if(paramsNames) routes[url][':']=paramsNames;
 				});
 			});
@@ -52,7 +52,7 @@
 		},
 		
 		find:function(all){
-			all=this.all='/'+all.sbTrim('/');
+			all=this.all='/'+UString.trim(all,'/');
 			/* DEV */ console.log('router: find: "'+all+'"'); /* /DEV */
 			var t=this,route=false,lang=S.langs.get(),m;
 			$.each(routes,function(i,r){
@@ -65,12 +65,12 @@
 						m.shift(); // remove m[0];
 						var nbNamedParameters=r[':'].length,countMatches=m.length;
 						if(countMatches !== 0){
-							r[':'].sEach(function(k,v){ params[v]=m.shift(); });
+							r[':'].forEach(function(v,k){ params[v]=m.shift(); });
 						}
-						['controller','action'].sEach(function(k,v){
+						['controller','action'].forEach(function(v,k){
 							if(c_a[k]==='!'){
 								if(params[v]){
-									c_a[k]=t.untranslate(params[v]).sbUcFirst();
+									c_a[k]=UString.ucFirst(t.untranslate(params[v]));
 									delete params[v];
 								}else c_a[k]=t.DEFAULT[v];
 							}
@@ -100,7 +100,7 @@
 		* S.router.getArrayLink(['/:id-:slug',post.id,post.slug])
 		*/
 		getArrayLink:function(params){
-			var options=S.isObject(url.sLast()) ? url.pop() : {},
+			var options=S.isObject(UArray.last(url)) ? url.pop() : {},
 				plus=options['?'] ? '?'+options['?'] : '',
 				route=routes[params.shift()];
 			if(options.ext) plus+='.'+params.ext;
@@ -114,11 +114,11 @@
 		* S.html.url('/site/login')
 		*/
 		getStringLink:function(params){
-			var route=params.sbTrim('\/').split('/',3), controller=route[0], action=route[1] || this.DEFAULT_ACTION, params= route[2];
+			var route=UString.trim(params,'/').split('/',3), controller=route[0], action=route[1] || this.DEFAULT_ACTION, params= route[2];
 			route=routes['/:controller(/:action/*)?'];
 			var froute= action==this.DEFAULT_ACTION ?  '/'+ this.translate(controller) : 
 				route['en'][1].sbFormat(this.translate(controller),this.translate(action),params ? '/'+params : '');
-			return froute + (route.ext && !froute.sbEndsWith('.'+route.ext)?'.'+route.ext:'');
+			return froute + (route.ext && !froute.endsWith('.'+route.ext)?'.'+route.ext:'');
 		},
 		
 		translate:function(string){

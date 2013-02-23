@@ -28,11 +28,11 @@ S.menu={
 			links=options;
 			options={};
 		}
-		options=S.extObj({menuAttributes:{'class':type},lioptions:{},linkoptions:{},startsWith:false},options);
+		options=UObj.extend({menuAttributes:{'class':type},lioptions:{},linkoptions:{},startsWith:false},options);
 		var t=this,res=S.html.tag(this.tagName,options.menuAttributes),ul=this.tagName==='ul'?res:$('<ul/>').appendTo(res);
-		links.sEach(function(k,item){
+		links.forEach(function(item,k){
 			if(!item[0]){ ul.append(S.html.tag('li',{'class':'separator'},this.separator,1)); return; }
-			var linkOptions=S.extObj(options.linkoptions,item[2]);
+			var linkOptions=UObj.extend(options.linkoptions,item[2]);
 			
 			if(linkOptions.visible===false) return;
 			delete linkOptions.visible;

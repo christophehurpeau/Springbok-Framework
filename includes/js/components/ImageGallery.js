@@ -1,6 +1,5 @@
 includeCore('components/FileGallery');
 
-
 S.ImageGallery=function(to,albumLink,imageLink,onSelectImage,imageAttrs){
 	var t=this;
 	t.$=to;
@@ -37,7 +36,7 @@ S.ImageGallery=function(to,albumLink,imageLink,onSelectImage,imageAttrs){
 							albumsLength=albums.length;
 						albums.push(album);
 						t.sort();
-						var idxOf=albums.sHas(album);
+						var idxOf=albums.indexOf(album);
 						t.addAlbum(album,true,idxOf===albumsLength?false:idxOf);
 					});
 				});
@@ -84,10 +83,10 @@ S.ImageGallery=function(to,albumLink,imageLink,onSelectImage,imageAttrs){
 					imagesLength=images.length;
 				images.push(image);
 				t.sort();
-				var idxOf=images.sHas(image);
+				var idxOf=images.indexOf(image);
 				t.addImage(image,true,idxOf===imagesLength?false:idxOf);
 				if(t.selectedAlbum!==0)
-					t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children.sFindBy('id',t.selectedAlbum).images++;
+					UArray.findBy(t.albumsMap[t.albumsMap[t.selectedAlbum].parent].children,'id',t.selectedAlbum).images++;
 			}
 		}
 	});
@@ -106,7 +105,7 @@ S.ImageGallery.prototype={
 		$.fancybox.close();
 	},
 	selectAlbum:function(idAlbum){
-		if(idAlbum!==0 && this.albumsMap[this.selectedAlbum]['children'].sHas(idAlbum)!==-1) return false;
+		if(idAlbum!==0 && UArray.has(this.albumsMap[this.selectedAlbum]['children'],idAlbum)) return false;
 		if(this.albumsMap[idAlbum]===undefined)
 			this.albumsMap[idAlbum]=S.syncJson(this.albumLink+'/images',{id:idAlbum});
 		this.selectedAlbum=idAlbum;
@@ -114,11 +113,11 @@ S.ImageGallery.prototype={
 	},
 	sort:function(create){
 		var idAlbum=this.selectedAlbum;
-		this.albumsMap[idAlbum].images.sSortBy(this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
+		UArray.sortBy(this.albumsMap[idAlbum].images,this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
 		if(create) this.createListAlbums(this.albumsMap[idAlbum].children,this.albumsMap[idAlbum].images);
 	},
 	selectImage:function(idImage){
-		return this.onSelectImage(idImage,this.albumsMap[this.selectedAlbum].images.sFindBy('id',idImage));
+		return this.onSelectImage(idImage,UArray.findBy(this.albumsMap[this.selectedAlbum].images,'id',idImage));
 	},
 	createListAlbums:function(albums,images){
 		var t=this;

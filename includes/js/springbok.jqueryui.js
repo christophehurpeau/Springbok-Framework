@@ -102,7 +102,7 @@ $.widget( "ui.combobox", {
 });
 
 var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
-	url=url.sbRtrim('/')+'/'; options=options || {}; options.url=options.url || '';
+	url=UString.trimRight(url,'/')+'/'; options=options || {}; options.url=options.url || '';
 	var select=prepare(div,options), t, o, input=div.find('input');
 	
 	div.find('a.action.add').click(function(e){
@@ -147,7 +147,7 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 
 
 var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
-	url=url.sbRtrim('/')+'/'; options=options || {}; options.url=options.url || '';
+	url=UString.trimRight(url,'/')+'/'; options=options || {}; options.url=options.url || '';
 	
 	options.actions||(options.actions={});
 	options.actions['delete']=function(li,val){
@@ -176,7 +176,7 @@ var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
 		}/* DEV */else alert('already has this line !'); /* /DEV */
 	});
 	
-	S.oForEach(options.actions,function(actionName,fn){
+	UObj.forEach(options.actions,function(actionName,fn){
 		ul.on('click','a.'+actionName,function(e){
 			e.preventDefault();
 			var li=$(this).closest('li'),val=li.attr('rel');

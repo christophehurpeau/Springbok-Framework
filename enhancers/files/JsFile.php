@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.3';
+	public static $CACHE_PATH='js_8.3.7';
 
 	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
@@ -79,6 +79,13 @@ class JsFile extends EnhancerFile{
 			$c=preg_replace('/\'{t(f|c|)\s+([^}]+)\s*}\'/U','i18n$1[\'$2\']',$c);
 			//$c=preg_replace('/\'{t(c)? (.*)}\'/U','i18n$1[\'$2\']',$c);
 			
+			
+			$c=preg_replace('/\/\*\s+NODE\s+\*\/.*\/\*\s+\/NODE\s+\*\//Ums','',$c);
+			$c=str_replace('/* BROWSER */','',str_replace('/* /BROWSER */','',$c));
+			$c=preg_replace('/\(\(\/\*\s+NODE\|\|BROWSER\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$c);
+			$c=preg_replace('/\/\*\s+(RM|HIDE|REMOVE|NONE)\s+\*\/.*\/\*\s+\/(RM|HIDE|REMOVE|NONE)\s+\*\//Ums','',$c);
+			
+			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false && substr($this->fileName(),0,5)!=='i18n-'){
 				/*$after='';
 				$c=preg_replace_callback('/\/\*\s+AFTER\s+\*\/(.*)\/\*\s+\/AFTER\s+\*\//Ums',function($m) use(&$after){$after.=$m[1]; return '';},$c);
@@ -107,6 +114,7 @@ class JsFile extends EnhancerFile{
 		//if($this->fileName()=='global.js')
 		//	return 'function include(fileName){document.write(\'<script type="text/javascript" src="\'+jsdir+fileName+\'.js"></script>\');var notifier = new EventNotifier();setTimeout(notifier,100);notifier.wait->();}'.$this->_realSrcContent;
 		//return $this->_realSrcContent;
+		
 		return $content;
 	}
 	
@@ -118,6 +126,8 @@ class JsFile extends EnhancerFile{
 			if($this->devProdDiff){
 				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$content);
 				$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
+				//$content=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)||(.+)\)\)/Ums','$1',$content);
+				$content=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$1',$content);
 			}
 			
 			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
@@ -153,6 +163,8 @@ class JsFile extends EnhancerFile{
 			if($this->devProdDiff){
 				$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
 				$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
+				$content=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$content);
+				$content=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$2',$content);
 				
 				
 				if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);

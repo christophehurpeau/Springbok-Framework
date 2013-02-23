@@ -1,7 +1,7 @@
 S.HEltForm=S.extClass(S.HElt,{
 	ctor:function(method){ var t=this; t._formElt=t.elt=$('<form method="'+method+'"/>')/*.data('sElt',this)*/; t._defaultLabel=true; },
 	setModelName:function(modelName,name,value){
-		if(!name && modelName!=null) name=modelName.sbLcFirst();
+		if(!name && modelName!=null) name=UString.lcFirst(modelName);
 		if(modelName!=null) App.require('m/'+modelName);
 		this._modelName=modelName; this._name=name; this._value=value;
 		return this;
