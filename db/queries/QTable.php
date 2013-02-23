@@ -70,12 +70,16 @@ class QTable extends QFindAll{
 							if(!empty($queryOptions['where'])) $query->where($queryOptions['where']);
 							if(!empty($queryOptions['orderBy'])) $query->orderBy($queryOptions['orderBy']);
 						}
-						$query->setFields(array($relModelName::_getPkName(),$relModelName::$__displayField));
+						$fields=array($relModelName::_getPkName()); $displayField=$relModelName::$__displayField;
+						is_array($displayField) ? $fields['v']=$displayField : $fields[]=$displayField;
+						$query->setFields($fields);
 						if($this->addInTable===false) $query->with($modelName,array('fields'=>false,'type'=>QFind::INNER,'join'=>true));
 						$belongsToFields[$field]=$query->execute();
 					}
 				}else{
-					$this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+					$displayField=$relModelName::$__displayField;
+					$this->with($relKey,array('fields'=>is_array($displayField) ? array($field=>$relModelName::$__displayField)
+										: array($relModelName::$__displayField=>$field) ,'fieldsInModel'=>true));
 				}
 			}
 		}
@@ -199,7 +203,9 @@ class QTable extends QFindAll{
 									.'Known relations : '.implode(', ',array_keys($modelName::$_relations)));
 					/* /DEV */
 					$relModelName=$modelName::$_relations[$relKey]['modelName'];
-					$this->with($relKey,array('fields'=>array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
+					$displayField=$relModelName::$__displayField;
+					$this->with($relKey,array('fields'=>is_array($displayField) ? array($field=>$relModelName::$__displayField)
+										: array($relModelName::$__displayField=>$field),'fieldsInModel'=>true));
 				}
 			}
 		}

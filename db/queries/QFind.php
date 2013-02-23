@@ -250,7 +250,14 @@ abstract class QFind extends QSelect{
 						$fieldAlias=$this->allFields['_'][]=substr($field,$aspos+4);
 						$sql.=substr($field,0,$aspos).' '.$this->_db->formatField($fieldAlias);
 					}else */
-					if(($fpos=strpos($field,'('))!==false){
+					if(is_array($alias)){
+						$_a=$field; $field=$alias; $alias=$_a; $isArrayField=true;
+						/* DEV */ if($alias===false) throw new Exception('must have an alias'); /* /DEV */
+						$sql.='CONCAT(';
+						foreach($field as $concatField)
+							$sql.= (is_numeric($concatField) || $concatField[0]==='"' ? $concatField : $fieldPrefix.$this->_db->formatField($concatField)) .',';
+						$sql=substr($sql,0,-1).')';
+					}elseif(($fpos=strpos($field,'('))!==false){
 						$sql.=$field;
 					}elseif(substr($field,0,4)==='CASE'){
 						$fpos=true;
@@ -295,7 +302,14 @@ abstract class QFind extends QSelect{
 					if($join['fields']!==false){
 						foreach($join['fields'] as $field=>$alias){
 							if(is_int($field)){ $field=$alias; $alias=false;}
-							if($fpos=strpos($field,'(')){
+							
+							if(is_array($alias)){
+								$_a=$field; $field=$alias; $alias=$_a; $isArrayField=true;
+								$sql.='CONCAT(';
+								foreach($field as $concatField)
+									$sql.= (is_numeric($concatField) || $concatField[0]==='"' ? $concatField : $join['alias'].'.'.$this->_db->formatField($concatField)) .',';
+								$sql=substr($sql,0,-1).')';
+							}elseif($fpos=strpos($field,'(')){
 								$sql.=$field;
 							}else{
 								if(substr($field,0,8)==='DISTINCT'){

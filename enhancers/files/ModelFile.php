@@ -297,7 +297,8 @@ class ModelFile extends PhpFile{
 						.'$__tableName='."'".$annotations['TableName'][0][0]."'".',$__alias='."'".$annotations['TableAlias'][0][0]."'"
 						.',$__pluralized='."'".UInflector::pluralizeCamelizedLastWord($matches[2])."'"
 						.($dbName?',$__dbName=\''.$dbName.'\',$__modelDb':'')
-						.(isset($annotations['DisplayField'][0][0])?',$__displayField=\''.$annotations['DisplayField'][0][0].'\'':'')
+						.(isset($annotations['DisplayField'][0][0])?',$__displayField='.(count($annotations['DisplayField'][0])===1? '\''.$annotations['DisplayField'][0][0].'\'' 
+																										: UPhp::exportCode($annotations['DisplayField'][0]) ):'')
 						.($orderByField?',$__orderByField=\''.$orderByField.'\'':'')
 						.',$__cacheable='.($cacheable?'true':'false')
 						.';'
