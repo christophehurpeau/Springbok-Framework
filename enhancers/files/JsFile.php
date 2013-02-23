@@ -254,11 +254,12 @@ class JsFile extends EnhancerFile{
 	public function getEnhancedProdContent(){}
 
 	public static function includes($content,$currentPath,$appPath,&$includes,&$enhanced){
-		$content=preg_replace_callback('/include(Core|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
+		$content=preg_replace_callback('/include(Core(?:Utils)?|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
 			if(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
 			
-			if($matches[1]==='JsAppConfig') $path=$appPath.'src/jsapp';
+			if(empty($matches[1])) $path=$currentPath;
+			else if($matches[1]==='JsAppConfig') $path=$appPath.'src/jsapp';
 			elseif($matches[1]==='Lib'){
 				$libs=dirname(CORE_SRC).'/includes';
 				$path=$libs.(file_exists($libs.'/js/'.$matches[2].'.js')?'/js':'');
@@ -266,9 +267,11 @@ class JsFile extends EnhancerFile{
 				list($pluginKey,$fileName)=explode('/',$matches[2],2);
 				$path=$enhanced->pluginPathFromKey($pluginKey).'web/js';
 				$matches[2]=$fileName;
+			}elseif($matches[1]==='CoreUtils'){
+				$path=CORE_SRC.'includes/js-utils';
 			}else $path=CORE_SRC.(file_exists(CORE_SRC.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
 			
-			$fileContent=file_get_contents((empty($matches[1])?$currentPath:$path).DS.$matches[2].'.js');
+			$fileContent=file_get_contents($path.DS.$matches[2].'.js');
 			
 			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced);
 		},$content);
