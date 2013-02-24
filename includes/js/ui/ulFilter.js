@@ -1,9 +1,12 @@
+includeCoreUtils('UString/normalize');
+
 $.fn.sUlFilter=function(filter){
 	if(!filter) this.find('li').removeClass('hidden');
 	else{
+		var normalizedFilter=UString.normalize(filter);
 		this.find('li:not(.notfiltrable)').each(function(i,li){
 			li=$(li);
-			li.text().toLowerCase().sbRemoveSpecialChars().indexOf(filter.toLowerCase().sbRemoveSpecialChars())===-1 ? li.sHide() : li.sShow();
+			UString.normalize(li.text()).contains(normalizedFilter) ? li.sHide() : li.sShow();
 		});
 	}
 };

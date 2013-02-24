@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.3';
+	public static $CACHE_PATH='js_8.3.7';
 
 	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
@@ -79,6 +79,13 @@ class JsFile extends EnhancerFile{
 			$c=preg_replace('/\'{t(f|c|)\s+([^}]+)\s*}\'/U','i18n$1[\'$2\']',$c);
 			//$c=preg_replace('/\'{t(c)? (.*)}\'/U','i18n$1[\'$2\']',$c);
 			
+			
+			$c=preg_replace('/\/\*\s+NODE\s+\*\/.*\/\*\s+\/NODE\s+\*\//Ums','',$c);
+			$c=str_replace('/* BROWSER */','',str_replace('/* /BROWSER */','',$c));
+			$c=preg_replace('/\(\(\/\*\s+NODE\|\|BROWSER\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$c);
+			$c=preg_replace('/\/\*\s+(RM|HIDE|REMOVE|NONE)\s+\*\/.*\/\*\s+\/(RM|HIDE|REMOVE|NONE)\s+\*\//Ums','',$c);
+			
+			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false && substr($this->fileName(),0,5)!=='i18n-'){
 				/*$after='';
 				$c=preg_replace_callback('/\/\*\s+AFTER\s+\*\/(.*)\/\*\s+\/AFTER\s+\*\//Ums',function($m) use(&$after){$after.=$m[1]; return '';},$c);
@@ -107,6 +114,7 @@ class JsFile extends EnhancerFile{
 		//if($this->fileName()=='global.js')
 		//	return 'function include(fileName){document.write(\'<script type="text/javascript" src="\'+jsdir+fileName+\'.js"></script>\');var notifier = new EventNotifier();setTimeout(notifier,100);notifier.wait->();}'.$this->_realSrcContent;
 		//return $this->_realSrcContent;
+		
 		return $content;
 	}
 	
@@ -118,6 +126,8 @@ class JsFile extends EnhancerFile{
 			if($this->devProdDiff){
 				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$content);
 				$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
+				//$content=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)||(.+)\)\)/Ums','$1',$content);
+				$content=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$1',$content);
 			}
 			
 			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
@@ -153,6 +163,8 @@ class JsFile extends EnhancerFile{
 			if($this->devProdDiff){
 				$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
 				$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
+				$content=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$content);
+				$content=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$2',$content);
 				
 				
 				if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);
@@ -254,11 +266,13 @@ class JsFile extends EnhancerFile{
 	public function getEnhancedProdContent(){}
 
 	public static function includes($content,$currentPath,$appPath,&$includes,&$enhanced){
-		$content=preg_replace_callback('/include(Core|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
+		$content=preg_replace_callback('/include(Core(?:Utils)?|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
+			if(substr($matches[2],-1)==='/') $matches[2].=basename($matches[2]);
 			if(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
 			
-			if($matches[1]==='JsAppConfig') $path=$appPath.'src/jsapp';
+			if(empty($matches[1])) $path=$currentPath;
+			else if($matches[1]==='JsAppConfig') $path=$appPath.'src/jsapp';
 			elseif($matches[1]==='Lib'){
 				$libs=dirname(CORE_SRC).'/includes';
 				$path=$libs.(file_exists($libs.'/js/'.$matches[2].'.js')?'/js':'');
@@ -266,9 +280,11 @@ class JsFile extends EnhancerFile{
 				list($pluginKey,$fileName)=explode('/',$matches[2],2);
 				$path=$enhanced->pluginPathFromKey($pluginKey).'web/js';
 				$matches[2]=$fileName;
+			}elseif($matches[1]==='CoreUtils'){
+				$path=CORE_SRC.'includes/js-utils';
 			}else $path=CORE_SRC.(file_exists(CORE_SRC.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
 			
-			$fileContent=file_get_contents((empty($matches[1])?$currentPath:$path).DS.$matches[2].'.js');
+			$fileContent=file_get_contents($path.DS.$matches[2].'.js');
 			
 			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced);
 		},$content);

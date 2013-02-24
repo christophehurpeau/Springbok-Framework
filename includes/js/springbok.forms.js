@@ -131,10 +131,10 @@ includeCore('libs/jquery-ui-1.9.2.position');
 
 
 S.HForm=function(modelName,formAttributes,tagContainer,options){
-	formAttributes=S.extObj({action:'',method:'post'},formAttributes);
+	formAttributes=UObj.extend({action:'',method:'post'},formAttributes);
 	this.$=$('<form/>').attr(formAttributes);
 	this.modelName=modelName||false;
-	this.name=modelName?modelName.sbLcFirst():false;
+	this.name=modelName?UString.lcFirst(modelName):false;
 	this.tagContainer=tagContainer!==undefined?tagContainer:'div';
 };
 S.HForm.prototype={
@@ -144,7 +144,7 @@ S.HForm.prototype={
 	},
 	_container:function(res,defaultClass,attributes,labelFor,label,appendLabel){
 		if(this.tagContainer && (attributes || attributes===undefined)){
-			attributes=S.extObj({'class':defaultClass},attributes);
+			attributes=UObj.extend({'class':defaultClass},attributes);
 			res=$('<'+this.tagContainer+'/>').html(res);
 			if(attributes.before){ res.prepend(attributes.before); delete attributes.before; }
 			if(attributes.after){ res.append(attributes.after); delete attributes.after; }
@@ -154,8 +154,8 @@ S.HForm.prototype={
 		return res;
 	},
 	_input:function(name,type,label,inputAttributes,containerAttributes){
-		inputAttributes=S.extObj({
-			id:(this.modelName ? this.modelName : 'Input')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+		inputAttributes=UObj.extend({
+			id:(this.modelName ? this.modelName : 'Input')+UString.ucFirst(name)+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
 		delete inputAttributes.idSuffix;
@@ -207,9 +207,9 @@ S.HForm.prototype={
 
 
 	select:function(name,list,options,inputAttributes,containerAttributes){
-		options=S.extObj({empty:undefined},options);
-		inputAttributes=S.extObj({
-			id:(this.modelName ? this.modelName : 'Select')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+		options=UObj.extend({empty:undefined},options);
+		inputAttributes=UObj.extend({
+			id:(this.modelName ? this.modelName : 'Select')+UString.ucFirst(name)+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
 		delete inputAttributes.idSuffix;
@@ -260,8 +260,8 @@ S.HForm.prototype={
 	
 	
 	textarea:function(name,label,inputAttributes,containerAttributes){
-		inputAttributes=S.extObj({
-			id:(this.modelName ? this.modelName : 'Textarea')+name.sbUcFirst()+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
+		inputAttributes=UObj.extend({
+			id:(this.modelName ? this.modelName : 'Textarea')+UString.ucFirst(name)+(inputAttributes&&inputAttributes.idSuffix?inputAttributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},inputAttributes);
 		delete inputAttributes.idSuffix;
@@ -282,9 +282,9 @@ S.HForm.prototype={
 
 
 	checkbox:function(name,label,attributes,containerAttributes){
-		attributes=S.extObj({
+		attributes=UObj.extend({
 			type:'checkbox',
-			id:(this.modelName ? this.modelName : 'Checkbox')+name.sbUcFirst()+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
+			id:(this.modelName ? this.modelName : 'Checkbox')+UString.ucFirst(name)+(attributes&&attributes.idSuffix?attributes.idSuffix:''),
 			name:(this.name ? this.name+'['+name+']' : name)
 		},attributes);
 		delete attributes.idSuffix;
@@ -301,7 +301,7 @@ S.HForm.prototype={
 	
 	submit:function(title,attributes,containerAttributes){
 		if(title===undefined) title=i18nc.Save;
-		attributes=S.extObj({'class':'submit'},attributes);
+		attributes=UObj.extend({'class':'submit'},attributes);
 		var str=$('<input type="submit"/>').attr('value',title).attr(attributes);
 		if(this.tagContainer !== 'div' || containerAttributes!==undefined)
 			str=$('<'+this.tagContainer+' class="submit"/>').attr(containerAttributes||{}).html(str); 

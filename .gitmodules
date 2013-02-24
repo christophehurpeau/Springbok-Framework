@@ -1,3 +1,6 @@
 [submodule "includes/styl"]
 	path = includes/styl
 	url = git@github.com:christophehurpeau/Springbok-Styl.git
+[submodule "includes/js-utils"]
+	path = includes/js-utils
+	url = git@github.com:christophehurpeau/Springbok-JsUtils.git

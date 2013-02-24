@@ -2,7 +2,7 @@ includeCore('ui/base');
 includeCore('libs/jquery-ui-1.9.2.position');
 S.WDialog=S.Widget.extend({
 	ctor:function(title,htmlOrText,buttons,options){
-		options=S.extObj({
+		options=UObj.extend({
 			open:true,
 			closeOnEscape:true,
 			zIndex:9000 //fancybox : 8030
@@ -92,7 +92,7 @@ S.dialogs={
 		if(S.isObj(defaultVal)){
 			findInput='select';
 			div.append($('<select class="wp100">').html(
-				S.oImplode(defaultVal,function(k,v){ return '<option value="'+k+'">'+S.escape(v)+'</option>'; })
+				UObj.implode(defaultVal,function(k,v){ return '<option value="'+k+'">'+S.escape(v)+'</option>'; })
 			));
 		}else{
 			findInput='input';

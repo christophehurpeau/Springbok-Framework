@@ -23,7 +23,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
 		if(!S.isObject(options)) options={minLength:options==null?3:options};
-		options=S.extObj({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
+		options=UObj.extend({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
 		display=display||defaultDisplayList;
 		/*$(window).on('beforeunload',function(){
 			
@@ -44,15 +44,15 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				if(S.isObject(list)){
 					oKey=url.key;
 					list=[]; listValues=[];
-					S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
+					UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(UString.normalize(v[url.key])) });
 					filter=function(matcher){ return list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
 				}
 			}
 			
-			if(listValues===undefined) listValues=list.map(S.sNormalize);
+			if(listValues===undefined) listValues=list.map(UString.normalize);
 			
 			onChange=function(term,onSuccess){
-				var matcher = new RegExp( S.sNormalize(term) ), data=filter(matcher);
+				var matcher = new RegExp( UString.normalize(term) ), data=filter(matcher);
 				if(data) onSuccess(data,oKey);
 			}
 		}else onChange=function(val,onSuccess){
@@ -133,7 +133,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			divResult.on('hover','li',function(){
 				divResult.find('li.current').removeClass('current');
 			});
-			options=S.extObj({
+			options=UObj.extend({
 				navigate:false,
 				keydown:function(eKeyCode,input){
 					if(active){

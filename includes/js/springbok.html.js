@@ -1,7 +1,7 @@
 S.html={
 	baseurl:basedir.substr(0,basedir.length-1),
 	link:function(title,url,options){
-		options=S.extObj({escape:true},options);
+		options=UObj.extend({escape:true},options);
 		
 		if(url===false) url=this.url(url,options.fullUrl);
 		else if(!url) title=url=this.url(title,options.fullUrl);
@@ -40,7 +40,7 @@ S.html={
 	},
 	
 	iconLink:function(icon,text,url,options){
-		options=S.extObj({'class':'aicon'},options);
+		options=UObj.extend({'class':'aicon'},options);
 		options.escape=false;
 		return this.link($('<span/>').attr('class','icon '+icon).afterText(' '+text),url,options);
 	},
@@ -61,8 +61,8 @@ S.html={
 			if(url) url=url.trim();
 			if(!url || url==='/') return (full || '') + this.baseurl + '/';
 			else{
-				if(url.sHas('://')) return url;
-				if(url.sbStartsWith('\\/')) return url.substr(1);
+				if(url.contains('://')) return url;
+				if(url.startsWith('\\/')) return url.substr(1);
 				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
 			}
 		}else{

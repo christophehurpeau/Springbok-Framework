@@ -165,7 +165,7 @@ class DBSchemaProcessing{
 		
 		
 		/* DEV */
-		if(!$generate && !$force) foreach($this->dbs as &$db) $db->resetQueries();
+		if((!$generate && !$force) || $this->logs ===null) foreach($this->dbs as &$db) $db->resetQueries();
 		/* /DEV */
 		
 		self::$isProcessing=false;

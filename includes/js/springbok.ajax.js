@@ -1,6 +1,7 @@
 includeCore('springbok.base');
 includeCore('springbok.history');
 includeCore('ui/slideTo');
+
 (function(){
 	var lastConfirmResult=true,readyCallbacks=$.Callbacks();
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
@@ -21,7 +22,7 @@ includeCore('ui/slideTo');
 		
 		S.ready=function(callback){ readyCallbacks.add(callback); };
 	});
-	S.redirect=function(url){ if(url){ url.sHas(':') ? window.location=url : S.ajax.load(url);} }
+	S.redirect=function(url){ if(url){ url.contains(':') ? window.location=url : S.ajax.load(url);} }
 	S.setTitle=function(title){ document.title=title; defineDefault('UPDATE_H1_WITH_TITLE',false); if(UPDATE_H1_WITH_TITLE) divVariable.children('h1:first').text(title) }
 	S.ajax={
 		init:function(){
@@ -70,7 +71,7 @@ includeCore('ui/slideTo');
 			})
 			.on('submit','form[action]:not([action="javascript:;"]):not([action="#"]):not([target]):not([enctype]):not([action^="http://"])',function(){
 				var form=$(this),isGet=form.attr('method')==='get',action=form.attr('action'),params=form.serialize();
-				if(isGet){ action+=(action.sHas('?')?'&':'?')+params; params=undefined; }
+				if(isGet){ action+=(action.contains('?')?'&':'?')+params; params=undefined; }
 				S.ajax.load(action,params,isGet?0:'post',form.has('input[type="password"]'));
 				return false;
 			})

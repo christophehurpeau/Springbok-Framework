@@ -6,7 +6,7 @@ S.HPagination=function(container,options,callback){
 	this.$pager=$('<ul class="pager">').appendTo($('<div class="pager">').appendTo(container));
 	
 	//this.totalPages=pager.find('li.page:last').text();
-	this.options=S.extObj({nbBefore:3,nbAfter:3,hidden:true,withText:false},options);
+	this.options=UObj.extend({nbBefore:3,nbAfter:3,hidden:true,withText:false},options);
 };
 
 

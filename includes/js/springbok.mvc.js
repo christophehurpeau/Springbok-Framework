@@ -7,7 +7,7 @@
 	// Create a new model
 	S.Model=function(attributes,options){
 		this._changed=false;
-		this._previousAttributes=S.clone(attributes);
+		this._previousAttributes=UObj.clone(attributes);
 	}
 	
 	function App(name,version){

@@ -1,3 +1,4 @@
+includeCoreUtils('UString/normalize');
 includeCore('ui/_inputFollow');
 includeCore('libs/jquery-ui-1.9.2.position');
 
@@ -5,7 +6,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 	navigate:true, minLength:3, dataType:'json',delay:180,
 	ctor:function(input,url,destContent,options){
 		S.ui.InputFollow.call(this,input);
-		S.extObj(this,options);
+		UObj.extend(this,options);
 		this.div=destContent;
 		this.display=this.display||S.ui.InputSearch.defaultDisplayList;
 		
@@ -18,7 +19,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				if(url instanceof $){
 					list=url.find('option').each(function(i,option){
 						option=$(option);
-						option.attr('data-value-normalized',S.sNormalize(option.attr('value')));
+						option.attr('data-value-normalized',UString.normalize(option.attr('value')));
 					});
 					filter=function(matcher){
 						return !matcher ? list : list.filter(function(){ return matcher.test($(this).attr('data-value-normalized')); });
@@ -31,17 +32,17 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					if(S.isObject(list)){
 						this.oKey=url.key;
 						list=[]; listValues=[];
-						S.oForEach(url.list,function(k,v){ list.push(v); listValues.push(S.sNormalize(v[url.key])) });
+						UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(UString.normalize(v[url.key])) });
 						filter=function(matcher){ return !matcher ? list : list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
 					}
 				}
 			}
 			
 			if(filter===undefined) filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
-			if(listValues===undefined) listValues=list.map(S.sNormalize);
+			if(listValues===undefined) listValues=list.map(UString.normalize);
 			
 			this.onChange=function(term){
-				var matcher = new RegExp( S.sNormalize(term) ), data=filter(matcher);
+				var matcher = new RegExp( UString.normalize(term) ), data=filter(matcher);
 				if(data) t.onSuccess(data);
 			}
 		}else{
