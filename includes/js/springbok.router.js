@@ -107,7 +107,7 @@
 			else if(route.ext) plus+= '.'+route.ext;
 			if(options['#']) plus+='#'+options['#'];
 		
-			return params ? route[S.lang][1].sbVFormat(params)+plus : route[S.lang][1]+plus;
+			return params ? UString.vformat(route[S.lang][1],params)+plus : route[S.lang][1]+plus;
 		},
 		
 		/* Exemples :
@@ -117,7 +117,7 @@
 			var route=UString.trim(params,'/').split('/',3), controller=route[0], action=route[1] || this.DEFAULT_ACTION, params= route[2];
 			route=routes['/:controller(/:action/*)?'];
 			var froute= action==this.DEFAULT_ACTION ?  '/'+ this.translate(controller) : 
-				route['en'][1].sbFormat(this.translate(controller),this.translate(action),params ? '/'+params : '');
+				UString.format(route['en'][1],this.translate(controller),this.translate(action),params ? '/'+params : '');
 			return froute + (route.ext && !froute.endsWith('.'+route.ext)?'.'+route.ext:'');
 		},
 		
