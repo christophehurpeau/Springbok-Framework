@@ -6,7 +6,7 @@ $.fn.sUlFilter=function(filter){
 		var normalizedFilter=UString.normalize(filter);
 		this.find('li:not(.notfiltrable)').each(function(i,li){
 			li=$(li);
-			UString.normalize(li.text()).contains(normalizedFilter) ? li.sHide() : li.sShow();
+			UString.normalize(li.text()).contains(normalizedFilter) ? li.sShow() : li.sHide();
 		});
 	}
 };
