@@ -61,7 +61,7 @@ class DBSchemaProcessing{
 										
 										if($dbName==='cli'){
 											$this->displayAndLog('Update: '.$query
-												.UExec::exec('cd '.escapeshellarg($baseDir).' && php cli.php '.escapeshellarg($query)));
+												.UExec::exec('cd '.escapeshellarg($baseDir).' && php cli.php '.escapeshellarg($query).' noenhance'));
 										}else{
 											$db=DB::init($dbName);
 											try{
