@@ -126,7 +126,8 @@ class CModelTable extends CModelTableAbstract{
 			if($this->hasForm()){
 				$idPage='page'.$formId;
 				echo '<input id="'.$idPage.'" type="hidden" name="page" value="'.$pagination->getPage().'"/>'.HHtml::jsInline('var changePage=function(num){$(\'#'.$idPage.'\').val(num);$(\'#'.$formId.'\').submit();return false;}');
-			}else{
+			}
+			if(!$this->isFiltersAllowed()){
 				$hrefQuery='';
 				if(!empty($_POST)){
 					$post=$_POST;
@@ -141,7 +142,7 @@ class CModelTable extends CModelTableAbstract{
 				$href=HHtml::urlEscape(array(true,CRoute::getAll(),'?'=>$hrefQuery));
 			}
 			echo $pager='<div class="pager">'.HPagination::createPager($pagination->getPage(),$pagination->getTotalPages(),
-				$this->hasForm()?function($page){
+				$this->isFiltersAllowed()?function($page){
 					return ' href="#" onclick="return changePage('.$page.');"';
 				}:function($page) use($href){
 					return ' href="'.$href.'page='.$page.'"';
