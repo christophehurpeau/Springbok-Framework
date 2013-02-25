@@ -8,9 +8,6 @@ class BSlug_build{
 		
 		$displayField=isset($annotations['DisplayField'][0][0])?$annotations['DisplayField'][0][0]:'name';
 		if(!isset($modelFile->_fields[$displayField]) && !isset($annotations['Slug']))
-			throw new Exception($modelFile->_className.' must have an field "name"');
-		
-		if(!isset($modelFile->_fields[$displayField]) && !isset($annotations['Slug']))
 			throw new Exception($modelFile->_className.' must have an field "'.$displayField.'"');
 		
 		$modelFile->_fields['slug']=array('SqlType'=>isset($annotations['Slug']) ? array($annotations['Slug'][0][0]) : $modelFile->_fields[$displayField]['SqlType'],

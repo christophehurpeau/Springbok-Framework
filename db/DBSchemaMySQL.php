@@ -262,8 +262,14 @@ class DBSchemaMySQL extends DBSchema{
 		return $foreignsKeys;
 
 		
+		
+		//return isset(self::$_allForeignKeys[$this->getDb()->_getName()][$this->tableName])?self::$_allForeignKeys[$this->getDb()->_getName()][$this->tableName]:array();
+	}
+	
+	private static $_allForeignKeys;
+	public function getHasManyForeignKeys(){
 		if(!isset(self::$_allForeignKeys[$this->getDb()->_getName()])){
-			$res=$this->db->doSelectRows_('SELECT kcu.TABLE_NAME,kcu.CONSTRAINT_NAME,kcu.COLUMN_NAME,kcu.REFERENCED_TABLE_SCHEMA,kcu.REFERENCED_TABLE_NAME,kcu.REFERENCED_COLUMN_NAME,rc.UPDATE_RULE,rc.DELETE_RULE'
+			$res=$this->db->doSelectRows_('SELECT SQL_CACHE  kcu.TABLE_NAME,kcu.CONSTRAINT_NAME,kcu.COLUMN_NAME,kcu.REFERENCED_TABLE_SCHEMA,kcu.REFERENCED_TABLE_NAME,kcu.REFERENCED_COLUMN_NAME,rc.UPDATE_RULE,rc.DELETE_RULE'
 				.' FROM '.$this->db->formatTable('information_schema').'.'.$this->db->formatTable('KEY_COLUMN_USAGE').' kcu'
 				.' LEFT JOIN '.$this->db->formatTable('information_schema').'.'.$this->db->formatTable('REFERENTIAL_CONSTRAINTS').' rc ON kcu.CONSTRAINT_SCHEMA=rc.CONSTRAINT_SCHEMA AND kcu.CONSTRAINT_NAME=rc.CONSTRAINT_NAME AND kcu.TABLE_NAME=rc.TABLE_NAME'
 				.' WHERE kcu.CONSTRAINT_SCHEMA=DATABASE() AND kcu.REFERENCED_TABLE_NAME IS NOT NULL'
@@ -272,10 +278,8 @@ class DBSchemaMySQL extends DBSchema{
 			foreach($res as &$r)
 				self::$_allForeignKeys[$this->getDb()->_getName()][$r[0]][$r[2]]=array_combine(array('tableName','name','column','referenced_database','referenced_table','referenced_column','onUpdate','onDelete'),$r);
 		}
-		return isset(self::$_allForeignKeys[$this->getDb()->_getName()][$this->tableName])?self::$_allForeignKeys[$this->getDb()->_getName()][$this->tableName]:array();
-	}
-
-	public function getHasManyForeignKeys(){
+		
+		
 		$hM=array();
 		foreach(self::$_allForeignKeys as $dbName=>$dbs){
 			foreach($dbs as $tableName=>$fks){

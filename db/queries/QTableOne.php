@@ -14,4 +14,8 @@ class QTableOne extends QTable{
 		
 		return new CModelTableOne($this);
 	}
+	
+	public function notFoundIfFalse(){
+		return $this->end()->notFoundIfFalse();
+	}
 }
