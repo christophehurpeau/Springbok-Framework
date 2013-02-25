@@ -6,6 +6,8 @@ class CModelTable extends CModelTableAbstract{
 	public function actionClick($action='view'){$this->actionClick=$action; return $this; }
 	public function actions(){$this->rowActions=func_get_args(); return $this; }
 	public function setActions($actions){$this->rowActions=$actions; return $this; }
+	
+	/** action='view' || ['view','title'=>'Click here to view'] || ['view','/controller/action'] */
 	public function addAction($action){$this->rowActions[]=$action; return $this; }
 	public function controller($controller){$this->controller=$controller; return $this; }
 	

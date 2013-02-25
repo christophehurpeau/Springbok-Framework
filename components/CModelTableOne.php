@@ -6,6 +6,13 @@ class CModelTableOne extends CModelTable{
 		if($this->results===null) $this->results=$this->query->execute();
 	}
 	
+	public function notFoundIfFalse(){
+		/* DEV */if($this->results!==null) throw new Exception('$this->results!==null'); /* /DEV */
+		$this->execute();
+		if(empty($this->results)) notFound();
+		return $this;
+	}
+	
 	public function display($displayTotalResults=false,$transformerClass='THtml'){
 		$this->execute();
 		$this->_setFields();

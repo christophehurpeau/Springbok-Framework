@@ -22,8 +22,11 @@ class UString{
 	}
 	
 	public static function normalize($string){
-		return self::low(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',
-																HString::transliterate($string))));
+		return self::normalizeWithoutTransliterate(HString::transliterate($string));
+	}
+	public static function normalizeWithoutTransliterate($string){
+		$string=preg_replace_callback('/\b(?:[A-Za-z]\.){2,}\b/',function($m){return str_replace('.','',$m[0]); },$string);
+		return self::low(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',$string)));
 	}
 	
 	public static function callbackWords($string,$callback){

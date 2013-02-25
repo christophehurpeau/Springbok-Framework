@@ -59,12 +59,17 @@ class DBSchemaProcessing{
 										if(empty($line) || $line[0]==='#') continue;
 										list($dbName,$query) = explode('=>',$line,2);
 										
-										$db=DB::init($dbName);
-										try{
-											$db->doUpdate($query);
-										}catch(Exception $ex){
-											$error=true;
-											$this->displayAndLog('ERROR: '.$ex->getMessage());
+										if($dbName==='cli'){
+											$this->displayAndLog('Update: '.$query
+												.UExec::exec('cd '.escapeshellarg($baseDir).' && php cli.php '.escapeshellarg($query).' noenhance'));
+										}else{
+											$db=DB::init($dbName);
+											try{
+												$db->doUpdate($query);
+											}catch(Exception $ex){
+												$error=true;
+												$this->displayAndLog('ERROR: '.$ex->getMessage());
+											}
 										}
 									}
 									

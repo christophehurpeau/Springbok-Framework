@@ -17,7 +17,7 @@ abstract class DBSchema{
 		return $dbSchema;
 	}
 	
-	public static function get(&$db,&$tableName){
+	public static function get($db,$tableName){
 		$schemaClass='DBSchema'.$db->_getType();
 		$dbSchema=new $schemaClass($db,$tableName);
 		return $dbSchema;
