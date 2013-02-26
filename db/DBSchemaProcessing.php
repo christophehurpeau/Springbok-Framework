@@ -64,7 +64,6 @@ class DBSchemaProcessing{
 											if(empty($query)) $currentDbName=$dbName;
 										}else{
 											if($line==='=>END'){
-												debug($currentDbName);
 												$dbName=$currentDbName;
 												$query=$currentQuery;
 												$currentQuery='';
