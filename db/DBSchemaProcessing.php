@@ -55,9 +55,25 @@ class DBSchemaProcessing{
 								foreach($versionsToUpdate as $version){
 									$sql=file_get_contents(APP.'dbEvolutions/'.$dbVersionToFilename[$version].'.sql');
 									
+									$currentDbName=null; $currentQuery='';
 									foreach(explode("\n",$sql) as $line){
 										if(empty($line) || $line[0]==='#') continue;
-										list($dbName,$query) = explode('=>',$line,2);
+										
+										if($currentDbName===null){
+											list($dbName,$query) = explode('=>',$line,2);
+											if(empty($query)) $currentDbName=$dbName;
+										}else{
+											if($line==='=>END'){
+												debug($currentDbName);
+												$dbName=$currentDbName;
+												$query=$currentQuery;
+												$currentQuery='';
+												$currentDbName=null;
+											}else{
+												$currentQuery.=$line.' ';
+												continue;
+											}
+										}
 										
 										if($dbName==='cli'){
 											$this->displayAndLog('Update: '.$query
