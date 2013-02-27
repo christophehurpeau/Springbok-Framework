@@ -88,6 +88,8 @@ class DBSchemaProcessing{
 												$multiQueries ? $db->doMultiQueries($query) : $db->doUpdate($query);
 											}catch(Exception $ex){
 												$error=true;
+												$vars['error']=$ex;
+												$vars['errorQuery']=$query;
 												$this->displayAndLog('ERROR: '.$ex->getMessage());
 											}
 										}
