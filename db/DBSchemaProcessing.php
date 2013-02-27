@@ -61,14 +61,15 @@ class DBSchemaProcessing{
 										
 										if($currentDbName===null){
 											list($dbName,$query) = explode('=>',$line,2);
-											if(empty($query)) $currentDbName=$dbName;
+											if(empty($query)){ $currentDbName=$dbName; continue; }
+											$multiQueries=false;
 										}else{
 											if($line==='=>END'){
-												debug($currentDbName);
 												$dbName=$currentDbName;
 												$query=$currentQuery;
 												$currentQuery='';
 												$currentDbName=null;
+												$multiQueries=true;
 											}else{
 												$currentQuery.=$line.' ';
 												continue;
@@ -81,7 +82,7 @@ class DBSchemaProcessing{
 										}else{
 											$db=DB::init($dbName);
 											try{
-												$db->doUpdate($query);
+												$multiQueries ? $db->doMultiQueries($query) : $db->doUpdate($query);
 											}catch(Exception $ex){
 												$error=true;
 												$this->displayAndLog('ERROR: '.$ex->getMessage());
