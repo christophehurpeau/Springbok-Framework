@@ -1,4 +1,5 @@
 <?php
+define('LOGS_PATH',/* DEV */dirname(APP).'/data/logs/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP.'logs/'/* /PROD */);
 abstract class CLogger{
 	static private $_instances;
  
@@ -20,7 +21,7 @@ class FileLogger extends CLogger{
 	private $_file;
 
 	public function __construct($name='info'){
-		$this->_file=fopen(/* DEV */dirname(APP).'/data/logs/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP.'logs/'/* /PROD */.static::name($name), 'a+');
+		$this->_file=fopen(LOGS_PATH.static::name($name),'a+');
 	}
 
 	public function log($message = ''){
