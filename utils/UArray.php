@@ -122,6 +122,12 @@ class UArray {
 	    return true;
 	}
 	
+	public static function findKeyBy($a,$propName,$val){
+		foreach($a as $k=>$v){
+			if($v[$propName] == $val) return $k;
+		}
+		return false;
+	}
 	
 	
 	public static function splice($array,$offset,$values){
