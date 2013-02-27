@@ -250,6 +250,7 @@ abstract class QFind extends QSelect{
 						$fieldAlias=$this->allFields['_'][]=substr($field,$aspos+4);
 						$sql.=substr($field,0,$aspos).' '.$this->_db->formatField($fieldAlias);
 					}else */
+					$fpos=false;
 					if(is_array($alias)){
 						$_a=$field; $field=$alias; $alias=$_a; $isArrayField=true;
 						/* DEV */ if($alias===false) throw new Exception('must have an alias'); /* /DEV */
@@ -303,6 +304,7 @@ abstract class QFind extends QSelect{
 						foreach($join['fields'] as $field=>$alias){
 							if(is_int($field)){ $field=$alias; $alias=false;}
 							
+							$fpos=false;
 							if(is_array($alias)){
 								$_a=$field; $field=$alias; $alias=$_a; $isArrayField=true;
 								$sql.='CONCAT(';
