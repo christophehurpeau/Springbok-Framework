@@ -117,7 +117,11 @@ form.oneline div.input,form.oneline div.submit{
 	float:left;
 	margin-top:0;
 }
-
+form.inline{
+	display:inline;
+	display:inline-block;
+}
+form.inline:after{clear:none;display:none;}
 
 
 /* TABLE */

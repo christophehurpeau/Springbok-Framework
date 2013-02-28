@@ -28,6 +28,7 @@ class DBSchemaProcessing{
 		if(Config::$generate['default']){
 			$currentDbVersion=trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
 			$currentDbVersion=strpos($currentDbVersion,'-')!==false ? strtotime($currentDbVersion) : (int)$currentDbVersion;
+			$this->displayAndLog('currentDbVersion='.$currentDbVersion);
 			
 			if($currentDbVersion===0) file_put_contents($currentDbVersionFilename,time());
 			else{
@@ -40,7 +41,7 @@ class DBSchemaProcessing{
 					$lastVersion=(int)array_pop($dbVersions);
 					
 					if($currentDbVersion !== $lastVersion && $currentDbVersion < $lastVersion){
-						$this->displayAndLog('currentDbVersion ('.$currentDbVersion.') != lastVersion ('.$lastVersion.')');
+						$this->displayAndLog('currentDbVersion != lastVersion ('.$lastVersion.')');
 						
 						$versionsToUpdate=array($lastVersion);
 						while(($version=array_pop($dbVersions)) && $version > $currentDbVersion)
@@ -53,6 +54,7 @@ class DBSchemaProcessing{
 								render(CORE.'db/evolutions-view.php',$vars);
 							}else{
 								foreach($versionsToUpdate as $version){
+									$this->displayAndLog('dbEvolution: '.$dbVersionToFilename[$version].'.sql');
 									$sql=file_get_contents(APP.'dbEvolutions/'.$dbVersionToFilename[$version].'.sql');
 									
 									$currentDbName=null; $currentQuery='';
@@ -99,6 +101,7 @@ class DBSchemaProcessing{
 												$vars['error']=$ex;
 												$vars['errorQuery']=$query;
 												$this->displayAndLog('ERROR: '.$ex->getMessage());
+												break;
 											}
 										}
 									}
