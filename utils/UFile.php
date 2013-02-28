@@ -68,9 +68,13 @@ class UFileOpened{
 			return fclose($this->_file);
 		}catch(ErrorException $e){}
 	}
-		
+	
 	public function write($string){
 		return fwrite($this->_file,$string);
+	}
+	
+	public function writeLine($string){
+		return $this->write($string."\n");
 	}
 	
 	public function read(){
@@ -100,7 +104,7 @@ class UFileOpened{
 
 
 	public function log($message=''){
-		return fwrite($this->_file,date('m-d H:i:s')."\t".$message."\n");
+		return $this->writeLine(date('m-d H:i:s')."\t".$message);
 	}
 
 
