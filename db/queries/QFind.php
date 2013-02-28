@@ -361,8 +361,8 @@ abstract class QFind extends QSelect{
 		
 		if(!empty($this->joins)){
 			foreach($this->joins as &$join){
-				$sql.=$join['type'].($modelName::$__dbName!==$join['modelName']::$__dbName || ($currentDb!==NULL && $currentDb->getDbName() !== $join['modelName']::$__modelDb->getDbName())?$join['modelName']::$__modelDb->getDbName().'.':'')
-					.$join['modelName']::_fullTableName().' '.$join['alias'];
+				$sql.=$join['type'].($modelName::$__dbName!==$join['modelName']::$__dbName || ($currentDb!==NULL && $currentDb->getDbName() !== $join['modelName']::$__modelDb->getDbName())? $join['modelName']::$__modelDb->getDbName().'.':'')
+					.$this->_db->formatTable($join['modelName']::_fullTableName()).' '.$join['alias'];
 				if(!empty($join['onConditions'])){
 					$sql.=' ON ';
 					$sql=$this->_condToSQL($join['onConditions'],'AND',$sql,false);

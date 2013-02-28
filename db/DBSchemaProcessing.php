@@ -71,20 +71,33 @@ class DBSchemaProcessing{
 												$currentDbName=null;
 												$multiQueries=true;
 											}else{
-												$currentQuery.=$line.' ';
-												continue;
+												$currentQuery.=$line;
+												if(substr($currentQuery,-1)===';'){
+													$dbName=$currentDbName;
+													$query=$currentQuery;
+													$currentQuery='';
+													$multiQueries=true;
+												}else{
+													$currentQuery.="\n";
+													continue;
+												}
 											}
 										}
 										
 										if($dbName==='cli'){
-											$this->displayAndLog('Update: '.$query
+											$this->displayAndLog('Update: '.$query."\n"
 												.UExec::exec('cd '.escapeshellarg($baseDir).' && php cli.php '.escapeshellarg($query).' noenhance'));
+										}elseif($dbName==='sql'){
+											$this->displayAndLog('SQL: '.$query."\n"
+												.UExec::exec('cd '.escapeshellarg($baseDir).' && mysql -u '.' -p'.' '.' < '.escapeshellarg('sql/'.$query)));
 										}else{
 											$db=DB::init($dbName);
 											try{
 												$multiQueries ? $db->doMultiQueries($query) : $db->doUpdate($query);
 											}catch(Exception $ex){
 												$error=true;
+												$vars['error']=$ex;
+												$vars['errorQuery']=$query;
 												$this->displayAndLog('ERROR: '.$ex->getMessage());
 											}
 										}

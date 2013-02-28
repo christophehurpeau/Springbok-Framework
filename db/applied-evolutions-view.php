@@ -13,6 +13,11 @@
 				</li>
 			<?php endforeach; ?>
 			</ul>
+		<?php if(!empty($error)): ?>
+		<div>An error occured : <?php echo h($error->getMessage()) ?></div>
+		<div>Query : <?php echo h($errorQuery) ?></div>
+		<?php endif; ?>
+			
 		<a href="<?php echo $_SERVER['REQUEST_URI'] ?>">Continuer</a>
 		<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Queries:</h5>
 		<?php echo HDev::springbokBar(true); ?>
