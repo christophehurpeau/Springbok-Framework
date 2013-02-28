@@ -71,8 +71,16 @@ class DBSchemaProcessing{
 												$currentDbName=null;
 												$multiQueries=true;
 											}else{
-												$currentQuery.=$line.' ';
-												continue;
+												$currentQuery.=$line;
+												if(substr($currentQuery,-1)===';'){
+													$dbName=$currentDbName;
+													$query=$currentQuery;
+													$currentQuery='';
+													$multiQueries=true;
+												}else{
+													$currentQuery.="\n";
+													continue;
+												}
 											}
 										}
 										
