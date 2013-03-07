@@ -125,7 +125,7 @@ class SSqlModel extends SModel{
 		}
 		if(empty($data)) return null;
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
-		$this->afterUpdateCompare($data,$where);
+		$this->_afterUpdateCompare($data,$where);
 		return true;
 		
 	}
