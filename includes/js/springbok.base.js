@@ -252,7 +252,7 @@ window.S={
 
 /* DEV */includeCore('libs/stacktrace');/* /DEV */
 
-RegExp.sEscape=function(value){
+S.regexpEscape=RegExp.sEscape=function(value){
 	return value.replace( /([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1" );
 };
 
