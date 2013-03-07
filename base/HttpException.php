@@ -1,28 +1,22 @@
 <?php
-class HttpException extends Exception{
-	private $httpcode,$title,$description;
+class HttpException extends SDetailedException{
+	private $httpcode;
 	
 	public function __construct($httpcode,$status,$title,$description='',$previous=null){
-		parent::__construct($status,$httpcode,$previous);
+		parent::__construct($status,$httpcode,$title,$description,$previous);
 		$this->httpcode=$httpcode;
-		$this->title=$title;
-		$this->description=$description;
 	}
 	
 	public function getHttpCode(){
 		return $this->httpcode;
 	}
 	
-	public function getTitle(){
-		return $this->title;
-	}
-	
 	public function hasDescription(){
-		return $this->description!=='';
+		return parent::hasDetails();
 	}
 	
 	public function getDescription(){
-		return $this->description;
+		return parent::getDetails();
 	}
 }
 
