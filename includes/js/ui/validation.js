@@ -166,6 +166,11 @@ S.ready(function(){
 			return !error;
 		},
 		checkElement:function(elt,checkAllAndFirstError){
+			if(elt.is(':disabled')){
+				this.cleanElement(elt);
+				return true;
+			}
+			
 			var tagName=elt.prop('tagName').toLowerCase(),isInput=tagName==='input',type=isInput ? elt.attr('type')||'text' : undefined,error;
 			if(isInput && type==='radio'){
 				
