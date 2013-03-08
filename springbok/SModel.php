@@ -225,13 +225,15 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 		$this->afterSave($data);
 		$this->afterUpdate($data);
 	}
-	protected function afterUpdateCompare($data,$primaryKeys){
+	protected function _afterUpdateCompare($data,$primaryKeys){
+		$this->afterUpdateCompare($data,$primaryKeys);
 		$this->_afterUpdate($data);
 	}
 	
 	protected function afterSave(){}
 	protected function afterInsert(){}
 	protected function afterUpdate(){}
+	protected function afterUpdateCompare($data,$primaryKeys){ }
 	protected function afterDelete(){}
 	
 	/* */

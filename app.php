@@ -132,8 +132,11 @@ class App{
 		try{
 			/* DEV */
 			if(rtrim(Config::$siteUrl['index'],'/')!=='http://localhost'){
-				Springbok::$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
-				if(Springbok::$scriptname==='www' || empty(Springbok::$scriptname)) Springbok::$scriptname='index';
+				$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
+				if(isset(Config::$siteUrl[$scriptname])){ //dev sur un serveur
+					Springbok::$scriptname=$scriptname;
+					if(Springbok::$scriptname==='www' || empty(Springbok::$scriptname)) Springbok::$scriptname='index';
+				}
 			}
 			/* /DEV */
 			if(Springbok::$scriptname==='index'){

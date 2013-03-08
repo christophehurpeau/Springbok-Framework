@@ -94,7 +94,13 @@ class STest{
 						.'<b>'.h($fName).'</b> ';
 				if(is_string($result)) echo $result;
 				elseif(!empty($result['exception'])){
-					echo '<u>Exception:</u> '.$result['exception']->getMessage();
+					echo '<u>Exception:</u> ';
+					if($result['exception'] instanceof SDetailedException){
+						echo $result['exception']->toHtml();
+					}else{
+						echo $result['exception']->getMessage();
+					}
+					echo '<div class="italic">in '.$result['exception']->getFile().':'.$result['exception']->getLine().'</div>';
 					echo prettyHtmlBackTrace(0,$result['exception']->getTrace());
 				}else echo UVarDump::dump($result,4,true);
 				echo '</div>';

@@ -62,4 +62,12 @@ class UVarDump{
 		$o=new UVarDump($MAX_DEPTH,$html);
 		return $o->_dumpVar($var);
 	}
+	
+	public static function dumpHtml($var,$MAX_DEPTH=3){
+		$black=true; $message=self::dump($var,$MAX_DEPTH,true);
+		return '<div style="text-align:left;'.($black?'background:#1A1A1A;color:#FCFCFC;border:1px solid #050505':'background:#FFDDAA;color:#333;border:1px solid #E07308').';overflow:auto;padding:1px 2px;position:relative;z-index:999999">'
+			.'<pre style="text-align:left;margin:0;overflow:auto;font:normal 1em \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.$message.'</pre>'
+			.'</div>';
+		;
+	}
 }

@@ -260,7 +260,7 @@ class ConfigFile extends PhpFile{
 		if(isset($configArray['data_dir'])){
 			$afterContent.="define('DATA',".$this->replaceAPP(UPhp::exportString(rtrim($configArray['data_dir'],'/').'/')).");";
 			unset($configArray['data_dir']);
-		}elseif(in_array($configname,array('_dev','_home','_work'))) $afterContent.="define('DATA',dirname(APP).'/data/');";
+		}elseif(in_array($configname,array('_dev','_home','_work','_'.ENV))) $afterContent.="define('DATA',dirname(APP).'/data/');";
 		else $afterContent.="define('DATA',APP.'data/');";
 		
 		foreach(array('img_dir'=>'IMGDIR') as $configK=>$constN)
