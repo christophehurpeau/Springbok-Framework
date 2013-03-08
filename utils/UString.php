@@ -31,9 +31,10 @@ class UString{
 	
 	public static function callbackWords($string,$callback){
 		/* http://www.php.net/manual/en/regexp.reference.unicode.php */
-		return preg_replace_callback("/(\w\'|(?:[A-Z]\.){2,}|\p{L}+(\.|\b))/u", //u=unicode != U
-					function($m) use($callback){ $dot=empty($m[2])?'':'.';
-						return $callback($dot===''?$m[1]:substr($m[1],0,-1),$dot); },$string);
+		foreach(array("/(\w\'|(?:[A-Z]\.){2,}|\p{L}+(\.|\b))/u","/(\p{L}+\-\p{L}+(\.|\b))/u") as $regexp) //u=unicode != U
+		$string=preg_replace_callback($regexp,function($m) use($callback){
+			$dot=empty($m[2])?'':'.'; return $callback($dot===''?$m[1]:substr($m[1],0,-1),$dot); },$string);
+		return $string;
 	}
 	
 	public static function firstLine($string){
