@@ -31,7 +31,7 @@ abstract class AFolderEnhancer{
 		$logger=$this->enhanced->getLogger();
 		$logger->log('D: '.$dir->getName());
 		
-		if(substr($dir->getName(),0,1)==='.') return;
+		//if(substr($dir->getName(),0,1)==='.') return;
 		$devFolder=new Folder($devDir,0775);
 		if(!$dirHasDev) $prodFolder=new Folder($prodDir,0775);
 		
@@ -39,6 +39,8 @@ abstract class AFolderEnhancer{
 		
 		foreach($files as $file){
 			$filename=$file->getName();
+			if($filename[0]==='.') continue;
+			
 			$logger->log('F: '.$filename);
 			if($override!==true && $class!=='ConfigFile'){
 				$fileExists=false;

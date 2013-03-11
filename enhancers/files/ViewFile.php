@@ -81,7 +81,7 @@ class ViewFile extends PhpFile{
 			$content=preg_replace_callback('/{'.$prfx.'while\s+([^}]+?)\s*\}/',$callbackCreator('while($1):'),$content);
 			$content=preg_replace_callback('/{'.$prfx.'\/while}/',$callbackCreator('endwhile;'),$content);
 			
-			$content=preg_replace_callback('/{'.$prfx.'debug\s+([^}]+?)\s*\}/',$callbackCreator('debug($1,false)'),$content);
+			$content=preg_replace_callback('/{'.$prfx.'debug\s+([^}]+?)\s*\}/',$callbackCreator('debugNoFlush($1)'),$content);
 			$content=preg_replace_callback('/{'.$prfx.'debugVar\s+([^}]+?)\s*\}/',$callbackCreator('debugVarNoFlush($1)'),$content);
 			$content=preg_replace_callback('/{'.$prfx.'jsReady\}/',$callbackCreator('HHtml::jsReadyStart()'),$content);
 			$content=preg_replace_callback('/{'.$prfx.'\/jsReady\}/',$callbackCreator('HHtml::jsReadyEnd()'),$content);
