@@ -89,9 +89,13 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 		flush();
 	}
 }
-function debug($object,$flush=true,$MAX_DEPTH=5){
-	prettyDebug(UVarDump::dump($object,$MAX_DEPTH),2,$flush,true);
+function _debug($objects,$flush=true,$MAX_DEPTH=5){
+	if(count($objects)===1) $objects=$objects[0];
+	prettyDebug(UVarDump::dump($objects,$MAX_DEPTH),2,$flush,true);
 }
+function debug(){ _debug(func_get_args(),true); }
+function debugNoFlush(){ _debug(func_get_args(),false); }
+
 function debugCode($code,$withBacktrace=true){
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
 }
