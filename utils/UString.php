@@ -29,9 +29,11 @@ class UString{
 		return self::low(trim(preg_replace('/[ \-\'\"\_\(\)\[\]\{\}\#\~\&\*\,\.\;\:\!\?\/\\\\|\`\<\>\+]+/',' ',$string)));
 	}
 	
-	public static function callbackWords($string,$callback){
+	public static function callbackWords($string,$callback,$regexpDash=false){
 		/* http://www.php.net/manual/en/regexp.reference.unicode.php */
-		foreach(array("/(\w\'|(?:[A-Z]\.){2,}|\p{L}+(\.|\b))/u","/(\p{L}+\-\p{L}+(\.|\b))/u") as $regexp) //u=unicode != U
+		$arrayRegexp=array("/(\w\'|(?:[A-Z]\.){2,}|\p{L}+(\.|\b))/u"); //u=unicode != U
+		if($regexpDash) $arrayRegexp[]="/(\p{L}+\-\p{L}+(\.|\b))/u";
+		foreach($arrayRegexp as $regexp)
 		$string=preg_replace_callback($regexp,function($m) use($callback){
 			$dot=empty($m[2])?'':'.'; return $callback($dot===''?$m[1]:substr($m[1],0,-1),$dot); },$string);
 		return $string;
