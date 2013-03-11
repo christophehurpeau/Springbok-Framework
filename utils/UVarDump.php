@@ -42,7 +42,12 @@ class UVarDump{
 				}
 			//}
 			return self::color('Array: ','BD74BE',$this->html).$res;
-		}elseif(is_string($var)) return $this->color(UPhp::exportString($var),'EC7600');
+		}elseif(is_string($var)){
+			$str=$var;
+			if(($enc=mb_detect_encoding($str,'UTF-8, ISO-8859-15, ASCII, GBK'))!=='UTF-8')
+				$str=iconv($enc,'UTF-8',$str); 
+			return $this->color(UPhp::exportString($str),'EC7600').$this->color('['.$enc.']','f2a04d');
+		}
 		elseif(is_float($var)) return $this->color(strpos($var,'.')===false ? $var.'.0' : $var,'FFCD22');
 		elseif(is_numeric($var)) return $this->color($var,'FFCD22');
 		elseif(is_bool($var)) return $this->color($var?'true':'false','93C763;font-weight:bold');
