@@ -93,7 +93,7 @@ class Springbok{
 			throw new ErrorException($message,$code,0,$file,$line);
 		$previousError=self::$inError;
 		$forceDefault=self::$inError!==null/* DEV */||App::$enhancing/* /DEV */;
-		self::$inError=/* DEV */new ErrorException($message,$code,0,$file,$line)/* /DEV *//* HIDE */||/* /HIDE *//* PROD */true/* /PROD */;
+		self::$inError=new ErrorException($message,$code,0,$file,$line);
 		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
 		$log=self::getErrorText($code)." : $message ($file:$line)\n";
 		//echo $log; ob_flush();
