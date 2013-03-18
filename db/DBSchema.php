@@ -377,16 +377,15 @@ abstract class DBSchema{
 				$rModelName=$column['ForeignKey'][0];
 				if($rModelName==$modelName){
 					if(!isset($relations[$rModelName]))
-						$relations[$rModelName]=array('reltype'=>'belongsTo','foreignKey'=>$fieldName,'associationForeignKey'=>$column['ForeignKey'][1],'alias'=>($modelName::$__alias).'2');
+						$relations[$rModelName]=array('reltype'=>'belongsTo',0=>array($fieldName=>$column['ForeignKey'][1]),'alias'=>($modelName::$__alias).'2');
 				}else{
 					if(!isset($relations[$rModelName]))
-						$relations[$rModelName]=array('reltype'=>'belongsTo','foreignKey'=>$fieldName,'associationForeignKey'=>$column['ForeignKey'][1]);
+						$relations[$rModelName]=array('reltype'=>'belongsTo',0=>array($fieldName=>$column['ForeignKey'][1]));
 					$addedRelations[]=$rModelName;
 					if(!isset($rModelName::$__modelInfos['relations'][$modelName]))
 						$rModelName::$__modelInfos['relations'][$modelName]=array(
 							'reltype'=>(count($modelName::$__modelInfos['primaryKeys'])===1 && $modelName::$__modelInfos['primaryKeys'][0]===$fieldName) ? 'hasOne' : 'hasMany', //TODO OR hasUnique
-							'foreignKey'=>$column['ForeignKey'][1],
-							'associationForeignKey'=>$fieldName
+							0=>array($column['ForeignKey'][1]=>$fieldName)
 						);
 				}
 			}
@@ -473,19 +472,25 @@ abstract class DBSchema{
 		if(!isset($relation['conditions'])){
 			switch($type){
 				case 'hasMany':
-					if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
-					if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
+					if(!isset($relation[0])){
+						if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
+						if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
+					}
 					if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataName($keyDataName,$modelName);
 					break;
 				case 'belongsTo': // many to one
-					if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
-					if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=$relation['modelName']::_getPkName();
+					if(!isset($relation[0])){
+						if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
+						if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=$relation['modelName']::_getPkName();
+					}
 					if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataNamePrefixless($keyDataName,$modelName);
 					break;
 				case 'hasOne': // one to one
-					if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
-					//if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
-					if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
+					if(!isset($relation[0])){
+						if(!isset($relation['foreignKey'])) $relation['foreignKey']=$modelName::_getPkName();
+						//if(!isset($relation['foreignKey'])) $relation['foreignKey']=self::_defaultForeignKey($relation['modelName']);
+						if(!isset($relation['associationForeignKey'])) $relation['associationForeignKey']=self::_defaultForeignKey($modelName);
+					}
 					if(!isset($relation['dataName'])) $relation['dataName']=self::defaultRelationDataName($keyDataName,$modelName,false);
 					break;
 				case 'hasManyThrough':
@@ -501,6 +506,9 @@ abstract class DBSchema{
 					break;
 				default: throw new Exception($modelName.': Unknown type: '.$type);
 			}
+			if($type!=='hasManyThrough' && $type!=='hasOneThrough' && !isset($relation[0]))
+					$relation[0]=array($relation['foreignKey']=>$relation['associationForeignKey']);
+			unset($relation['foreignKey'],$relation['associationForeignKey']);
 		}
 	}
 
