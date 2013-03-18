@@ -57,7 +57,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 						data:{term:val},
 						dataType:t.dataType,
 						success:function(data){ t.onSuccess(data); /* don't let other arguments */ },
-						error:function(){ lastVal=null; (t.error||t.reset)(); }
+						error:function(){ lastVal=null; (t.error||t.reset).call(t); }
 					});
 				},t.delay);
 			};

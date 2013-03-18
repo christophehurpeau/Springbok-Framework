@@ -24,6 +24,16 @@ class CMail{
 	public static function create($template,$vars,$subject,$to){
 		if(!isset($vars['subject'])) $vars['subject']=$subject;
 		include_once CORE.'mvc/views/View.php';
+		$mailer=self::_create($subject,$to);
+		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
+		$html=render(APP.'viewsMails/'.$template.'.php',$vars,true);
+		$html=preg_replace('#\s*<(/?(?:li|ul|ol|div|p|table|tr)|td|body|html|head)(\s+|>)#iu',"\n<$1$2",$html);
+		$html=preg_replace('#\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?#iu',"\n$1$2$3$4$5\n",$html);
+		$mailer->MsgHTML($html,APP);
+		return $mailer;
+	}
+	
+	private static function _create($subject,$to){
 		$mailer=self::get();
 		$mailer->ClearAllRecipients();
 		$mailer->ClearAttachments();
@@ -34,13 +44,20 @@ class CMail{
 		else
 			$mailer->AddAddress($to);
 		$mailer->Subject=$subject;
-		if(!empty($vars['email'])) $mailer->AddReplyTo($vars['email']);
-		$html=render(APP.'viewsMails/'.$template.'.php',$vars,true);
-		$html=preg_replace('#\s*<(/?(?:li|ul|ol|div|p|table|tr)|td|body|html|head)(\s+|>)#iu',"\n<$1$2",$html);
-		$html=preg_replace('#\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?#iu',"\n$1$2$3$4$5\n",$html);
+		return $mailer;
+	}
+	
+	public static function createHtml($html,$subject,$to){
+		$mailer=self::_create($subject,$to);
 		$mailer->MsgHTML($html,APP);
 		return $mailer;
 	}
+	
+	
+	public static function sendHtml($html,$subject,$to){
+		return self::createHtml($html,$subject,$to)->Send();
+	}
+	
 	
 	public static function sendAdmin($template,$vars,$subject){
 		self::send('admin/'.$template, $vars, $subject,Config::$admin_email);
