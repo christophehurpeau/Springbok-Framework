@@ -62,6 +62,11 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 	public function &_getData(){
 		return $this->data;
 	}
+	public function _getFields($names){
+		$data=array();
+		foreach($names as $name) $data[$name]=$this->data[$name];
+		return $data;
+	}
 	
 	public function _set($name,$value){
 		$this->data[$name]=$value;

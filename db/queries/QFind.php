@@ -161,8 +161,14 @@ abstract class QFind extends QSelect{
 				/* DEV */if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
 				$options+=$lastModelName::$_relations[$relName];
 				
-				/* DEV */if(!isset($options['foreignKey'])) throw new Exception('$options[\'foreignKey\'] is not defined: '.print_r($options,true)); /* /DEV */
-				$onConditions=array($lastAlias.'.'.$options['foreignKey'].'='.$options['alias'].'.'.$options['associationForeignKey']);
+				/* DEV */
+				if(!isset($options[0])) throw new Exception('$options[0] is not defined: '.print_r($options,true));
+				if(isset($options['foreignKey'])) throw new Exception('foreignKey is defined: '.print_r($options,true));
+				if(isset($options['associationForeignKey'])) throw new Exception('associationForeignKey is defined: '.print_r($options,true));
+				/* /DEV */
+				$onConditions=array();
+				foreach($options[0] as $foreignKey=>$associationForeignKey)
+					$onConditions[]=$lastAlias.'.`'.$foreignKey.'`='.$options['alias'].'.`'.$associationForeignKey.'`';
 				if(isset($options['onConditions'])) $options['onConditions']=array_merge($options['onConditions'],$onConditions);
 				else $options['onConditions']=$onConditions;
 				
@@ -172,15 +178,32 @@ abstract class QFind extends QSelect{
 			
 			/* DEV */if(!isset($lastModelName::$_relations[$key])) throw new Exception($lastModelName.' does not have a relation named "'.$key.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
 			$options=$join+$lastModelName::$_relations[$key];
-			$onConditions=array($lastAlias.'.'.$options['foreignKey'].'='.$options['alias'].'.'.$options['associationForeignKey']);
+			
+			/* DEV */
+			if(!isset($options[0])) throw new Exception('$options[0] is not defined: '.print_r($options,true));
+			if(isset($options['foreignKey'])) throw new Exception('foreignKey is defined: '.print_r($options,true));
+			if(isset($options['associationForeignKey'])) throw new Exception('associationForeignKey is defined: '.print_r($options,true));
+			/* /DEV */
+			
+			
+			$onConditions=array();
+			foreach($options[0] as $foreignKey=>$associationForeignKey)
+				$onConditions[]=$lastAlias.'.`'.$foreignKey.'`='.$options['alias'].'.`'.$associationForeignKey.'`';
 			if(isset($options['onConditions'])) $options['onConditions']=array_merge($options['onConditions'],$onConditions);
 			else $options['onConditions']=$onConditions;
 			$options['reltype']=substr($join['reltype'],0,-7);
 			unset($options['joins']);
 			$this->_addJoinInJoin($options);
 		}else{
-			if($join['foreignKey']!==false){
-				$onConditions=array($modelAlias.'.'.$join['foreignKey'].'='.$join['alias'].'.'.$join['associationForeignKey']);
+			/* DEV */
+			if(!isset($join[0])) throw new Exception('$join[0] is not defined: '.print_r($join,true));
+			if(isset($join['foreignKey'])) throw new Exception('foreignKey is defined: '.print_r($join,true));
+			if(isset($join['associationForeignKey'])) throw new Exception('associationForeignKey is defined: '.print_r($join,true));
+			/* /DEV */
+			if($join[0]!==false){
+				$onConditions=array();
+				foreach($join[0] as $foreignKey=>$associationForeignKey)
+					$onConditions[]=$modelAlias.'.`'.$foreignKey.'`='.$join['alias'].'.`'.$associationForeignKey.'`';
 				if(isset($join['onConditions'])) $join['onConditions']=array_merge($join['onConditions'],$onConditions);
 				else $join['onConditions']=$onConditions;
 			}
@@ -452,41 +475,41 @@ abstract class QFind extends QSelect{
 		switch($w['reltype']){
 			case 'belongsTo':
 			case 'hasOne':
-				$objField = $w['foreignKey'];
-				$resField = $w['associationForeignKey'];
+				$objFields = array_keys($w[0]);
+				$resFields = $w[0];
 				
-				return self::_createBelongsToAndHasOneQuery($query,$w,$obj->_get($objField),$resField);
+				return self::_createBelongsToAndHasOneQuery($query,$w,$obj->_getFields($objFields),$resFields);
 			case 'hasMany':
-				$objField = $w['foreignKey'];
-				$resField = $w['associationForeignKey'];
+				$objFields = array_keys($w[0]);
+				$resFields = $w[0];
 				
-				return self::_createHasManyQuery($query,$w,$obj->_get($objField),$resField);
+				return self::_createHasManyQuery($query,$w,$obj->_getFields($objFields),$resFields);
 			case 'hasOneThrough':
 				$withMore=array(); reset($w['joins']);
 				self::_recursiveThroughWith($withMore,$w['joins'],$w);
 				$rel=$obj::$_relations[$w['relName']];
 				
-				$objField = $rel['foreignKey'];
-				$resField = $rel['associationForeignKey'];
+				$objFields = array_keys($rel[0]);
+				$resFields = $rel[0];
 				
-				return self::_createBelongsToAndHasOneQuery($query,$w,$obj->_get($objField),$resField,false,$withMore['with'],$rel['alias']);
+				return self::_createBelongsToAndHasOneQuery($query,$w,$obj->_getFields($objFields),$resFields,false,$withMore['with'],$rel['alias']);
 			case 'hasManyThrough':
 				$withMore=array(); reset($w['joins']);
 				self::_recursiveThroughWith($withMore,$w['joins'],$w);
 				$rel=$obj::$_relations[$w['relName']];
 				
-				$objField = $rel['foreignKey'];
-				$resField = $rel['associationForeignKey'];
+				$objFields = array_keys($rel[0]);
+				$resFields = $rel[0];
 				
-				return self::_createHasManyQuery($query,$w,$obj->_get($objField),$resField,false,$withMore['with'],$rel['alias']);
+				return self::_createHasManyQuery($query,$w,$obj->_getFields($objFields),$resFields,false,$withMore['with'],$rel['alias']);
 			case 'belongsToType':
 				$type=$obj->_get($w['fieldType']);
 				if(empty($w['types'][$type])) return false;
 				
-				$objField = $w['foreignKey'];
-				$resField = $w['associationForeignKey'];
+				$objFields = array_keys($w[0]);
+				$resFields = $w[0];
 				
-				return self::_createBelongsToAndHasOneQuery($query,$w['relations'][$w['types'][$type]],$obj->_get($objField),$resField);
+				return self::_createBelongsToAndHasOneQuery($query,$w['relations'][$w['types'][$type]],$obj->_get($objFields),$resFields);
 			default:
 				throw new Exception('Unknown relation; '.$w['reltype']);
 		}
@@ -527,40 +550,46 @@ abstract class QFind extends QSelect{
 			switch($w['reltype']){
 				case 'belongsTo':
 				case 'hasOne':
-					$objField = $w['foreignKey'];
-					$resField = $w['associationForeignKey'];
+					$objFields = array_keys($w[0]);
 					
-					$values=self::_getValues($objs,$objField);
+					$values=self::_getValues($objs,$objFields);
 					if(!empty($values)){
-						$listRes = self::_createHasManyQuery($w['fieldsInModel']===true?new QFindRows($w['modelName']):null,$w,$values,$resField,true)->execute();
+						$resFields = $w[0];
+						$listRes = self::_createHasManyQuery($w['fieldsInModel']===true?new QFindRows($w['modelName']):null,$w,$values,$resFields,true)->execute();
 						
 						if($listRes){
 							if($w['fieldsInModel']===true){
 								foreach($objs as $obj)
-									foreach($listRes as $res)
-										if($res[$resField] == $obj->_get($objField)){
-											foreach($res as $k=>$v)
-												if($k!==$resField) $obj->_set($k,$v);
-											break;
-										}
+									foreach($listRes as $res){
+										foreach($resFields as $keyField=>$resField)
+											if($res[$resField] == $obj->_get($keyField)) goto endforeachlistres;
+										
+										foreach($res as $k=>$v)
+											if($k!==$resField) $obj->_set($k,$v);
+										break;
+										endforeachlistres:
+									}
 							}else{
 								foreach($objs as $obj)
-									foreach($listRes as $res)
-										if ($res->_get($resField) == $obj->_get($objField)){
-											$obj->_set($w['dataName'],$res);
-											break;
-										}
+									foreach($listRes as $res){
+										foreach($resFields as $keyField=>$resField)
+											if($res[$resField] == $obj->_get($keyField)) goto endforeachlistres2;
+										
+										$obj->_set($w['dataName'],$res);
+										
+										endforeachlistres2:
+									}
 							}
 						}
 					}
 					unset($with[$key]);
 					break;
 				case 'hasMany':
-					$objField = $w['foreignKey'];
+					$objFields = array_keys($w[0]);
 					
-					$values=self::_getValues($objs,$objField);
+					$values=self::_getValues($objs,$objFields);
 					if(!empty($values)){
-						$resField = $w['associationForeignKey'];
+						$resFields = $w[0];
 						
 						if(count($w['fields'])===1){
 							$keyFirstField=key($w['fields']);
@@ -571,17 +600,20 @@ abstract class QFind extends QSelect{
 						else $tabResKey=false;
 						if(isset($w['groupResBy'])){ $groupResBy=$w['groupResBy']; unset($w['groupResBy']); }
 						else $groupResBy=false;
-						$query=self::_createHasManyQuery(new QFindAll($w['modelName']),$w,$values,$resField,true);
+						$query=self::_createHasManyQuery(new QFindAll($w['modelName']),$w,$values,$resFields,true);
 						$listRes=$query->execute();
 						if($listRes) foreach($objs as $key=>$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
-								if($res->_get($resField) == $obj->_get($objField)){
-									if($oneField===false){
-										if($tabResKey!==false) $listObjsRes[$res->_get($tabResKey)]=$res;
-										else $listObjsRes[]=$res;
-									}else $listObjsRes[]=$res->_get($oneField);
-								}
+								foreach($resFields as $keyField=>$resField)
+									if($res->_get($resField) == $obj->_get($keyField)) goto endforeachlistresHasMany;
+								
+								if($oneField===false){
+									if($tabResKey!==false) $listObjsRes[$res->_get($tabResKey)]=$res;
+									else $listObjsRes[]=$res;
+								}else $listObjsRes[]=$res->_get($oneField);
+								
+								endforeachlistresHasMany:
 							}
 							if($groupResBy!==false){
 								$finalRes=array();
@@ -599,30 +631,33 @@ abstract class QFind extends QSelect{
 					$obj=current($objs);
 					$rel=$obj::$_relations[$w['relName']];
 					
-					$objField = $rel['foreignKey'];
+					$objFields = array_keys($rel[0]);
 					
-					$values=self::_getValues($objs,$objField);
+					$values=self::_getValues($objs,$objFields);
 					if(!empty($values)){
 						$withMore=array(); reset($w['joins']);
 						self::_recursiveThroughWith($withMore,$w['joins'],$obj::$__className);
 						
-						$resField = $rel['associationForeignKey'];
+						$resFields = $rel[0];
 						$oneField=count($w['fields'])===1 && !isset($w['with'])?$w['fields'][0]:false;
 						
 						/* DEV */if(empty($w['fields'])) throw new Exception('You must specify fields...');/* /DEV */
-						$w['fields']['('.$rel['alias'].'.`'.$resField.'`)']=$resField;
+						foreach($resFields as $resField){
+							$w['fields']['('.$rel['alias'].'.`'.$resField.'`)']=$resField;
+							if(isset($w['groupBy'])) $w['groupBy']=$rel['alias'].'.'.$resField.','.$w['groupBy'];
+						}
 						
-						if(isset($w['groupBy'])) $w['groupBy']=$rel['alias'].'.'.$resField.','.$w['groupBy'];
-						
-						$listRes=self::_createHasManyQuery(null,$w,$values,$resField,false,$withMore['with'],$rel['alias'])->execute();
+						$listRes=self::_createHasManyQuery(null,$w,$values,$resFields,false,$withMore['with'],$rel['alias'])->execute();
 						if($listRes!==false){
 							foreach($objs as $k=>&$obj){
 								$listObjsRes=array();
 								foreach($listRes as $res){
-									if($res->_get($resField) == $obj->_get($objField)){
-										if($oneField===false) $listObjsRes[] = $res;
-										else $listObjsRes[]=$res->_get($oneField);
-									}
+									foreach($resFields as $keyField=>$resField)
+										if($res->_get($resField) == $obj->_get($keyField)) goto endforeachlistresHasManyThrough;
+									if($oneField===false) $listObjsRes[] = $res;
+									else $listObjsRes[]=$res->_get($oneField);
+									
+									endforeachlistresHasManyThrough:
 								}
 								$obj->_set($w['dataName'],$listObjsRes);
 							}
@@ -687,40 +722,43 @@ abstract class QFind extends QSelect{
 		self::AfterQuery_obj($with,$model);
 	}
 	
-	private static function _getValues($objs,$objField){
+	private static function _getValues($objs,$objFields){
 		$values=array();
 		foreach($objs as &$obj){
-			$value=$obj->_get($objField);
-			if($value !== null) $values[]=$value;
+			foreach($objFields as $objField){
+				$value=$obj->_get($objField);
+				if($value !== null) $values[$objField][]=$value;
+			}
 		}
-		return array_unique($values);
+		foreach($values as &$v) $v=array_unique($v,SORT_REGULAR);
+		return $values;
 	}
 	
-	private static function _createBelongsToAndHasOneQuery($query,$w,$values,&$resField,$addResField=false,$moreWith=null,$fieldTableAlias=null){
+	private static function _createBelongsToAndHasOneQuery($query,$w,$values,$resFields,$addResFields=false,$moreWith=null,$fieldTableAlias=null){
 		if($query===null) $query=new QFindOne($w['modelName']);
-		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
+		$query->setFields($addResFields ? self::_addFieldsIfNecessary($w['fields'],$resFields) : $w['fields']);
 		if(isset($w['where'])) $where=$w['where']; else $where=array();
-		if($fieldTableAlias !== null) $resField=$fieldTableAlias.'.'.$resField;
-		$where[$resField]=$values;
+		if($fieldTableAlias !== null) foreach($resFields as &$resField) $resField=$fieldTableAlias.'.'.$resField;
+		foreach($resFields as $keyField=>$resField) $where[$resField]=$values[$keyField];
 		$query->where($where);
 		if(isset($w['with'])) $query->_setWith($w['with']);
 		if($moreWith!==null) $query->setAllWith($moreWith);
 		return $query;
 	}
 	
-	private static function _createHasManyQuery($query,$w,$values,$resField,$addResField=false,$moreWith=null,$fieldTableAlias=null){
+	private static function _createHasManyQuery($query,$w,$values,$resFields,$addResFields=false,$moreWith=null,$fieldTableAlias=null){
 		if($query===null){
-			if($addResField===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
+			if($addResFields===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
 			else $query = new QFindAll($w['modelName']);
 		}
-		$query->setFields($addResField ? self::_addFieldIfNecessary($w['fields'],$resField) : $w['fields']);
+		$query->setFields($addResFields ? self::_addFieldsIfNecessary($w['fields'],$resFields) : $w['fields']);
 		if(isset($w['where'])) $where=$w['where']; else $where=array();
-		if($fieldTableAlias !== null) $resField=$fieldTableAlias.'.'.$resField;
-		$where[$resField]=$values;
+		if($fieldTableAlias !== null) foreach($resFields as &$resField) $resField=$fieldTableAlias.'.'.$resField;
+		foreach($resFields as $keyField=>$resField) $where[$resField]=$values[$keyField];
 		$query->where($where);
 		if(isset($w['orderBy'])) $query->orderBy($w['orderBy']);
 		if(isset($w['groupBy'])){
-			if($addResField===true){
+			if($addResFields===true){
 				if(is_string($w['groupBy'])) $w['groupBy']=array($w['groupBy']);
 				$w['groupBy'][]=$resField;
 			}
@@ -734,9 +772,9 @@ abstract class QFind extends QSelect{
 		return $query;
 	}
 	
-	private static function _addFieldIfNecessary(&$fields,$field){
-		if(empty($fields) || in_array($field,$fields)) return $fields;
-		$fields[]=$field;
+	private static function _addFieldsIfNecessary(&$fields,$addFields){
+		if(empty($fields)) return $fields;
+		foreach($addFields as $addField) if(!in_array($addField,$fields)) $fields[]=$addField;
 		return $fields;
 	}
 }
