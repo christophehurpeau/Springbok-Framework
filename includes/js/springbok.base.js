@@ -206,12 +206,11 @@ window.S={
 		}
 	},
 	
-	map:function(objectOrArray,callback){
-		if(objectOrArray)
-			$.each(function(i,v){
-				objectOrArray[i]=callback(v,i);
-			});
-		return objectOrArray;
+	map:function(arrayOrObject,callback){
+		return S.isArray(arrayOrObject) ? arrayOrObject.map(callback) : UObj.map(arrayOrObject,callback);
+	},
+	join:function(arrayOrObject,separator){
+		return S.isArray(arrayOrObject) ? arrayOrObject.join(separator) : UObj.join(arrayOrObject,separator);
 	},
 	
 	/* STRING */
