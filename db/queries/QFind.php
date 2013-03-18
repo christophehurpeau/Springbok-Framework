@@ -562,7 +562,7 @@ abstract class QFind extends QSelect{
 								foreach($objs as $obj)
 									foreach($listRes as $res){
 										foreach($resFields as $keyField=>$resField)
-											if($res[$resField] == $obj->_get($keyField)) goto endforeachlistres;
+											if($res[$resField] !== $obj->_get($keyField)) goto endforeachlistres;
 										
 										foreach($res as $k=>$v)
 											if($k!==$resField) $obj->_set($k,$v);
@@ -573,7 +573,7 @@ abstract class QFind extends QSelect{
 								foreach($objs as $obj)
 									foreach($listRes as $res){
 										foreach($resFields as $keyField=>$resField)
-											if($res[$resField] == $obj->_get($keyField)) goto endforeachlistres2;
+											if($res[$resField] !== $obj->_get($keyField)) goto endforeachlistres2;
 										
 										$obj->_set($w['dataName'],$res);
 										
@@ -606,7 +606,7 @@ abstract class QFind extends QSelect{
 							$listObjsRes=array();
 							foreach($listRes as &$res){
 								foreach($resFields as $keyField=>$resField)
-									if($res->_get($resField) == $obj->_get($keyField)) goto endforeachlistresHasMany;
+									if($res->_get($resField) !== $obj->_get($keyField)) goto endforeachlistresHasMany;
 								
 								if($oneField===false){
 									if($tabResKey!==false) $listObjsRes[$res->_get($tabResKey)]=$res;
@@ -653,7 +653,7 @@ abstract class QFind extends QSelect{
 								$listObjsRes=array();
 								foreach($listRes as $res){
 									foreach($resFields as $keyField=>$resField)
-										if($res->_get($resField) == $obj->_get($keyField)) goto endforeachlistresHasManyThrough;
+										if($res->_get($resField) !== $obj->_get($keyField)) goto endforeachlistresHasManyThrough;
 									if($oneField===false) $listObjsRes[] = $res;
 									else $listObjsRes[]=$res->_get($oneField);
 									
