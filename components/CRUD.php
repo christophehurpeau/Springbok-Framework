@@ -67,7 +67,6 @@ class CRUD{
 		echo $form->fieldsetStart($title);
 		$fields===null ? $form->all() : $form->autoFields($fields);
 		echo $form->end();
-		echo HHtml::jsInline('$("#formCrud'.$model.'").ht5ifv();');
 		if($renderView) $v->render();
 	}
 	
