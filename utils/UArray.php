@@ -140,4 +140,9 @@ class UArray {
 		}
 		return false;
 	}
+	
+	public static function firstValue($array){
+		foreach($array as $elt) return $elt;
+		return false;
+	}
 }
