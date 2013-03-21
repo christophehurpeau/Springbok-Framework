@@ -3,15 +3,17 @@ if($('#container').length===0 && $('#page').css('position')!=='fixed') $('body')
 var checkedDivFixedPosition=false,checkedDivPagePosition=false;
 function checkDivFixedPosition(){
 	$('#container').addClass('devEnvironnement');
-	var divFixed=$('div.fixed'),divPage=$('#page');
+	var divFixed=$('div.fixed'),divPage=$('#page'),header=$('header');
 	if(divPage.length!==0 && checkedDivPagePosition===false){
 		checkedDivPagePosition=true;
-		if(divPage.css('position')==='absolute') $('head').append('<style type="text/css">html body #container{margin-top:0 !important;}#container #page{top:'+(parseInt(divPage.css('top'))+28)+'px;}</style>')
+		if(divPage.css('position')==='absolute') $('head').append('<style type="text/css">html body #container{margin-top:0 !important;}#container #page{top:'+(parseInt(divPage.css('top'))+28)+'px;}'
+				+'@media (min-width:1200px){ #container #page{top:'+divPage.css('top')+'} }</style>')
 	}
 	if(divFixed.length!==0 && checkedDivFixedPosition===false){
 		checkedDivFixedPosition=true;
 		if(divFixed.css('position')==='fixed')
-			$('head').append('<style type="text/css">#container #page div.fixed{top:'+(parseInt(divFixed.css('top'))+28)+'px;}</style>')
+			$('head').append('<style type="text/css">#container #page div.fixed{top:'+(parseInt(divFixed.css('top'))+28)+'px;}'
+				+'@media (min-width:1200px){ #container #page div.fixed{top:'+divFixed.css('top')+'}  #container #page div.fixed.right{ right:200px }}</style>')
 	}
 }
 checkDivFixedPosition();
