@@ -14,15 +14,15 @@ class HDev{
 		echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/springbokBar.css'));
 		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE_SRC.'includes/js/jquery/json.js').file_get_contents(CORE_SRC.'includes/springbokBar.js').'});');
 		$changes=&App::$changes[0];
-		echo '<div id="springbok-bar"><b onclick="$(\'#springbok-bar\').fadeOut()">Springbok</b>'
-			.' | <a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':
+		echo '<div id="springbok-bar"><a href="#" class="springbokTitle" onclick="if(confirm(\'Voulez-vous cacher SpringbokBar ?\')) $(\'#springbok-bar\').fadeOut()"><b>Springbok</b></a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':
 									('<span'.($changes?($changes[2]?' style="color:red"':($changes[3]?' style="color:orange"':'')):'').'>'
 										.empty($changes) || empty($changes[0][1]['all']) ?'0':count($changes[0][1]['all']))).'</span>)</a>'
-			.' | <a href="javascript:;" rel="queries">Queries ('.(!class_exists('DB',false)?'0':(array_sum(array_map(function(&$db){return $db->getNbQueries();},DB::getAll())))).')</a>'
-			.' | <a href="javascript:;" rel="route">Route</a>'
-			.' | <a href="javascript:;" rel="sessiotn">Session</a>'
-			.' | <a href="javascript:;" rel="js-console">Js Console (<span>0</span>)</a>'
-			.' | <a href="javascript:;" rel="ajax">Ajax (<span>0</span>)</a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="queries">Queries ('.(!class_exists('DB',false)?'0':(array_sum(array_map(function(&$db){return $db->getNbQueries();},DB::getAll())))).')</a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="route">Route</a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="sessiotn">Session</a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="js-console">Js Console (<span>0</span>)</a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="ajax">Ajax (<span>0</span>)</a>'
 			.'</div>';
 		
 		echo '<div id="springbok-bar-changes" class="springbok-bar-content"><div>'; self::springbokBarChanges(); echo '</div></div>';

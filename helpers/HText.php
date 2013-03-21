@@ -33,7 +33,6 @@ class HText{
 		}
 		
 		$content=explode("\n",$content);
-		if($withLineNumbers) $withLineNumbers='%'.strlen((string)count($content)).'d';
 		
 		if(($ok=($line <= count($content)))){
 			$start=array_slice($content,$firstline=max(0,($minmax?($line-1-$minmax):0)),$line-1-$firstline);
@@ -41,6 +40,7 @@ class HText{
 			$end=$minmax?array_slice($content,$line,$minmax):array_slice($content,$line);
 		}else $start=$content;
 		
+		if($withLineNumbers) $withLineNumbers='%'.strlen((string)($ok?$line+$minmax:$minmax+1)).'d';
 		$content=self::lines($withLineNumbers,$ok?$firstline+1:1,$start,$formatter);
 		if($ok){
 			$attributes=array();
@@ -49,6 +49,7 @@ class HText{
 			$content.=self::line($withLineNumbers,$line,$attributes,$lineContent,$formatter);
 			$content.=self::lines($withLineNumbers,$line+1,$end,$formatter);
 		}
+		!isset($preAttrs['style']) ? $preAttrs['style']='position:relative;' : $preAttrs['style'].=';position:relative;';
 		return HHtml::tag('pre',$preAttrs,$content,false);
 	}
 	
@@ -59,6 +60,11 @@ class HText{
 	}
 	
 	private static function line($withLineNumbers,$numLine,$attributes,$contentLine){
-		return HHtml::tag('div',$attributes,($withLineNumbers?('<i style="color:#AAA;font-size:7pt;">'.sprintf($withLineNumbers,$numLine).'</i> '):'').$contentLine,false);
+		//!isset($attributes['style']) ? $attributes['style']='overflow:auto;' : $attributes['style'].=';overflow:auto;';
+		!isset($attributes['style']) ? $attributes['style']='white-space:pre-wrap;'.($withLineNumbers?'padding-left:20px;':'')
+										 : $attributes['style'].=';white-space:pre-wrap;'.($withLineNumbers?'padding-left:20px;':'');
+		
+		return HHtml::tag('div',$attributes,($withLineNumbers?('<i style="color:#AAA;font-size:7pt;position:absolute;left:1px;padding-top:1px;">'
+					.sprintf($withLineNumbers,$numLine).'</i> '):'').$contentLine,false);
 	}
 }
