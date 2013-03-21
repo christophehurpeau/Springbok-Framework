@@ -95,6 +95,7 @@ class QInsert extends AQuery{
 					if($value===NULL) $sql.='NULL';
 					elseif(is_int($value) || is_float($value)) $sql.=$value;
 					elseif(is_bool($value)) $sql.=($value===true?'""':'NULL');
+					elseif(is_array($value)) $sql.=$value[0];
 					else $sql.=$this->_db->escape($value);
 					
 					$sql.=',';
