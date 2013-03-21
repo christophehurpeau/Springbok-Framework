@@ -10,6 +10,6 @@ mkdir src/web/sprites
 sudo chown -R www-data src/web/sprites
 mkdir src/dbEvolutions
 touch src/dbEvolutions/Versions.php
-sudo chown -R www-data src/dbEvolutions
-sudo chmod -R 775 src/dbEvolutions
+sudo chown -R www-data src/dbEvolutions currentDbVersion
+sudo chmod -R 775 src/dbEvolutions currentDbVersion
 
