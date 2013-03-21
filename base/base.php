@@ -191,8 +191,8 @@ function h($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,
 function h2($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
 /* /PROD */
 function urlenc($string){return urlencode(urlencode($string)); }
-function startsWith($haystack,$needle) {return substr($haystack,0,strlen($needle))===$needle;}
-function endsWith($haystack,$needle){return strrpos($haystack,$needle)===strlen($haystack)-strlen($needle);}
+function startsWith($haystack,$needle){ $l=UString::length($needle); return mb_substr($haystack,0,$l)===$needle;}
+function endsWith($haystack,$needle){ $l=UString::length($needle); return mb_strrpos($haystack,$needle)===UString::length($haystack)-$l;}
 
 //TODO PhpFileEnhancer
 function isE(&$var,$then,$else='ReplaceWithVar'){ return empty($var) ? $then : ($else==='ReplaceWithVar'?$var:$else); }

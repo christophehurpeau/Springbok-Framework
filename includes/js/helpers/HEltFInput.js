@@ -38,5 +38,6 @@ S.HEltFInput=S.extClass(S.HEltFContble,{
 	},
 	container:function(){ var type=this.elt.attr('type'); return new S.HEltFCont(this,'input '+(type!='text'?'text ':'')+type); },
 	wp100:function(){ this.addClass('wp100'); return this; },
-	change:function(){ this.elt.change.apply(this.elt,arguments); return this; }
+	change:function(){ this.elt.change.apply(this.elt,arguments); return this; },
+	applyElt:function(name){ this.elt[name].apply(this.elt,UArray.slice1(arguments)); return this; }
 });

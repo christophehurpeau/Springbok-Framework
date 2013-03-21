@@ -27,7 +27,7 @@ html body #springbok-bar{
 	z-index: 99999;
 	overflow:hidden;
 }
-html body #springbok-bar a,html body #springbok-bar b{
+html body #springbok-bar a{
 	padding:0 6px;
 	display:inline-block;
 	line-height:27px;
@@ -35,11 +35,33 @@ html body #springbok-bar a,html body #springbok-bar b{
 	text-decoration:none;
 	outline:none;
 }
-@media (max-width: 640px) {
-	html body #springbok-bar,html body .springbok-bar-content *{
-		font:100 8pt 'Ubuntu Condensed','Ubuntu','Droid Sans Condensed','Droid Sans','Segoe UI Condensed','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+@media (min-width:1200px){
+	html body #container{margin-top:0;}
+	html body header,html body .sticky,html body #container #page .sticky{
+		top:0;
 	}
-	html body #springbok-bar a,html body #springbok-bar b{
+	html body header{ right:200px }
+	html body{
+		padding-right:200px;
+	}
+
+
+	html body #springbok-bar{
+		width:200px;
+		height:100%;
+		bottom:0; left:auto;
+	}
+	html body #springbok-bar a{
+		display:block;
+	}
+	
+	html body #springbok-bar .springokBarSep{ display:none; }
+}
+@media (max-width: 640px){
+	html body #springbok-bar,html body .springbok-bar-content *{
+		font:100% 8pt 'Ubuntu Condensed','Ubuntu','Droid Sans Condensed','Droid Sans','Segoe UI Condensed','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	}
+	html body #springbok-bar a{
 		padding:0 2px;
 		text-shadow:none !important;/* jquery mobile*/
 	}
@@ -67,7 +89,7 @@ html body #springbok-bar a.current{
 	background: linear-gradient(top, #333 0%,#555 100%); /* W3C */
 }
 
-html body #springbok-bar b{
+html body #springbok-bar a.springbokTitle{
 	text-shadow:1px 1px #666;
 }
 
@@ -90,6 +112,12 @@ html body .springbok-bar-content/*,#springbok-bar-popup*/{
     display:none;
     color:#FFF;
     background:#555;
+}
+@media (min-width:1200px){
+	html body .springbok-bar-content/*,#springbok-bar-popup*/{
+		top:0;right:200px;
+		width:auto;
+	}
 }
 /*
 #springbok-bar-popup{

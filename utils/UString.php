@@ -49,4 +49,5 @@ class UString{
 	public static function low($str){ return mb_strtolower($str); }
 	public static function up($str){ return mb_strtoupper($str); }
 	public static function ucFirst($str){ return mb_strtoupper(mb_substr($str,0,1)) . mb_substr($str,1); }
+	public static function length($str){ return mb_strlen($str); }
 }

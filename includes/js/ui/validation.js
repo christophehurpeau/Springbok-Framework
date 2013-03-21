@@ -71,7 +71,7 @@ S.ready(function(){
 				
 				//http://www.w3.org/TR/html5/common-microsyntaxes.html#real-numbers
 				number:function($node,val){
-					return !/^-?[0-9]+(\.[0-9]*)?(E(-|\+)?[0-9]+)?$/i.test(val) || !(val=parseInt(val,10))
+					return !/^-?[0-9]+(\.[0-9]*)?(E(-|\+)?[0-9]+)?$/i.test(val) || ((val=parseInt(val,10))===NaN)
 						|| checkMinAndMax($node,val,function(v){ return parseInt(v,10); });
 				},
 				range:function($node,val){ return restrictions.input.type.number.text($node,val); },

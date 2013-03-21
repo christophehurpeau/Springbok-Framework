@@ -49,7 +49,7 @@ class QTable extends QFindAll{
 				$modelRelations=$modelName::$__modelInfos['relations'];
 				$parentRelModelName=isset($modelRelations['Parent'])?$modelRelations['Parent']['modelName']:false;
 				foreach($modelRelations as $relKey=>&$rel){
-					if($rel['reltype']==='belongsTo' && $rel['modelName']!==$parentRelModelName && in_array($rel['foreignKey'],$fields) 
+					if($rel['reltype']==='belongsTo' && $rel['modelName']!==$parentRelModelName && count($rel[0])===1 && in_array(key($rel),$fields) 
 							&& empty($modelName::$__PROP_DEF[$rel['foreignKey']]['annotations']['Enum'])) $belongsToFields[$rel['foreignKey']]=$relKey;}
 			}
 			foreach($belongsToFields as $field=>$relKey){
