@@ -179,6 +179,7 @@ function dev_eval($code){
 /* PROD */
 function prettyDebug($message,$skipLength=2){}
 function debug($object){}
+function debugNoFlush(){}
 function debugCode($code){}
 function debugVar($var){}
 function debugVarNoFlush(){}
