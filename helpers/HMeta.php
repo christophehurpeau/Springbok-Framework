@@ -55,13 +55,15 @@ class HMeta{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msApp()</div>'; /* /DEV */
 	}
 	public static function msAppAction($name,$url,$entry=null,$icon='favicon.ico'){
-		HHead::metaName("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
+		HHead::metaNameAdd("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /* /DEV */
 	}
 
 	public static function position($lat,$lng,$placename=null,$region=null){
 		/* http://en.wikipedia.org/wiki/Geotagging */
 		HHead::metaName("ICBM",$lat.', '.$lng);
+		HHead::metaProperty('place:location:latitude',$lat);
+		HHead::metaProperty('place:location:longitude',$lng);
 		HHead::metaName("geo.position",$lat.';'.$lng);
 		if($placename!==null) HHead::metaName("geo.placename",$placename);
 		if($region!==null) HHead::metaName("geo.region",$region);
@@ -83,7 +85,8 @@ class HMeta{
 	public static function displayCanonical(){
 		/* DEV */ if(self::$canonical===null && Springbok::$inError===null) throw new Exception("canonical is not defined"); /* /DEV */
 		if(self::$canonical===false) return '';
-		echo '<link rel="canonical" href="'.HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true).'"/>';
+		echo '<link rel="canonical" href="'.($href=HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true)).'"/>'
+				.'<meta property="og:url" content="'.$href.'"/>';
 		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,true).'"/>';
 		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,true).'"/>';
 		if(self::$smallSizes!==null) echo '<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
