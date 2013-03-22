@@ -43,6 +43,16 @@ class HHead{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /* /DEV */
 	}
 	
+	public static function metaNameAdd($name,$content){
+		/* DEV */
+		self::testDisplayed();
+		if($name!==h($name)) throw new Exception('Please escape name');
+		/* /DEV */
+		if(!isset(self::$head['metas.name.add'])) self::$head['metas.name.add']='';
+		self::$head['metas.name.add'].='<meta name="'.$name.'" content="'.h($content).'"/>';
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /* /DEV */
+	}
+	
 	public static function metaProperty($property,$content){
 		/* DEV */
 		self::testDisplayed();
@@ -53,6 +63,17 @@ class HHead{
 		self::$head['metaprop.'.$property]='<meta property="'.$property.'" content="'.h($content).'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /* /DEV */
 	}
+	
+	public static function metaPropertyAdd($property,$content){
+		/* DEV */
+		self::testDisplayed();
+		if($property!==h($property)) throw new Exception('Please escape property');
+		/* /DEV */
+		if(!isset(self::$head['metas.property.add'])) self::$head['metas.property.add']='';
+		self::$head['metas.property.add'].='<meta property="'.$property.'" content="'.h($content).'"/>';
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /* /DEV */
+	}
+	
 	
 	/* DEV */ private static $_IE_started=false; /* /DEV */
 	public static function startIeIf($ieVersion,$operator){

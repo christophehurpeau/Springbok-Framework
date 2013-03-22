@@ -173,8 +173,12 @@ class App{
 			/* DEV */ if(!class_exists($controllerName,false)) throw new Exception("Controller Class does not exists : ".$controllerName); /* /DEV */
 			$controllerName::dispatch(Springbok::$suffix,$mdef);
 		}catch(Exception $exception){
+			$forceDefault=false;
 			if(!($exception instanceof HttpException)){
-				if($exception instanceof DBException) $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
+				if(self::$inError!==null && self::$inError instanceof HttpException){
+					$e=self::$inError;
+					$forceDefault=true;
+				}elseif($exception instanceof DBException) $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
 				elseif($exception instanceof mysqli_sql_exception){
 					/* http://dev.mysql.com/doc/refman//5.5/en/error-messages-server.html */
 					$code=$exception->getCode();
@@ -210,7 +214,7 @@ class App{
 			/* PROD */
 			if($e->getDescription()===false) exit;
 			$vars=array('title'=>$e->getTitle(),'descr'=>$e->getDescription());
-			if(file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){
+			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){
 				include_once CORE.'mvc/views/View.php';
 				render(APP.'views'.Springbok::$suffix.'/http-exception.php',$vars);
 			}else render(CORE.'mvc/views/http-exception.php',$vars);
