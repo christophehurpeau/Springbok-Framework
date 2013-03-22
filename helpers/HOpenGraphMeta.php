@@ -14,16 +14,6 @@ class HOpenGraphMeta{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::description()</div>'; /* /DEV */
 	}
 	
-	/** That image should be at least 50x50 in any of the usually supported image forms (JPG, PNG, etc.) */
-	public static function image($url,$type=null,$width=null,$height=null){
-		HHead::metaProperty('og:image',$url);
-		if($type!==null) HHead::metaProperty('og:image:type',$type);
-		if($width!==null) HHead::metaProperty('og:image:width',$width);
-		if($height!==null) HHead::metaProperty('og:image:height',$height);
-		
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::image()</div>'; /* /DEV */
-	}
-	
 	public static function siteName($siteName){
 		HHead::metaProperty('og:site_name',$siteName);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::siteName()</div>'; /* /DEV */
@@ -42,6 +32,18 @@ class HOpenGraphMeta{
 	public static function type($type){
 		HHead::metaProperty('og:type',$type);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::type()</div>'; /* /DEV */
+	}
+	
+	
+	
+	/** That image should be at least 50x50 in any of the usually supported image forms (JPG, PNG, etc.) */
+	public static function image($url,$type=null,$width=null,$height=null){
+		HHead::metaPropertyAdd('og:image',$url);
+		if($type!==null) HHead::metaPropertyAdd('og:image:type',$type);
+		if($width!==null) HHead::metaPropertyAdd('og:image:width',$width);
+		if($height!==null) HHead::metaPropertyAdd('og:image:height',$height);
+		
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::image()</div>'; /* /DEV */
 	}
 	
 }
