@@ -58,6 +58,14 @@ class HMeta{
 		HHead::metaName("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /* /DEV */
 	}
+
+	public static function position($lat,$lng,$placename=null,$region=null){
+		/* http://en.wikipedia.org/wiki/Geotagging */
+		HHead::metaName("ICBM",$lat.', '.$lng);
+		HHead::metaName("geo.position",$lat.';'.$lng);
+		if($placename!==null) HHead::metaName("geo.placename",$placename);
+		if($region!==null) HHead::metaName("geo.region",$region);
+	}
 	
 	public static function canonical($url){ self::$canonical=$url; }
 	public static function canonicalEntry($entry){ self::$canonicalEntry=$entry; }
