@@ -11,8 +11,11 @@ class BNormalized_build{
 		if(!isset($modelFile->_fields[$displayField]) && !isset($annotations['Normalized']))
 			throw new Exception($modelFile->_className.' must have an field "'.$displayField.'"');
 		
+		if(isset($modelFile->_fields[$displayField]['Translatable'])) return;
+		
 		$modelFile->_fields['normalized']=array('SqlType'=>isset($annotations['Normalized']) ? array($annotations['Normalized'][0][0]) : $modelFile->_fields[$displayField]['SqlType'],
-					'NotNull'=>false, 'Index'=>false, 'NotBindable'=>false);
+					'NotNull'=>false, 'NotBindable'=>false);
 		if(isset($annotations['UniqueNormalized'])) $modelFile->_fields['normalized']['Unique']=false;
+		else $modelFile->_fields['normalized']['Index']=false;
 	}
 }

@@ -1,4 +1,4 @@
 <?php
-tree BLang{
+trait BLang{
 	
 }

@@ -49,6 +49,10 @@ class UPhp{
 		else return "'".str_replace(array('\\\'','\''),array('\\\\\'','\\\''),$string)."'";
 	}
 	
+	public static function toAnnotation($name,$value){
+		return '@'.$name.substr(self::exportCode($value,''),5);
+	}
+	
 	public static function recursive(/* HIDE */$callback,$args/* /HIDE */){
 		$callback=func_get_arg(0);
 		return call_user_func_array($callback,func_get_args());

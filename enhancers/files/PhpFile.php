@@ -1,9 +1,9 @@
 <?php
 class PhpFile extends EnhancerFile{
 	public static $CACHE_PATH=false;
-	protected $_devContent,$_prodContent,
+	protected $_devContent,$_prodContent;
 		/** [0:'className', 1:'params', path:'path', content:'content'] */
-		$_traits;
+	public $_traits;
 	
 	public static function regexpFunction($name='#'){
 		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).'\s*\((.*)\)\s*{'

@@ -121,19 +121,24 @@ class ModelFile extends PhpFile{
 						$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL),'Index'=>false);
 					}
 					
+					$loadedTraits=array();
 					if(!empty($this->_traits)){
 						foreach($this->_traits as $trait){
 							$loaded=true; $pathBuild=substr($trait['path'],0,-4).'_build.php';
 							if(!class_exists($trait[0].'_build',false) && ($loaded=file_exists($pathBuild))) include $pathBuild;
 							if($loaded)
-								call_user_func_array(array($trait[0].'_build','onBuild'),
+								call_user_func_array(array($loadedTraits[]=$trait[0].'_build','onBuild'),
 									array($modelFile,&$contentInfos,$annotations,$this->enhanced->config,&$classBeforeContent));
 						}
+						foreach($loadedTraits as $loadedTrait)
+							if(method_exists($loadedTrait,'afterBuild'))
+								call_user_func_array(array($loadedTrait,'afterBuild'),array($modelFile));
 					}
 					
 					// check
 					$traitsClassNames=empty($this->_traits) ? array() : array_map(function($t){return $t[0];},$this->_traits);
-					foreach(['Parent'=>'BParent','ParentBigintId'=>'BParent','Child'=>'BChild','Slug'=>'BSlug','Seo'=>'BSeo'] as $annotation=>$traitName){
+					foreach(array('Parent'=>'BParent','ParentBigintId'=>'BParent','Child'=>'BChild',
+								'Slug'=>'BSlug','Seo'=>'BSeo') as $annotation=>$traitName){
 						if(isset($annotations[$annotation]) && !in_array($traitName,$traitsClassNames))
 							throw new Exception($modelFile->_className.' need to use trait "'.$traitName.'"');
 					}
@@ -145,11 +150,11 @@ class ModelFile extends PhpFile{
 					$eventsArray=empty($this->_traits) ? array() : array_map(function($t){ return $t['content_build']; },$this->_traits);
 					$eventsArray[]=$content;
 					
-					foreach(['beforeSave'=>'','beforeInsert'=>'','beforeUpdate'=>'','beforeDelete'=>'',
-						'afterUpdateCompare'=>'$data,$primaryKeys','afterSave'=>['$data=null','$data'],
-								'afterInsert'=>['$data=null','$data'],'afterUpdate'=>['$data=null','$data'],
-								'afterDelete'=>''] as $event=>$params){
-							$eventsCallbacks=[]; $regexp=PhpFile::regexpArrayField($event);
+					foreach(array('beforeSave'=>'','beforeInsert'=>'','beforeUpdate'=>'','beforeDelete'=>'',
+						'afterUpdateCompare'=>'$data,$primaryKeys','afterSave'=>array('$data=null','$data'),
+								'afterInsert'=>array('$data=null','$data'),'afterUpdate'=>array('$data=null','$data'),
+								'afterDelete'=>'') as $event=>$params){
+							$eventsCallbacks=array(); $regexp=PhpFile::regexpArrayField($event);
 							foreach($eventsArray as $c){
 								$c=preg_replace_callback($regexp,function($matches2) use(&$eventsCallbacks,$event,$params){
 									$eval=dev_eval('return '.$matches2[1]);
@@ -162,7 +167,6 @@ class ModelFile extends PhpFile{
 								$classBeforeContent.='protected function '.$event.'('.(is_string($params)?$params:$params[0]).'){'
 									.' return '.implode(' && ',array_unique($eventsCallbacks)).'&& parent::'.$event.'('.(is_string($params)?$params:$params[1]).');}';
 						}
-					
 					
 					
 					
