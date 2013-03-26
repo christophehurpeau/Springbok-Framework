@@ -6,13 +6,15 @@ class HDev{
 	public static function springbokBar($includeJquery=false){
 		/* PROD */ return; /* /PROD */
 		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
-		if($includeJquery){
-			echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
-			readfile(CORE_SRC.'includes/js/libs/jquery-1.8.3.js');
-			echo "//]]>\n</script>";
+		if(defined('CORE_SRC')){
+			if($includeJquery){
+				echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
+				readfile(CORE_SRC.'includes/js/libs/jquery-1.8.3.js');
+				echo "//]]>\n</script>";
+			}
+			echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/springbokBar.css'));
+			echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE_SRC.'includes/js/jquery/json.js').file_get_contents(CORE_SRC.'includes/springbokBar.js').'});');
 		}
-		echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/springbokBar.css'));
-		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE_SRC.'includes/js/jquery/json.js').file_get_contents(CORE_SRC.'includes/springbokBar.js').'});');
 		$changes=&App::$changes[0];
 		echo '<div id="springbok-bar"><a href="#" class="springbokTitle" onclick="if(confirm(\'Voulez-vous cacher SpringbokBar ?\')) $(\'#springbok-bar\').fadeOut()"><b>Springbok</b></a>'
 			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':

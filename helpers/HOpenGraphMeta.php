@@ -36,7 +36,8 @@ class HOpenGraphMeta{
 	
 	
 	
-	/** That image should be at least 50x50 in any of the usually supported image forms (JPG, PNG, etc.) */
+	/** All the images referenced by og:image should be at least 200px in both dimensions, with 1500x1500 preferred. (Maximum image size is 5MB.)
+	 * Please check all the images with tag og:image in the given url and ensure that it meets the recommended specification. */
 	public static function image($url,$type=null,$width=null,$height=null){
 		HHead::metaPropertyAdd('og:image',$url);
 		if($type!==null) HHead::metaPropertyAdd('og:image:type',$type);
