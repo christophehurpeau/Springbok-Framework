@@ -19,7 +19,7 @@ class CCookie{
 	}
 	public static function setLang($lang){
 		if(!isset(self::$_config['lang'])) return null;
-		setcookie($name,$lang,time()+36000,'/','',false,true);
+		setcookie('lang',$lang,time()+36000,'/','',false,true);
 	}
 	
 	public static function delete($name){
