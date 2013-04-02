@@ -11,6 +11,7 @@ class CLang{
 					if(CSession::exists('_lang')){
 						self::$lang=CSession::get('_lang');
 						goto foundlang;
+					}
 					break;
 				case 'cookie':
 					if(CCookie::exists('lang')){
