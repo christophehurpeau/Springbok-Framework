@@ -119,7 +119,7 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 			}
 	}
 	public static function addJS($url){
-		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
+		/* DEV */throw new Exception('Use HHead::linkAddJs() now'); /* /DEV */
 		return HHead::linkJs($url);
 	}
 	public static function jsI18n(){

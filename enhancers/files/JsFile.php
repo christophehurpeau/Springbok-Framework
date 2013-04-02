@@ -286,7 +286,7 @@ class JsFile extends EnhancerFile{
 			
 			$fileContent=file_get_contents($path.DS.$matches[2].'.js');
 			
-			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced);
+			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced)."\n";
 		},$content);
 		return $content;
 	}
