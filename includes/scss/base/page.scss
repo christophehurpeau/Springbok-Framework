@@ -61,13 +61,13 @@ html{
 }
 html,body{ @if $PAGE_100{ height:100%; } @else { min-height:100%; }}
 body/*,.mceContentBody*/{
-	font:normal /*62.5%*/80% Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	font:normal /*62.5%*/80% Ubuntu,'Droid Sans','Segoe UI',Corbel,'DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 	@include background($BodyBackground); color:$BodyColor;
 	margin:0;padding:0;
 	/* @include webkitAntialiased; */
 }
 input,textarea{
-	font:normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'Gill Sans','DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
+	font:normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
 }
 body.mceContentBody{
 	@if $VariableBackground{background:$VariableBackground;}
