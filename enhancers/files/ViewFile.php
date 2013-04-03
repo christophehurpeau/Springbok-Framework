@@ -125,7 +125,7 @@ class ViewFile extends PhpFile{
 		
 		
 		$content=preg_replace_callback('/{recursiveFunction\s+([^}]+)\s*(?:use\(([^)]+)\)\s*)?\}(.*){\/recursiveFunction}/Us',function($m){
-			return '<?php UPhp::recursive(function($callback,'.$m[1].')'.(empty($m[2])?'':' use('.implode(',',$m[2]).')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
+			return '<?php UPhp::recursive(function($callback,'.$m[1].')'.(empty($m[2])?'':' use('.$m[2].')').'{ ?>'.$m[3].'<?php },'.$m[1].') ?>';
 		},$content);
 		
 		$content=preg_replace('/{icon(32|)\s+([^}]+)\s*\}/','<span class="icon$1 $2"></span>',$content);
@@ -137,9 +137,10 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/{menuLink\s+([^}]+)\s*}/U','<?php echo HMenu::link($1) ?>',$content);
 		$content=preg_replace('/{price\s+([^}]+)\s*}/U','<?php echo HFormat::price($1) ?>',$content);
 		$content=preg_replace_callback('/{menu(topHtml|Top|LeftHtml|Left|Right)\s*([^\n]*)\n+(.*)}/Us',function(&$m){
-			return'<?php echo HMenu::'.lcfirst($m[1]).'(array('.rtrim(implode(',',array_map(function(&$link){return implode('=>',explode(':',trim($link),2));},preg_split('/,\n\s*/',trim($m[3],' \t\n\r\0\x0B,')))),',').')'
+			$lines=array_map(function(&$link){return implode('=>',explode(':',trim($link),2));},preg_split('/,\n\s*/',trim($m[3],' \t\n\r\0\x0B,')));
+			return'<?php echo HMenu::'.lcfirst($m[1]).'(array('.rtrim(implode(',',$lines),',').')'
 				.(empty($m[2])?'':',array('.implode('=>',array_map('trim',explode(':',$m[2]))).')').') ?'.'>';
-			},$content);
+		},$content);
 		
 		
 		if(strpos($content,'<?=')){ debugCode($content); exit(htmlspecialchars('<?= still exist !')); }
