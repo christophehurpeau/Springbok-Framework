@@ -227,9 +227,9 @@ form .required label:after {
 	display:inline;
 }
 
-$ValidationValidBorder:1px solid #2EB82E;
-$ValidationInvalidBorder:1px solid #F33;
-$ValidationInvalidShadow:0 0 1.5px 1px #f1cccc;
+$ValidationValidBorder:1px solid #2EB82E !default;
+$ValidationInvalidBorder:1px solid #F33 !default;
+$ValidationInvalidShadow:0 0 1.5px 1px #f1cccc !default;
 
 form input.invalid, form textarea.invalid,
 form div.input.text input.invalid,
@@ -238,14 +238,14 @@ form div.text.invalid textarea,
 form input.ht5ifv-show-invalid, form textarea.ht5ifv-show-invalid,
 form div.input input.ht5ifv-show-invalid, form div.input textarea.ht5ifv-show-invalid,
 input.validation-invalid, textarea.validation-invalid, select.validation-invalid{
-	border:$ValidationInvalidBorder;
-	box-shadow:$ValidationInvalidShadow;
+	@if $ValidationInvalidBorder{ border:$ValidationInvalidBorder; }
+	@if $ValidationInvalidShadow{ box-shadow:$ValidationInvalidShadow; }
 }
 form input.ht5ifv-show-valid, form textarea.ht5ifv-show-valid,
 form .input.text input.ht5ifv-show-valid,
 form div.input input.ht5ifv-show-valid, form div.input textarea.ht5ifv-show-valid,
 input.validation-valid:focus,textarea.validation-valid:focus{
-	border:$ValidationValidBorder
+	@if $ValidationValidBorder{ border:$ValidationValidBorder; }
 }
 .ht5ifv-show-required{background-color: #f1cccc}
 .ht5ifv-show-min{background-color: #FF9999}
