@@ -84,6 +84,16 @@ class GitRepository{
 	public function fetch(){
 		$this->run('fetch origin master:master');
 	}
+
+	public function status(){
+		/* https://www.kernel.org/pub/software/scm/git/docs/git-status.html */
+		$o=$this->run('status --porcelain');
+		return array_map(function($l){ return array('status'=>trim(substr($l,0,2)),'file'=>substr($l,3)); },explode("\n",$o));
+	}
+	
+	public function isUpToDate(){
+		return $this->run('fetch --dry-run 2>&1')==='';
+	}
 	
 	public function clone_to($target){
 		return UExec::exec('git clone '.escapeshellarg($this->repo_path).' '.escapeshellarg($target));
@@ -109,6 +119,10 @@ class GitRepository{
 				$branches[$m[1]]=array('revision'=>$m[2],'identifier'=>$m[2]);
 		}
 		return $branches;
+	}
+	
+	public function currentBranch(){
+		return $this->run('rev-parse --abbrev-ref HEAD');
 	}
 	
 	/** Get details of a commit: tree, parents, author/committer (name, mail, date), message */
