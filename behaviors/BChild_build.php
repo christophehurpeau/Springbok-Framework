@@ -10,6 +10,12 @@ class BChild_build{
 						'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Child'][0][1]) ? $annotations['Child'][0][1] : null);
 		$classBeforeContent.='public function insert(){ $this->data["'.$idField.'"]=$this->insertParent(); $res=parent::insert(); return $res ? $this->data["'.$idField.'"] : $res; }';
 		$classBeforeContent.='public function insertIgnore(){ $idParent=$this->insertIgnoreParent(); if($idParent){ $this->data["'.$idField.'"]=$idParent; return parent::insertIgnore();} }';
+		
+		$parentModel=$annotations['Child'][0][0];
+		if($parentModel!==UInflector::camelize($parentModel,false))
+			throw new Exception($parentModel.' does not look like a model !');
+		if(!isset($enhanceConfig['modelParents'][$parentModel]))
+			throw new Exception('You need to add childs of '.$parentModel.' in enhance.php');
 		$typesParent=$enhanceConfig['modelParents'][$annotations['Child'][0][0]];
 		$typeForParent=array_search($modelFile->_className,$typesParent);
 		if($typeForParent===false) throw new Exception("Type parent not found for ".$modelFile->_className.": ".print_r($typesParent,true));

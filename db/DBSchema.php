@@ -463,6 +463,12 @@ abstract class DBSchema{
 
 	private static function _defaultsRelation(&$modelName,&$type,&$key,&$relation){
 		if(!isset($relation['modelName'])) $relation['modelName']=$key;
+		try{
+			class_exists($relation['modelName'],true);
+		}catch(Exception $e){
+			throw new Exception('Creating relations for model '.$modelName.': model does NOT exists "'.$relation['modelName'].'"',
+				1,$e);
+		}
 		if(!isset($relation['alias'])) $relation['alias']=$relation['modelName']::$__alias;
 		if(in_array($type,array('hasMany','belongsTo','hasOne')))
 			$relation+=array('fieldsInModel'=>false,'isCount'=>false,'isDistinct'=>false,'join'=>null,'type'=>' LEFT JOIN ','fields'=>null);
