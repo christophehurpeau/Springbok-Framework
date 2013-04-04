@@ -427,7 +427,7 @@ abstract class DBSchema{
 	}
 	
 	public function createRelations(){
-		$modelName=&$this->modelName;
+		$modelName=$this->modelName;
 		if($this->modelInfos===false) return;
 		$contentInfos=&$modelName::$__modelInfos;
 		
@@ -453,11 +453,34 @@ abstract class DBSchema{
 					self::_defaultsRelation($modelName,$type,$key,$relation);
 				}
 			}
+			$this->_writeContentInfos($contentInfos);
+		}
+	}
+
+	private function _writeContentInfos($contentInfos){
+		$modelName=$this->modelName;
 		
-			$content='<?php return '.UPhp::exportCode($contentInfos).';';
-			if(/*$write*/true) file_put_contents($filename=($this->isEntity?APP.'models/infos/':Config::$models_infos).$modelName,$content);
-			$modelName::$__modelInfos=&$contentInfos;
-			$modelName::$_relations=&$contentInfos['relations'];
+		$content='<?php return '.UPhp::exportCode($contentInfos).';';
+		if(/*$write*/true) file_put_contents($filename=($this->isEntity?APP.'models/infos/':Config::$models_infos).$modelName,$content);
+		$modelName::$__modelInfos=&$contentInfos;
+		$modelName::$_relations=&$contentInfos['relations'];
+	}
+	public function createAutoParentRelations(){
+		$modelName=$this->modelName;
+		if($this->modelInfos===false) return;
+		$contentInfos=&$modelName::$__modelInfos;
+		
+		if(in_array('BChild',class_uses($modelName,true))){
+			$relations=$modelName::$__modelInfos['relations'];
+			$parentRelation=$relations['Parent'];
+			if(isset($parentRelation[0]['id']) && $parentRelation[0]['id']==='id'){
+				$contentInfos=&$modelName::$__modelInfos;
+				$parentModelName=$parentRelation['modelName'];
+				foreach($parentModelName::$_relations as $key=>$relation){
+					if(!isset($relations[$key])) $contentInfos['relations'][$key]=$relation;
+				}
+				$this->_writeContentInfos($contentInfos);
+			}
 		}
 	}
 
