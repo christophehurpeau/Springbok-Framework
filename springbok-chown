@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sudo chown $USER src/
+sudo chown -R $USER src/
 sudo chown www-data:$USER .
 sudo chmod 775 .
 sudo mkdir dev/ prod/ tmp/ data/ data/logs/ db/
