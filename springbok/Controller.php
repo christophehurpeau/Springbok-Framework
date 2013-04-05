@@ -15,18 +15,25 @@ class Controller{
 		$methodAnnotations=$mdef['annotations'];
 		//if(isset(static::$_classAnnotations))
 		//	$methodAnnotations += static::$_classAnnotations;
-		/* 
-		if(isset($methodAnnotations['Ajax'])){
-			if(!CHttpRequest::isAjax()) notFound();
-		} */
-		return call_user_func_array(array('static',$methodName),$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations));
+		if(isset($methodAnnotations['SubAction'])) notFound();
+		return call_user_func_array(array('static',$methodName),self::getParams($mdef,$methodAnnotations));
+	}
+	
+	public static function _loadMdef($controller,$action){
+		$mdef=APP.'controllers'.self::$suffix.'/methods/'.$controller.'-'.$action;
+		if(!file_exists($mdef))
+			/* DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.$controller.'::'.$action.' ('.CRoute::getAll().')'); /* /DEV */
+			/* PROD */ notFound(); /* /PROD */
+		return include $mdef;
 	}
 	
 	protected static function checkAccess($checkAnnotation){
 		ACSecure::checkAccess($checkAnnotation);
 	}
 
-	protected static function getParams($mdef,$methodAnnotations){
+	protected static function getParams($mdef,$methodAnnotations,$rParams=null){
+		if($mdef['params']===false) return array();
+		
 		/* DONT FORGET TO CHANGE RESTCONTROLLER AND SOCKETCONTROLLER */
 		$params=array();
 		
@@ -34,7 +41,7 @@ class Controller{
 		if($method==='GET') $DATA=$_GET;
 		elseif($method==='POST') $DATA=$_POST;
 		
-		$rParams=CRoute::getParams();
+		if($rParams===null) $rParams=CRoute::getParams();
 		$num=0;
 		foreach($mdef['params'] as $paramName=>$def){
 			if($rParams && isset($rParams[$paramName])) $val=$rParams[$paramName];
@@ -120,6 +127,8 @@ class Controller{
 		return self::$layoutVars[$name];
 	}
 	
+	/* call controllers */
+	
 	
 	protected static function callController($controllerName,$actionName,$params=array()){
 		CRoute::setControllerAndAction($controllerName,$actionName);
@@ -127,6 +136,13 @@ class Controller{
 		include APP.'controllers'.self::$suffix.'/'.$controllerName.'.php';
 		call_user_func_array(array($controllerName,$actionName),$params);
 		exit;
+	}
+	
+	protected static function callSubAction($controllerName,$actionName,$rParams,$moreParams){
+		$mdef=self::_loadMdef($controllerName,$actionName);
+		$params=self::getParams($mdef,$mdef['annotations'],$rParams);
+		foreach($moreParams as $k=>$p) $params[$k]=$p;
+		self::callController($controllerName,$actionName,$params);
 	}
 	
 	/* */
