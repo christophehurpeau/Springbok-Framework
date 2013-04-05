@@ -52,12 +52,21 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 			
 			if(!empty($t['args']) || !empty($t['params'])){
 				$prettyMessage.='<b>Arguments :</b><br />';
-				$args=empty($t['args']) ? $t['params'] : $t['args'];
-				foreach($args as $num=>$arg){ 
-					$prettyMessage.='<i style="color:#AAA;font-size:7pt;">Arg '.$num.'</i> ';
-					$prettyMessage.=UVarDump::dump($arg);
-					$prettyMessage.="<br />";
+				if(!empty($t['args'])){
+					foreach($t['args'] as $num=>$arg){ 
+						$prettyMessage.='<i style="color:#AAA;font-size:7pt;">Arg '.$num.'</i> ';
+						$prettyMessage.=UVarDump::dump($arg);
+						$prettyMessage.="<br />";
+					}
+				}else{
+					foreach($t['params'] as $argName=>$argVal){ 
+						$prettyMessage.='<i style="color:#666;font-size:7pt;">'.$argName.'</i> ';
+						$prettyMessage.=h($argVal);
+						$prettyMessage.="<br />";
+					}
 				}
+				
+				
 				//echo "\t".str_replace("\n", "\n\t",print_r($t['args'],true))."\n";
 			}
 			if($isGoodFile){
