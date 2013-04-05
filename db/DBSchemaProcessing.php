@@ -194,6 +194,7 @@ class DBSchemaProcessing{
 		foreach($schemas as $schema) $schema->addForeignKeysRelations();
 		foreach($schemas as $schema) $schema->addForeignKeysHasManyThroughRelations();
 		foreach($schemas as $schema) $schema->createRelations();
+		foreach($schemas as $schema) $schema->createAutoParentRelations();
 		
 		if($this->generate && $triggersDir->exists()){
 			foreach($triggersDir->listFiles() as $file){
