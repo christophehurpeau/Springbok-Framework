@@ -202,6 +202,9 @@ class ConfigFile extends PhpFile{
 				$configArray=$this->mergeWithPluginsConfig('_',$configArray);
 				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
 				$configArray['models_infos']=$configArray['autoload_default'].'infos/';
+				if(!empty($this->enhanced->config['modelParents'])){
+					$configArray['modelParents']=array('type2model'=>$this->enhanced->config['modelParents']);
+				}
 			}elseif($this->enhanced->isPlugin()){
 				return;
 			}else{
