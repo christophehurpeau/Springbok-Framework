@@ -1,7 +1,7 @@
 <?php
 /** http://www.google.com/support/webmasters/bin/answer.py?answer=79812 */
 class HMeta{
-	private static $canonical,$canonicalEntry,$prev,$next,$smallSizes,$altLangs;
+	private static $canonical,$canonicalEntry,$canonicalFullUrl=true,$prev,$next,$smallSizes,$altLangs;
 	
 	public static function keywords($keywords){
 		HHead::metaName('keywords',$keywords);
@@ -71,6 +71,7 @@ class HMeta{
 	
 	public static function canonical($url){ self::$canonical=$url; }
 	public static function canonicalEntry($entry){ self::$canonicalEntry=$entry; }
+	public static function canonicalFullUrl($full){ self::$canonicalFullUrl=$full; }
 	public static function prev($url){ self::$prev=$url; }
 	public static function next($url){ self::$next=$url; }
 	public static function smallSizes($url,$entry){ self::$smallSizes=HHtml::urlEscape($url,$entry,true); }
@@ -85,10 +86,10 @@ class HMeta{
 	public static function displayCanonical(){
 		/* DEV */ if(self::$canonical===null && Springbok::$inError===null) throw new Exception("canonical is not defined"); /* /DEV */
 		if(self::$canonical===false) return '';
-		echo '<link rel="canonical" href="'.($href=HHtml::urlEscape(self::$canonical,self::$canonicalEntry,true)).'"/>'
+		echo '<link rel="canonical" href="'.($href=HHtml::urlEscape(self::$canonical,self::$canonicalEntry,self::$canonicalFullUrl)).'"/>'
 				.'<meta property="og:url" content="'.$href.'"/>';
-		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,true).'"/>';
-		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,true).'"/>';
+		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,self::$canonicalFullUrl).'"/>';
+		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,self::$canonicalFullUrl).'"/>';
 		if(self::$smallSizes!==null) echo '<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::displayCanonical()</div>'; /* /DEV */
 	}
