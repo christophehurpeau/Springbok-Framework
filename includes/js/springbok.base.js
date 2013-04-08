@@ -127,6 +127,7 @@ window.S={
 	},
 	
 	isString:function(varName){ return typeof(varName)==='string'; },
+	isStr:function(varName){ return typeof varName === 'string'; },
 	isArray:Array.isArray || $.isArray,
 	isObject:function(varName){ return typeof(varName)==='object' },
 	isObj:function(varName){ return typeof(varName)==='object' },
@@ -314,8 +315,10 @@ S.error=function(m){
 	var f=function(){
 		$('[id]').each(function(){
 			var ids = $('[id="'+this.id+'"]');
-			if(ids.length>1 && ids[0]==this)
-				S.error('Multiple IDs #'+this.id);
+			if(ids.length>1 && ids[0]==this){
+				var f=(this.id.startsWith('springbok-')?console.error:S.error);
+				f(null,'Multiple IDs #'+this.id);
+			}
 		});
 		
 		if(!window.inputListHandlerIncluded && $('input[list]').length)

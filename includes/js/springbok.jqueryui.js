@@ -113,7 +113,7 @@ var ajaxC_CommonFunction=function(div,url,options,prepare,onAdd){
 				imgLoading.remove(); t.sShow();
 			};
 		if(!val){
-			if(!options.allowNew){ alert(i18nc['validation.required']); return false; }
+			if(!options.allowNew){ alert(i18nc['validation.required']); imgLoading.remove(); t.sShow(); return false; }
 			action='create';
 			data={val:input.val()};//TODO onAddCurrent create et add inversé ?
 			onAddCurrent=function(d){ if($.isNumeric(d)) onAdd_current(d); else if(S.isObj(d) && d.ok) onAdd_current('1',d); else onAdd_current(false) };
