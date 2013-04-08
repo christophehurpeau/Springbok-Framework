@@ -26,7 +26,7 @@ class BHistory_build{
 		
 		
 		$classBeforeContent.=
-			"\n".'public static function addHistory($objId,$type,$relId=null,$userId=true,$source=AConsts::DEFAULT_SOURCE){ '
+			"\n".'public static function addHistory($objId,$type,$relId=null,$userId=true,$source=null){ '
 						.$historyClass.'::add($objId,$type,$relId,$userId,$source); }'
 			."\n".'private function _history_created(){ self::addHistory($this->id,'.$historyClass.'::CREATED,'.$createdBy.','.$createdFrom.'); }'
 			."\n".'private function _history_updated(){ self::addHistory($this->id,'.$historyClass.'::UPDATED,'.$updatedBy.','.$updatedFrom.'); }';
