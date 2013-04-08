@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ $USER = 'root' ]
+then
+	echo "Vous êtes root !"
+	exit
+fi
+
 sudo chown -R $USER src/
 sudo chown www-data:$USER .
 sudo chmod 775 .
