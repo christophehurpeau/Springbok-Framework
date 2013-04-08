@@ -63,13 +63,18 @@ class HBreadcrumbs{
 	public static function toJs($lastTitle){
 		if(self::$_lastTitle!==null) self::$_links[]=self::$_lastTitle;
 		elseif(!empty($lastTitle)) self::$_links[]=$lastTitle;
-		array_walk(self::$_links,function(&$value,$title){
-			if(!is_int($title)){
-				if(!is_array($value)) $value=HHtml::url($value);
+		$js='[';
+		foreach(self::$_links as $title=>$value){
+			if(is_int($title)){
+				$js.=json_encode($value).',';
+			}else{
+				if(!is_array($value)) $value=array('url'=>HHtml::url($value));
 				else{ $value['url']=HHtml::url($value[0]); unset($value[0]); }
+				$value['_title']=$title;
+				$js.=json_encode($value).',';
 			}
-		});
-		return json_encode(self::$_links,JSON_FORCE_OBJECT);
+		};
+		return substr($js,0,-1).']';
 	}
 }
 	
