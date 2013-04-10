@@ -102,7 +102,7 @@ class ConfigFile extends PhpFile{
 				if(!isset($finalTranslations['->'.$lang][$lstring]))
 					throw new Exception('Missing route translation : "'.$string.'" for lang "'.$lang.'"');
 				return strtolower($finalTranslations['->'.$lang][$lstring]);
-			}
+			};
 			
 			/* ROUTES */
 			$routes=self::incl($this->srcFile()->getPath());
@@ -159,7 +159,7 @@ class ConfigFile extends PhpFile{
 						elseif($specialEnd2) $routeLangPreg=substr($routeLangPreg,0,-2).'(?:\/(.*))?'.substr($routeLangPreg,-2);
 						
 						$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_\-]+)/',
-							function($m) use($paramsDef,$lang,&$paramsNames,$finalTranslations){
+							function($m) use($paramsDef,$lang,&$paramsNames,$translate){
 								if(!empty($m[1])) return $m[0];
 								$paramsNames[]=$m[2];
 								if(isset($paramsDef[$m[2]])){
