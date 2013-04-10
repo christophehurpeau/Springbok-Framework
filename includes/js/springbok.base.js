@@ -326,6 +326,9 @@ S.error=function(m){
 		if(!window.inputDataBoxHandlerIncluded && $('input[data-box]').length)
 			S.error("You must include \'ui/inputDataBoxHandler\' in your js file to be able to handle input[data-box]");
 		
+		if(!S.ajax && $('input[data-confirm]').length){
+			S.error('You must include \'springbok.ajax\' in your js file to be able to use data-confirm');
+		}
 	};
 	S.ready(f);
 	$document.bind('springbokAjaxPageLoaded',f);
