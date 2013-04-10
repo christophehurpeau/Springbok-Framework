@@ -40,7 +40,7 @@ class HMenu{
 
 	private static function _li($type,$title,$value,$options){
 		if(is_int($title)){
-			if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
+			if($value===false) return HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator);
 			$title=$value['title'];
 		}
 		if(is_array($value) && isset($value['children'])){

@@ -78,7 +78,8 @@ class Springbok{
 		
 		
 		if($previousError!==null){
-			$exception=new Exception($exception->getMessage()."\nPrevious error : ".$previousError->getMessage(),0,$exception);
+			$exception=new Exception($exception->getMessage()."\nPrevious error : ".$previousError->getMessage()
+										.' ('.$previousError->getFile().':'.$previousError->getLine().')',0,$exception);
 		}
 		
 		
@@ -120,7 +121,8 @@ class Springbok{
 		while(ob_get_length()>0) ob_end_clean();
 		
 		if($previousError!==null){
-			$message.="\nPrevious error : ".$previousError->getMessage();
+			$message.="\nPrevious error : ".$previousError->getMessage()
+										.' ('.$previousError->getFile().':'.$previousError->getLine().')';
 		}
 		
 		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
