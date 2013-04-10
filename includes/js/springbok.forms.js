@@ -45,7 +45,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 	$.fn.ajaxForm=function(url,success,beforeSubmit,error){
 		this.each(function(){
 			//if(!error) error=function(jqXHR, textStatus){alert('Error: '+textStatus);};
-			var form=$(this),submit,imgLoadingSubmit=S.imgLoading();
+			var form=$(this),submit,imgLoadingSubmit;
 			if(S.isFunc(url)){
 				error=beforeSubmit;
 				beforeSubmit=success;
@@ -67,7 +67,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				var ajaxOptions={
 					type:'post',cache:false,
 					headers:{'SpringbokAjaxFormSubmit':'1'},
-					beforeSend:function(){submit.hide();submit.parent().append(imgLoadingSubmit);},
+					beforeSend:function(){submit.hide();submit.parent().append(imgLoadingSubmit=S.imgLoading());},
 					data:form.serialize(),
 					complete:function(){submit.show().blur();form.find('.img.imgLoading').remove();form.fadeTo(150,1)},
 					error:error
