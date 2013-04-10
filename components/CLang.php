@@ -28,7 +28,7 @@ class CLang{
 					break;
 			}
 		}
-		self::$lang=/* DEV */isset(App::$enhancing)&&App::$enhancing?'fr':/* /DEV */Config::$default_lang;
+		self::$lang=/* DEV */isset(App::$enhancing)&&App::$enhancing?'fr':/* /DEV */Config::$availableLangs[0];
 		foundlang:
 		self::$db=DB::init('_lang',array(
 			'type'=>'SQLite',
@@ -52,6 +52,18 @@ class CLang{
 	
 	public static function get(){
 		return self::$lang;
+	}
+	
+	public static function _getAll(){
+		return Config::$allLangs;
+	}
+	
+	public static function getAvailable(){
+		return Config::$availableLangs;
+	}
+	
+	public static function getDefault(){
+		return Config::$availableLangs[0];
 	}
 	
 	public static function translate($string,$category){
