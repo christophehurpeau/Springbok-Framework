@@ -107,6 +107,18 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 	
 	
 	
+	/* DEV */
+	public function __call($method,$args){
+		//$reflClass=new ReflectionClass(__CLASS__);
+		//$knownMethods=array_map(function($m){ return $m->name; },$reflClass->getMethods(ReflectionMethod::IS_STATIC));
+		
+		throw new Exception("Call to undefined method {$method} in class ".get_called_class()
+				."\nKnown methods :".implode(', ',get_class_methods(__CLASS__)));
+	}
+	/* /DEV */
+	
+	
+	
 	/* Iterator */
 	/*
 	public function rewind(){
