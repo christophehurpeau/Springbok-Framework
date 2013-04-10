@@ -1,19 +1,5 @@
 <?php
 class UInflector{
-	public static function underscore($word){
-		$word=preg_replace('/([A-Z]+|[0-9]+)([A-Z][a-z])/','$1_$2',$word);
-		$word=preg_replace('/([a-z])([A-Z]|[0-9])/','$1_$2',$word);
-		return strtolower($word);
-	}
-	
-	public static function camelize($value,$startWithLowercase=false){
-		$values=explode('_',$value);
-		$value=array_shift($values);
-		$res=($startWithLowercase?$value:ucfirst($value));
-		foreach($values as $value) $res.=ucfirst($value);
-		return $res;
-	}
-	
 	public static function pluralize($word){
 		include_once CORE.'libs/Inflect.php';
 		return Inflect::pluralize($word);
