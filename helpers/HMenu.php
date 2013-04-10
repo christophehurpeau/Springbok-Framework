@@ -33,23 +33,25 @@ class HMenu{
 		if(!isset($options['menuAttributes']['class'])) $options['menuAttributes']['class']=$type;
 		$res=HHtml::openTag(self::$tagName,$options['menuAttributes']);
 		if(self::$tagName!=='ul') $res.='<ul>';
-		foreach($links as $title=>$value){
-			if(is_int($title)){
-				if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
-				$title=$value['title'];
-			}
-			if(is_array($value) && isset($value['children'])){
-				if( isset($value['visible']) && !$value['visible']) continue;
-				$res.='<li>'.(!empty($value['escape'])?h($title):$title).'<ul>';
-				foreach($value['children'] as $childTitle=>$childValue){
-					$res.=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
-				}
-				$res.='</ul></li>';
-			}else
-				$res.=self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
-		}
+		foreach($links as $title=>$value) $res.=self::_li($type,$title,$value,$options);
 		if(self::$tagName!=='ul') $res.='</ul>';
 		return $res.HHtml::closeTag(self::$tagName);
+	}
+
+	private static function _li($type,$title,$value,$options){
+		if(is_int($title)){
+			if($value===false){ $res.=HHtml::tag('li',array('class'=>'separator'),$type==='top'?self::$separatorTop:self::$separator); continue; }
+			$title=$value['title'];
+		}
+		if(is_array($value) && isset($value['children'])){
+			if( isset($value['visible']) && !$value['visible']) continue;
+			$res='<li>'.(!empty($value['escape'])?h($title):$title).'<ul>';
+			foreach($value['children'] as $childTitle=>$childValue){
+				$res=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
+			}
+			return '</ul></li>';
+		}else
+			return self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
 	}
 	public static function link($title,$value,$linkoptions=array(),$options=array(),$lioptions=array()){
 		if(!isset($options['startsWith'])) $options['startsWith']=false;
