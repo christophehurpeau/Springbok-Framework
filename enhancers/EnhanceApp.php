@@ -10,6 +10,7 @@ define('CORE_SRC',dirname(CORE).'/src/');
 
 class EnhanceApp extends AEnhance{
 	public function __construct($dirname){
+		defined('DATA')||define('DATA',dirname(APP).'/data/');
 		$this->enhanced=new EnhancedApp('app',$dirname);
 	}
 	
