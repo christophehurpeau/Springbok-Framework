@@ -41,6 +41,10 @@ class CHttpRequest{
 	public static function getClientIP(){
 		return $_SERVER['REMOTE_ADDR'];
 	}
+	
+	public static function getCurrentUrl(){
+		return $_SERVER['REQUEST_URI'];
+	}
 
 	public static function isHTTPS(){
 		return IS_HTTPS;

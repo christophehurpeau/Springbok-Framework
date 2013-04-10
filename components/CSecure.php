@@ -82,7 +82,7 @@ class CSecure{
 	}
 	
 	public static function redirectToLogin(){
-		Controller::redirect(static::config('url_login'));
+		Controller::redirect(array(true,static::config('url_login'),'?'=>'back='.urlencode(CHttpRequest::getCurrentUrl())));
 	}
 	
 	public static function connect($redirect=true){
