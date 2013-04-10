@@ -141,12 +141,12 @@ class AjaxPageDynamicTabsView extends AjaxPageView{
 class AjaxContentPageView extends AjaxPageView{
 	public function __construct($title=false,$layout=null,$layoutNameOverride=null){
 		parent::__construct($title,'',$layout,$layoutNameOverride);
-	 	echo '<div class="'.static::attrClass().'">';
-    }
-    public function render(){
-        echo '</div>';
-        parent::render();
-    }
+		echo '<div class="'.static::attrClass().'">';
+	}
+	public function render(){
+		echo '</div>';
+		parent::render();
+	}
 	protected static function attrClass(){
 		return 'variable padding';
 	}
@@ -171,6 +171,6 @@ class AjaxContentView extends AbstractAjaxView{
 		else{
 			HHtml::displayJsReady();
 			if(isset($_SERVER['HTTP_SPRINGBOKBREADCRUMBS'])) header('SpringbokAjaxBreadcrumbs: '.HBreadcrumbs::toJs($this->title));
-		}	
+		}
 	}
 }

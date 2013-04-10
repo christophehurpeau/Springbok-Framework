@@ -55,6 +55,12 @@
 	color:#000546;
 }
 
+.mGray{
+	@extend .message;
+	@extend .boxGray;
+	border:1px solid #888;
+}
+
 
 .boxWarning{
 	background:#FFDDAA;
@@ -63,4 +69,8 @@
 .boxError{
 	background:#efafaf;
 	color:#8A0000;
+}
+.boxGray{
+	background:#AAA;
+	color:#111;
 }
