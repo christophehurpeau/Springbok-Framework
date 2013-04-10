@@ -1,6 +1,6 @@
 <?php
 function replaceAppAndCoreInFile($file){
-	return str_replace(array(APP,CORE),array('APP/','CORE/'),$file);
+	return str_replace(array(APP,CORE,realpath(CORE).'/'),array('APP/','CORE/','CORE/'),$file);
 }
 
 function prettyBackTrace($skipLength=1,$trace=false){
@@ -22,9 +22,8 @@ function prettyBackTrace($skipLength=1,$trace=false){
 	return $prettyMessage;
 }
 /* DEV */
-/* http://christophe.hurpeau.com/blog/52-Ouvrir-gedit-depuis-firefox-en-ajoutant-le-protocole-gedit */
-function geditURL($file,$line){
-	return '<a href="gedit://'.h($file).'?'.$line.'">';
+function openLocalFile($file,$line){
+	return '<a href="openlocalfile://'.h($file).'?'.$line.'">';
 }
 
 function prettyHtmlBackTrace($skipLength=1,$trace=false){
@@ -43,7 +42,7 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 		$isGoodFile=file_exists($t['file'])?file_get_contents($t['file']):false;
 		
 		if($isGoodFile || !empty($t['args'])) $prettyMessage.='<div><a href="javascript:;" style="color:#CC7A00;text-decoration:none;outline:none;" onclick="var el=document.getElementById(\''.$id.'\'); el.style.display=el.style.display==\'none\'?\'block\':\'none\';">';
-		$prettyMessage.='#'.$i.' '.($isGoodFile?geditURL($t['file'],$t['line']):'').replaceAppAndCoreInFile($t['file']).'('.$t['line'].')'.($isGoodFile?'</a>':'').': ';
+		$prettyMessage.='#'.$i.' '.($isGoodFile?openLocalFile($t['file'],$t['line']):'').replaceAppAndCoreInFile($t['file']).'('.$t['line'].')'.($isGoodFile?'</a>':'').': ';
 		if(isset($t['object']) && is_object($t['object']))
 			$prettyMessage.=get_class($t['object']).'->';
 		$prettyMessage.=$t['function']."()";
