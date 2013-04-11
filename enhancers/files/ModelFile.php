@@ -182,7 +182,7 @@ class ModelFile extends PhpFile{
 					
 					// check
 					$traitsClassNames=empty($this->_traits) ? array() : array_map(function($t){return $t[0];},$this->_traits);
-					foreach(array('Parent'=>'BParent','ParentBigintId'=>'BParent','Child'=>'BChild',
+					foreach(array('Parent'=>'BParent','ParentBigintId'=>'BChild','Child'=>'BChild',
 								'Slug'=>'BSlug','Seo'=>'BSeo') as $annotation=>$traitName){
 						if(isset($annotations[$annotation]) && !in_array($traitName,$traitsClassNames))
 							throw new Exception($modelFile->_className.' need to use trait "'.$traitName.'"');
