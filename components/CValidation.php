@@ -55,7 +55,7 @@ class CValidation{
 		return self::_addError($key,self::validNotEmpty($val));
 	}
 	private static function validNotEmpty($val){
-		return empty($val) ? _tC('validation.required') : false;
+		return empty($val)&&$val!=='0' ? _tC('validation.required') : false;
 	}
 	
 	
