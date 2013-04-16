@@ -1,12 +1,11 @@
 <?php
 class HElementFormInputCheckbox extends HElementFormContainable{
-	public function __construct($form,$name,$label=true){
+	public function __construct($form,$name,$label=null){
 		parent::__construct($form,$name);
 		$this->attributes['type']='checkbox';
 		if($name!==false) $this->_setAttrName($name);
 		$this->_setAttrId();
-		if($label===true)
-		else $this->label=$label;
+		$this->label=$label;
 		
 		$value=$this->form->_getValue($this->name);
 		if($value!==null && $value!==false) $this->checked();
