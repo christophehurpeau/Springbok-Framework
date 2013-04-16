@@ -161,7 +161,7 @@ class CSecure{
 			$pwd=trim($user->$password,static::config('trim'));
 			$where[$password]=USecure::hasAltSalt()===false ? (USecure::hashWithSalt($pwd)) : array(USecure::hashWithSalt($pwd),USecure::hashWithAltSalt($pwd));
 			
-			$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
+			$query=$id===$login ? /**/$className::QExist() : /**/$className::QValue()->field($id);
 			
 			if($res=$query->where($where)->execute()){
 				$connected=$id===$login ? $user->$login : $res;
