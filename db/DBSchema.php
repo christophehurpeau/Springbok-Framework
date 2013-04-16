@@ -133,8 +133,8 @@ abstract class DBSchema{
 		if($this->shouldApply()) $this->applyColumnsModifications();
 		
 		// reorder
-		$this->columns=$columns=$this->getColumns();
 		if($this->shouldApply()){
+			if(!empty($a1)||!empty($a2)||!empty($a3)) $this->columns=$columns=$this->getColumns();
 			$actualAllPrev=array();
 			$actualPrev=false;
 			foreach($columns as $col){
