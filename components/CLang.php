@@ -28,6 +28,11 @@ class CLang{
 					break;
 			}
 		}
+		
+		//$locale = Locale::acceptFromHttp($_SERVER('HTTP_ACCEPT_LANGUAGE'));
+		//if($locale!==null)
+		
+		
 		self::$lang=/* DEV */isset(App::$enhancing)&&App::$enhancing?'fr':/* /DEV */Config::$availableLangs[0];
 		foundlang:
 		self::$db=DB::init('_lang',array(

@@ -63,6 +63,7 @@ class ConfigFile extends PhpFile{
 				$pluginName=$this->enhanced->getName();
 				if(($md5Value=$db->doSelectValue('SELECT t FROM t WHERE c=\'P\' AND s="plugin.'.$pluginName.'.md5"'))!==$this->md5){
 					debugVar("UPDATE LANGS : ".$pluginName.' ('.$md5Value.' != '.$this->md5.')');
+					$db->beginTransaction();
 					$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$pluginName.'.%" )');
 					$configArray=include $this->srcFile()->getPath();
 					foreach($configArray as $key=>$value){
@@ -71,6 +72,7 @@ class ConfigFile extends PhpFile{
 						$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'P\','.$db->escape($value).')');
 					}
 					$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ("plugin.'.$pluginName.'.md5",\'P\','.$db->escape($this->md5).')');
+					$db->commit();
 				}
 			}
 			$this->write($configname,'',$devFile,$prodFile);

@@ -1,6 +1,6 @@
 <?php
 class PhpFile extends EnhancerFile{
-	public static $CACHE_PATH=false;
+	public static $CACHE_PATH=false,$defaultExtension='php';
 	protected $_devContent,$_prodContent;
 		/** [0:'className', 1:'params', path:'path', content:'content'] */
 	public $_traits;

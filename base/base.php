@@ -22,8 +22,8 @@ function prettyBackTrace($skipLength=1,$trace=false){
 	return $prettyMessage;
 }
 /* DEV */
-function openLocalFile($file,$line){
-	return '<a href="openlocalfile://'.h($file).'?'.$line.'">';
+function openLocalFile($file,$line=null){
+	return '<a href="openlocalfile://'.h($file).($line===null?'':'?'.$line).'">';
 }
 
 function prettyHtmlBackTrace($skipLength=1,$trace=false){

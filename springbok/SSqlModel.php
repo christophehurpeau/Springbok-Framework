@@ -291,7 +291,7 @@ class SSqlModel extends SModel{
 	}
 	
 	public static function __callStatic($method, $params){
-		if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exist)(\w+)?By(\w+)$/',$method,$matches))
+		if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exists?)(\w+)?By(\w+)$/',$method,$matches))
 			throw new \Exception("Call to undefined method {$method} in class ".get_called_class()
 					/* DEV */."\nKnown methods :".implode(', ',get_class_methods(static::$__className))/* /DEV */);
  

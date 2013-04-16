@@ -1,6 +1,6 @@
 <?php
 class MergeTxtFile extends EnhancerFile{
-	public static $CACHE_PATH=false;
+	public static $CACHE_PATH=false,$defaultExtension='';
 	
 	protected function loadContent($srcContent){
 		$sortedVersions=array();

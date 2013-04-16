@@ -23,6 +23,7 @@ class DBSQLite extends DBSql{
 		return $this->_connect->lastInsertRowID();
 	}
 	public function close(){
+		if($this->_connect===null) return;
 		$this->_connect->close();
 		$this->_connect=null;
 	}

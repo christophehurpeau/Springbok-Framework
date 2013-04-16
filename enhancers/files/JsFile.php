@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.7';
+	public static $CACHE_PATH='js_8.3.7',$defaultExtension='js';
 
 	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
