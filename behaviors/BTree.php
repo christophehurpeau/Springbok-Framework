@@ -209,20 +209,31 @@ trait BTree{
 		return new HTree(self::generateSimpleTreeList());
 	}
 	
-	public static function rebuild($parent=1,$left=1){
-		$right = $left+1;
+	public static function rebuild(){
+		self::beginTransaction();
+		self::_rebuild(1,1,0);
+		self::commit();
+	}
+	
+	private static function _rebuild($parent=1,$left=1,$depth=0){
+		$right=$left+1; $childDepth=$depth+1;
+		self::QValues()->field('id')->byParent_id($parent)
+			->orderBy(static::$__orderByField)
+			->callback(function($childId) use(&$right,$childDepth){
+				$right=self::_rebuild($childId,$right,$childDepth);
+			}); 
+		/*
 		$children=self::QValues()->field('id')->byParent_id($parent);
-		foreach($children as $childId) $right=self::rebuild($modelName,$childId,$right);
-		if($parent!==0){
-			$model=new $modelName;
-			$model->id=$parent;
-			$model->left=$left;
-			$model->right=$right;
-			$model->update();
-		}
+		foreach($children as $childId) $right=self::rebuild($childId,$right);*/
+		if($parent!==0)
+			self::QUpdate()->set(array('left'=>$left,'right'=>$right,'level_depth'=>$depth,'updated'=>false))
+					->where(array('id'=>$parent))->execute();
 		return $right+1;
 	}
+	
 	public static function rebuildNoRootParent(){
-		self::rebuild(0,0);
+		self::beginTransaction();
+		self::_rebuild(0,0,0);
+		self::commit();
 	}
 }
