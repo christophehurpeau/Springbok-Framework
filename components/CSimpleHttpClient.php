@@ -8,7 +8,7 @@ class CSimpleHttpClient{
 		return $res;
 	}
 	public static function getWithQuery($url,$params,$timeout=3){
-		return self::get($url.'?'.http_build_query($formdata),$timeout);
+		return self::get($url.'?'.http_build_query($params),$timeout);
 	}
 	
 	
