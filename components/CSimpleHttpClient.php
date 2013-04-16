@@ -7,6 +7,11 @@ class CSimpleHttpClient{
 		curl_close($ch);
 		return $res;
 	}
+	public static function getWithQuery($url,$params,$timeout=3){
+		return self::get($url.'?'.http_build_query($formdata),$timeout);
+	}
+	
+	
 	public static function getJson($url,$timeout=3){
 		/*print_r(self::get($url));*/
 		return json_decode(self::get($url,$timeout),true);
