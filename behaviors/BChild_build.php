@@ -28,9 +28,6 @@ class BChild_build{
 									.' return $parent->insertIgnore(); }';
 		$classBeforeContent.="\n".'public function updateParent(){ $parent=new '.$annotations['Child'][0][0].';'
 									.'$data=$this->data;'.($idField==='id' ? '' : '$data["id"]=$data["p_id"]; unset($data["p_id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
-									.' return call_user_func_array(array($parent,"update"),func_get_args()); }';
-		$classBeforeContent.="\n".'public function updateParent(){ $parent=new '.$annotations['Child'][0][0].';'
-									.'$data=$this->data;'.($idField==='id' ? '' : '$data["id"]=$data["p_id"]; unset($data["p_id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
 									.'$res=call_user_func_array(array($parent,"update"),func_get_args());'
 									.'if($res){ $parentData=$parent->_getData();'
 											.($idField==='id' ? 'unset($parentData[\'_type\']);' : 'unset($parentData["id"],$parentData[\'_type\']);')
