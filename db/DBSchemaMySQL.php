@@ -1,8 +1,22 @@
 <?php
 class DBSchemaMySQL extends DBSchema{
+	//private static $allTables;
+	
+	private function _tableStatus(){
+		$dbName=$this->db->_getName();
+		if(!isset(self::$_allStatusTables[$dbName]))
+			self::$_allStatusTables[$dbName]=$this->db->doSelectListRows('SHOW TABLE STATUS');
+		return isset(self::$_allStatusTables[$dbName][$this->tableName]) ? 
+					self::$_allStatusTables[$dbName][$this->tableName] : null;
+	}
 	
 	public function tableExist(){
-		return $this->db->doSelectValue("SHOW TABLES LIKE ".$this->db->escape($this->tableName));
+		//return $this->db->doSelectValue("SHOW TABLES LIKE ".$this->db->escape($this->tableName));
+		/*$dbName=$this->db->_getName();
+		if(!isset(self::$allTables[$dbName]))
+			self::$allTables[$dbName]=$this->db->doSelectValues('SHOW TABLES');
+		return in_array($this->tableName,self::$allTables[$dbName]);*/
+		return $this->_tableStatus()!==null;
 	}
 	
 	public function createTable(){
@@ -36,9 +50,10 @@ class DBSchemaMySQL extends DBSchema{
 		$this->doUpdate(substr($sql,0,-2),true);
 	}
 	
-	
+	private static $_allStatusTables=array();
 	public function checkTable(){
-		$status=$this->db->doSelectRow('SHOW TABLE STATUS LIKE '.$this->db->escape($this->tableName));
+		//$status=$this->db->doSelectRow('SHOW TABLE STATUS LIKE '.$this->db->escape($this->tableName));
+		$status=$this->_tableStatus();
 		return $status['Engine']===(empty($this->modelInfos['Engine'])?'InnoDB':$this->modelInfos['Engine']) && $status['Collation']==='utf8_general_ci'
 			&& ((empty($this->modelInfos['comment']) && empty($status['Comment'])) || (!empty($this->modelInfos['comment']) && $this->modelInfos['comment']===$status['Comment']));
 	}
@@ -58,8 +73,15 @@ class DBSchemaMySQL extends DBSchema{
 	}
 	
 	
+	public function findColumnsInfos(){
+		$this->getColumns();
+		$this->getIndexes();
+		$this->getForeignKeys();
+	}
+	
 	public function getColumns(){
 		$cols=$this->db->doSelectRows('SHOW FULL COLUMNS FROM '.$this->db->formatTable($this->tableName));
+		$pks=array();
 		foreach($cols as &$col){
 			$col['name']=$col['Field'];
 			$col['type']=$col['Type'];
@@ -68,8 +90,10 @@ class DBSchemaMySQL extends DBSchema{
 			$col['default']=$col['Default'];
 			$col['comment']=$col['Comment'];
 			unset($col['Field'],$col['Type'],$col['Null'],$col['Default'],$col['Comment']);
+			if($col['Key']==='PRI') $pks[]=$col['name'];
 		}
-		return $cols;
+		$this->primaryKeys=$pks;
+		return $this->columns=$cols;
 	}
 	
 	private $_alterOperations;
@@ -155,10 +179,11 @@ class DBSchemaMySQL extends DBSchema{
 				if($indexTab===null) $indexTab=array('collation'=>$index['Collation'],'Sub_part'=>$index['Sub_part'],'Packed'=>$index['Packed'],'Null'=>$index['Null'],'index_type'=>$index['Index_type'],'Comment'=>$index['Comment']);
 				$indexTab['columns'][$index['Column_name']]=$index['Cardinality'];
 			}
-		return $indexes;
+		return $this->indexes=$indexes;
 	}
 	
 	public function getPrimaryKeys(){
+		if($this->primaryKeys!==null) return $this->primaryKeys;
 		return $this->db->doSelectValues('SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA`=DATABASE() AND `TABLE_NAME`='.$this->db->escape($this->tableName).' AND `COLUMN_KEY`="PRI"');
 	}
 	public function removePrimaryKey(){
@@ -265,7 +290,7 @@ class DBSchemaMySQL extends DBSchema{
 			}
 		}
 		//debugVar($createTable,$foreignsKeys);
-		return $foreignsKeys;
+		return $this->foreignKeys=$foreignsKeys;
 
 		
 		

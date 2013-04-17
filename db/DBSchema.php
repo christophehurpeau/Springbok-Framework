@@ -1,7 +1,9 @@
 <?php
 abstract class DBSchema{
 	private $tableExist=true;
-	protected $schemaProcessing,$modelName,$tableName,$modelInfos,$isEntity,$columns=false;
+	protected $schemaProcessing,$modelName,$tableName,$modelInfos,$isEntity,
+		/* columns infos */
+		$columns=false,$primaryKeys,$indexes,$foreignKeys;
 	/**  @var DB */
 	protected $db;
 	
@@ -41,7 +43,7 @@ abstract class DBSchema{
 				$this->log('Create table');
 				if($this->shouldApply()){
 					$this->createTable();
-					$this->columns=$this->getColumns();
+					$this->findColumnsInfos();
 					$this->generatePropDefs();
 					if(method_exists($modelName,'afterCreateTable')) $modelName::afterCreateTable();
 				}
@@ -50,12 +52,12 @@ abstract class DBSchema{
 					$this->log('Check table failed!');
 					if($this->shouldApply()) $this->correctTable();
 				}
-				$this->columns=$this->getColumns();
+				$this->findColumnsInfos();
 				$this->compareTableAndApply();
 				$this->generatePropDefs();
 			}
 		}else{
-			$this->columns=$this->getColumns();
+			$this->findColumnsInfos();
 			$this->generatePropDefs();
 		}
 	}
@@ -79,7 +81,7 @@ abstract class DBSchema{
 	
 	public function compareTableAndApply(){
 		if($this->modelInfos===false) return;
-		if($this->columns===null) $this->columns=$this->getColumns();
+		if($this->columns===false) $this->findColumnsInfos();
 		$columns=&$this->columns;$modelInfos=$this->modelInfos;
 		$icolumns=array(); $prev=false; $allPrev=array();
 		foreach($columns as $col) $icolumns[$col['name']]=$col;
@@ -103,16 +105,14 @@ abstract class DBSchema{
 		// Remove cols
 		$a1=array_diff_key($icolumns,$modelInfos['columns']);
 		if(!empty($a1)){
-			$pks=$this->getPrimaryKeys();
+			$pks=$this->primaryKeys;
 			foreach($a1 as $name=>$col){
 				$this->log('Remove col : '.$name);
 				if($this->shouldApply()){
 					if(in_array($name,$pks)){
-						$currentConstraints=$this->getForeignKeys();
-						foreach($currentConstraints as $fk)
+						foreach($this->foreignKeys as $fk)
 							$this->removeForeignKey($fk);
-						$allIndexes=$this->getIndexes();
-						foreach($allIndexes as $indexes)
+						foreach($this->indexes as $indexes)
 							foreach($indexes as $iName=>$iFields) $this->removeIndex($iName);
 						$this->removePrimaryKey();
 					}
@@ -134,7 +134,8 @@ abstract class DBSchema{
 		
 		// reorder
 		if($this->shouldApply()){
-			if(!empty($a1)||!empty($a2)||!empty($a3)) $this->columns=$columns=$this->getColumns();
+			if(!empty($a1)||!empty($a2)||!empty($a3)) $this->findColumnsInfos();
+			$columns=$this->columns;
 			$actualAllPrev=array();
 			$actualPrev=false;
 			foreach($columns as $col){
@@ -180,7 +181,7 @@ abstract class DBSchema{
 	}
 	public function compareIndexes(){
 		if(!$this->isGenerateSchema()) return;
-		$indexes=$this->getIndexes();
+		$indexes=$this->indexes;
 		$currentIndex=$currentUniqueIndex=array();
 		foreach(array('nonunique'=>'currentIndex','unique'=>'currentUniqueIndex') as $keyI=>$tabIN){
 			$tabI=$$tabIN;
@@ -239,7 +240,7 @@ abstract class DBSchema{
 	public function compareForeignKeys(){
 		if(!$this->isGenerateSchema() || $this->modelInfos===false) return;
 		$modelName=&$this->modelName;
-		$currentConstraints=$this->getForeignKeys();
+		$currentConstraints=$this->foreignKeys;
 		$constraints=array();
 		foreach($this->modelInfos['columns'] as $colname=>$col)
 			if(isset($col['ForeignKey'])) $constraints[$colname]=&$col['ForeignKey'];
@@ -275,7 +276,7 @@ abstract class DBSchema{
 	
 	public function generatePropDefs(){
 		if(!$this->tableExist || $this->modelInfos===false) return;
-		if($this->columns===false) $this->columns=$this->getColumns();
+		if($this->columns===false) $this->findColumnsInfos();
 		$modelName=&$this->modelName;
 		$properties=$this->createModelPropDef();
 		
@@ -557,14 +558,11 @@ abstract class DBSchema{
 	public abstract function checkTable();
 	public abstract function correctTable();
 	
-	public abstract function getColumns();
-	public function findColumns(){$this->columns=$this->getColumns();}
+	public abstract function findColumnsInfos();
 	
 	/** Return if change or not */
 	public abstract function compareColumn($column,$modelInfo);
 	
-	public abstract function getIndexes();
-	public abstract function getPrimaryKeys();
 	public abstract function removePrimaryKey();
 	public abstract function addPrimaryKey();
 	public abstract function changePrimaryKey();

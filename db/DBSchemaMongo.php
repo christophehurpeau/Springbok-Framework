@@ -18,9 +18,8 @@ class DBSchemaMongo extends DBSchema{
 			}
 			$modelIndexes[$key]=$changedIndexes;
 		}
-				
-		$indexes=$this->getIndexes();
-		foreach($indexes as $index) $currentIndexes[isset($index['unique'])&&$index['unique']?1:0][$index['name']]=$index['key'];
+		
+		foreach($this->indexes as $index) $currentIndexes[isset($index['unique'])&&$index['unique']?1:0][$index['name']]=$index['key'];
 		
 		$modelIndexes[0]['_id_']=array('_id'=>1);
 		
@@ -85,18 +84,22 @@ class DBSchemaMongo extends DBSchema{
 	public function checkTable(){return true;}
 	public function correctTable(){}
 	
-	public function getColumns(){ return array(); }
+	public function findColumnsInfos(){
+		$this->columns=array();
+		$this->getPrimaryKeys();
+		$this->getIndexes();
+	}
 	
 	public function compareColumn($column,$modelInfo){
 		return false;
 	}
 	
 	public function getIndexes(){
-		return $this->col()->getIndexInfo();
+		return $this->indexes=$this->col()->getIndexInfo();
 	}
 	
 	public function getPrimaryKeys(){
-		return array('_id');
+		return $this->primaryKeys=array('_id');
 	}
 	public function removePrimaryKey(){}
 	public function addPrimaryKey(){}

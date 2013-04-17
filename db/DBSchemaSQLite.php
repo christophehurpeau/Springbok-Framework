@@ -48,7 +48,16 @@ class DBSchemaSQLite extends DBSchema{
 	public function correctTable(){}
 	
 	public function getColumns(){
-		return $this->db->doSelectRows('PRAGMA table_info('.$this->db->escape($this->tableName).')');
+		$cols=$this->columns=$this->db->doSelectRows('PRAGMA table_info('.$this->db->escape($this->tableName).')');
+		$pks=array();
+		foreach($cols as $col)
+			if($col['pk']) $pks[]=$col['name'];
+		$this->primaryKeys=$pks;
+		return $cols;
+	}
+	public function findColumnsInfos(){
+		$this->getColumns();
+		$this->getIndexes();
 	}
 	
 	private $_addColumns,$_hasChangedOrRemovedColumn;
@@ -161,6 +170,7 @@ class DBSchemaSQLite extends DBSchema{
 	}
 	
 	public function getPrimaryKeys(){
+		if($this->primaryKeys!==null) return $this->primaryKeys;
 		$pks=array();
 		foreach($this->getColumns($this->tableName) as $col)
 			if($col['pk']) $pks[]=$col['name'];
@@ -186,7 +196,7 @@ class DBSchemaSQLite extends DBSchema{
 	public function activeForeignKeyChecks(){$this->db->doUpdate('PRAGMA foreign_keys = ON');}
 	
 	
-	public function getForeignKeys(){return array();}
+	public function getForeignKeys(){return $this->foreignKeys=array();}
 	public function removeForeignKeys(){return false;}
 	
 	public function addForeignKey($colName,$fk,$dropBefore,$colInfos){
