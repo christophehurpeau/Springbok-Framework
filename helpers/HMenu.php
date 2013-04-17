@@ -44,12 +44,12 @@ class HMenu{
 			$title=$value['title'];
 		}
 		if(is_array($value) && isset($value['children'])){
-			if( isset($value['visible']) && !$value['visible']) continue;
+			if( isset($value['visible']) && !$value['visible']) return '';
 			$res='<li>'.(!empty($value['escape'])?h($title):$title).'<ul>';
 			foreach($value['children'] as $childTitle=>$childValue){
-				$res=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
+				$res.=self::link($childTitle,$childValue,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
 			}
-			return '</ul></li>';
+			return $res.'</ul></li>';
 		}else
 			return self::link($title,$value,$options['linkoptions'],array('startsWith'=>$options['startsWith']),$options['lioptions']);
 	}
