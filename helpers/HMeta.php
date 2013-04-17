@@ -36,6 +36,15 @@ class HMeta{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_nofollow()</div>'; /* /DEV */
 	}
 	
+	public static function nosnippet(){
+		HHead::metaName('robots','nosnippet');
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::nosnippet()</div>'; /* /DEV */
+	}
+	public static function noarchive(){
+		HHead::metaName('robots','noarchive');
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noarchive()</div>'; /* /DEV */
+	}
+	
 	
 	public static function google_notranslate(){
 		HHead::metaName('google','notranslate');
