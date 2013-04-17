@@ -31,7 +31,7 @@ class BChild_build{
 									.'$res=call_user_func_array(array($parent,"update"),func_get_args());'
 									.'if($res){ $parentData=$parent->_getData();'
 											.($idField==='id' ? 'unset($parentData[\'_type\']);' : 'unset($parentData["id"],$parentData[\'_type\']);')
-											.' $this->_copyData($parentData);'
+											.' $this->_copyData($parentData); }'
 									.'return $res; }';
 		if($idField==='p_id') $classBeforeContent.="\n".'public static function getParentId($childId){ return self::QValue()->field("p_id")->byId($childId); }';
 	}
