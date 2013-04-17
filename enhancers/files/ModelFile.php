@@ -13,7 +13,7 @@ class ModelFile extends PhpFile{
 	public static function _getPath($m,&$controllersSrc,$enhanced,$withParam=false){
 		eval('$eval=array('.$m[1].');');
 		if(!isset($eval))
-			throw new Exception('Error eval : '.$m[1]);
+			$this->throwException('Error eval : '.$m[1]);
 		$countEval=count($eval); $param=null;
 		if($countEval===($withParam?3:2) && ($eval[0]==='core')||($eval[0]==='springbok')){
 			array_shift($eval);
@@ -50,7 +50,7 @@ class ModelFile extends PhpFile{
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
 			if(!preg_match(ModelFile::REGEXP_FIELDS,$path,$mFields)){
 				if($extends!==false) return '';
-				throw new Exception('Import fields : unable to find '.$path);
+				$this->throwException('Import fields : unable to find '.$path);
 			}
 			return $mFields[0];
 		},$srcContent);
@@ -59,7 +59,7 @@ class ModelFile extends PhpFile{
 			list($path,$fieldsNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
 			if(!preg_match_all(self::regexpArrayField($fieldsNames),$path,$mFields)){
 				if($extends!==false) return '';
-				throw new Exception('Import array fields : unable to find '.$path);
+				$this->throwException('Import array fields : unable to find '.$path);
 			}
 			return implode("\n",$mFields[0]);
 		},$srcContent);
@@ -68,7 +68,7 @@ class ModelFile extends PhpFile{
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
 			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts)){
 				if($extends!==false) return '';
-				throw new Exception('Import consts : unable to find '.$path);
+				$this->throwException('Import consts : unable to find '.$path);
 			}
 			return implode("\n",$mConsts[0]);
 		},$srcContent);
@@ -77,7 +77,7 @@ class ModelFile extends PhpFile{
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
 			if(!preg_match_all(ModelFile::REGEXP_TRAITS,$path,$mTraits)){
 				if($extends!==false) return '';
-				throw new Exception('Import traits : unable to find '.$path);
+				$this->throwException('Import traits : unable to find '.$path);
 			}
 			return implode("\n",$mTraits[1]);
 		},$srcContent);
@@ -89,7 +89,7 @@ class ModelFile extends PhpFile{
 			foreach($functionNames as $functionName){
 				if(!preg_match_all(self::regexpFunction($functionName),$path,$mFunction)){
 					if($extends!==false) continue;
-					throw new Exception('Import Function : unable to find '.$path.' '.$functionName);
+					$this->throwException('Import Function : unable to find '.$path.' '.$functionName);
 				}
 				foreach($mFunction[0] as $kFunction=>$srcFunction){
 					if(!preg_match(self::regexpFunction($mFunction[1][$kFunction]),$srcContent))
@@ -143,7 +143,7 @@ class ModelFile extends PhpFile{
 					$classBeforeContent='';
 					
 					if(!isset($annotations['TableName'])) $annotations['TableName'][0]=array(UInflector::pluralizeUnderscoredWords(UString::underscore(substr($modelFile->_className,0,2)===strtoupper(substr($matches[2],0,2))?substr($matches[2],isset($annotations['Db'])?2:1):$matches[2])));
-					if(!isset($annotations['TableAlias'])) throw new Exception('Table Alias is missing for : '.$modelFile->_className);
+					if(!isset($annotations['TableAlias'])) $this->throwException('Table Alias is missing for : '.$modelFile->_className);
 					$dbName=isset($annotations['Db'])?$annotations['Db'][0][0]:false;
 					if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
 					if(isset($annotations['Engine'])) $contentInfos['Engine']=$annotations['Engine'][0][0];
@@ -165,15 +165,15 @@ class ModelFile extends PhpFile{
 					}
 					
 					if(isset($annotations['Created'])){
-						if(isset($modelFile->_fields['created'])) throw new Exception($modelFile->_className.' already contains a field "created"');
+						if(isset($modelFile->_fields['created'])) $this->throwException($modelFile->_className.' already contains a field "created"');
 						$modelFile->_fields['created']=array('SqlType'=>array('datetime'),'NotNull'=>false,'NotBindable'=>false,'Index'=>false);
 					}
 					if(isset($annotations['CreatedBy'])){
-						if(isset($modelFile->_fields['created_by'])) throw new Exception($modelFile->_className.' already contains a field "created_by"');
+						if(isset($modelFile->_fields['created_by'])) $this->throwException($modelFile->_className.' already contains a field "created_by"');
 						$modelFile->_fields[$createdByField='created_by']=array('SqlType'=>array('int(10) unsigned'),'Null'=>false,'NotBindable'=>false,'Index'=>false);
 					}
 					if(isset($annotations['Updated'])){
-						if(isset($modelFile->_fields['updated'])) throw new Exception($modelFile->_className.' already contains a field "updated"');
+						if(isset($modelFile->_fields['updated'])) $this->throwException($modelFile->_className.' already contains a field "updated"');
 						$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL),'Index'=>false);
 					}
 					
@@ -185,10 +185,10 @@ class ModelFile extends PhpFile{
 					foreach(array('Parent'=>'BParent','ParentBigintId'=>'BChild','Child'=>'BChild',
 								'Slug'=>'BSlug','Seo'=>'BSeo') as $annotation=>$traitName){
 						if(isset($annotations[$annotation]) && !in_array($traitName,$traitsClassNames))
-							throw new Exception($modelFile->_className.' need to use trait "'.$traitName.'"');
+							$this->throwException($modelFile->_className.' need to use trait "'.$traitName.'"');
 					}
 					
-					if(isset($annotations['LogChanges'])) throw new Exception('LogChanges : Use trait "BLogChanges" now.');
+					if(isset($annotations['LogChanges'])) $this->throwException('LogChanges : Use trait "BLogChanges" now.');
 					
 					
 					
@@ -203,7 +203,7 @@ class ModelFile extends PhpFile{
 							foreach($eventsArray as $c){
 								$c=preg_replace_callback($regexp,function($matches2) use(&$eventsCallbacks,$event,$params){
 									$eval=dev_eval('return '.$matches2[1]);
-									if(empty($eval) && !empty($matches2[1]) && !is_array($eval)) throw new Exception('Failed to eval :'."\n".$matches2[1]);
+									if(empty($eval) && !empty($matches2[1]) && !is_array($eval)) $this->throwException('Failed to eval :'."\n".$matches2[1]);
 									foreach($eval as $key=>$callback) $eventsCallbacks[]='$this->'.$callback.'('.(is_string($params)?$params:$params[1]).')';
 									return '';
 								},$c);
@@ -385,7 +385,7 @@ class ModelFile extends PhpFile{
 						$matches2[1]=preg_replace('/\s*\b([A-Z][A-Za-z\_]+)\s*\=\>/','"$1"=>',$matches2[1]);
 						$eval=dev_eval('return '.$matches2[1]);
 						if(empty($eval) && !empty($matches2[1]) && !is_array($eval))
-							throw new Exception('Failed to eval :'."\n".$matches2[1]);
+							$this->throwException('Failed to eval :'."\n".$matches2[1]);
 						foreach($eval as $key=>&$relation){
 							if(is_numeric($key)){ $key=$relation; $relation=array(); }
 							$relation['reltype']=$relType;

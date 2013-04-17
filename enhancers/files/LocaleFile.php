@@ -10,7 +10,7 @@ class LocaleFile extends EnhancerFile{
 		try{
 			$yaml=yaml_parse($this->_srcContent,/*$isPlugins ? -1 : */0,$nbDocs);
 		}catch(ErrorException $e){
-			throw new Exception('Error while parsing yaml : '.replaceAppAndCoreInFile($this->srcFile()->getPath())."\n".$e->getMessage());
+			$this->throwException($e->getMessage());
 		}
 		
 		$lang=substr($this->fileName(),0,-4);

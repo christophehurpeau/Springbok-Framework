@@ -62,7 +62,7 @@ class PhpFile extends EnhancerFile{
 			if(!empty($this->_traits)){
 				foreach($this->_traits as &$trait){
 					$trait['path']=$path=$this->findTraitPath($trait[0]);
-					if(!file_exists($path)) throw new Exception('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists ('.$path.')');
+					if(!file_exists($path)) $this->throwException('Trait "'.$trait[0].'" in '.$this->fileName().' does not exists ('.$path.')');
 					
 					$srcContent.=$trait['content']=file_get_contents($path);
 					$srcContent.=$trait['content_build']=UFile::getContents(substr($path,0,-4).'_build.php');

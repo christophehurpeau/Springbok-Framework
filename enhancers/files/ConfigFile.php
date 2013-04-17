@@ -79,7 +79,7 @@ class ConfigFile extends PhpFile{
 		}elseif($this->enhanced->isPlugin()){
 			
 		}elseif(substr($configname,0,7)=='routes_'){
-			throw new Exception('Define all routes in routes.php, now.');
+			$this->throwException('Define all routes in routes.php, now.');
 		}elseif($configname=='routes'){
 			/* LANGS */
 			$finalTranslations=NULL;
@@ -102,7 +102,7 @@ class ConfigFile extends PhpFile{
 			$translate=function($lang,$string) use($finalTranslations){
 				$lstring=UString::low($string);
 				if(!isset($finalTranslations['->'.$lang][$lstring]))
-					throw new Exception('Missing route translation : "'.$string.'" for lang "'.$lang.'"');
+					$this->throwException('Missing route translation : "'.$string.'" for lang "'.$lang.'"');
 				return $finalTranslations['->'.$lang][$lstring];
 			};
 			
@@ -113,7 +113,7 @@ class ConfigFile extends PhpFile{
 			
 			
 			if(empty($this->enhanced->appConfig['availableLangs']))
-				throw new Exception('Missing config "allLangs" in config/_.php');
+				$this->throwException('Missing config "allLangs" in config/_.php');
 			$allLangs=empty($this->enhanced->appConfig['allLangs']) ? 
 								$this->enhanced->appConfig['availableLangs'] : $this->enhanced->appConfig['allLangs'];
 			
@@ -137,7 +137,7 @@ class ConfigFile extends PhpFile{
 						foreach($allLangs as $lang){
 							if(!isset($route[$lang])){
 								if($lang==='en') $route['en']=$url;
-								else throw new Exception('Missing lang "'.$lang.'" for route "'.$url.'"');
+								else $this->throwException('Missing lang "'.$lang.'" for route "'.$url.'"');
 							}
 						}
 					}elseif(!preg_match('#/[a-zA-Z]#',$url)){
@@ -146,7 +146,7 @@ class ConfigFile extends PhpFile{
 						foreach($allLangs as $lang)
 							$route[$lang]=preg_replace_callback('#/([a-zA-Z]+)#',function($r) use($translate,$lang){
 											return '/'.$translate($lang,$r[1]); },$url);
-						//throw new Exception('Missing langs for route : '.$url);
+						//$this->throwException('Missing langs for route : '.$url);
 					}
 					
 					foreach($route as $lang=>&$routeLang){
@@ -222,11 +222,11 @@ class ConfigFile extends PhpFile{
 			$configArray=self::incl($srcFilePath,$ext);
 			if($this->enhanced->isApp()){
 				foreach(array('siteUrl') as $attr)
-					if(!isset($configArray[$attr])) throw new Exception('Missing attr config : '.$attr.' (file : '.$configname.')');
+					if(!isset($configArray[$attr])) $this->throwException('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
 				if(!empty($this->enhanced->config['entries']))
 					foreach($this->enhanced->config['entries'] as $entry)
-						if(!isset($configArray['siteUrl'][$entry])) throw new Exception('Missing site url for entry : '.$entry.' (file : '.$configname.')');
+						if(!isset($configArray['siteUrl'][$entry])) $this->throwException('Missing site url for entry : '.$entry.' (file : '.$configname.')');
 				
 				foreach($configArray['siteUrl'] as $key=>&$val) $val=rtrim($val,'/');
 				if(!isset($configArray['cookie_domain'])) $configArray['cookie_domain']='';
@@ -248,7 +248,7 @@ class ConfigFile extends PhpFile{
 				
 				
 				if(isset($configArray['default_lang']))
-					throw new Exception('Please change in your config file "config/_.php" : '
+					$this->throwException('Please change in your config file "config/_.php" : '
 								."'default_lang'=>'".$configArray['default_lang']."' into "
 								."'availableLangs'=>array('".$configArray['default_lang']."')");
 				
