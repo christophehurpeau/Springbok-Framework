@@ -46,7 +46,7 @@ S.ready(function(){
 				},
 				email:function($node,val){
 					//the $node.get(0).getAttribute('multiple') is a workaround for IE9
-					var values = $node.attr('multiple') || $node.get(0).getAttribute('multiple') ? $val.split(/\s*,\s*/) : [val];
+					var values = $node.attr('multiple') || $node.get(0).getAttribute('multiple') ? val.split(/\s*,\s*/) : [val];
 					function validate(){
 						var val = values.pop();
 						return !val || val &&
@@ -98,7 +98,7 @@ S.ready(function(){
 			},
 			
 			restrictions:['pattern','minlength','maxlength','data-same'],
-			pattern:function(pattern,val,$node){ return !(new RegExp('^'+pattern+'$')).test($val); },
+			pattern:function(pattern,val,$node){ return !(new RegExp('^'+pattern+'$')).test(val); },
 			minlength:function(maxlength,val,$node){ return val.length < maxlength; },
 			maxlength:function(minlength,val,$node){ return val.length > minlength; },
 			'data-same':function(dataSame,val,$node){ return val != $(dataSame).val(); }

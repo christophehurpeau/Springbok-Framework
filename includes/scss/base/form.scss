@@ -227,6 +227,10 @@ form .required label:after {
 	display:inline;
 }
 
+$ValidationValidBorder:1px solid #2EB82E !default;
+$ValidationInvalidBorder:1px solid #F33 !default;
+$ValidationInvalidShadow:0 0 1.5px 1px #f1cccc !default;
+
 form input.invalid, form textarea.invalid,
 form div.input.text input.invalid,
 form div.text.invalid input,
@@ -234,14 +238,14 @@ form div.text.invalid textarea,
 form input.ht5ifv-show-invalid, form textarea.ht5ifv-show-invalid,
 form div.input input.ht5ifv-show-invalid, form div.input textarea.ht5ifv-show-invalid,
 input.validation-invalid, textarea.validation-invalid, select.validation-invalid{
-	border:1px solid #F33;
-	box-shadow:0 0 1.5px 1px #f1cccc;
+	@if $ValidationInvalidBorder{ border:$ValidationInvalidBorder; }
+	@if $ValidationInvalidShadow{ box-shadow:$ValidationInvalidShadow; }
 }
 form input.ht5ifv-show-valid, form textarea.ht5ifv-show-valid,
 form .input.text input.ht5ifv-show-valid,
 form div.input input.ht5ifv-show-valid, form div.input textarea.ht5ifv-show-valid,
 input.validation-valid:focus,textarea.validation-valid:focus{
-	border: 1px solid #2EB82E
+	@if $ValidationValidBorder{ border:$ValidationValidBorder; }
 }
 .ht5ifv-show-required{background-color: #f1cccc}
 .ht5ifv-show-min{background-color: #FF9999}
@@ -253,7 +257,7 @@ input.validation-valid:focus,textarea.validation-valid:focus{
 	margin: 5px 0;
 	padding: 5px;
 	background-color: #F33;
-	color : #FFF;
+	color: #FFF;
 	font-weight: bold;
 }
 .validation-advice p{margin:0}

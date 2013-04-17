@@ -291,19 +291,20 @@ class SSqlModel extends SModel{
 	}
 	
 	public static function __callStatic($method, $params){
-        if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exist)(\w+)?By(\w+)$/',$method,$matches))
-            throw new \Exception("Call to undefined method {$method}"/* DEV */."\nKnown methods :".implode(', ',get_class_methods(static::$__className))/* /DEV */);
+		if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exists?)(\w+)?By(\w+)$/',$method,$matches))
+			throw new \Exception("Call to undefined method {$method} in class ".get_called_class()
+					/* DEV */."\nKnown methods :".implode(', ',get_class_methods(static::$__className))/* /DEV */);
  
  		$className='Q'.ucfirst($matches[1]);
-        $query = new $className(static::$__className);
+		$query = new $className(static::$__className);
 		if(!empty($matches[2])){
 			$fields=explode('And',$matches[2]);
 			$fields=array_map('lcfirst',$fields);
 			$query->setFields($fields);
 		}
 		$query->by($matches[3],$params);
-        return $query->execute();
-    }
+		return $query->execute();
+	}
 	
 	
 	/* */

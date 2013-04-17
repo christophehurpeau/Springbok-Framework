@@ -13,6 +13,9 @@ class CSettings{
 	public static function get($name){
 		return self::$settings[$name];
 	}
+	public static function is($name){
+		return (bool)self::$settings[$name];
+	}
 	
 	public static function afterDeploy(){
 		if(empty(self::$settings)) self::$settings=include APP.'config/basicSettings.php';

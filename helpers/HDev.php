@@ -6,13 +6,15 @@ class HDev{
 	public static function springbokBar($includeJquery=false){
 		/* PROD */ return; /* /PROD */
 		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
-		if($includeJquery){
-			echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
-			readfile(CORE_SRC.'includes/js/libs/jquery-1.8.3.js');
-			echo "//]]>\n</script>";
+		if(defined('CORE_SRC')){
+			if($includeJquery){
+				echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
+				readfile(CORE_SRC.'includes/js/libs/jquery-1.8.3.js');
+				echo "//]]>\n</script>";
+			}
+			echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/springbokBar.css'));
+			echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE_SRC.'includes/js/jquery/json.js').file_get_contents(CORE_SRC.'includes/springbokBar.js').'});');
 		}
-		echo HHtml::cssInline(file_get_contents(CORE_SRC.'includes/springbokBar.css'));
-		echo HHtml::jsInline('$(document).ready(function(){'.file_get_contents(CORE_SRC.'includes/js/jquery/json.js').file_get_contents(CORE_SRC.'includes/springbokBar.js').'});');
 		$changes=&App::$changes[0];
 		echo '<div id="springbok-bar"><a href="#" class="springbokTitle" onclick="if(confirm(\'Voulez-vous cacher SpringbokBar ?\')) $(\'#springbok-bar\').fadeOut()"><b>Springbok</b></a>'
 			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="changes">Changes ('.(file_exists(dirname(APP).'/block_deploy')?'<span style="color:red;font-weight:bold">A deployment is in progress':
@@ -110,7 +112,7 @@ class HDev{
 	
 	
 	public static function error(&$e_message,&$e_file,&$e_line,&$e_context){
-		echo '<pre style="font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.geditURL($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
+		echo '<pre style="font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.openLocalFile($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown' && file_exists($e_file)){
 			echo '<br/><h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
 			echo HText::highlightLine(file_get_contents($e_file),'php',$e_line,false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:1em;'));
@@ -121,7 +123,7 @@ class HDev{
 	}
 	
 	public static function exception(&$e_message,&$e_file,&$e_line,&$e_trace){
-		echo '<pre style="font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.geditURL($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
+		echo '<pre style="font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.openLocalFile($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown'){
 			echo '<br/><h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
 			echo HText::highlightLine(file_get_contents($e_file),'php',$e_line,false,'background:#EBB',true,10);

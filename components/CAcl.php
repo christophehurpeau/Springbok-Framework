@@ -10,4 +10,9 @@ class CAcl{
 		}else $groupId=AclGroup::GUEST;
 		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>&$groupId,'permission'=>&$permission));
 	}
+	
+	public static function requireAccess(){
+		if(false===call_user_func_array(array('static','checkAccess'),func_get_args()))
+			CSecure::isConnected() ? forbidden() : CSecure::redirectToLogin();
+	}
 }

@@ -3,13 +3,12 @@
 	S.breadcrumbs=function(links){
 		var b=$('#breadcrumbs'),span,first=b.children(':first-child'),url;
 		b.html(first);
-		$.each(links,function(i,l){
+		links && links.forEach(function(l){
 			b.append(separator);
 			span=$('<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"/>').appendTo(b);
-			if(/*$.type(i)==='number'*/$.isNumeric(i)) $('<span/>').text(l).appendTo(span);
+			if(/*$.type(i)==='number'*/S.isStr(l)) $('<span/>').text(l).appendTo(span);
 			else{
-				url=S.isObject(l) ? l.url : l;
-				span.append($('<a/>').attr(linkoptions).attr('href',url).html($('<span itemprop="title"/>').text(i)));
+				span.append($('<a/>').attr(linkoptions).attr('href',l.url).html($('<span itemprop="title"/>').text(l._title)));
 			}
 		});
 		span&&span.addClass('last');

@@ -175,8 +175,8 @@ class App{
 		}catch(Exception $exception){
 			$forceDefault=false;
 			if(!($exception instanceof HttpException)){
-				if(self::$inError!==null && self::$inError instanceof HttpException){
-					$e=self::$inError;
+				if(Springbok::$inError!==null && Springbok::$inError instanceof HttpException){
+					$e=Springbok::$inError;
 					$forceDefault=true;
 				}elseif($exception instanceof DBException) $e=new FatalHttpException(503,'Service Temporarily Unavailable','Service Temporarily Unavailable');
 				elseif($exception instanceof mysqli_sql_exception){

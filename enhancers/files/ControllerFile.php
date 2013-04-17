@@ -71,7 +71,7 @@ class ControllerFile extends PhpFile{
 		$phpContent=preg_replace('/(self::|\s+)(mset|set|set_|setForLayout|setForLayoutAndView|'
 				.'uploadedFiles|moveUploadedFile|redirect|redirectPermanent|redirectLast|'
 				.'render|_render|renderJSON|renderText|renderHtml|renderFile|sendFile)\(/',
-			' self::$2(',$phpContent);
+			"\n".'self::$2(',$phpContent);
 		
 		$phpContent=preg_replace_callback('/self::mset\(((?:\s*\$(?:[a-zA-Z0-9\_]+)\s*\,)*\s*\$(?:[a-zA-Z0-9\_]+)\s*)\);/mU',function(&$matches){
 			$content='';

@@ -24,7 +24,7 @@ function displaySpringbokBarPopup(content){
 
 var jsConsoleLink=$('#springbok-bar a[rel="js-console"]'),jsConsoleSpanCount=jsConsoleLink.find('span'),
 			ajaxLink=$('#springbok-bar a[rel=ajax]'),ajaxSpanCount=ajaxLink.find('span');
-$('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
+$(document).ajaxComplete(function(e,xhr,settings){
 	if(!checkedDivFixedPosition || !checkedDivPagePosition) checkDivFixedPosition();
 	//console.log(e,xhr,settings);
 	ajaxLink.stop(true,true).fadeOut(99).fadeIn(99).fadeOut(99).fadeIn(99);
@@ -41,7 +41,7 @@ $('#springbok-bar-ajax ul').ajaxComplete(function(e,xhr,settings){
 		$t.addClass('current');
 		return false;
 	})
-	.fadeOut(0).appendTo(this).fadeIn(); //fade isn't really usefull...
+	.fadeOut(0).appendTo($('#springbok-bar-ajax ul')).fadeIn(); //fade isn't really usefull...
 });
 
 

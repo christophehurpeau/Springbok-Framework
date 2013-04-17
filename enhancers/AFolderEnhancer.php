@@ -65,7 +65,7 @@ abstract class AFolderEnhancer{
 				$justDev=$dirHasDev;
 				if($found===false){
 					$destFilename=false;
-					$copy=$ext!=='php';
+					$copy=$ext!==$class::$defaultExtension;
 					$justSrc= !$allowUnderscoredFiles && $this->enhanced instanceof EnhancedApp ? $filename[0]==='_' : false;
 				}else{
 					list($class,$justSrc,$destFilename,$copy)=$found;

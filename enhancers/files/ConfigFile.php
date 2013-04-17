@@ -32,7 +32,7 @@ class ConfigFile extends PhpFile{
 		}
 		return $this->md5=md5($md5);
 	}
-	
+	private static $_openedLangs=array();
 	public function processEhancing($devFile,$prodFile,$justDev=false,$isCore=false){
 		$ext=UFile::extension($srcFilePath=$this->srcFile()->getPath());
 		$configname=substr($this->fileName(),0,-(strlen($ext)+1));
@@ -54,33 +54,69 @@ class ConfigFile extends PhpFile{
 			}
 		}else*/
 		if($configname=='enhance'||$configname=='tests') ; //nothing
-		elseif($this->enhanced->isPlugin()){
-			if(substr($configname,0,5)==='lang.'){
-				$fileLang=$this->enhanced->getAppDir().'db/'.substr($configname,5).'.db';
-				if(file_exists($fileLang)){
-					$db=new DBSQLite(false,array( 'file'=>$fileLang,'flags'=>SQLITE3_OPEN_READWRITE ));
-					$pluginName=$this->enhanced->getName();
-					if(($md5Value=$db->doSelectValue('SELECT t FROM t WHERE c=\'P\' AND s="plugin.'.$pluginName.'.md5"'))!==$this->md5){
-						debugVar("UPDATE LANGS : ".$pluginName.' ('.$md5Value.' != '.$this->md5.')'); 
-						$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$pluginName.'.%" )');
-						$configArray=include $this->srcFile()->getPath();
-						foreach($configArray as $key=>$value){
-							if(substr($key,0,7)==='models.') $db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape(substr($key,7)).',\'f\','.$db->escape($value).')');
-							else $db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'a\','.$db->escape($value).')');
-							$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'P\','.$db->escape($value).')');
-						}
-						$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ("plugin.'.$pluginName.'.md5",\'P\','.$db->escape($this->md5).')');
+		elseif(substr($configname,0,5)==='lang.'){
+			$lang=substr($configname,5);
+			$fileLang=$this->enhanced->getAppDir().'db/'.$lang.'.db';
+			if(file_exists($fileLang)){
+				$db=isset(self::$_openedLangs[$lang])?self::$_openedLangs[$lang]:
+					(self::$_openedLangs[$lang]=new DBSQLite(false,array( 'file'=>$fileLang,'flags'=>SQLITE3_OPEN_READWRITE )));
+				$pluginName=$this->enhanced->getName();
+				if(($md5Value=$db->doSelectValue('SELECT t FROM t WHERE c=\'P\' AND s="plugin.'.$pluginName.'.md5"'))!==$this->md5){
+					debugVar("UPDATE LANGS : ".$pluginName.' ('.$md5Value.' != '.$this->md5.')');
+					$db->beginTransaction();
+					$db->doUpdate('DELETE FROM t WHERE c=\'a\' AND EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' AND t.s LIKE "plugin.'.$pluginName.'.%" )');
+					$configArray=include $this->srcFile()->getPath();
+					foreach($configArray as $key=>$value){
+						if(substr($key,0,7)==='models.') $db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape(substr($key,7)).',\'f\','.$db->escape($value).')');
+						else $db->doUpdate('INSERT OR IGNORE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'a\','.$db->escape($value).')');
+						$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ('.$db->escape($key).',\'P\','.$db->escape($value).')');
 					}
+					$db->doUpdate('REPLACE INTO t (s,c,t) VALUES ("plugin.'.$pluginName.'.md5",\'P\','.$db->escape($this->md5).')');
+					$db->commit();
 				}
-				$this->write($configname,'',$devFile,$prodFile);
 			}
+			$this->write($configname,'',$devFile,$prodFile);
+		}elseif($this->enhanced->isPlugin()){
+			
 		}elseif(substr($configname,0,7)=='routes_'){
 			throw new Exception('Define all routes in routes.php, now.');
 		}elseif($configname=='routes'){
+			/* LANGS */
+			$finalTranslations=NULL;
+			$langsFilePath=dirname($this->srcFile()->getPath()).DS.'routes-langs.php';
+			if(file_exists($langsFilePath)){
+				$translations=include $langsFilePath;
+				if($translations!==NULL){
+					$translations=$this->mergeWithPluginsConfig('routes-langs',$translations);
+					$finalTranslations=array();
+					foreach($translations as $s=>$t){
+						if(!isset($t['en'])) $t['en']=$s;
+						foreach($t as $lang=>$s2){
+							$finalTranslations['->'.$lang][strtolower($s)]=$s2;
+							$finalTranslations[$lang.'->'][strtolower($s2)]=$s;
+						}
+					}
+				}
+			}
+			
+			$translate=function($lang,$string) use($finalTranslations){
+				$lstring=UString::low($string);
+				if(!isset($finalTranslations['->'.$lang][$lstring]))
+					throw new Exception('Missing route translation : "'.$string.'" for lang "'.$lang.'"');
+				return $finalTranslations['->'.$lang][$lstring];
+			};
+			
 			/* ROUTES */
 			$routes=self::incl($this->srcFile()->getPath());
 			if(!isset($routes['index'])) $routes=array('index'=>$routes);
 			$finalRoutes=array();
+			
+			
+			if(empty($this->enhanced->appConfig['availableLangs']))
+				throw new Exception('Missing config "allLangs" in config/_.php');
+			$allLangs=empty($this->enhanced->appConfig['allLangs']) ? 
+								$this->enhanced->appConfig['availableLangs'] : $this->enhanced->appConfig['allLangs'];
+			
 			foreach($routes as $entry=>$entryRoutes){
 				if(isset($entryRoutes['includesFromEntry'])){
 					if(is_string($entryRoutes['includesFromEntry'])) $entryRoutes['includesFromEntry']=array($entryRoutes['includesFromEntry']);
@@ -90,10 +126,29 @@ class ConfigFile extends PhpFile{
 					}
 					unset($entryRoutes['includesFromEntry']);
 				}
+				
 				foreach($entryRoutes as $url=>$route){
-					$finalRoutes[$entry][$url][0]=$route[0]; $paramsDef=isset($route[1])?$route[1]:NULL; $langs=isset($route[2])?$route[2]:NULL;
-					$finalRoutes[$entry][$url]['ext']=isset($route['ext'])?$route['ext']:NULL;
-					$route=array('_'=>$url); if($langs !== NULL) $route=$route+$langs;
+					$finalRoutes[$entry][$url][0]=$route[0]; $paramsDef=isset($route[1])?$route[1]:null; $langs=isset($route[2])?$route[2]:null;
+					$finalRoutes[$entry][$url]['ext']=isset($route['ext'])?$route['ext']:null;
+					$route=array();
+					
+					if($langs !== null){
+						$route=$langs;
+						foreach($allLangs as $lang){
+							if(!isset($route[$lang])){
+								if($lang==='en') $route['en']=$url;
+								else throw new Exception('Missing lang "'.$lang.'" for route "'.$url.'"');
+							}
+						}
+					}elseif(!preg_match('#/[a-zA-Z]#',$url)){
+						foreach($allLangs as $lang) $route[$lang]=$url;
+					}else{
+						foreach($allLangs as $lang)
+							$route[$lang]=preg_replace_callback('#/([a-zA-Z]+)#',function($r) use($translate,$lang){
+											return '/'.$translate($lang,$r[1]); },$url);
+						//throw new Exception('Missing langs for route : '.$url);
+					}
+					
 					foreach($route as $lang=>&$routeLang){
 						$paramsNames=array();
 						if($specialEnd=(substr($routeLang,-2)==='/*'))
@@ -105,12 +160,19 @@ class ConfigFile extends PhpFile{
 						if($specialEnd) $routeLangPreg.='(?:\/(.*))?';
 						elseif($specialEnd2) $routeLangPreg=substr($routeLangPreg,0,-2).'(?:\/(.*))?'.substr($routeLangPreg,-2);
 						
-						$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_]+)/',
-							function($m) use($paramsDef,$lang,&$paramsNames){
+						$routeLang=array(0=>preg_replace_callback('/(\(\?)?\:([a-zA-Z_\-]+)/',
+							function($m) use($paramsDef,$lang,&$paramsNames,$translate){
 								if(!empty($m[1])) return $m[0];
 								$paramsNames[]=$m[2];
 								if(isset($paramsDef[$m[2]])){
-									$paramDefVal=is_array($paramsDef[$m[2]]) ? $paramsDef[$m[2]][$lang] : $paramsDef[$m[2]];
+									if(is_array($paramsDef[$m[2]])) $paramDefVal=$paramsDef[$m[2]][$lang];
+									else{
+										$paramDefVal=$paramsDef[$m[2]];
+										if(preg_match('/^[a-zA-Z\|]+$/',$paramDefVal))
+											$paramDefVal=implode('|',array_map(function($s) use($translate,$lang){
+													return $translate($lang,$s);
+												},explode('|',$paramDefVal)));
+									}
 									return $paramDefVal=='id' ? '([0-9]+)' : '('.str_replace('(','(?:',$paramDefVal).')'; /* can have 0 before : 001-Slug */
 								}
 								if(in_array($m[2],array('id'))) return '([0-9]+)';
@@ -122,25 +184,10 @@ class ConfigFile extends PhpFile{
 						$finalRoutes[$entry][$url][$lang]=$routeLang;
 						if(!empty($paramsNames)) $finalRoutes[$entry][$url][':']=$paramsNames;
 					}
-					$finalRoutes[$entry][$url]['paramsCount']=substr_count($finalRoutes[$entry][$url]['_'][1],'%s');
+					$finalRoutes[$entry][$url]['paramsCount']=substr_count($finalRoutes[$entry][$url][$allLangs[0]][1],'%s');
 				}
 			}
 		
-			/* LANGS */
-			$finalTranslations=NULL;
-			$langsFilePath=dirname($this->srcFile()->getPath()).DS.($configname=='routes'?'routes-langs':'routes-langs_'.substr($configname,7)).'.php';
-			if(file_exists($langsFilePath)){
-				$translations=include $langsFilePath;
-				if($translations!==NULL){
-					$finalTranslations=array();
-					foreach($translations as $s=>$t){
-						foreach($t as $lang=>$s2){
-							$finalTranslations['->'.$lang][strtolower($s)]=$s2;
-							$finalTranslations[$lang.'->'][strtolower($s2)]=$s;
-						}
-					}
-				}
-			}
 			
 			$finalProdContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
 			$finalRoutes['index']=array('/dev/:controller(/:action/*)?'=>array('Dev!::!',
@@ -199,9 +246,21 @@ class ConfigFile extends PhpFile{
 						}
 					}
 				
+				
+				if(isset($configArray['default_lang']))
+					throw new Exception('Please change in your config file "config/_.php" : '
+								."'default_lang'=>'".$configArray['default_lang']."' into "
+								."'availableLangs'=>array('".$configArray['default_lang']."')");
+				
+				if(empty($configArray['allLangs']))
+					$configArray['allLangs']=$configArray['availableLangs'];
+				
 				$configArray=$this->mergeWithPluginsConfig('_',$configArray);
 				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
 				$configArray['models_infos']=$configArray['autoload_default'].'infos/';
+				if(!empty($this->enhanced->config['modelParents'])){
+					$configArray['modelParents']=array('type2model'=>$this->enhanced->config['modelParents']);
+				}
 			}elseif($this->enhanced->isPlugin()){
 				return;
 			}else{
@@ -248,35 +307,35 @@ class ConfigFile extends PhpFile{
 	}
 
 	private function writeClass($configname,&$configArray,&$devFile,&$prodFile){
-		$content='<?php class Config{public static ';
-		$afterContent="define('STATIC_URL',";
+		$content="define('STATIC_URL',"; $afterContent='';
 		if(isset($configArray['static_url'])){
 			$configArray['static_url']=rtrim($configArray['static_url'],'/');
-			$afterContent.=UPhp::exportString($configArray['static_url'].'/');
+			$content.=UPhp::exportString($configArray['static_url'].'/');
 			unset($configArray['static_url']);
-		}else $afterContent.="BASE_URL.'/web/'";
-		$afterContent.=");define('WEB_URL',STATIC_URL.WEB_FOLDER);";
+		}else $content.="BASE_URL.'/web/'";
+		$content.=");define('WEB_URL',STATIC_URL.WEB_FOLDER);";
 		
 		if(isset($configArray['data_dir'])){
-			$afterContent.="define('DATA',".$this->replaceAPP(UPhp::exportString(rtrim($configArray['data_dir'],'/').'/')).");";
+			$content.="define('DATA',".$this->replaceAPP(UPhp::exportString(rtrim($configArray['data_dir'],'/').'/')).");";
 			unset($configArray['data_dir']);
-		}elseif(in_array($configname,array('_dev','_home','_work','_'.ENV))) $afterContent.="define('DATA',dirname(APP).'/data/');";
-		else $afterContent.="define('DATA',APP.'data/');";
+		}elseif(in_array($configname,array('_dev','_home','_work','_'.ENV))) $afterContent.="defined('DATA')||define('DATA',dirname(APP).'/data/');";
+		else $content.="define('DATA',APP.'data/');";
 		
 		foreach(array('img_dir'=>'IMGDIR') as $configK=>$constN)
 			if(isset($configArray[$configK]))
-				$afterContent.="define('".$constN."',".$this->replaceAppAndData(UPhp::exportString(rtrim($configArray[$configK],'/').'/')).");";
+				$content.="define('".$constN."',".$this->replaceAppAndData(UPhp::exportString(rtrim($configArray[$configK],'/').'/')).");";
 		
 		$configArray['db']['_lang']=$configname==='_'.ENV ? dirname(APP).'/db/' : APP.'db/';
 		
+		$content.='class Config{public static ';
 		foreach($configArray as $key=>$val){
 			$code=UPhp::exportCode($val);
-			if(strpos($code,"'".APP)!==false){
+			if(strpos($code,"'".APP)!==false||strpos($code,"'".DATA)!==false){
 				$content.='$'.$key.',';
-				$afterContent.='Config::$'.$key.'='.$this->replaceAPP($code).';';
+				$afterContent.='Config::$'.$key.'='.$this->replaceAppAndData($code).';';
 			}else $content.='$'.$key.'='.$code.',';
 		}
-		$content=substr($content,0,-1).';}'.$afterContent;
+		$content='<?php '.substr($content,0,-1).';}'.$afterContent;
 		$contentProd=$contentDev=$content;
 		$contentDev.='/*if(class_exists("DB",false))*/ DB::loadConfig(true);';
 		foreach($this->enhanced->config['base'] as $name){

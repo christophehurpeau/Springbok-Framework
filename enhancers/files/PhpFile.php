@@ -1,17 +1,17 @@
 <?php
 class PhpFile extends EnhancerFile{
-	public static $CACHE_PATH=false;
-	protected $_devContent,$_prodContent,
+	public static $CACHE_PATH=false,$defaultExtension='php';
+	protected $_devContent,$_prodContent;
 		/** [0:'className', 1:'params', path:'path', content:'content'] */
-		$_traits;
+	public $_traits;
 	
 	public static function regexpFunction($name='#'){
-		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+'.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).'\s*\((.*)\)\s*{'
+		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+('.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).')\s*\((.*)\)\s*{'
 																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Us';
 	}
 	
 	public static function regexpArrayField($name='#'){
-		return '/\s*public\s*(?:static)?\s*\$'.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).'\s*=\s*(array\(.*\);)/Us';
+		return '/\s*public\s*(?:static)?\s*\$'.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).'\s*=\s*((?:array\(.*\)|\[.*\]);)/Us';
 	}
 	
 	protected function loadContent($srcContent){

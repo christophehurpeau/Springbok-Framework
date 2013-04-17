@@ -50,4 +50,26 @@ class UString{
 	public static function up($str){ return mb_strtoupper($str); }
 	public static function ucFirst($str){ return mb_strtoupper(mb_substr($str,0,1)) . mb_substr($str,1); }
 	public static function length($str){ return mb_strlen($str); }
+	
+	
+	public static function underscore($word){
+		return strtolower(self::_underscore($word));
+	}
+	public static function underscoreUp($word){
+		return strtoupper(self::_underscore($word));
+	}
+	
+	private static function _underscore($word){
+		$word=preg_replace('/([A-Z]+|[0-9]+)([A-Z][a-z])/','$1_$2',$word);
+		$word=preg_replace('/([a-z])([A-Z]|[0-9])/','$1_$2',$word);
+		return $word;
+	}
+	
+	public static function camelize($value,$startWithLowercase=false){
+		$values=explode('_',$value);
+		$res=$startWithLowercase===false ? '' : array_shift($values);
+		foreach($values as $value) $res.=ucfirst($value);
+		return $res;
+	}
+	
 }

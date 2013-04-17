@@ -126,7 +126,7 @@ includeCore('ui/slideTo');
 					
 					if(h=jqXHR.getResponseHeader('SpringbokRedirect')){
 						divLoading.remove();
-						S.ajax.load(h,false,false,true,true);
+						h.contains('://') ? S.redirect(h) : S.ajax.load(h,false,false,true,true);
 						return;
 					}
 					

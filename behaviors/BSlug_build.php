@@ -10,6 +10,8 @@ class BSlug_build{
 		if(!isset($modelFile->_fields[$displayField]) && !isset($annotations['Slug']))
 			throw new Exception($modelFile->_className.' must have an field "'.$displayField.'"');
 		
+		if(isset($modelFile->_fields[$displayField]['Translatable'])) return;
+		
 		$modelFile->_fields['slug']=array('SqlType'=>isset($annotations['Slug']) ? array($annotations['Slug'][0][0]) : $modelFile->_fields[$displayField]['SqlType'],
 				'MinLength'=>array(3));
 		if(isset($annotations['UniqueSlug'])) $modelFile->_fields['slug']['Unique']=false;

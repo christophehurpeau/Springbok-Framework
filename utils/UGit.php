@@ -4,7 +4,7 @@ class_exists('URepository',true);
 /* & http://code.fealdia.org/viewgit/?a=viewblob&p=viewgit&h=d292901c58ccae33d8c249afcccc2cdd065b375c&hb=93bdbda834621af67d8f3d6bdeac8a81d3f05f33&f=inc/functions.php */
 /* & Redmine */
 class UGit{
-	public static function &create($repo_path,$source=null,$bare=false){
+	public static function create($repo_path,$source=null,$bare=false){
 		if(self::exists($repo_path))
 			throw new Exception('"'.$repo_path.'" is already a git repository');
 		$repo=new GitRepository($repo_path,true,false);
@@ -13,12 +13,22 @@ class UGit{
 		return $repo;
 	}
 	
-	public static function open($repo_path){
-		return new GitRepository($repo_path);
+	public static function open($repoPath){
+		return new GitRepository($repoPath);
 	}
 	
-	public static function exists($repo_path){
-		return is_dir($repo_path) && (file_exists($repo_path."/.git") && is_dir($repo_path."/.git") || (file_exists($repo_path.'/HEAD')));
+	public static function exists($repoPath){
+		$repoPath=rtrim($repoPath,'/');
+		return is_dir($repoPath) && (file_exists($repoPath."/.git") && is_dir($repoPath."/.git") || (file_exists($repoPath.'/HEAD')));
+	}
+	
+	public static function check($repoPath,$source=null,$bare=false){
+		if(self::exists($repoPath)) return true;
+		if($source===null) return false;
+		$parentLocalRepo=dirname($repoPath);
+		if(!file_exists($parentLocalRepo))
+			mkdir($parentLocalRepo,0755,true);
+		return self::create($repoPath,$source,true) ? true : false;
 	}
 }
 
@@ -37,10 +47,10 @@ class GitRevision extends AbstractRepositoryRevision{
 * @class GitRepo
 */
 class GitRepository{
-	protected $repo_path = null;
+	protected $repo_path=null,$_logName;
 	
-	public function __construct($repo_path=NULL,$create_new=false,$_init=true){
-		if($repo_path!==NULL)$this->set_repo_path($repo_path,$create_new,$_init);
+	public function __construct($repo_path=null,$create_new=false,$_init=true){
+		if($repo_path!==null) $this->set_repo_path($repo_path,$create_new,$_init);
 	}
 	
 	public function set_repo_path($repo_path,$create_new=false,$_init =true){
@@ -63,11 +73,19 @@ class GitRepository{
 				}else throw new Exception('cannot create repository in non-existent directory');
 			}else throw new Exception('"'.$repo_path.'" does not exist');
 		}
+		$this->_logName=basename($this->repo_path).'-'.md5($this->repo_path);
 	}
 	
 	
-	public function run($command){
-		return UExec::exec('cd '.escapeshellarg($this->repo_path).' && git '.$command);
+	public function run($command,$beforeCommand=''){
+		$res=UExec::exec('cd '.escapeshellarg($this->repo_path).' && '.$beforeCommand.' git '.$command);
+		$this->log($command."\n".$res);
+		return $res;
+	}
+	
+	
+	public function log($log){
+		CLogger::get('git-exec-'.$this->_logName)->log($log);
 	}
 	
 	
@@ -83,6 +101,16 @@ class GitRepository{
 	
 	public function fetch(){
 		$this->run('fetch origin master:master');
+	}
+
+	public function status(){
+		/* https://www.kernel.org/pub/software/scm/git/docs/git-status.html */
+		$o=$this->run('status --porcelain');
+		return array_map(function($l){ return array('status'=>trim(substr($l,0,2)),'file'=>substr($l,3)); },explode("\n",$o));
+	}
+	
+	public function isUpToDate(){
+		return $this->run('fetch --dry-run 2>&1')==='';
 	}
 	
 	public function clone_to($target){
@@ -109,6 +137,10 @@ class GitRepository{
 				$branches[$m[1]]=array('revision'=>$m[2],'identifier'=>$m[2]);
 		}
 		return $branches;
+	}
+	
+	public function currentBranch(){
+		return $this->run('rev-parse --abbrev-ref HEAD');
 	}
 	
 	/** Get details of a commit: tree, parents, author/committer (name, mail, date), message */
@@ -269,5 +301,14 @@ class GitRepository{
 			.($identifierTo===null?'':$identifierTo)
 			.' -- '.$path);
 		return self::parseShortRevisions($output);
+	}
+
+
+	/* UPDATE A BARE REPOSITORY */
+	
+	
+	public function editFile($content,$path){
+		$sha1=$this->run('hash-object -w --stdin ',escapeshellarg($content).' | ');
+		$this->run('update-index --cacheinfo 100644 '.escapeshellarg($sha1).' '.escapeshellarg($path));
 	}
 }

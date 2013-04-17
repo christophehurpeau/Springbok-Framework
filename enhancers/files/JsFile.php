@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.7';
+	public static $CACHE_PATH='js_8.3.7',$defaultExtension='js';
 
 	private $devProdDiff,$includes=array();
 	public function loadContent($srcContent){
@@ -286,7 +286,7 @@ class JsFile extends EnhancerFile{
 			
 			$fileContent=file_get_contents($path.DS.$matches[2].'.js');
 			
-			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced);
+			return $matches[1]==='JsAppConfig'?substr($fileContent,$start=strpos($fileContent,'=')+1,strrpos($fileContent,';')-$start):JsFile::includes($fileContent,$currentPath,$appPath,$includes,$enhanced)."\n";
 		},$content);
 		return $content;
 	}

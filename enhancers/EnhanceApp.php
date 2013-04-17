@@ -10,6 +10,7 @@ define('CORE_SRC',dirname(CORE).'/src/');
 
 class EnhanceApp extends AEnhance{
 	public function __construct($dirname){
+		defined('DATA')||define('DATA',dirname(APP).'/data/');
 		$this->enhanced=new EnhancedApp('app',$dirname);
 	}
 	
@@ -46,15 +47,76 @@ class EnhanceApp extends AEnhance{
 	
 	public function afterInit(&$dev,&$prod){
 		$this->createIndexFile($dev,$prod);
+		$appDir=$this->enhanced->getAppDir();
 		
 		$base="<?php
 define('DS', DIRECTORY_SEPARATOR);
 define('CORE','".dirname(CORE)."/dev/"."');
 define('CLIBS','".dirname(CORE)."/libs/dev/');
 define('APP', __DIR__.'/dev/');";
-		file_put_contents($this->enhanced->getAppDir().'cli.php',$base.'unset($argv[0]);'."\n".'$action=array_shift($argv);'."\n"."include CORE.'cli.php';");
-		file_put_contents($this->enhanced->getAppDir().'job.php',$base.'$action="job";'."\n"."include CORE.'cli.php';");
-		file_put_contents($this->enhanced->getAppDir().'daemon.php',$base.'$action="daemon";'."\n"."include CORE.'cli.php';");
+		file_put_contents($appDir.'cli.php',$base.'unset($argv[0]);'."\n".'$action=array_shift($argv);'."\n"."include CORE.'cli.php';");
+		file_put_contents($appDir.'job.php',$base.'$action="job";'."\n"."include CORE.'cli.php';");
+		file_put_contents($appDir.'daemon.php',$base.'$action="daemon";'."\n"."include CORE.'cli.php';");
+		
+		// oldapps
+		
+		if(is_dir($appDir.'db/')){
+			foreach(new FilesystemIterator($appDir.'db/') as $dbFilePath){
+				if(substr($dbFilePath,-3)!=='.db') continue;
+				$lang=substr(basename($dbFilePath),0,-3);
+				$yamlFiles=array('app'=>$appDir.'src/locales/'.$lang.'.yml',
+					'models'=>$appDir.'src/locales/'.$lang.'_models.yml',
+					'plugins'=>$appDir.'src/locales/'.$lang.'_plugins.yml');
+				
+				if(!file_exists($yamlFiles['app'])){
+					debug("locales/$lang.yml doesn't exists but the db file does");
+					$db=SpringbokTranslations::loadDbLang($appDir.'db/',$lang);
+					$app=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'a\' AND s NOT LIKE "plugin.%"'
+							.' AND NOT EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' )');
+					$appS=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'s\'');
+					$appP=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'p\'');
+					$modelsTranslations=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'f\''
+							.' AND NOT EXISTS( SELECT 1 FROM t t2 WHERE ("models." || t.s)=t2.s AND t.t=t2.t AND t2.c=\'P\' )');
+					$pluginsTranslations=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'a\' AND s LIKE "plugin.%"');
+					$db->close();
+					
+					foreach($appS as $s=>$t) $app[$s]=array('one'=>$t,'other'=>$appP[$s]);
+					
+					$models=array();
+					foreach($modelsTranslations as $s=>$t){
+						$exploded=explode(':',$s,2);
+						if(empty($exploded[1])) $exploded=explode('.',$s,2);
+						if(empty($exploded[1]) && substr($exploded[0],-1)===':')
+							{ $exploded[0]=substr($exploded[0],0,-1); $exploded[1]=''; }
+						$models[$exploded[0]][$exploded[1]]=$t;
+					}
+					
+					$plugins=array();
+					foreach($pluginsTranslations as $s=>$t){
+						$exploded=explode('.',$s,3);
+						$plugins[$exploded[1]][$exploded[2]]=$t;
+					}
+					
+					$needToExit=false;
+					foreach($yamlFiles as $varName=>$yamlFile){
+						if(empty($$varName)) continue;
+						$translations=yaml_emit($$varName, YAML_UTF8_ENCODING);
+						if(is_writable(dirname($yamlFile)) && !file_exists($yamlFile) || is_writable($yamlFile)){
+							file_put_contents($yamlFile,$translations);
+						}else{
+							echo'<br/>'.'You need to write this content : in the file '.h($yamlFile)
+								.'<pre>'.h($translations).'</pre>';
+							$needToExit=true;
+						}
+					}
+					if($needToExit){
+						$this->onError();
+						exit;
+					}
+				}
+			}
+			
+		}
 	}
 	
 	
@@ -200,6 +262,7 @@ define('APP', __DIR__.'/dev/');";
 					elseif(startsWith($dPath,$srcDir.'controllers')){ $class='ControllerFile'; }
 					elseif($dPath===$srcDir.'jobs/') $class='JobFile';
 					elseif($dPath===$srcDir.'daemons/') $class='DaemonFile';
+					elseif($dPath===$srcDir.'locales/') $class='LocaleFile';
 					elseif($dPath===$srcDir.'models/'){ $class='ModelFile'; }
 					elseif($dPath===$srcDir.'modules/') $class='ModuleFile';
 					elseif(startsWith($dPath,$srcDir.'views')) $class='ViewFile';

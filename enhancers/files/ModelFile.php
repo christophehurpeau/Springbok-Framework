@@ -5,7 +5,9 @@ class ModelFile extends PhpFile{
 	
 	const REGEXP_FIELDS='/public\s+((?:\/\*\*[^;{]*\*\/\s+\$[A-Za-z0-9\s_]+\s*(?:,\s*)?)+\s*;)/Ums';
 	const REGEXP_CLASS='/(?:\/\*\*([^{]*)\*\/\s+)?class ([A-Za-z_0-9]+)([^{]*){/s';
-	const REGEXP_CONSTS='/const\s+[^;]+\s*;/i';
+	const REGEXP_CONSTS='/\bconst\s+[^;]+\s*;/i';
+	const REGEXP_TRAITS='/\{\s+(use\s+[^;]+\s*;)/i';
+	const REGEXP_CLASS_WITH_ANNOTATIONS='/\/\*\*([^{]*)\*\/\s+class ([A-Za-z_0-9]+)([^{]*){/';
 	
 	
 	public static function _getPath($m,&$controllersSrc,$enhanced,$withParam=false){
@@ -28,40 +30,82 @@ class ModelFile extends PhpFile{
 	}
 	
 	protected function loadContent($srcContent){//TODO mettre en commun le code avec ControllerFile dans PhpFile.
-		$controllersSrc=array(); $enhanced=$this->enhanced;
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+		$controllersSrc=array(); $enhanced=$this->enhanced; $extends=false;
+		
+		$srcContent=preg_replace_callback('/\/\*\s+@Extends\(([^*]+)\)\s+\*\//',function($m) use(&$extends){
+			$extends=$m;
+			return "/* @ImportConsts(".$m[1].") */"
+					."/* @ImportTraits(".$m[1].") */"
+					."/* @ImportFields(".$m[1].") */"
+					."/* @ImportArrayFields(".$m[1].",'#') */"
+					."/* @ImportFunction(".$m[1].",'#') */";
+		},$srcContent);
+		if($extends!==false){
+			$path=ModelFile::_getPath($extends, $controllersSrc, $enhanced);
+			preg_match(self::REGEXP_CLASS_WITH_ANNOTATIONS, $path, $extendsM);
+			$srcContent=preg_replace(self::REGEXP_CLASS_WITH_ANNOTATIONS,'/** '.$extendsM[1].' $1 **/'."\n".'class $2$3{',$srcContent);
+		}
+		
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
-			if(!preg_match(ModelFile::REGEXP_FIELDS,$path,$mFields))
+			if(!preg_match(ModelFile::REGEXP_FIELDS,$path,$mFields)){
+				if($extends!==false) return '';
 				throw new Exception('Import fields : unable to find '.$path);
+			}
 			return $mFields[0];
 		},$srcContent);
 		
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportArrayFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportArrayFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			list($path,$fieldsNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
-			if(!preg_match_all(self::regexpArrayField($fieldsNames),$path,$mFields))
+			if(!preg_match_all(self::regexpArrayField($fieldsNames),$path,$mFields)){
+				if($extends!==false) return '';
 				throw new Exception('Import array fields : unable to find '.$path);
+			}
 			return implode("\n",$mFields[0]);
 		},$srcContent);
 		
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportConsts\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportConsts\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
-			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts))
+			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts)){
+				if($extends!==false) return '';
 				throw new Exception('Import consts : unable to find '.$path);
+			}
 			return implode("\n",$mConsts[0]);
 		},$srcContent);
 		
-		$srcContent=preg_replace_callback('/\/\*\s+@ImportFunction\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc){
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportTraits\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!preg_match_all(ModelFile::REGEXP_TRAITS,$path,$mTraits)){
+				if($extends!==false) return '';
+				throw new Exception('Import traits : unable to find '.$path);
+			}
+			return implode("\n",$mTraits[1]);
+		},$srcContent);
+		
+		$srcContent=preg_replace_callback('/\/\*\s+@ImportFunction\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$srcContent,$extends){
 			list($path,$functionNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
 			if(is_string($functionNames)) $functionNames=array($functionNames);
 			$res='';
 			foreach($functionNames as $functionName){
-				if(!preg_match_all(self::regexpFunction($functionName),$path,$mFunction))
+				if(!preg_match_all(self::regexpFunction($functionName),$path,$mFunction)){
+					if($extends!==false) continue;
 					throw new Exception('Import Function : unable to find '.$path.' '.$functionName);
-				$res.=implode("\n",$mFunction[0])."\n";
+				}
+				foreach($mFunction[0] as $kFunction=>$srcFunction){
+					if(!preg_match(self::regexpFunction($mFunction[1][$kFunction]),$srcContent))
+						$res.=$srcFunction."\n";
+				}
 			}
 			return $res;
 		},$srcContent);
 		$this->_srcContent=$srcContent;
+	}
+	
+	private $_loadedTraits=array();
+	private function callTraitsBuilder($methodName,$args){
+		foreach($this->_loadedTraits as $loadedTrait)
+			if(method_exists($loadedTrait,$methodName))
+				call_user_func_array(array($loadedTrait,$methodName),$args);
 	}
 	
 	public function enhancePhpContent($content,$false=false){
@@ -69,13 +113,25 @@ class ModelFile extends PhpFile{
 		//preg_match('/class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches);
 		//debug($matches);
 		
-		if(preg_match('/\*\*([^{]*)\*\/\s+class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches) && !empty($matches[2])
+		if(preg_match(self::REGEXP_CLASS_WITH_ANNOTATIONS,$content,$matches) && !empty($matches[2])
 						 && (($isSQL=preg_match('/@TableAlias\(/',$matches[1])) || ($isDb=preg_match('/@Db\(/',$matches[1]))) ){
 			
 			// SQL MODEL
 			//$content=parent::enhancePhp($content,false);
 			
 			$modelFile=$this;
+			
+			if(!empty($this->_traits)){
+				foreach($this->_traits as $trait){
+					$loaded=true; $pathBuild=substr($trait['path'],0,-4).'_build.php';
+					if(!class_exists($trait[0].'_build',false) && ($loaded=file_exists($pathBuild))) include $pathBuild;
+					if($loaded) $this->_loadedTraits[]=$trait[0].'_build';
+				}
+			}
+			
+			
+			
+			
 			if($isSQL){
 				$content=preg_replace_callback('/\/\*\*([^;{]*)\*\/\s+public\s+\$([A-Za-z0-9\s_]+);/Ums',array($this,'fields'),$content);
 				$content=preg_replace_callback(self::REGEXP_FIELDS,array($this,'mfields'),$content);
@@ -86,7 +142,7 @@ class ModelFile extends PhpFile{
 					$modelFile->_className=$matches[2];
 					$classBeforeContent='';
 					
-					if(!isset($annotations['TableName'])) $annotations['TableName'][0]=array(UInflector::pluralizeUnderscoredWords(UInflector::underscore(substr($modelFile->_className,0,2)===strtoupper(substr($matches[2],0,2))?substr($matches[2],isset($annotations['Db'])?2:1):$matches[2])));
+					if(!isset($annotations['TableName'])) $annotations['TableName'][0]=array(UInflector::pluralizeUnderscoredWords(UString::underscore(substr($modelFile->_className,0,2)===strtoupper(substr($matches[2],0,2))?substr($matches[2],isset($annotations['Db'])?2:1):$matches[2])));
 					if(!isset($annotations['TableAlias'])) throw new Exception('Table Alias is missing for : '.$modelFile->_className);
 					$dbName=isset($annotations['Db'])?$annotations['Db'][0][0]:false;
 					if(isset($annotations['Generate'])) $contentInfos['generate']=$annotations['Generate'][0][0];
@@ -121,19 +177,13 @@ class ModelFile extends PhpFile{
 						$modelFile->_fields['updated']=array('SqlType'=>array('datetime'),'Null'=>false,'NotBindable'=>false,'Default'=>array(NULL),'Index'=>false);
 					}
 					
-					if(!empty($this->_traits)){
-						foreach($this->_traits as $trait){
-							$loaded=true; $pathBuild=substr($trait['path'],0,-4).'_build.php';
-							if(!class_exists($trait[0].'_build',false) && ($loaded=file_exists($pathBuild))) include $pathBuild;
-							if($loaded)
-								call_user_func_array(array($trait[0].'_build','onBuild'),
-									array($modelFile,&$contentInfos,$annotations,$this->enhanced->config,&$classBeforeContent));
-						}
-					}
+					$this->callTraitsBuilder('onBuild',array($modelFile,&$contentInfos,$annotations,$this->enhanced->config,&$classBeforeContent));
+					$this->callTraitsBuilder('afterBuild',array($modelFile));
 					
 					// check
 					$traitsClassNames=empty($this->_traits) ? array() : array_map(function($t){return $t[0];},$this->_traits);
-					foreach(['Parent'=>'BParent','ParentBigintId'=>'BParent','Child'=>'BChild','Slug'=>'BSlug','Seo'=>'BSeo'] as $annotation=>$traitName){
+					foreach(array('Parent'=>'BParent','ParentBigintId'=>'BChild','Child'=>'BChild',
+								'Slug'=>'BSlug','Seo'=>'BSeo') as $annotation=>$traitName){
 						if(isset($annotations[$annotation]) && !in_array($traitName,$traitsClassNames))
 							throw new Exception($modelFile->_className.' need to use trait "'.$traitName.'"');
 					}
@@ -145,11 +195,11 @@ class ModelFile extends PhpFile{
 					$eventsArray=empty($this->_traits) ? array() : array_map(function($t){ return $t['content_build']; },$this->_traits);
 					$eventsArray[]=$content;
 					
-					foreach(['beforeSave'=>'','beforeInsert'=>'','beforeUpdate'=>'','beforeDelete'=>'',
-						'afterUpdateCompare'=>'$data,$primaryKeys','afterSave'=>['$data=null','$data'],
-								'afterInsert'=>['$data=null','$data'],'afterUpdate'=>['$data=null','$data'],
-								'afterDelete'=>''] as $event=>$params){
-							$eventsCallbacks=[]; $regexp=PhpFile::regexpArrayField($event);
+					foreach(array('beforeSave'=>'','beforeInsert'=>'','beforeUpdate'=>'','beforeDelete'=>'',
+						'afterUpdateCompare'=>'$data,$primaryKeys','afterSave'=>array('$data=null','$data'),
+								'afterInsert'=>array('$data=null','$data'),'afterUpdate'=>array('$data=null','$data'),
+								'afterDelete'=>'') as $event=>$params){
+							$eventsCallbacks=array(); $regexp=PhpFile::regexpArrayField($event);
 							foreach($eventsArray as $c){
 								$c=preg_replace_callback($regexp,function($matches2) use(&$eventsCallbacks,$event,$params){
 									$eval=dev_eval('return '.$matches2[1]);
@@ -158,13 +208,15 @@ class ModelFile extends PhpFile{
 									return '';
 								},$c);
 							}
-							if(!empty($eventsCallbacks))
-								$classBeforeContent.='protected function '.$event.'('.(is_string($params)?$params:$params[0]).'){'
-									.' return '.implode(' && ',array_unique($eventsCallbacks)).'&& parent::'.$event.'('.(is_string($params)?$params:$params[1]).');}';
+							if(!empty($eventsCallbacks) || !preg_match(self::regexpFunction($event),$content)){
+								$classBeforeContent.="\n".'protected function '.$event.'('.(is_string($params)?$params:$params[0]).'){';
+								if(!empty($eventsCallbacks))
+									$classBeforeContent.=' return '.implode(' && ',array_unique($eventsCallbacks)).';';
+								else
+									$classBeforeContent.=' return true;';
+								$classBeforeContent.='}';
+							}
 						}
-					
-					
-					
 					
 					$pkAutoGenerated=false;$enums=$specialFields=array();
 					foreach($modelFile->_fields as $name=>$field)
@@ -172,7 +224,7 @@ class ModelFile extends PhpFile{
 							$contentInfos['primaryKeys'][]=$name;
 							if(isset($field['Pk'][0])){
 								if($pkAutoGenerated=$field['Pk'][0])
-									$classBeforeContent.='protected function _beforeInsert(){$this->'.$contentInfos['primaryKeys'][0].'='.($pkAutoGenerated=='UUID'?'UGenerator::uuid()':'')
+									$classBeforeContent.="\n".'protected function _beforeInsert(){$this->'.$contentInfos['primaryKeys'][0].'='.($pkAutoGenerated=='UUID'?'UGenerator::uuid()':'')
 													.';return parent::_beforeInsert();}';
 							}
 						
@@ -252,7 +304,7 @@ class ModelFile extends PhpFile{
 						$res='';
 						foreach($enums as $fieldName=>$array){
 							if(count($array)===1 && is_array($array[0])){ $array=$array[0]; $isFromClass=count($array)===2 && isset($array[0]) && isset($array[1]); }else $isFromClass=false;
-							$res.='public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){';
+							$res.="\n".'public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){';
 							if($isFromClass){
 								$res.='return '.$array[0].'::'.$array[1].'();';
 							}else{
@@ -282,14 +334,17 @@ class ModelFile extends PhpFile{
 					$specialFieldsSetData=$specialFieldsGetData=$specialFieldsBefore='';
 					foreach($specialFields as $name=>$type){
 						if($type==='Boolean'||$type==='BooleanInt'){
-							$specialFieldsBefore.='public function is'.($camelized=UInflector::camelize($name,false)).'(){return '.($type==='Boolean'?'$this->'.$name.'!==null&&$this->'.$name.'!==false&&$this->'.$name.'!==0':'$this->'.$name).';}';
-							$specialFieldsBefore.='public function display'.$camelized.'(){ return $this->is'.$camelized.'() ? '."_tC('Yes') : _tC('No')".'; }';
+							$has=substr($name,0,4)==='has_';
+							$camelized=UString::camelize($has?substr($name,4):$name,false);
+							$prefix=$has?'has':'is';
+							$specialFieldsBefore.="\n".'public function '.$prefix.$camelized.'(){return '.($type==='Boolean'?'$this->'.$name.'!==null&&$this->'.$name.'!==false&&$this->'.$name.'!==0':'$this->'.$name).';}';
+							$specialFieldsBefore.="\n".'public function display'.$camelized.'(){ return $this->'.$prefix.$camelized.'() ? '."_tC('Yes') : _tC('No')".'; }';
 						}elseif($type==='Json'){
-							$fieldName=UInflector::camelize($name,true);
+							$fieldName=UString::camelize($name,true);
 							$specialFieldsSetData.='if(isset($data[\''.$name.'\'])) $data[\''.$name.'\']=json_decode($data[\''.$name.'\'],true);'
 								.' $this->'.$fieldName.'=&$data[\''.$name.'\'];';
 							$specialFieldsGetData.='if(isset($d[\''.$name.'\'])){ unset($d[\''.$name.'\']); $d[\''.$name.'\']=json_encode($data[\''.$name.'\']);}';
-							$specialFieldsBefore.='public $'.$fieldName.';';
+							$specialFieldsBefore.="\n".'public $'.$fieldName.';';
 						}
 					}
 				
@@ -308,16 +363,16 @@ class ModelFile extends PhpFile{
 							.(empty($specialFieldsGetData)?'':'public function &_getData(){$data=parent::_getData();$d=$data;'.$specialFieldsGetData.'return $d;}')
 						)
 						.($createdField||isset($annotations['CreatedBy'])||$createdByField||isset($annotations['Child'])?
-							'public static function QInsert(){return new QInsert(self::$__className,'.($stringCreatedField=($createdField?UPhp::exportString($createdField):'null')).($createdByField?','.UPhp::exportString($createdByField):'').');}'
-							.'public static function QInsertSelect(){return new QInsertSelect(self::$__className,'.$stringCreatedField.');}'
-							.'public static function QReplace(){return new QReplace(self::$__className,'.$stringCreatedField.');}'
+							"\n".'public static function QInsert(){return new QInsert(self::$__className,'.($stringCreatedField=($createdField?UPhp::exportString($createdField):'null')).($createdByField?','.UPhp::exportString($createdByField):'').');}'
+							."\n".'public static function QInsertSelect(){return new QInsertSelect(self::$__className,'.$stringCreatedField.');}'
+							."\n".'public static function QReplace(){return new QReplace(self::$__className,'.$stringCreatedField.');}'
 						:'')
 						.($updatedField||isset($annotations['Child'])?/*'protected function _beforeUpdate(){if(!isset($this->'.$updatedField.')) $this->'.$updatedField.'=date(\'Y-m-d H:i:s\');return parent::_beforeUpdate();}'*/
-						'public static function QUpdate(){return new QUpdate(self::$__className,'.($stringUpdatedField=($updatedField?UPhp::exportString($updatedField):'null')).');}'
-						.'public static function QUpdateOne(){return new QUpdateOne(self::$__className,'.$stringUpdatedField.');}'
+						"\n".'public static function QUpdate(){return new QUpdate(self::$__className,'.($stringUpdatedField=($updatedField?UPhp::exportString($updatedField):'null')).');}'
+						."\n".'public static function QUpdateOne(){return new QUpdateOne(self::$__className,'.$stringUpdatedField.');}'
 						:'')
 						.$classBeforeContent;
-						//.implode('',array_map(function(&$field){return 'public function &'.UInflector::camelize($field,false).'($v){$this->_set('.UPhp::exportString($field).',$v);return $this;}';},array_keys($modelFile->_fields)))
+						//.implode('',array_map(function(&$field){return 'public function &'.UString::camelize($field,false).'($v){$this->_set('.UPhp::exportString($field).',$v);return $this;}';},array_keys($modelFile->_fields)))
 						
 				},$content,1);
 				
@@ -340,6 +395,9 @@ class ModelFile extends PhpFile{
 						return '';
 					},$content);
 				}
+				
+				BHistory_build::_history_beforeEnd($modelFile,$contentInfos,$content);
+				$this->callTraitsBuilder('beforeEnd',array($modelFile,&$contentInfos,&$content));
 			}else{
 				// MongoDB
 				$contentInfos=array('indexes'=>array());

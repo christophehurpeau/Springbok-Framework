@@ -11,7 +11,7 @@ class SControllerREST extends Controller{
 		$mdef=include $mdef;
 		$methodAnnotations=$mdef['annotations'];
 		static::crossDomainHeaders();
-		return call_user_func_array(array('static',$methodName),$mdef['params']===false?array():self::getParams($mdef,$methodAnnotations));
+		return call_user_func_array(array('static',$methodName),self::getParams($mdef,$methodAnnotations));
 	}
 	
 	

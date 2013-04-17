@@ -127,6 +127,7 @@ window.S={
 	},
 	
 	isString:function(varName){ return typeof(varName)==='string'; },
+	isStr:function(varName){ return typeof varName === 'string'; },
 	isArray:Array.isArray || $.isArray,
 	isObject:function(varName){ return typeof(varName)==='object' },
 	isObj:function(varName){ return typeof(varName)==='object' },
@@ -234,21 +235,9 @@ window.S={
 	
 	tableClick:function(){
 		S.eltClick('table.pointer tr');
-	},
-	eltClick:function(selector){
-		$(selector).off('click').each(function(i,elt){
-			elt=$(elt);
-			var trTimeout,href=elt.attr('rel');
-			if(!href) return;
-			elt.on('click',function(){trTimeout=setTimeout(function(){S.redirect(href)},180);});
-			elt.find('a[href]:not([href="#"])').off('click').on('click',function(e){ clearTimeout(trTimeout); e.stopPropagation(); e.preventDefault();
-					var a=$(this),confirmMessage=a.data('confirm'); if(!confirmMessage || confirm(confirmMessage=='1' ? i18nc['Are you sure ?'] : confirmMessage)) S.redirect(a.attr('href')); });
-			elt.find('a[href="#"]').off('click').on('click',function(e){ clearTimeout(trTimeout); e.stopPropagation(); e.preventDefault(); });
-		});
-		
 	}
 };
-
+includeCore('base/eltClick');
 /* DEV */includeCore('libs/stacktrace');/* /DEV */
 
 S.regexpEscape=RegExp.sEscape=function(value){
@@ -326,8 +315,10 @@ S.error=function(m){
 	var f=function(){
 		$('[id]').each(function(){
 			var ids = $('[id="'+this.id+'"]');
-			if(ids.length>1 && ids[0]==this)
-				S.error('Multiple IDs #'+this.id);
+			if(ids.length>1 && ids[0]==this){
+				var f=(this.id.startsWith('springbok-')?console.error:S.error);
+				f(null,'Multiple IDs #'+this.id);
+			}
 		});
 		
 		if(!window.inputListHandlerIncluded && $('input[list]').length)
@@ -335,6 +326,9 @@ S.error=function(m){
 		if(!window.inputDataBoxHandlerIncluded && $('input[data-box]').length)
 			S.error("You must include \'ui/inputDataBoxHandler\' in your js file to be able to handle input[data-box]");
 		
+		if(!S.ajax && $('input[data-confirm]').length){
+			S.error('You must include \'springbok.ajax\' in your js file to be able to use data-confirm');
+		}
 	};
 	S.ready(f);
 	$document.bind('springbokAjaxPageLoaded',f);

@@ -1,6 +1,6 @@
 <?php
 class ImgFile extends EnhancerFile{
-	public static $CACHE_PATH='img_8.0.2';
+	public static $CACHE_PATH='img_8.0.2',$defaultExtension='';
 	
 	public function enhanceContent(){}
 	

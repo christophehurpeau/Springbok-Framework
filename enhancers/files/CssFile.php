@@ -433,7 +433,7 @@ class CssFile extends EnhancerFile{
 				$cssImgs=array(); $spritename=substr($prodFile->getName(),0,-4).'.png';
 				$logger->log('ImgSprite: '.$spritename);
 				$fileContent=file_get_contents($compiledCssFolder.$prodFile->getName());
-				$matches=array(); $md5CssImgs='';
+				$matches=$md5CssImgs=array();
 				if(preg_match_all('/background(\-image)?\s*:\s*([^ ]+)?\s*url\(([^)]+)\)/U',$fileContent,$matches)){
 					foreach($matches[3] as $i=>$url){
 						$url=trim($url,' \'"');
@@ -466,8 +466,8 @@ class CssFile extends EnhancerFile{
 					}else{
 						include_once CORE.'enhancers/CssSpriteGen.php';
 						$cssSpriteGen=new CssSpriteGen($tmpFolder);
-						$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$spritePath);
-						copy($spritePath,$cacheFolder.$md5CssImgs);
+						$cssRules=$cssSpriteGen->CreateSprite($imgDir,$cssImgs,$cacheFolder.$md5CssImgs);
+						copy($cacheFolder.$md5CssImgs,$spritePath);
 						file_put_contents($cacheFolder.$md5CssImgs.'_imgs',json_encode($cssRules));
 					}
 					/*if(file_exists($imgDir.$spritename)) */copy($spritePath,$dev->getPath().'web/sprites/'.$spritename);

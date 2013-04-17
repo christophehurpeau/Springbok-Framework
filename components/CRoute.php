@@ -61,7 +61,7 @@ class CRoute{
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
 		foreach(self::$_routes[Springbok::$scriptname] as $route){
-			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.(isset($route[$lang])?$route[$lang][0]:$route['_'][0]).'$/Ui',$all,$matches)){
+			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.$route[$lang][0].'$/Ui',$all,$matches)){
 				/*$ext=isset($matches['ext'])?array_pop($matches):NULL;
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
@@ -157,7 +157,7 @@ class CRoute{
 		if($action==self::DEFAULT_ACTION)
 			$froute='/'.self::translate($controller,$lang);
 		else
-			$froute=sprintf($route['_'][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
+			$froute=sprintf($route[$lang][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
 		return /* DEV */self::$_prefix./* /DEV */$froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
 	}
 

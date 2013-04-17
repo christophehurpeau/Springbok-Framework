@@ -119,7 +119,7 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 			}
 	}
 	public static function addJS($url){
-		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
+		/* DEV */throw new Exception('Use HHead::linkAddJs() now'); /* /DEV */
 		return HHead::linkJs($url);
 	}
 	public static function jsI18n(){
@@ -303,6 +303,7 @@ s.parentNode.insertBefore(g,s);
 			$entry=Springbok::$scriptname;
 			if($full===true) $full=Config::$siteUrl[$entry];
 		}elseif(($entry!==Springbok::$scriptname && $full===null) || $full===true) $full=Config::$siteUrl[$entry];
+		/* DEV */if(is_string($full) && rtrim($full,'/')!==$full) throw new Exception('Please remove the "/" at the end of "'.$full.'"'); /* /DEV */
 		if(is_array($url)){
 			$url=(!$full?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($entry,$url);
 			$escape=false;
