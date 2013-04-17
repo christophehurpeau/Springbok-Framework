@@ -103,7 +103,7 @@ class ConfigFile extends PhpFile{
 				$lstring=UString::low($string);
 				if(!isset($finalTranslations['->'.$lang][$lstring]))
 					throw new Exception('Missing route translation : "'.$string.'" for lang "'.$lang.'"');
-				return strtolower($finalTranslations['->'.$lang][$lstring]);
+				return $finalTranslations['->'.$lang][$lstring];
 			};
 			
 			/* ROUTES */
