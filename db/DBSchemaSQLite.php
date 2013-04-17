@@ -58,6 +58,7 @@ class DBSchemaSQLite extends DBSchema{
 	public function findColumnsInfos(){
 		$this->getColumns();
 		$this->getIndexes();
+		$this->foreignKeys=array();//not supported yet.
 	}
 	
 	private $_addColumns,$_hasChangedOrRemovedColumn;
@@ -166,7 +167,7 @@ class DBSchemaSQLite extends DBSchema{
 				$indexes[stripos($index['sql'],' UNIQUE ')?'unique':'nonunique'][$index['name']]
 						=array('columns'=>array_flip(array_map(function(&$val){return trim($val,' `');},explode(',',substr($index['sql'],$startLength,strpos($index['sql'],')')-$startLength)))));
 			}
-		return $indexes;
+		return $this->indexes=$indexes;
 	}
 	
 	public function getPrimaryKeys(){
