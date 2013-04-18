@@ -20,18 +20,25 @@ class BChild_build{
 		$typeForParent=array_search($modelFile->_className,$typesParent);
 		if($typeForParent===false) throw new Exception("Type parent not found for ".$modelFile->_className.": ".print_r($typesParent,true));
 		
+		
+		$updateThisData=' if($res){ $parentData=$parent->_getData();'
+										.($idField==='id' ? 'unset($parentData[\'_type\']);' : 'unset($parentData["id"],$parentData[\'_type\']);')
+										.' $this->mset($parentData); }';
+		
 		$classBeforeContent.="\n".'public function insertParent(){ $parent=new '.$annotations['Child'][0][0].';'
 									.'$data=$this->data;'.($idField==='id' ? '' : 'unset($data["id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
-									.' return $parent->'.($annotations['Child'][0][0]==='SearchablesKeyword'?'findIdOrInsert(\'id\')':'insert()').'; }';
+									.' $res=$parent->'.($annotations['Child'][0][0]==='SearchablesKeyword'?'findIdOrInsert(\'id\')':'insert()').';'
+									.$updateThisData
+									.'return $res; }';
 		$classBeforeContent.="\n".'public function insertIgnoreParent(){ $parent=new '.$annotations['Child'][0][0].';'
 									.'$data=$this->data;'.($idField==='id' ? '' : 'unset($data["id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
-									.' return $parent->insertIgnore(); }';
+									.' $res=$parent->insertIgnore();'
+									.$updateThisData
+									.' return $res; }';
 		$classBeforeContent.="\n".'public function updateParent(){ $parent=new '.$annotations['Child'][0][0].';'
 									.'$data=$this->data;'.($idField==='id' ? '' : '$data["id"]=$data["p_id"]; unset($data["p_id"]);').' $data[\'_type\']='.$typeForParent.'; $parent->_copyData($data);'
 									.'$res=call_user_func_array(array($parent,"update"),func_get_args());'
-									.'if($res){ $parentData=$parent->_getData();'
-											.($idField==='id' ? 'unset($parentData[\'_type\']);' : 'unset($parentData["id"],$parentData[\'_type\']);')
-											.' $this->_copyData($parentData); }'
+									.$updateThisData
 									.'return $res; }';
 		if($idField==='p_id') $classBeforeContent.="\n".'public static function getParentId($childId){ return self::QValue()->field("p_id")->byId($childId); }';
 	}
