@@ -1,7 +1,10 @@
 <?php
 trait BTextContent{
 	public function regenerateText(){
-		if(!empty($this->text)) VSeo::generate(static::$__className,$this->id);
+		if($this->isKeyExists('text')){
+			if(!empty($this->text)) VSeo::generate(static::$__className,$this->id);
+			else VSeo::destroy(static::$__className,$this->id);
+		}
 		return true;
 	}
 	
