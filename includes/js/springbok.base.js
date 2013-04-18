@@ -64,6 +64,14 @@ window.S={
 		if(lang) script.lang=lang;
 		(to||document.body).appendChild(script);
 	},
+	loadAsyncScript:function(url,lang,to){
+		var script = document.createElement("script");
+		script.type = "text/javascript";
+		script.src = url;
+		if(lang) script.lang=lang;
+		script.async=true;
+		(to||document.body).appendChild(script);
+	},
 	loadSyncScript:function(url){
 		return $.ajax({
 			url:url,
