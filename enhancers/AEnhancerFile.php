@@ -102,6 +102,11 @@ abstract class EnhancerFile{
 		return $content;
 	}
 	
+	
+	public function throwException($message){
+		throw new Exception('Enhancing '.replaceAppAndCoreInFile($this->srcFile->getPath())." :\n".$message);
+	}
+	
 	/* getters */
 	
 	public function srcFile(){

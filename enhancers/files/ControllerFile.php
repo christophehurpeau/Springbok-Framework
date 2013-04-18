@@ -17,7 +17,7 @@ class ControllerFile extends PhpFile{
 		$srcContent=preg_replace_callback('/\/\*\s+@Import(Action|Function)\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
 			eval('$eval=array('.$m[2].');');
 			if(!isset($eval))
-				throw new Exception('Error eval : '.$m[2]);
+				$this->throwException('Error eval : '.$m[2]);
 			$countEval=count($eval);
 			if($countEval===3 && ($eval[0]==='core')||($eval[0]==='springbok')){
 				array_shift($eval);
@@ -35,11 +35,11 @@ class ControllerFile extends PhpFile{
 				if(!preg_match_all(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('
 									.($eval[1]==='#'?'[a-zA-Z_]+':preg_quote($eval[1])).')',
 							ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
-					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
+					$this->throwException('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 				return implode("\n",$mAction[0])."\n";
 			}else{
 				if(!preg_match_all(self::regexpFunction($eval[1]),$controllersSrc[$countEval.$controllerPath],$mFunction))
-					throw new Exception('Import action : unable to find '.$controllerPath.' '.$eval[1]);
+					$this->throwException('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 				return implode("\n",$mFunction[0])."\n";
 			}
 		},$srcContent);

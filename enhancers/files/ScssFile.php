@@ -122,7 +122,7 @@ class ScssFile extends EnhancerFile{
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd '.escapeshellarg(dirname($this->srcFile()->getPath())).' ; '.$cmd.' 2>&1');
 		if(!empty($res)){
-			throw new Exception("Error in scss conversion to css : ".$this->fileName()."\n".$res);
+			$this->throwException("Error in scss conversion to css : ".$this->fileName()."\n".$res);
 		}
 		unlink($tmpfname);
 		chmod($dest,0777);

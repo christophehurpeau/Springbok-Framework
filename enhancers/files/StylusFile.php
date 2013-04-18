@@ -84,7 +84,7 @@ class StylusFile extends EnhancerFile{
 		debugPrintr($cmd);
 		debugVar($res,$output,$status);
 		if(!empty($res)){
-			throw new Exception("Error in stylus conversion to css : ".$this->fileName()."\n".$res);
+			$this->throwException("Error in stylus conversion to css : ".$this->fileName()."\n".$res);
 		}
 		chmod($dest,0777);
 		
