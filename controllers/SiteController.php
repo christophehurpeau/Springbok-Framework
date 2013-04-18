@@ -2,12 +2,19 @@
 class SiteController extends Controller{
 	/** */
 	function index(){
-		 render();
+		render();
 	}
 	
 	/** */
 	function favicon(){
-		 renderFile(APP.'web/img/favicon.ico');
+		self::cacheFor('3 weeks');
+		renderFile(APP.'web/img/favicon.ico');
+	}
+
+	/** */
+	function appleTouchIconPrecomposed(){
+		self::cacheFor('3 weeks');
+		renderFile(APP.'web/img/logo-57.png');
 	}
 
 	
