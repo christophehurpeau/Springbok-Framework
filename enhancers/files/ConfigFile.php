@@ -140,11 +140,11 @@ class ConfigFile extends PhpFile{
 								else $this->throwException('Missing lang "'.$lang.'" for route "'.$url.'"');
 							}
 						}
-					}elseif(!preg_match('#/[a-zA-Z]#',$url)){
+					}elseif(!preg_match('#/[a-zA-Z\_]#',$url)){
 						foreach($allLangs as $lang) $route[$lang]=$url;
 					}else{
 						foreach($allLangs as $lang)
-							$route[$lang]=preg_replace_callback('#/([a-zA-Z]+)#',function($r) use($translate,$lang){
+							$route[$lang]=preg_replace_callback('#/([a-zA-Z\_]+)#',function($r) use($translate,$lang){
 											return '/'.$translate($lang,$r[1]); },$url);
 						//$this->throwException('Missing langs for route : '.$url);
 					}
@@ -168,7 +168,7 @@ class ConfigFile extends PhpFile{
 									if(is_array($paramsDef[$m[2]])) $paramDefVal=$paramsDef[$m[2]][$lang];
 									else{
 										$paramDefVal=$paramsDef[$m[2]];
-										if(preg_match('/^[a-zA-Z\|]+$/',$paramDefVal))
+										if(preg_match('/^[a-zA-Z\|\_]+$/',$paramDefVal))
 											$paramDefVal=implode('|',array_map(function($s) use($translate,$lang){
 													return $translate($lang,$s);
 												},explode('|',$paramDefVal)));
