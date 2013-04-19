@@ -16,6 +16,6 @@ S.Listenable.prototype={
 				events[i].apply(this,args);
 		}*/
 		var callbacks=this._events[event];
-		if(callbacks) callbacks.fire.apply(arraySliceFunction.call(arguments,1));
+		if(callbacks) callbacks.fire.apply(this,arraySliceFunction.call(arguments,1));
 	}
 };

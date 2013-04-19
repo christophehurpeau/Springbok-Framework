@@ -1,9 +1,10 @@
 includeCore('springbok.base');
 includeCore('springbok.history');
+includeCore('base/callbacksOnce');
 includeCore('ui/slideTo');
 
 (function(){
-	var lastConfirmResult=true,readyCallbacks=$.Callbacks();
+	var lastConfirmResult=true,readyCallbacks=S.CallbacksOnce();
 	document.confirm=function(param){return lastConfirmResult=window.confirm(param);};
 	var divContainer,divPage,divVariable,divContent,linkFavicon,normalFaviconHref,
 		changeLinkFavicon=function(href){
@@ -140,14 +141,16 @@ includeCore('ui/slideTo');
 					
 					$(window).scrollTop(0);
 					
-					var OnReadyCallbacks=readyCallbacks;
-					S.ajax.loadContent(div,jqXHR.responseText,function(){OnReadyCallbacks.fire();$document.trigger('springbokAjaxPageLoaded',div);},to,data || forceNotAddDataToGetORdoNotDoTheEffect);
-					readyCallbacks=$.Callbacks();
-					
-					changeLinkFavicon(normalFaviconHref);
-					
-					if(to === 'base') divPage=$('#page'); 
-					if(to === 'base' || to === 'page') S.ajax.updateVariable(divPage);
+					S.ajax.loadContent(div,jqXHR.responseText,function(){
+						readyCallbacks.fire();
+						$document.trigger('springbokAjaxPageLoaded',div);
+						
+						changeLinkFavicon(normalFaviconHref);
+						
+						if(to === 'base') divPage=$('#page'); 
+						if(to === 'base' || to === 'page') S.ajax.updateVariable(divPage);
+						
+					},to,data || forceNotAddDataToGetORdoNotDoTheEffect);
 					
 					$('body').removeClass('cursorWait');
 					divLoading.remove();
@@ -160,7 +163,7 @@ includeCore('ui/slideTo');
 				}*/
 			});
 		},
-		loadContent:function(div,content,OnReadyCallbacks,to,forceNotAddDataToGetORdoNotDoTheEffect){
+		loadContent:function(div,content,onContentLoaded,to,forceNotAddDataToGetORdoNotDoTheEffect){
 			div.find('span.mceEditor').each(function(){
 				var ed=tinymce.get(this.id.substr(0,this.id.length-7));
 				ed.focus(); ed.remove();
@@ -168,10 +171,10 @@ includeCore('ui/slideTo');
 			
 			defineDefault('AJAX_CONTENT_EFFECT',true);
 			if(AJAX_CONTENT_EFFECT && to === 'content' && !forceNotAddDataToGetORdoNotDoTheEffect){
-				divContent=div.sSlideTo(content,OnReadyCallbacks);
+				divContent=div.sSlideTo(content,onContentLoaded);
 			}else{
 				div.html(content);//.fadeTo(0,1);
-				OnReadyCallbacks();
+				onContentLoaded();
 			}
 		}
 	};

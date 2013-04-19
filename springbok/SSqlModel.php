@@ -30,8 +30,10 @@ class SSqlModel extends SModel{
 	
 	private function _insert($query,$data){
 		$id=$query->data($data)->execute();
-		if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
-		$this->_afterInsert($data);
+		if($id){
+			if(static::$__modelInfos['isAI']) $this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
+			$this->_afterInsert($data);
+		}
 		return $id;
 	}
 
