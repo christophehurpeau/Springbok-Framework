@@ -49,12 +49,19 @@ class TestNavigator extends CHttpClient{
 		$this->parsedHtml=$parsedHtml;
 	}
 	public function checkMetas(){
-		$metas=$parsedHtml->find('head meta[name="description"]');
-		assert(count($metas)===1);
-		$metas=$parsedHtml->find('head meta[name="keywords"]');
-		assert(count($metas)===1);
-		$metas=$parsedHtml->find('head meta[property="og:site_name"]');
-		assert(count($metas)===1);
+		$parsedHtml=$this->_parseHtml();
+		$metaTitle=$parsedHtml->find('head title');
+		assert(count($metaTitle)===1);
+		$metaDescription=$parsedHtml->find('head meta[name="description"]');
+		assert(count($metaDescription)===1);
+		$metaKeywords=$parsedHtml->find('head meta[name="keywords"]');
+		assert(count($metaKeywords)===1);
+		$metaOgSiteName=$parsedHtml->find('head meta[property="og:site_name"]');
+		assert(count($metaOgSiteName)===1);
+		$metaOgTitle=$parsedHtml->find('head meta[property="og:title"]');
+		assert(count($metaOgTitle)===1);
+		return array('title'=>$metaTitle[0],'description'=>$metaDescription[0],'keywords'=>$metaKeywords[0],
+				'og_siteName'=>$metaOgSiteName[0],'og_title'=>$metaOgTitle[0]);
 	}
 }
 
@@ -106,5 +113,11 @@ class STest{
 				echo '</div>';
 			}
 		}
+	}
+	
+	
+	public function equals($_1,$_2){
+		if($_1!==$_2)
+			throw new Exception('"'.$_1.'" !== "'.$_2.'"');
 	}
 }
