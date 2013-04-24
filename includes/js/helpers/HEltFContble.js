@@ -1,7 +1,7 @@
 includeCore('jquery/outerHTML');
 S.HEltFContble=S.extClass(S.HElt,{
 	ctor:function(form,name){this._form=form; this._name=name; this._labelEscape=1; },
-	placeholder:function(value){ try{this.attr('placeholder',value);}catch(err){} /* DEV */alert('TODO : bug IE7 placeholder jquery set');/* /DEV */ return this; },
+	placeholder:function(value){ this.attr('placeholder',value); return this; },
 	
 	label:function(value){ this._label=value; return this; },
 	htmlLabel:function(value){ this._label=value; this._labelEscape=0; return this; },

@@ -111,6 +111,7 @@ class CHttpRequest{
 			//'VoilaBot',
 			//'WebCrawler',
 			'crawler','spider','spyder',
+			'facebookexternalhit',
 		 
 			'Xenu',
 		 
@@ -136,13 +137,14 @@ class CHttpRequest{
 	
 	private static $_ieVersion;
 	public static function IE_version(){
+		if(self::$_ieVersion!==null) return self::$_ieVersion;
 		if(!isset($_SERVER['HTTP_USER_AGENT']) || !preg_match("#MSIE ([\d\.]+)#i",$_SERVER['HTTP_USER_AGENT'],$ua)) return self::$_ieVersion=false;
 		return self::$_ieVersion=$ua[1];
 	}
 	
-	public static function isIElt8(){ return self::$_ieVersion===false ? false : self::$_ieVersion < 8; }
-	public static function isIElt9(){ return self::$_ieVersion===false ? false : self::$_ieVersion < 9; }
-	public static function isIElt10(){ return self::$_ieVersion===false ? false : self::$_ieVersion < 10; }
+	public static function isIElt8(){ return self::IE_version()===false ? false : self::$_ieVersion < 8; }
+	public static function isIElt9(){ return self::IE_version()===false ? false : self::$_ieVersion < 9; }
+	public static function isIElt10(){ return self::IE_version()===false ? false : self::$_ieVersion < 10; }
 	
 	CONST P_WINDOWS=0,P_MAC=1,P_LINUX=2,P_FREE_BSD=3,P_IPOD=10,P_IPAD=11,P_IPHONE=12,P_ANDROID=13,P_SYMBIAN=14,P_P_IMODE=15,P_NINTENDO_WII=20,P_PLAYSTATION_PORTABLE=21;
 	CONST B_CRAWLER=0,B_OPERA_MINI=1,B_OPERA=2,B_IE=3,B_FIREFOX=4,B_CHROME=5,B_CHROMIUM=6,B_SAFARI=7,

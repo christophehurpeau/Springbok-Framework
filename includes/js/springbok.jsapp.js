@@ -1,4 +1,4 @@
-includeCore('libs/jquery-1.8.3');
+includeCore('libs/jquery-latest');
 includeCore('springbok.base');
 
 S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
