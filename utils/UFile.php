@@ -16,6 +16,16 @@ class UFile{
 		if($jsonDecoded===null) throw new Exception('Bad JSON '.$path);
 		return $jsonDecoded;
 	}
+	public static function getYAML($path){
+		try{
+			$content=file_get_contents($path);
+		}catch(ErrorException $e){
+			return false;
+		}
+		$yamlDecoded=yaml_parse($content,true);
+		return $yamlDecoded;
+	}
+	
 	
 	public static function rm($path){
 		try{
