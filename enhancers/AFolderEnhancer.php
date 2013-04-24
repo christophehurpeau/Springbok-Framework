@@ -56,7 +56,8 @@ abstract class AFolderEnhancer{
 			$ext=$file->getExt();
 			
 			if($class==='ConfigFile'){
-				if($filename==='enhance.php'||$filename==='_.php'||$filename==='_.json'
+				if($filename==='_.json') throw new Exception('Use YAML now instead of JSON');
+				if($filename==='enhance.php'||$filename==='_.php'||$filename==='_.yml'
 						||startsWith($filename,'routes-langs')) continue;
 				$justDev=false;
 				$destFilename=substr($filename,0,strrpos($filename,'.')+1).'php';

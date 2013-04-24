@@ -2,6 +2,7 @@
 class DBSchemaMySQL extends DBSchema{
 	//private static $allTables;
 	
+	private static $_allStatusTables=array();
 	private function _tableStatus(){
 		$dbName=$this->db->_getName();
 		if(!isset(self::$_allStatusTables[$dbName]))
@@ -50,7 +51,6 @@ class DBSchemaMySQL extends DBSchema{
 		$this->doUpdate(substr($sql,0,-2),true);
 	}
 	
-	private static $_allStatusTables=array();
 	public function checkTable(){
 		//$status=$this->db->doSelectRow('SHOW TABLE STATUS LIKE '.$this->db->escape($this->tableName));
 		$status=$this->_tableStatus();

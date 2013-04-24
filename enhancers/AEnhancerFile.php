@@ -66,6 +66,7 @@ abstract class EnhancerFile{
 	
 	public function writeDevFile($devFile){
 		$content=$this->getEnhancedDevContent();
+		$this->checkContent($content);
 		if($content!==false)
 			if(!file_exists($devFile->getPath()) || md5_file($devFile->getPath())!=md5($content))
 				$devFile->write($content);
@@ -73,6 +74,7 @@ abstract class EnhancerFile{
 	}
 	public function writeProdFile($prodFile){
 		$content=$this->getEnhancedProdContent();
+		$this->checkContent($content);
 		if($content!==false)
 			if(!file_exists($prodFile->getPath()) || md5_file($prodFile->getPath())!=md5($content))
 				$prodFile->write($content);
@@ -81,6 +83,7 @@ abstract class EnhancerFile{
 	
 	public abstract function getEnhancedDevContent();
 	public abstract function getEnhancedProdContent();
+	public function checkContent($content){}
 	
 	public function hardConfig($content){
 		$enhanced=$this->enhanced;

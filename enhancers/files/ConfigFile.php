@@ -12,7 +12,7 @@ class ConfigFile extends PhpFile{
 		}
 		
 		if($this->enhanced->isApp() && substr($this->fileName(),0,1) === '_'){
-			if($this->fileName()!=='_.php'&&$this->fileName()!=='_.json')
+			if($this->fileName()!=='_.php'&&$this->fileName()!=='_.yml')
 				$md5.=file_get_contents(dirname($this->srcFile()->getPath()).'/_.'.UFile::extension($this->fileName()));
 			
 			if(!empty($this->enhanced->appConfig['plugins']))
@@ -240,7 +240,7 @@ class ConfigFile extends PhpFile{
 							$configArray['autoload_default']=$pluginPath.'models/';
 						}
 						$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1].'/src/';
-						foreach(array('php','json') as $extPlugin){
+						foreach(array('php','json','yml') as $extPlugin){
 							if(file_exists($pluginConfigPath=($devPluginPath.'config/'.$configname.'.'.$extPlugin)))
 								$configArray=UArray::union_recursive($configArray,self::incl($pluginConfigPath,$extPlugin));
 						}
@@ -254,6 +254,18 @@ class ConfigFile extends PhpFile{
 				
 				if(empty($configArray['allLangs']))
 					$configArray['allLangs']=$configArray['availableLangs'];
+				
+				if(isset($configArray['cookie_domain'])){
+					if(is_string($configArray['cookie_domain'])){
+						$cdomain=$configArray['cookie_domain'];
+						$configArray['cookie_domain']=array_map(function() use($configArray){
+							 return $configArray['cookie_domain']; },$configArray['siteUrl']);
+					}else{
+						foreach($configArray['siteUrl'] as $entry=>$siteUrl)
+							if(!array_key_exists($entry,$configArray['cookie_domain']))
+								throw new Exception('Missing cookie_domain for entry "'.$entry.'" (file : '.$configname.')');
+					}
+				}
 				
 				$configArray=$this->mergeWithPluginsConfig('_',$configArray);
 				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
@@ -289,7 +301,7 @@ class ConfigFile extends PhpFile{
 		if($this->enhanced->configNotEmpty('plugins'))
 			foreach($this->enhanced->config['plugins'] as $key=>$plugin){
 				$devPluginPath=$this->enhanced->devConfig['pluginsPaths'][$plugin[0]].$plugin[1];
-				foreach(array('php','json') as $extPlugin){
+				foreach(array('php','json','yml') as $extPlugin){
 					if(file_exists($pluginConfigPath=($devPluginPath.'/config/'.$configname.'.'.$extPlugin)))
 						$configArray=UArray::union_recursive($configArray,self::incl($pluginConfigPath,$extPlugin));
 				}
@@ -359,6 +371,6 @@ class ConfigFile extends PhpFile{
 	
 	public static function incl($path,$ext=null){
 		if($ext===null) $ext=UFile::extension($path);
-		return $ext==='php' ? include $path : UFile::getJSON($path);
+		return $ext==='php' ? include $path : ($ext==='json'? UFile::getJSON($path) : UFile::getYAML($path));
 	}
 }
