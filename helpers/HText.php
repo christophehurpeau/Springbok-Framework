@@ -29,6 +29,10 @@ class HText{
 				$content=preg_replace('/\b(true|false|null|undefined)\b/im',
 					'<b style="color:#606">$1</b>',$content);
 				break;
+			case 'yml':
+				$content=h($content);
+				$content=preg_replace('/^(\s*)(\'[\']*\'|\"[\"]*\"|[^:]+)\:/m','$1<i style="color:#33A">$2</i>:',$content);
+				break;
 			default: $content=h($content); break;
 		}
 		
@@ -49,7 +53,8 @@ class HText{
 			$content.=self::line($withLineNumbers,$line,$attributes,$lineContent,$formatter);
 			$content.=self::lines($withLineNumbers,$line+1,$end,$formatter);
 		}
-		!isset($preAttrs['style']) ? $preAttrs['style']='position:relative;' : $preAttrs['style'].=';position:relative;';
+		!isset($preAttrs['style']) ? $preAttrs['style']='background:#FFF;color:#222;border:0;position:relative;'
+					 : $preAttrs['style']=';background:#FFF;color:#222;border:0;position:relative;'.$preAttrs['style'];
 		return HHtml::tag('pre',$preAttrs,$content,false);
 	}
 	

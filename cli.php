@@ -65,7 +65,10 @@ class App{
 	
 	public static function run($action,$argv){
 		/* DEV */
-		if(!empty($argv[1]) && $argv[1]==='noenhance'){
+		if(!empty($argv[0]) && $argv[0]==='noenhance'){
+			array_shift($argv);
+			$shouldEnhance=false;
+		}elseif(!empty($argv[1]) && $argv[1]==='noenhance'){
 			array_splice($argv,1,1);
 			$shouldEnhance=false;
 		}elseif(!empty($argv[2]) && $argv[2]==='noenhance'){

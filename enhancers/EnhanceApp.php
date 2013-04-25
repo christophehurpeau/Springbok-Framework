@@ -77,7 +77,8 @@ define('APP', __DIR__.'/dev/');";
 					$appP=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'p\'');
 					$modelsTranslations=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'f\''
 							.' AND NOT EXISTS( SELECT 1 FROM t t2 WHERE ("models." || t.s)=t2.s AND t.t=t2.t AND t2.c=\'P\' )');
-					$pluginsTranslations=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'a\' AND s LIKE "plugin.%"');
+					$pluginsTranslations=$db->doSelectListValue('SELECT s,t FROM t WHERE c=\'a\' AND s LIKE "plugin.%"'
+							.' AND NOT EXISTS( SELECT 1 FROM t t2 WHERE t.s=t2.s AND t.t=t2.t AND t2.c=\'P\' )');
 					$db->close();
 					
 					foreach($appS as $s=>$t) $app[$s]=array('one'=>$t,'other'=>$appP[$s]);

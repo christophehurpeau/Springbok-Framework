@@ -255,16 +255,14 @@ class ConfigFile extends PhpFile{
 				if(empty($configArray['allLangs']))
 					$configArray['allLangs']=$configArray['availableLangs'];
 				
-				if(isset($configArray['cookie_domain'])){
-					if(is_string($configArray['cookie_domain'])){
-						$cdomain=$configArray['cookie_domain'];
-						$configArray['cookie_domain']=array_map(function() use($configArray){
-							 return $configArray['cookie_domain']; },$configArray['siteUrl']);
-					}else{
-						foreach($configArray['siteUrl'] as $entry=>$siteUrl)
-							if(!array_key_exists($entry,$configArray['cookie_domain']))
-								throw new Exception('Missing cookie_domain for entry "'.$entry.'" (file : '.$configname.')');
-					}
+				if(is_string($configArray['cookie_domain'])){
+					$cdomain=$configArray['cookie_domain'];
+					$configArray['cookie_domain']=array_map(function() use($configArray){
+						 return $configArray['cookie_domain']; },$configArray['siteUrl']);
+				}else{
+					foreach($configArray['siteUrl'] as $entry=>$siteUrl)
+						if(!array_key_exists($entry,$configArray['cookie_domain']))
+							throw new Exception('Missing cookie_domain for entry "'.$entry.'" (file : '.$configname.')');
 				}
 				
 				$configArray=$this->mergeWithPluginsConfig('_',$configArray);

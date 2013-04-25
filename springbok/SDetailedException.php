@@ -1,6 +1,6 @@
 <?php
 class SDetailedException extends Exception{
-	private $title,$details;
+	protected $title,$details;
 	
 	public function __construct($message,$code=0,$title=null,$details='',$previous=null){
 		parent::__construct($message,$code,$previous);

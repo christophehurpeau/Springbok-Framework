@@ -177,10 +177,9 @@ $BreadcrumbsShadow:-1 !default;
 $BreadcrumbsColor:false !default;
 #breadcrumbs{
 	$BreadcrumbsPadding:-1 !default;
-	$BreadcrumbsMargin:-1 !default;
+	$BreadcrumbsMargin:0 0 5px !default;
 	@if $BreadcrumbsBackground{  @if -1==$BreadcrumbsPadding{$BreadcrumbsPadding:2px 3px 3px 5px;} $BreadcrumbsMargin:3px 3px 5px; padding:$BreadcrumbsPadding; background:$BreadcrumbsBackground; }
 	@if false==$BreadcrumbsInVariable{
-		$BreadcrumbsMargin:0 0 5px;
 		@if $FixedVariableShadow and $BreadcrumbsShadow==-1{ $BreadcrumbsShadow:$FixedVariableShadow; }
 		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
 		@if false==$BreadcrumbsBackground{

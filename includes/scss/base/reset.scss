@@ -18,11 +18,15 @@ h1{
 	h5{font-size:1.1em;margin-bottom:5px;}
 	h6{font-size:1.05em;margin-bottom:5px;}
 }@else{
-	h2{font-size:1.4em;margin:4px 0 12px;}
-	h3{font-size:1.2em;margin-bottom:10px;}
-	h4{font-size:1.1em;margin-bottom:8px;}
-	h5{font-size:1.05em;margin-bottom:5px;}
-	h6{font-size:1em;margin-bottom:5px;}
+	h2{font-size:1.4em;margin:9px 0 12px;}
+	h3{font-size:1.2em;margin:7px 0 10px;}
+	h4{font-size:1.1em;margin:4px 0 8px;}
+	h5{font-size:1.05em;margin:4px 0 5px;}
+	h6{font-size:1em;margin:4px 0 5px;}
+	div h2:first-child,div h3:first-child,
+		div h4:first-child,div h5:first-child,div h6:first-child{
+			margin-top:0;
+		}
 }
 
 
