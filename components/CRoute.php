@@ -130,7 +130,10 @@ class CRoute{
 		if($link !==true){
 			$route=self::$_routes[$entry][$link];
 			/* DEV */
-			if($route===null) throw new Exception("CRoute getLink: This route does not exists: ".$link);
+			if($route===null){
+				if(Springbok::$inError) return 'javascript:alert(\'No route found\')';
+				throw new Exception("CRoute getLink: This route does not exists: ".$link);
+			}
 			/* /DEV */
 		}
 		if(isset($params['ext'])) $plus.='.'.$params['ext'];

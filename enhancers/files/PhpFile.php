@@ -73,6 +73,12 @@ class PhpFile extends EnhancerFile{
 		return $this->md5=(md5($srcContent).$this->enhanced->md5EnhanceConfig());
 	}
 
+	public function checkContent($content){
+		/*parsekit_compile_string($content,$errors);
+		if(!empty($errors)) throw new Exception(print_r($errors,true));*/
+		//token_get_all($content);
+	}
+
 	public function findAllTraits($srcContent,$check=false){
 		if($check){ $oldTraits=$this->_traits; $this->_traits=array(); }
 		$tokens=token_get_all($this->_srcContent);

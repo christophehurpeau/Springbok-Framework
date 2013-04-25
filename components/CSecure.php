@@ -6,6 +6,7 @@ class CSecure{
 	protected static $_cookie;
 	
 	public static function init(){
+		/* DEV */if(Springbok::$inError===null)/* /DEV */
 		self::$_config=self::loadConfig();
 	}
 	

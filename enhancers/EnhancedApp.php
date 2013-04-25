@@ -7,11 +7,16 @@ class EnhancedApp extends Enhanced{
 		parent::__construct($type,$dirname);
 		$appDir=$this->getAppDir();
 		if(file_exists($appDir.'src/config/_.php')) $this->appConfig=include $appDir.'src/config/_.php';
-		elseif(file_exists($appDir.'src/config/_.json')) $this->appConfig=UFile::getJSON($appDir.'src/config/_.json');
+		//elseif(file_exists($appDir.'src/config/_.json')) $this->appConfig=UFile::getJSON($appDir.'src/config/_.json');
+		elseif(file_exists($appDir.'src/config/_.json'))
+			throw new Exception('Use YAML now (config/_.json)'."\n".yaml_emit(UFile::getJSON($appDir.'src/config/_.json')));
+		elseif(file_exists($appDir.'src/config/_.yml')) $this->appConfig=UFile::getYAML($appDir.'src/config/_.yml');
 		else throw new Exception('Missing "_" config file !');
 		
 		if(file_exists($appDir.'src/config/_'.ENV.'.php')) $this->devConfig=include $appDir.'src/config/_'.ENV.'.php';
-		elseif(file_exists($appDir.'src/config/_'.ENV.'.json')) $this->devConfig=UFile::getJSON($appDir.'src/config/_'.ENV.'.json');
+		elseif(file_exists($appDir.'src/config/_'.ENV.'.json'))
+			throw new Exception('Use YAML now (config/_'.ENV.'.json)'."\n".yaml_emit(UFile::getJSON($appDir.'src/config/_'.ENV.'.json')));
+		elseif(file_exists($appDir.'src/config/_'.ENV.'.yml')) $this->devConfig=UFile::getYAML($appDir.'src/config/_'.ENV.'.yml');
 		
 		$this->md5EnhanceConfig=empty($this->config['config'])?'':md5(implode('~',$this->config['config']));
 		

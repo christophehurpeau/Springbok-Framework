@@ -1,6 +1,7 @@
 $H1Color:#FFF !default;
 $H1Background:false !default;
 $H1_TEXT_SHADOW:false !default;
+$PAGE_VERSION:1 !default;
 
 h1,h2,h3,h4,h5,h6{clear:both; margin-top:0;position:relative;}
 h1{
@@ -10,11 +11,23 @@ h1{
   @else{ padding:0; }
   @if $H1_TEXT_SHADOW{ text-shadow:$H1_TEXT_SHADOW; }
 }
-h2{font-size:1.4em;margin:4px 0 12px;}
-h3{font-size:1.3em;margin-bottom:10px;}
-h4{font-size:1.18em;margin-bottom:8px;}
-h5{font-size:1.1em;margin-bottom:5px;}
-h6{font-size:1.05em;margin-bottom:5px;}
+@if $PAGE_VERSION==1{
+	h2{font-size:1.4em;margin:4px 0 12px;}
+	h3{font-size:1.3em;margin-bottom:10px;}
+	h4{font-size:1.18em;margin-bottom:8px;}
+	h5{font-size:1.1em;margin-bottom:5px;}
+	h6{font-size:1.05em;margin-bottom:5px;}
+}@else{
+	h2{font-size:1.4em;margin:9px 0 12px;}
+	h3{font-size:1.2em;margin:7px 0 10px;}
+	h4{font-size:1.1em;margin:4px 0 8px;}
+	h5{font-size:1.05em;margin:4px 0 5px;}
+	h6{font-size:1em;margin:4px 0 5px;}
+	div h2:first-child,div h3:first-child,
+		div h4:first-child,div h5:first-child,div h6:first-child{
+			margin-top:0;
+		}
+}
 
 
 /* http://necolas.github.com/normalize.css/2.0.1/normalize.css */

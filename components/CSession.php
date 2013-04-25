@@ -3,7 +3,7 @@ class CSession{
 	private static $_config,$_agent,$_SESSION;
 	
 	public static function init(){
-		session_set_cookie_params(5760,BASE_URL.'/',Config::$cookie_domain);
+		session_set_cookie_params(5760,BASE_URL.'/',Config::$cookie_domain[Springbok::$scriptname]);
 		self::start();
 		/*if(self::$_config['checkAgent']){
 			$agent=md5($_SERVER['HTTP_USER_AGENT'].USecure::getSalt());

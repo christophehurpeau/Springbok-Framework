@@ -4,6 +4,7 @@ for(var i = 0; i < html5elements.length; i++) document.createElement(html5elemen
 
 /* http://kangax.github.com/es5-compat-table/ */
 /* https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js */
+/* https://github.com/kriskowal/es5-shim/blob/master/es5-sham.min.js */
 
 /**
 * Brings an environment as close to ECMAScript 5 compliance

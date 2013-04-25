@@ -112,22 +112,25 @@ class HDev{
 	
 	
 	public static function error(&$e_message,&$e_file,&$e_line,&$e_context){
-		echo '<pre style="font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.openLocalFile($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
+		echo '<pre style="background:#FFF;color:#222;border:0;font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.openLocalFile($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown' && file_exists($e_file)){
 			echo '<br/><h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
 			echo HText::highlightLine(file_get_contents($e_file),'php',$e_line,false,'background:#EBB',true,14,array('style'=>'font-family:\'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,"Courier New",monospace;font-size:1em;'));
 		}
-		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre>'.prettyHtmlBackTrace(3).'</pre>';
+		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre style="background:#FFF;color:#222;border:0">'.prettyHtmlBackTrace(3).'</pre>';
 		
-		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre>'.UVarDump::dump($e_context).'</pre>';
+		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre style="background:#FFF;color:#222;border:0">'.UVarDump::dump($e_context).'</pre>';
 	}
 	
-	public static function exception(&$e_message,&$e_file,&$e_line,&$e_trace){
-		echo '<pre style="font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.openLocalFile($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
-		if($e_file && $e_file !== 'Unknown'){
+	public static function exception($e){
+		echo '<pre style="background:#FFF;color:#222;border:0;font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e instanceof SDetailedException ? $e->getTitle() : $e->getMessage())
+					.' ('.openLocalFile($e->getFile(),$e->getLine()).replaceAppAndCoreInFile($e->getFile()).':'.$e->getLine().'</a>)'.'</pre>';
+		if($e instanceof SDetailedException)
+			echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Details:</h5>'.$e->detailsHtml();
+		if($e->getFile() && $e->getFile() !== 'Unknown'){
 			echo '<br/><h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">File content:</h5>';
-			echo HText::highlightLine(file_get_contents($e_file),'php',$e_line,false,'background:#EBB',true,10);
+			echo HText::highlightLine(file_get_contents($e->getFile()),'php',$e->getLine(),false,'background:#EBB',true,10);
 		}
-		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre>'.prettyHtmlBackTrace(0,$e_trace).'</pre>';
+		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre style="background:#FFF;color:#222;border:0">'.prettyHtmlBackTrace(0,$e->getTrace()).'</pre>';
 	}
 }

@@ -1,9 +1,9 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.3.7',$defaultExtension='js';
+	public static $CACHE_PATH='js_8.5.1',$defaultExtension='js';
 
-	private $devProdDiff,$includes=array();
+	private $devProdDiff,$includes=array(),$_srcContentOldIe;
 	public function loadContent($srcContent){
 		if(UString::firstLine($srcContent)==="includeCore('springbok.jsapp');"){
 			$filename=substr($this->fileName(),0,-3);
@@ -104,6 +104,13 @@ class JsFile extends EnhancerFile{
 					.",staticUrl=basedir+'web/',webUrl=staticUrl+'./',imgUrl=webUrl+'img/'"
 					.($this->fileName()==='admin.js'?',entryUrl='.json_encode($this->enhanced->devConfig['siteUrl'],JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE):'')
 					.";\n".$this->_srcContent;
+			
+			$srcContentNonIe=str_replace('OLD_IE','false',$this->_srcContent);
+			if($srcContentNonIe!==$this->_srcContent){
+				$this->_srcContentOldIe=str_replace('OLD_IE','true',$this->_srcContent);
+				$this->_srcContent=$srcContentNonIe;
+			}
+			
 		}
 	}
 	
@@ -121,17 +128,24 @@ class JsFile extends EnhancerFile{
 	public function writeDevFile($devFile){
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($devFile->getPath()))==='ace') $devFile->write($this->_srcContent);
 		else{
-			$content=$this->_srcContent;
+			$content=$this->_srcContent; $contentOldIe=$this->_srcContentOldIe;
 			
 			if($this->devProdDiff){
-				$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$content);
-				$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
-				//$content=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)||(.+)\)\)/Ums','$1',$content);
-				$content=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$1',$content);
+				foreach(array('content','contentOldIe') as $varName){
+					if(empty($$varName)) continue;
+					$$varName=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$$varName);
+					$$varName=str_replace('/* DEV */','',str_replace('/* /DEV */','',$$varName));
+					//$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)||(.+)\)\)/Ums','$1',$$varName);
+					$$varName=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$1',$$varName);
+				}
 			}
 			
 			if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$devFile->getPath(),true);
-			else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath(),true);
+			else{
+				self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$devFile->getPath(),true);
+				if(!empty($contentOldIe)) self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$contentOldIe,substr($devFile->getPath(),0,-3).'.oldIe.js',false,true);
+				else copy($devFile->getPath(),substr($devFile->getPath(),0,-3).'.oldIe.js');
+			}
 			
 			
 			
@@ -161,16 +175,25 @@ class JsFile extends EnhancerFile{
 		if(substr($this->fileName(),-7,-3)==='.min' || basename(dirname($prodFile->getPath()))==='ace') $prodFile->write($this->_srcContent);
 		else{
 			if($this->devProdDiff){
-				$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_srcContent);
-				$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
-				$content=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$content);
-				$content=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$2',$content);
+				$content=$this->_srcContent; $contentOldIe=$this->_srcContentOldIe;
 				
+				foreach(array('content','contentOldIe') as $varName){
+					if(empty($$varName)) continue;
+					$$varName=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$$varName);
+					$$varName=str_replace('/* PROD */','',str_replace('/* /PROD */','',$$varName));
+					$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$$varName);
+					$$varName=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$2',$$varName);
+				}
 				
 				if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);
-				else self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$prodFile->getPath());
+				else{
+					self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$content,$prodFile->getPath());
+					if(!empty($contentOldIe)) self::executeGoogleCompressor($this->enhanced->getTmpDir(),$this->enhanced,$contentOldIe,substr($prodFile->getPath(),0,-3).'.oldIe.js',false,false);
+					else copy($prodFile->getPath(),substr($prodFile->getPath(),0,-3).'.oldIe.js');
+				}
 			}else{
 				copy($this->getDevFile()->getPath(),$prodFile->getPath());
+				copy($this->getDevFile()->getPath(),substr($prodFile->getPath(),0,-3).'.oldIe.js');
 			}
 			
 			//self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath());
@@ -182,6 +205,10 @@ class JsFile extends EnhancerFile{
 
 	protected function copyFromCache($cachefile,$devFile,$prodFile,$justDev){
 		if(file_exists($cachefile.'_src')) copy($cachefile.'_src',substr($devFile->getPath(),0,-3).'.src.js');
+		if(file_exists($cachefile.'_oldIe')){
+			foreach($justDev?array($devFile):array($devFile,$prodFile) as $destFile)
+				copy($cachefile.'_oldIe',substr(is_string($destFile)?$destFile:$destFile->getPath(),0,-3).'.oldIe.js');
+		}
 		parent::copyFromCache($cachefile,$devFile,$prodFile,$justDev);
 	}
 	
@@ -190,6 +217,9 @@ class JsFile extends EnhancerFile{
 		$srcFile=substr($devFile->getPath(),0,-3).'.src.js';
 		if(file_exists($srcFile)) copy($srcFile,$cachefile.'_src');
 		else UFile::rm($cachefile.'_src');
+		$srcFile=substr($devFile->getPath(),0,-3).'.oldIe.js';
+		if(file_exists($srcFile)) copy($srcFile,$cachefile.'_oldIe');
+		else UFile::rm($cachefile.'_oldIe');
 	}
 	
 	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
@@ -216,7 +246,7 @@ class JsFile extends EnhancerFile{
 		}
 	}
 	
-	public static function executeGoogleCompressor($tmpDir,$enhancer,&$content,$destination,$createSourceMap=false){
+	public static function executeGoogleCompressor($tmpDir,$enhancer,&$content,$destination,$createSourceMap=false,$oldIE=false){
 		$dest=$destination?$destination:tempnam($tmpDir,'gclosuredest');
 		$javaExecutable = 'java';
 		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
@@ -229,6 +259,7 @@ class JsFile extends EnhancerFile{
 			$cmd.='--create_source_map '.escapeshellarg($destination.'.map').' --source_map_format=V3';
 		}else $rawSrcFile=tempnam($tmpDir,'gclosure');
 		//$content='/*jshint asi:true boss:true eqnull:true es5:true evil:true funcscope:true globalstrict:true lastsemic:true laxbreak:true shadow:true sub:true */'."\n".$content;
+		//$content='/** @define {boolean} */ var OLD_IE = false;'.$content;
 		file_put_contents($rawSrcFile,$content);
 		//debug($rawSrcFile.' :'."\n".shell_exec('jshint '.escapeshellarg($rawSrcFile)));
 		
@@ -246,8 +277,12 @@ class JsFile extends EnhancerFile{
 			}
 		}
 		if($createSourceMap) file_put_contents($destination,'//@ sourceMappingURL='./*(defined('BASE_URL')?BASE_URL.'/web/js/':'').*/basename($destination).'.map',FILE_APPEND);//(defined('BASE_URL')?BASE_URL:'')
-		else unlink($rawSrcFile);
-		chmod($dest,0777);
+		elseif(!$oldIE) unlink($rawSrcFile);
+		try{
+			chmod($dest,0777);
+		}catch(ErrorException $ee){
+			throw new Exception('JS compilation failed '.$destination."\nres:\n".$res."\ncontent:\n".$content);
+		}
 		if(!$destination){
 			$destination=file_get_contents($dest);
 			unlink($dest);

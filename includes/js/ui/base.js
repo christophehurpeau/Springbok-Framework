@@ -2,6 +2,10 @@ includeCore('base/listenable');
 /* http://code.jquery.com/ui/jquery-ui-git.js - http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes*/
 //var and not : S.ui.keyCodes : private.
 S.ui={};
+/**
+ * Enum for key codes.
+ * @enum {number}
+ */
 var keyCodes={
 	BACKSPACE: 8,
 	COMMA: 188,

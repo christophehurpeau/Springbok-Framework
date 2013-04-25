@@ -93,7 +93,7 @@ S.ready(function(){
 				},
 				
 				//ip:function($node,val){ },
-				price:function($node,val){ return !/^\d+(\.\d{2})?$/.test(val) || checkMinAndMax($node,val,Number); },
+				price:function($node,val){ return !/^\d+(\.\d{2})?$/.test(val) || checkMinAndMax($node,val,Number); }
 				//latlng pattern : /^\-?\d{1,3}\.\d+$/
 			},
 			
@@ -106,7 +106,7 @@ S.ready(function(){
 		checkbox:function($node){ return !(!$node.prop('required') || $node.is(':checked')); },
 		select:function($node){ return $node.val() == null; },
 		textarea:function($node){ return false; },
-		radio:function($radioGroup,$node){ return $radioGroup.filter(':checked').length > 0 },
+		radio:function($radioGroup,$node){ return $radioGroup.filter(':checked').length > 0 }
 	};
 	
 	//TODO : required, pattern, data-same, data-min-length
@@ -116,7 +116,7 @@ S.ready(function(){
 			ctor:function(input){
 				S.ui.InputBox.call(this,input,'sValidationMessage');
 			},
-			createDiv:function(){ return $('<div class="divInputBox hidden boxError"/>'); },//TODO : add an arrow, remove css validation-error
+			createDiv:function(){ return $('<div class="divInputBox hidden boxError"/>'); }//TODO : add an arrow, remove css validation-error
 		});
 	S.FormValidator=function(form,eventsName){
 		this.form=form.attr('novalidate','novalidate').data('sValidator',this);

@@ -22,8 +22,12 @@ window.onerror=function handleError(message,url,line){
 
 /* /DEV */
 
-if(!Object.keys){//http://kangax.github.com/es5-compat-table/
-	$.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+if(OLD_IE){
+	//include Core('es5-compat.src');
+}else{
+	if(!Object.keys){//http://kangax.github.com/es5-compat-table/
+		$.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+	}
 }
 
 
@@ -58,19 +62,27 @@ window.S={
 	},
 	
 	loadScript:function(url,lang,to){
-		var script = document.createElement("script");
-		script.type = "text/javascript";
-		script.src = url;
-		if(lang) script.lang=lang;
-		(to||document.body).appendChild(script);
+		if(OLD_IE){
+			$.ajax({ url:url, global:false, async:false, cache:true, dataType:'script' });
+		}else{
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = url;
+			if(lang) script.lang=lang;
+			(to||document.body).appendChild(script);
+		}
 	},
 	loadAsyncScript:function(url,lang,to){
-		var script = document.createElement("script");
-		script.type = "text/javascript";
-		script.src = url;
-		if(lang) script.lang=lang;
-		script.async=true;
-		(to||document.body).appendChild(script);
+		if(OLD_IE){
+			$.ajax({ url:url, global:false, async:true, cache:true, dataType:'script' });
+		}else{
+			var script = document.createElement("script");
+			script.type = "text/javascript";
+			script.src = url;
+			if(lang) script.lang=lang;
+			script.async=true;
+			(to||document.body).appendChild(script);
+		}
 	},
 	loadSyncScript:function(url){
 		return $.ajax({
@@ -113,6 +125,9 @@ window.S={
 			}
 			return new_string;
 		},
+		/** 
+		 * @deprecated Use UString.stripTags()
+		 */
 		stripHTML:function(str){return str.replace(/<&#91;^>&#93;*>/g, '');},
 
 
@@ -134,9 +149,15 @@ window.S={
 		});
 	},
 	
+	/** 
+	 * @deprecated Use S.isStr()
+	 */
 	isString:function(varName){ return typeof(varName)==='string'; },
 	isStr:function(varName){ return typeof varName === 'string'; },
 	isArray:Array.isArray || $.isArray,
+	/** 
+	 * @deprecated Use S.isObj()
+	 */
 	isObject:function(varName){ return typeof(varName)==='object' },
 	isObj:function(varName){ return typeof(varName)==='object' },
 	isFunc:function(varName){ return typeof(varName)==='function' },
@@ -316,7 +337,7 @@ UObj.extend($.fn,{
 
 /* DEV */
 S.error=function(m){
-	console.error(m);
+	console.error('S.error',m);
 	alert(m);
 };
 (function(){
@@ -324,8 +345,8 @@ S.error=function(m){
 		$('[id]').each(function(){
 			var ids = $('[id="'+this.id+'"]');
 			if(ids.length>1 && ids[0]==this){
-				var f=(this.id.startsWith('springbok-')?console.error:S.error);
-				f(null,'Multiple IDs #'+this.id);
+				var fError=(this.id.startsWith('springbok-')||this.id.startsWith('Springbok')?console.error:S.error);
+				fError('Multiple IDs #'+this.id);
 			}
 		});
 		

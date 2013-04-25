@@ -68,6 +68,12 @@ class HMeta{
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /* /DEV */
 	}
 
+	/* Windows8 */
+	public static function msTile($color,$image='logo-144.png'){
+		HHead::metaName("msapplication-TileColor",$color);
+		HHead::metaName("msapplication-TileImage",'/web/img/'.$image);
+	}
+
 	public static function position($lat,$lng,$placename=null,$region=null){
 		/* http://en.wikipedia.org/wiki/Geotagging */
 		HHead::metaName("ICBM",$lat.', '.$lng);

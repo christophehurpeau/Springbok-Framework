@@ -16,6 +16,24 @@ class UFile{
 		if($jsonDecoded===null) throw new Exception('Bad JSON '.$path);
 		return $jsonDecoded;
 	}
+	public static function getYAML($path){
+		try{
+			$content=file_get_contents($path);
+		}catch(ErrorException $e){
+			return false;
+		}
+		/* DEV */try{/* /DEV */
+		$content=str_replace("\t",' ',$content);
+		$yamlDecoded=yaml_parse($content,0);
+		/* DEV */}catch(ErrorException $e){
+			$errorMessage=$e->getMessage();
+			preg_match('/\(line ([0-9]+)[,\)]/',$errorMessage,$m);
+			throw new SDetailedHtmlException('UFile::getYAML parse error: '.replaceAppAndCoreInFile($path)." :\n".$errorMessage,
+					0,null,"<h6>File Content:</h6>".HText::highlightLine($content,'yml',empty($m)?null:$m[1]),$e);
+		}/* /DEV */
+		return $yamlDecoded;
+	}
+	
 	
 	public static function rm($path){
 		try{

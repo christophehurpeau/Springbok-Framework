@@ -29,7 +29,7 @@ class CCookie{
 	
 	private static function _getConfig($name){
 		$config=(isset(self::$_config[$name])?self::$_config[$name]:array())
-			+array('name'=>'Sb'.$name,'expires'=>'2 weeks','path'=>null,'domain'=>Config::$cookie_domain,'https'=>IS_HTTPS,'httponly'=>true,'key'=>NULL,);
+			+array('name'=>'Sb'.$name,'expires'=>'2 weeks','path'=>null,'domain'=>Config::$cookie_domain[Springbok::$scriptname],'https'=>IS_HTTPS,'httponly'=>true,'key'=>NULL,);
 
 		if($config['expires'] === 0);
 		elseif($config['expires'] === '0') $config['expires']=0;
