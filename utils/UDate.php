@@ -13,8 +13,7 @@ class UDate{
 		list($month,$year)=self::addMonths((int)$month,(int)$year,$months);
 		return strtotime($year.'-'.$month.'-'.min($day,self::getDaysInMonth($year,$month)));
 	}
-	
-	public static function removeMonths_Time($time,$months){
+	public static function removeMonths($time,$months){
 		$day=date('j',$time);
 		$month=date('m',$time) - $months;
 		$year=date('Y',$time);
@@ -22,7 +21,11 @@ class UDate{
 			$month+=12;
 			$year--;
 		}
-		return strtotime($year.'-'.$month.'-'.min($day,self::getDaysInMonth($year,$month)));
+		return array($year,$month,min($day,self::getDaysInMonth($year,$month)));
+	}
+	
+	public static function removeMonths_Time($time,$months){
+		return strtotime(implode('-',self::removeMonths($time,$months)));
 	}
 	
 	public static function addMonths($month,$year,$months){
