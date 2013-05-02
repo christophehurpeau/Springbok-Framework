@@ -9,8 +9,11 @@ class LocaleFile extends EnhancerFile{
 		$isPlugins=substr($this->fileName(),-(8+4))==='_plugins.yml';
 		try{
 			$yaml=$this->_srcContent;
-			$yaml=str_replace("\t",'  ',$yaml);
-			$yaml=yaml_parse($yaml,/*$isPlugins ? -1 : */0,$nbDocs);
+			if(empty($yaml)) $yaml=array();
+			else{
+				$yaml=str_replace("\t",'  ',$yaml);
+				$yaml=yaml_parse($yaml,/*$isPlugins ? -1 : */0,$nbDocs);
+			}
 		}catch(ErrorException $e){
 			$this->throwException($e->getMessage());
 		}
