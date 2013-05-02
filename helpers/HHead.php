@@ -120,7 +120,7 @@ class HHead{
 	
 	public static function linkJs($url='/global'){
 		/* DEV */ self::testDisplayed(); /* /DEV */
-		if(CHttpRequest::isIElt9() && $url!=='/es5-compat'){
+		if(CHttpUserAgent::isIElt9() && $url!=='/es5-compat'){
 			if(substr($url,-4)!=='.min') $url.='.oldIe';
 		}
 		self::$head['js'].='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
@@ -188,4 +188,4 @@ class HHead{
 	}
 }
 
-if(CHttpRequest::isIElt9()) HHead::linkJs('/es5-compat');
+if(CHttpUserAgent::isIElt9()) HHead::linkJs('/es5-compat');

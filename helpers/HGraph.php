@@ -39,10 +39,9 @@ function weekendAreas(axes) {
 }
 $.plot($("$id"),$dataDays, {
 	colors:$colors,
-	//grid:{markings:weekendAreas,hoverable:true},
+	grid:{markings:weekendAreas,hoverable:true},
 	//series:{ bars: { show: true, align:'center', barWidth: 1000*60*60*24, fill:true, fillColor: { colors: [ { opacity: 0.8 }, { opacity: 0.1 } ] } } },
-	//legend: { noColumns: 2 },
-	grid:{hoverable:true},
+	legend: { noColumns: 2 },
 	series:{ lines:{show:true}, points:{show:true} },
 	xaxis: { mode: "time", timeformat: "%0d %b", tickSize:[7, "day"], max:$maxXAxis, monthNames:['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] },
 	yaxis:{ min:0 }
