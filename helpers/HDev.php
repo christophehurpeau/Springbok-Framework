@@ -5,7 +5,7 @@ class HDev{
 	
 	public static function springbokBar($includeJquery=false){
 		/* PROD */ return; /* /PROD */
-		if(CHttpRequest::isMobile() || isset($_GET['springbokNoDevBar'])) return;
+		if(CHttpUserAgent::isMobileAndNotTablet() || isset($_GET['springbokNoDevBar'])) return;
 		if(defined('CORE_SRC')){
 			if($includeJquery){
 				echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
