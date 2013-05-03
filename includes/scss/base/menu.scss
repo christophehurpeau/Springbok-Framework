@@ -61,6 +61,8 @@ nav.left ul ul{
 header nav,div.header nav{
   @if $HeaderMenuFontsize{ font-size:$HeaderMenuFontsize; }
   @if $HeaderMenuMargin{ margin:$HeaderMenuMargin; }
+	@include background($HeaderMenuBackground);
+	@if $HeaderMenuColor{ color:$HeaderMenuColor; }
 }
 
 // the compiler automaticly remove empty
