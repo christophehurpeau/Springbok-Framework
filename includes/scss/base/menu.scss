@@ -7,7 +7,6 @@ $HeaderMenuFontsize:false !default;
 $HeaderMenuUppercase:false !default;
 $HeaderMenuMargin:false !default;
 $HeaderMenuLinkBold:true !default;
-$HeaderMenuInline:false !default;
 
 $HeaderMenuLinkMargin:1px 2px !default;
 $HeaderMenuLinkWidth:false !default;
@@ -48,7 +47,7 @@ nav li a:hover{text-decoration: underline;text-shadow:none;}
 $HeaderNavTopFloat:true !default;
 @if $HeaderNavTopFloat{ header nav.top,nav.top ul{float:left} }
 
-nav.top li{ @if $PAGE_VERSION==1 OR $HeaderMenuInline{float:left;} display:block; @if $HeaderMenuInline{ display:inline-block; }}
+nav.top li{ @if $PAGE_VERSION==1{float:left; } display:block;display:inline-block;}
 nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;}
 /*menu.right li a, menu.left li a{padding:5px;}*/
 nav.right li,nav.left li{margin:2px 0}
