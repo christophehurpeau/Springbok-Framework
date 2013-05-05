@@ -47,7 +47,7 @@ nav li a:hover{text-decoration: underline;text-shadow:none;}
 $HeaderNavTopFloat:true !default;
 @if $HeaderNavTopFloat{ header nav.top,nav.top ul{float:left} }
 
-nav.top li{float:left;display:block;display:inline-block;}
+nav.top li{ @if $PAGE_VERSION==1{float:left; } display:block;display:inline-block;}
 nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;}
 /*menu.right li a, menu.left li a{padding:5px;}*/
 nav.right li,nav.left li{margin:2px 0}
@@ -61,6 +61,8 @@ nav.left ul ul{
 header nav,div.header nav{
   @if $HeaderMenuFontsize{ font-size:$HeaderMenuFontsize; }
   @if $HeaderMenuMargin{ margin:$HeaderMenuMargin; }
+	@include background($HeaderMenuBackground);
+	@if $HeaderMenuColor{ color:$HeaderMenuColor; }
 }
 
 // the compiler automaticly remove empty
