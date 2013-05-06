@@ -24,6 +24,11 @@ class App{
 		return include APP.'config/'.$name.($withSuffix ? '_'.ENV : '').'.php';
 	}
 	
+	public static function siteUrl($entry,$https=null){
+		$su=Config::$siteUrl[$entry];
+		return ($su[0]===null ? ($https===null ? HTTP_OR_HTTPS : ($https===true ? 'https://' : 'http://')) : $su[0]). $su[1];
+	}
+	
 	/** @return CLocale */
 	public static function getLocale(){
 		return CLocale::get('fr');
@@ -131,7 +136,7 @@ class App{
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			/* DEV */
-			if(rtrim(Config::$siteUrl['index'],'/')!=='http://localhost'){
+			if(rtrim(App::siteUrl('index'),'/')!=='http://localhost'){
 				$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
 				if(isset(Config::$siteUrl[$scriptname])){ //dev sur un serveur
 					Springbok::$scriptname=$scriptname;
@@ -147,7 +152,7 @@ class App{
 				Springbok::$suffix='.'.Springbok::$scriptname;
 				
 				/* DEV */
-				CRoute::init(rtrim(Config::$siteUrl['index'],'/')==='http://localhost'?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
+				CRoute::init(rtrim(App::siteUrl('index'),'/')==='http://localhost'?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
 				if(CRoute::getController()==='Web'){
 					Controller::renderFile(APP.substr(CRoute::getAll(),1));
 				}

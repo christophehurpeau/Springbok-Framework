@@ -58,7 +58,7 @@ class HMeta{
 	
 	public static function msApp($color,$entryStart=null){
 		HHead::metaName("application-name",Config::$projectName);
-		HHead::metaName("msapplication-starturl",Config::$siteUrl[$entryStart===null ? Springbok::$scriptname : 'index']);
+		HHead::metaName("msapplication-starturl",App::siteUrl($entryStart===null ? Springbok::$scriptname : 'index'));
 		HHead::metaName("msapplication-window","width=1024;height=768");
 		HHead::metaName("msapplication-navbutton-color",$color);
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msApp()</div>'; /* /DEV */
@@ -101,18 +101,18 @@ class HMeta{
 	public static function displayCanonical(){
 		/* DEV */ if(self::$canonical===null && Springbok::$inError===null) throw new Exception("canonical is not defined"); /* /DEV */
 		if(self::$canonical===false) return '';
-		echo '<link rel="canonical" href="'.($href=HHtml::urlEscape(self::$canonical,self::$canonicalEntry,self::$canonicalFullUrl)).'"/>'
+		echo '<link rel="canonical" href="'.($href=HHtml::urlEscape(self::$canonical,self::$canonicalEntry,self::$canonicalFullUrl,false,false)).'"/>'
 				.'<meta property="og:url" content="'.$href.'"/>';
-		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,self::$canonicalFullUrl).'"/>';
-		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,self::$canonicalFullUrl).'"/>';
+		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,self::$canonicalFullUrl,false,false).'"/>';
+		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,self::$canonicalFullUrl,false,false).'"/>';
 		if(self::$smallSizes!==null) echo '<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
 		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::displayCanonical()</div>'; /* /DEV */
 	}
 	
 	public static function getCanonicalRaw(){ return self::$canonical; }
-	public static function getCanonical($fullUrl=true){
+	public static function getCanonical($fullUrl=true,$https=null,$cache=false){
 		if(empty(self::$canonical)) return false;
-		return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl);
+		return HHtml::url(self::$canonical,self::$canonicalEntry,$fullUrl,false,$cache,$https);
 	}
 	public static function getSmallSizesEscapedUrl(){
 		return self::$smallSizes;

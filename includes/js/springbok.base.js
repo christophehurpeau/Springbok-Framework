@@ -43,6 +43,8 @@ window.S={
 	redirect:function(url){ url && (window.location=url); },
 	setTitle:function(title){document.title=title;},
 	
+	httpOrHttps:function(){ return window.location.protocol == "https:" ? 'https://' : 'http://'; },
+	
 	imgLoading:function(){ return $('<span class="img imgLoading"/>') },
 	imgLongLoading:function(){ return this.imgLoading(); /* return $('<span class="img imgLongLoading"/>')*/ },
 	bodyIcon:function(iconName,of,my,at){
