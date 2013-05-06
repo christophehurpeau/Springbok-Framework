@@ -374,6 +374,7 @@ s.parentNode.insertBefore(g,s);
 	
 	/* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
 	
+	/* OLD!
 	public static function ajaxCRDSelectFiltrable($url,$items,$added,$options=array()){
 		$divid=uniqid('ajaxCRDSelectFiltrable_');
 		$options+=array('selectAttributes'=>array(),'ulAttributes'=>array('class'=>'compact'));
@@ -425,5 +426,81 @@ s.parentNode.insertBefore(g,s);
 		HHtml::jsReady((isset($options['inputAttributes']['placeholder'])?'$(\'#'.$divid.' input\').defaultInput();':'')
 			.'$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.$options['js']:'').')');
 		return '<div id="'.$divid.'">'.$res.'</div>';
+	}*/
+	
+	public static function ajaxCRDSelectFiltrable($url,$items,$added,$options=array()){
+		$divid=uniqid('ajaxCRDSelectFiltrable_');
+		if(!isset($options['selectAttributes'])) $options['selectAttributes']=array();
+		$options=self::_ajaxInitOptions($options);
+		$res=HHtml::openTag('select',$options['selectAttributes'])
+			.HHtml::tag('option',array('value'=>'','selected'=>true),'');
+		$addedItems=array();
+		foreach($items as $id=>&$name){
+			$attributes=array('value'=>$id);
+			if(in_array($id,$added)){
+				$addedItems[]=array($id,$name,'editable'=>isset($options['notEditable'])?!in_array($id,$options['notEditable']):true,
+							'deletable'=>isset($options['notDeletable'])?!in_array($id,$options['notDeletable']):true);
+
+				//$attributes['class']='hidden';
+				continue;
+			}
+
+			$res.=HHtml::tag('option',$attributes,$name);
+		}
+		$res.=HHtml::closeTag('select').' '.self::iconAction('add vaMid','#');
+		$res.=HHtml::openTag('ul',$options['ulAttributes']);
+		foreach($addedItems as $id=>&$item) $res.=self::_ajaxCreateLi($item,$options);
+		$res.='</ul>';
+		unset($options['selectAttributes'],$options['actions']);
+		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('S.ready(function(){$(\'#'.$divid.'\').ajaxCRDSelectFiltrable('.json_encode(HHtml::url($url))
+						.(!empty($options['js'])?','.$options['js']:(!empty($options)?','.json_encode($options):'')).')})');
+	}
+
+	public static function ajaxCRDInputAutocomplete($url,$items,$options=array()){
+		$divid=uniqid('ajaxCRDInputAutocomplete_');
+		$options+=array('inputAttributes'=>array(),'js'=>'{}');
+		$options=self::_ajaxInitOptions($options);
+		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
+		$res.=HHtml::openTag('ul',$options['ulAttributes']);
+
+		if(is_object(current($items))){
+			$list=$items; $items=array();
+			foreach($list as $model)
+				$res.=self::_ajaxCreateLi(self::_ajaxCreateItem($model,$options),$options);
+		}else{
+			foreach($items as $id=>&$name)
+				$res.=self::_ajaxCreateLi(array($id,$name,'editable'=>isset($options['notEditable'])?!in_array($id,$options['notEditable']):true,
+							'deletable'=>isset($options['notDeletable'])?!in_array($id,$options['notDeletable']):true),$options);
+		}
+
+		$res.='</ul>';
+		//unset($options['inputAttributes'],$options['ulAttributes'],$options['modelFunctionName'],$options['escape']);
+		if(isset($options['allowNew'])) $options['js']='{allowNew:1}';
+		HHtml::jsReady((isset($options['inputAttributes']['placeholder'])?'$(\'#'.$divid.' input\').defaultInput();':'')
+			.'$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options['js'])?','.$options['js']:'').')');
+		return '<div id="'.$divid.'">'.$res.'</div>';
+	}
+
+	public static function _ajaxInitOptions($options){
+		if(!isset($options['ulAttributes'])) $options['ulAttributes']=array('class'=>'compact');
+		if(!isset($options['modelFunctionName'])) $options['modelFunctionName']='name';
+		if(!isset($options['escape'])) $options['escape']=true;
+		$actions= isset($options['actions']) && !empty($options['actions']) ? $options['actions'] : array();
+		$actions[]='delete';
+		$actions=array_combine($actions,$actions);
+		foreach($actions as &$action) $action=' '.self::iconAction($action,'#');
+		$options['actions']=$actions;
+		return $options;
+	}
+
+	public static function _ajaxCreateItem($model,$options){
+		return array($model->id(),$model->{$options['modelFunctionName']}(),
+					'editable'=>$model->isEditable(),'deletable'=>$model->isDeletable());
+	}
+	public static function _ajaxCreateLi($item,$options){
+		$itemActions=$options['actions'];
+		if(isset($itemActions['edit']) && !$item['editable']) unset($itemActions['edit']);
+		if(!$item['deletable']) unset($itemActions['delete']);
+		return HHtml::tag('li',array('rel'=>$item[0]),HHtml::tag('span',array(),$item[1],$options['escape']).implode('',$itemActions),false);
 	}
 }
