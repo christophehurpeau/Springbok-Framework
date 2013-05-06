@@ -13,32 +13,32 @@ class ModelFile extends PhpFile{
 	public static function _getPath($m,&$controllersSrc,$enhanced,$withParam=false){
 		eval('$eval=array('.$m[1].');');
 		if(!isset($eval))
-			$this->throwException('Error eval : '.$m[1]);
+			throw new Exception('Error eval : '.$m[1]);
 		$countEval=count($eval); $param=null;
 		if($countEval===($withParam?3:2) && ($eval[0]==='core')||($eval[0]==='springbok')){
-			array_shift($eval);
+			array_shift($eval); $pluginKey='CORE';
 			$modelPath=CORE.'models/'.$eval[0].'.php';
-			if(!isset($controllersSrc[$countEval.$modelPath]))
-				$controllersSrc[$countEval.$modelPath]=file_get_contents($modelPath);
+			if(!isset($controllersSrc[$pluginKey.'/'.$modelPath]))
+				$controllersSrc[$pluginKey.'/'.$modelPath]=file_get_contents($modelPath);
 		}else{
-			$parentPath=$countEval===($withParam?3:2) ? $enhanced->pluginPathFromKey(array_shift($eval)) : $enhanced->getAppDir().'src/';
+			$parentPath=$countEval===($withParam?3:2) ? $enhanced->pluginPathFromKey($pluginKey=array_shift($eval)) : $enhanced->getAppDir().'src/';
 			$modelPath='models/'.($eval[0]).'.php';
-			if(!isset($controllersSrc[$countEval.$modelPath]))
-				$controllersSrc[$countEval.$modelPath]=file_get_contents($parentPath.$modelPath);
+			if(!isset($controllersSrc[$pluginKey.'/'.$modelPath]))
+				$controllersSrc[$pluginKey.'/'.$modelPath]=file_get_contents($parentPath.$modelPath);
 		}
-		return $withParam? array($controllersSrc[$countEval.$modelPath],$eval[1]) : $controllersSrc[$countEval.$modelPath];
+		return $withParam? array($controllersSrc[$pluginKey.'/'.$modelPath],$eval[1]) : $controllersSrc[$pluginKey.'/'.$modelPath];
 	}
 	
 	protected function loadContent($srcContent){//TODO mettre en commun le code avec ControllerFile dans PhpFile.
 		$controllersSrc=array(); $enhanced=$this->enhanced; $extends=false;
 		
-		$srcContent=preg_replace_callback('/\/\*\s+@Extends\(([^*]+)\)\s+\*\//',function($m) use(&$extends){
-			$extends=$m;
-			return "/* @ImportConsts(".$m[1].") */"
-					."/* @ImportTraits(".$m[1].") */"
-					."/* @ImportFields(".$m[1].") */"
-					."/* @ImportArrayFields(".$m[1].",'#') */"
-					."/* @ImportFunction(".$m[1].",'#') */";
+		$srcContent=preg_replace_callback('/\/\*\s+@(Extends|Inherits)\(([^*]+)\)\s+\*\//',function($m) use(&$extends){
+			if($m[1]==='Extends') $extends=array(1=>$m[2]);
+			return "/* @ImportConsts(".$m[2].") */"
+					."/* @ImportTraits(".$m[2].") */"
+					."/* @ImportFields(".$m[2].") */"
+					."/* @ImportArrayFields(".$m[2].",'#') */"
+					."/* @ImportFunction(".$m[2].",'#') */";
 		},$srcContent);
 		if($extends!==false){
 			$path=ModelFile::_getPath($extends, $controllersSrc, $enhanced);
