@@ -228,7 +228,11 @@ class ConfigFile extends PhpFile{
 					foreach($this->enhanced->config['entries'] as $entry)
 						if(!isset($configArray['siteUrl'][$entry])) $this->throwException('Missing site url for entry : '.$entry.' (file : '.$configname.')');
 				
-				foreach($configArray['siteUrl'] as $key=>&$val) $val=rtrim($val,'/');
+				foreach($configArray['siteUrl'] as $key=>&$val){
+					$val=explode('://',$val,2);
+					$val[0]= $val[0]==='HTTP_OR_HTTPS' ? null : $val[0].'://';
+					$val[1]=rtrim($val[1],'/');
+				}
 				if(!isset($configArray['cookie_domain'])) $configArray['cookie_domain']='';
 
 				$configArray=UArray::union_recursive($configArray,$this->enhanced->appConfig);
@@ -319,8 +323,10 @@ class ConfigFile extends PhpFile{
 	private function writeClass($configname,&$configArray,&$devFile,&$prodFile){
 		$content="define('STATIC_URL',"; $afterContent='';
 		if(isset($configArray['static_url'])){
+			if(substr($configArray['static_url'],0,16)==='HTTP_OR_HTTPS://') $configArray['static_url']=substr($configArray['static_url'],16);
+			elseif(substr($configArray['static_url'],0,7)==='http://') $configArray['static_url']=substr($configArray['static_url'],7);
 			$configArray['static_url']=rtrim($configArray['static_url'],'/');
-			$content.=UPhp::exportString($configArray['static_url'].'/');
+			$content.='HTTP_OR_HTTPS.'.UPhp::exportString($configArray['static_url'].'/');
 			unset($configArray['static_url']);
 		}else $content.="BASE_URL.'/web/'";
 		$content.=");define('WEB_URL',STATIC_URL.WEB_FOLDER);";
@@ -340,7 +346,7 @@ class ConfigFile extends PhpFile{
 		$content.='class Config{public static ';
 		foreach($configArray as $key=>$val){
 			$code=UPhp::exportCode($val);
-			if(strpos($code,"'".APP)!==false||strpos($code,"'".DATA)!==false){
+			if(strpos($code,"'".APP)!==false||strpos($code,"'".DATA)!==false||strpos($code,"'HTTP_OR_HTTPS")!==false){
 				$content.='$'.$key.',';
 				$afterContent.='Config::$'.$key.'='.$this->replaceAppAndData($code).';';
 			}else $content.='$'.$key.'='.$code.',';
@@ -364,7 +370,7 @@ class ConfigFile extends PhpFile{
 	}
 	
 	private function replaceAppAndData($code){
-		return str_replace("'".APP,"APP.'",str_replace("'".DATA,"DATA.'",$code));
+		return str_replace("'HTTP_OR_HTTPS","HTTP_OR_HTTPS.'",str_replace("'".APP,"APP.'",str_replace("'".DATA,"DATA.'",$code)));
 	}
 	
 	public static function incl($path,$ext=null){

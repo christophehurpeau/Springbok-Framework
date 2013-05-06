@@ -151,24 +151,24 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	}
 	
 	
-	public static function ganalytics($code,$trackPageLoadTime=false,$https=false){
+	public static function ganalytics($code,$trackPageLoadTime=false){
 		self::jsHead('
 var _gaq=[["_setAccount","'.$code.'"],[\'_trackPageview\']'.($trackPageLoadTime?",['_trackPageLoadTime']":'').'];
 (function(d,t){
 var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-g.type=\'text/javascript\';g.async=1;g.src=\''.($https?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
+g.type=\'text/javascript\';g.async=1;g.src=\''.(IS_HTTPS?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
 s.parentNode.insertBefore(g,s);
 })(document,\'script\')');
 	}
 	
-	public static function ganalyticsMultiTracker($codes,$domainName,$trackPageLoadTime=false,$https=false){
+	public static function ganalyticsMultiTracker($codes,$domainName,$trackPageLoadTime=false){
 		$gaq= 'var _gaq = _gaq || [];_gaq.push([\'_setDomainName\', \''.$domainName.'\']';
 		foreach($codes as $key => $value) 
 			$gaq.= ',[\''.$key.'_setAccount\',\''.$value.'\'],[\''.$key.'_trackPageview\']'.($trackPageLoadTime?",['".$key."_trackPageLoadTime']":'');
 		self::jsHead($gaq.');
 (function(d,t){
 var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-g.type=\'text/javascript\';g.async=1;g.src=\''.($https?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
+g.type=\'text/javascript\';g.async=1;g.src=\''.(IS_HTTPS?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
 s.parentNode.insertBefore(g,s);
 })(document,\'script\')');
 	}
@@ -179,11 +179,12 @@ s.parentNode.insertBefore(g,s);
 	}
 	
 	public static function link($title,$url=false,$options=array()){
-		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>null);
+		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>null,'cache'=>false,'https'=>null);
 		if($url){
-			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:'))) $url=self::url($url,$options['entry'],$options['fullUrl']);
+			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:')))
+				$url=self::url($url,$options['entry'],$options['fullUrl'],false,$options['cache'],$options['https']);
 			if($title===null) $title=$url;
-		}else $title=$url=self::url($title,$options['entry'],$options['fullUrl']);
+		}else $title=$url=self::url($title,$options['entry'],$options['fullUrl'],false,$options['cache'],$options['https']);
 		
 		
 		if(isset($options['escape'])) $escape=$options['escape'];
@@ -207,7 +208,7 @@ s.parentNode.insertBefore(g,s);
 			
 		}
 		
-		unset($options['escape'],$options['confirm'],$options['current'],$options['entry'],$options['fullUrl']);
+		unset($options['escape'],$options['confirm'],$options['current'],$options['entry'],$options['fullUrl'],$options['cache'],$options['https']);
 		
 		$options['href']=$url;
 		return self::tag('a',$options,$title,$escape);
@@ -297,12 +298,21 @@ s.parentNode.insertBefore(g,s);
 		return self::tag('option',$attributes,$name);
 	}
 	
-	public static function url($url=null,$entry=null,$full=null,$escape=false){
+	public static function url($url=null,$entry=null,$full=null,$escape=false,$cache=false,$https=null){
 		/* DEV */ if($entry===false || $entry===true) throw new Exception('Entry param cannot be false or true'); /* /DEV */
+		$before='';
 		if($entry===null){
 			$entry=Springbok::$scriptname;
-			if($full===true) $full=Config::$siteUrl[$entry];
-		}elseif(($entry!==Springbok::$scriptname && $full===null) || $full===true) $full=Config::$siteUrl[$entry];
+			if($full===true){
+				if($cache===false) $full=App::siteUrl($entry,$https);
+				else{
+					$before='<?php echo App::siteUrl(Springbok::$scriptname,'.UPhp::exportCode($https).') ?>';
+					$full=false;
+				}
+			}
+		}elseif($cache){
+			$before='<?php '.($full===true?'':'if("'.$entry.'"!==Springbok::$scriptname)').' echo App::siteUrl("'.$entry.'",'.UPhp::exportCode($https).') ?>';
+		}elseif(($entry!==Springbok::$scriptname && $full===null) || $full===true) $full=App::siteUrl($entry,$https);
 		/* DEV */if(is_string($full) && rtrim($full,'/')!==$full) throw new Exception('Please remove the "/" at the end of "'.$full.'"'); /* /DEV */
 		if(is_array($url)){
 			$url=(!$full?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($entry,$url);
@@ -317,8 +327,8 @@ s.parentNode.insertBefore(g,s);
 		}
 		return $escape?h($url,false):$url;
 	}
-	public static function urlEscape($url=null,$entry=null,$full=null){
-		return self::url($url,$entry,$full,true);
+	public static function urlEscape($url=null,$entry=null,$full=null,$cache=false,$https=null){
+		return self::url($url,$entry,$full,true,$cache,$https);
 	}
 	
 	public static function staticUrl($url=null,$folder=false,$escape=true){
@@ -364,6 +374,7 @@ s.parentNode.insertBefore(g,s);
 	
 	/* ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- */
 	
+	/* OLD!
 	public static function ajaxCRDSelectFiltrable($url,$items,$added,$options=array()){
 		$divid=uniqid('ajaxCRDSelectFiltrable_');
 		$options+=array('selectAttributes'=>array(),'ulAttributes'=>array('class'=>'compact'));
@@ -415,5 +426,81 @@ s.parentNode.insertBefore(g,s);
 		HHtml::jsReady((isset($options['inputAttributes']['placeholder'])?'$(\'#'.$divid.' input\').defaultInput();':'')
 			.'$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options)?','.$options['js']:'').')');
 		return '<div id="'.$divid.'">'.$res.'</div>';
+	}*/
+	
+	public static function ajaxCRDSelectFiltrable($url,$items,$added,$options=array()){
+		$divid=uniqid('ajaxCRDSelectFiltrable_');
+		if(!isset($options['selectAttributes'])) $options['selectAttributes']=array();
+		$options=self::_ajaxInitOptions($options);
+		$res=HHtml::openTag('select',$options['selectAttributes'])
+			.HHtml::tag('option',array('value'=>'','selected'=>true),'');
+		$addedItems=array();
+		foreach($items as $id=>&$name){
+			$attributes=array('value'=>$id);
+			if(in_array($id,$added)){
+				$addedItems[]=array($id,$name,'editable'=>isset($options['notEditable'])?!in_array($id,$options['notEditable']):true,
+							'deletable'=>isset($options['notDeletable'])?!in_array($id,$options['notDeletable']):true);
+
+				//$attributes['class']='hidden';
+				continue;
+			}
+
+			$res.=HHtml::tag('option',$attributes,$name);
+		}
+		$res.=HHtml::closeTag('select').' '.self::iconAction('add vaMid','#');
+		$res.=HHtml::openTag('ul',$options['ulAttributes']);
+		foreach($addedItems as $id=>&$item) $res.=self::_ajaxCreateLi($item,$options);
+		$res.='</ul>';
+		unset($options['selectAttributes'],$options['actions']);
+		return '<div id="'.$divid.'">'.$res.'</div>'.HHtml::jsInline('S.ready(function(){$(\'#'.$divid.'\').ajaxCRDSelectFiltrable('.json_encode(HHtml::url($url))
+						.(!empty($options['js'])?','.$options['js']:(!empty($options)?','.json_encode($options):'')).')})');
+	}
+
+	public static function ajaxCRDInputAutocomplete($url,$items,$options=array()){
+		$divid=uniqid('ajaxCRDInputAutocomplete_');
+		$options+=array('inputAttributes'=>array(),'js'=>'{}');
+		$options=self::_ajaxInitOptions($options);
+		$res=HHtml::tag('input',$options['inputAttributes']).' '.self::iconAction('add vaMid','#');
+		$res.=HHtml::openTag('ul',$options['ulAttributes']);
+
+		if(is_object(current($items))){
+			$list=$items; $items=array();
+			foreach($list as $model)
+				$res.=self::_ajaxCreateLi(self::_ajaxCreateItem($model,$options),$options);
+		}else{
+			foreach($items as $id=>&$name)
+				$res.=self::_ajaxCreateLi(array($id,$name,'editable'=>isset($options['notEditable'])?!in_array($id,$options['notEditable']):true,
+							'deletable'=>isset($options['notDeletable'])?!in_array($id,$options['notDeletable']):true),$options);
+		}
+
+		$res.='</ul>';
+		//unset($options['inputAttributes'],$options['ulAttributes'],$options['modelFunctionName'],$options['escape']);
+		if(isset($options['allowNew'])) $options['js']='{allowNew:1}';
+		HHtml::jsReady((isset($options['inputAttributes']['placeholder'])?'$(\'#'.$divid.' input\').defaultInput();':'')
+			.'$(\'#'.$divid.'\').ajaxCRDInputAutocomplete('.json_encode(HHtml::url($url)).(!empty($options['js'])?','.$options['js']:'').')');
+		return '<div id="'.$divid.'">'.$res.'</div>';
+	}
+
+	public static function _ajaxInitOptions($options){
+		if(!isset($options['ulAttributes'])) $options['ulAttributes']=array('class'=>'compact');
+		if(!isset($options['modelFunctionName'])) $options['modelFunctionName']='name';
+		if(!isset($options['escape'])) $options['escape']=true;
+		$actions= isset($options['actions']) && !empty($options['actions']) ? $options['actions'] : array();
+		$actions[]='delete';
+		$actions=array_combine($actions,$actions);
+		foreach($actions as &$action) $action=' '.self::iconAction($action,'#');
+		$options['actions']=$actions;
+		return $options;
+	}
+
+	public static function _ajaxCreateItem($model,$options){
+		return array($model->id(),$model->{$options['modelFunctionName']}(),
+					'editable'=>$model->isEditable(),'deletable'=>$model->isDeletable());
+	}
+	public static function _ajaxCreateLi($item,$options){
+		$itemActions=$options['actions'];
+		if(isset($itemActions['edit']) && !$item['editable']) unset($itemActions['edit']);
+		if(!$item['deletable']) unset($itemActions['delete']);
+		return HHtml::tag('li',array('rel'=>$item[0]),HHtml::tag('span',array(),$item[1],$options['escape']).implode('',$itemActions),false);
 	}
 }
