@@ -32,9 +32,7 @@ $HeaderMenuLinkCurrentOrHoverColor:false !default;
 $HeaderMenuLinkCurrentOrHoverShadow:false !default;
 $HeaderMenuLinkCurrentOrHoverBorderBottom:false !default;
 
-nav{
-	margin:2px 0; padding:0;
-}
+/* see reset.scss for nav{} */
 nav ul{
 	list-style:none;
 	margin:0; padding:0;
@@ -47,8 +45,10 @@ nav li a:hover{text-decoration: underline;text-shadow:none;}
 $HeaderNavTopFloat:true !default;
 @if $HeaderNavTopFloat{ header nav.top,nav.top ul{float:left} }
 
-nav.top li{ @if $PAGE_VERSION==1{float:left; } display:block;display:inline-block;}
-nav.top li a,nav.top li.separator{margin:0;padding:3px 6px;display:block;}
+nav.top li{ @if $PAGE_VERSION==1{float:left; } display:inline;display:inline-block;}
+$MenuPaddingTB:3px !default;
+nav.top li a,nav.top li.separator{margin:0;padding:$MenuPaddingTB 6px;display:inline-block;}
+
 /*menu.right li a, menu.left li a{padding:5px;}*/
 nav.right li,nav.left li{margin:2px 0}
 nav.right.nomarg li,menu.left.nomarg li{margin:0}
@@ -167,4 +167,5 @@ $VariableMenuAlign:false !default;
 	@if $VariableMenuCurrentColor{ color:$VariableMenuCurrentColor; }
 }
 
-#page .fixed nav{padding:5px 10px;}
+$FixedMenuPadding:5px 10px !default;
+#page .fixed nav{@if $FixedMenuPadding{ padding:$FixedMenuPadding; }}
