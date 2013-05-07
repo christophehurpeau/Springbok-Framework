@@ -239,7 +239,8 @@ $BreadcrumbsColor:false !default;
 		/*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
 	}@else{
 		position:relative;
-		margin-top:8px;
+		$PageMarginTop:8px !default;
+		@if $PageMarginTop{ margin-top:$PageMarginTop; }
 	}
 	
 	@if $PAGE_VERSION==1{

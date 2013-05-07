@@ -99,6 +99,12 @@ p{
 	font-size:1.02em;
 }
 
+
+nav{
+	$NavMargin:2px 0 !default; $NavPadding:0 !default;
+	margin:$NavMargin; padding:$NavPadding;
+}
+
 ul,ol,menu{margin:8px 0; padding-left:35px}/* firefox default : margin:12px 0; padding-left:40px */
 ul ul,ul ol,ol ul,ol ol{padding-left:20px}
 
