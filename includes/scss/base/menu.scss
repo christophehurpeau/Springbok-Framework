@@ -31,6 +31,7 @@ $HeaderMenuLinkCurrentOrHoverBackground:false !default;
 $HeaderMenuLinkCurrentOrHoverColor:false !default;
 $HeaderMenuLinkCurrentOrHoverShadow:false !default;
 $HeaderMenuLinkCurrentOrHoverBorderBottom:false !default;
+$HeaderMenuLinkDisplayBlock:false !default;
 
 /* see reset.scss for nav{} */
 nav ul{
@@ -47,7 +48,8 @@ $HeaderNavTopFloat:true !default;
 
 nav.top li{ @if $PAGE_VERSION==1{float:left; } display:inline;display:inline-block;}
 $MenuPaddingTB:3px !default;
-nav.top li a,nav.top li.separator{margin:0;padding:$MenuPaddingTB 6px;display:inline-block;}
+nav.top li a,nav.top li.separator{margin:0;padding:$MenuPaddingTB 6px;}
+nav.top li a{ @if $HeaderMenuLinkDisplayBlock{ display:block; }@else{ display:inline-block } }
 
 /*menu.right li a, menu.left li a{padding:5px;}*/
 nav.right li,nav.left li{margin:2px 0}
