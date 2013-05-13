@@ -20,10 +20,12 @@ class CLang{
 					}
 					break;
 				case 'urls':
-					if(isset(Config::$lang_urls[$_SERVER['HTTP_HOST']])){
-						$langs=Config::$lang_urls[$_SERVER['HTTP_HOST']];
-						self::$lang=is_array($langs) ? $langs[0] : $langs;
-						goto foundlang;
+					if(!empty($_SERVER['HTTP_HOST'])){
+						if(isset(Config::$lang_urls[$_SERVER['HTTP_HOST']])){
+							$langs=Config::$lang_urls[$_SERVER['HTTP_HOST']];
+							self::$lang=is_array($langs) ? $langs[0] : $langs;
+							goto foundlang;
+						}
 					}
 					break;
 			}
