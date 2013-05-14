@@ -2,7 +2,7 @@
 	'decimalFormat'=>array('decimalSep'=>',','thousandsSep'=>' '),
 	'percentFormat'=>'%s %%',
 	'scientificFormat' => '#E0',
-	'currencyFormat' => '#,##0.00 ¤',
+	'currencyFormat' => '# ##0,00 ¤',
 	
 	'isPlural'=>function($number){ return $number>1; },
 	
