@@ -5,6 +5,8 @@ abstract class HElement{
 	public function attrs($attributes){ $this->attributes=$attributes+$this->attributes; return $this; }
 	public function attr($attrName,$value){ $this->attributes[$attrName]=$value; return $this; }
 	public function id($id){ $this->attributes['id']=$id; return $this; }
+	public function title($title){ $this->attributes['title']=$title; return $this; }
+	public function rel($rel){ $this->attributes['rel']=$rel; return $this; }
 	public function attrClass($class){ $this->attributes['class']=$class; return $this; }
 	public function addClass($class){ $this->attributes['class'].=' '.$class; return $this; }
 	public function style($style){ $this->attributes['style']=$style; return $this; }
@@ -18,4 +20,8 @@ abstract class HElement{
 	
 	public static function create($tag){ return new HElementBasic($tag); }
 	public static function button(){ return new HElementButton(); }
+	public static function link($text){ return (new HElementLink())->content($text); }
+	public static function linkHtml($html){ return (new HElementLink())->contentHtml($text); }
+	public static function iconLink($icon,$text){ return (new HElementLink())->icon($icon,$text); }
+	public static function iconLinkHtml($icon,$html){ return (new HElementLink())->iconHtml($icon,$html); }
 }
