@@ -10,7 +10,7 @@ trait BSlugRedirectable{
 	protected function _addSlugRedirect(){
 		if(!empty($this->slug)){
 			if(!empty($this->oldSlug)) SlugRedirect::add(static::$__className,$this->oldSlug,$this->slug);
-			SlugRedirect::slugAdded(static::$__className,$this->slug);
+			//SlugRedirect::slugAdded(static::$__className,$this->slug);
 		}
 		return true;
 	}
