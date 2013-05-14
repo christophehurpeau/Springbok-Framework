@@ -82,7 +82,8 @@ class SSqlModel extends SModel{
 			unset($data[$pkName]);
 		}
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
-		$this->_afterUpdate($data);
+		/* DEV */$resAfterUpdate=/* /DEV */$this->_afterUpdate($data);
+		/* DEV */if($resAfterUpdate!==true) throw new Exception('After Updated Failed ('.$resAfterUpdate.')');/* /DEV */
 		return true;
 	}
 	

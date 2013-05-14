@@ -12,5 +12,6 @@ trait BSlugRedirectable{
 			if(!empty($this->oldSlug)) SlugRedirect::add(static::$__className,$this->oldSlug,$this->slug);
 			SlugRedirect::slugAdded(static::$__className,$this->slug);
 		}
+		return true;
 	}
 }
