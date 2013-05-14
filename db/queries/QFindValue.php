@@ -6,5 +6,11 @@ class QFindValue extends QFind{
 		return $res;
 	}
 	
+	public function notFoundIfFalse(){
+		$res=$this->execute();
+		if($res===false) notFound();
+		return $res;
+	}
+	
 	public function with($with,$options=array()){ $options+=array('fields'=>false,'join'=>true); $this->_addWithToQuery($with,$options); return $this;}
 }
