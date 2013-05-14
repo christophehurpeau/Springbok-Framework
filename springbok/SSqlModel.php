@@ -83,7 +83,7 @@ class SSqlModel extends SModel{
 		}
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
 		/* DEV */$resAfterUpdate=/* /DEV */$this->_afterUpdate($data);
-		/* DEV */if($resAfterUpdate!==true) throw new Exception('After Updated Failed ('.$resAfterUpdate.')');/* /DEV */
+		/* DEV *//*if($resAfterUpdate!==true) throw new Exception('After Updated Failed ('.$resAfterUpdate.')');*//* /DEV */
 		return true;
 	}
 	
