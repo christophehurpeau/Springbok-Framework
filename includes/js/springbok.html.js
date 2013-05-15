@@ -57,7 +57,7 @@ S.html={
 	* S.html.url(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
 	*/
 	url:function(url,full){
-		if(S.isString(url) || !url){
+		if(S.isStr(url) || !url){
 			if(url) url=url.trim();
 			if(!url || url==='/') return (full || '') + this.baseurl + '/';
 			else{

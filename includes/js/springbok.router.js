@@ -93,14 +93,14 @@
 		},
 		
 		getLink:function(url){
-			return S.isString(url) ? this.getStringLink(url) : this.getArrayLink(url);
+			return S.isStr(url) ? this.getStringLink(url) : this.getArrayLink(url);
 		},
 		
 		/* Exemples :
 		* S.router.getArrayLink(['/:id-:slug',post.id,post.slug])
 		*/
 		getArrayLink:function(params){
-			var options=S.isObject(UArray.last(url)) ? url.pop() : {},
+			var options=S.isObj(UArray.last(url)) ? url.pop() : {},
 				plus=options['?'] ? '?'+options['?'] : '',
 				route=routes[params.shift()];
 			if(options.ext) plus+='.'+params.ext;

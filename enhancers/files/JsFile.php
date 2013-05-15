@@ -301,7 +301,7 @@ class JsFile extends EnhancerFile{
 	public function getEnhancedProdContent(){}
 
 	public static function includes($content,$currentPath,$appPath,&$includes,&$enhanced){
-		$content=preg_replace_callback('/include(Core(?:Utils)?|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
+		$content=preg_replace_callback('/include((?:Js)?Core(?:Utils)?|Lib|JsAppConfig|Plugin)?\(\'([\w\s\._\-\/\&\+]+)\'\)\;?\n?/mi',function($matches) use(&$currentPath,&$appPath,&$includes,&$enhanced){
 			if(substr($matches[2],-1)==='/') $matches[2].=basename($matches[2]);
 			if(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;

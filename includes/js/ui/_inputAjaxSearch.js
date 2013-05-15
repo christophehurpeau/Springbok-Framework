@@ -12,10 +12,10 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		
 		var t=this,xhr,lastVal=null,currentTimeout;
 		if(S.isFunc(url)) this.onChange=url;
-		else if(S.isArray(url) || S.isObject(url) || url instanceof $){
+		else if(S.isArray(url) || S.isObj(url) || url instanceof $){
 			var list=url,filter=undefined,listValues;
 			
-			if(S.isObject(url)){
+			if(S.isObj(url)){
 				if(url instanceof $){
 					list=url.find('option').each(function(i,option){
 						option=$(option);
@@ -29,7 +29,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					this.displayLi=this.displayLi||function(v){ return $(v).attr('value'); };
 				}else{
 					list=url.list;
-					if(S.isObject(list)){
+					if(S.isObj(list)){
 						this.oKey=url.key;
 						list=[]; listValues=[];
 						UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(UString.normalize(v[url.key])) });
@@ -112,7 +112,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		callback=callback||t.displayLi;
 		$.each(data,function(i,v){
 			li=$('<li/>');
-			if(S.isString(v)) li.html(v);
+			if(S.isStr(v)) li.html(v);
 			else{
 				/* DEV */if(!callback && !v[key]) console.warn('[ui/InputSearch:displayList]','text is empty',v,key);/* /DEV */
 				li[t.escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
