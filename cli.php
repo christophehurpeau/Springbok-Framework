@@ -11,7 +11,7 @@ if (version_compare(PHP_VERSION, '5.3.0')===-1)
 
 set_time_limit(0);
 
-define('BASE_URL',''); define('APP_VERSION',''); define('WEB_FOLDER','');
+define('BASE_URL',''); define('APP_VERSION',''); define('WEB_FOLDER',''); define('HTTP_OR_HTTPS','http://');
 include CORE.'springbok.php';
 
 Springbok::$prefix='cli_';
@@ -56,6 +56,11 @@ class App{
 	public static function configArray($name,$withSuffix=false){
 		return include APP.'config'.DS.$name.($withSuffix ? '_'.ENV : '').'.php';
 	}
+	public static function siteUrl($entry,$https=null){
+		$su=Config::$siteUrl[$entry];
+		return ($su[0]===null ? ($https===null ? 'http://' : ($https===true ? 'https://' : 'http://')) : $su[0]). $su[1];
+	}
+	
 	
 	/** @return CLocale */
 	public static function getLocale(){

@@ -371,7 +371,7 @@ class ConfigFile extends PhpFile{
 	}
 	
 	private function replaceAppAndData($code){
-		return str_replace("'HTTP_OR_HTTPS","HTTP_OR_HTTPS.'",str_replace("'".APP,"APP.'",str_replace("'".DATA,"DATA.'",$code)));
+		return str_replace("'HTTP_OR_HTTPS","HTTP_OR_HTTPS.'",str_replace("'HTTP_OR_HTTPS://","HTTP_OR_HTTPS.'",str_replace("'".APP,"APP.'",str_replace("'".DATA,"DATA.'",$code))));
 	}
 	
 	public static function incl($path,$ext=null){

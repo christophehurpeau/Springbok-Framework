@@ -77,9 +77,9 @@ includeCore('libs/jquery-ui-1.9.2.position');
 					.error(function(){S.bodyIcon('cross',form);})
 					.success(function(data,textStatus,jqXHR){
 						S.bodyIcon('tick',form);
-						if(S.isObject(data) && data.update){
+						if(S.isObj(data) && data.update){
 							var u=data.update;
-							if(S.isObject(u)){
+							if(S.isObj(u)){
 								for(var key in u){
 									var d=u[key];
 									for(var k in d){

@@ -12,7 +12,7 @@ S.HGoogle={
 			else markers=[markers];
 			markers.forEach(function(marker){
 				url+='&markers=';
-				if(S.isObject(marker)){
+				if(S.isObj(marker)){
 					url+=marker.style.join('|')+'|';
 					marker=marker.locations;
 				}

@@ -98,7 +98,8 @@ class ViewFile extends PhpFile{
 		$content=preg_replace('/<\?\s+(.+)\s*;?\s+\?>/Us','<?php echo $1 ?>',$content);
 		
 		//Exception à la règle
-		$content=preg_replace_callback('/{=(\$'.$jusqualafin.')\}/U',function($m) use($t){return '<?php echo '.$t->enhancePhpContent($m[1]).' ?>';},$content);
+		$content=preg_replace_callback('/{=(\$'.$jusqualafin.')\}/U',function($m) use($t){
+				return '<?php echo '.$t->enhancePhpContent(substr($m[1],0,2)==='E.'?'HElement::'.substr($m[1],2):$m[1]).' ?>';},$content);
 		
 		$content=preg_replace('/{\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? $2 : $3 ?>',$content);
 		$content=preg_replace('/{=\?\s+([^:]+)\s+=>\s+([^}]+)\s+:\s+([^}]+)\s*}/','<?php echo $1 ? h($2) : h($3) ?>',$content);

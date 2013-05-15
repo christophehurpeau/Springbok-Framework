@@ -7,7 +7,7 @@ S.WDialog=S.Widget.extend({
 			closeOnEscape:true,
 			zIndex:9000 //fancybox : 8030
 		},options);
-		this.elt=$('<div>')[S.isString(htmlOrText)?'text':'html'](htmlOrText)
+		this.elt=$('<div>')[S.isStr(htmlOrText)?'text':'html'](htmlOrText)
 				.addClass('ui-dialog-content ui-widget-content');
 		
 	},
@@ -42,7 +42,7 @@ S.dialogs={
 	alert:function(title,message){
 		var div=$('<div>'),buttons={};
 		buttons[i18nc['Close']]=function(){div.dialog('close');};
-		S.isString(message) ? div.text(message) : div.html(message);
+		S.isStr(message) ? div.text(message) : div.html(message);
 		div.dialog({
 			autoOpen: true,
 			title:title,
@@ -56,8 +56,7 @@ S.dialogs={
 	},
 	confirm:function(title,message,okButtonName,callbackOk,callbackCancel){
 		var div=$('<div>'),buttons={};
-		S.isString(message) ? div.text(message) : div.html(message);
-		
+		S.isStr(message) ? div.text(message) : div.html(message);
 		
 		buttons[i18nc.Cancel]=function(){
 			div.hide();
@@ -88,7 +87,7 @@ S.dialogs={
 			callback=defaultVal;
 			defaultVal='';
 		}
-		S.isString(message) ? div.text(message) : div.html(message);
+		S.isStr(message) ? div.text(message) : div.html(message);
 		if(S.isObj(defaultVal)){
 			findInput='select';
 			div.append($('<select class="wp100">').html(

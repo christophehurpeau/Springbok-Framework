@@ -4,13 +4,13 @@ includeCore('libs/jquery-ui-1.9.2.position');
 (function(){
 	var defaultDisplayList=function(data,ulAttrs,callback,escape){
 		var li,result=$('<ul>').attr(ulAttrs),key='text';
-		if( callback && S.isString(callback) ){
+		if( callback && S.isStr(callback) ){
 			key=callback;
 			callback=undefined;
 		}
 		$.each(data,function(i,v){
 			li=$('<li/>');
-			if(S.isString(v)) li.html(v);
+			if(S.isStr(v)) li.html(v);
 			else{
 				/* DEV */if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayList]','text is empty',v,key);/* /DEV */
 				li[escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
@@ -22,7 +22,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 	$.fn.sAjaxSearch=function(url,options,destContent,display){
 		var xhr,input=this,lastVal='',currentTimeout,
 			abort=function(){};
-		if(!S.isObject(options)) options={minLength:options==null?3:options};
+		if(!S.isObj(options)) options={minLength:options==null?3:options};
 		options=UObj.extend({ navigate:true, minLength:3, dataType:'json',delay:180 },options);
 		display=display||defaultDisplayList;
 		/*$(window).on('beforeunload',function(){
@@ -34,14 +34,14 @@ includeCore('libs/jquery-ui-1.9.2.position');
 										 : function(data,oKey){ destContent.html(display(data,undefined,oKey||options.display||options.oKey,options.escape)) },
 			onChange;
 		if(S.isFunc(url)) onChange=url;
-		else if(S.isArray(url) || S.isObject(url)){
+		else if(S.isArray(url) || S.isObj(url)){
 			var list=url,filter,oKey,listValues;
 			
 			filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
 			
-			if(S.isObject(url)){
+			if(S.isObj(url)){
 				list=url.list;
-				if(S.isObject(list)){
+				if(S.isObj(list)){
 					oKey=url.key;
 					list=[]; listValues=[];
 					UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(UString.normalize(v[url.key])) });

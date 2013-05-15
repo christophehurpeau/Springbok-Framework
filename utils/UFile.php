@@ -107,6 +107,10 @@ class UFileOpened{
 		return UEncoding::convertToUtf8($this->readLine($length,$ending));
 	}
 	
+	public function readCsvLine($delimiter=',', $enclosure='"', $escape='\\'){
+		return fgetcsv($this->_file,0,$delimiter,$enclosure,$escape);
+	}
+	
 	public function lockShared(){
 		return flock($this->_file,LOCK_SH);
 	}

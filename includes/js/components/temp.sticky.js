@@ -142,7 +142,7 @@ StickyStore.prototype.on = (function(event, fn) {
  */
 
 StickyStore.prototype.trigger = (function(event, args) {
-  args = arraySliceFunction.call(arguments, 1);
+  args = UArray.slice1(arguments);
   if (this.events && this.events[event]) {
     for (var i=0; i<this.events[event].length; i++) {
       this.events[event][i].apply(this, args);

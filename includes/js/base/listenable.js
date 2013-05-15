@@ -11,11 +11,11 @@ S.Listenable.prototype={
 	},
 	fire:function(event,args){
 		/*if(this._events[event]){
-			args = arraySliceFunction.call(arguments,1);
+			args = UArray.slice1(arguments);
 			for(var i=0,events=this._events[event],l=events.length; i<l; i++)
 				events[i].apply(this,args);
 		}*/
 		var callbacks=this._events[event];
-		if(callbacks) callbacks.fire.apply(this,arraySliceFunction.call(arguments,1));
+		if(callbacks) callbacks.fire.apply(this,UArray.slice1(arguments));
 	}
 };
