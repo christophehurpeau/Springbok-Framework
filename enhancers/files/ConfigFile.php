@@ -113,7 +113,7 @@ class ConfigFile extends PhpFile{
 			
 			
 			if(empty($this->enhanced->appConfig['availableLangs']))
-				$this->throwException('Missing config "allLangs" in config/_.php');
+				$this->throwException('Missing config "availableLangs" in config/_.php');
 			$allLangs=empty($this->enhanced->appConfig['allLangs']) ? 
 								$this->enhanced->appConfig['availableLangs'] : $this->enhanced->appConfig['allLangs'];
 			
@@ -193,8 +193,7 @@ class ConfigFile extends PhpFile{
 			$devRoute=array('Dev!::!',
 				':'=>array('controller','action'),'paramsCount'=>3,'ext'=>null,
 				'_'=>array('\/Dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/Dev/%s/%s%s'));
-			foreach((isset($this->enhanced->appConfig['allLangs'])?$this->enhanced->appConfig['allLangs']:$this->enhanced->appConfig['availableLangs']) as $lang)
-				$devRoute[$lang]=$devRoute['_'];
+			foreach($allLangs as $lang) $devRoute[$lang]=$devRoute['_'];
 			$finalRoutes['index']=array('/dev/:controller(/:action/*)?'=>$devRoute)+$finalRoutes['index'];
 			$finalDevContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
 			$this->write($configname,$finalProdContent,$devFile,$prodFile,$finalDevContent);

@@ -131,7 +131,6 @@ class ModelFile extends PhpFile{
 			
 			
 			
-			
 			if($isSQL){
 				$content=preg_replace_callback('/\/\*\*([^;{]*)\*\/\s+public\s+\$([A-Za-z0-9\s_]+);/Ums',array($this,'fields'),$content);
 				$content=preg_replace_callback(self::REGEXP_FIELDS,array($this,'mfields'),$content);

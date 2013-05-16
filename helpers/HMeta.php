@@ -37,7 +37,7 @@ class HMeta{
 	}
 	public static function nofollow(){
 		HHead::metaName('robots','nofollow');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_nofollow()</div>'; /* /DEV */
+		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::nofollow()</div>'; /* /DEV */
 	}
 	
 	public static function nosnippet(){
