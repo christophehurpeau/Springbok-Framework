@@ -130,7 +130,17 @@ abstract class DBSchema{
 				if($this->shouldApply()) $this->changeColumn($name,$icolumns[$name]);
 			}
 		
-		if($this->shouldApply()) $this->applyColumnsModifications();
+		if($this->shouldApply()){
+			try{
+				$this->applyColumnsModifications();
+			}catch(DBException $e){
+				foreach($this->foreignKeys as $fk)
+					$this->removeForeignKey($fk);
+				foreach($this->indexes as $indexes)
+					foreach($indexes as $iName=>$iFields) $this->removeIndex($iName);
+				$this->applyColumnsModifications();
+			}
+		}
 		
 		// reorder
 		if($this->shouldApply()){
@@ -430,7 +440,7 @@ abstract class DBSchema{
 	public function createRelations(){
 		$modelName=$this->modelName;
 		if($this->modelInfos===false) return;
-		$contentInfos=&$modelName::$__modelInfos;
+		$contentInfos=$modelName::$__modelInfos;
 		
 		if($contentInfos['relations']){
 			foreach($contentInfos['relations'] as $key=>&$relation){
@@ -439,7 +449,7 @@ abstract class DBSchema{
 				if($type === 'belongsToType'){
 					if(!isset($relation['fieldType'])) $relation['fieldType']=$key;
 					$relation['join']=null; $relation['isCount']=false;
-					$relations=array();
+					$internalRelations=array();
 					/*debugVar($relation['types']);*/
 					foreach($relation['relations'] as $key2=>$rel2){
 						$rel2['reltype']='belongsTo';
@@ -447,9 +457,9 @@ abstract class DBSchema{
 						if(!isset($rel2['foreignKey'])) $rel2['foreignKey']='rel_id';
 						
 						self::_defaultsRelation($modelName,$rel2['reltype'],$key2,$rel2);
-						$relations[$key2]=$rel2;
+						$internalRelations[$key2]=$rel2;
 					}
-					$relation['relations']=$relations;
+					$relation['relations']=$internalRelations;
 				}else{
 					self::_defaultsRelation($modelName,$type,$key,$relation);
 				}
@@ -463,8 +473,8 @@ abstract class DBSchema{
 		
 		$content='<?php return '.UPhp::exportCode($contentInfos).';';
 		if(/*$write*/true) file_put_contents($filename=($this->isEntity?APP.'models/infos/':Config::$models_infos).$modelName,$content);
-		$modelName::$__modelInfos=&$contentInfos;
-		$modelName::$_relations=&$contentInfos['relations'];
+		$modelName::$__modelInfos=$contentInfos;
+		$modelName::$_relations=$contentInfos['relations'];
 	}
 	public function createAutoParentRelations(){
 		$modelName=$this->modelName;
@@ -478,7 +488,7 @@ abstract class DBSchema{
 				$contentInfos=&$modelName::$__modelInfos;
 				$parentModelName=$parentRelation['modelName'];
 				foreach($parentModelName::$_relations as $key=>$relation){
-					if(!isset($relations[$key])) $contentInfos['relations'][$key]=$relation;
+					if(!isset($contentInfos['relations'][$key])) $contentInfos['relations'][$key]=$relation;
 				}
 				$this->_writeContentInfos($contentInfos);
 			}

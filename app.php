@@ -136,7 +136,7 @@ class App{
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
 			/* DEV */
-			if(rtrim(App::siteUrl('index'),'/')!=='http://localhost'){
+			if(rtrim(App::siteUrl('index',false),'/')!=='http://localhost'){
 				$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
 				if(isset(Config::$siteUrl[$scriptname])){ //dev sur un serveur
 					Springbok::$scriptname=$scriptname;
@@ -152,7 +152,7 @@ class App{
 				Springbok::$suffix='.'.Springbok::$scriptname;
 				
 				/* DEV */
-				CRoute::init(rtrim(App::siteUrl('index'),'/')==='http://localhost'?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
+				CRoute::init(rtrim(App::siteUrl('index',false),'/')==='http://localhost'?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
 				if(CRoute::getController()==='Web'){
 					Controller::renderFile(APP.substr(CRoute::getAll(),1));
 				}
