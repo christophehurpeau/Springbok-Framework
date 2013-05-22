@@ -35,7 +35,7 @@ class CLang{
 		//if($locale!==null)
 		
 		
-		self::$lang=/* DEV */isset(App::$enhancing)&&App::$enhancing?'fr':/* /DEV */Config::$availableLangs[0];
+		self::$lang=/* DEV */isset(App::$enhancing)&&App::$enhancing?file_exists(dirname(APP).'src/locales/fr.yml')?'fr':'en':/* /DEV */Config::$availableLangs[0];
 		foundlang:
 		self::$db=DB::init('_lang',array(
 			'type'=>'SQLite',
