@@ -111,7 +111,7 @@ abstract class DBSchema{
 				if($this->shouldApply()){
 					if(in_array($name,$pks)){
 						foreach($this->foreignKeys as $fk)
-							$this->removeForeignKey($fk);
+							try{ $this->removeForeignKey($fk); }catch(DBException $e){ }
 						foreach($this->indexes as $indexes)
 							foreach($indexes as $iName=>$iFields) $this->removeIndex($iName);
 						$this->removePrimaryKey();
