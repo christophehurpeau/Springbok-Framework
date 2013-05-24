@@ -60,7 +60,15 @@ class UVarDump{
 	}
 	
 	public function color($content,$color){
-		return $this->html?'<span style="color:#'.$color.';">'.htmlentities($content,ENT_QUOTES,'UTF-8',true).'</span>':$content;
+		if($this->html){
+			$str=htmlentities($content,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',true);
+			/* DEV */
+			if(!Springbok::$inError && strpos($str,'�')!==false)
+				throw new Exception('This string has a bad character in it : '.$str);
+			/* /DEV */
+			return '<span style="color:#'.$color.';">'.$str.'</span>';
+		}
+		return $content;
 	}
 	
 	public static function dump($var,$MAX_DEPTH=3,$html=null){

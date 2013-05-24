@@ -21,7 +21,7 @@ class CHttpClient{
 	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),$httpHeaders,$ajax=false,
 		$cookies=array(),$_cookies=array(),$referer=false,$cookiePath,$useCookies=false,//$saveCookies=true,
 		$username=null,$password=null,$proxy=null,
-		$result,$headers,$lastUrl,$status=0,$error,$redirect=true;
+		$result,$headers=false,$lastUrl,$status=0,$error,$redirect=true;
 
 	public static function randomUserAgent(){
 		// TODO update user agent list
@@ -67,7 +67,7 @@ class CHttpClient{
 	public function setCookiePath($path){$this->cookiePath=$path;return $this;}
 	public function addCookie($name,$value){$this->cookies[$name]=$value;return $this;}
 	public function destroyCookieFile(){
-		if(file_exists(DATA.'tmp/curl/'.$this->cookiePath)) unlink(DATA.'tmp/curl/'.$this->cookiePath);
+		if(!empty($this->cookiePath) && file_exists(DATA.'tmp/curl/'.$this->cookiePath)) unlink(DATA.'tmp/curl/'.$this->cookiePath);
 		return $this;
 	}
 	public function getCookies(){return $this->cookies;}
@@ -82,7 +82,9 @@ class CHttpClient{
 	public function useCookies($value=true){$this->useCookies=$value;return $this;}
 	public function useReferer(){$this->referer='';return $this;}
 	public function followRedirects(){$this->redirect=true;return $this;}
-	public function doNotfollowRedirects(){$this->redirect=false;return $this;}
+	public function doNotFollowRedirects(){$this->redirect=false;return $this;}
+	public function parseHeaders(){$this->headers=null;return $this;}
+	public function doNotParseHeaders(){$this->headers=false;return $this;}
 	/** ip:port , username:password */
 	public function proxy($proxy,$auth=false){$this->proxy=array($proxy,$auth);return $this;}
 	
@@ -95,6 +97,8 @@ class CHttpClient{
 	public function getError(){ return $this->error; }
 	public function getResult(){ return $this->result; }
 	public function getLastUrl(){ return $this->lastUrl; }
+	public function getHeaders(){ return $this->headers; }
+	public function getHeader($key){ return $this->headers[$key]; }
 	
 	
 	public function get($target,$referer=null){
@@ -136,6 +140,17 @@ class CHttpClient{
 		$this->result=curl_exec($ch);
 		$this->status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
 		$this->lastUrl=curl_getinfo($ch,CURLINFO_EFFECTIVE_URL);
+		if($this->headers!==false){
+			$headerSize=curl_getinfo($ch,CURLINFO_HEADER_SIZE);
+			$headers=substr($this->result,0,$headerSize);
+			$this->result=substr($this->result,$headerSize);
+			$this->headers=array();
+			foreach(explode("\r\n",$headers) as $k=>$headerLine){
+				if($k===0 || empty($headerLine)) continue;
+				$headerLine=explode(': ',$headerLine,2);
+				$this->headers[strtolower($headerLine[0])]=$headerLine[1];
+			}
+		}
 		$this->error=curl_error($ch);
 		
 		
@@ -191,7 +206,7 @@ class CHttpClient{
 			curl_setopt($ch,CURLOPT_COOKIEFILE,$cookieFile);
 		}
 		
-		curl_setopt($ch,CURLOPT_HEADER,false);
+		curl_setopt($ch,CURLOPT_HEADER,$this->headers===false ? false : true);
 		if($this->httpHeaders!==null) curl_setopt($ch,CURLOPT_HTTPHEADER,$this->httpHeaders);
 		//curl_setopt($ch,CURLOPT_NOBODY,false);
 		curl_setopt($ch,CURLOPT_TIMEOUT,self::$TIMEOUT);
