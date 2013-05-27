@@ -39,10 +39,10 @@ class TestNavigator extends CHttpClient{
 			throw new Exception($this->getLastUrl().' : '.$this->getStatus());
 	}
 	
-	public function checkRedirectPermanent($to){
+	public function checkRedirectPermanent($to,$index=null){
 		if($this->getStatus()!==301)
 			throw new Exception($this->getLastUrl().' : '.$this->getStatus());
-		$this->equals($this->getHeader('location'),$to);
+		$this->equals($this->getHeader('location'),($index===null?'':App::siteUrl($index,false)).$to);
 	}
 	
 	protected function _beforeCurlCreate(){
@@ -97,27 +97,29 @@ class TestNavigator extends CHttpClient{
 		// http://www.sagerock.com/blog/title-tag-meta-description-length/
 		
 		$metaTitle=$parsedHtml->find('head title');
-		$this->check($metaTitle)->size(1);
+		$this->check($metaTitle,'Meta title tags')->size(1);
 		$metaTitle=$metaTitle[0]; $metaTitleText=hdecode($metaTitle->innertext);
-		$this->check($metaTitleText,'Meta title')->doubleSpace()->minLength(25)->maxLength(69);
+		$c=$this->check($metaTitleText,'Meta title')->doubleSpace()->minLength(25);
+		if($this->testClass->_mustBePerfect()) $c->maxLength(69);
 		
 		$metaDescription=$parsedHtml->find('head meta[name="description"]');
-		$this->check($metaDescription)->size(1);
+		$this->check($metaDescription,'Meta description tags')->size(1);
 		$metaDescription=$metaDescription[0]; $metaDescriptionContent=hdecode($metaDescription->content);
-		$this->check($metaDescriptionContent,'Meta description')->doubleSpace()->minLength(50)->maxLength(150);
+		$c=$this->check($metaDescriptionContent,'Meta description')->doubleSpace()->minLength(50);
+		if($this->testClass->_mustBePerfect()) $c->maxLength(150);
 		
 		$metaKeywords=$parsedHtml->find('head meta[name="keywords"]');
-		$this->check($metaKeywords)->size(1);
+		$this->check($metaKeywords,'Meta keywords tags')->size(1);
 		$metaKeywords=$metaKeywords[0]; $metaKeywordsContent=hdecode($metaKeywords->content);
 		$this->check($metaKeywordsContent,'Meta keywords')->doubleSpace();
 		
 		$metaOgSiteName=$parsedHtml->find('head meta[property="og:site_name"]');
-		$this->check($metaOgSiteName)->size(1);
+		$this->check($metaOgSiteName,'Meta og:site_name tags')->size(1);
 		$metaOgSiteName=$metaOgSiteName[0]; $metaOgSiteNameContent=hdecode($metaOgSiteName->content);
 		$this->check($metaOgSiteNameContent,'Meta og:site_name')->doubleSpace();
 		
 		$metaOgTitle=$parsedHtml->find('head meta[property="og:title"]');
-		$this->check($metaOgTitle)->size(1);
+		$this->check($metaOgTitle,'Meta og:title tags')->size(1);
 		$metaOgTitle=$metaOgTitle[0]; $metaOgTitleContent=hdecode($metaOgTitle->content);
 		$this->check($metaOgTitleContent,'Meta og:title')->doubleSpace();
 		
@@ -136,9 +138,11 @@ class TestNavigator extends CHttpClient{
 }
 
 class STest{
-	public static $testEnv=false;
+	public static $testEnv=false,$perfect=true;
 	
 	private $lastNavigator;
+	
+	public function _mustBePerfect(){ return static::$perfect; }
 	
 	public function _before(){}
 	public function _after(){}
@@ -184,7 +188,7 @@ class STest{
 	}
 	
 	public static function display($results){
-		if($results===1) echo '<div class="message error">missing return for '+h($file)+' </div>';
+		if($results===1) echo '<div class="message error">missing return</div>';
 		else{
 			foreach($results as $fName => $result){
 				echo '<div class="message '.($result==='pass'?'success':'error').'">'
@@ -258,7 +262,7 @@ class STestCheck{
 	
 	public function size($size){
 		if($this->_getCount()!==$size)
-			$this->ex($this->_varInfoOr('The array').' has a size of '.$size.', not '.$size,'array= '.print_r($this->var,true));
+			$this->ex($this->_varInfoOr('The array').' has a size of '.$this->_getCount().', not '.$size,'array= '.UVarDump::dump($this->var,3,false));
 		
 	}
 	
@@ -270,9 +274,9 @@ class STestCheck{
 				$this->ex($this->_varInfoOr('The string').' does not contains "'.$string.'"','string= '.$this->var);
 		}elseif( is_array($this->var) ){
 			if(array_key_exists($string,$this->var)===false)
-				$this->ex($this->_varInfoOr('The array').' does not contains the key "'.$string.'"','array= '.print_r($this->var,true));
+				$this->ex($this->_varInfoOr('The array').' does not contains the key "'.$string.'"','array= '.UVarDump::dump($this->var,3,false));
 		}else
-			$this->ex($this->_varInfoOr('This').' is not a string nor an array','val= '.print_r($this->var,true));
+			$this->ex($this->_varInfoOr('This').' is not a string nor an array','val= '.UVarDump::dump($this->var,3,false));
 	}
 	
 	
@@ -280,7 +284,7 @@ class STestCheck{
 	
 	public function isString(){
 		if(!is_string($this->var))
-			$this->ex($this->_varInfoOr('The var').' is not a string','type='.gettype($this->var).', var= '.print_r($this->var,true));
+			$this->ex($this->_varInfoOr('The var').' is not a string','type='.gettype($this->var).', var= '.UVarDump::dump($this->var,3,false));
 		if(($enc=mb_detect_encoding($this->var,'UTF-8, ISO-8859-15, ASCII, GBK'))!=='UTF-8')
 			$this->ex($this->_varInfoOr('The string').' is not an UTF-8 string','encoding='.($enc?$enc:'unknown').', string= '.iconv($enc,'UTF-8',$this->var));
 		return $this;
