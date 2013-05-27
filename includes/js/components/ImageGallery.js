@@ -113,7 +113,7 @@ S.ImageGallery.prototype={
 	},
 	sort:function(create){
 		var idAlbum=this.selectedAlbum;
-		UArray.sortBy(this.albumsMap[idAlbum].images,this.sortBy,this.sortWay==='asc',this.sortBy==='created'?'stringDates':undefined);
+		UArray.sortBy(this.albumsMap[idAlbum].images,this.sortBy,this.sortWay==='asc',/*this.sortBy==='created'?'stringDates':*/undefined);
 		if(create) this.createListAlbums(this.albumsMap[idAlbum].children,this.albumsMap[idAlbum].images);
 	},
 	selectImage:function(idImage){
