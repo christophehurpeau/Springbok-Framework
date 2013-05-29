@@ -5,7 +5,7 @@ define('IS_HTTPS',/*isset($_SERVER['HTTPS']) ? */!empty($_SERVER['HTTPS']) && $_
 define('HTTP_OR_HTTPS',IS_HTTPS?'https://':'http://');
 if(isset($_SERVER['HTTP_HOST'])) define('FULL_BASE_URL',HTTP_OR_HTTPS.$_SERVER['HTTP_HOST']);
 
-/* DEV */
+/*#if DEV */
 if (version_compare(PHP_VERSION, '5.4.0')===-1)
 	die('PHP Version 5.4.0 is REQUIRED');
-/* /DEV */
+/*#/if */

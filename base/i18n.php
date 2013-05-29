@@ -1,6 +1,6 @@
 <?php
 // date_default_timezone_set('UTC');
-include CORE.'components/CLang.php';
+require '../components/CLang.php';
 
 function _t($string,$alt=null){$r=CLang::translate($string,'a'); return $r!==false ? $r : ($alt===null?$string:$alt);}
 function tf($string){$args=func_get_args(); $r=CLang::translate(array_shift($args),'a'); return vsprintf($r!==false ? $r : $string,$args);}

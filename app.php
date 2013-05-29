@@ -1,24 +1,24 @@
 <?php
-/* DEV */ini_set('display_errors',1);/* /DEV */
-/* PROD */ini_set('display_errors',0);/* /PROD */
+/*#if DEV */
+/*#if PROD*/
 error_reporting(E_ALL/* | E_STRICT*/);
 
 include CORE.'springbok.php';
 
 require '_init.php';
 
-/* DEV */
+/*#if DEV */
 define('APP_DATE',time());
 define('APP_VERSION','');
 define('WEB_FOLDER','');
-/* /DEV */
+/*#/if */
 
 require 'springbok/Controller.php';
 require 'components/CRoute.php';
 require 'components/CHttpRequest.php';
 
 class App{
-	/* DEV */public static $enhancing=false,$currentFileEnhanced='',$changes=array();/* /DEV */
+	/*#if DEV */public static $enhancing=false,$currentFileEnhanced='',$changes=array();/*#/if */
 	
 	public static function configArray($name,$withSuffix=false){
 		return include APP.'config/'.$name.($withSuffix ? '_'.ENV : '').'.php';
@@ -35,7 +35,7 @@ class App{
 	}
 	
 	public static function run(){
-		/* DEV */
+		/*#if DEV */
 		if(!file_exists($pathConfigFile=dirname(APP).'/src/config/_'.ENV.'.php')
 				 && !file_exists(substr($pathConfigFile,0,-3).'yml'))
 			exit('The config for your environnement: "'.ENV.'" does NOT exist ! Please create '.$pathConfigFile);
@@ -70,12 +70,12 @@ class App{
 		//$tmpDir=new Folder(APP.'tmp'); $tmpDir->mkdirs();
 		//$langDir=new Folder(APP.'models/infos'); $langDir->mkdirs();
 		
-		/* /DEV */
+		/*#/if */
 				
 		include APP.'config/_'.ENV.'.php';
 		if(!class_exists('Config',false)) exit('CONFIG does not exists');
 		
-		/* DEV */
+		/*#if DEV */
 		//$t=microtime(true);
 		if($shouldEnhance){
 			$updateCookie=false;
@@ -129,13 +129,13 @@ class App{
 		}
 		//debug('schema process took : '.(microtime(true) - $t).' s');
 		
-		/* /DEV */
+		/*#/if */
 
 		
 		//if(isset(Config::$base))
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
-			/* DEV */
+			/*#if DEV */
 			if(rtrim(App::siteUrl('index',false),'/')!=='http://localhost'){
 				$scriptname=strstr($_SERVER['HTTP_HOST'],'.',true);
 				if(isset(Config::$siteUrl[$scriptname])){ //dev sur un serveur
@@ -143,39 +143,39 @@ class App{
 					if(Springbok::$scriptname==='www' || empty(Springbok::$scriptname)) Springbok::$scriptname='index';
 				}
 			}
-			/* /DEV */
+			/*#/if */
 			if(Springbok::$scriptname==='index'){
 				Springbok::$prefix=Springbok::$suffix='';
-				CRoute::init(/* DEV */''/* /DEV */);
+				CRoute::init(/*#if DEV */''/*#/if */);
 			}else{
 				Springbok::$prefix=Springbok::$scriptname.'_';
 				Springbok::$suffix='.'.Springbok::$scriptname;
 				
-				/* DEV */
+				/*#if DEV */
 				CRoute::init(rtrim(App::siteUrl('index',false),'/')==='http://localhost'?'/'.Springbok::$scriptname:'','_'.Springbok::$scriptname);
 				if(CRoute::getController()==='Web'){
 					Controller::renderFile(APP.substr(CRoute::getAll(),1));
 				}
-				/* /DEV */
-				/* PROD */
+				/*#/if */
+				/*#if PROD*/
 				CRoute::init();
-				/* /PROD */
+				/*#/if*/
 			}
 			Controller::$defaultLayout=Springbok::$prefix.'default';
 			
 			//TODO do some optimization with cache + langs
 			$mdef=APP.'controllers'.Springbok::$suffix.'/methods/'.CRoute::getController().'-'.CRoute::getAction();
 			if(!file_exists($mdef))
-				/* DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')'); /* /DEV */
-				/* PROD */ notFound(); /* /PROD */
+				/*#if DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')'); /*#/if*/
+				/*#if PROD*/ notFound(); /*#/if*/
 			
 			$controllerName=CRoute::getController().'Controller';
 			/* if(!file_exists($filename=APP.'controllers'.$suffix.'/'.$controllerName.'.php')) notFound(); */
-			/* DEV */ if(!file_exists(APP.'controllers'.Springbok::$suffix.'/'.$controllerName.'.php')) throw new Exception("Controller does not exists : ".$controllerName); /* /DEV */
+			/*#if DEV */ if(!file_exists(APP.'controllers'.Springbok::$suffix.'/'.$controllerName.'.php')) throw new Exception("Controller does not exists : ".$controllerName); /*#/if*/
 			include APP.'controllers'.Springbok::$suffix.'/'.$controllerName.'.php';
 			
 			/*if(!class_exists($controllerName,false)) notFound();*/
-			/* DEV */ if(!class_exists($controllerName,false)) throw new Exception("Controller Class does not exists : ".$controllerName); /* /DEV */
+			/*#if DEV */ if(!class_exists($controllerName,false)) throw new Exception("Controller Class does not exists : ".$controllerName); /*#/if*/
 			$controllerName::dispatch(Springbok::$suffix,$mdef);
 		}catch(Exception $exception){
 			$forceDefault=false;
@@ -213,22 +213,22 @@ class App{
 			
 			Springbok::handleException($exception);
 			
-			/* DEV */
+			/*#if DEV */
 			self::displayException($e,false);
-			/* /DEV */
-			/* PROD */
+			/*#/if */
+			/*#if PROD*/
 			if($e->getDescription()===false) exit;
 			$vars=array('title'=>$e->getTitle(),'descr'=>$e->getDescription());
 			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){
 				include_once CORE.'mvc/views/View.php';
 				render(APP.'views'.Springbok::$suffix.'/http-exception.php',$vars);
 			}else render(CORE.'mvc/views/http-exception.php',$vars);
-			/* /PROD */
+			/*#/if*/
 		}
 	}
 	
 	public static function shutdown(){
-		/* DEV */
+		/*#if DEV */
 		if(!error_get_last() && class_exists('DB',false) && CFirebug::isAvailable() && !headers_sent()){
 			$setGroup=false;
 			foreach(DB::getAll() as $dbname=>$db){
@@ -252,7 +252,7 @@ class App{
 			}
 			if($setGroup!==false) CFirebug::groupEnd();
 		}
-		/* /DEV */
+		/*#/if */
 	}
 	
 	/**
@@ -263,7 +263,7 @@ class App{
 		$type=CHttpRequest::acceptsByExtOrHttpAccept('html','json','xml');
 		if($type && $type!=='html'){
 			$content=array('error'=>array('type'=>'exception','class'=>get_class($exception)
-					/* DEV */,'message'=>$exception->getMessage()/* /DEV */));
+					/*#if DEV */,'message'=>$exception->getMessage()/*#/if*/));
 			if($type==='xml') displayXml($content);
 			else displayJson($content);
 		}else{
@@ -271,13 +271,13 @@ class App{
 			$vars=array(
 				'e'=>&$exception,
 				'e_className'=>get_class($exception),
-				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced."\n":'')./* /DEV */$exception->getMessage(),
+				'e_message'=>/*#if DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced."\n":'')./*#/if*/$exception->getMessage(),
 				'e_file'=>$exception->getFile(),
 				'e_line'=>$exception->getLine(),
 				'e_trace'=>$exception->getTrace(),
 			);
 			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/exception.php')
-					/* DEV */ && class_exists('CRoute',false) && substr(CRoute::getAll(),0,5)!=='/Dev/'/* /DEV */){
+					/*#if DEV */ && class_exists('CRoute',false) && substr(CRoute::getAll(),0,5)!=='/Dev/'/*#/if*/){
 				include_once CORE.'mvc/views/View.php';
 				render(APP.'views'.Springbok::$suffix.'/exception.php',$vars);
 			}else render(CORE.'mvc/views/exception.php',$vars);
@@ -291,14 +291,14 @@ class App{
 			header('Content-type: application/json; charset=UTF-8');
 			exit('{"error":{'
 				.'"type":"error",'
-				.'"type":'.json_encode(Springbok::getErrorText($code))/* DEV */.','
-				.'"message":'.json_encode($message) /* /DEV */
+				.'"type":'.json_encode(Springbok::getErrorText($code))/*#if DEV */.','
+				.'"message":'.json_encode($message) /*#/if */
 			.'}}');
 		}else{
 			if(!headers_sent()) header("Content-Type: text/html; charset=UTF-8",true);
 			$vars=array(
 				'e_name'=>Springbok::getErrorText($code),
-				'e_message'=>/* DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced."\n":'')./* /DEV */$message,
+				'e_message'=>/*#if DEV */(self::$enhancing?'Current File Enhanced : '.self::$currentFileEnhanced."\n":'')./*#/if */$message,
 				'e_file'=>$file,
 				'e_line'=>$line,
 				'e_context'=>$context,
