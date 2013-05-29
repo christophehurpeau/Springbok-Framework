@@ -25,10 +25,13 @@ class SDetailedException extends Exception{
 	}
 	
 	public function detailsHtml(){
-		return h($this->details);
+		return nl2br(h($this->details));
 	}
 	
 	public function toHtml(){
-		return '<b>'.h(__CLASS__).'</b>'.($this->code===0?'':' ['.h($this->code).']').': '.h($this->title)."<br>".$this->detailsHtml();
+		$class=__CLASS__;
+		return ($class==='SDetailedException'?'':'<b>'.h($class).'</b>').($this->code===0?'':' ['.h($this->code).']')
+					.($this->code===0 && $class==='SDetailedException'?'':': ')
+					.h($this->title)."<br>".$this->detailsHtml();
 	}
 }

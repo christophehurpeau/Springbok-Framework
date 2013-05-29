@@ -53,6 +53,7 @@ abstract class DB{
 			if(empty($config['dbname-test'])) $config['dbname-test']=$config['dbname'].'-test';
 			if($config['dbname']===$config['dbname-test']) throw new Exception('DB Config for "'.$configName.'" has the same dbname for test');
 			/* /DEV */
+			if(!isset($config['dbname-origin'])) $config['dbname-origin']=$config['dbname'];
 			$config['dbname']=$config['dbname-test'];
 		}
 		foreach(self::$_INSTANCES as $instance) $instance->switchToTestEnvironment();

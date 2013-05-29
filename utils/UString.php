@@ -51,6 +51,8 @@ class UString{
 	public static function ucFirst($str){ return mb_strtoupper(mb_substr($str,0,1)) . mb_substr($str,1); }
 	public static function length($str){ return mb_strlen($str); }
 	
+	public static function pos($haystack,$needle){ return mb_strrpos($haystack,$needle); }
+	
 	
 	public static function underscore($word){
 		return strtolower(self::_underscore($word));

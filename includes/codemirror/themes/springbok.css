@@ -5,8 +5,6 @@
 .cm-s-sb .CodeMirror-linenumber { color: #aaa; }
 .cm-s-sb .CodeMirror-cursor { border-left: 1px solid white !important; }
 
-
-
 .cm-s-sb .cm-keyword {  color: #93C763; } /**/
 .cm-s-sb .cm-atom { color: #608c92; }
 .cm-s-sb .cm-number { color:  #FFCD22; } /**/

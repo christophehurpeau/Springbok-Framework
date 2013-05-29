@@ -195,9 +195,17 @@ function debugPrintr($var){}
 function dev_eval($code){return eval($code);}
 /* /PROD */
 
-function h($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
+function h($data,$double=true){
+	/* PROD */return /* /PROD *//* DEV */$str=/* /DEV */htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);
+	/* DEV */
+	if(!Springbok::$inError && strpos($str,'�')!==false && substr($str,0,8)!=='&lt;?php')
+		throw new Exception('This string has a bad character in it : '.$str);
+	return $str;
+	/* /DEV */
+}
+function hdecode($string){ return html_entity_decode($string,ENT_QUOTES,'UTF-8'); }
 /* PROD */
-function h2($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES,'UTF-8',$double);}
+function h2($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);}
 /* /PROD */
 function urlenc($string){return urlencode(urlencode($string)); }
 function startsWith($haystack,$needle){ $l=UString::length($needle); return mb_substr($haystack,0,$l)===$needle;}

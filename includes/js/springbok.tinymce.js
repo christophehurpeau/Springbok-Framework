@@ -313,7 +313,9 @@ S.tinymce={
 	        mode: 'htmlmixed',
 	        tabMode: 'indent',
 	        theme:'sb',
-	        lineWrapping:true
+	        lineWrapping:true,
+	        autoCloseTags:true,
+	        autoCloseBrackets:'()""'
 	     });
 	    /*CodeMirror.commands["selectAll"](editorHtml);
 	    var from=editorHtml.getCursor(true),to=editorHtml.getCursor(false);

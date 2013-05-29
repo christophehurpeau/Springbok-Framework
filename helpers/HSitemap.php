@@ -18,7 +18,7 @@ class HSitemap{
 );
 	}
 	public function add($url,$options=array(),$entry='index'){
-		$content='<url><loc>'.HHtml::urlEscape($url,$entry,true).'</loc>';
+		$content='<url><loc>'.HHtml::urlEscape($url,$entry,true,false,false).'</loc>';
 		foreach($options as $key=>$optionContent){
 			/*if($key==='altMobile'){
 				$key='xhtml:link';
