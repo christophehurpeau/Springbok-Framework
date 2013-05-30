@@ -12,7 +12,7 @@ class Preprocessor{
 		$defines['false']=false; $defines['true']=false;
 		
 		$lastIndex=0; $stack=array();
-		while(preg_match('/([ ]*)\/\*[ ]*#(include|ifn?def|if|\/if|endif|else|elif|eval|value|val)[ ]*([^\*]*)[ ]*\*\\\\?\//Uu',$data,$m,PREG_OFFSET_CAPTURE,$lastIndex)){
+		while(preg_match('/(^[ ]*)?\/\*[ ]*#(ifn?def|ifelse|if|\/if|endif|else|el(?:se)?if|eval|value|val)[ ]*([^\*]*)[ ]*\*\\\\?\//Uum',$data,$m,PREG_OFFSET_CAPTURE,$lastIndex)){
 			$index=$m[0][1]; $lastIndex=$index+strlen($m[0][0]);
 			$indent=$m[1][0]; $instruction=$m[2][0]; $content=trim($m[3][0]);
 			
@@ -39,10 +39,10 @@ class Preprocessor{
 					elseif($first5==='false') $removeAfterLength=5;
 					elseif($first4==='true') $removeAfterLength=4;
 					
-					$data=substr($data,0,$index).$indent.$include.substr($data,$lastIndex+$removeAfterLength);
+					$data=substr($data,0,$index).$include.substr($data,$lastIndex+$removeAfterLength);
 					$lastIndex=$index+strlen($include);
 					break;
-				case 'ifdef': case 'ifndef': case 'if':
+				case 'ifdef': case 'ifndef': case 'if': case 'ifelse':
 					$ignore=false;
 					if($negation=$instruction==='if' && substr($content,0,1)==='!')
 						$content=trim(substr($content,1));
@@ -50,12 +50,13 @@ class Preprocessor{
 					if(isset($ignoreDefines[$content])){ $ignore=true; $include=''; }
 					elseif($instruction==='ifdef') $include=array_key_exists($content,$defines);
 					elseif($instruction==='ifndef') $include=!array_key_exists($content,$defines);
+					else if($instruction==='ifelse') $include=$defines[$content] ? 1 : 2;
 					else{
 						if(preg_match('/^(.*) then (.*)$/Uu',$content,$m2)){
 							if(isset($ignoreDefines[$m2[1]])) break;
 							
 							$include=$defines[$m2[1]] ? $m2[2] : '';
-							$data=substr($data,0,$index).$indent.$include.substr($data,$lastIndex);
+							$data=substr($data,0,$index).$include.substr($data,$lastIndex);
 							break;
 						}else{
 							if(!isset($defines[$content])) throw new Exception('Undefined constant "'.$content.'": '.substr($data,$index,$index+100));
@@ -64,7 +65,7 @@ class Preprocessor{
 					}
 					if($negation) $include=!$include;
 					
-					$stack[]=array('ignore'=>$ignore,'include'=>$include,'index'=>$index,'lastIndex'=>$lastIndex, 'indent'=>$indent);
+					$stack[]=array('ignore'=>$ignore,'include'=>$include,'index'=>$index,'lastIndex'=>$lastIndex);
 					break;
 				case '/if': case 'endif': case 'else': case 'elif': case 'elseif':
 					if(empty($stack))
@@ -72,13 +73,18 @@ class Preprocessor{
 					$before=array_pop($stack);
 					if(!$before['ignore']){
 						$include=substr($data,$before['lastIndex'],$index-$before['lastIndex']);
-						if(!$before['include']) $include='';
+						if($before['include'] === 1 || $before['include'] === 2){
+							if(substr($include,0,1)==='('&&substr($include,-1)===')') $include=substr($include,1,-1);
+							$include=explode('||',$include);
+							if(count($include) !== 2) throw new Exception('ifelse : '.count($include).' != 2 : '.$data);
+							$include=$include[$before['include']-1];
+						}elseif(!$before['include']) $include='';
 						
 						/*print_r(array('match'=>$m,'before'=>$before,'data'=>$data,'include'=>$include,
 								'beforeData'=>substr($data,0,$before['index']),'afterData'=>substr($data,$lastIndex)));
 						echo "\n";*/
 						
-						$data=substr($data,0,$before['index']).$before['indent'].$include.substr($data,$lastIndex);
+						$data=substr($data,0,$before['index']).$include.substr($data,$lastIndex);
 						$lastIndex=$before['index']+strlen($include);
 						
 						
@@ -91,7 +97,7 @@ class Preprocessor{
 							if(substr($content,0,1)==='!') $include=!$defines[trim(substr($content,1))];
 							else $include=$defines[$content];
 						}
-						$stack[]=array('ignore'=>$ignore, 'include'=>$include, 'index'=>$lastIndex, 'lastIndex'=>$lastIndex, 'indent'=>$indent);
+						$stack[]=array('ignore'=>$ignore, 'include'=>$include, 'index'=>$lastIndex, 'lastIndex'=>$lastIndex);
 					}
 					break;
 			}

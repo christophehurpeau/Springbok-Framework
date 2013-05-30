@@ -65,4 +65,12 @@ include CORE.'springbok.php';");
 		$result=$preprocessor->process(array('blog.VPostsLatest.fullUrls'=>true),'$post->excerpt=UHtml::transformInternalLinks($post->excerpt,Config::$internalLinks,\'index\',/*#val blog.VPostsLatest.fullUrls */false);');
 		$this->equals($result,'$post->excerpt=UHtml::transformInternalLinks($post->excerpt,Config::$internalLinks,\'index\',true);');
 	}
+	
+	function ifelse(){
+		$preprocessor=new Preprocessor('js');
+		$result=$preprocessor->process(array('DEV'=>true),'/*#ifelse DEV*/(module.exports||S.behaviours.Slug)/*#/if*/');
+		$this->equals($result,'module.exports');
+		$result=$preprocessor->process(array('DEV'=>false),'/*#ifelse DEV*/module.exports||S.behaviours.Slug/*#/if*/');
+		$this->equals($result,'S.behaviours.Slug');
+	}
 }

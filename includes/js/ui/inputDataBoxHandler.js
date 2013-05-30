@@ -8,7 +8,7 @@ includeCore('ui/inputbox');
 			this.input.removeAttr('data-box');
 		}
 	});
-	/* DEV */window.inputDataBoxHandlerIncluded=true;/* /DEV */
+	/*#if DEV*/window.inputDataBoxHandlerIncluded=true;/*#/if*/
 	$document.on('focus','input[data-box]',function(e){
 		new inputBoxHandler($(this));
 	});

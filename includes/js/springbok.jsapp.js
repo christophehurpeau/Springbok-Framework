@@ -29,7 +29,7 @@ S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"
 			$.each(arguments,function(k,fileName){
 				if(!loadedRequired[fileName]){
 					loadedRequired[fileName]=true;
-					S.loadSyncScript(webUrl+'js/'+INCLPREFIX+fileName+'.js'/* DEV */+'?'+(new Date().getTime())/* /DEV */);
+					S.loadSyncScript(webUrl+'js/'+INCLPREFIX+fileName+'.js'/*#if DEV*/+'?'+(new Date().getTime())/*#/if*/);
 				}
 			});
 		},
@@ -106,7 +106,7 @@ App.load=S.ajax.load=function(url){
 		S.history.navigate(url);
 		App.require('c/'+route.controller);
 		var c=C[route.controller];
-		/* DEV */ if(!c) console&&console.log('This controller doesn\'t exists: "'+route.controller+'".'); /* /DEV */
+		/*#if DEV*/ if(!c) console&&console.log('This controller doesn\'t exists: "'+route.controller+'".'); /*#/if*/
 		if(!c) notFound();
 		c.dispatch(route);
 	}catch(err){

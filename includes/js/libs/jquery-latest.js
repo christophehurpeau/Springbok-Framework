@@ -1,6 +1,5 @@
 includeCore('libs/jquery-1.9.1');
 
-/* DEV */
+/*#if DEV*/
 includeCore('libs/jquery-migrate-1.1.1');
-// fin dev in migrate
-
+/*#/if*/

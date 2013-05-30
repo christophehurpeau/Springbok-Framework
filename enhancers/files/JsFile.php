@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.6',$defaultExtension='js';
+	public static $CACHE_PATH='js_8.7',$defaultExtension='js';
 
 	public static function init(){
 		self::$preprocessor=new Preprocessor('js');
@@ -84,8 +84,6 @@ class JsFile extends EnhancerFile{
 			//$c=preg_replace('/\'{t(c)? (.*)}\'/U','i18n$1[\'$2\']',$c);
 			
 			
-			$c=preg_replace('/\(\(\/\*\s+NODE\|\|BROWSER\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$c);
-			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false && substr($this->fileName(),0,5)!=='i18n-'){
 				/*$after='';
 				$c=preg_replace_callback('/\/\*\s+AFTER\s+\*\/(.*)\/\*\s+\/AFTER\s+\*\//Ums',function($m) use(&$after){$after.=$m[1]; return '';},$c);
@@ -134,8 +132,6 @@ class JsFile extends EnhancerFile{
 				foreach(array('content','contentOldIe') as $varName){
 					if(empty($$varName)) continue;
 					$$varName=$this->preprocessor_devprod($$varName,true);
-					//$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)||(.+)\)\)/Ums','$1',$$varName);
-					$$varName=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$1',$$varName);
 				}
 			}
 			
@@ -179,8 +175,6 @@ class JsFile extends EnhancerFile{
 				foreach(array('content','contentOldIe') as $varName){
 					if(empty($$varName)) continue;
 					$$varName=$this->preprocessor_devprod($$varName,false);
-					//$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$$varName);
-					$$varName=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$2',$$varName);
 				}
 				
 				if(substr($this->fileName(),0,7)==='tinymce') self::executeCompressor($this->enhanced->getTmpDir(),$content,$prodFile->getPath(),true);

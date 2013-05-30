@@ -1,10 +1,10 @@
 includeCore('ui/inputbox');
 
-/* DEV */
+/*#if DEV*/
 S.ready(function(){
 	if($.ht5ifv) alert('Please do not use ht5ifv !');
 });
-/* /DEV */
+/*#/if*/
 (function(){
 	var checkTimeFormat=function(val){
 		//http://www.w3.org/TR/html5/common-microsyntaxes.html#valid-time-string
@@ -88,7 +88,7 @@ S.ready(function(){
 				},
 				
 				file:function($node,val){
-					/* DEV */ alert('TODO'); /* /DEV */
+					/*#if DEV*/ alert('TODO'); /*#/if*/
 					return false;
 				},
 				
@@ -129,7 +129,7 @@ S.ready(function(){
 	};
 	S.FormValidator.eventsName='blur focus change keyup';
 	S.FormValidator.addRestriction=function(name,f){
-		/* DEV */ if(restrictions.input[name]) S.error('restriction '+name+' already exists'); /* /DEV */
+		/*#if DEV*/ if(restrictions.input[name]) S.error('restriction '+name+' already exists'); /*#/if*/
 		restrictions.input.restrictions.push(name);
 		restrictions.input[name]=f;
 	};
@@ -182,10 +182,10 @@ S.ready(function(){
 				if(val==''){
 					if(elt.prop('required')) return this.checkFailed(elt,'required',checkAllAndFirstError);
 				}else if(type!=='hidden'){
-					/* DEV */
+					/*#if DEV*/
 					if(isInput && !restrictions.input.type[type]) S.error('Unknown input type: '+type);
 					if(isInput && !S.isFunc(restrictions.input.type[type])) S.error('input type: '+type+' is not a function');
-					/* /DEV */
+					/*#/if*/
 					error=isInput ? restrictions.input.type[type](elt,val)
 							: restrictions[tagName](elt,val);
 					if(error!==false) return this.checkFailed(elt,error===true?type||'required':error,checkAllAndFirstError);
@@ -210,7 +210,7 @@ S.ready(function(){
 			if(S.isArray(error)) error=UString.vformat(i18nc['validation.'+error[0]],UArray.slice1(error));
 			else if(error!=null){
 				error=i18nc['validation.'+error];
-				/* DEV */ if(!error) S.error('Unknown validation translation error: '+error); /* /DEV */
+				/*#if DEV*/ if(!error) S.error('Unknown validation translation error: '+error); /*#/if*/
 			}
 			if(error){
 				!ib && (ib=new validationBox(elt));
