@@ -46,6 +46,23 @@ include CORE.'springbok.php';");
 		$this->equals($result,'public function _doSelectRowsCallback($query,$callback){}');
 		$result=$preprocessor->process(array('DEV'=>false),$str);
 		$this->equals($result,'public function doSelectRowsCallback($query,$callback){}');
-		
+	}
+
+	function value(){
+		$preprocessor=new Preprocessor('php');
+		$result=$preprocessor->process(array('size'=>1),'$test->limit(/*#val size */);');
+		$this->equals($result,'$test->limit(1);');
+		$result=$preprocessor->process(array('size'=>1),'$test->limit(/*#val size */0);');
+		$this->equals($result,'$test->limit(1);');
+		$result=$preprocessor->process(array('size'=>1),'$test->limit(/*#val size */0,123);');
+		$this->equals($result,'$test->limit(1,123);');
+		$result=$preprocessor->process(array('arg1'=>'"ahah"'),'$test->limit(/*#val arg1 */\'\',123);');
+		$this->equals($result,'$test->limit("ahah",123);');
+		$result=$preprocessor->process(array('arg1'=>false),'$test->limit(/*#val arg1 */true,123);');
+		$this->equals($result,'$test->limit(false,123);');
+		$result=$preprocessor->process(array('arg1'=>true),'$test->limit(/*#val arg1 */false,123);');
+		$this->equals($result,'$test->limit(true,123);');
+		$result=$preprocessor->process(array('blog.VPostsLatest.fullUrls'=>true),'$post->excerpt=UHtml::transformInternalLinks($post->excerpt,Config::$internalLinks,\'index\',/*#val blog.VPostsLatest.fullUrls */false);');
+		$this->equals($result,'$post->excerpt=UHtml::transformInternalLinks($post->excerpt,Config::$internalLinks,\'index\',true);');
 	}
 }

@@ -1,4 +1,4 @@
 <?php
 
-$folderTests=dirname(CORE).'/src/tests/';
+$folderTests=CORE.'tests/';
 include __DIR__.'/tests.php';

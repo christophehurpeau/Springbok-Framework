@@ -59,7 +59,7 @@ class EnhanceSpringbok{
 			if($prodDir===false) $newProdDir=false;
 			else{ $newProdDir=new Folder($prodDir->getPath().$dirname); $newProdDir->mkdir(0775); }
 
-			if($dirname=='enhancers'||$dirname=='controllers'/*||$dirname=='includes'*/){
+			if($dirname=='enhancers'||$dirname=='controllers'||$dirname==='tests'/*||$dirname=='includes'*/){
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newDevDir);
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newProdDir);
 			}/*elseif(){

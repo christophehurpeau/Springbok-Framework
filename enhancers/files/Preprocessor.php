@@ -31,14 +31,13 @@ class Preprocessor{
 					}
 					
 					$removeAfterLength=0;
-					if(substr($data,$lastIndex,2)==='0 ') $removeAfterLength=2;
-					elseif(substr($data,$lastIndex,2)==='0;') $removeAfterLength=1;
-					elseif(substr($data,$lastIndex,3)==="'' ") $removeAfterLength=3;
-					elseif(substr($data,$lastIndex,3)==="'';") $removeAfterLength=2;
-					elseif(substr($data,$lastIndex,6)==='false ') $removeAfterLength=6;
-					elseif(substr($data,$lastIndex,6)==='false;') $removeAfterLength=5;
-					elseif(substr($data,$lastIndex,5)==='true ') $removeAfterLength=5;
-					elseif(substr($data,$lastIndex,5)==='true;') $removeAfterLength=4;
+					$first5=substr($data,$lastIndex,5); $first4=substr($first5,0,4); $first2=substr($first4,0,2);
+					if($first2==='0 ') $removeAfterLength=2;
+					elseif($first2==='0;' || $first2==='0,' || $first2==='0)' || $first2==='0.'
+						|| $first2==='0+' || $first2==='0-') $removeAfterLength=1;
+					elseif($first2==="''") $removeAfterLength=2;
+					elseif($first5==='false') $removeAfterLength=5;
+					elseif($first4==='true') $removeAfterLength=4;
 					
 					$data=substr($data,0,$index).$indent.$include.substr($data,$lastIndex+$removeAfterLength);
 					$lastIndex=$index+strlen($include);

@@ -8,7 +8,6 @@ define('ALIBS',APP.'libs/');
 
 
 date_default_timezone_set('Europe/Paris');
-ob_start();
 
 //Exceptions
 require 'springbok/SDetailedException.php';
