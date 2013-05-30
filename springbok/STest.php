@@ -209,6 +209,28 @@ class STest{
 		}
 	}
 	
+	public static function cliDisplay($results){
+		$nbResults=$resultsFailed=0;
+		if($results===1) echo cliColor('missing return',CliColors::red)."\n";
+		else{
+			foreach($results as $fName => $result){
+				$nbResults++;
+				if($result==='pass') echo '✔ '.$fName."\n";
+				else{
+					$resultsFailed++;
+					echo cliColor('✖ ',CliColors::red).$fName."\n";
+					if(is_string($result)) echo $result;
+					elseif(!empty($result['exception'])){
+						echo cliColor('Exception:',CliColors::red).' '.$result['exception']->getMessage()."\n";
+						echo 'in '.$result['exception']->getFile().':'.$result['exception']->getLine();
+						echo prettyBackTrace(0,$result['exception']->getTrace());
+					}else echo UVarDump::dump($result,4,false);
+				}
+			}
+		}
+		return array('total'=>$nbResults,'failed'=>$resultsFailed);
+	}
+	
 	public function check($var,$varInfo=null){
 		return new STestCheck($this,$var,$varInfo);
 	}
@@ -241,9 +263,9 @@ class STestCheck{
 	
 	/* ALL */
 	
-	public function equals($var2){
-		if($this->var!==$var2)
-			throw new Exception('"'.$this->var.'" !== "'.$var2.'"');
+	public function equals($expected){
+		if($this->var!==$expected)
+			throw new Exception('"'.$this->var.'" !== "'.$expected.'"');
 		return $this;
 	}
 	

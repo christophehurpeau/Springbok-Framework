@@ -1,10 +1,10 @@
 <?php
-/* DEV */define('ENV',include dirname(CORE).'/env.php');/* /DEV */
-/* PROD */define('ENV',include APP.'env.php');/* /PROD */
+/*#if DEV */define('ENV',include dirname(CORE).'/env.php');/*#/if*/
+/*#if PROD*/define('ENV',include APP.'env.php');/*#/if*/
 require 'base/base.php';
 define('ALIBS',APP.'libs/');
 //define('CLIBS',CORE.'libs'.DS);
-//define('CLIBS',$parentCore.'libs//* DEV */dev/* /DEV *//* PROD */prod/* /PROD *//');
+//define('CLIBS',$parentCore.'libs//*#if DEV */dev/*#/if*//*#if PROD*/prod/*#/if*//');
 
 
 date_default_timezone_set('Europe/Paris');
@@ -15,11 +15,11 @@ require 'springbok/SDetailedException.php';
 require 'base/HttpException.php';
 
 class Springbok{
-	const VERSION=/* EVAL time() /EVAL */0;
+	const VERSION=/*#eval time() */0;
 	public static $scriptname='index',$prefix='',$suffix='';
 
 	public static function findPath($className){
-		return self::_findPath($className,CORE,/* DEV */class_exists('Config',false)?/* /DEV */Config::$autoload_default/* DEV */:APP.'models/'/* /DEV */);
+		return self::_findPath($className,CORE,/*#if DEV */class_exists('Config',false)?/*#/if */Config::$autoload_default/*#if DEV */:APP.'models/'/*#/if */);
 	}
 	
 	public static function _findPath($class_name,$path,$default_path){
@@ -55,15 +55,15 @@ class Springbok{
 	/** @param Exception $exception */
 	public static function handleException($exception){
 		$previousError=self::$inError;
-		$forceDefault=self::$inError!==null/* DEV */||App::$enhancing/* /DEV */;
+		$forceDefault=self::$inError!==null/*#if DEV */||App::$enhancing/*#/if */;
 		self::$inError=$exception;
-		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
+		/*#if DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /*#/if */
 		while(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
 		//echo $log; ob_flush();
 		if(isset($_SERVER['REQUEST_URI'])){
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
-			if(/* DEV */!App::$enhancing && /* /DEV */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
+			if(/*#if DEV */!App::$enhancing && /*#/if */CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
 		}
 		if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
 		$log.="\nCall Stack:\n".$exception->getTraceAsString();
@@ -74,7 +74,7 @@ class Springbok{
 			return;
 		}
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
-		/* DEV */elseif(App::$enhancing){debugPrintr($log); exit;}else die($log);/* /DEV */
+		/*#if DEV */elseif(App::$enhancing){debugPrintr($log); exit;}else die($log);/*#/if */
 		
 		
 		if($previousError!==null){
@@ -93,30 +93,30 @@ class Springbok{
 		if($fromShutdown===false && !($code & (E_STRICT|E_NOTICE)))
 			throw new ErrorException($message,$code,0,$file,$line);
 		$previousError=self::$inError;
-		$forceDefault=self::$inError!==null/* DEV */||App::$enhancing/* /DEV */;
+		$forceDefault=self::$inError!==null/*#if DEV */||App::$enhancing/*#/if*/;
 		self::$inError=new ErrorException($message,$code,0,$file,$line);
-		/* DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /* /DEV */
+		/*#if DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /*#/if */
 		$log=self::getErrorText($code)." : $message ($file:$line)\n";
 		//echo $log; ob_flush();
 		if(isset($_SERVER['REQUEST_URI'])){
 			$log.=' REQUEST_URI='.$_SERVER['REQUEST_URI'];
-			/* DEV */if(!App::$enhancing){/* /DEV */
+			/*#if DEV */if(!App::$enhancing){/*#/if */
 				if(!class_exists('CSession',false)) include CORE.'components/CSession.php';
 				if(!class_exists('CSecure',false)) include CORE.'components/CSecure.php';
-				/* DEV */
+				/*#if DEV */
 				if(!class_exists('HText',false)) include CORE.'helpers/HText.php';
 				if(!class_exists('HDev',false)) include CORE.'helpers/HDev.php';
-				/* /DEV */
+				/*#/if */
 				if(CSecure::isConnected_Safe()) $log.=' Connected='.CSecure::connected();
-			/* DEV */}/* /DEV */
+			/*#if DEV */}/*#/if */
 		}
 		if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
 		$log.="\nCall Stack:\n".prettyBackTrace();
 		if($message==='Unsupported operand types') $log.="\nContext:\n".print_r($context,true);
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('error')->log($log);
-		/* DEV *//*elseif(App::$enhancing){debug($log); exit;}else die($log);*//* /DEV */
+		/*#if DEV *//*elseif(App::$enhancing){debug($log); exit;}else die($log);*//*#/if */
 		
-		/* PROD */ if($code & (E_STRICT|E_NOTICE)) return true; /* /PROD */
+		/*#if PROD */ if($code & (E_STRICT|E_NOTICE)) return true; /*#/if */
 		
 		while(ob_get_length()>0) ob_end_clean();
 		
@@ -159,10 +159,10 @@ class Springbok{
 	}
 }
 
-function __autoload($className){ /* DEV */
+function __autoload($className){ /*#if DEV */
 	if($className==='Config'){
 		eval('class Config{public static $autoload_default,$cookie_domain=array("'.Springbok::$scriptname.'"=>""),$models_infos,'
-			.'$allLangs=array("'.($lang=(file_exists(dirname(APP).'src/locales/fr.yml')?'fr':'en')).'"),$availableLangs=array("'.$lang.'"),$siteUrl=array("index"=>""),'
+			.'$allLangs=array("'.($lang=(file_exists(dirname(APP).'/src/locales/fr.yml')?'fr':'en')).'"),$availableLangs=array("'.$lang.'"),$siteUrl=array("index"=>""),'
 			.'$db=array("default"=>array("dbname"=>"mysql","user"=>"mysql","password"=>"mysql"));}'
 			.'Config::$autoload_default=APP.\'models/\';Config::$models_infos=Config::$autoload_default."infos/";');
 		define("STATIC_URL",BASE_URL.'/web/');
@@ -174,4 +174,4 @@ function __autoload($className){ /* DEV */
 		debug('CSecure is loaded');
 		return true;
 	}*/
-/* /DEV */ include Springbok::findPath($className); }
+/*#/if */ include Springbok::findPath($className); }

@@ -22,15 +22,15 @@ class UFile{
 		}catch(ErrorException $e){
 			return false;
 		}
-		/* DEV */try{/* /DEV */
+		/*#if DEV */try{/*#/if */
 		$content=str_replace("\t",' ',$content);
 		$yamlDecoded=yaml_parse($content,0);
-		/* DEV */}catch(ErrorException $e){
+		/*#if DEV */}catch(ErrorException $e){
 			$errorMessage=$e->getMessage();
 			preg_match('/\(line ([0-9]+)[,\)]/',$errorMessage,$m);
 			throw new SDetailedHtmlException('UFile::getYAML parse error: '.replaceAppAndCoreInFile($path)." :\n".$errorMessage,
 					0,null,"<h6>File Content:</h6>".HText::highlightLine($content,'yml',empty($m)?null:$m[1]),$e);
-		}/* /DEV */
+		}/*#/if */
 		return $yamlDecoded;
 	}
 	
@@ -172,9 +172,9 @@ class Folder extends AFile{
 	public function __construct($dirname,$create=false){
 		if(substr($dirname,-(strlen(DS))) != DS) $dirname.=DS;
 		parent::__construct($dirname);
-		/* DEV */
+		/*#if DEV */
 		if($this->isFile()) throw new UnexpectedValueException($dirname.' is a file');
-		/* /DEV */
+		/*#/if */
 		if($create) $this->mkdir($create===true?0770:$create);
 	}
 	

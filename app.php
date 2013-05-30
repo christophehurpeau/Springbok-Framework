@@ -1,6 +1,6 @@
 <?php
-/*#if DEV */
-/*#if PROD*/
+/*#if DEV */ini_set('display_errors',1);/*#/if*/
+/*#if PROD*/ini_set('display_errors',0);/*#/if*/
 error_reporting(E_ALL/* | E_STRICT*/);
 
 include CORE.'springbok.php';
@@ -156,8 +156,7 @@ class App{
 				if(CRoute::getController()==='Web'){
 					Controller::renderFile(APP.substr(CRoute::getAll(),1));
 				}
-				/*#/if */
-				/*#if PROD*/
+				/*#else*/
 				CRoute::init();
 				/*#/if*/
 			}
@@ -166,8 +165,8 @@ class App{
 			//TODO do some optimization with cache + langs
 			$mdef=APP.'controllers'.Springbok::$suffix.'/methods/'.CRoute::getController().'-'.CRoute::getAction();
 			if(!file_exists($mdef))
-				/*#if DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')'); /*#/if*/
-				/*#if PROD*/ notFound(); /*#/if*/
+				/*#if DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.CRoute::getController().'::'.CRoute::getAction().' ('.CRoute::getAll().')');
+				/*#else*/ notFound(); /*#/if*/
 			
 			$controllerName=CRoute::getController().'Controller';
 			/* if(!file_exists($filename=APP.'controllers'.$suffix.'/'.$controllerName.'.php')) notFound(); */
@@ -215,8 +214,7 @@ class App{
 			
 			/*#if DEV */
 			self::displayException($e,false);
-			/*#/if */
-			/*#if PROD*/
+			/*#else*/
 			if($e->getDescription()===false) exit;
 			$vars=array('title'=>$e->getTitle(),'descr'=>$e->getDescription());
 			if($forceDefault===false && file_exists(APP.'views'.Springbok::$suffix.'/http-exception.php')){

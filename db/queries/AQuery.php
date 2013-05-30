@@ -21,14 +21,14 @@ abstract class AQuery{
 	
 	protected function _condToSQL($conds,$glue,$sql,$fieldPrefix='',$wrap=false){
 		if($wrap) $sql.=' (';
-		/* DEV */
+		/*#if DEV */
 		if(!is_array($conds)){
 			debug('$conds is not array :');
 			debugVar($conds);
 			debugVar($this);
 			exit;
 		}
-		/* /DEV */
+		/*#/if */
 		foreach($conds as $key=>&$value){
 			if($key==='AND' || $key==='OR') $sql=$this->_condToSQL($value,$key,$sql,$fieldPrefix,true);
 			elseif(is_int($key)){

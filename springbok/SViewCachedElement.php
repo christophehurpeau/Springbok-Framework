@@ -49,7 +49,7 @@ class SViewCachedElement extends SViewElement{
 			$this->_file->unlock();
 			if($close===true) $this->_file->close();
 		}catch(Exception $e){
-			/* DEV */ throw $e; /* /DEV */
+			/*#if DEV */ throw $e; /*#/if*/
 			foreach(static::$views as $view) UFile::rm($this->path.$view);
 		}
 	}

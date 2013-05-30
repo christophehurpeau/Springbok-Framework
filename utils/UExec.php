@@ -94,7 +94,7 @@ class UExec{
 		return UEncoding::convertToUtf8(trim(shell_exec($command.($waiting?' 2>&1':' > /dev/null 2>/dev/null &'))));
 	}
 	
-	public static function createTarGz(/* HIDE */$cd,$options,$archive,$files/* /HIDE */){
+	public static function createTarGz(/*#if false*/$cd,$options,$archive,$files/*#/if*/){
 		$files=func_get_args();
 		$cd=array_shift($files);
 		$options=array_shift($files);

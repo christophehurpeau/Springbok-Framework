@@ -54,7 +54,7 @@ class CCookie{
 			else{
 				$jsondata=substr($decrytpeddata,40);
 				if(substr($decrytpeddata,0,40)!==sha1($jsondata)){
-					/* DEV */ if($name!=='springbok') throw new Exception('CCookie : decrypted data does not match sha1 (name='.$name.')'); /* /DEV */
+					/*#if DEV */ if($name!=='springbok') throw new Exception('CCookie : decrypted data does not match sha1 (name='.$name.')'); /*#/if*/
 					$this->data=array();
 				}else{
 					$this->data=json_decode($jsondata,true);

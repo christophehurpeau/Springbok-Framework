@@ -113,6 +113,15 @@ class GitRepository{
 		return $this->run('fetch --dry-run 2>&1')==='';
 	}
 	
+	public function getUntrackedFiles(){
+		return $this->run('ls-files --others --exclude-standard');
+	}
+	
+	public function stateWithRemote(){
+		return $this->run('rev-list --left-right master...HEAD');
+	}
+	
+	
 	public function clone_to($target){
 		return UExec::exec('git clone '.escapeshellarg($this->repo_path).' '.escapeshellarg($target));
 	}

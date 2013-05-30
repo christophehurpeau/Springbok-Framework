@@ -75,9 +75,9 @@ class HMenu{
 				if(isset($value['startsWith'])) $startsWith=$value['startsWith'];
 				$url=$value[0];
 				unset($value[0],$value['startsWith']);
-				/* DEV */
+				/*#if DEV */
 				if(isset($value['options'])) throw new Exception('Deprecated');
-				/* /DEV */
+				/*#/if */
 				if(!empty($value)) $linkoptions=$value+$linkoptions;
 			}
 			$linkoptions['current']=$startsWith;

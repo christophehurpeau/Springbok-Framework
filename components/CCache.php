@@ -47,7 +47,7 @@ abstract class CCache{
 	
 	
 	protected function setExpiration($expiration){
-		if($expiration===null) $this->_expiration=/* DEV */120/* /DEV *//* HIDE */+/* /HIDE *//* PROD */3600/* /PROD */;
+		if($expiration===null) $this->_expiration=/*#if DEV */120/*#/if*//*#if false*/+/*#/if*//*#if PROD*/3600/*#/if*/;
 		else $this->_expiration=$expiration;
 	}
 	

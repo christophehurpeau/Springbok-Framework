@@ -34,7 +34,7 @@ abstract class QFind extends QSelect{
 	/** @return QSelect */
 	public function field($field){$this->fields[0]=array($field);return $this;}
 	/** @return QSelect */
-	public function setFields($fields,$params=NULL){$this->fields[0]=$fields;/* DEV */if($params !== NULL) throw new Exception('NOT SUPPORTED !'); /* /DEV */return $this;}
+	public function setFields($fields,$params=NULL){$this->fields[0]=$fields;/*#if DEV */if($params !== NULL) throw new Exception('NOT SUPPORTED !'); /*#/if*/return $this;}
 	public function noFields(){ $this->fields[0]=false; return $this; }
 	
 	
@@ -119,17 +119,17 @@ abstract class QFind extends QSelect{
 		if(isset($foptions['with'])) $this->_recursiveWith($foptions['with'],$foptions['modelName'],$foptions['alias']);
 	}
 	public static function _addWith(&$withArray,&$key,&$options,$modelName){
-		/* DEV */if(!isset($modelName::$_relations[$key])) throw new Exception($modelName.' does not have a relation named "'.$key.'"'."\n".'Known relations : '.implode(', ',array_keys($modelName::$_relations))); /* /DEV */
+		/*#if DEV */if(!isset($modelName::$_relations[$key])) throw new Exception($modelName.' does not have a relation named "'.$key.'"'."\n".'Known relations : '.implode(', ',array_keys($modelName::$_relations))); /*#/if*/
 		$relation=$modelName::$_relations[$key];
-		/* DEV */
+		/*#if DEV */
 		if(!is_array($options)) throw new Exception('options is not array : '.print_r($options,true));
 		if(!is_array($relation)) throw new Exception('relation is not array : '.print_r($relation,true));
-		/* /DEV */
+		/*#/if*/
 		$foptions=$options+$relation;
 	
 		if(isset($foptions['fields']) && is_string($foptions['fields'])) $foptions['fields']=explode(',',$foptions['fields']);
 		if(isset($foptions['with'])){
-			/* DEV */ if(!is_array($foptions['with'])) throw new Exception('$foptions["with"] is not array : '.print_r($foptions['with'],true)); /* /DEV */
+			/*#if DEV */ if(!is_array($foptions['with'])) throw new Exception('$foptions["with"] is not array : '.print_r($foptions['with'],true)); /*#/if*/
 			foreach($foptions['with'] as $kW=>&$opW){ if(is_int($kW)){unset($foptions['with'][$kW]); $kW=$opW;$opW=array();} self::_addWith($foptions['with'],$kW,$opW,$foptions['modelName']); }
 		}
 		return $withArray[$key]=$foptions;
@@ -158,14 +158,14 @@ abstract class QFind extends QSelect{
 			foreach($join['joins'] as $relName=>$options){
 				if(is_int($relName)){ $relName=$options; $options=array(); }
 				$options+=array('fields'=>false,'join'=>true);
-				/* DEV */if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
+				/*#if DEV */if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /*#/if*/
 				$options+=$lastModelName::$_relations[$relName];
 				
-				/* DEV */
+				/*#if DEV */
 				if(!isset($options[0])) throw new Exception('$options[0] is not defined: '.print_r($options,true));
 				if(isset($options['foreignKey'])) throw new Exception('foreignKey is defined: '.print_r($options,true));
 				if(isset($options['associationForeignKey'])) throw new Exception('associationForeignKey is defined: '.print_r($options,true));
-				/* /DEV */
+				/*#/if*/
 				$onConditions=array();
 				foreach($options[0] as $foreignKey=>$associationForeignKey)
 					$onConditions[]=$lastAlias.'.`'.$foreignKey.'`='.$options['alias'].'.`'.$associationForeignKey.'`';
@@ -176,14 +176,14 @@ abstract class QFind extends QSelect{
 				$this->joins[$lastAlias]=$options;
 			}
 			
-			/* DEV */if(!isset($lastModelName::$_relations[$key])) throw new Exception($lastModelName.' does not have a relation named "'.$key.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
+			/*#if DEV */if(!isset($lastModelName::$_relations[$key])) throw new Exception($lastModelName.' does not have a relation named "'.$key.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /*#/if*/
 			$options=$join+$lastModelName::$_relations[$key];
 			
-			/* DEV */
+			/*#if DEV */
 			if(!isset($options[0])) throw new Exception('$options[0] is not defined: '.print_r($options,true));
 			if(isset($options['foreignKey'])) throw new Exception('foreignKey is defined: '.print_r($options,true));
 			if(isset($options['associationForeignKey'])) throw new Exception('associationForeignKey is defined: '.print_r($options,true));
-			/* /DEV */
+			/*#/if*/
 			
 			
 			$onConditions=array();
@@ -195,11 +195,11 @@ abstract class QFind extends QSelect{
 			unset($options['joins']);
 			$this->_addJoinInJoin($options);
 		}else{
-			/* DEV */
+			/*#if DEV */
 			if(!isset($join[0])) throw new Exception('$join[0] is not defined: '.print_r($join,true));
 			if(isset($join['foreignKey'])) throw new Exception('foreignKey is defined: '.print_r($join,true));
 			if(isset($join['associationForeignKey'])) throw new Exception('associationForeignKey is defined: '.print_r($join,true));
-			/* /DEV */
+			/*#/if*/
 			if($join[0]!==false){
 				$onConditions=array();
 				foreach($join[0] as $foreignKey=>$associationForeignKey)
@@ -276,7 +276,7 @@ abstract class QFind extends QSelect{
 					$fpos=false;
 					if(is_array($alias)){
 						$_a=$field; $field=$alias; $alias=$_a; $isArrayField=true;
-						/* DEV */ if($alias===false) throw new Exception('must have an alias'); /* /DEV */
+						/*#if DEV */ if($alias===false) throw new Exception('must have an alias'); /*#/if*/
 						$sql.='CONCAT(';
 						foreach($field as $concatField)
 							$sql.= (is_numeric($concatField) || $concatField[0]==='"' ? $concatField : $fieldPrefix.$this->_db->formatField($concatField)) .',';
@@ -444,7 +444,7 @@ abstract class QFind extends QSelect{
 				}
 			}else{
 				$type=$join['modelName'];
-				/* DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.UVarDump::dump($type)); /* /DEV */
+				/*#if DEV */ if(!is_string($type)) throw new Exception('Type is not a string : '.UVarDump::dump($type)); /*#/if*/
 				$joinObj=new $type();
 				$joinObj->_copyData($joinData);
 				$obj->$join['dataName']=$joinObj;
@@ -532,7 +532,7 @@ abstract class QFind extends QSelect{
 		$relName=key($joins); $options=current($joins);
 		if(is_int($relName)){ $relName=$options; $options=array(); }
 		$options+=array('fields'=>false,'join'=>true);
-		/* DEV *///if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /* /DEV */
+		/*#if DEV *///if(!isset($lastModelName::$_relations[$relName])) throw new Exception($lastModelName.' does not have a relation named "'.$relName.'"'."\n".'Known relations : '.implode(', ',array_keys($lastModelName::$_relations))); /*#/if*/
 		//$options+=$lastModelName::$_relations[$relName];
 		if(isset($w['withOptions'][$relName])) $options=$w['withOptions'][$relName]+$options;// can override 'fields'
 		$with['with']=array($relName=>$options);
@@ -641,7 +641,7 @@ abstract class QFind extends QSelect{
 						$resFields = $rel[0];
 						$oneField=count($w['fields'])===1 && !isset($w['with'])?$w['fields'][0]:false;
 						
-						/* DEV */if(empty($w['fields'])) throw new Exception('You must specify fields...');/* /DEV */
+						/*#if DEV */if(empty($w['fields'])) throw new Exception('You must specify fields...');/*#/if*/
 						foreach($resFields as $resField){
 							$w['fields']['('.$rel['alias'].'.`'.$resField.'`)']=$resField;
 							if(isset($w['groupBy'])) $w['groupBy']=$rel['alias'].'.'.$resField.','.$w['groupBy'];

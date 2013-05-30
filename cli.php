@@ -1,13 +1,13 @@
 <?php
 if(!defined('STDIN')) exit;
-/* DEV */ini_set('display_errors',1);/* /DEV */
-/* PROD */ini_set('display_errors',0);/* /PROD */
+/*#if DEV */ini_set('display_errors',1);/*#/if*/
+/*#if PROD*/ini_set('display_errors',0);/*#/if*/
 error_reporting(E_ALL | E_STRICT);
 
-/* PROD */
+/*#if PROD*/
 if (version_compare(PHP_VERSION, '5.3.0')===-1)
 	die('PHP Version 5.3.0 is REQUIRED');
-/* /PROD */
+/*#/if*/
 
 set_time_limit(0);
 
@@ -51,7 +51,7 @@ class CSession{
 }
 
 class App{
-	/* DEV */public static $enhancing=false;/* /DEV */
+	/*#if DEV */public static $enhancing=false;/*#/if*/
 		
 	public static function configArray($name,$withSuffix=false){
 		return include APP.'config'.DS.$name.($withSuffix ? '_'.ENV : '').'.php';
@@ -69,7 +69,7 @@ class App{
 	
 	
 	public static function run($action,$argv){
-		/* DEV */
+		/*#if DEV */
 		if(!empty($argv[0]) && $argv[0]==='noenhance'){
 			array_shift($argv);
 			$shouldEnhance=false;
@@ -84,9 +84,9 @@ class App{
 			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
 			$enhanceApp->process();
 		}
-		/* /DEV */
+		/*#/if*/
 		include APP.'config/_'.ENV.'.php';
-		/* DEV */
+		/*#if DEV */
 		if($shouldEnhance){
 			$schemaProcessing=new DBSchemaProcessing(new Folder(APP.'models'),new Folder(APP.'triggers'),true,false);
 			self::$enhancing=false;
@@ -96,7 +96,7 @@ class App{
 		//$tmpDir=new Folder(APP.'tmp'); $tmpDir->mkdirs();
 		//$langDir=new Folder(APP.'models/infos'); $langDir->mkdirs();
 		
-		/* /DEV */
+		/*#/if*/
 		
 		if(!class_exists('Config',false)){
 			echo 'CONFIG does not exists';exit;
@@ -105,7 +105,7 @@ class App{
 		//if(isset(Config::$base))
 		//	foreach(Config::$base as $name) include CORE.'base/'.$name.'.php';
 		try{
-			CRoute::cliinit(/* DEV */''/* /DEV */);
+			CRoute::cliinit(/*#if DEV */''/*#/if*/);
 			$className=basename($action);
 			if(ctype_upper($className[0])){ $action.='Cli'; $className.='Cli'; $call=true; }else $call=false;
 			if(file_exists($filename=APP.'cli/'.$action.'.php'))
@@ -137,28 +137,28 @@ class App{
 	public static function displayException($exception,$forceDefault){
 		display('');
 		display(cliColor(get_class($exception),CliColors::lightRed));
-		display($exception->getMessage()/* DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/* /DEV */.'');
-		/* DEV */
+		display($exception->getMessage()/*#if DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/*#/if*/.'');
+		/*#if DEV */
 		if($exception->getFile() && $exception->getLine()){
 			$content=file($exception->getFile());
 			display(cliColor("Line:",CliColors::lightPurple).' '.$content[$exception->getLine()-1]);
 		}
 		display(cliColor("Backtrace:",CliColors::lightPurple));
 		echo prettyBackTrace(0,$exception->getTrace());
-		/* /DEV */
+		/*#/if*/
 		echo "\n";
 	}
 
 	public static function displayError($forceDefault,$code, $message, $file, $line){
 		echo "\nPHP Error [".Springbok::getErrorText($code)."]";
-		echo "\n$message"/* DEV */." ($file:$line)"/* /DEV */;
-		/* DEV */
+		echo "\n$message"/*#if DEV */." ($file:$line)"/*#/if*/;
+		/*#if DEV */
 		if($file && $line){
 			$content=file($file);
 			echo "\nLine: ".$content[$line-1];
 		}
 		echo "\nBacktrace:\n".prettyBackTrace().'';
-		/* /DEV */
+		/*#/if*/
 		echo "\n";
 	}
 }

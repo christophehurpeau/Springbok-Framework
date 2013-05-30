@@ -18,7 +18,7 @@ class Model implements Iterator{
 	
 	
 	public static function _getPkName(){
-		/* DEV */if(empty(static::$__modelInfos['primaryKeys'])) throw new Exception(static::$__className.' does not have any primary keys');/* /DEV */
+		/*#if DEV */if(empty(static::$__modelInfos['primaryKeys'])) throw new Exception(static::$__className.' does not have any primary keys');/*#/if*/
 		return static::$__modelInfos['primaryKeys'][0];
 	}
 	
@@ -34,11 +34,11 @@ class Model implements Iterator{
 		return isset($this->data[$name]);
 	}
 	public function __get($name){
-		/* DEV */
+		/*#if DEV */
 		if(!/*isset($this->data[$name])*/array_key_exists($name,$this->data)){//isset does'nt work if the value is null
 			throw new Exception($name.' IS NOT in the object : '.print_r($this->data,true));
 		}
-		/* /DEV */
+		/*#/if*/
 		//$methodName='get'.ucfirst($name);
 		//if(!is_callable(array($this,$methodName)))
 			return $this->data[$name];
@@ -296,14 +296,14 @@ class Model implements Iterator{
 		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))
 			->orderBy($orderByField===null?static::$__displayField:$orderByField);
 	}
-	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return static::QListName()->execute();}
+	public static function findListName(){/*#if DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /*#/if*/return static::QListName()->execute();}
 	public static function findCachedListName(){
 		$className=&static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use(&$className){return $className::findListName();});
+		return CCache::get('models')->readOrWrite($className,function() use($className){return $className::findListName();});
 	}
 	public static function findCachedListValues($fields){
 		$className=&static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use(&$className,&$fields){return $className::QListRows()->fields($fields)->execute();});
+		return CCache::get('models')->readOrWrite($className,function() use($className,$fields){ return $className::QListRows()->fields($fields); });
 	}
 	
 	public static function findFirstLetters($fieldName='name'){

@@ -21,9 +21,9 @@ abstract class Payment{
 
 	protected function _render($file){
 		$this->beforeRender();
-		/* DEV */
+		/*#if DEV */
 		if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
-		/* /DEV */
+		/*#/if*/
 		return render($file,self::$viewVars,true);
 	}
 }

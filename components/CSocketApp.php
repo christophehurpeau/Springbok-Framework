@@ -79,7 +79,7 @@ class CSocketApp{
 	
 	public function run($name){
 		$this->prefix=$name.DS;
-		CRoute::cliinit(/* DEV */''/* /DEV */);
+		CRoute::cliinit(/*#if DEV */''/*#/if*/);
 		
 	}
 	
@@ -90,8 +90,8 @@ class CSocketApp{
 			// do some optimization with cache + langs
 			$filename=APP.'controllers/'.$this->prefix.'methods/'.CRoute::getController().'-'.CRoute::getAction();
 			if(!file_exists($filename))
-				/* DEV */ throw new Exception('This route does not exists : '.$this->prefix.CRoute::getController().'::'.CRoute::getAction()); /* /DEV */
-				/* PROD */ notFound(); /* /PROD */
+				/*#if DEV */ throw new Exception('This route does not exists : '.$this->prefix.CRoute::getController().'::'.CRoute::getAction()); /*#/if*/
+				/*#if PROD*/ notFound(); /*#/if*/
 			$mdef=include $filename;
 			
 			$controllerName=CRoute::getController().'Controller';

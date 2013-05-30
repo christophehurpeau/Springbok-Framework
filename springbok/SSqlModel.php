@@ -9,7 +9,7 @@ class SSqlModel extends SModel{
 	
 	
 	public static function _getPkName(){
-		/* DEV */if(empty(static::$__modelInfos['primaryKeys'])) throw new Exception(static::$__className.' does not have any primary keys');/* /DEV */
+		/*#if DEV */if(empty(static::$__modelInfos['primaryKeys'])) throw new Exception(static::$__className.' does not have any primary keys');/*#/if*/
 		return static::$__modelInfos['primaryKeys'][0];
 	}
 	
@@ -47,7 +47,7 @@ class SSqlModel extends SModel{
 		$data=$this->_getSaveData(func_get_args());
 		return $this->_insert(static::QInsert()->ignore(),$data);
 	}
-	public function findIdOrInsert(/* DEV */$UniqueField/* /DEV */){
+	public function findIdOrInsert(/*#if DEV */$UniqueField/*#/if*/){
 		$args=func_get_args();
 		$UniqueField=array_shift($args);
 		if(!$this->_beforeInsert()) return false;
@@ -82,8 +82,8 @@ class SSqlModel extends SModel{
 			unset($data[$pkName]);
 		}
 		if(!static::QUpdateOne()->values($data)->where($where)->execute()) return false;
-		/* DEV */$resAfterUpdate=/* /DEV */$this->_afterUpdate($data);
-		/* DEV *//*if($resAfterUpdate!==true) throw new Exception('After Updated Failed ('.$resAfterUpdate.')');*//* /DEV */
+		/*#if DEV */$resAfterUpdate=/*#/if*/$this->_afterUpdate($data);
+		/*#if DEV *//*if($resAfterUpdate!==true) throw new Exception('After Updated Failed ('.$resAfterUpdate.')');*//*#/if*/
 		return true;
 	}
 	
@@ -118,7 +118,7 @@ class SSqlModel extends SModel{
 	
 	public function updateCompare($originalData=null){
 		if(!$this->_beforeUpdate()) return false;
-		/* DEV */if($originalData===null && $this->originalData===null) throw new Exception('Model needed to be prepared'); /* /DEV */
+		/*#if DEV */if($originalData===null && $this->originalData===null) throw new Exception('Model needed to be prepared'); /*#/if*/
 		$data=$this->compareData($originalData);
 		if($data===false) return null;
 		$where=array();
@@ -158,7 +158,7 @@ class SSqlModel extends SModel{
 		$where=array();
 		foreach(static::$__modelInfos['primaryKeys'] as $pkName)
 			$where[$pkName]=$this->data[$pkName];
-		/* DEV */if(empty($where)) throw new Exception('WHERE should not be empty !'); /* /DEV */
+		/*#if DEV */if(empty($where)) throw new Exception('WHERE should not be empty !'); /*#/if*/
 		$this->originalData=self::QRow()->setFields(array_keys(array_diff_key($this->data,$where)))->where($where)->execute();
 		
 	}
@@ -252,7 +252,7 @@ class SSqlModel extends SModel{
 		$orderByField=static::$__orderByField;
 		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
 	}
-	public static function findListName(){/* DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /* /DEV */return static::QListName()->execute();}
+	public static function findListName(){/*#if DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /*#/if*/return static::QListName()->execute();}
 	public static function findCachedListName(){
 		$className=static::$__className;
 		return CCache::get('models')->readOrWrite($className,function() use($className){return $className::findListName();});
@@ -296,7 +296,7 @@ class SSqlModel extends SModel{
 	public static function __callStatic($method, $params){
 		if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exists?)(\w+)?By(\w+)$/',$method,$matches))
 			throw new \Exception("Call to undefined method {$method} in class ".get_called_class()
-					/* DEV */."\nKnown methods :".implode(', ',get_class_methods(static::$__className))/* /DEV */);
+					/*#if DEV */."\nKnown methods :".implode(', ',get_class_methods(static::$__className))/*#/if*/);
  
  		$className='Q'.ucfirst($matches[1]);
 		$query = new $className(static::$__className);

@@ -1,11 +1,11 @@
 <?php
 include CLIBS.'php-wsdl/class.phpwsdl.php';
 //include CLIBS.'php-wsdl/class.phpwsdlhash.php';
-/* DEV */
+/*#if DEV */
 PhpWsdl::$Debugging=true;
 PhpWsdl::$DebugFile=DATA.'logs/php-wsdl.log';
 PhpWsdl::$DebugBackTrace=true;
-/* /DEV */
+/*#/if*/
 PhpWsdl::$CacheFolder=DATA.'soap/';
 class SControllerSoap extends Controller{
 	protected static $resp,$soapMethods;
@@ -14,11 +14,11 @@ class SControllerSoap extends Controller{
 		self::$suffix=$suffix;
 		static::beforeDispatch();
 		$paramsFile=DATA.'soap/params'.$suffix.'.'.($className=substr(get_called_class(),0,-10)).'.php';
-		/* PROD */ if(!file_exists($paramsFile)): /* /PROD */
+		/*#if PROD*/ if(!file_exists($paramsFile)): /*#/if*/
 		$params=array('methods'=>static::soapMethods($className),'complexTypes'=>static::complexTypes());
 		file_put_contents($paramsFile,serialize($params));
 		ini_set('soap.wsdl_cache_enabled',0);
-		/* PROD */endif;/* /PROD */
+		/*#if PROD*/endif;/*#/if*/
 		
 		$params=unserialize(file_get_contents($paramsFile));
 		
@@ -33,10 +33,10 @@ class SControllerSoap extends Controller{
 			false,								// Don't send WSDL right now
 			false);								// Don't start the SOAP server right now
 		
-		/* DEV */
+		/*#if DEV */
 		ini_set('soap.wsdl_cache_enabled',0);	// Disable caching in PHP
 		PhpWsdl::$CacheTime=0;					// Disable caching in PhpWsdl
-		/* /DEV */
+		/*#/if*/
 		
 		static::beforeRunServer($soap);
 		

@@ -4,10 +4,10 @@ class HElementLink extends HElementWithContent{
 		return $this->iconHtml($icon,h($text));
 	}
 	public function iconHtml($icon,$html){
-		/* DEV */ if(!empty($this->content)) throw new Exception('$this->content is not empty'); /* /DEV */
+		/*#if DEV */ if(!empty($this->content)) throw new Exception('$this->content is not empty'); /*#/if*/
 		$this->content='<span class="icon '.h($icon).'"></span>'.$html;
 		$this->contentEscape=false;
-		/* DEV */ if(isset($this->attributes['class'])) throw new Exception('specify your attr "class" after calling icon() or iconHtml()'); /* /DEV */
+		/*#if DEV */ if(isset($this->attributes['class'])) throw new Exception('specify your attr "class" after calling icon() or iconHtml()'); /*#/if*/
 		$this->attrClass('aicon');
 		return $this;
 	}

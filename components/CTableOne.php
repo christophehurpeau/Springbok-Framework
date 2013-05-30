@@ -1,7 +1,7 @@
 <?php
 class CTableOne extends CTable{
 	public static function create($query){
-		/* DEV */if(!($query instanceof QFindOne)) throw new Exception('Your query must be an instance of QFindOne'); /* /DEV */
+		/*#if DEV */if(!($query instanceof QFindOne)) throw new Exception('Your query must be an instance of QFindOne'); /*#/if*/
 		return new CTableOne($query);
 	}
 	

@@ -10,8 +10,8 @@ class HSitemap{
 			elseif($ext==='news') $after.=' xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"';
 			else $after.=' '.$ext;
 		}
-		$this->_file=/* DEV */fopen/* /DEV *//* HIDE */&&/* /HIDE *//* PROD */gzopen/* /PROD */(($this->_fileName=($file[0]==='/'?'':APP.'web/files/').$file/* DEV */),'w'/* /DEV *//* PROD */.'.gz').'.tmp','w9'/* /PROD */);
-		/* DEV */fwrite/* /DEV *//* HIDE */&&/* /HIDE *//* PROD */gzwrite/* /PROD */($this->_file,'<?xml version="1.0" encoding="UTF-8"?>
+		$this->_file=/*#if DEV */fopen/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzopen/*#/if*/(($this->_fileName=($file[0]==='/'?'':APP.'web/files/').$file/*#if DEV */),'w'/*#/if*//*#if PROD*/.'.gz').'.tmp','w9'/*#/if*/);
+		/*#if DEV */fwrite/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzwrite/*#/if*/($this->_file,'<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'
 	.' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"'
 	.' xmlns:xhtml="http://www.w3.org/1999/xhtml"'.$after.'>'
@@ -31,12 +31,12 @@ class HSitemap{
 			$content.=HHtml::tag($key,$optionsOption,$optionContent);
 		}
 		$content.='</url>'.PHP_EOL;
-		/* DEV */fwrite/* /DEV *//* HIDE */&&/* /HIDE *//* PROD */gzwrite/* /PROD */($this->_file,$content);
+		/*#if DEV */fwrite/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzwrite/*#/if*/($this->_file,$content);
 	}
 
 	public function end(){
-		/* DEV */fwrite/* /DEV *//* HIDE */&&/* /HIDE *//* PROD */gzwrite/* /PROD */($this->_file,'</urlset>');
-		/* DEV */fclose/* /DEV *//* HIDE */&&/* /HIDE *//* PROD */gzclose/* /PROD */($this->_file);
-		/* PROD */rename($this->_fileName.'.tmp',$this->_fileName);/* /PROD */
+		/*#if DEV */fwrite/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzwrite/*#/if*/($this->_file,'</urlset>');
+		/*#if DEV */fclose/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzclose/*#/if*/($this->_file);
+		/*#if PROD*/rename($this->_fileName.'.tmp',$this->_fileName);/*#/if*/
 	}
 }

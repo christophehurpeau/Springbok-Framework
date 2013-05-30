@@ -13,7 +13,7 @@ class HHtml{
 	}
 	
 	public static function metaCharset($encoding='utf-8'){
-		/* DEV */if(self::$isIElt8===null) throw new Exception('Call HHtml::doctype() to know if request is IE < 8'); /* /DEV */
+		/*#if DEV */if(self::$isIElt8===null) throw new Exception('Call HHtml::doctype() to know if request is IE < 8'); /*#/if*/
 		return self::$isIElt8 ? '<meta http-equiv="Content-Type" content="text/html; charset='.$encoding.'"/>' : '<meta charset="'.$encoding.'">';
 	}
 	public static function metaLanguage($lang=null){
@@ -22,25 +22,25 @@ class HHtml{
 	}
 	
 	public static function cssLink($url='/main',$media=false){
-		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::linkCss() now'); /*#/if*/
 		return HHead::linkCss($url,$media);
 	}
 	
 	public static function favicon($imgUrl='favicon.png'){
-		/* DEV */throw new Exception('Use HHead::favicon() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::favicon() now'); /*#/if*/
 		return HHead::favicon($imgUrl);
 	}
 
 	public static function logoMobile($imgNamePrefix='logo'){
-		/* DEV */throw new Exception('Use HHead::icons() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::icons() now'); /*#/if*/
 		return HHead::icons($imgNamePrefix);
 	}
 	
 	public static function cssLinks(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::display() now'); /*#/if*/
 	}
 	public static function addCSS($url,$media=false){
-		/* DEV */throw new Exception('Use HHead::linkCss() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::linkCss() now'); /*#/if*/
 		HHead::linkCss($url,$media);
 	}
 	public static function cssInline($content,$attributes=array()){
@@ -85,13 +85,13 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	
 	
 	public static function jsLink($url='/global'){
-		/* DEV */throw new Exception('Use HHead::linkJs() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::linkJs() now'); /*#/if*/
 		return HHead::linkJs($url);
 	}
 	
 	private static $_JS;
 	public static function jsLinks(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::display() now'); /*#/if*/
 		if(isset(self::$_JS['all']))
 			foreach(self::$_JS['all'] as $url) self::jsLink($url);
 		if(isset(self::$_JS['ie']))
@@ -119,11 +119,11 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 			}
 	}
 	public static function addJS($url){
-		/* DEV */throw new Exception('Use HHead::linkAddJs() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::linkAddJs() now'); /*#/if*/
 		return HHead::linkJs($url);
 	}
 	public static function jsI18n(){
-		/* DEV */throw new Exception('Use HHead::jsI18n() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::jsI18n() now'); /*#/if*/
 		return self::jsLink('/i18n-'.CLang::get());
 	}
 	
@@ -145,7 +145,7 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	}
 	
 	public static function addJS4IE($url,$for){
-		/* DEV */throw new Exception('Use HHead::linkJsIe($ieVersion,$operator,$url) now. Note : if you have several scripts use HHead::startIeIf($ieVersion,$operator);HHead::linkJs($url);... HHead::endIeIf();'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::linkJsIe($ieVersion,$operator,$url) now. Note : if you have several scripts use HHead::startIeIf($ieVersion,$operator);HHead::linkJs($url);... HHead::endIeIf();'); /*#/if*/
 		$for=explode(' ',$for);
 		HHead::linkJsIe($for[1],$for[0],$url);
 	}
@@ -198,8 +198,8 @@ s.parentNode.insertBefore(g,s);
 		
 		if(isset($options['current']) && $options['current']!==false){
 			if($options['current']===1) $current=true;
-			elseif($options['current'] && $url!==BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.'/') $current=$url==substr(BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.CRoute::getAll(),0,strlen($url));
-			else $current=($url==(BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.CRoute::getAll()));
+			elseif($options['current'] && $url!==BASE_URL/*#if DEV */.CRoute::$_prefix/*#/if*/.'/') $current=$url==substr(BASE_URL/*#if DEV */.CRoute::$_prefix/*#/if*/.CRoute::getAll(),0,strlen($url));
+			else $current=($url==(BASE_URL/*#if DEV */.CRoute::$_prefix/*#/if*/.CRoute::getAll()));
 			//debugVar($url,$current);
 			if($current){
 				if(isset($options['class'])) $options['class'].=' current';
@@ -299,7 +299,7 @@ s.parentNode.insertBefore(g,s);
 	}
 	
 	public static function url($url=null,$entry=null,$full=null,$escape=false,$cache=false,$https=null){
-		/* DEV */ if($entry===false || $entry===true) throw new Exception('Entry param cannot be false or true'); /* /DEV */
+		/*#if DEV */ if($entry===false || $entry===true) throw new Exception('Entry param cannot be false or true'); /*#/if*/
 		$before='';
 		if($entry===null){
 			$entry=Springbok::$scriptname;
@@ -313,12 +313,12 @@ s.parentNode.insertBefore(g,s);
 		}elseif($cache){
 			$before='<?php '.($full===true?'':'if("'.$entry.'"!==Springbok::$scriptname)').' echo App::siteUrl("'.$entry.'",'.UPhp::exportCode($https).') ?>';
 		}elseif(($entry!==Springbok::$scriptname && $full===null) || $full===true) $full=App::siteUrl($entry,$https);
-		/* DEV */if(is_string($full) && rtrim($full,'/')!==$full) throw new Exception('Please remove the "/" at the end of "'.$full.'"'); /* /DEV */
+		/*#if DEV */if(is_string($full) && rtrim($full,'/')!==$full) throw new Exception('Please remove the "/" at the end of "'.$full.'"'); /*#/if*/
 		if(is_array($url)){
 			$url=(!$full?'':($full===true?FULL_BASE_URL:$full)).BASE_URL.CRoute::getArrayLink($entry,$url);
 			$escape=false;
 		}else{
-			if(empty($url) || $url==='/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL/* DEV */.CRoute::$_prefix/* /DEV */.'/';
+			if(empty($url) || $url==='/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).BASE_URL/*#if DEV */.CRoute::$_prefix/*#/if*/.'/';
 			else{
 				if(strpos($url,'://')>0) return $url;
 				if(substr($url,0,2)==='\/') $url=($full===false?'':($full===true?FULL_BASE_URL:$full)).substr($url,1);

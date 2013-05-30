@@ -6,7 +6,7 @@ class CTable{
 	 * @return CTable
 	 */
 	public static function create($query){
-		/* DEV */if(!($query instanceof QFindAll || $query instanceof QSql)) throw new Exception('Your query must be an instance of QFindAll'); /* /DEV */
+		/*#if DEV */if(!($query instanceof QFindAll || $query instanceof QSql)) throw new Exception('Your query must be an instance of QFindAll'); /*#/if*/
 		return new CTable($query);
 	}
 	

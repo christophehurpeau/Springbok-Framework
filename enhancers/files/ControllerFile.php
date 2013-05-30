@@ -81,7 +81,7 @@ class ControllerFile extends PhpFile{
 			return 'self::mset(array('.rtrim($content,',').'));';*/
 			
 			foreach(explode(',',$matches[1]) as $varname)
-				$content.="self::set/* PROD */_/* /PROD */('".($varname=substr(trim($varname),1))."'".',$'.$varname.');'; //TODO !
+				$content.="self::set/*#if PROD*/_/*#/if*/('".($varname=substr(trim($varname),1))."'".',$'.$varname.');'; //TODO !
 			return $content;
 		},$phpContent);
 		
@@ -177,11 +177,11 @@ class ControllerFile extends PhpFile{
 
 		/* Les premiers à être testés */
 		if(isset($mdef['annotations']['Post']) || isset($this->_classAnnotations['Post'])){
-			$methodBody='if(empty($_POST)) /* DEV */throw new Exception("POST empty");/* /DEV *//* PROD */methodNotAllowed();/* /PROD */'.$methodBody;
+			$methodBody='if(empty($_POST)) /*#if DEV */throw new Exception("POST empty");/*#/if*//*#if PROD*/methodNotAllowed();/*#/if*/'.$methodBody;
 			unset($mdef['annotations']['Post']);
 		}
 		if(isset($mdef['annotations']['Ajax']) || isset($this->_classAnnotations['Ajax'])){
-			$methodBody='if(!CHttpRequest::isAjax()) /* DEV */throw new Exception("Should be ajax");/* /DEV *//* PROD */notFound();/* /PROD */'.$methodBody;
+			$methodBody='if(!CHttpRequest::isAjax()) /*#if DEV */throw new Exception("Should be ajax");/*#/if*//*#if PROD*/notFound();/*#/if*/'.$methodBody;
 			unset($mdef['annotations']['Ajax']);
 		}
 		

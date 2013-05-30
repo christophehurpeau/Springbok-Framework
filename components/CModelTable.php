@@ -92,8 +92,8 @@ class CModelTable extends CModelTableAbstract{
 	
 	public $editableUrl;
 	public function displayEditable($url,$displayTotalResults=true,$transformerClass='THtmlEditable'){
-		/* DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /* /DEV */
-		/* DEV */ if($this->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /* /DEV */
+		/*#if DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /*#/if*/
+		/*#if DEV */ if($this->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /*#/if*/
 		
 		$this->editableUrl=$url;
 		$this->display($displayTotalResults,$transformerClass);

@@ -32,7 +32,7 @@ abstract class HElementFormContainable extends HElement{
 	}
 	
 	public function __toString(){
-		/* DEV */ if(Springbok::$inError) return '[HElementFormContainable]'; /* /DEV */
+		/*#if DEV */ if(Springbok::$inError) return '[HElementFormContainable]'; /*#/if*/
 		return $this->form->isContainable() ? $this->container()->__toString() : $this->toString();
 	}
 

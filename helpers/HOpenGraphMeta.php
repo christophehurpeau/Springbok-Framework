@@ -2,36 +2,36 @@
 /** http://ogp.me/ */
 class HOpenGraphMeta{
 	public static function display(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::display() now'); /*#/if*/
 	}
 	
 	public static function title($title){
 		HHead::metaProperty('og:title',$title);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::title()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::title()</div>'; /*#/if*/
 	}
 	public static function description($description){
 		HHead::metaProperty('og:description',$description);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::description()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::description()</div>'; /*#/if*/
 	}
 	
 	public static function siteName($siteName){
 		HHead::metaProperty('og:site_name',$siteName);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::siteName()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::siteName()</div>'; /*#/if*/
 	}
 	
 	public static function fbApp($appId){
 		HHead::metaProperty('fb:app_id',$appId);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::fbApp()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::fbApp()</div>'; /*#/if*/
 	}
 	
 	public static function locale($locale){
 		HHead::metaProperty('og:locale',$locale);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::locale()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::locale()</div>'; /*#/if*/
 	}
 	
 	public static function type($type){
 		HHead::metaProperty('og:type',$type);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::type()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::type()</div>'; /*#/if*/
 	}
 	
 	
@@ -44,7 +44,7 @@ class HOpenGraphMeta{
 		if($width!==null) HHead::metaPropertyAdd('og:image:width',$width);
 		if($height!==null) HHead::metaPropertyAdd('og:image:height',$height);
 		
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::image()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HOpenGraphMeta::image()</div>'; /*#/if*/
 	}
 	
 }

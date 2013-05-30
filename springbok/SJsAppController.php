@@ -9,7 +9,7 @@ class SJsAppController extends Controller{
 			'window.onload=function(){'
 				.'var s=document.createElement("script");'
 				.'s.type="text/javascript";'
-				.'s.src="'.HHtml::staticUrl($jsappScript.'.js','js')/* DEV */.'?'.time()/* /DEV */.'";'
+				.'s.src="'.HHtml::staticUrl($jsappScript.'.js','js')/*#if DEV */.'?'.time()/*#/if*/.'";'
 				.'document.body.appendChild(s);'
 			.'};'
 		);

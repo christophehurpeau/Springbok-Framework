@@ -22,8 +22,8 @@ class Controller{
 	public static function _loadMdef($controller,$action){
 		$mdef=APP.'controllers'.self::$suffix.'/methods/'.$controller.'-'.$action;
 		if(!file_exists($mdef))
-			/* DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.$controller.'::'.$action.' ('.CRoute::getAll().')'); /* /DEV */
-			/* PROD */ notFound(); /* /PROD */
+			/*#if DEV */ throw new Exception('This action does not exists : '.Springbok::$suffix.' '.$controller.'::'.$action.' ('.CRoute::getAll().')');
+			/*#else*/ notFound(); /*#/if*/
 		return include $mdef;
 	}
 	
@@ -54,11 +54,11 @@ class Controller{
 			$num++;
 		}
 		if(isset($methodAnnotations['ValidParams']) && CValidation::hasErrors()){
-			/* DEV */throw new Exception('Not valid params : '.print_r(CValidation::errors(),true)
+			/*#if DEV */throw new Exception('Not valid params : '.print_r(CValidation::errors(),true)
 																		."\n\nparams=".print_r($params,true)
 																		."\n\nmdef params=".print_r($mdef['params'],true)
 																		."\n\n\$_GET=".print_r($_GET,true)
-																		."\n\n\$_POST=".print_r($_POST,true));/* /DEV */
+																		."\n\n\$_POST=".print_r($_POST,true));/*#/if*/
 			if($methodAnnotations['ValidParams']===false) notFound();
 			else{
 				self::header404();
@@ -73,10 +73,10 @@ class Controller{
 	/* GETTERS & SETTERS */
 
 	protected static function set($name,$value=null){
-		/* DEV */
+		/*#if DEV */
 		if(is_array($name))
 			throw new Exception('Controller::set array => use mset');
-		/* /DEV */
+		/*#/if*/
 		self::$viewVars[$name]=$value;
 	}
 	protected static function set_($name,&$value){
@@ -91,18 +91,18 @@ class Controller{
 	}
 	
 	public static function setForLayout($name,$value=null){
-		/* DEV */
+		/*#if DEV */
 		if(is_array($name))
 			throw new Exception('Controller::setForLayout array => use msetForLayout');
-		/* /DEV */
+		/*#/if*/
 		self::$layoutVars[$name]=$value;
 	}
 	
 	public static function setForLayoutAndView($name,$value){
-		/* DEV */
+		/*#if DEV */
 		if(is_array($name))
 			throw new Exception('Controller::setForLayout array => use msetForLayoutAndView');
-		/* /DEV */
+		/*#/if*/
 		if(is_array($name)){
 			self::$viewVars=$name+self::$viewVars;
 			self::$layoutVars=$name+self::$layoutVars;
@@ -240,9 +240,9 @@ class Controller{
 	public static function _render($file){
 		include_once CORE.'mvc/views/View.php';
 		static::beforeRender();
-		/* DEV */
+		/*#if DEV */
 		if(!file_exists($file)) throw new Exception(_tC('This view does not exist:').' '.replaceAppAndCoreInFile($file));
-		/* /DEV */
+		/*#/if*/
 		render($file,self::$viewVars);
 	}
 	
@@ -255,7 +255,7 @@ class Controller{
 		if($exit===true) exit;
 	}
 
-	/* DEV */
+	/*#if DEV */
 	protected static function renderTable($title,&$table,$add=false,$layout=null){
 		throw new Exception("Use Model::Table()->render() now.");
 	}
@@ -263,7 +263,7 @@ class Controller{
 	protected static function renderEditableTable($title,&$table,$pkField,$url,$add=false,$layout=null){
 		throw new Exception("Use Model::Table()->renderEditable() now.");
 	}
-	/* /DEV */
+	/*#/if*/
 	
 	public static function cacheFor($time){
 		$maxAge=strtotime($time,0);

@@ -6,6 +6,7 @@ include CORE_SRC.'utils/UEncoding.php';
 include CORE_SRC.'enhancers/AEnhancerFile.php';
 include CORE_SRC.'enhancers/Enhanced.php';
 include CORE_SRC.'enhancers/EnhancedCore.php';
+include CORE_SRC.'enhancers/files/Preprocessor.php';
 include CORE_SRC.'enhancers/files/PhpFile.php';
 include CORE_SRC.'enhancers/files/CssFile.php';
 

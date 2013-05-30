@@ -73,7 +73,7 @@ class HElementFormInput extends HElementFormContainable{
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.($this->type!=='text'?'text ':'').$this->type); }
 	
 	public function toString(){
-		/* DEV */ if(Springbok::$inError) return '[HElementFormInput]'; /* /DEV */
+		/*#if DEV */ if(Springbok::$inError) return '[HElementFormInput]'; /*#/if*/
 		$this->attributes['type']=$this->type;
 		return $this->_labelToString().(empty($this->between)?'':$this->between).HHtml::tag('input',$this->attributes);
 	}

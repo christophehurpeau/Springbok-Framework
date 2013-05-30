@@ -1,7 +1,7 @@
 <?php
 class DBSchemaProcessing{
 	public static $isProcessing=false;
-	private $force,$generate,$shouldApply/* PROD */ =true/* /PROD */,/* DEV */$writeDbEvolution=false,/* /DEV */
+	private $force,$generate,$shouldApply/*#if PROD*/ =true/*#/if*/,/*#if DEV */$writeDbEvolution=false,/*#/if*/
 			$dbs=array(),$columns=array(),$schemas=array(),$logs,$logger,$time;
 	
 	public function __construct(Folder $modelDir,Folder $triggersDir,$force=false,$generate=true){
@@ -11,19 +11,19 @@ class DBSchemaProcessing{
 		self::$isProcessing=true;
 		
 		$this->force=$force; $schemas=array();
-		/* DEV */
+		/*#if DEV */
 			$apply=CHttpRequest::_GETor('apply');
 			$this->shouldApply=$force?true:$apply==='springbokProcessSchema'||$apply==='springbok_Evolu_Schema';
 			$this->writeDbEvolution=$force?false:$apply==='springbok_Evolu_Schema';
-		/* /DEV */
+		/*#/if*/
 		$this->generate=$generate||$this->shouldApply;
 		
-		$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
-		/* DEV */
+		$baseDir=/*#if DEV */dirname(APP).'/'/*#/if*//*#if false*/./*#/if*//*#if PROD*/APP/*#/if*/;
+		/*#if DEV */
 			if(!is_writable(APP.'dbEvolutions')) throw new Exception('dbEvolutions is not writable !');
 			if(file_exists(APP.'dbEvolutions/Versions.php') && !is_writable(APP.'dbEvolutions/Versions.php'))
 					throw new Exception('dbEvolutions/Versions.php is not writable !');
-		/* /DEV */
+		/*#/if*/
 		
 		if(Config::$generate['default']){
 			$currentDbVersion=trim(UFile::getContents($currentDbVersionFilename=($baseDir.'currentDbVersion')));
@@ -157,7 +157,7 @@ class DBSchemaProcessing{
 			foreach($schemas as $schema) $schema->compareForeignKeys();
 		}
 		
-		/* DEV */
+		/*#if DEV */
 		//regenerate after modifs
 		/*if($this->generate){
 			foreach($schemas as $schema){
@@ -184,7 +184,7 @@ class DBSchemaProcessing{
 			header('Location: '.substr($_SERVER['REQUEST_URI'],0,-strlen('?apply=springbokProcessSchema')));
 			exit;
 		}
-		/* /DEV */
+		/*#/if*/
 		
 		//if(self::$hasModifs)
 		//	foreach($schemas as $schema) $schema->createForeignRelationships();
@@ -203,9 +203,9 @@ class DBSchemaProcessing{
 		}
 		
 		
-		/* DEV */
+		/*#if DEV */
 		if((!$generate && !$force) || $this->logs ===null) foreach($this->dbs as &$db) $db->resetQueries();
-		/* /DEV */
+		/*#/if*/
 		
 		self::$isProcessing=false;
 	}
@@ -226,10 +226,10 @@ class DBSchemaProcessing{
 	}
 	
 	public function query($dbName,$sql){
-		/* DEV */
+		/*#if DEV */
 			if($this->writeDbEvolution)
 				file_put_contents(dirname(APP).'/src/dbEvolutions/'.$this->time.'.sql',"\n".$dbName."=>".str_replace("\n",' ',$sql),FILE_APPEND);
-		/* /DEV */
+		/*#/if*/
 	}
 
 	public function isGenerate(){

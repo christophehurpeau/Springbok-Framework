@@ -6,7 +6,7 @@ class CJobs{
 	}
 	*/
 	public static function start($job,$args=array()){
-		return UExec::exec('php '.escapeshellarg(/* PROD */APP/* /PROD *//* HIDE */./* /HIDE *//* DEV */dirname(APP).DS/* /DEV */.'job.php').' '.escapeshellarg($job).' '
+		return UExec::exec('php '.escapeshellarg(/*#if PROD*/APP/*#/if*//*#if false*/./*#/if*//*#if DEV */dirname(APP).DS/*#/if*/.'job.php').' '.escapeshellarg($job).' '
 				.implode(' ',array_map('escapeshellarg',$args)).' 2>&1');
 	}
 	/*

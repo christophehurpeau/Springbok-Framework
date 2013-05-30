@@ -1,8 +1,12 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.5.1',$defaultExtension='js';
+	public static $CACHE_PATH='js_8.6',$defaultExtension='js';
 
+	public static function init(){
+		self::$preprocessor=new Preprocessor('js');
+	}
+	
 	private $devProdDiff,$includes=array(),$_srcContentOldIe;
 	public function loadContent($srcContent){
 		if(UString::firstLine($srcContent)==="includeCore('springbok.jsapp');"){
@@ -22,7 +26,7 @@ class JsFile extends EnhancerFile{
 		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$this->includes,$this->enhanced);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
-		$this->devProdDiff= (strpos($srcContent,'/* DEV */')!==false||strpos($this->_srcContent,'/* PROD */')!==false);
+		$this->devProdDiff= (strpos($srcContent,'/*#if DEV */')!==false);
 		
 		$this->_srcContent=$srcContent;
 		//if($this->fileName()==='jsapp.js') debug($srcContent);
@@ -70,7 +74,7 @@ class JsFile extends EnhancerFile{
 			
 			foreach($constantes as $const=>$replacement)
 				$c=str_replace($const,$replacement,$c);
-			$c=$this->hardConfig($c);
+			$c=$this->preprocessor($c,true);
 			
 			$c=str_replace('__SPRINGBOK_COMPILED_TIME__',time(),$c);
 			
@@ -80,11 +84,7 @@ class JsFile extends EnhancerFile{
 			//$c=preg_replace('/\'{t(c)? (.*)}\'/U','i18n$1[\'$2\']',$c);
 			
 			
-			$c=preg_replace('/\/\*\s+NODE\s+\*\/.*\/\*\s+\/NODE\s+\*\//Ums','',$c);
-			$c=str_replace('/* BROWSER */','',str_replace('/* /BROWSER */','',$c));
 			$c=preg_replace('/\(\(\/\*\s+NODE\|\|BROWSER\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$c);
-			$c=preg_replace('/\/\*\s+(RM|HIDE|REMOVE|NONE)\s+\*\/.*\/\*\s+\/(RM|HIDE|REMOVE|NONE)\s+\*\//Ums','',$c);
-			
 			
 			if(strpos(dirname($this->srcFile()->getPath()),'app')===false && substr($this->fileName(),0,5)!=='i18n-'){
 				/*$after='';
@@ -133,8 +133,7 @@ class JsFile extends EnhancerFile{
 			if($this->devProdDiff){
 				foreach(array('content','contentOldIe') as $varName){
 					if(empty($$varName)) continue;
-					$$varName=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$$varName);
-					$$varName=str_replace('/* DEV */','',str_replace('/* /DEV */','',$$varName));
+					$$varName=$this->preprocessor_devprod($$varName,true);
 					//$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)||(.+)\)\)/Ums','$1',$$varName);
 					$$varName=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$1',$$varName);
 				}
@@ -179,9 +178,8 @@ class JsFile extends EnhancerFile{
 				
 				foreach(array('content','contentOldIe') as $varName){
 					if(empty($$varName)) continue;
-					$$varName=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$$varName);
-					$$varName=str_replace('/* PROD */','',str_replace('/* /PROD */','',$$varName));
-					$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$$varName);
+					$$varName=$this->preprocessor_devprod($$varName,false);
+					//$$varName=preg_replace('/\(\(\/\*\s+DEV\|\|PROD\s+\*\/(.+)\|\|(.+)\)\)/Ums','$2',$$varName);
 					$$varName=preg_replace('/\(\/\*\s+DEV\|\|PROD\s+\*\/([^\)\|]+)\|\|([^)]+)\)/Ums','$2',$$varName);
 				}
 				
@@ -326,3 +324,4 @@ class JsFile extends EnhancerFile{
 		return $content;
 	}
 }
+JsFile::init();
