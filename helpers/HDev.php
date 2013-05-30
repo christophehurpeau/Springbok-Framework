@@ -122,7 +122,7 @@ class HDev{
 		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre style="background:#FFF;color:#222;border:0">'.UVarDump::dump($e_context).'</pre>';
 	}
 	
-	public static function exception($e){
+	public static function exception(Exception $e){
 		echo '<pre style="background:#FFF;color:#222;border:0;font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e instanceof SDetailedException ? $e->getTitle() : $e->getMessage())
 					.' ('.openLocalFile($e->getFile(),$e->getLine()).replaceAppAndCoreInFile($e->getFile()).':'.$e->getLine().'</a>)'.'</pre>';
 		if($e instanceof SDetailedException)
@@ -132,5 +132,15 @@ class HDev{
 			echo HText::highlightLine(file_get_contents($e->getFile()),'php',$e->getLine(),false,'background:#EBB',true,10);
 		}
 		echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Call Stack:</h5><pre style="background:#FFF;color:#222;border:0">'.prettyHtmlBackTrace(0,$e->getTrace()).'</pre>';
+		
+		$previous=$e->getPrevious();
+		if(!empty($previous)){
+			$e=$previous;
+			
+			echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Previous exception</h5>'
+					.'<pre style="background:#FFF;color:#222;border:0;font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e instanceof SDetailedException ? $e->getTitle() : $e->getMessage())
+						.' ('.openLocalFile($e->getFile(),$e->getLine()).replaceAppAndCoreInFile($e->getFile()).':'.$e->getLine().'</a>)'.'</pre>'
+					.'<pre style="background:#FFF;color:#222;border:0">'.prettyHtmlBackTrace(0,$e->getTrace()).'</pre>';
+		}
 	}
 }

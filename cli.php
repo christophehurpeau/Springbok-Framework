@@ -145,6 +145,12 @@ class App{
 		}
 		display(cliColor("Backtrace:",CliColors::lightPurple));
 		echo prettyBackTrace(0,$exception->getTrace());
+		
+		if($previous=($exception->getPrevious())){
+			display(cliColor("\nPrevious:",CliColors::lightRed));
+			display($previous->getMessage());
+			echo prettyBackTrace(0,$previous->getTrace());
+		}
 		/*#/if*/
 		echo "\n";
 	}

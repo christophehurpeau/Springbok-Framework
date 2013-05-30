@@ -65,7 +65,7 @@ class Preprocessor{
 					}
 					if($negation) $include=!$include;
 					
-					$stack[]=array('ignore'=>$ignore,'include'=>$include,'index'=>$index,'lastIndex'=>$lastIndex);
+					$stack[]=array('ignore'=>$ignore,'include'=>$include,'index'=>$index,'lastIndex'=>$lastIndex, 'indent'=>$indent);
 					break;
 				case '/if': case 'endif': case 'else': case 'elif': case 'elseif':
 					if(empty($stack))
@@ -79,7 +79,7 @@ class Preprocessor{
 								'beforeData'=>substr($data,0,$before['index']),'afterData'=>substr($data,$lastIndex)));
 						echo "\n";*/
 						
-						$data=substr($data,0,$before['index']).$include.substr($data,$lastIndex);
+						$data=substr($data,0,$before['index']).$before['indent'].$include.substr($data,$lastIndex);
 						$lastIndex=$before['index']+strlen($include);
 						
 						
@@ -92,7 +92,7 @@ class Preprocessor{
 							if(substr($content,0,1)==='!') $include=!$defines[trim(substr($content,1))];
 							else $include=$defines[$content];
 						}
-						$stack[]=array('ignore'=>$ignore, 'include'=>$include, 'index'=>$lastIndex, 'lastIndex'=>$lastIndex);
+						$stack[]=array('ignore'=>$ignore, 'include'=>$include, 'index'=>$lastIndex, 'lastIndex'=>$lastIndex, 'indent'=>$indent);
 					}
 					break;
 			}

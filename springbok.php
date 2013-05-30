@@ -56,7 +56,8 @@ class Springbok{
 	public static function handleException($exception){
 		$previousError=self::$inError;
 		$forceDefault=self::$inError!==null/*#if DEV */||App::$enhancing/*#/if */;
-		self::$inError=$exception;
+		if($previousError===$exception) $previousError=null;
+		else self::$inError=$exception;
 		/*#if DEV */if(isset(App::$enhancing) && App::$enhancing) App::$enhancing->onError(); /*#/if */
 		while(ob_get_length()>0) ob_end_clean();
 		$log=get_class($exception).' ['.$exception->getCode().']'.' : '.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().")\n";
@@ -81,7 +82,6 @@ class Springbok{
 			$exception=new Exception($exception->getMessage()."\nPrevious error : ".$previousError->getMessage()
 										.' ('.$previousError->getFile().':'.$previousError->getLine().')',0,$exception);
 		}
-		
 		
 		if(!$isHttpException && !headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500); // ????
 		App::displayException($exception,$forceDefault);
