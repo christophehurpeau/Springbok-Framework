@@ -7,7 +7,7 @@ class CModelTableOne extends CModelTable{
 	}
 	
 	public function notFoundIfFalse(){
-		/* DEV */if($this->results!==null) throw new Exception('$this->results!==null'); /* /DEV */
+		/*#if DEV */if($this->results!==null) throw new Exception('$this->results!==null'); /*#/if*/
 		$this->execute();
 		if(empty($this->results)) notFound();
 		return $this;

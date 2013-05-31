@@ -53,7 +53,7 @@ class UPhp{
 		return '@'.$name.substr(self::exportCode($value,''),5);
 	}
 	
-	public static function recursive(/* HIDE */$callback,$args/* /HIDE */){
+	public static function recursive(/*#if false*/$callback,$args/*#/if*/){
 		$callback=func_get_arg(0);
 		return call_user_func_array($callback,func_get_args());
 	}

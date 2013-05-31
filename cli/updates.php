@@ -1,14 +1,14 @@
 <?php
 
 
-$baseDir=/* DEV */dirname(APP).'/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP/* /PROD */;
-/* DEV */
+$baseDir=/*#if DEV */dirname(APP).'/'/*#/if*//*#if false*/./*#/if*//*#if PROD*/APP/*#/if*/;
+/*#if DEV */
 if(file_exists(APP.'cli/updates')){
 	if(!is_writable(APP.'cli/updates')) throw new Exception('dbEvolutions is not writable !');
 	if(file_exists(APP.'cli/updates/Updates.php') && !is_writable(APP.'cli/updates/Updates.php'))
 			throw new Exception('dbEvolutions/Versions.php is not writable !');
 }
-/* /DEV */
+/*#/if*/
 
 //TODO unifier ce fichier avec DBSchemaProcessing
 $lastCliUpdate=trim(UFile::getContents($lastCliUpdateFilename=($baseDir.'lastCliUpdate')));

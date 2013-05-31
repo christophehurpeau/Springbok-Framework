@@ -3,15 +3,15 @@ class CRoute{
 	const DEFAULT_CONTROLLER='Site';
 	const DEFAULT_ACTION='index';
 	
-	/* DEV */public static $_prefix,$TESTED_ROUTES=array();/* /DEV */
+	/*#if DEV */public static $_prefix,$TESTED_ROUTES=array();/*#/if*/
 	private static $_routes,$_langs,
 		$all,$controller,$action,$params,$ext;
 
-	public static function init(/* DEV */$prefix/* /DEV */){
+	public static function init(/*#if DEV */$prefix/*#/if*/){
 		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];
 		self::$_langs=$routes['langs'];
-		/* DEV */self::$_prefix=$prefix;/* /DEV */
+		/*#if DEV */self::$_prefix=$prefix;/*#/if*/
 		
 		$all=CHttpRequest::getPathInfo();
 		self::initRoute($all);
@@ -20,8 +20,8 @@ class CRoute{
 	public static function initRoute($all){
 		$route=CRoute::find(self::$all=$all='/'.trim($all,'/'));
 		if(!$route)
-			/* DEV */ throw new Exception('No route was found for the url : '.$all); /* /DEV */
-			/* PROD */ notFound(); /* /PROD */
+			/*#if DEV */ throw new Exception('No route was found for the url : '.$all); /*#/if*/
+			/*#if PROD*/ notFound(); /*#/if*/
 		
 		list(self::$controller,self::$action,self::$params,self::$ext)=$route;
 	}
@@ -35,11 +35,11 @@ class CRoute{
 		return CRoute::find('/'.trim($url,'/'));
 	}
 	
-	public static function cliinit(/* DEV */$prefix/* /DEV */){
+	public static function cliinit(/*#if DEV */$prefix/*#/if*/){
 		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];
 		self::$_langs=$routes['langs'];
-		/* DEV */self::$_prefix=$prefix;/* /DEV */
+		/*#if DEV */self::$_prefix=$prefix;/*#/if*/
 	}
 	
 	public static function getCompleteArrayRoute(){
@@ -61,7 +61,7 @@ class CRoute{
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
 		foreach(self::$_routes[Springbok::$scriptname] as $route){
-			if(preg_match(/* DEV */self::$TESTED_ROUTES[]=/* /DEV */'/^'.$route[$lang][0].'$/Ui',$all,$matches)){
+			if(preg_match(/*#if DEV */self::$TESTED_ROUTES[]=/*#/if*/'/^'.$route[$lang][0].'$/Ui',$all,$matches)){
 				/*$ext=isset($matches['ext'])?array_pop($matches):NULL;
 				unset($matches[0],$matches['ext']);
 				(?:\.(?<ext>[a-z]{2,4}))?
@@ -129,12 +129,12 @@ class CRoute{
 		$link=array_shift($params);
 		if($link !==true){
 			$route=self::$_routes[$entry][$link];
-			/* DEV */
+			/*#if DEV */
 			if($route===null){
 				if(Springbok::$inError) return 'javascript:alert(\'No route found\')';
 				throw new Exception("CRoute getLink: This route does not exists: ".$link);
 			}
-			/* /DEV */
+			/*#/if*/
 		}
 		if(isset($params['ext'])) $plus.='.'.$params['ext'];
 		elseif(isset($route['ext'])) $plus.= '.'.$route['ext'];
@@ -147,7 +147,7 @@ class CRoute{
 		
 		if(empty($params)) return $route[$lang][1].$plus;
 		$url=($link===true?self::getStringLink($entry,$params[0]):vsprintf($route[CLang::get()][1],$params));
-		return /* DEV */self::$_prefix./* /DEV */($url==='/'?'/':rtrim($url,'/')).$plus;
+		return /*#if DEV */self::$_prefix./*#/if*/($url==='/'?'/':rtrim($url,'/')).$plus;
 	}
 	
 	public static function getStringLink($entry,$params){
@@ -161,7 +161,7 @@ class CRoute{
 			$froute='/'.self::translate($controller,$lang);
 		else
 			$froute=sprintf($route[$lang][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
-		return /* DEV */self::$_prefix./* /DEV */$froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
+		return /*#if DEV */self::$_prefix./*#/if*/$froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
 	}
 
 	public static function translate($string,$lang){

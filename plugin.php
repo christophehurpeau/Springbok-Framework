@@ -1,7 +1,7 @@
 <?php
 if(!defined('STDIN')) exit;
-/* DEV */ini_set('display_errors',1);/* /DEV */
-/* PROD */ini_set('display_errors',0);/* /PROD */
+/*#if DEV */ini_set('display_errors',1);/*#/if*/
+/*#if PROD*/ini_set('display_errors',0);/*#/if*/
 error_reporting(E_ALL | E_STRICT);
 
 set_time_limit(0);
@@ -46,18 +46,18 @@ class App{
 	 */
 	public static function displayException($exception,$forceDefault){
 		echo ''.get_class($exception)."\n";
-		echo ''.$exception->getMessage()/* DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/* /DEV */.'';
-		/* DEV */
+		echo ''.$exception->getMessage()/*#if DEV */.' ('.str_replace(array(APP,CORE),array('APP/','CORE/'),$exception->getFile()).':'.$exception->getLine().')'/*#/if*/.'';
+		/*#if DEV */
 		echo 'Backtrace : '.prettyBackTrace(0,$exception->getTrace()).'';
-		/* /DEV */
+		/*#/if*/
 	}
 
 	public static function displayError($forceDefault,$code, $message, $file, $line){
 		echo "PHP Error [".Springbok::getErrorText($code)."]\n";
-		echo "$message"/* DEV */." ($file:$line)"/* /DEV */."\n";
-		/* DEV */
+		echo "$message"/*#if DEV */." ($file:$line)"/*#/if*/."\n";
+		/*#if DEV */
 		echo 'Backtrace :'.prettyBackTrace().'';
-		/* /DEV */
+		/*#/if*/
 	}
 }
 

@@ -5,59 +5,59 @@ class HMeta{
 	
 	public static function keywords($keywords){
 		HHead::metaName('keywords',$keywords);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::keywords()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::keywords()</div>'; /*#/if*/
 	}
 	public static function description($description){
 		HHead::metaName('description',$description);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::description()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::description()</div>'; /*#/if*/
 	}
 	
 	public static function set($metas){
 		HHead::metaName('keywords',$metas['keywords']);
 		HHead::metaName('description',$metas['description']);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::set()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::set()</div>'; /*#/if*/
 	}
 	
 	public static function robots($content){
 		HHead::metaName('robots',$content);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::robots()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::robots()</div>'; /*#/if*/
 	}
 	public static function googlebot($content){
 		HHead::metaName('googlebot',$content);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::googlebot()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::googlebot()</div>'; /*#/if*/
 	}
 	
 	public static function noindex_follow(){
 		HHead::metaName('robots','noindex, follow');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_follow()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_follow()</div>'; /*#/if*/
 	}
 	public static function noindex_nofollow(){
 		HHead::metaName('robots','noindex, nofollow');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_nofollow()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noindex_nofollow()</div>'; /*#/if*/
 	}
 	public static function nofollow(){
 		HHead::metaName('robots','nofollow');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::nofollow()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::nofollow()</div>'; /*#/if*/
 	}
 	
 	public static function nosnippet(){
 		HHead::metaName('robots','nosnippet');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::nosnippet()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::nosnippet()</div>'; /*#/if*/
 	}
 	public static function noarchive(){
 		HHead::metaName('robots','noarchive');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noarchive()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::noarchive()</div>'; /*#/if*/
 	}
 	
 	
 	public static function google_notranslate(){
 		HHead::metaName('google','notranslate');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::google_notranslate()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::google_notranslate()</div>'; /*#/if*/
 	}
 	
 	public static function viewport(){
 		HHead::metaName('viewport','target-densitydpi=device-dpi, width=device-width, initial-scale=1');
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::viewport()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::viewport()</div>'; /*#/if*/
 	}
 	
 	public static function msApp($color,$entryStart=null){
@@ -65,11 +65,11 @@ class HMeta{
 		HHead::metaName("msapplication-starturl",App::siteUrl($entryStart===null ? Springbok::$scriptname : 'index'));
 		HHead::metaName("msapplication-window","width=1024;height=768");
 		HHead::metaName("msapplication-navbutton-color",$color);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msApp()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msApp()</div>'; /*#/if*/
 	}
 	public static function msAppAction($name,$url,$entry=null,$icon='favicon.ico'){
 		HHead::metaNameAdd("msapplication-task",'name='.$name.'; action-uri='.HHtml::url($url,$entry,true).'; icon-uri=/web/img/'.$icon);
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::msAppAction()</div>'; /*#/if*/
 	}
 
 	/* Windows8 */
@@ -99,18 +99,18 @@ class HMeta{
 	public static function altlangs($urls){ self::$altLangs=$urls; }
 	
 	public static function display(){
-		/* DEV */throw new Exception('Use HHead::display() now'); /* /DEV */
+		/*#if DEV */throw new Exception('Use HHead::display() now'); /*#/if*/
 	}
 	
 	public static function displayCanonical(){
-		/* DEV */ if(self::$canonical===null && Springbok::$inError===null) throw new Exception("canonical is not defined"); /* /DEV */
+		/*#if DEV */ if(self::$canonical===null && Springbok::$inError===null) throw new Exception("canonical is not defined"); /*#/if*/
 		if(self::$canonical===false) return '';
 		echo '<link rel="canonical" href="'.($href=HHtml::urlEscape(self::$canonical,self::$canonicalEntry,self::$canonicalFullUrl,false,false)).'"/>'
 				.'<meta property="og:url" content="'.$href.'"/>';
 		if(self::$prev!==null) echo '<link rel="prev" href="'.HHtml::urlEscape(self::$prev,self::$canonicalEntry,self::$canonicalFullUrl,false,false).'"/>';
 		if(self::$next!==null) echo '<link rel="next" href="'.HHtml::urlEscape(self::$next,self::$canonicalEntry,self::$canonicalFullUrl,false,false).'"/>';
 		if(self::$smallSizes!==null) echo '<link rel="alternate" media="only screen and (max-width: 640px)" href="'.self::$smallSizes.'"/>';
-		/* DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::displayCanonical()</div>'; /* /DEV */
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::displayCanonical()</div>'; /*#/if*/
 	}
 	
 	public static function getCanonicalRaw(){ return self::$canonical; }

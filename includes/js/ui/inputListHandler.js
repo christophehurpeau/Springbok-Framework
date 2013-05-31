@@ -6,7 +6,7 @@ includeCore('ui/validation');
 		minLength:0,
 		select:function(li){ this.input.val(li.text()); this.inputValue.val($(li.data('item')).attr('data-key')); console.log(this.inputValue,$(li.data('item')).attr('data-key')); }
 	});
-	/* DEV */window.inputListHandlerIncluded=true;/* /DEV */
+	/*#if DEV*/window.inputListHandlerIncluded=true;/*#/if*/
 	$document.on('focus','input[list]',function(e){
 		var input=$(this),
 			datalist=$('datalist[id="'+input.attr('list')+'"]'),

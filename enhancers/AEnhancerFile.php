@@ -5,6 +5,8 @@ abstract class EnhancerFile{
 	
 	protected $enhanced,$_srcContent,$warnings,$errors,$md5;
 	
+	protected static $preprocessor;
+	
 	public function __construct($enhanced,$filename,$isCore=false,$isInLibDir=false){
 		$this->srcFile=new File($filename);
 		$this->enhanced=$enhanced;
@@ -84,7 +86,7 @@ abstract class EnhancerFile{
 	public abstract function getEnhancedDevContent();
 	public abstract function getEnhancedProdContent();
 	public function checkContent($content){}
-	
+	/*
 	public function hardConfig($content){
 		$enhanced=$this->enhanced;
 		$content=preg_replace_callback('#/\*\s+IF\(([A-Za-z0-9_\-\.]+)\)\s+\*\\\\?/\s*(.*)\s*\\\\?/\*\s+/IF\s+\*\\\\?/#Us',function($m) use($enhanced){
@@ -103,11 +105,28 @@ abstract class EnhancerFile{
 			return $enhanced->config['config'][$m[1]];
 		},$content);
 		return $content;
+	}*/
+
+	public function preprocessor($data,$isBrowser=false){
+		if(preg_match('#/\*\s+(IF2?\!?|VALUE|HIDE|EVAL|RM|HIDE|REMOVE|NONE|NODE|BROWSER)\(#',$data,$m)) // ! NONE != NODE
+			$this->throwException('Use the new Preprocessor now (found '.$m[1].')');
+		try{
+			return static::$preprocessor->process($this->enhanced->config['config'],$data,$isBrowser,null,array('DEV'=>true,'PROD'=>true));
+		}catch(Exception $e){
+			$this->throwException($e->getMessage());
+		}
+	}
+	public function preprocessor_devprod($data,$isDev){
+		try{
+			return static::$preprocessor->process(array('DEV'=>!!$isDev,'PROD'=>!$isDev),$data,null);
+		}catch(Exception $e){
+			$this->throwException($e->getMessage());
+		}
 	}
 	
 	
 	public function throwException($message){
-		throw new Exception('Enhancing '.replaceAppAndCoreInFile($this->srcFile->getPath())." :\n".$message);
+		throw new Exception('Enhancing '.(function_exists('replaceAppAndCoreInFile')?replaceAppAndCoreInFile($this->srcFile->getPath()):$this->srcFile->getPath())." :\n".$message);
 	}
 	
 	/* getters */

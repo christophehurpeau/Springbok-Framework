@@ -14,7 +14,7 @@ abstract class DBSql extends DB{
 	
 	public abstract function escape($string);
 
-	/* DEV */
+	/*#if DEV */
 	public function doSelect($methodName,$methodParams){
 		$t=microtime(true);
 		$result=call_user_func_array(array($this,'_doSelect'.$methodName),$methodParams);
@@ -102,33 +102,33 @@ abstract class DBSql extends DB{
 	}
 	
 	
-	/* /DEV */
+	/*#/if*/
 	
-	public abstract function /* DEV */_/* /DEV */doUpdate($query);
+	public abstract function /*#if DEV then _*/doUpdate($query);
 	
-	public abstract function /* DEV */_/* /DEV */doSelectSql($query);
-	public abstract function /* DEV */_/* /DEV */doSelectSqlCallback($query,$callback,$callbackFields);
+	public abstract function /*#if DEV then _*/doSelectSql($query);
+	public abstract function /*#if DEV then _*/doSelectSqlCallback($query,$callback,$callbackFields);
 	
-	public abstract function /* DEV */_/* /DEV */doSelectRows($query);
-	public abstract function /* DEV */_/* /DEV */doSelectRowsCallback($query,$callback);
-	public abstract function /* DEV */_/* /DEV */doSelectRows_($query);
-	public abstract function /* DEV */_/* /DEV */doSelectRowsCallback_($query,$callback);
-	public abstract function /* DEV */_/* /DEV */doSelectRow($query);
-	public abstract function /* DEV */_/* /DEV */doSelectRow_($query);
-	public abstract function /* DEV */_/* /DEV */doSelectObjects($query,$queryObj,$fields);
-	public abstract function /* DEV */_/* /DEV */doSelectObjectsCallback($query,$queryObj,$fields,$callback);
-	public abstract function /* DEV */_/* /DEV */doSelectAssocObjects($query,$queryObj,$fields,$tabResKey);
-	public abstract function /* DEV */_/* /DEV */doSelectObject($query,$queryObj,$fields);
-	public abstract function /* DEV */_/* /DEV */doSelectValues($query);
-	public abstract function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0);
-	public abstract function /* DEV */_/* /DEV */doSelectValue($query);
-	public abstract function /* DEV */_/* /DEV */doSelectListRows($query);
-	public abstract function /* DEV */_/* /DEV */doSelectListRows_($query);
-	public abstract function /* DEV */_/* /DEV */doSelectListValue($query);
+	public abstract function /*#if DEV then _*/doSelectRows($query);
+	public abstract function /*#if DEV then _*/doSelectRowsCallback($query,$callback);
+	public abstract function /*#if DEV then _*/doSelectRows_($query);
+	public abstract function /*#if DEV then _*/doSelectRowsCallback_($query,$callback);
+	public abstract function /*#if DEV then _*/doSelectRow($query);
+	public abstract function /*#if DEV then _*/doSelectRow_($query);
+	public abstract function /*#if DEV then _*/doSelectObjects($query,$queryObj,$fields);
+	public abstract function /*#if DEV then _*/doSelectObjectsCallback($query,$queryObj,$fields,$callback);
+	public abstract function /*#if DEV then _*/doSelectAssocObjects($query,$queryObj,$fields,$tabResKey);
+	public abstract function /*#if DEV then _*/doSelectObject($query,$queryObj,$fields);
+	public abstract function /*#if DEV then _*/doSelectValues($query);
+	public abstract function /*#if DEV then _*/doSelectValuesCallback($query,$callback,$numCol=0);
+	public abstract function /*#if DEV then _*/doSelectValue($query);
+	public abstract function /*#if DEV then _*/doSelectListRows($query);
+	public abstract function /*#if DEV then _*/doSelectListRows_($query);
+	public abstract function /*#if DEV then _*/doSelectListValue($query);
 	
 	/* QUERIES LOG */
 	
-	/* DEV */
+	/*#if DEV */
 	private $_nbQueries=0,$_queries=array();
 	
 	public function getQueries(){ return $this->_queries; }
@@ -151,7 +151,7 @@ abstract class DBSql extends DB{
 		$i=0;
 		return preg_replace_callback('/\?/m',function($matches) use(&$i,&$params){ return '"'.$params[$i++].'"'; },$query);
 	}
-	/* /DEV */
+	/*#/if*/
 	
 	
 	

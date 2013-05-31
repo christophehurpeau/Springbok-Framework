@@ -173,7 +173,7 @@ var ajaxCRDCommonFunction=function(div,url,options,prepare,onDelete,onAdd){
 				.append(actions)
 				.appendTo(ul).animate({opacity:1,height:'toggle'},'slow');
 			ul.change();
-		}/* DEV */else alert('already has this line !'); /* /DEV */
+		}/*#if DEV*/else alert('already has this line !'); /*#/if*/
 	});
 	
 	UObj.forEach(options.actions,function(actionName,fn){

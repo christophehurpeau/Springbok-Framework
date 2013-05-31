@@ -2,7 +2,7 @@
 class SDebugException extends SDetailedException{
 	private $args;
 	
-	public function __construct(/* HIDE */$title,$var1,$var2/* /HIDE */){
+	public function __construct(/*#if false*/$title,$var1,$var2/*#/if*/){
 		$args=func_get_args();
 		$title=array_shift($args);
 		parent::__construct($title);

@@ -5,6 +5,11 @@ class PhpFile extends EnhancerFile{
 		/** [0:'className', 1:'params', path:'path', content:'content'] */
 	public $_traits;
 	
+	
+	public static function init(){
+		self::$preprocessor=new Preprocessor('js');
+	}
+	
 	public static function regexpFunction($name='#'){
 		return '/(?:public|private|protected)\s+(?:static\s+)?function\s+('.($name==='#'?'[a-zA-Z_]+':preg_quote($name)).')\s*\((.*)\)\s*{'
 																		.'\s*(.*)\s*\n(?:\t|\040{2}|\040{4})}\n/Us';
@@ -141,7 +146,7 @@ class PhpFile extends EnhancerFile{
 		/*$content=preg_replace_callback('/(<\?php[ |\n](?:.*)(?:[ |\n])?\?>)/Ums', array($this,'enhancePhpContent'.$suffix),$content);
 		$content=preg_replace_callback('/(<\?php[ |\n](?:.*))$/ms', array($this,'enhancePhpContent'.$suffix),$content);
 		//ini_set('memory_limit', '512M');*/
-		$this->_srcContent=$this->hardConfig($this->_srcContent);
+		$this->_srcContent=$this->preprocessor($this->_srcContent);
 		if(empty($this->_srcContent) || trim($this->_srcContent)==='<?php'){
 			$this->_devContent=$this->_prodContent=false;
 			return;
@@ -281,7 +286,6 @@ class PhpFile extends EnhancerFile{
 		$phpContent=preg_replace_callback('/\/\*\s+EVAL\s+(.*)\s+\/EVAL\s+\*\//Us',
 			function($matches){$val='';eval('$val='.$matches[1].';');if($val==='') exit(print_r($matches,true));return UPhp::exportCode($val);}
 			,$phpContent);
-		$phpContent=preg_replace('/\/\*\s+HIDE\s+\*\/.*\/\*\s+\/HIDE\s+\*\//Ums','',$phpContent);
 		$phpContent=preg_replace('/return !new [^;]+;/','',$phpContent);
 		$phpContent=preg_replace('/\bSF\:\:onlyOnce\(\)\;/','',$phpContent);
 		
@@ -362,15 +366,15 @@ class PhpFile extends EnhancerFile{
 	}
 	
 	public function getEnhancedDevPhpContent(){
-		if($this->isCore() && $this->fileName()==='PhpFile.php') return $content;
-		$content=preg_replace('/\/\*\s+PROD\s+\*\/.*\/\*\s+\/PROD\s+\*\//Ums','',$this->_phpContent);
-		$content=str_replace('/* DEV */','',str_replace('/* /DEV */','',$content));
+		if($this->isCore() && $this->fileName()==='PhpFile.php') return $this->_phpContent;
+		if(preg_match('/\/\*\s+\/?(PROD|DEV)\s+\*\//',$this->_phpContent,$m))
+			$this->throwException('Use the new Preprocessor now (found '.$m[1].')');
+		$content=$this->preprocessor_devprod($this->_phpContent,true);
 		//$content=$this->optimisePhpPlace($content);
 		return $this->afterEnhancePhpContent($content);
 	}
 	public function getEnhancedProdPhpContent(){
-		$content=preg_replace('/\/\*\s+DEV\s+\*\/.*\/\*\s+\/DEV\s+\*\//Ums','',$this->_phpContent);
-		$content=str_replace('/* PROD */','',str_replace('/* /PROD */','',$content));
+		$content=$this->preprocessor_devprod($this->_phpContent,false);
 		return $this->afterEnhancePhpContent($content);
 	}
 	
@@ -652,3 +656,4 @@ class PhpFile extends EnhancerFile{
 		return $new;
 	}
 }
+PhpFile::init();

@@ -9,11 +9,11 @@ class DBSQLite extends DBSql{
 	}
 	
 	public function connect(){
-		/* DEV */try{ /* /DEV */
+		/*#if DEV */try{ /*#/if*/
 		$this->_connect=new SQLite3($this->_config['file'],$this->_config['flags']);
-		/* DEV */}catch(Exception $e){
+		/*#if DEV */}catch(Exception $e){
 			throw new Exception('Unable to connect: '.$this->_config['file'].' '.$e->getMessage());
-		}/* /DEV */
+		}/*#/if*/
 		/*if(!$this->_connect) throw new DBException('Unable to connect',null);*/
 	}
 	
@@ -44,7 +44,7 @@ class DBSQLite extends DBSql{
 		return $this->_connect->query($query);
 	}
 	
-	public function /* DEV */_/* /DEV */doUpdate($query){
+	public function /*#if DEV then _*/doUpdate($query){
 		return $this->_query($query);
 	}
 	
@@ -65,14 +65,14 @@ class DBSQLite extends DBSql{
 		return $fields;
 	}
 	
-	public function /* DEV */_/* /DEV */doSelectSql($query){
+	public function /*#if DEV then _*/doSelectSql($query){
 		$r=$this->_query($query); $res=array(); $fields=$this->getFieldsSQL($r);
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[]=$row;
 		$r->close();
 		return array('res'=>$res,'fields'=>$fields);
 	}
 	
-	public function /* DEV */_/* /DEV */doSelectSqlCallback($query,$callback,$callbackFields){
+	public function /*#if DEV then _*/doSelectSqlCallback($query,$callback,$callbackFields){
 		$r=$this->_query($query);
 		$callbackFields($this->getFieldsSQL($r));
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $callback($row);
@@ -80,95 +80,95 @@ class DBSQLite extends DBSql{
 	}
 	
 	
-	public function /* DEV */_/* /DEV */doSelectRows($query){
+	public function /*#if DEV then _*/doSelectRows($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[]=$row;
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectRowsCallback($query,$callback){
+	public function /*#if DEV then _*/doSelectRowsCallback($query,$callback){
 		$r=$this->_query($query);
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $callback($row);
 	}
-	public function /* DEV */_/* /DEV */doSelectRows_($query){
+	public function /*#if DEV then _*/doSelectRows_($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[]=$row;
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectRowsCallback_($query,$callback){
+	public function /*#if DEV then _*/doSelectRowsCallback_($query,$callback){
 		$r=$this->_query($query);
 		while($row=$r->fetchArray(SQLITE3_NUM)) $callback($row);
 	}
 	
-	public function /* DEV */_/* /DEV */doSelectRow($query){
+	public function /*#if DEV then _*/doSelectRow($query){
 		// TODO TESTER querySingle($query,true)
 		$r=$this->_query($query);
 		$res=$r->fetchArray(SQLITE3_ASSOC);
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectRow_($query){
+	public function /*#if DEV then _*/doSelectRow_($query){
 		$r=$this->_query($query);
 		$res=$r->fetchArray(SQLITE3_NUM);
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectValues($query,$numCol=0){
+	public function /*#if DEV then _*/doSelectValues($query,$numCol=0){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[]=$row[$numCol];
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectValuesCallback($query,$callback,$numCol=0){
+	public function /*#if DEV then _*/doSelectValuesCallback($query,$callback,$numCol=0){
 		$r=$this->_query($query);
 		while($row=$r->fetchArray(SQLITE3_NUM)) $callback($row[$numCol]);
 	}
-	public function /* DEV */_/* /DEV */doSelectAssocValues($query,$tabResKey){
+	public function /*#if DEV then _*/doSelectAssocValues($query,$tabResKey){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row[0];
 		return $res;
 	}
 	
 	
-	public function /* DEV */_/* /DEV */doSelectValue($query){
+	public function /*#if DEV then _*/doSelectValue($query){
 		//return $this->_connect->querySingle($query);
 		$r=$this->_query($query);
 		if($row=$r->fetchArray(SQLITE3_NUM)) return $row[0];
 		$res=false; return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectExist($query){
+	public function /*#if DEV then _*/doSelectExist($query){
 		$r=$this->_query($query);
 		if($row=$r->fetchArray(SQLITE3_NUM)) $res=true; else $res=false;
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectListRows($query){
+	public function /*#if DEV then _*/doSelectListRows($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_ASSOC)) $res[current($row)]=$row;
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectListRows_($query){
+	public function /*#if DEV then _*/doSelectListRows_($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row;
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectListValue($query){
+	public function /*#if DEV then _*/doSelectListValue($query){
 		$r=$this->_query($query); $res=array();
 		while($row=$r->fetchArray(SQLITE3_NUM)) $res[$row[0]]=$row[1];
 		return $res;
 	}
 	
-	public function /* DEV */_/* /DEV */doSelectObjects($query,$queryObj,$fields){
+	public function /*#if DEV then _*/doSelectObjects($query,$queryObj,$fields){
 		$rows=$this->doSelectRows_($query); $res=array();
 		foreach($rows as $row) $res[]=$queryObj->_createObject($row);
 		return $res;
 	}
-	public function /* DEV */_/* /DEV */doSelectObjectsCallback($query,$queryObj,$fields,$callback){
+	public function /*#if DEV then _*/doSelectObjectsCallback($query,$queryObj,$fields,$callback){
 		$rows=$this->doSelectRows_($query);
 		foreach($rows as $row) $callback($queryObj->_createObject($row));
 	}
-	public function /* DEV */_/* /DEV */doSelectListObjects($query,$queryObj,$fields){
+	public function /*#if DEV then _*/doSelectListObjects($query,$queryObj,$fields){
 		$rows=$this->doSelectRows_($query); $res=array();
 		foreach($rows as $row) $res[$row[0]]=$queryObj->_createObject($row);
 		return $res;
 	}
 	
-	public function /* DEV */_/* /DEV */doSelectAssocObjects($query,$queryObj,$fields,$tabResKey){
+	public function /*#if DEV then _*/doSelectAssocObjects($query,$queryObj,$fields,$tabResKey){
 		$rows=$this->doSelectRows_($query); $res=array();
 		foreach($rows as $row){
 			$obj=$queryObj->_createObject($row);
@@ -177,7 +177,7 @@ class DBSQLite extends DBSql{
 		return $res;
 	}
 	
-	public function /* DEV */_/* /DEV */doSelectObject($query,$queryObj,$fields){
+	public function /*#if DEV then _*/doSelectObject($query,$queryObj,$fields){
 		$row=$this->doSelectRow_($query);
 		if($row) return $queryObj->_createObject($row); 
 		return false;
@@ -212,4 +212,4 @@ class DBSQLite extends DBSql{
 		return $this->doSelectValue("SELECT 1 FROM  sqlite_master WHERE type='table' AND name=".$this->escape($tableName));
 	}
 }
-DBSQLite::$DEFAULT_FLAGS=SQLITE3_OPEN_READWRITE/* DEV */ | SQLITE3_OPEN_CREATE/* /DEV */;
+DBSQLite::$DEFAULT_FLAGS=SQLITE3_OPEN_READWRITE/*#if DEV */ | SQLITE3_OPEN_CREATE/*#/if*/;

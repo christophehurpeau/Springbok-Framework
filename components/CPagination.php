@@ -1,7 +1,7 @@
 <?php
 class CPagination{
 	public static function create($query){
-		/* DEV */throw new Exception('Use QAll()->paginate() now.');/* /DEV */
+		/*#if DEV */throw new Exception('Use QAll()->paginate() now.');/*#/if*/
 		return self::_create($query);
 	}
 	public static function _create($query){
@@ -33,14 +33,14 @@ class CPagination{
 	public function _getQuery(){ return $this->query; }
 	
 	public function execute(){
-		/* HIDE *//* DEV */ try{ /* /DEV *//* /HIDE */
+		/*#if false*//*#if DEV */ try{ /*#/if*//*#/if*/
 		if(!($hFR=$this->query->hasCalcFoundRows())){
 			$count=$this->totalResults=$this->_countQuery();
 			if($count > 0) $this->totalPages=(int)ceil((double)$count / $this->pageSize);
 		}
-		/* HIDE *//* DEV */ }catch(Exception $ex){
+		/*#if false*//*#if DEV */ }catch(Exception $ex){
 			throw new Exception(print_r($this->query,true));
-		} /* /DEV *//* /HIDE */
+		} /*#/if*//*#/if*/
 		if($hFR || $count > 0){
 			if($this->page===1) $down=0;
 			else{

@@ -1,7 +1,7 @@
-/* PROD */
+/*#if PROD*/
 includeCore('libs/jquery-1.9.1-prod');
-/* /PROD */
+/*#/if*/
 
-/* DEV */
+/*#if DEV*/
 includeCore('libs/jquery-1.9.1-dev');
-/* /DEV */
+/*#/if*/

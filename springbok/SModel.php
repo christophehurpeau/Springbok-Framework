@@ -26,11 +26,11 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 	}
 	
 	public function __get($name){
-		/* DEV */
+		/*#if DEV */
 		if(!/*isset($this->data[$name])*/array_key_exists($name,$this->data)){//isset does'nt work if the value is null
 			throw new Exception($name.' IS NOT in the object : '.print_r($this->data,true));
 		}
-		/* /DEV */
+		/*#/if */
 		//$methodName='get'.ucfirst($name);
 		//if(!is_callable(array($this,$methodName)))
 			return $this->data[$name];
@@ -112,7 +112,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 	
 	
 	
-	/* DEV */
+	/*#if DEV */
 	/*
 	public function __call($method,$args){
 		//$reflClass=new ReflectionClass(__CLASS__);
@@ -121,7 +121,7 @@ abstract class SModel implements IteratorAggregate,ArrayAccess,Serializable,Json
 		throw new Exception("Call to undefined method {$method} in class ".get_called_class()
 				."\nKnown methods :".implode(', ',get_class_methods(__CLASS__)));
 	}*/
-	/* /DEV */
+	/*#/if */
 	
 	
 	

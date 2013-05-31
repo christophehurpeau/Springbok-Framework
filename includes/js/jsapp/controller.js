@@ -8,7 +8,7 @@ S.Controller.prototype={
 		if(this.beforeDispatch) this.beforeDispatch();
 		route.sParams.unshift(route.nParams);
 		var m=this.methods[route.action];
-		/* DEV */ if(!m) console.log('This action doesn\'t exists: "'+route.action+'". Known methods: '+Object.keys(this.methods)); /* /DEV */
+		/*#if DEV*/ if(!m) console.log('This action doesn\'t exists: "'+route.action+'". Known methods: '+Object.keys(this.methods)); /*#/if*/
 		if(!m) notFound();
 		m.apply(this,route.sParams);
 	},

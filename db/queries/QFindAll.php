@@ -30,7 +30,7 @@ class QFindAll extends QFind{
 			$callback=$callback2;
 		}elseif(is_string($callback)){
 			$callback=create_function('$m','$m->'.$callback.';');
-			/* DEV */if($callback===false) throw new Exception('Failed to create lambda function : $m->'.$callback.';'); /* /DEV */
+			/*#if DEV */if($callback===false) throw new Exception('Failed to create lambda function : $m->'.$callback.';'); /*#/if*/
 		}
 		$this->_db->doSelectObjectsCallback($sql,$this,$this->queryResultFields,$callback);
 	}

@@ -21,7 +21,7 @@ function prettyBackTrace($skipLength=1,$trace=false){
 	}
 	return $prettyMessage;
 }
-/* DEV */
+/*#if DEV */
 function openLocalFile($file,$line=null){
 	return '<a href="openlocalfile://'.h($file).($line===null?'':'?'.$line).'">';
 }
@@ -84,7 +84,7 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 	if(!defined('STDIN')){
 		$id=uniqid('',true);
 		echo str_pad('<div style="text-align:left;'.($black?'background:#1A1A1A;color:#FCFCFC;border:1px solid #050505':'background:#FFDDAA;color:#333;border:1px solid #E07308').';overflow:auto;padding:1px 2px;position:relative;z-index:999999">'
-			.'<pre style="background:#FFF;color:#222;text-align:left;margin:0;overflow:auto;font:normal 1em \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.$message.'</pre>'
+			.'<pre style="'.($black?'background:#1A1A1A;color:#FCFCFC':'background:#FFF;color:#222').';text-align:left;margin:0;overflow:auto;font:normal 1em \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.$message.'</pre>'
 			.'<div style="margin-top:5px"><a href="javascript:;" style="color:#CA6807;text-decoration:none;font-size:7pt;font-style:italic;" onclick="var el=document.getElementById(\''.$id.'\'); el.style.display=el.style.display==\'none\'?\'block\':\'none\';">Afficher / cacher le backtrace</a></div><div id="'.$id.'" class="backtrace" style="display:none">'
 			.($skipLength!==false?'<pre style="text-align:left;margin:0;overflow:auto;background:#FFFFCE;color:#222;font:normal 9pt \'Ubuntu Mono\',\'UbuntuBeta Mono\',Monaco,Menlo,\'Courier New\',monospace;">'.prettyHtmlBackTrace($skipLength).'</pre>':'')
 			.'</div></div><br />',4096);
@@ -182,9 +182,9 @@ function dev_eval($code){
 	}
 }
 
-/* /DEV */
+/*#/if*/
 
-/* PROD */
+/*#if PROD*/
 function prettyDebug($message,$skipLength=2){}
 function debug($object){}
 function debugNoFlush(){}
@@ -193,20 +193,20 @@ function debugVar($var){}
 function debugVarNoFlush(){}
 function debugPrintr($var){}
 function dev_eval($code){return eval($code);}
-/* /PROD */
+/*#/if*/
 
 function h($data,$double=true){
-	/* PROD */return /* /PROD *//* DEV */$str=/* /DEV */htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);
-	/* DEV */
+	/*#if PROD*/return /*#/if*//*#if DEV */$str=/*#/if*/htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);
+	/*#if DEV */
 	if(!Springbok::$inError && strpos($str,'�')!==false && substr($str,0,8)!=='&lt;?php')
 		throw new Exception('This string has a bad character in it : '.$str);
 	return $str;
-	/* /DEV */
+	/*#/if*/
 }
 function hdecode($string){ return html_entity_decode($string,ENT_QUOTES,'UTF-8'); }
-/* PROD */
+/*#if PROD*/
 function h2($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);}
-/* /PROD */
+/*#/if*/
 function urlenc($string){return urlencode(urlencode($string)); }
 function startsWith($haystack,$needle){ $l=UString::length($needle); return mb_substr($haystack,0,$l)===$needle;}
 function endsWith($haystack,$needle){ $l=UString::length($needle); return mb_strrpos($haystack,$needle)===UString::length($haystack)-$l;}
@@ -227,11 +227,11 @@ function render($file,$vars,$return=false){
 		return ob_get_clean();
 	}else include $file;
 }
-/* PROD */
+/*#if PROD*/
 //backward compatibility
 function notFoundIfFalse($v){if($v===false)notFound();}
 function e/* space */(&$var,$else){ return empty($var) ? $else : $var; }
-/* /PROD */
+/*#/if*/
 
 function displayJson($content){
 	header('Content-type: application/json; charset=UTF-8');

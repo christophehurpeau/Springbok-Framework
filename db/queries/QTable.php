@@ -196,12 +196,12 @@ class QTable extends QFindAll{
 		}else{
 			if($this->autoRelations!==false) foreach($belongsToFields as $field=>$relKey){
 				if(is_string($relKey)){
-					/* DEV */
+					/*#if DEV */
 					//throw new Exception(print_r(array($relKey,'relations'=>$modelName::$_relations),true));
 					if(!isset($modelName::$_relations[$relKey]))
 						throw new Exception($modelName.' does not have a relation named "'.$relKey.'"'."\n"
 									.'Known relations : '.implode(', ',array_keys($modelName::$_relations)));
-					/* /DEV */
+					/*#/if */
 					$relModelName=$modelName::$_relations[$relKey]['modelName'];
 					$displayField=$relModelName::$__displayField;
 					$this->with($relKey,array('fields'=>is_array($displayField) ? array($field=>$relModelName::$__displayField)

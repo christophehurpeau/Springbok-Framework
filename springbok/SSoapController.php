@@ -7,7 +7,7 @@ class SSoapController extends Controller{
 		if($folderName===null) $folderName=CRoute::getController();
 		
 		$wsdlfilename=APP.'views'.self::$suffix.DS.$folderName.DS.$fileName.'.xml';
-		/* PROD */ if(!file_exists($wsdlfilename)): /* /PROD */
+		/*#if PROD*/ if(!file_exists($wsdlfilename)): /*#/if*/
 		$name=substr(get_called_class(),0,-10);
 		self::$uri=HHTml::url('/'.lcfirst($name),true,false);
 		
@@ -28,7 +28,7 @@ class SSoapController extends Controller{
 		}
 		debugVar($wsdlfilename);
 		$wsdl->dump($wsdlfilename);
-		/* PROD */endif;/* /PROD */
+		/*#if PROD*/endif;/*#/if*/
 		
 		header('Content-type: text/xml');
 		echo file_get_contents(APP.'views'.self::$suffix.DS.$folderName.DS.$fileName.'.xml');

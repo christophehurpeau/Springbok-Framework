@@ -12,7 +12,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 			li=$('<li/>');
 			if(S.isStr(v)) li.html(v);
 			else{
-				/* DEV */if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayList]','text is empty',v,key);/* /DEV */
+				/*#if DEV*/if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayList]','text is empty',v,key);/*#/if*/
 				li[escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
 			}
 			result.append(li);

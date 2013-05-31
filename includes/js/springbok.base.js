@@ -1,26 +1,21 @@
 /*! Springbok */
 /*'use strict';*/
-/* PROD */
+/*#if PROD*/
 window.onerror=function handleError(message,url,line){
 	if(url && !(url.indexOf('chrome://')===0 || url.indexOf('http://127.0.0.1')===0))
 		$.get(basedir+'site/jsError',{href:window.location.href,jsurl:url,message:message,line:line});
 	//alert("An error has occurred!\n"+e);
 	//if(console) console.log(e);
 	//console.log(arguments);
-	/* DEV */
+	/*#if DEV*/
 	/*if(console){
 		console.log(arguments,S&&S.StackTrace());
 	}*/
-	/* /DEV */
+	/*#/if*/
 	//return true;
 	return false;
 };
-/* /PROD */
-
-/* DEV */
-
-
-/* /DEV */
+/*#/if*/
 
 if(OLD_IE){
 	//include Core('es5-compat.src');
@@ -167,7 +162,7 @@ UObj.extend(S,{
 	}
 });
 includeCore('base/eltClick');
-/* DEV */includeCore('libs/stacktrace');/* /DEV */
+/*#if DEV*/includeCore('libs/stacktrace');/*#/if*/
 
 RegExp.sEscape=S.regexpEscape;
 
@@ -233,7 +228,7 @@ UObj.extend($.fn,{
 
 
 
-/* DEV */
+/*#if DEV*/
 S.error=function(m){
 	console.error('S.error',m);
 	alert(m);
@@ -260,6 +255,6 @@ S.error=function(m){
 	S.ready(f);
 	$document.bind('springbokAjaxPageLoaded',f);
 })();
-/* /DEV */
+/*#/if*/
 
 

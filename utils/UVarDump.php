@@ -62,10 +62,10 @@ class UVarDump{
 	public function color($content,$color){
 		if($this->html){
 			$str=htmlentities($content,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',true);
-			/* DEV */
+			/*#if DEV */
 			if(!Springbok::$inError && strpos($str,'�')!==false)
 				throw new Exception('This string has a bad character in it : '.$str);
-			/* /DEV */
+			/*#/if */
 			return '<span style="color:#'.$color.';">'.$str.'</span>';
 		}
 		return $content;

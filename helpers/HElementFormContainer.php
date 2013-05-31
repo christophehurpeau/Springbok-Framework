@@ -17,7 +17,7 @@ class HElementFormContainer extends HElement{
 	public function noError(){ $this->error=false; return $this; }
 	
 	public function __toString(){
-		/* DEV */ if(Springbok::$inError) return '[HElementFormContainer]'; /* /DEV */
+		/*#if DEV */ if(Springbok::$inError) return '[HElementFormContainer]'; /*#/if*/
 		if($hasError=$this->error!==false && CValidation::hasError($key=($this->form->modelName === NULL ? $this->contained->name : $this->form->name.'.'.$this->contained->name)))
 			$this->addClass('invalid');
 		return HHtml::tag($this->tagContainer,$this->attributes,

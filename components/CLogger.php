@@ -1,5 +1,5 @@
 <?php
-define('LOGS_PATH',/* DEV */dirname(APP).'/data/logs/'/* /DEV *//* HIDE */./* /HIDE *//* PROD */APP.'logs/'/* /PROD */);
+define('LOGS_PATH',/*#if DEV */dirname(APP).'/data/logs/'/*#/if*//*#if false*/./*#/if*//*#if PROD*/APP.'logs/'/*#/if*/);
 abstract class CLogger{
 	static private $_instances;
  
@@ -43,7 +43,7 @@ class FileLogger extends CLogger{
 }
 class FileLoggerWithScriptName extends FileLogger{
 	protected static function name($name,$ext='log'){
-		return date('Y-m-')./* DEV */(class_exists('Springbok',false)?/* /DEV */Springbok::$prefix/* DEV */:'')/* /DEV */.$name.'.'.$ext;
+		return date('Y-m-')./*#if DEV */(class_exists('Springbok',false)?/*#/if*/Springbok::$prefix/*#if DEV */:'')/*#/if*/.$name.'.'.$ext;
 	}
 }
 

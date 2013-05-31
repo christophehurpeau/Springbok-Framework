@@ -46,7 +46,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 				if(data) t.onSuccess(data);
 			}
 		}else{
-			/* DEV */if(!this.minLength) S.error('minLength=0 with url is not recommanded'); /* /DEV */
+			/*#if DEV*/if(!this.minLength) S.error('minLength=0 with url is not recommanded'); /*#/if*/
 			this.onChange=function(val){
 				if(xhr){ xhr.abort(); xhr=null;}
 				if(currentTimeout) clearTimeout(currentTimeout);
@@ -114,7 +114,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 			li=$('<li/>');
 			if(S.isStr(v)) li.html(v);
 			else{
-				/* DEV */if(!callback && !v[key]) console.warn('[ui/InputSearch:displayList]','text is empty',v,key);/* /DEV */
+				/*#if DEV*/if(!callback && !v[key]) console.warn('[ui/InputSearch:displayList]','text is empty',v,key);/*#/if*/
 				li[t.escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);
 			}
 			result.append(li);

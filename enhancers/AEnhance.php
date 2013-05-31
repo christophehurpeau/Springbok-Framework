@@ -6,6 +6,7 @@ include CORE.'utils/UPhp.php';
 include CORE.'utils/UInflector.php';
 include CORE.'utils/UArray.php';
 
+include __DIR__.'/files/Preprocessor.php';
 global $enhancers;
 $enhancers=array('PhpFile','ConfigFile','ControllerFile','JobFile','DaemonFile','ModelFile','ModuleFile','LocaleFile','ViewFile','MergeTxtFile',
 		'ImgFile','CssFile','ScssFile','StylusFile','JsFile','UselessFile','JsAppFile');

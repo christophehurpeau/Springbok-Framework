@@ -6,6 +6,7 @@ include CORE_SRC.'utils/UEncoding.php';
 include CORE_SRC.'enhancers/AEnhancerFile.php';
 include CORE_SRC.'enhancers/Enhanced.php';
 include CORE_SRC.'enhancers/EnhancedCore.php';
+include CORE_SRC.'enhancers/files/Preprocessor.php';
 include CORE_SRC.'enhancers/files/PhpFile.php';
 include CORE_SRC.'enhancers/files/CssFile.php';
 
@@ -58,7 +59,7 @@ class EnhanceSpringbok{
 			if($prodDir===false) $newProdDir=false;
 			else{ $newProdDir=new Folder($prodDir->getPath().$dirname); $newProdDir->mkdir(0775); }
 
-			if($dirname=='enhancers'||$dirname=='controllers'/*||$dirname=='includes'*/){
+			if($dirname=='enhancers'||$dirname=='controllers'||$dirname==='tests'/*||$dirname=='includes'*/){
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newDevDir);
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newProdDir);
 			}/*elseif(){

@@ -4,7 +4,7 @@ class HTable{
 	private static $tAligns=array('center'=>'center','right'=>'alignRight');
 	
 	public static function table($component,$displayTotalResults=true){
-		/* DEV */if(!($component instanceof CTable)) throw new Exception('Your component must be an instance of CTable'); /* /DEV */
+		/*#if DEV */if(!($component instanceof CTable)) throw new Exception('Your component must be an instance of CTable'); /*#/if*/
 		$component->execute();
 		
 		//if($component->export) return self::export($component);

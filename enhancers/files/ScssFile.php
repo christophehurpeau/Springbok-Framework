@@ -2,6 +2,11 @@
 class ScssFile extends EnhancerFile{
 	public static $CACHE_PATH='scss_8.1';
 	
+	public static function init(){
+		self::$preprocessor=new Preprocessor('scss');
+		ScssFile::findSassPath();
+	}
+	
 	public function loadContent($srcContent){
 		if(!$this->isCore()){
 			if(file_exists($filename=dirname($this->srcFile()->getPath()).'/_mixins.scss'))
@@ -57,7 +62,7 @@ class ScssFile extends EnhancerFile{
 	
 	
 	public function enhanceContent(){
-		$this->_srcContent=$this->hardConfig($this->_srcContent);
+		$this->_srcContent=$this->preprocessor($this->_srcContent);
 		$rules=array(
 			'transition'=>array('-moz-transition','-webkit-transition','-o-transition'),
 			'border-radius'=>array('-moz-border-radius','-webkit-border-radius','-ms-border-radius'),
@@ -142,4 +147,4 @@ class ScssFile extends EnhancerFile{
 		CssFile::afterEnhanceApp($enhanced,$dev,$prod);
 	}
 }
-ScssFile::findSassPath();
+ScssFile::init();

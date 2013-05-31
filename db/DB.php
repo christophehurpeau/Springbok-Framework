@@ -3,8 +3,8 @@ abstract class DB{
 	private static $_INSTANCES=array();
 	
 	private static $_allConfigs;
-	public static function loadConfig(/* DEV */$force=false/* /DEV */){
-		/* DEV */ if($force || !App::$enhancing) /* /DEV */ self::$_allConfigs=Config::$db;
+	public static function loadConfig(/*#if DEV */$force=false/*#/if*/){
+		/*#if DEV */ if($force || !App::$enhancing) /*#/if*/ self::$_allConfigs=Config::$db;
 	}
 	public static function langDir(){
 		return self::$_allConfigs['_lang'];
@@ -14,9 +14,9 @@ abstract class DB{
 	public static function init($configName,$config=false){
 		if(isset(self::$_INSTANCES[$configName])) return self::$_INSTANCES[$configName];
 		if($config===false){
-			/* DEV */
+			/*#if DEV */
 			if(!isset(self::$_allConfigs[$configName])) throw new Exception('DB Config is missing : '.$configName);
-			/* /DEV */
+			/*#/if*/
 			$config=self::$_allConfigs[$configName]+array('prefix'=>'','type'=>'MySQL','host'=>'localhost','port'=>3306);
 		}
 		$className='DB'.$config['type'];
@@ -49,10 +49,10 @@ abstract class DB{
 	public static function setTestEnvironment(){
 		foreach(self::$_allConfigs as $configName=>&$config){
 			if($configName==='_lang') continue;
-			/* DEV */
+			/*#if DEV */
 			if(empty($config['dbname-test'])) $config['dbname-test']=$config['dbname'].'-test';
 			if($config['dbname']===$config['dbname-test']) throw new Exception('DB Config for "'.$configName.'" has the same dbname for test');
-			/* /DEV */
+			/*#/if*/
 			if(!isset($config['dbname-origin'])) $config['dbname-origin']=$config['dbname'];
 			$config['dbname']=$config['dbname-test'];
 		}
@@ -86,7 +86,7 @@ abstract class DB{
 	protected $_name,$_connect,$_config;
 	
 	public function __construct($configName,$config){
-		/* DEV */if(!isset(self::$_INSTANCES[$configName])) self::$_INSTANCES[$configName]=$this;/* /DEV */
+		/*#if DEV */if(!isset(self::$_INSTANCES[$configName])) self::$_INSTANCES[$configName]=$this;/*#/if*/
 		$this->_name=$configName;
 		$this->_config=$config;
 		$this->connect();
@@ -123,10 +123,10 @@ abstract class DB{
 	
 	public function switchToTestEnvironment(){
 		if($this->_name==='_lang') return;
-		/* DEV */
+		/*#if DEV */
 		if(empty($this->_config['dbname-test'])) $this->_config['dbname-test']=$this->_config['dbname'].'-test';
 		if($this->_config['dbname']===$this->_config['dbname-test']) throw new Exception('DB Config for "'.$this->_name.'" has the same dbname for test');
-		/* /DEV */
+		/*#/if*/
 		$this->_config['dbname']=$this->_config['dbname-test'];
 		$this->connect();
 	}
@@ -188,9 +188,9 @@ abstract class DB{
 	/* QUERIES */
 	/*
 	public function &doSelect($query,$params,$methodName,$methodParams=array()){
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true);
-		/* /DEV *//*
+		/*#/if*//*
 		if($params===false) $statement=$this->_connect->query($query);
 		else $statement=$this->_connect->prepare($query);
 		$this->checkStatement($statement,$query,$params);
@@ -199,17 +199,17 @@ abstract class DB{
 			$this->checkErrors($statement,$query,$params);
 		}
 		$result=call_user_func_array(array($statement,$methodName),$methodParams);
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true) - $t;
 		$this->_logQuery(array('query'=>$query,'params'=>$params,'result'=>$result,'time'=>$t));
-		/* /DEV *//*
+		/*#/if*//*
 		return $result;
 	}
 	
 	public function doSelectCallback($query,$params,$callback,$methodParams){
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true);
-		/* /DEV *//*
+		/*#/if*//*
 		if($params===false) $statement=$this->_connect->query($query);
 		else $statement=$this->_connect->prepare($query);
 		$this->checkStatement($statement,$query,$params);
@@ -218,10 +218,10 @@ abstract class DB{
 			$this->checkErrors($statement,$query,$params);
 		}
 
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true) - $t;
 		$this->_logQuery(array('query'=>&$query,'params'=>&$params,'result'=>false,'time'=>&$t));
-		/* /DEV *//*
+		/*#/if*//*
 		
 		while(($result=call_user_func_array(array($statement,'fetch'),$methodParams))!==false){
 			$callback($result);
@@ -230,9 +230,9 @@ abstract class DB{
 	}
 
 	public function &doUpdate($query,$params=false){
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true);
-		/* /DEV *//*
+		/*#/if*//*
 		if($params===false) $statement=$this->_connect->exec($query);
 		else $statement=$this->_connect->prepare($query);
 		$this->checkStatement($statement,$query,$params);
@@ -241,34 +241,34 @@ abstract class DB{
 			$this->checkErrors($statement,$query,$params);
 			if($result) $result=$statement->rowCount();
 		}else $result=$statement;
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true) - $t;
 		$this->_logQuery(array('query'=>$query,'params'=>$params,'result'=>$result,'time'=>$t));
-		/* /DEV *//*
+		/*#/if*//*
 		return $result;
 	}
 	
 	public function &prepareStatement($query,$callback){
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true);
-		/* /DEV *//*
+		/*#/if*//*
 		$statement=$this->_connect->prepare($query);
 		$this->checkStatement($statement,$query,NULL);
 		$result=$callback($statement);
-		/* DEV *//*
+		/*#if DEV *//*
 		$t=microtime(true) - $t;
 		$this->_logQuery(array('query'=>$query,'params'=>false,'result'=>$result,'time'=>$t));
-		/* /DEV *//*
+		/*#/if*//*
 		return $result;
 	}
 */
 	
 	
-	/* DEV */
+	/*#if DEV */
 	public function resetQueries(){}
 	public function getQueries(){ return array(); }
 	public function getNbQueries(){ return 0; }
-	/* /DEV */
+	/*#/if*/
 	
 	public abstract function getDatabases();
 	public abstract function getTables();
