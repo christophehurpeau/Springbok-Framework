@@ -5,6 +5,8 @@ class EnhancedApp extends Enhanced{
 	
 	public function __construct($type,&$dirname){
 		parent::__construct($type,$dirname);
+		if(empty($this->config['config'])) $this->config['config']=array();
+		
 		$appDir=$this->getAppDir();
 		if(file_exists($appDir.'src/config/_.php')) $this->appConfig=include $appDir.'src/config/_.php';
 		//elseif(file_exists($appDir.'src/config/_.json')) $this->appConfig=UFile::getJSON($appDir.'src/config/_.json');

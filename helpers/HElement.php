@@ -8,6 +8,7 @@ abstract class HElement{
 	public function title($title){ $this->attributes['title']=$title; return $this; }
 	public function rel($rel){ $this->attributes['rel']=$rel; return $this; }
 	public function attrClass($class){ $this->attributes['class']=$class; return $this; }
+	public function setClass($class){ $this->attributes['class']=$class; return $this; }
 	public function addClass($class){ $this->attributes['class'].=' '.$class; return $this; }
 	public function style($style){ $this->attributes['style']=$style; return $this; }
 	public function onClick($onClick){ $this->attributes['onclick']=$onClick; return $this; }

@@ -9,12 +9,6 @@ class HHead{
 		self::$head['title']='<title>'.h($title).'</title>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::title()</div>'; /*#/if*/
 	}
-	public static function adaptiveTitle($title){
-		/*#if DEV */ self::testDisplayed(); /*#/if*/
-		self::$head['title']='<title>'.h(UString::length($title) < 25 ? $title.' - '.Config::$projectName : $title).'</title>';
-		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::adaptiveTitle()</div>'; /*#/if*/
-	}
-	
 	public static function favicon($imgUrl='favicon.png'){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		$href=STATIC_URL.'img/'.$imgUrl;

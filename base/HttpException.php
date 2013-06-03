@@ -25,7 +25,10 @@ class FatalHttpException extends HttpException{
 }
 class InternalServerError extends FatalHttpException{
 	public function __construct(){
-		return parent::__construct(500,'Internal Server Error',_tC('http.500'));
+		if(!empty($_SERVER['HTTP_USER_AGENT']) && stripos($_SERVER['HTTP_USER_AGENT'],'bot')===false)
+			parent::__construct(500,'Internal Server Error',_tC('http.500'));
+		else
+			parent::__construct(503,'Service Unavailable',_tC('http.500')); //keep error message 500
 	}
 }
 

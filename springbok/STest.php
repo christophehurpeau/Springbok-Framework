@@ -1,29 +1,36 @@
 <?php
 class TestNavigator extends CHttpClient{
-	private $testClass;
+	private $testClass,$currentUrl;
 	public function __construct($testClass){
 		$this->testClass=$testClass;
 		$this->doNotFollowRedirects();
 		$this->parseHeaders();
 	}
 	
-	public function get($url,$entry='index'){
-		try{ return parent::get($this->_url($url,$entry)); }catch(HttpClientError $e){}
+	public function getCurrentUrl(){
+		return $this->currentUrl;
 	}
-	public function getReal($url,$entry='index'){
-		return $this->get($url[0]==='/' ? '\\'.$url : $url,$entry);
+	
+	public function get($url,$entry='index',$_internal=false){
+		try{ return parent::get($this->_url($url,$entry,$_internal)); }catch(HttpClientError $e){}
 	}
-	public function post($url,$entry='index'){
-		return parent::post($this->_url($url,$entry));
+	public function getReal($url,$entry='index',$_internal=false){
+		$url=$url[0]==='/' ? '\\'.$url : $url;
+		if($_internal===false) $this->currentUrl=$url;
+		return $this->get($url,$entry);
 	}
-	public function ajaxGet($url,$entry='index'){
-		return parent::ajaxGet($this->_url($url,$entry));
+	public function post($url,$entry='index',$_internal=false){
+		return parent::post($this->_url($url,$entry,$_internal));
 	}
-	public function ajaxPost($url,$entry='index'){
-		return parent::ajaxPost($this->_url($url,$entry));
+	public function ajaxGet($url,$entry='index',$_internal=false){
+		return parent::ajaxGet($this->_url($url,$entry,$_internal));
 	}
-	private function _url($url,$entry){
+	public function ajaxPost($url,$entry='index',$_internal=false){
+		return parent::ajaxPost($this->_url($url,$entry,$_internal));
+	}
+	private function _url($url,$entry,$_internal){
 		$url=HHtml::url($url,$entry,true);
+		if($_internal===false) $this->currentUrl=$url;
 		return $url.(strpos($url,'?')===false?'?':'&').'springbokNoEnhance=true&springbokNoDevBar=true';
 	}
 	
@@ -36,7 +43,8 @@ class TestNavigator extends CHttpClient{
 	
 	public function status200(){
 		if($this->getStatus()!==200)
-			throw new Exception($this->getLastUrl().' : '.$this->getStatus());
+			throw new Exception($this->getLastUrl().' : '.$this->getStatus()
+					.($this->getStatus()===301||$this->getStatus()===302?' to '.$this->getHeader('location'):''));
 	}
 	
 	public function checkRedirectPermanent($to,$index=null){
@@ -49,10 +57,9 @@ class TestNavigator extends CHttpClient{
 		$this->parsedHtml=null;
 	}
 	
-	private $parsedHtml,$currentParsedUrl,$metas,$h1;
+	private $parsedHtml,$metas,$h1;
 	public function parseHtml(){
 		include_once CLIBS.'simple_html_dom.php';
-		$this->currentParsedUrl=$this->getLastUrl();
 		$this->metas=null;
 		return $this->parsedHtml=str_get_html($this->getResult());
 	}
@@ -85,7 +92,7 @@ class TestNavigator extends CHttpClient{
 		$parsedHtml=$this->_parseHtml();
 		$links=$parsedHtml->find('head link');
 		foreach($links as $link){
-			$this->getReal($link->href);
+			$this->getReal($link->href,null,true);
 			$this->status200();
 		}
 		$this->parsedHtml=$parsedHtml;
@@ -99,7 +106,7 @@ class TestNavigator extends CHttpClient{
 		$metaTitle=$parsedHtml->find('head title');
 		$this->check($metaTitle,'Meta title tags')->size(1);
 		$metaTitle=$metaTitle[0]; $metaTitleText=hdecode($metaTitle->innertext);
-		$c=$this->check($metaTitleText,'Meta title')->doubleSpace()->minLength(25);
+		$c=$this->check($metaTitleText,'Meta title')->doubleSpace()->minLength(20);
 		if($this->testClass->_mustBePerfect()) $c->maxLength(69);
 		
 		$metaDescription=$parsedHtml->find('head meta[name="description"]');
@@ -240,7 +247,7 @@ class STest{
 	}
 	
 	public function ex($message,$details){
-		throw new SDetailedException($message,0,null,$details.(empty($this->lastNavigator)?'':"\n".'Last URL='.$this->lastNavigator->getLastUrl().' ['.$this->lastNavigator->getStatus().']'));
+		throw new SDetailedException($message.(empty($this->lastNavigator)?'':"\n".'Last URL='.$this->lastNavigator->getCurrentUrl()),0,null,$details);
 	}
 }
 

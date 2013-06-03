@@ -21,4 +21,4 @@ $t=microtime(true) - $t;
 echo "\n";
 if($total===0){ echo 'No tests'; exit(2); }
 else if($totalFailed===0){ echo cliColor('OK',CliColors::green).' '.$total.'/'.$total.' in '.$t.' ms'; exit(0); }
-else{ echo cliColor('FAILED',CliColors::green).' '.($total-$totalFailed).'/'.$total.' in '.$t.' ms'; exit(1); }
+else{ echo cliColor('FAILED',CliColors::lightRed).' '.($total-$totalFailed).'/'.$total.' in '.$t.' ms'; exit(1); }
