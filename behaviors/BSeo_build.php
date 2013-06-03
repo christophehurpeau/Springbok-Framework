@@ -1,5 +1,7 @@
 <?php
 class BSeo_build{
+	public static $beforeSave=array('_normalizeMetas');
+	
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){
 		foreach(array('meta_title','meta_descr','meta_keywords') as $fieldName)
 			if(isset($modelFile->_fields[$fieldName])) throw new Exception($modelFile->_className.' already contains a field "'.$fieldName.'"');

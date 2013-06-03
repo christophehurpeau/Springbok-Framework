@@ -8,7 +8,7 @@ class HElementLink extends HElementWithContent{
 		$this->content='<span class="icon '.h($icon).'"></span>'.$html;
 		$this->contentEscape=false;
 		/*#if DEV */ if(isset($this->attributes['class'])) throw new Exception('specify your attr "class" after calling icon() or iconHtml()'); /*#/if*/
-		$this->attrClass('aicon');
+		$this->setClass('aicon');
 		return $this;
 	}
 	

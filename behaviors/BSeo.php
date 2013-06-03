@@ -10,4 +10,10 @@ trait BSeo{
 		foreach(array('meta_title','meta_descr','meta_keywords') as $metaName)
 			if(empty($this->$metaName)) $this->$metaName=null;
 	}
+	
+	protected function _normalizeMetas(){
+		foreach(array('meta_title','meta_descr','meta_keywords') as $metaName)
+			if(!empty($this->$metaName)) $this->$metaName=preg_replace('/[\t ]+/u',' ',str_replace(' ,',', ',trim($this->$metaName,",; \t\n\r\0\x0B")));
+		return true;
+	}
 }

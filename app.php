@@ -3,6 +3,7 @@
 /*#if PROD*/ini_set('display_errors',0);/*#/if*/
 error_reporting(E_ALL/* | E_STRICT*/);
 
+ob_start();
 include CORE.'springbok.php';
 
 require '_init.php';

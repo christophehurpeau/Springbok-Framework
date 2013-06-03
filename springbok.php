@@ -82,7 +82,11 @@ class Springbok{
 										.' ('.$previousError->getFile().':'.$previousError->getLine().')',0,$exception);
 		}
 		
-		if(!$isHttpException && !headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500); // ????
+		if(!headers_sent())
+			if(!empty($_SERVER['HTTP_USER_AGENT']) && stripos($_SERVER['HTTP_USER_AGENT'],'bot')===false)
+				header('HTTP/1.1 500 Internal Server Error',true,500);
+			else
+				header('HTTP/1.1 503 Service Unavailable',true,503);
 		App::displayException($exception,$forceDefault);
 		exit(1);
 	}
@@ -124,7 +128,11 @@ class Springbok{
 										.' ('.$previousError->getFile().':'.$previousError->getLine().')';
 		}
 		
-		if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error',true,500);
+		if(!headers_sent())
+			if(!empty($_SERVER['HTTP_USER_AGENT']) && stripos($_SERVER['HTTP_USER_AGENT'],'bot')===false)
+				header('HTTP/1.1 500 Internal Server Error',true,500);
+			else
+				header('HTTP/1.1 503 Service Unavailable',true,503);
 		App::displayError($forceDefault,$code, $message, $file, $line,$context);
 		exit(1);
 	}

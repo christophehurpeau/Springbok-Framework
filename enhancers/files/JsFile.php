@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.7',$defaultExtension='js';
+	public static $CACHE_PATH='js_8.7.2',$defaultExtension='js';
 
 	public static function init(){
 		self::$preprocessor=new Preprocessor('js');
@@ -26,7 +26,7 @@ class JsFile extends EnhancerFile{
 		$srcContent=self::includes($srcContent,dirname($this->srcFile()->getPath()),$this->enhanced->getAppDir(),$this->includes,$this->enhanced);
 		//$srcContent=str_replace('coreDeclareApp();','S.app=new App('.json_encode(self::$APP_CONFIG['projectName']).','.time().');',$srcContent);
 		
-		$this->devProdDiff= (strpos($srcContent,'/*#if DEV */')!==false);
+		$this->devProdDiff= preg_match('~/\*\#if(then)?\s+(\!\s*)?(DEV|PROD)~',$srcContent);
 		
 		$this->_srcContent=$srcContent;
 		//if($this->fileName()==='jsapp.js') debug($srcContent);

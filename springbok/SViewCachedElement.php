@@ -27,7 +27,6 @@ class SViewCachedElement extends SViewElement{
 		try{
 			$this->_file=UFile::open($this->path.'view','rb');
 		}catch(ErrorException $e){
-			parent::__construct($vars);
 			$this->generateAll(false);
 		}
 		$this->_file->lockShared();
@@ -59,11 +58,22 @@ class SViewCachedElement extends SViewElement{
 		return $this->read($view);
 	}
 	public function incl($view='view',$vars=array()){
-		return render($this->path.$view,$vars,true);
+		try{
+			return render($this->path.$view,$vars,true);
+		}catch(ErrorException $e){ //try again (if cache is currently removed, can occur)
+			$this->generateAll(false);
+			return render($this->path.$view,$vars,true);
+		}
 	}
 	
 	protected function read($view){
-		return $view==='view' ? $this->_file->read() : file_get_contents($this->path.$view);
+		if($view==='view') return $this->_file->read();
+		try{
+			return file_get_contents($this->path.$view);
+		}catch(ErrorException $e){ //try again (if cache is currently removed, can occur)
+			$this->generateAll(false);
+			return file_get_contents($this->path.$view);
+		}
 	}
 	protected function write($view,$content){
 		return $view==='view' ? $this->_file->write($content) : file_put_contents($this->path.$view,$content);

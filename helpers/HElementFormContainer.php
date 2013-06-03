@@ -6,7 +6,7 @@ class HElementFormContainer extends HElement{
 	public function __construct($form,$contained,$defaultClass){
 		$this->form=$form; $this->contained=$contained;
 		$this->tagContainer=$this->form->getTagContainer();
-		$this->attrClass($defaultClass);
+		$this->setClass($defaultClass);
 	}
 	
 	public function tagContainer($tagContainer){ $this->tagContainer=$tagContainer; return $this; }
