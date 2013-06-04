@@ -16,63 +16,63 @@ S.dates={
 	},
 	niceDate:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDateNice(date);
 	},
 	shortDate:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDateShort(date);
 	},
 	compactDate:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDateCompact(date);
 	},
 	simpleDate:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDateSimple(date);
 	},
 	completeDate:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDateComplete(date);
 	},
 	
 	simpleTime:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatTimeSimple(date);
 	},
 	niceDateTime:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDatetimeNice(date);
 	},
 	compactDateTime:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDatetimeCompact(date);
 	},
 	simpleDateTime:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDatetimeSimple(date);
 	},
 	
 	completeDateTime:function(date){
 		if(!date) date=new Date();
-		else if(S.isStr(date)) date=this.parseStringDate(date);
+		else if(S.isString(date)) date=this.parseStringDate(date);
 		else if(parseInt(date) === date) date=new Date(date);
 		return S.i18n.formatDatetimeComplete(date);
 	}

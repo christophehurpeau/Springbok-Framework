@@ -75,7 +75,7 @@ include CORE.'cli.php';");
 		
 		if(file_exists($filename=$projectPath.'web'.DS.'js'.DS.'global.js')){
 			$jsFile=file($filename);
-			$line0="var basedir='".$deployment->base_url."',webdir=basedir+'web/',imgdir=webdir+'img/',jsdir=webdir+'js/';\n";
+			$line0="var baseUrl='".$deployment->base_url."',webdir=baseUrl+'web/',imgdir=webdir+'img/',jsdir=webdir+'js/';\n";
 			if($jsFile[0]!=$line0){
 				$jsFile[0]=$line0;
 				file_put_contents($filename,implode('',$jsFile));

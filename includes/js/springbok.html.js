@@ -1,5 +1,5 @@
 S.html={
-	baseurl:basedir.substr(0,basedir.length-1),
+	baseUrl:baseUrl.substr(0,baseUrl.length-1),
 	link:function(title,url,options){
 		options=UObj.extend({escape:true},options);
 		
@@ -15,7 +15,7 @@ S.html={
 		
 		if(options.current !== undefined){
 			if(options.current===1) current=true;
-			else if(options.current && url!==false && url !==this.baseurl) current=url.startsWith(window.location.pathname);
+			else if(options.current && url!==false && url !==this.baseUrl) current=url.startsWith(window.location.pathname);
 			else current=url===window.location.pathname;
 			
 			delete options.current;
@@ -57,16 +57,16 @@ S.html={
 	* S.html.url(['/:id-:slug',post.id,post.slug,{'target':'_blank','?':'page=2'}])
 	*/
 	url:function(url,full){
-		if(S.isStr(url) || !url){
+		if(S.isString(url) || !url){
 			if(url) url=url.trim();
-			if(!url || url==='/') return (full || '') + this.baseurl + '/';
+			if(!url || url==='/') return (full || '') + this.baseUrl + '/';
 			else{
 				if(url.contains('://')) return url;
 				if(url.startsWith('\\/')) return url.substr(1);
-				if(url.substr(0,1)==='/') return (full || '') + this.baseurl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
+				if(url.substr(0,1)==='/') return (full || '') + this.baseUrl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
 			}
 		}else{
-			return (full || '') + this.baseurl + (S.router ? S.router.getArrayLink(url) : url);
+			return (full || '') + this.baseUrl + (S.router ? S.router.getArrayLink(url) : url);
 		}
 	}
 };

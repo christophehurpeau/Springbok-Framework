@@ -243,7 +243,7 @@ $.fn.ajaxCSInputAutocomplete=function(url,options,redirect){
 
 
 $.fn.toggleLink=function(dest){
-	if(S.isStr(dest)) dest=$(dest);
+	if(S.isString(dest)) dest=$(dest);
 	var t=this.css({padding:'8px 0 8px 20px',position:'relative',backgroundColor:'transparent'}),icon=$('<span class="ui-icon ui-icon-triangle-1-e"/>').css({position:'absolute',top:'50%',marginTop:'-8px',left:'2px'});
 	this.find('a').css('outline','none');
 	t.prepend(icon)

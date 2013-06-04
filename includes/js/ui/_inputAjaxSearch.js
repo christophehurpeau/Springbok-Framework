@@ -112,7 +112,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		callback=callback||t.displayLi;
 		$.each(data,function(i,v){
 			li=$('<li/>');
-			if(S.isStr(v)) li.html(v);
+			if(S.isString(v)) li.html(v);
 			else{
 				/*#if DEV*/if(!callback && !v[key]) console.warn('[ui/InputSearch:displayList]','text is empty',v,key);/*#/if*/
 				li[t.escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);

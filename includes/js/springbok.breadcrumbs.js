@@ -6,7 +6,7 @@
 		links && links.forEach(function(l){
 			b.append(separator);
 			span=$('<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"/>').appendTo(b);
-			if(/*$.type(i)==='number'*/S.isStr(l)) $('<span/>').text(l).appendTo(span);
+			if(/*$.type(i)==='number'*/S.isString(l)) $('<span/>').text(l).appendTo(span);
 			else{
 				span.append($('<a/>').attr(linkoptions).attr('href',l.url).html($('<span itemprop="title"/>').text(l._title)));
 			}

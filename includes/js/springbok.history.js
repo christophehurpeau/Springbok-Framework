@@ -7,7 +7,7 @@
 		start:function(){
 			if (historyStarted) throw new Error("history has already been started");
 			historyStarted = true;
-			this.options=UObj.extend({root:basedir.substr(1)},this.options);
+			this.options=UObj.extend({root:baseUrl.substr(1)},this.options);
 			this._wantsPushState= !!this.options.pushState;
 			this._hasPushState= !!(this.options.pushState && window.history && window.history.pushState);
 			var fragment=this.getFragment(),docMode=document.documentMode,oldIE=(isIE.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
@@ -39,7 +39,7 @@
 			// in a browser where it could be `pushState`-based instead...
 			} else */if (this._wantsPushState && this._hasPushState && (hash=this.getHash())) {
 				this.fragment = hash.replace(routeStripper, '');
-				window.history.replaceState({fragment:this.fragment},document.title,loc.protocol + '//' + loc.host + basedir + this.fragment);
+				window.history.replaceState({fragment:this.fragment},document.title,loc.protocol + '//' + loc.host + baseUrl + this.fragment);
 				return false;
 			}
 			return this._hasPushState || fragment===''?true:false;
@@ -58,7 +58,7 @@
 					///if(fragment.indexOf(this.options.root) == 0) fragment = fragment.substr(this.options.root.length);
 				}else fragment=this.getHash();
 			}
-			if(fragment.startsWith(basedir)) fragment=fragment.substr(basedir.length);
+			if(fragment.startsWith(baseUrl)) fragment=fragment.substr(baseUrl.length);
 			else if(fragment.startsWith(this.options.root)) fragment=fragment.substr(this.options.root.length);
 			return fragment.replace(routeStripper,'');
 		},
@@ -75,7 +75,7 @@
 		
 		// Attempt to load the current URL fragment.
 		loadUrl:function(fragmentOverride,state){
-			var fragment = basedir+( this.fragment = this.getFragment(fragmentOverride));
+			var fragment = baseUrl+( this.fragment = this.getFragment(fragmentOverride));
 			if(fragment){
 				var a=$('a[href="'+fragment+'"]');
 				a.length===0 ? S.redirect(fragment) : a.click();
@@ -88,15 +88,15 @@
 			if(this.fragment == frag) return;
 			if(window._gaq) _gaq.push(['_trackPageview',frag]);
 			
-			if(frag.startsWith(basedir)) frag=frag.substr(basedir.length);
+			if(frag.startsWith(baseUrl)) frag=frag.substr(baseUrl.length);
 			else if(frag.startsWith(this.options.root)) frag=frag.substr(this.options.root.length);
 			if(this.fragment == frag) return;
 			
 			this.fragment=frag;
 			if(this._hasPushState){
-				//if(console && console.log) console.log('push: '+loc.protocol + '//' + loc.host + basedir+frag);
+				//if(console && console.log) console.log('push: '+loc.protocol + '//' + loc.host + baseUrl+frag);
 				//var title=document.title;
-				window.history[replace?'replaceState':'pushState']({},document.title, loc.protocol+'//'+loc.host + basedir+frag);
+				window.history[replace?'replaceState':'pushState']({},document.title, loc.protocol+'//'+loc.host + baseUrl+frag);
 			}else{
 				this._updateHash(loc,frag,replace);
 				if(this.iframe && (frag != this.getFragment(this.iframe.location.hash))){
