@@ -37,22 +37,21 @@ class CGeo{
 	 * @return an array containing the minimum and maximum latitude and longitude which define the
 	 * bounding coordinates.
 	 */
-	CONST EARTH_RADIUS=6371;
+	const EARTH_RADIUS=6371;
 		
-	public static function boundingCoordinates($point, $distance){
-		if(!isset($point['lat'])||!isset($point['lon'])||$distance < 0)throw new InvalidArgumentException();
-		
-		$_minLat=-pi()*0.5;
-		$_maxLat=pi()*0.5;
-		$_minLon=-pi();
-		$_maxLon=pi();
+	public static function boundingCoordinates($latitude, $longitude, $distance){
+		$pi = pi();
+		$_minLat=-$pi*0.5;
+		$_maxLat=$pi*0.5;
+		$_minLon=-$pi;
+		$_maxLon=$pi;
 		
 		// angular distance in radians on a great circle
-		$radDist = $distance / self::EARTH_RADIUS;
+		$radDist = $distance / CGeo::EARTH_RADIUS;
 		
 		/*  latitude & longitude in radians*/
-		$radLat= deg2rad($point['lat']);/* = $point['lat']* pi() / 180 */
-		$radLon= deg2rad($point['lon']);
+		$radLat= deg2rad($latitude);/* = $point['lat']* pi() / 180 */
+		$radLon= deg2rad($longitude);
 		
 		$minLat = $radLat - $radDist;
 		$maxLat = $radLat + $radDist;
@@ -62,10 +61,10 @@ class CGeo{
 			$deltaLon =  asin(sin($radDist) / cos($radLat));
 			$minLon = $radLon - $deltaLon;
 			if ($minLon < $_minLon)
-				$minLon += 2 * pi();
+				$minLon += 2 * $pi;
 			$maxLon = $radLon + $deltaLon;
 			if ($maxLon > $_maxLon)
-				$maxLon -= 2 * pi();
+				$maxLon -= 2 * $pi;
 		}
 		else {
 			// a pole is within the distance
