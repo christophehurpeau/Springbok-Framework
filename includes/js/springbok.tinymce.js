@@ -18,7 +18,7 @@ S.tinymce={
 			skin:'o2k7',skin_variant:'black',
 			
 			theme_advanced_toolbar_location:'top', theme_advanced_toolbar_align:'left', theme_advanced_statusbar_location:'bottom',//  theme_advanced_resizing:false,
-			document_base_url:basedir,
+			document_base_url:baseUrl,
 			width:w, height:h,
 			
 			font_size_style_values:"7pt,8pt,9pt,10pt,11pt,12pt,14pt,18pt,24pt,36pt",

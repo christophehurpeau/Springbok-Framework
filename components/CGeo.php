@@ -22,4 +22,60 @@ class CGeo{
 	public static function mysqlDistanceCoord($lat1,$long1,$lat2='c.latitude',$long2='c.longitude'){
 		return 'POW(('.$lat2.'-'.$lat1.'),2 )+POW(('.$long2.'-'.$long1.'),2)';
 	}
+	
+	/**
+	 * Computes the bounding coordinates of all points on the surface
+	 * of a sphere that have a great circle distance to the point represented
+	 * by the latitude and longitude parameters that is less or equal to the distance
+	 * argument.
+	 * For more information about the formulae used in this method visit
+	 * http://JanMatuschek.de/LatitudeLongitudeBoundingCoordinates
+	 *
+	 * @param latitude latitude in degrees
+	 * @param longitude longitude in degrees
+	 * @param distance the distance in Km from the point represented by the two previous arguments
+	 * @return an array containing the minimum and maximum latitude and longitude which define the
+	 * bounding coordinates.
+	 */
+	const EARTH_RADIUS=6371;
+		
+	public static function boundingCoordinates($latitude, $longitude, $distance){
+		$pi = pi();
+		$_minLat=-$pi*0.5;
+		$_maxLat=$pi*0.5;
+		$_minLon=-$pi;
+		$_maxLon=$pi;
+		
+		// angular distance in radians on a great circle
+		$radDist = $distance / CGeo::EARTH_RADIUS;
+		
+		/*  latitude & longitude in radians*/
+		$radLat= deg2rad($latitude);/* = $point['lat']* pi() / 180 */
+		$radLon= deg2rad($longitude);
+		
+		$minLat = $radLat - $radDist;
+		$maxLat = $radLat + $radDist;
+		
+		//double minLon, maxLon;
+		if ($minLat > $_minLat && $maxLat < $_maxLat) {
+			$deltaLon =  asin(sin($radDist) / cos($radLat));
+			$minLon = $radLon - $deltaLon;
+			if ($minLon < $_minLon)
+				$minLon += 2 * $pi;
+			$maxLon = $radLon + $deltaLon;
+			if ($maxLon > $_maxLon)
+				$maxLon -= 2 * $pi;
+		}
+		else {
+			// a pole is within the distance
+			$minLat = max($minLat, $_minLat);
+			$maxLat = min($maxLat, $_maxLat);
+			$minLon = $_minLon;
+			$maxLon = $_maxLon;
+		}
+		return array(	'minLat'=>rad2deg($minLat),
+						'maxLat'=>rad2deg($maxLat),
+						'minLon'=>rad2deg($minLon),
+						'maxLon'=>rad2deg($maxLon));
+	}
 }

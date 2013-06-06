@@ -43,7 +43,7 @@ S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"
 				jQuery.ajax({
 					type:type,
 					headers:headers,
-					url:basedir+'api/'+url,
+					url:baseUrl+'api/'+url,
 					data:data,
 					success:function(r){ callback(r); },
 					error:function(jqXHR, textStatus, errorThrown){
@@ -98,7 +98,7 @@ includeCore('springbok.ajax');
 includeCore('springbok.storage');
 
 App.load=S.ajax.load=function(url){
-	if(url.startsWith(basedir)) url = url.substr(basedir.length);
+	if(url.startsWith(baseUrl)) url = url.substr(baseUrl.length);
 	try{
 		var route=S.router.find(url);
 		if(!route) notFound();

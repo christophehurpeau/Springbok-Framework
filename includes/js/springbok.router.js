@@ -93,7 +93,7 @@
 		},
 		
 		getLink:function(url){
-			return S.isStr(url) ? this.getStringLink(url) : this.getArrayLink(url);
+			return S.isString(url) ? this.getStringLink(url) : this.getArrayLink(url);
 		},
 		
 		/* Exemples :

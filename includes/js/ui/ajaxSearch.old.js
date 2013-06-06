@@ -4,13 +4,13 @@ includeCore('libs/jquery-ui-1.9.2.position');
 (function(){
 	var defaultDisplayList=function(data,ulAttrs,callback,escape){
 		var li,result=$('<ul>').attr(ulAttrs),key='text';
-		if( callback && S.isStr(callback) ){
+		if( callback && S.isString(callback) ){
 			key=callback;
 			callback=undefined;
 		}
 		$.each(data,function(i,v){
 			li=$('<li/>');
-			if(S.isStr(v)) li.html(v);
+			if(S.isString(v)) li.html(v);
 			else{
 				/*#if DEV*/if(!callback && !v[key]) console.warn('[ui/ajaxSearch:displayList]','text is empty',v,key);/*#/if*/
 				li[escape===false?'html':'text'](callback ? callback(v,i): v.url ? $('<a/>').attr('href',v.url).text(v[key]) : v[key]).data('item',v);

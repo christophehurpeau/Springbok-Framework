@@ -3,7 +3,7 @@ S.HElt.prototype={
 	attrs:function(attrs){this.elt.attr(attrs); return this; },
 	attr:function(attrName,value){this.elt.attr(attrName,value); return this; },
 	id:function(value){this.elt.attr('id',value); return this; },
-	attrClass:function(value){ this.attr('class',value); return this; },
+	setClass:function(value){ this.attr('class',value); return this; },
 	addClass:function(value){this.elt.addClass(value); return this; },
 	rmClass:function(value){this.elt.removeClass(value); return this; },
 	style:function(value){this.attr('style',value); return this; },
