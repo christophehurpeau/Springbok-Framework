@@ -56,7 +56,7 @@ class HMeta{
 	}
 	
 	public static function viewport(){
-		HHead::metaName('viewport','target-densitydpi=device-dpi, width=device-width, initial-scale=1');
+		HHead::metaName('viewport','width=device-width, initial-scale=1');
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::viewport()</div>'; /*#/if*/
 	}
 	
