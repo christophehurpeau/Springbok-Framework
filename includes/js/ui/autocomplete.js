@@ -2,7 +2,7 @@ includeCore('ui/_inputAjaxSearch');
 includeCore('ui/inputbox');
 
 S.ui.Autocomplete=S.ui.InputSearch.extend({
-	navigate:false,
+	writable:{ navigate:false, },
 	ctor:function(input,url,options){
 		var t=this;
 		S.ui.InputBox.call(t,input,'sAutocomplete');
@@ -11,7 +11,7 @@ S.ui.Autocomplete=S.ui.InputSearch.extend({
 		
 		t.div.on('click','li',t.select ? function(){ t.select.call(t,$(this)); t.hideDiv().empty(); }
 							 : function(){ input.val($(this).text()).change(); t.hideDiv().empty(); });
-		t.div.on('hover','li',function(){ t.div.find('li.current').removeClass('current'); });
+		t.div.on('mouseenter','li',function(){ t.div.find('li.current').removeClass('current'); });
 	},
 	createDiv:function(){ return $('<div class="divAutocomplete divInputBox widget hidden"/>'); },
 	divFindLi:function(selector){
@@ -61,7 +61,7 @@ S.ui.Autocomplete=S.ui.InputSearch.extend({
 	}
 });
 
-UObj.union(S.ui.Autocomplete.prototype,S.ui.InputBox._inheritsproto_);
+S.mixin(S.ui.Autocomplete,S.ui.InputBox);
 
 $.fn.sAutocomplete=function(url,options,displayResult){ return new S.ui.Autocomplete(this,url,options,displayResult); };
 if(includedCore('helpers/HEltFInput')) S.HEltFInput.prototype.autocomplete=function(url,options,displayResult){

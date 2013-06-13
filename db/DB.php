@@ -75,7 +75,7 @@ abstract class DB{
 			//$instance->close();
 			$instance->connect();
 		}
-    }
+	}
 	public static function resetAllQueries(){
 		foreach(self::$_INSTANCES as $instance) $instance->resetQueries();
 	}

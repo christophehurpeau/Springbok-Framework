@@ -2,8 +2,8 @@
 include_once __DIR__.DS.'AQuery.php';
 /**
  * INSERT [LOW_PRIORITY | DELAYED] [IGNORE]
-    [INTO] tbl_name [(col_name,...)]
-    SELECT ...
+	[INTO] tbl_name [(col_name,...)]
+	SELECT ...
  */
 class QInsertSelect extends AQuery{
 	private $start='INSERT',$query,$cols=false,$createdField;

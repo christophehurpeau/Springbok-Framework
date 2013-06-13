@@ -477,7 +477,7 @@ class PhpFile extends EnhancerFile{
 				if($withVarAnnotation!==false) $multiple? $annotations['var'][]=substr($pname,4) : $annotations['var']=substr($pname,4);
 				continue;
 			}
-			eval('$eval='.(empty($matches[2][$key]) ? 'false': "array(".$matches[2][$key].")").';');
+			eval('$eval='.(!isset($matches[2][$key])||$matches[2][$key]==='' ? 'false': "array(".$matches[2][$key].")").';');
 			if(!isset($eval))
 				throw new Exception('Error eval : '.$matches[2][$key]);
 			$multiple? $annotations[$pname][]=$eval : $annotations[$pname]=$eval;

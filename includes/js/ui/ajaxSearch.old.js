@@ -130,7 +130,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				};
 			divResult.on('click','li',options.select ? function(){ options.select.call(this,input); hideDivResult().empty(); }
 								 : function(){ input.val($(this).text()).change(); hideDivResult().empty(); });
-			divResult.on('hover','li',function(){
+			divResult.on('mouseenter','li',function(){
 				divResult.find('li.current').removeClass('current');
 			});
 			options=UObj.extend({

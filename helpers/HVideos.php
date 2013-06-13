@@ -13,7 +13,7 @@ class HVideos{
 		if($jsapiEnable) $url.='&enablejsapi=1&playerapiid='.$options['id'];
 
 		return self::videoObject($url, $options);
-    }
+	}
 
 	public static function dailymotion($id,$options=array()){
 		$url='http://www.dailymotion.com/swf/'.$id;

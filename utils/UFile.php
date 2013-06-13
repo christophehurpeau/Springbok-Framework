@@ -211,7 +211,7 @@ class Folder extends AFile{
 	public function listAll(){
 		/*foreach (new DirectoryIterator('../moodle') as $fileInfo) {
 		if($fileInfo->isDot()) continue;
-	    echo $fileInfo->getFilename() . "<br>\n";
+		echo $fileInfo->getFilename() . "<br>\n";
 		}*/
 		if($dir=opendir($this->name)){
 			$files=array();

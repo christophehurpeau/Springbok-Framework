@@ -3,18 +3,18 @@ define('LOGS_PATH',/*#if DEV */dirname(APP).'/data/logs/'/*#/if*//*#if false*/./
 abstract class CLogger{
 	static private $_instances;
  
-    abstract function log($message = '');
+	abstract function log($message = '');
  
-    /**
-     *
-     * @param string $name
-     * @param string $type
-     * @return Logger
-     */
-    static public function get($name,$type='FileLoggerWithScriptName'){
-        if(isset(self::$_instances[$name])) return self::$_instances[$name];
-        return self::$_instances[$name]=new $type($name);
-    }
+	/**
+	 *
+	 * @param string $name
+	 * @param string $type
+	 * @return Logger
+	 */
+	static public function get($name,$type='FileLoggerWithScriptName'){
+		if(isset(self::$_instances[$name])) return self::$_instances[$name];
+		return self::$_instances[$name]=new $type($name);
+	}
 }
 
 class FileLogger extends CLogger{
@@ -63,12 +63,12 @@ class SqliteLogger extends CLogger{
 	
 	public function log($message = ''){
 		$q = sprintf('INSERT INTO logs (created, ident, priority, message) ' .
-                     "VALUES ('%s', '%s', %d, '%s')",
-                     $this->_table,
-                     strftime('%Y-%m-%d %H:%M:%S', time()),
-                     sqlite_escape_string($this->_ident),
-                     $priority,
-                     sqlite_escape_string($message));
+					 "VALUES ('%s', '%s', %d, '%s')",
+					 $this->_table,
+					 strftime('%Y-%m-%d %H:%M:%S', time()),
+					 sqlite_escape_string($this->_ident),
+					 $priority,
+					 sqlite_escape_string($message));
 		$columns=array(
 			'created'=>array('type'=>'datetime','notnull'=>true,'unique'=>false,'default'=>false),
 			'c'=>array('type'=>'TEXT','notnull'=>true,'unique'=>false,'default'=>'"a"'),
@@ -76,6 +76,6 @@ class SqliteLogger extends CLogger{
 		);
 		if(!$db->tableExist('t')) $db->doUpdate('CREATE TABLE logs( created DATETIME, c TEXT, t t');
 		
-        return sqlite_unbuffered_query($this->_db, $q);
+		return sqlite_unbuffered_query($this->_db, $q);
 	}
 }

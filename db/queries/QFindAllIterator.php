@@ -47,8 +47,8 @@ class QFindAllIterator implements Iterator{
 
 /*
  * while($iterator->valid()) {
-    echo $iterator->key() . ' => ' . $iterator->current() . "\n";
+	echo $iterator->key() . ' => ' . $iterator->current() . "\n";
 
-    $iterator->next();
+	$iterator->next();
 }
  */

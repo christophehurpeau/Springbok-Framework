@@ -63,8 +63,8 @@ class CSecure{
 		return self::$_user;
 	}
 	
-    public static function isAdmin(){ return static::user()->isAdmin(); }
-    
+	public static function isAdmin(){ return static::user()->isAdmin(); }
+	
 	public static function checkAccess($params=null){
 		if(!static::connect(false)){
 			if(($auth=static::config('auth'))===''){

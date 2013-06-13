@@ -163,7 +163,7 @@ class Model implements Iterator{
 		$this->_afterUpdate($data);
 		return true;	
 	}
-    
+	
 	public function updateOrInsert(){
 		if(!$this->beforeSave()) return false;
 		$data=$this->_getSaveData(func_get_args());
@@ -338,19 +338,19 @@ class Model implements Iterator{
 	}
 	
 	public static function __callStatic($method, $params){
-        if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exist)(\w+)?By(\w+)$/',$method,$matches))
-            throw new \Exception("Call to undefined method {$method}");
+		if (!preg_match('/^(findOne|findAll|findValues|findValue|findListAll|findListName|deleteOne|deleteAll|exist)(\w+)?By(\w+)$/',$method,$matches))
+			throw new \Exception("Call to undefined method {$method}");
  
  		$className='Q'.ucfirst($matches[1]);
-        $query = new $className(static::$__className);
+		$query = new $className(static::$__className);
 		if(!empty($matches[2])){
 			$fields=explode('And',$matches[2]);
 			$fields=array_map('lcfirst',$fields);
 			$query->setFields($fields);
 		}
 		$query->by($matches[3],$params);
-        return $query->execute();
-    }
+		return $query->execute();
+	}
 	
 	
 	/* Iterator */

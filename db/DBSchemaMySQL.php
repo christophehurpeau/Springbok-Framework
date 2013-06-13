@@ -148,6 +148,7 @@ class DBSchemaMySQL extends DBSchema{
 			.($col['notnull']?' NOT NULL':'')
 			.($col['autoincrement']?($aiPk?' PRIMARY KEY':'').' AUTO_INCREMENT':'')
 			.($col['default']?' DEFAULT '.(is_numeric($col['default']) || $col['default']==='CURRENT_TIMESTAMP'?$col['default']:'"'.trim($col['default'],'"').'"'):'')
+			.($col['default']===0?' DEFAULT 0':'')
 			.($col['comment']?' COMMENT "'.$col['comment'].'"':'');
 	}
 	
@@ -208,8 +209,12 @@ class DBSchemaMySQL extends DBSchema{
 		return strtolower($column['type']) != strtolower($modelInfo['type'])
 			|| !($column['Collation']===null || $column['Collation'] === 'utf8_general_ci' )
 			|| ((bool)$column['notnull']) != ((bool)$modelInfo['notnull'])
-			|| (!( (!$modelInfo['default'] && empty($column['default'])) ||
-				$column['default']===$modelInfo['default'] || ($column['default']!==null && ((string)$column['default']) === trim((string)$modelInfo['default'],'"'))))
+			|| ($modelInfo['default']===0 && $column['default']!=='0')
+			|| ($modelInfo['default']!==0 && !(
+					(!$modelInfo['default'] && empty($column['default'])) ||
+					$column['default']===$modelInfo['default'] ||
+					($column['default']!==null && ((string)$column['default']) === trim((string)$modelInfo['default'],'"'))
+				))
 			|| ((bool)$column['autoincrement']) != ((bool)$modelInfo['autoincrement'])
 			|| (!( (!$modelInfo['comment'] && empty($column['comment'])) ||
 				$column['comment']===$modelInfo['comment'] || ($column['comment']!==null && ((string)$column['comment']) === trim((string)$modelInfo['comment'],'"'))))
