@@ -60,9 +60,9 @@ class CWebSocket extends CSocket{
 	
 	private function getHeaders($req){
 		$r=$h=$o=$sk1=$sk2=$l8b=null;
-		if(preg_match("/GET (.*) HTTP/"		       ,$req,$match)) $r=$match[1];
-		if(preg_match("/Host: (.*)\r\n/"		      ,$req,$match)) $h=$match[1];
-		if(preg_match("/Origin: (.*)\r\n/"		    ,$req,$match)) $o=$match[1];
+		if(preg_match("/GET (.*) HTTP/"			   ,$req,$match)) $r=$match[1];
+		if(preg_match("/Host: (.*)\r\n/"			  ,$req,$match)) $h=$match[1];
+		if(preg_match("/Origin: (.*)\r\n/"			,$req,$match)) $o=$match[1];
 		if(preg_match("/Sec-WebSocket-Key1: (.*)\r\n/",$req,$match)) $this->log("Sec Key1: ".$sk1=$match[1]);
 		if(preg_match("/Sec-WebSocket-Key2: (.*)\r\n/",$req,$match)) $this->log("Sec Key2: ".$sk2=$match[1]);
 		if($match=substr($req,-8)) $this->log("Last 8 bytes: ".$l8b=$match);

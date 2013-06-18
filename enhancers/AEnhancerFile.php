@@ -157,7 +157,7 @@ abstract class EnhancerFile{
 	public static function removeWS_B_E($content){
 		// remove WS at beginning of file
 		$content=preg_replace('/^\s+/','',$content);
-    	// remove WS and at end of file
+		// remove WS and at end of file
 		$content=preg_replace('/\s+$/','',$content);
 		return $content;
 	}

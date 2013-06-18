@@ -3,7 +3,7 @@ includeCore('ui/validation');
 
 (function(){
 	var inputListHandler=S.ui.Autocomplete.extend({
-		minLength:0,
+		writable:{ minLength:0, },
 		select:function(li){ this.input.val(li.text()); this.inputValue.val($(li.data('item')).attr('data-key')); console.log(this.inputValue,$(li.data('item')).attr('data-key')); }
 	});
 	/*#if DEV*/window.inputListHandlerIncluded=true;/*#/if*/

@@ -9,8 +9,8 @@ class CCookie{
 	public static function exists($name){
 		return isset($_COOKIE[$name]);
 	}
-	public static function get($name){
-		return new CCookie($name,self::_getConfig($name));
+	public static function get($name,$notSetConfig=array()){
+		return new CCookie($name,self::_getConfig($name,$notSetConfig));
 	}
 	
 	public static function getLang(){
@@ -27,8 +27,8 @@ class CCookie{
 		setcookie($name,'',time()-42000,$config['path'],$config['domain'],$config['https'],$config['httponly']);
 	}
 	
-	private static function _getConfig($name){
-		$config=(isset(self::$_config[$name])?self::$_config[$name]:array())
+	private static function _getConfig($name,$notSetConfig){
+		$config=(isset(self::$_config[$name])?self::$_config[$name]:$notSetConfig)
 			+array('name'=>'Sb'.$name,'expires'=>'2 weeks','path'=>null,'domain'=>Config::$cookie_domain[Springbok::$scriptname],'https'=>IS_HTTPS,'httponly'=>true,'key'=>NULL,);
 
 		if($config['expires'] === 0);

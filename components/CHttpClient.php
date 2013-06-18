@@ -257,141 +257,141 @@ class CHttpClient{
 			$cookieName  = trim($this->_tokenize($cookieHeaders[$cookie], "="));
 			$cookieValue = $this->_tokenize(";");
 			$urlParsed   = parse_url($this->target);
-			$domain      = $urlParsed['host'];
-			$secure      = '0';
-			$path        = "/";
-			$expires     = "";
+			$domain	  = $urlParsed['host'];
+			$secure	  = '0';
+			$path		= "/";
+			$expires	 = "";
 			
 			while(($name = trim(urldecode($this->_tokenize("=")))) != "")
-            {
-                $value = urldecode($this->_tokenize(";"));
-                
-                switch($name)
-                {
-                    case "path"     : $path     = $value; break;
-                    case "domain"   : $domain   = $value; break;
-                    case "secure"   : $secure   = ($value != '') ? '1' : '0'; break;
-                }
-            }
-            
-            $this->_setCookie($cookieName, $cookieValue, $expires, $path , $domain, $secure);
+			{
+				$value = urldecode($this->_tokenize(";"));
+				
+				switch($name)
+				{
+					case "path"	 : $path	 = $value; break;
+					case "domain"   : $domain   = $value; break;
+					case "secure"   : $secure   = ($value != '') ? '1' : '0'; break;
+				}
+			}
+			
+			$this->_setCookie($cookieName, $cookieValue, $expires, $path , $domain, $secure);
 		}
 	}
 
 	private function _setCookie($name, $value, $expires = "" , $path = "/" , $domain = "" , $secure = 0){
-        if(strlen($name) == 0)
-        {
-            return($this->_setError("No valid cookie name was specified."));
-        }
+		if(strlen($name) == 0)
+		{
+			return($this->_setError("No valid cookie name was specified."));
+		}
 
-        if(strlen($path) == 0 || strcmp($path[0], "/"))
-        {
-            return($this->_setError("$path is not a valid path for setting cookie $name."));
-        }
-            
-        if($domain == "" || !strpos($domain, ".", $domain[0] == "." ? 1 : 0))
-        {
-            return($this->_setError("$domain is not a valid domain for setting cookie $name."));
-        }
-        
-        $domain = strtolower($domain);
-        
-        if(!strcmp($domain[0], "."))
-        {
-            $domain = substr($domain, 1);
-        }
-            
-        $name  = $this->_encodeCookie($name, true);
-        $value = $this->_encodeCookie($value, false);
-        
-        $secure = intval($secure);
-        
-        $this->_cookies[] = array( "name"      =>  $name,
-                                   "value"     =>  $value,
-                                   "domain"    =>  $domain,
-                                   "path"      =>  $path,
-                                   "expires"   =>  $expires,
-                                   "secure"    =>  $secure
-                                 );
-    }
+		if(strlen($path) == 0 || strcmp($path[0], "/"))
+		{
+			return($this->_setError("$path is not a valid path for setting cookie $name."));
+		}
+			
+		if($domain == "" || !strpos($domain, ".", $domain[0] == "." ? 1 : 0))
+		{
+			return($this->_setError("$domain is not a valid domain for setting cookie $name."));
+		}
+		
+		$domain = strtolower($domain);
+		
+		if(!strcmp($domain[0], "."))
+		{
+			$domain = substr($domain, 1);
+		}
+			
+		$name  = $this->_encodeCookie($name, true);
+		$value = $this->_encodeCookie($value, false);
+		
+		$secure = intval($secure);
+		
+		$this->_cookies[] = array( "name"	  =>  $name,
+								   "value"	 =>  $value,
+								   "domain"	=>  $domain,
+								   "path"	  =>  $path,
+								   "expires"   =>  $expires,
+								   "secure"	=>  $secure
+								 );
+	}
 
 function _encodeCookie($value, $name)
-    {
-        return($name ? str_replace("=", "%25", $value) : str_replace(";", "%3B", $value));
-    }
+	{
+		return($name ? str_replace("=", "%25", $value) : str_replace(";", "%3B", $value));
+	}
 	 function _passCookies()
-    {
-        if (is_array($this->_cookies) && count($this->_cookies) > 0)
-        {
-            $urlParsed = parse_url($this->target);
-            $tempCookies = array();
-            
-            foreach($this->_cookies as $cookie)
-            {
-                if ($this->_domainMatch($urlParsed['host'], $cookie['domain']) && (0 === strpos($urlParsed['path'], $cookie['path']))
-                    && (empty($cookie['secure']) || $urlParsed['protocol'] == 'https')) 
-                {
-                    $tempCookies[$cookie['name']][strlen($cookie['path'])] = $cookie['value'];
-                }
-            }
-            
-            // cookies with longer paths go first
-            foreach ($tempCookies as $name => $values) 
-            {
-                krsort($values);
-                foreach ($values as $value) 
-                {
-                    $this->addCookie($name, $value);
-                }
-            }
-        }
-    }
+	{
+		if (is_array($this->_cookies) && count($this->_cookies) > 0)
+		{
+			$urlParsed = parse_url($this->target);
+			$tempCookies = array();
+			
+			foreach($this->_cookies as $cookie)
+			{
+				if ($this->_domainMatch($urlParsed['host'], $cookie['domain']) && (0 === strpos($urlParsed['path'], $cookie['path']))
+					&& (empty($cookie['secure']) || $urlParsed['protocol'] == 'https')) 
+				{
+					$tempCookies[$cookie['name']][strlen($cookie['path'])] = $cookie['value'];
+				}
+			}
+			
+			// cookies with longer paths go first
+			foreach ($tempCookies as $name => $values) 
+			{
+				krsort($values);
+				foreach ($values as $value) 
+				{
+					$this->addCookie($name, $value);
+				}
+			}
+		}
+	}
 	 function _domainMatch($requestHost, $cookieDomain)
-    {
-        if ('.' != $cookieDomain{0}) 
-        {
-            return $requestHost == $cookieDomain;
-        } 
-        elseif (substr_count($cookieDomain, '.') < 2) 
-        {
-            return false;
-        } 
-        else 
-        {
-            return substr('.'. $requestHost, - strlen($cookieDomain)) == $cookieDomain;
-        }
-    }
+	{
+		if ('.' != $cookieDomain{0}) 
+		{
+			return $requestHost == $cookieDomain;
+		} 
+		elseif (substr_count($cookieDomain, '.') < 2) 
+		{
+			return false;
+		} 
+		else 
+		{
+			return substr('.'. $requestHost, - strlen($cookieDomain)) == $cookieDomain;
+		}
+	}
 	 function _tokenize($string, $separator = '')
-    {
-        if(!strcmp($separator, ''))
-        {
-            $separator = $string;
-            $string = $this->nextToken;
-        }
-        
-        for($character = 0; $character < strlen($separator); $character++)
-        {
-            if(gettype($position = strpos($string, $separator[$character])) == "integer")
-            {
-                $found = (isset($found) ? min($found, $position) : $position);
-            }
-        }
-        
-        if(isset($found))
-        {
-            $this->nextToken = substr($string, $found + 1);
-            return(substr($string, 0, $found));
-        }
-        else
-        {
-            $this->nextToken = '';
-            return($string);
-        }
-    }*/
+	{
+		if(!strcmp($separator, ''))
+		{
+			$separator = $string;
+			$string = $this->nextToken;
+		}
+		
+		for($character = 0; $character < strlen($separator); $character++)
+		{
+			if(gettype($position = strpos($string, $separator[$character])) == "integer")
+			{
+				$found = (isset($found) ? min($found, $position) : $position);
+			}
+		}
+		
+		if(isset($found))
+		{
+			$this->nextToken = substr($string, $found + 1);
+			return(substr($string, 0, $found));
+		}
+		else
+		{
+			$this->nextToken = '';
+			return($string);
+		}
+	}*/
 }
 
 // +----------------------------------------------------------------------+
-// | Akelos Framework - http://www.akelos.org                             |
+// | Akelos Framework - http://www.akelos.org							 |
 // +----------------------------------------------------------------------+
 
 /**
@@ -403,281 +403,281 @@ function _encodeCookie($value, $name)
 
 class AkHttpClient extends AkObject
 {
-    public $HttpRequest;
-    public $error;
-    public $Response;
-    private $_cookie_path;
-    private $_cookie_jar = 'default';
+	public $HttpRequest;
+	public $error;
+	public $Response;
+	private $_cookie_path;
+	private $_cookie_jar = 'default';
 
-    public function get($url, $options = array())
-    {
-        return $this->customRequest($url, 'GET', $options);
-    }
+	public function get($url, $options = array())
+	{
+		return $this->customRequest($url, 'GET', $options);
+	}
 
-    public function post($url, $options = array(), $body = '')
-    {
-        return $this->customRequest($url, 'POST', $options, $body);
-    }
+	public function post($url, $options = array(), $body = '')
+	{
+		return $this->customRequest($url, 'POST', $options, $body);
+	}
 
-    public function put($url, $options = array(), $body = '')
-    {
-        return $this->customRequest($url, 'PUT', $options, $body);
-    }
+	public function put($url, $options = array(), $body = '')
+	{
+		return $this->customRequest($url, 'PUT', $options, $body);
+	}
 
-    public function delete($url, $options = array())
-    {
-        return $this->customRequest($url, 'DELETE', $options);
-    }
+	public function delete($url, $options = array())
+	{
+		return $this->customRequest($url, 'DELETE', $options);
+	}
 
-    // prefix_options, query_options = split_options(options)
+	// prefix_options, query_options = split_options(options)
 
-    public function customRequest($url, $http_verb = 'GET', $options = array(), $body = '')
-    {
-        $this->getRequestInstance($url, $http_verb, $options, $body);
-        return empty($options['cache']) ? $this->sendRequest() : $this->returnCustomRequestFromCache($url,$options);
-    }
+	public function customRequest($url, $http_verb = 'GET', $options = array(), $body = '')
+	{
+		$this->getRequestInstance($url, $http_verb, $options, $body);
+		return empty($options['cache']) ? $this->sendRequest() : $this->returnCustomRequestFromCache($url,$options);
+	}
 
-    public function returnCustomRequestFromCache($url, $options)
-    {
-        $Cache = Ak::cache();
-        $Cache->init(is_numeric($options['cache']) ? $options['cache'] : 86400, !isset($options['cache_type']) ? 1 : $options['cache_type']);
-        if (!$data = $Cache->get('AkHttpClient_'.md5($url))) {
-            $data = $this->sendRequest();
-            $Cache->save($data);
-        }
-        return $data;
-    }
+	public function returnCustomRequestFromCache($url, $options)
+	{
+		$Cache = Ak::cache();
+		$Cache->init(is_numeric($options['cache']) ? $options['cache'] : 86400, !isset($options['cache_type']) ? 1 : $options['cache_type']);
+		if (!$data = $Cache->get('AkHttpClient_'.md5($url))) {
+			$data = $this->sendRequest();
+			$Cache->save($data);
+		}
+		return $data;
+	}
 
-    public function urlExists($url)
-    {
-        $this->getRequestInstance($url, 'GET');
-        $this->sendRequest(false);
-        return $this->code == 200;
-    }
+	public function urlExists($url)
+	{
+		$this->getRequestInstance($url, 'GET');
+		$this->sendRequest(false);
+		return $this->code == 200;
+	}
 
-    public function getRequestInstance($url, $http_verb = 'GET', $options = array(), $body = '')
-    {
-        $default_options = array(
-        'header' => array(),
-        'params' => array(),
-        );
+	public function getRequestInstance($url, $http_verb = 'GET', $options = array(), $body = '')
+	{
+		$default_options = array(
+		'header' => array(),
+		'params' => array(),
+		);
 
-        $options = array_merge($default_options, $options);
+		$options = array_merge($default_options, $options);
 
-        $options['header']['user-agent'] = empty($options['header']['user-agent']) ?
-        'Akelos PHP Framework AkHttpClient (http://akelos.org)' : $options['header']['user-agent'];
+		$options['header']['user-agent'] = empty($options['header']['user-agent']) ?
+		'Akelos PHP Framework AkHttpClient (http://akelos.org)' : $options['header']['user-agent'];
 
-        list($user_name, $password) = $this->_extractUserNameAndPasswordFromUrl($url);
+		list($user_name, $password) = $this->_extractUserNameAndPasswordFromUrl($url);
 
-        require_once(AK_VENDOR_DIR.DS.'pear'.DS.'HTTP'.DS.'Request.php');
+		require_once(AK_VENDOR_DIR.DS.'pear'.DS.'HTTP'.DS.'Request.php');
 
-        $this->{'_setParamsFor'.ucfirst(strtolower($http_verb))}($url, $options['params']);
+		$this->{'_setParamsFor'.ucfirst(strtolower($http_verb))}($url, $options['params']);
 
-        $this->HttpRequest = new HTTP_Request($url);
+		$this->HttpRequest = new HTTP_Request($url);
 
-        $user_name ? $this->HttpRequest->setBasicAuth($user_name, $password) : null;
+		$user_name ? $this->HttpRequest->setBasicAuth($user_name, $password) : null;
 
-        $this->HttpRequest->setMethod(constant('HTTP_REQUEST_METHOD_'.$http_verb));
+		$this->HttpRequest->setMethod(constant('HTTP_REQUEST_METHOD_'.$http_verb));
 
-        if(!empty($body)){
-            $this->setBody($body);
-        }elseif ($http_verb == 'PUT' && !empty($options['params'])){
-            $this->setBody($options['params']);
-        }
+		if(!empty($body)){
+			$this->setBody($body);
+		}elseif ($http_verb == 'PUT' && !empty($options['params'])){
+			$this->setBody($options['params']);
+		}
 
-        !empty($options['params']) && $this->addParams($options['params']);
+		!empty($options['params']) && $this->addParams($options['params']);
 
-        isset($options['cookies']) &&  $this->addCookieHeader($options, $url);
+		isset($options['cookies']) &&  $this->addCookieHeader($options, $url);
 
-        $this->addHeaders($options['header']);
+		$this->addHeaders($options['header']);
 
-        return $this->HttpRequest;
-    }
+		return $this->HttpRequest;
+	}
 
-    public function addHeaders($headers)
-    {
-        foreach ($headers as $k=>$v){
-            $this->addHeader($k, $v);
-        }
-    }
+	public function addHeaders($headers)
+	{
+		foreach ($headers as $k=>$v){
+			$this->addHeader($k, $v);
+		}
+	}
 
-    public function addHeader($name, $value)
-    {
-        $this->HttpRequest->removeHeader($name);
-        $this->HttpRequest->addHeader($name, $value);
-    }
+	public function addHeader($name, $value)
+	{
+		$this->HttpRequest->removeHeader($name);
+		$this->HttpRequest->addHeader($name, $value);
+	}
 
-    public function getResponseHeader($name)
-    {
-        return $this->HttpRequest->getResponseHeader($name);
-    }
+	public function getResponseHeader($name)
+	{
+		return $this->HttpRequest->getResponseHeader($name);
+	}
 
-    public function getResponseHeaders()
-    {
-        return $this->HttpRequest->getResponseHeader();
-    }
+	public function getResponseHeaders()
+	{
+		return $this->HttpRequest->getResponseHeader();
+	}
 
-    public function getResponseCode()
-    {
-        return $this->HttpRequest->getResponseCode();
-    }
+	public function getResponseCode()
+	{
+		return $this->HttpRequest->getResponseCode();
+	}
 
-    public function addParams($params = array())
-    {
-        if(!empty($params)){
-            foreach (array_keys($params) as $k){
-                $this->HttpRequest->addPostData($k, $params[$k]);
-            }
-        }
-    }
+	public function addParams($params = array())
+	{
+		if(!empty($params)){
+			foreach (array_keys($params) as $k){
+				$this->HttpRequest->addPostData($k, $params[$k]);
+			}
+		}
+	}
 
-    public function setBody($body)
-    {
-        Ak::compat('http_build_query');
-        $this->HttpRequest->setBody(http_build_query((array)$body));
-    }
+	public function setBody($body)
+	{
+		Ak::compat('http_build_query');
+		$this->HttpRequest->setBody(http_build_query((array)$body));
+	}
 
-    public function sendRequest($return_body = true)
-    {
-        $this->Response = $this->HttpRequest->sendRequest();
-        $this->code = $this->HttpRequest->getResponseCode();
-        $this->persistCookies();
-        if (PEAR::isError($this->Response)) {
-            $this->error = $this->Response->getMessage();
-            return false;
-        } else {
-            return $return_body ? $this->HttpRequest->getResponseBody() : true;
-        }
-    }
+	public function sendRequest($return_body = true)
+	{
+		$this->Response = $this->HttpRequest->sendRequest();
+		$this->code = $this->HttpRequest->getResponseCode();
+		$this->persistCookies();
+		if (PEAR::isError($this->Response)) {
+			$this->error = $this->Response->getMessage();
+			return false;
+		} else {
+			return $return_body ? $this->HttpRequest->getResponseBody() : true;
+		}
+	}
 
 
-    public function addCookieHeader(&$options, $url)
-    {
-        if(isset($options['cookies'])){
-            $url_details = parse_url($url);
-            $jar = Ak::sanitize_include((empty($options['jar']) ? $this->_cookie_jar : $options['jar']), 'paranoid');
-            $this->setCookiePath(AK_TMP_DIR.DS.'cookies'.DS.$jar.DS.Ak::sanitize_include($url_details['host'],'paranoid'));
-            if($options['cookies'] === false){
-                $this->deletePersistedCookie();
-                return;
-            }
-            if($cookie_value = $this->getPersistedCookie()){
-                $this->_persisted_cookie = $cookie_value;
-                $options['header']['cookie'] = $cookie_value;
-            }
-        }
-    }
+	public function addCookieHeader(&$options, $url)
+	{
+		if(isset($options['cookies'])){
+			$url_details = parse_url($url);
+			$jar = Ak::sanitize_include((empty($options['jar']) ? $this->_cookie_jar : $options['jar']), 'paranoid');
+			$this->setCookiePath(AK_TMP_DIR.DS.'cookies'.DS.$jar.DS.Ak::sanitize_include($url_details['host'],'paranoid'));
+			if($options['cookies'] === false){
+				$this->deletePersistedCookie();
+				return;
+			}
+			if($cookie_value = $this->getPersistedCookie()){
+				$this->_persisted_cookie = $cookie_value;
+				$options['header']['cookie'] = $cookie_value;
+			}
+		}
+	}
 
-    public function setCookiePath($path)
-    {
-        $this->_cookie_path = $path;
-    }
+	public function setCookiePath($path)
+	{
+		$this->_cookie_path = $path;
+	}
 
-    public function getPersistedCookie()
-    {
-        if(file_exists($this->_cookie_path)){
-            return Ak::file_get_contents($this->_cookie_path);
-        }
-        return false;
-    }
+	public function getPersistedCookie()
+	{
+		if(file_exists($this->_cookie_path)){
+			return Ak::file_get_contents($this->_cookie_path);
+		}
+		return false;
+	}
 
-    public function deletePersistedCookie()
-    {
-        if(file_exists($this->_cookie_path)){
-            Ak::file_delete($this->_cookie_path);
-            $this->_cookie_path = false;
-            return;
-        }
-        return false;
-    }
+	public function deletePersistedCookie()
+	{
+		if(file_exists($this->_cookie_path)){
+			Ak::file_delete($this->_cookie_path);
+			$this->_cookie_path = false;
+			return;
+		}
+		return false;
+	}
 
-    public function persistCookies()
-    {
-        if($this->_cookie_path){
-            $cookies_from_response = $this->HttpRequest->getResponseCookies();
-            if(!empty($this->_persisted_cookie)){
-                $this->HttpRequest->_cookies = array();
-                $persisted_cookies = $this->HttpRequest->_response->_parseCookie($this->_persisted_cookie);
-                $this->HttpRequest->_cookies = $cookies_from_response;
-            }
-            if(!empty($cookies_from_response)){
-                $all_cookies = array_merge(isset($persisted_cookies)?$persisted_cookies:array(), $cookies_from_response);
-                $cookies = array();
-                foreach($all_cookies as $cookie){
-                    if(!empty($cookie['value'])){
-                        $cookies[$cookie['name']] = "{$cookie['name']}={$cookie['value']}";
-                    }
-                }
-                $cookie_string = trim(join($cookies, '; '));
-                Ak::file_put_contents($this->_cookie_path, $cookie_string);
-            }
-        }
-    }
+	public function persistCookies()
+	{
+		if($this->_cookie_path){
+			$cookies_from_response = $this->HttpRequest->getResponseCookies();
+			if(!empty($this->_persisted_cookie)){
+				$this->HttpRequest->_cookies = array();
+				$persisted_cookies = $this->HttpRequest->_response->_parseCookie($this->_persisted_cookie);
+				$this->HttpRequest->_cookies = $cookies_from_response;
+			}
+			if(!empty($cookies_from_response)){
+				$all_cookies = array_merge(isset($persisted_cookies)?$persisted_cookies:array(), $cookies_from_response);
+				$cookies = array();
+				foreach($all_cookies as $cookie){
+					if(!empty($cookie['value'])){
+						$cookies[$cookie['name']] = "{$cookie['name']}={$cookie['value']}";
+					}
+				}
+				$cookie_string = trim(join($cookies, '; '));
+				Ak::file_put_contents($this->_cookie_path, $cookie_string);
+			}
+		}
+	}
 
-    private function _extractUserNameAndPasswordFromUrl(&$url)
-    {
-        return array(null,null);
-    }
+	private function _extractUserNameAndPasswordFromUrl(&$url)
+	{
+		return array(null,null);
+	}
 
-    public function getParamsOnUrl($url)
-    {
-        $parts = parse_url($url);
-        if($_tmp = (empty($parts['query']) ? false : $parts['query'])){
-            unset($parts['query']);
-            $url = $this->_httpRenderQuery($parts);
-        }
-        $result = array();
-        !empty($_tmp) && parse_str($_tmp, $result);
-        return $result;
-    }
+	public function getParamsOnUrl($url)
+	{
+		$parts = parse_url($url);
+		if($_tmp = (empty($parts['query']) ? false : $parts['query'])){
+			unset($parts['query']);
+			$url = $this->_httpRenderQuery($parts);
+		}
+		$result = array();
+		!empty($_tmp) && parse_str($_tmp, $result);
+		return $result;
+	}
 
-    public function getUrlWithParams($url, $params)
-    {
-        $parts = parse_url($url);
-        Ak::compat('http_build_query');
-        $parts['query'] = http_build_query($params);
-        return $this->_httpRenderQuery($parts);
-    }
+	public function getUrlWithParams($url, $params)
+	{
+		$parts = parse_url($url);
+		Ak::compat('http_build_query');
+		$parts['query'] = http_build_query($params);
+		return $this->_httpRenderQuery($parts);
+	}
 
-    private function _setParamsForGet(&$url, &$params)
-    {
-        $url_params = $this->getParamsOnUrl($url);
-        if(!count($url_params) && !empty($params)){
-            $url = $this->getUrlWithParams($url, $params);
-        }else{
-            $params = $url_params;
-        }
-    }
+	private function _setParamsForGet(&$url, &$params)
+	{
+		$url_params = $this->getParamsOnUrl($url);
+		if(!count($url_params) && !empty($params)){
+			$url = $this->getUrlWithParams($url, $params);
+		}else{
+			$params = $url_params;
+		}
+	}
 
-    private function _setParamsForPost(&$url, &$params)
-    {
-        empty($params) && $params = $this->getParamsOnUrl($url);
-    }
+	private function _setParamsForPost(&$url, &$params)
+	{
+		empty($params) && $params = $this->getParamsOnUrl($url);
+	}
 
-    private function _setParamsForPut(&$url, &$params)
-    {
-        empty($params) && $params = $this->getParamsOnUrl($url);
-    }
+	private function _setParamsForPut(&$url, &$params)
+	{
+		empty($params) && $params = $this->getParamsOnUrl($url);
+	}
 
-    private function _setParamsForDelete(&$url, &$params)
-    {
-        if(!$this->getParamsOnUrl($url) && !empty($params)){
-            $url = $this->getUrlWithParams($url, $params);
-        }
-    }
+	private function _setParamsForDelete(&$url, &$params)
+	{
+		if(!$this->getParamsOnUrl($url) && !empty($params)){
+			$url = $this->getUrlWithParams($url, $params);
+		}
+	}
 
-    private function _httpRenderQuery($parts)
-    {
-        return is_array($parts) ? (
-        (isset($parts['scheme']) ? $parts['scheme'].':'.((strtolower($parts['scheme']) == 'mailto') ? '' : '//') : '').
-        (isset($parts['user']) ? $parts['user'].(isset($parts['pass']) ? ':'.$parts['pass'] : '').'@' : '').
-        (isset($parts['host']) ? $parts['host'] : '').
-        (isset($parts['port']) ? ':'.$parts['port'] : '').
-        (isset($parts['path'])?((substr($parts['path'], 0, 1) == '/') ? $parts['path'] : ('/'.$parts['path'])):'').
-        (isset($parts['query']) ? '?'.$parts['query'] : '').
-        (isset($parts['fragment']) ? '#'.$parts['fragment'] : '')
-        ) : false;
-    }
+	private function _httpRenderQuery($parts)
+	{
+		return is_array($parts) ? (
+		(isset($parts['scheme']) ? $parts['scheme'].':'.((strtolower($parts['scheme']) == 'mailto') ? '' : '//') : '').
+		(isset($parts['user']) ? $parts['user'].(isset($parts['pass']) ? ':'.$parts['pass'] : '').'@' : '').
+		(isset($parts['host']) ? $parts['host'] : '').
+		(isset($parts['port']) ? ':'.$parts['port'] : '').
+		(isset($parts['path'])?((substr($parts['path'], 0, 1) == '/') ? $parts['path'] : ('/'.$parts['path'])):'').
+		(isset($parts['query']) ? '?'.$parts['query'] : '').
+		(isset($parts['fragment']) ? '#'.$parts['fragment'] : '')
+		) : false;
+	}
 }
 */
 

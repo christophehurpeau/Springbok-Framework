@@ -82,7 +82,7 @@ class CssFile extends EnhancerFile{
 		//$content=preg_replace_callback('/\s*{(.*)}\s*/m',function($matches){
 		//	return '{'.preg_replace('/\s*:\s*/m',':',$matches[1]).'}';
 		//},$content);
-////                $content=preg_replace('/\s*({.*)\s*:\s*(.*})\s*/m','$1:$2',$content);
+////				$content=preg_replace('/\s*({.*)\s*:\s*(.*})\s*/m','$1:$2',$content);
 
 		// reduce non-newline whitespace to one
 		//$content=preg_replace('/[ \f]+/',' ',$content);

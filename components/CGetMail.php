@@ -91,13 +91,13 @@ class CGetMail{
 				continue;
 
 			if ($k == 'FLAGGED') {
-			    if (!$v)
-                    continue;
+				if (!$v)
+					continue;
 
-                $query .= "$k ";
+				$query .= "$k ";
 			} else {
-			    if (!$v)
-                    continue;
+				if (!$v)
+					continue;
 				$query .= "$k \"$v\" ";
 			}
 		}
@@ -108,7 +108,7 @@ class CGetMail{
 		if ($this->cur_mailbox != $args['EmailBox'])
 			$this->_changeMailbox($args['EmailBox']);
 
-     	if ($this->use_native)
+	 	if ($this->use_native)
 	 		$res = imap_search($this->mailer, $query);
 
 		else

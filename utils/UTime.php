@@ -13,7 +13,7 @@ class UTime{
 			$toAdd=((int)$matches[1]);
 		if ($toAdd == -1)
 			throw new Exception("Invalid duration pattern : " . $duration);
-        return $toAdd;
+		return $toAdd;
 	}
 	
 	const REG_EXPR_HOURS_MINUTES='((?:(?:(\d+)(?:hours?|h))(?:\s*(\d+)(?:mins?|m)?)?)|(?:(\d+)(?:mins?|m))|(?:(\d+(?:[\.,]\d+)?)(?:hours?|h)))';

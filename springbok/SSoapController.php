@@ -15,7 +15,7 @@ class SSoapController extends Controller{
 		$wsdl->addSchemaTypeSection();
 		
 		$port=$wsdl->addPortType($name.'Port');
-        $binding=$wsdl->addBinding($name.'Binding','tns:'.$name.'Port');
+		$binding=$wsdl->addBinding($name.'Binding','tns:'.$name.'Port');
 		$wsdl->addSoapBinding($binding,'rpc','http://schemas.xmlsoap.org/soap/http');
 		$wsdl->addService($name.'Service', $name.'Port','tns:'.$name.'Binding',static::$uri);
 		

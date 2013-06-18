@@ -1,20 +1,20 @@
 <?php
 /**
  * LOAD DATA [LOW_PRIORITY | CONCURRENT] [LOCAL] INFILE 'file_name.txt'
-    [REPLACE | IGNORE]
-    INTO TABLE tbl_name
-    [CHARACTER SET charset_name]
-    [FIELDS
-        [TERMINATED BY '\t']
-        [[OPTIONALLY] ENCLOSED BY '']
-        [ESCAPED BY '\\' ]
-    ]
-    [LINES 
-        [STARTING BY '']    
-        [TERMINATED BY '\n']
-    ]
-    [IGNORE number LINES]
-    [(col_name,...)]
+	[REPLACE | IGNORE]
+	INTO TABLE tbl_name
+	[CHARACTER SET charset_name]
+	[FIELDS
+		[TERMINATED BY '\t']
+		[[OPTIONALLY] ENCLOSED BY '']
+		[ESCAPED BY '\\' ]
+	]
+	[LINES 
+		[STARTING BY '']	
+		[TERMINATED BY '\n']
+	]
+	[IGNORE number LINES]
+	[(col_name,...)]
  */
 include_once __DIR__.DS.'AQuery.php';
 class QLoadData extends AQuery{

@@ -11,7 +11,7 @@ class UArray {
 	 * @copyright 2008 Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 	 * @license   http://www.opensource.org/licenses/bsd-license.php New BSD Licence
 	 * @version   SVN: Release: $Id: explodeTree.inc.php 89 2008-09-05 20:52:48Z kevin $
-	 * @link    http://kevin.vanzonneveld.net/
+	 * @link	http://kevin.vanzonneveld.net/
 	 * @link		http://kevin.vanzonneveld.net/techblog/article/convert_anything_to_tree_structures_in_php/
 	 *
 	 * @param array   $array
@@ -108,18 +108,18 @@ class UArray {
 				if(is_array($value))
 					$array1[$key] = self::union_recursive($array1[$key],$value);
 			}else $array1[$key]=$value;
-        }
+		}
 		return $array1;
 	}
 	
 	public static function knatsort(&$karr){
-	    $kkeyarr = array_keys($karr);
-	    natsort($kkeyarr);
-	    $ksortedarr=array();
-	    foreach($kkeyarr as $kcurrkey)
-	        $ksortedarr[$kcurrkey] = $karr[$kcurrkey];
-	    $karr = $ksortedarr;
-	    return true;
+		$kkeyarr = array_keys($karr);
+		natsort($kkeyarr);
+		$ksortedarr=array();
+		foreach($kkeyarr as $kcurrkey)
+			$ksortedarr[$kcurrkey] = $karr[$kcurrkey];
+		$karr = $ksortedarr;
+		return true;
 	}
 	
 	public static function findKeyBy($a,$propName,$val){

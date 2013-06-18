@@ -2,9 +2,9 @@
 include_once __DIR__.DS.'AQuery.php';
 /**
  * DELETE [LOW_PRIORITY] [QUICK] [IGNORE] FROM table_name
-       [WHERE where_definition]
-       [ORDER BY ...]
-       [LIMIT row_count]
+	   [WHERE where_definition]
+	   [ORDER BY ...]
+	   [LIMIT row_count]
  * @author Christophe Hurpeau
  */
 abstract class QDelete extends AQuery{
@@ -31,11 +31,11 @@ abstract class QDelete extends AQuery{
 	public function limit1(){$this->limit=1;return $this;}
 	
 	public function __call($method, $params){
-        if (!preg_match('/^by(\w+)$/',$method,$matches))
-            throw new \Exception("Call to undefined method {$method}");
-        $this->by($matches[1],$params);
-        return $this;
-    }
+		if (!preg_match('/^by(\w+)$/',$method,$matches))
+			throw new \Exception("Call to undefined method {$method}");
+		$this->by($matches[1],$params);
+		return $this;
+	}
 	
 	
 	public function _toSQL(){

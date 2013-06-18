@@ -1,9 +1,9 @@
 <?php
 /**
  * INSERT [LOW_PRIORITY | DELAYED] [IGNORE]
-    [INTO] tbl_name [(col_name,...)]
-    VALUES ({expr | DEFAULT},...),(...),...
-    [ ON DUPLICATE KEY UPDATE col_name=expr, ... ]
+	[INTO] tbl_name [(col_name,...)]
+	VALUES ({expr | DEFAULT},...),(...),...
+	[ ON DUPLICATE KEY UPDATE col_name=expr, ... ]
  */
 include_once __DIR__.DS.'AQuery.php';
 class QInsert extends AQuery{

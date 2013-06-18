@@ -2,10 +2,10 @@
 include_once __DIR__.DS.'AQuery.php';
 /**
  * UPDATE [LOW_PRIORITY] [IGNORE] tbl_name
-    SET col_name1=expr1 [, col_name2=expr2 ...]
-    [WHERE where_definition]
-    [ORDER BY ...]
-    [LIMIT row_count]
+	SET col_name1=expr1 [, col_name2=expr2 ...]
+	[WHERE where_definition]
+	[ORDER BY ...]
+	[LIMIT row_count]
  */
 class QUpdate extends AQuery{
 	private $values,$where,$limit=null,$orderBy,$updatedField;
@@ -20,7 +20,7 @@ class QUpdate extends AQuery{
 	public function where($conditions){$this->where=$conditions;return $this;}
 	
 	public function updatedField($field){$this->updatedField=$field;return $this;}
-    public function doNotUpdateUpdatedField(){ $this->updatedField=null; return $this; }
+	public function doNotUpdateUpdatedField(){ $this->updatedField=null; return $this; }
 	
 	public function by($query,$values){
 		$fields=explode('And',$query);
@@ -33,11 +33,11 @@ class QUpdate extends AQuery{
 	}
 	
 	public function __call($method, $params){
-        if (!preg_match('/^by(\w+)$/',$method,$matches))
-            throw new \Exception("Call to undefined method {$method}");
-        $this->by($matches[1],$params);
-        return $this;
-    }
+		if (!preg_match('/^by(\w+)$/',$method,$matches))
+			throw new \Exception("Call to undefined method {$method}");
+		$this->by($matches[1],$params);
+		return $this;
+	}
 	
 	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
 	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}

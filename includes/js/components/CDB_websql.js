@@ -54,7 +54,7 @@ adapters.webSQL.Collection.prototype={
 				}
 			},function(tx,results){
 				t.trigger('error', "Couldn't get webSQL item with key: " + key, key);
-    			callback && callback.call(store,false);
+				callback && callback.call(store,false);
 			}
 		);
 	},

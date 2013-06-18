@@ -3,7 +3,22 @@ includeCore('ui/_inputFollow');
 includeCore('libs/jquery-ui-1.9.2.position');
 
 S.ui.InputSearch=S.ui.InputFollow.extend({
-	navigate:true, minLength:3, dataType:'json',delay:180,
+	writable:{
+		navigate:true, minLength:3, dataType:'json',delay:180,
+		
+		onSuccess:function(data){
+			!data||data.length===0 ? this.emptyResult() : this.success(data);
+		},
+		reset:function(){
+			this._div().empty();
+		},
+		success:function(data){
+			this._div().html(this.display(data));
+		},
+		emptyResult:function(){
+			this._div().empty();
+		}
+	},
 	ctor:function(input,url,destContent,options){
 		S.ui.InputFollow.call(this,input);
 		UObj.extend(this,options);
@@ -94,18 +109,6 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		if(this.hasFocus) input.trigger('sSearch')
 	},
 	_div:function(){ return this.div; },
-	onSuccess:function(data){
-		!data||data.length===0 ? this.emptyResult() : this.success(data);
-	},
-	reset:function(){
-		this._div().empty();
-	},
-	success:function(data){
-		this._div().html(this.display(data));
-	},
-	emptyResult:function(){
-		this._div().empty();
-	}
 },{
 	defaultDisplayList:function(data,ulAttrs,callback){
 		var t=this,li,result=$('<ul>').attr(ulAttrs),key=this.oKey||'text';

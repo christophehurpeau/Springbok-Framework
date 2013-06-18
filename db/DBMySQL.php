@@ -68,6 +68,16 @@ class DBMySQL extends DBSql{
 			}
 			throw new DBException('Query error ['.$internalCalling.'] ('.$this->_connect->errno.'): '.$this->_connect->error,$query);
 		}
+		/*#if DEV*/
+		if($this->_connect->warning_count){
+			$warnings=array();
+			$w=$this->_connect->get_warnings();
+			do{
+				$warnings[]=$w->errno.': '.$w->message;
+			}while($w->next());
+			throw new DBException('Query warnings: '.print_r($warnings,true),$query);
+		}
+		/*#/if*/ 
 		return $r;
 	}
 	private function _query_($query,$fields,$internalCalling=0){

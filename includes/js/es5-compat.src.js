@@ -1,6 +1,10 @@
 var html5elements = "address|article|aside|audio|canvas|command|datalist|details|dialog|figure|figcaption|footer|header|hgroup|keygen|mark|meter|menu|nav|progress|ruby|section|time|video".split('|');
 for(var i = 0; i < html5elements.length; i++) document.createElement(html5elements[i]);
 
+/*
+ * pre-loaded for ie < 9
+ * post-loaded for browsers where !Object.create : FF < 4, Safari < 5, Opera < 12
+ */
 
 /* http://kangax.github.com/es5-compat-table/ */
 /* https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js */

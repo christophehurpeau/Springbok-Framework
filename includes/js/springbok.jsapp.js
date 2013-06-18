@@ -1,4 +1,4 @@
-includeCore('libs/jquery-1.8.3');
+includeCore('libs/jquery-latest');
 includeCore('springbok.base');
 
 S.loadSyncScript(webUrl+'js/'+INCLPREFIX+'i18n-'+(S.lang=$('meta[name="language"]').attr('content'))+'.js');
@@ -114,7 +114,7 @@ App.load=S.ajax.load=function(url){
 		if(err instanceof HttpException){
 			console&&console.log("APP : catch HttpException :",err);
 		}
-		console&&console.log("APP : catch error :",err);
+		console&&console.log("APP : catch error :",err,S.isObj(err) ? 'message='+err.message:'');
 		throw err;
 	}
 };

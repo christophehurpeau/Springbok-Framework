@@ -5,6 +5,7 @@ class BHistory_build{
 	
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){
 		$historyClass=isset($annotations['History']) ? $annotations['History'][0][0] : $modelFile->_className.'History';
+		$source=$enhanceConfig['config']['searchableHistory.source'];
 		
 		foreach(array('owner','created_by') as $fieldName)
 			if(isset($modelFile->_fields[$fieldName]) || $fieldName==='created_by'){
@@ -18,17 +19,19 @@ class BHistory_build{
 			if(isset($modelFile->_fields[$fieldName]) || $fieldName==='updated_by'){
 				$updatedBy='isset($this->'.$fieldName.')?$this->'.$fieldName.':true'; break; }
 		
-		foreach(array('updated_source','updated_from') as $fieldName)
-			if(isset($modelFile->_fields[$fieldName]) || $fieldName==='updated_from'){
-				$updatedFrom='isset($this->'.$fieldName.')?$this->'.$fieldName.':true'; break; }
+		if($source){
+			foreach(array('updated_source','updated_from') as $fieldName)
+				if(isset($modelFile->_fields[$fieldName]) || $fieldName==='updated_from'){
+					$updatedFrom='isset($this->'.$fieldName.')?$this->'.$fieldName.':null'; break; }
+		}
 		
 		$contentInfos['relations']['History']=array('reltype'=>'hasMany','modelName'=>$historyClass,'dataName'=>'history');
 		
 		$classBeforeContent.=
 			"\n".'public static function addHistory($objId,$type,$relId=null,$userId=true,$source=null){ '
 						.$historyClass.'::add($objId,$type,$relId,$userId,$source); }'
-			."\n".'private function _history_created(){ self::addHistory($this->id,'.$historyClass.'::CREATED,'.$createdBy.','.$createdFrom.'); return true; }'
-			."\n".'private function _history_updated(){ self::addHistory($this->id,'.$historyClass.'::UPDATED,'.$updatedBy.','.$updatedFrom.'); return true; }';
+			."\n".'private function _history_created(){ self::addHistory($this->id,'.$historyClass.'::CREATED,null,'.$createdBy.($source?','.$createdFrom:'').'); return true; }'
+			."\n".'private function _history_updated(){ self::addHistory($this->id,'.$historyClass.'::UPDATED,null,'.$updatedBy.($source?','.$updatedFrom:'').'); return true; }';
 		
 	}
 
