@@ -5,22 +5,28 @@ class DBMySQL extends DBSql{
 	public function _getType(){return 'MySQL';}
 	
 	public function connect(){
+		$this->_connect=$this->_createConnection($this->_config);
+	}
+	
+	public function _createConnection($config){
 		/*#if DEV */
 		try{
 		/*#/if*/
-			$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],$this->_config['dbname'],$this->_config['port']);
+			$connect=new MySQLi($config['host'],$config['user'],$config['password'],$config['dbname'],$config['port']);
 		/*#if DEV */
 		}catch(mysqli_sql_exception $e){
 			if($e->getMessage()==="Unknown database '{$this->_config['dbname']}'"){
-				$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],'mysql',$this->_config['port']);
-				$this->_connect->query('CREATE DATABASE '.$this->formatTable($this->_config['dbname']));
-				$this->_connect=new MySQLi($this->_config['host'],$this->_config['user'],$this->_config['password'],$this->_config['dbname'],$this->_config['port']);
+				$connect=new MySQLi($config['host'],$config['user'],$config['password'],'mysql',$config['port']);
+				$connect->query('CREATE DATABASE '.$this->formatTable($config['dbname']));
+				$connect=new MySQLi($config['host'],$config['user'],$config['password'],$config['dbname'],$config['port']);
 			}else throw $e;
 		}
 		/*#/if*/
-		//if($this->_connect->connect_errno) throw new DBException('Unable to connect: '.$this->_connect->connect_error); => WARNING 
-		$this->_connect->query('SET NAMES utf8');
+		//if($connect->connect_errno) throw new DBException('Unable to connect: '.$connect->connect_error); => WARNING 
+		$connect->query('SET NAMES utf8');
+		return $connect;
 	}
+	
 	public function getVersion(){return $this->_connect->server_version;}
 	public function lastInsertID($name=null) {
 		return (int)$this->_connect->insert_id;
@@ -49,29 +55,28 @@ class DBMySQL extends DBSql{
 		return '\''.$this->_connect->real_escape_string($string).'\'';
 	}
 	
-	
-	private function _query($query,$internalCalling=0){
-		$r=$this->_connect->query($query);
+	protected function _internal_query($connect,$query,$internalCalling=0){
+		$r=$connect->query($query);
 		/* if(!DBSchemaProcessing::$isProcessing) serviceUnavailable(_tC('The server is currently overloaded')); */
-		if($this->_connect->errno){
+		if($connect->errno){
 			if($internalCalling < 5){
-				if($this->_connect->errno==1213){
+				if($connect->errno==1213){
 					CLogger::get('mysql-deadlocks')->log($query);
-					return $this->_query($query,$internalCalling+1);
-				}elseif($this->_connect->errno==1205){
+					return $this->_internal_query($connect,$query,$internalCalling+1);
+				}elseif($connect->errno==1205){
 					CLogger::get('mysql-lockwait')->log($query);
-					return $this->_query($query,$internalCalling+1);
+					return $this->_internal_query($connect,$query,$internalCalling+1);
 				}elseif($internalCalling===0 && $this->_connect->errno==2006){
 					if($this->ping())
-						return $this->_query($query,$internalCalling+1);
+						return $this->_internal_query($connect,$query,$internalCalling+1);
 				}
 			}
-			throw new DBException('Query error ['.$internalCalling.'] ('.$this->_connect->errno.'): '.$this->_connect->error,$query);
+			throw new DBException('Query error ['.$internalCalling.'] ('.$connect->errno.'): '.$connect->error,$query);
 		}
 		/*#if DEV*/
-		if($this->_connect->warning_count){
+		if($connect->warning_count){
 			$warnings=array();
-			$w=$this->_connect->get_warnings();
+			$w=$connect->get_warnings();
 			do{
 				$warnings[]=$w->errno.': '.$w->message;
 			}while($w->next());
@@ -80,16 +85,24 @@ class DBMySQL extends DBSql{
 		/*#/if*/ 
 		return $r;
 	}
-	private function _query_($query,$fields,$internalCalling=0){
-		if(($stmt=$this->_connect->prepare($query))===false){
-			if($internalCalling===0 && $this->_connect->errno==2006){
+	
+	protected function _queryMaster($query){
+		return $this->_internal_query($this->_connect,$query);
+	}
+	protected function _querySlave($query){
+		return $this->_internal_query($this->_connect,$query);
+	}
+	
+	protected function _internal_preparedQuery($connect,$query,$fields,$internalCalling=0){
+		if(($stmt=$connect->prepare($query))===false){
+			if($internalCalling===0 && $connect->errno==2006){
 				if($this->ping())
-					return $this->_query_($query,$fields,$internalCalling+1);
+					return $this->_internal_preparedQuery($connect,$query,$fields,$internalCalling+1);
 			}
-			throw new DBException('Prepare statement failed ('.$this->_connect->errno.'): '.$this->_connect->error,$query);
+			throw new DBException('Prepare statement failed ('.$connect->errno.'): '.$connect->error,$query);
 		}
 		if($stmt->execute()===false){
-			throw new DBException('Execute statement failed ('.$this->_connect->errno.'): '.$this->_connect->error,$query);
+			throw new DBException('Execute statement failed ('.$connect->errno.'): '.$connect->error,$query);
 		}
 		//$stmt->store_results();
 		$r = call_user_func_array(array($stmt,'bind_result'),$fields);
@@ -98,8 +111,12 @@ class DBMySQL extends DBSql{
 		return $stmt;
 	}
 	
+	protected function _preparedQuerySlave($query,$fields){
+		return $this->_internal_preparedQuery($this->_connect,$query,$fields);
+	}
+	
 	public function /*#if DEV then _*/doUpdate($query){
-		$r=$this->_query($query);
+		$r=$this->_queryMaster($query);
 		if($r) return $this->_connect->affected_rows;
 		return false;
 	}
@@ -150,12 +167,12 @@ class DBMySQL extends DBSql{
 		return $fields;
 	}
 	public function /*#if DEV then _*/doSelectSql($query){
-		$r=$this->_query($query); $fields=$this->getFieldsSQL($r); $res=array();
+		$r=$this->_querySlave($query); $fields=$this->getFieldsSQL($r); $res=array();
 		while($row=$r->fetch_row()) $res[]=$row;
 		$r->close(); return array('res'=>&$res,'fields'=>&$fields);
 	}
 	public function /*#if DEV then _*/doSelectSqlCallback($query,$callback,$callbackFields){
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		$r->store_result();
 		$callbackFields($this->getFieldsSQL($r));
 		while($row=$r->fetch_row()) $callback($row);
@@ -165,13 +182,13 @@ class DBMySQL extends DBSql{
 	
 	/* NORMAL SELECT */
 	public function /*#if DEV then _*/doSelectRows($query){
-		$r=$this->_query($query); $res=array();
+		$r=$this->_querySlave($query); $res=array();
 		//$res=$r->fetch_all(MYSQLI_ASSOC);
 		while($row=$r->fetch_assoc()) $res[]=$row;
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectRowsCallback($query,$callback){
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		//$r->store_result();
 		while($row=$r->fetch_assoc()) $callback($row);
 		//$r->free_result();
@@ -180,13 +197,13 @@ class DBMySQL extends DBSql{
 	
 	
 	public function /*#if DEV then _*/doSelectRows_($query){
-		$r=$this->_query($query); $res=array();
+		$r=$this->_querySlave($query); $res=array();
 		//$res=$r->fetch_all(MYSQLI_NUM);
 		while($row=$r->fetch_row()) $res[]=$row;
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectRowsCallback_($query,$callback){
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		//$r->store_result();
 		while($row=$r->fetch_row()) $callback($row);
 		//$r->free_result();
@@ -195,32 +212,32 @@ class DBMySQL extends DBSql{
 	
 	
 	public function /*#if DEV then _*/doSelectRow($query){
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		$res=$r->fetch_assoc();
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectRow_($query){
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		$res=$r->fetch_row();
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectValues($query,$numCol=0){
-		/*$r=$this->_query($query); $res=array();
+		/*$r=$this->_querySlave($query); $res=array();
 		while($row=$r->fetch_row()) $res[]=$row[$numCol];
 		$r->close(); return $res;*/
 		$value=false; $res=array();
 		$fields=array(&$value);
-		$r=$this->_query_($query,$fields);
+		$r=$this->_preparedQuerySlave($query,$fields);
 		while($r->fetch()) $res[]=$value;
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectValuesCallback($query,$callback,$numCol=0){
-		/*$r=$this->_query($query); $res=array();
+		/*$r=$this->_querySlave($query); $res=array();
 		while($row=$r->fetch_row()) $callback($row[$numCol]);
 		$r->close();*/
 		$value=false; $res=array();
 		$fields=array(&$value);
-		$r=$this->_query_($query,$fields);
+		$r=$this->_preparedQuerySlave($query,$fields);
 		$r->store_result();
 		while($r->fetch()) $callback($value);
 		$r->free_result();
@@ -229,7 +246,7 @@ class DBMySQL extends DBSql{
 	public function /*#if DEV then _*/doSelectAssocValues($query,$tabResKey){
 		$value=false; $res=array();
 		$fields=array(&$value);
-		$r=$this->_query_($query,$fields);
+		$r=$this->_preparedQuerySlave($query,$fields);
 		while($r->fetch()) $res[$value]=$value;
 		$r->close(); return $res;
 	}
@@ -239,33 +256,33 @@ class DBMySQL extends DBSql{
 	public function /*#if DEV then _*/doSelectValue($query,$numCol=0){
 		$value=false;
 		$fields=array(&$value);
-		$r=$this->_query_($query,$fields);
+		$r=$this->_preparedQuerySlave($query,$fields);
 		if(!$r->fetch()) $value=false;
 		$r->close(); return $value;
 		/*
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		if($row=$r->fetch_row()) $res=$row[$numCol]; else $res=false;
 		$r->close(); return $res;*/
 	}
 	public function /*#if DEV then _*/doSelectExist($query){
-		$r=$this->_query($query);
+		$r=$this->_querySlave($query);
 		if($row=$r->fetch_row()) $res=true; else $res=false;
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectListRows($query){
-		$r=$this->_query($query); $res=array();
+		$r=$this->_querySlave($query); $res=array();
 		while($row=$r->fetch_assoc()) $res[current($row)]=$row;
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectListRows_($query){
-		$r=$this->_query($query); $res=array();
+		$r=$this->_querySlave($query); $res=array();
 		while($row=$r->fetch_row()) $res[$row[0]]=$row;
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectListValue($query){
 		$key;$value;
 		$fields=array(&$key,&$value);
-		$r=$this->_query_($query,$fields); $res=array();
+		$r=$this->_preparedQuerySlave($query,$fields); $res=array();
 		while($row=$r->fetch()) $res[$key]=$value;
 		$r->close(); return $res;
 	}
@@ -273,12 +290,12 @@ class DBMySQL extends DBSql{
 	/* SELECT USING PREPARE STATEMENT */
 	
 	public function /*#if DEV then _*/doSelectObjects($query,$queryObj,$fields){
-		$r=$this->_query_($query,$fields); $res=array();
+		$r=$this->_preparedQuerySlave($query,$fields); $res=array();
 		while($r->fetch()) $res[]=$queryObj->_createObj();
 		$r->close(); return $res;
 	}
 	public function /*#if DEV then _*/doSelectObjectsCallback($query,$queryObj,$fields,$callback){
-		$r=$this->_query_($query,$fields);
+		$r=$this->_preparedQuerySlave($query,$fields);
 		$r->store_result();
 		while($r->fetch()) $callback($queryObj->_createObj());
 		$r->free_result();
@@ -286,7 +303,7 @@ class DBMySQL extends DBSql{
 	}
 	
 	public function /*#if DEV then _*/doSelectAssocObjects($query,$queryObj,$fields,$tabResKey){
-		$r=$this->_query_($query,$fields); $res=array();
+		$r=$this->_preparedQuerySlave($query,$fields); $res=array();
 		while($r->fetch()){
 			$obj=$queryObj->_createObj();
 			$res[$obj->$tabResKey]=$obj;
@@ -295,7 +312,7 @@ class DBMySQL extends DBSql{
 		return $res;
 	}
 	public function /*#if DEV then _*/doSelectListObjects($query,$queryObj,$fields){
-		$r=$this->_query_($query,$fields); $res=array();
+		$r=$this->_preparedQuerySlave($query,$fields); $res=array();
 		while($r->fetch()){
 			$obj=$queryObj->_createObj();
 			$res[$fields[0]]=$obj;
@@ -305,7 +322,7 @@ class DBMySQL extends DBSql{
 	}
 	
 	public function /*#if DEV then _*/doSelectObject($query,$queryObj,$fields){
-		$r=$this->_query_($query,$fields);
+		$r=$this->_preparedQuerySlave($query,$fields);
 		if($r->fetch()) $res=$queryObj->_createObj(); else $res=false;
 		$r->close();
 		return $res;
