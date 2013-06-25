@@ -16,6 +16,7 @@ a{
   a.current{color:$InteractionCurrentColor}
   a:hover{color:$InteractionHoverColor}
 }
+a[href^="tel:"]{ text-decoration:none; }
 
 $__moreSelector:'';
 

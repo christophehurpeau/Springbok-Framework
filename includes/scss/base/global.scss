@@ -29,13 +29,13 @@ html body .hidden{display:none}
 .col{ display:table-cell; vertical-align:top; /* Opera */  @if $IE_COMPATIBILITY{ *float:left; /* IE <= 7 */ }}
 
 .line.gut > * + * { 
-    margin-left:1em;
+	margin-left:1em;
 }
 
 .row.gut > * + * { 
-   border-left:1em solid #fff; /* must be color of parent background */
-   border-left-color:transparent;
-   @if $IE_COMPATIBILITY{*border-left:0;}
+	border-left:1em solid #fff; /* must be color of parent background */
+	border-left-color:transparent;
+	@if $IE_COMPATIBILITY{*border-left:0;}
 }
 
 .aposR,.aposT,.aposTR,.aposB{position:absolute}
@@ -59,15 +59,15 @@ html body .hidden{display:none}
 .sepBot,.sepB,.sepTB{border-bottom:$SEP_BORDER;}
 
 .clearfix:after,header:after,.header:after,.fixed:after,.variable:after,ul.mosaic:after,nav.top:after,nav.top ul:after,form:after{ 
-  /*clear: both; 
-  display: block; 
-  height: 0; 
-  font-size: 0; 
-  visibility: hidden; 
-  content: ".";*/
-  content: "";
-  display: table;
-  clear: both; 
+	/*clear: both; 
+	display: block; 
+	height: 0; 
+	font-size: 0; 
+	visibility: hidden; 
+	content: ".";*/
+	content: "";
+	display: table;
+	clear: both; 
 }
 /** html .clearfix,*:first-child+html .clearfix*/
 @if $IE_COMPATIBILITY{
@@ -76,8 +76,8 @@ html body .hidden{display:none}
 
 
 span.right_val{
-    float: right;
-    text-align: right;
+	float: right;
+	text-align: right;
 }
 
 li a img{vertical-align:bottom}
@@ -86,62 +86,62 @@ img.floatL + h2,img.floatL + h3{clear:none;}
 table img,img.icon,span.icon,.vaMiddle,.row .vaMiddle{vertical-align:middle}
 span.img,span.icon{display:block;display:inline-block}
 .iconWrap{
-  position:relative;
-  overflow:hidden;
-  @if $IE_COMPATIBILITY{ zoom:1; }
+	position:relative;
+	overflow:hidden;
+	@if $IE_COMPATIBILITY{ zoom:1; }
 }
 .iconWrap .icon{
-  position:absolute;
-  top:0;left:0;
+	position:absolute;
+	top:0;left:0;
 }
 .iconWrap div{
-  display: table-cell;
-  vertical-align: middle;
+	display: table-cell;
+	vertical-align: middle;
 }
 a.aicon{display:inline-block;text-decoration:none;}
 
 ul.mosaic{
-  float:left; width:100%; clear:both;
-  list-style: none;
-  margin:0;padding:0;
-  li{float:left;display:block;margin:0 5px 3px 2px;}
-  li > a{display:block; text-decoration: none;}
-  li img{display:block; margin:0 auto 0; border:0}
+	float:left; width:100%; clear:both;
+	list-style: none;
+	margin:0;padding:0;
+	li{float:left;display:block;margin:0 5px 3px 2px;}
+	li > a{display:block; text-decoration: none;}
+	li img{display:block; margin:0 auto 0; border:0}
 }
 
 ul.inline,ul.nobullets,ul.simpleDouble,ul.clickable{
-  list-style:none;
-  margin:0;padding:0;
+	list-style:none;
+	margin:0;padding:0;
 }
 ul.inline{ @extend .dblock; }
 ul.inline li{ padding:2px 3px; display:inline; display:inline-block; }
 
 ul.spaced li{
-  padding:3px 0;
+	padding:3px 0;
 }
 
 ul.compact{
-  margin:5px 0;
-  padding:0 0 0 20px;
+	margin:5px 0;
+	padding:0 0 0 20px;
 }
 ul.icons{
-  list-style:none;
-  margin:5px 0;
-  padding:0 0 0 16px;
+	list-style:none;
+	margin:5px 0;
+	padding:0 0 0 16px;
 }
 ul.compact ul,ul.icons ul{margin:1px 0}
 
 ul.overflow-ellipsis li{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  display:block;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	display:block;
 }
 
 ul.simpleDouble ul{
 	list-style:disc;
 	padding:0 0 0 20px;
-  margin:0 0 5px;
+	margin:0 0 5px;
 }
 
 .cMt10 > *{margin-top:10px}
