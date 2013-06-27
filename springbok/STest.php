@@ -59,7 +59,7 @@ class TestNavigator extends CHttpClient{
 	
 	private $parsedHtml,$metas,$h1;
 	public function parseHtml(){
-		include_once CLIBS.'simple_html_dom.php';
+		include_once CORE.'libs/simple_html_dom.php';
 		$this->metas=null;
 		return $this->parsedHtml=str_get_html($this->getResult());
 	}
