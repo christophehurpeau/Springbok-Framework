@@ -63,7 +63,7 @@ S.html={
 			else{
 				if(url.contains('://')) return url;
 				if(url.startsWith('\\/')) return url.substr(1);
-				if(url.substr(0,1)==='/') return (full || '') + this.baseUrl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
+				if(url.charAt(0)==='/') return (full || '') + this.baseUrl + (S.router ? S.router.getStringLink(url.substr(1)) : url);
 			}
 		}else{
 			return (full || '') + this.baseUrl + (S.router ? S.router.getArrayLink(url) : url);

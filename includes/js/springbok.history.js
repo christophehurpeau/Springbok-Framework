@@ -84,7 +84,7 @@
 		
 		navigate:function(fragment,replace){
 			var frag = (fragment || '').replace(routeStripper, ''),loc=window.location;
-			if(frag.substr(0,1)==='?') frag=loc.pathname+frag;
+			if(frag.charAt(0)==='?') frag=loc.pathname+frag;
 			if(this.fragment == frag) return;
 			if(window._gaq) _gaq.push(['_trackPageview',frag]);
 			

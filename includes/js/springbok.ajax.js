@@ -91,7 +91,7 @@ includeCore('ui/slideTo');
 			if(divContent.length>0) divContent.data('layoutname');
 		},
 		load:function(url,data,type,forceNotAddDataToGetORdoNotDoTheEffect,replaceUrl){
-			if(url.substr(0,1)==='?') url=location.pathname+url;
+			if(url.charAt(0)==='?') url=location.pathname+url;
 			var oldCurrentTitle=document.title,ajaxurl=url,headers={},divLoading=$('<div class="globalAjaxLoading"/>').text(i18nc['Loading...']).prepend('<span/>');
 			
 			if(data && !forceNotAddDataToGetORdoNotDoTheEffect) url+=(url.indexOf('?')==-1?'?':'&')+data;
