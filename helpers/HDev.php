@@ -25,6 +25,7 @@ class HDev{
 			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="sessiotn">Session</a>'
 			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="js-console">Js Console (<span>0</span>)</a>'
 			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="ajax">Ajax (<span>0</span>)</a>'
+			.'<span class="springokBarSep"> | </span><a href="javascript:;" rel="metas">Métas</a>'
 			.'</div>';
 		
 		echo '<div id="springbok-bar-changes" class="springbok-bar-content"><div>'; self::springbokBarChanges(); echo '</div></div>';
@@ -38,6 +39,7 @@ class HDev{
 		echo '</div></div>';
 		
 		echo '<div id="springbok-bar-js-console" class="springbok-bar-content"><ul class="nobullets spaced"></ul></div>';
+		echo '<div id="springbok-bar-metas" class="springbok-bar-content"><div>'; self::springbokBarMetas(); echo '</div></div>';
 		
 		/*echo '<div id="springbok-bar-popup"><a href="javascript:;" onclick="$(\'#springbok-bar-popup\').fadeOut()">Close</a><pre></pre></div>';*/
 	}
@@ -108,6 +110,14 @@ class HDev{
 		else{
 			echo UVarDump::dump($_SESSION);
 		}
+	}
+	
+	private static function springbokBarMetas(){
+		echo '<h2>Métas</h2>';
+		echo '<ul id="springbokbar-metas-content"></ul>';
+		echo '<script>$(document).ready(function(){ var c=$("#springbokbar-metas-content");'
+			.' $("meta").each(function(e){ var li=$("<li>"),e=$(e); li.text("name="+e.attr("name")+", property="+e.attr("property")+", content="+e.attr("content")); c.append(li); })'
+			.' })</script>';
 	}
 	
 	
