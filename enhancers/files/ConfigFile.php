@@ -269,6 +269,9 @@ class ConfigFile extends PhpFile{
 							throw new Exception('Missing cookie_domain for entry "'.$entry.'" (file : '.$configname.')');
 				}
 				
+				if(!isset($configArray['cacheStore']))
+					$configArray['cacheStore']=isset($configArray['db']['cache'])?'SViewCacheStoreMongo':'SViewCacheStoreFile';
+				
 				$configArray=$this->mergeWithPluginsConfig('_',$configArray);
 				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
 				$configArray['models_infos']=$configArray['autoload_default'].'infos/';
