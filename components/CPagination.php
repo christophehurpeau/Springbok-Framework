@@ -72,4 +72,17 @@ class CPagination{
 	public function getResultsToArray(){
 		return SModel::mToArray($this->results);
 	}
+	
+	public function metas($linkFn){
+		$p=$this->page;
+		if($this->totalPages>1){
+			if($p>1){
+				if(!HHead::isMetaNameSet('robots'))
+					HHead::metaName('robots','noindex, follow');
+				HMeta::prev(call_user_func($linkFn,$p!=2?$p-1:null));
+			}
+			if($p<$this->totalPages) HMeta::next(call_user_func($linkFn,$p+1));
+		}
+		return $p;
+	}
 }

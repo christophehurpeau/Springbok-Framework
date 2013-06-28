@@ -43,6 +43,9 @@ class HHead{
 		self::$head['metaname.'.$name]='<meta name="'.$name.'" content="'.h($content).'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /*#/if*/
 	}
+	public static function isMetaNameSet($name){
+		return isset(self::$head['metaname.'.$name]);
+	}
 	
 	public static function metaNameAdd($name,$content){
 		/*#if DEV */
