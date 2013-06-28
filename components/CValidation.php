@@ -119,6 +119,16 @@ class CValidation{
 	public static function validMatch($val,$match){
 		return preg_match('/'.$match.'/',$val) ? false : sprintf(_tC('validation.pattern'),$match);
 	}
+	
+	public static function url($key,$val){
+		return self::_addError($key,self::validUrl($val,$maxSize));
+	}
+	private static function validUrl($val){
+		return self::isValidUrl($val) ? false : _tC('validation.url');
+	}
+	public static function isValidUrl($val){
+		return preg_match('/^https?\:\/\/'.self::PATTERN_HOSTNAME.'$/i',$val);
+	}
 }
 /*
 _tC('validation.color');
