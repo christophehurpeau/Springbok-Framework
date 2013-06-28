@@ -32,9 +32,6 @@ class SViewCacheStoreMongo{
 	}
 	
 	public function preinit(){
-		if($this->ve->exists()!==true){
-			$this->ve->generateAll();
-		}
 	}
 	
 	public function exists(){
