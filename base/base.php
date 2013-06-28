@@ -41,10 +41,10 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 		
 		$isGoodFile=file_exists($t['file'])?file_get_contents($t['file']):false;
 		
-		if($isGoodFile || !empty($t['args'])) $prettyMessage.='<div><a href="javascript:;" style="color:#CC7A00;text-decoration:none;outline:none;" onclick="var el=document.getElementById(\''.$id.'\'); el.style.display=el.style.display==\'none\'?\'block\':\'none\';">';
+		if($isGoodFile || !empty($t['args']) || !empty($t['params'])) $prettyMessage.='<div><a href="javascript:;" style="color:#CC7A00;text-decoration:none;outline:none;" onclick="var el=document.getElementById(\''.$id.'\'); el.style.display=el.style.display==\'none\'?\'block\':\'none\';">';
 		$prettyMessage.='#'.$i.' '.($isGoodFile?openLocalFile($t['file'],$t['line']):'').replaceAppAndCoreInFile($t['file']).'('.$t['line'].')'.($isGoodFile?'</a>':'').': ';
 		if(isset($t['object']) && is_object($t['object']))
-			$prettyMessage.=get_class($t['object']).'->';
+			$prettyMessage.=h(get_class($t['object'])).'->';
 		$prettyMessage.=$t['function']."()";
 		if($isGoodFile || !empty($t['args']) || !empty($t['params'])){
 			$prettyMessage.='</a></div><div id="'.$id.'" style="margin-top:5px;display:none">';
@@ -59,7 +59,7 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 					}
 				}else{
 					foreach($t['params'] as $argName=>$argVal){ 
-						$prettyMessage.='<i style="color:#666;font-size:7pt;">'.$argName.'</i> ';
+						$prettyMessage.='<i style="color:#666;font-size:7pt;">'.h($argName).'</i> ';
 						$prettyMessage.=h($argVal);
 						$prettyMessage.="<br />";
 					}
@@ -100,9 +100,10 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 function _debug($objects,$flush=true,$MAX_DEPTH=5){
 	if(count($objects)===1) $objects=$objects[0];
 	prettyDebug(UVarDump::dump($objects,$MAX_DEPTH),2,$flush,true);
+	if(count($objects)===1) return $objects;
 }
-function debug(){ _debug(func_get_args(),true); }
-function debugNoFlush(){ _debug(func_get_args(),false); }
+function debug(){ return _debug(func_get_args(),true); }
+function debugNoFlush(){ return _debug(func_get_args(),false); }
 
 function debugCode($code,$withBacktrace=true){
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
