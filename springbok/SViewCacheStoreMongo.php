@@ -40,9 +40,10 @@ class SViewCacheStoreMongo{
 	
 	public function incl($view,$vars){
 		extract($vars);
-		ob_start();
 		$res=$this->read($view);
 		if(substr($res,0,5)==='<?php') $res=substr($res,5);
+		else $res='?>'.$res;
+		ob_start();
 		eval($res);
 		return ob_get_clean();
 	}
