@@ -1,4 +1,35 @@
 <?php
+/* http://php.net/manual/en/function.array-column.php */
+if (!function_exists('array_column')){
+	function array_column(array $input, $columnKey, $indexKey = null) {
+		$result = array();
+		if (null === $indexKey) {
+			if (null === $columnKey) {
+				// trigger_error('What are you doing? Use array_values() instead!', E_USER_NOTICE);
+				$result = array_values($input);
+			}
+			else {
+				foreach ($input as $row) {
+					$result[] = $row[$columnKey];
+				}
+			}
+		}
+		else {
+			if (null === $columnKey) {
+				foreach ($input as $row) {
+					$result[$row[$indexKey]] = $row;
+				}
+			}
+			else {
+				foreach ($input as $row) {
+					$result[$row[$indexKey]] = $row[$columnKey];
+				}
+			}
+		}
+		return $result;
+	}
+}
+
 function replaceAppAndCoreInFile($file){
 	return str_replace(array(APP,CORE,realpath(CORE).'/'),array('APP/','CORE/','CORE/'),$file);
 }

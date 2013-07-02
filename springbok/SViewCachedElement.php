@@ -23,14 +23,19 @@ class SViewCachedElement extends SViewElement{
 		call_user_func(static::$store.'::destroyAll',$path,static::$views);
 	}
 	
-	protected $_store;
+	protected $_store,$_vars;
 	public function __construct($vars){
 		$this->calledClass=get_called_class();
-		parent::__construct($vars);
-		$this->_store=new static::$store($this,call_user_func_array($this->calledClass.'::path',$vars));
+		$this->_store=new static::$store($this,call_user_func_array($this->calledClass.'::path',$this->_vars=$vars));
+		if($this->exists()!==true)
+			$this->generateAll();
 		$this->_store->preinit();
 	}
+	public function loadVars($v=null){
+		if($this->vars===null) parent::loadVars($this->_vars);
+	}
 	public function generateAll($close=true){
+		$this->loadVars();
 		try{
 			include_once CORE.'mvc/views/View.php';
 			$this->_store->init();
@@ -42,7 +47,10 @@ class SViewCachedElement extends SViewElement{
 		}
 	}
 	
-	public function exists(){ return $this->_store->exists(); }
+	public function exists(){
+		/*#if DEV*/ return false;/*#/if*/
+		return $this->_store->exists();
+	}
 	
 	public function render($view='view'){
 		return $this->_store->read($view);

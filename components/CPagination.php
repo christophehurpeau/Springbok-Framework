@@ -18,7 +18,7 @@ class CPagination{
 	
 	public function pageSize($pageSize){$this->pageSize=$pageSize;return $this;}
 	public function getPageSize(){return $this->pageSize;}
-	public function page($page){$this->page=$page;return $this;}
+	public function page($page){$this->page=(int)$page;return $this;}
 	public function getPage(){return $this->page;}
 	public function getTotalResults(){return $this->totalResults;}
 	public function getTotalPages(){return $this->totalPages;}
@@ -79,7 +79,7 @@ class CPagination{
 			if($p>1){
 				if(!HHead::isMetaNameSet('robots'))
 					HHead::metaName('robots','noindex, follow');
-				HMeta::prev(call_user_func($linkFn,$p!=2?$p-1:null));
+				HMeta::prev(call_user_func($linkFn,$p===2?null:$p-1));
 			}
 			if($p<$this->totalPages) HMeta::next(call_user_func($linkFn,$p+1));
 		}

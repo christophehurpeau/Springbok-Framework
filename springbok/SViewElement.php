@@ -7,6 +7,9 @@ class SViewElement{
 	protected $vars,$calledClass;
 	public function __construct($vars){
 		$this->calledClass=get_called_class();
+		$this->loadVars($vars);
+	}
+	public function loadVars($vars){
 		$this->vars=call_user_func_array($this->calledClass.'::vars',$vars);
 	}
 	

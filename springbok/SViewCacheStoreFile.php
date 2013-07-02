@@ -31,9 +31,6 @@ class SViewCacheStoreFile{
 	}
 	
 	public function preinit(){
-		if($this->ve->exists()!==true){
-			$this->ve->generateAll();
-		}
 		try{
 			$this->_file=UFile::open($this->path.'_view','rb');
 		}catch(ErrorException $e){

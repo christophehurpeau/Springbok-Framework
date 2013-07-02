@@ -83,7 +83,7 @@ class HPagination{
 		if($totalPages>1) 
 			return $pager='<div class="pager">'.self::createPager($page,$totalPages,
 			function($page) use($pageName){
-				return ' href="'.HHtml::url(CRoute::getAll()).'?'.$pageName.'='.$page.'"';
+				return ' href="'.HHtml::url(CRoute::getAll()).($page<2 ? '' : '?'.$pageName.'='.$page).'"';
 			}).'</div>';
 		return '';
 	}
@@ -109,6 +109,6 @@ class HPagination{
 	}
 	
 	public static function callbackCreateUrl($page){
-		return HHtml::url(CRoute::getAll()).'?page='.$page;
+		return HHtml::url(CRoute::getAll()).($page<2 ? '' : '?page='.$page);
 	}
 }
