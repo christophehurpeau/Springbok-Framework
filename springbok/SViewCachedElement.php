@@ -43,7 +43,7 @@ class SViewCachedElement extends SViewElement{
 			$this->_store->end($close);
 		}catch(Exception $e){
 			/*#if DEV */ throw $e; /*#/if*/
-			foreach(static::$views as $view) UFile::rm($this->path.$view);
+			$this->_store->removeAll(static::$views);
 		}
 	}
 	

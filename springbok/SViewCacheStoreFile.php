@@ -72,6 +72,10 @@ class SViewCacheStoreFile{
 		return $view==='view' ? $this->_file->write($content) : self::writeStatic($this->path,$view,$content);
 	}
 	
+	public function removeAll($views){
+		foreach($views as $view) UFile::rm($this->path.'_'.$view);
+	}
+	
 	public function init(){
 		$this->_file=UFile::open($this->path.'_view','w');
 		$this->_file->lockExclusive();
