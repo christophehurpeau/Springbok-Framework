@@ -9,7 +9,12 @@ class SViewCacheStoreMongo{
 		try{
 			self::$db=DB::init('cache');
 		}catch(Exception $e){
-			self::$db=false;
+			usleep(200);
+			try{
+				self::$db=DB::init('cache');
+			}catch(Exception $e){
+				self::$db=false;
+			}
 		}
 	}
 	
@@ -55,6 +60,10 @@ class SViewCacheStoreMongo{
 	}
 	public function write($view,$content){
 		$this->data[$view]=$content;
+	}
+	
+	public function removeAll($views){
+		$this->collection->remove(array('_id'=>$this->id),array('justOne'=>true));
 	}
 	
 	public function init(){
