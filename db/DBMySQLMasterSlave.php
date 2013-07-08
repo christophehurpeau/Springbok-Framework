@@ -20,4 +20,16 @@ class DBMySQLMasterSlave extends DBMySQL{
 		return $this->_internal_preparedQuery($this->_connect_slave,$query,$fields);
 	}
 	
+	
+	public function getHost(){
+		return $this->_config['slave']['host'];
+	}
+	
+	public function getDbName(){
+		return $this->formatTable($this->_config['slave']['dbname']);
+	}
+	
+	public function getDatabaseName(){
+		return $this->_config['slave']['dbname'];
+	}
 }

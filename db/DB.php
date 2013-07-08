@@ -109,8 +109,12 @@ abstract class DB{
 
 	//public function getVersion(){return $this->_connect->getAttribute(PDO::ATTR_SERVER_VERSION);}
 	
-	public function isInSameHost(DB &$db){
-		return $this->_config['host'] === $db->_config['host'];
+	public function isInSameHost(DB $db){
+		return $this->getHost() === $db->getHost();
+	}
+	
+	public function getHost(){
+		return $this->_config['host'];
 	}
 	
 	public function getDbName(){

@@ -53,7 +53,7 @@ class ConfigFile extends PhpFile{
 				}
 			}
 		}else*/
-		if($configname=='enhance'||$configname=='tests') ; //nothing
+		if($configname=='enhance'||$configname=='tests'||$configname==='deployments') ; //nothing
 		elseif(substr($configname,0,5)==='lang.'){
 			$lang=substr($configname,5);
 			$fileLang=$this->enhanced->getAppDir().'db/'.$lang.'.db';
