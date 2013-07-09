@@ -15,6 +15,7 @@ class SViewCachedElement extends SViewElement{
 	
 	
 	public static function renderFile($calledClass,$view,$vars){
+		$vars['_viewName']=$view;
 		return render(APP.'viewsElements/'.substr($calledClass,1).'/'.$view.'.php',$vars,true);
 	}
 	
