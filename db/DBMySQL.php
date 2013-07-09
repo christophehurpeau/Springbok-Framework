@@ -27,8 +27,10 @@ class DBMySQL extends DBSql{
 		return $connect;
 	}
 	
-	public function getVersion(){return $this->_connect->server_version;}
-	public function lastInsertID($name=null) {
+	public function getVersion(){
+		return $this->_connect->server_version;
+	}
+	public function lastInsertID($name=null){
 		return (int)$this->_connect->insert_id;
 	}
 	
