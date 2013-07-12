@@ -108,6 +108,7 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
 */
 
 .ui-widget-header{
+	$HeaderMenuLinkColor:false !default;
   .ui-state-default{ 
   	@if $HeaderMenuLinkBorder{ border:1px solid $HeaderMenuLinkBorder; }
   	@if $HeaderMenuLinkBackground{
@@ -116,12 +117,16 @@ $__uiWidgetContentBackground:if(lightness($__uiWidgetContentBackground) > lightn
   	}@else{
   		background:inherit;
   	}
-  	color:$HeaderMenuLinkColor;
+  	
+  	@if $HeaderMenuLinkColor{
+  		color:$HeaderMenuLinkColor;
+  	}
   	font-weight: bold;
   }
   
-  .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: $HeaderMenuLinkColor; }
-  
+	@if $HeaderMenuLinkColor{
+  	.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: $HeaderMenuLinkColor; }
+  }
   .ui-state-hover,.ui-state-focus,.ui-state-active{
   	@include background($HeaderMenuLinkCurrentOrHoverBackground);
   	@if $HeaderMenuLinkCurrentOrHoverShadow{ text-shadow: -1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 1px 1px $HeaderMenuLinkCurrentOrHoverShadow,1px 0 1px $HeaderMenuLinkCurrentOrHoverShadow,0 -1px 1px $HeaderMenuLinkCurrentOrHoverShadow; }
