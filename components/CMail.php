@@ -62,4 +62,9 @@ class CMail{
 	public static function sendAdmin($template,$vars,$subject){
 		self::send('admin/'.$template, $vars, $subject,Config::$admin_email);
 	}
+	
+	
+	public static function sendAdminHtml($html,$subject){
+		self::sendHtml($html,$subject,Config::$admin_email);
+	}
 }
