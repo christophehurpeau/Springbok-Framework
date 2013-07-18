@@ -15,8 +15,12 @@ class HElementForm extends HElement{
 	public static function Get(){ return new static('get'); }
 	public static function File(){
 		$elt= new static('post');
-		$elt->attr('enctype','multipart/form-data');
-		return $elt;
+		return $elt->fileEnctype();
+	}
+	
+	public function fileEnctype(){
+		$this->attr('enctype','multipart/form-data');
+		return $this;
 	}
 	
 	public $method,$action,$actionEntry,$urlfull,

@@ -8,3 +8,6 @@
 	path = includes/img
 	url = git@github.com:christophehurpeau/Springbok-Images.git
 
+[submodule "includes/springbokjs"]
+	path = includes/springbokjs
+	url = git@github.com:christophehurpeau/SpringbokJS.git
