@@ -17,7 +17,8 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 		},
 		emptyResult:function(){
 			this._div().empty();
-		}
+		},
+		_div:function(){ return this.div; }
 	},
 	ctor:function(input,url,destContent,options){
 		S.ui.InputFollow.call(this,input);
@@ -108,7 +109,6 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 			});
 		if(this.hasFocus) input.trigger('sSearch')
 	},
-	_div:function(){ return this.div; },
 },{
 	defaultDisplayList:function(data,ulAttrs,callback){
 		var t=this,li,result=$('<ul>').attr(ulAttrs),key=this.oKey||'text';

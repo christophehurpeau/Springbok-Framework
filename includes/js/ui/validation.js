@@ -1,10 +1,16 @@
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+/* !!!!!!!!!!!!!! SPRINGBOK !!!!!!!!!!!!!! */
+/* !!!!!!!!!!!!!!    JS     !!!!!!!!!!!!!! */
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+ 
 includeCore('ui/inputbox');
 
-/*#if DEV*/
 S.ready(function(){
-	if($.ht5ifv) alert('Please do not use ht5ifv !');
+	/*#if DEV*/
+		if($.ht5ifv) alert('Please do not use ht5ifv !');
+	/*#/if*/
+	
 });
-/*#/if*/
 (function(){
 	var checkTimeFormat=function(val){
 		//http://www.w3.org/TR/html5/common-microsyntaxes.html#valid-time-string
@@ -88,7 +94,7 @@ S.ready(function(){
 				},
 				
 				file:function($node,val){
-					/*#if DEV*/ alert('TODO'); /*#/if*/
+					/*#if DEV*/ if($node.prop('required')) alert('TODO'); /*#/if*/
 					return false;
 				},
 				
@@ -101,9 +107,9 @@ S.ready(function(){
 			pattern:function(pattern,val,$node){ return !(new RegExp('^'+pattern+'$')).test(val); },
 			minlength:function(maxlength,val,$node){ return val.length < maxlength; },
 			maxlength:function(minlength,val,$node){ return val.length > minlength; },
-			'data-same':function(dataSame,val,$node){ return val != $(dataSame).val(); }
+			'data-same':function(dataSame,val,$node){ return val != $.first(dataSame).val(); }
 		},
-		checkbox:function($node){ return !(!$node.prop('required') || $node.is(':checked')); },
+		checkbox:function($node){ return !(!$node.prop('required') || $node.prop('checked')); },
 		select:function($node){ return $node.val() == null; },
 		textarea:function($node){ return false; },
 		radio:function($radioGroup,$node){ return $radioGroup.filter(':checked').length > 0 }
@@ -138,8 +144,8 @@ S.ready(function(){
 			if(this.form){
 				if(!removedForm){ //TODO : do that in widget or listenable
 					this.form.off(this.eventsName,selectorAllElements,this.listenFormF)
-						.unbind('submit',this.listenSubmitF)
-						.unbind('dispose',this.listtenDispose);
+						.off('submit',this.listenSubmitF)
+						.off('dispose',this.listtenDispose);
 				}
 				delete this.form;
 			}
@@ -154,7 +160,7 @@ S.ready(function(){
 		},*/
 		check:function(){
 			var t=this,radioNames=[],error;
-			this.form.find(selectorAllElements).each(function(){
+			this.form.find(selectorAllElements).forEach(function(){
 				var elt=$(this);
 				if(elt.is('input[type="radio"]')){
 					var name=elt.attr('name');
@@ -166,12 +172,12 @@ S.ready(function(){
 			return !error;
 		},
 		checkElement:function(elt,checkAllAndFirstError){
-			if(elt.is(':disabled')){
+			if(elt.prop('disabled')){
 				this.cleanElement(elt);
 				return true;
 			}
 			
-			var tagName=elt.prop('tagName').toLowerCase(),isInput=tagName==='input',type=isInput ? elt.attr('type')||'text' : undefined,error;
+			var tagName=elt.nodeName(),isInput=tagName==='input',type=isInput ? elt.attr('type')||'text' : undefined,error;
 			if(isInput && type==='radio'){
 				
 			}else if(isInput && type==='checkbox'){
@@ -229,15 +235,16 @@ S.ready(function(){
 			if(ib){ ib.div.empty(); ib.hideDiv(); }
 		}
 	};
-	//TODO validation min, max, pattern
-	//TODO replace ht5ifv everywhere
 	//TODO trigger events to be able to be used by inputListHandler
 	
-	S.FormValidator.checkForm=function(form){
+	S.FormValidator.getValidator=function(form){
 		var validator=form.data('sValidator');
 		!validator && (validator=new S.FormValidator(form));
-		return validator.check();
-	}
+		return validator;
+	};
+	S.FormValidator.checkForm=function(form){
+		return S.FormValidator.getValidator(form).check();
+	};
 	
 	$document.on('focus','form:not([novalidate])',function(e){
 		var v=new S.FormValidator($(this)),target;

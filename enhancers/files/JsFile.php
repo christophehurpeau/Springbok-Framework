@@ -309,6 +309,8 @@ class JsFile extends EnhancerFile{
 				$matches[2]=$fileName;
 			}elseif($matches[1]==='CoreUtils'){
 				$path=CORE_SRC.'includes/js-utils';
+			}elseif($matches[1]==='JsCore'){
+				$path=CORE_SRC.'includes/springbokjs/src';
 			}else $path=CORE_SRC.(file_exists(CORE_SRC.'includes/js/'.$matches[2].'.js')?'includes/js':'includes');
 			
 			$fileContent=file_get_contents($path.DS.$matches[2].'.js');

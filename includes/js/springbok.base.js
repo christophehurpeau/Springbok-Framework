@@ -181,6 +181,8 @@ $.cleanData=function(elems){
 }
 
 UObj.extend($.fn,{
+	forEach:$.fn.each,
+	
 	/* https://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js */
 	delayedBind:function(delay,eventType,eventData,handler,throttle){
 		if($.isFunction(eventData)){
@@ -216,7 +218,11 @@ UObj.extend($.fn,{
 	},
 	sHide:function(){ this.addClass('hidden'); return this; },
 	sShow:function(){ this.removeClass('hidden ssHidden'); return this; },
-	sToggle:function(){ return this[this.css('display')==='none'?'sShow':'sHide'](); }// cannot use hasClass('hidden') : ssHidden !
+	sToggle:function(){ return this[this.css('display')==='none'?'sShow':'sHide'](); },// cannot use hasClass('hidden') : ssHidden !
+	
+	nodeName:function(){
+		return this.prop('tagName').toLowerCase();
+	}
 });
 
 /*function extendBasic(subclass,superclass,basicsuperclass,varName,extendsPrototype){
@@ -225,8 +231,8 @@ UObj.extend($.fn,{
 		subclass.prototype[i]=function(){return basicsuperclass.prototype[i].apply(this[varName],arguments);}
 }*/
 
-
-
+//compat springbok $
+$.first=$;
 
 /*#if DEV*/
 S.error=function(m){
