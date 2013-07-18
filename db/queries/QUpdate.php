@@ -8,7 +8,7 @@ include_once __DIR__.DS.'AQuery.php';
 	[LIMIT row_count]
  */
 class QUpdate extends AQuery{
-	private $values,$where,$limit=null,$orderBy,$updatedField;
+	private $values,$where,$limit=null,$ignore=false,$orderBy,$updatedField;
 
 	public function __construct($modelName,$updatedField=null){
 		parent::__construct($modelName);
@@ -44,6 +44,12 @@ class QUpdate extends AQuery{
 	public function addOrder($value){ $this->orderBy[]=$value; return $this; }
 	
 	
+	public function ignore(){
+		$this->ignore=true;
+		return $this;
+	}
+	
+	
 	/** (limit) or ($limit, down) */
 	public function limit($limit,$down=0){
 		if($down>0) $this->limit=((int)$down).','.((int)$limit);
@@ -54,7 +60,9 @@ class QUpdate extends AQuery{
 	
 	public function _toSQL(){
 		$modelName=$this->modelName;
-		$sql='UPDATE '.$modelName::_fullTableName().' SET ';
+		$sql='UPDATE ';
+		if($this->ignore!==false) $sql.='IGNORE ';
+		$sql.=$modelName::_fullTableName().' SET ';
 		if(!empty($this->values)) foreach($this->values as $key=>$value){
 			if($key===$this->updatedField){
 				if($value===false) $this->updatedField=null;
