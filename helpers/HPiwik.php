@@ -1,16 +1,17 @@
 <?php
 class HPiwik{
 	/**
-	 * piwikLink: example.com/piwik.php
+	 * piwikLink: example.com/
 	 */
-	public static function tracker($piwikLink,$siteId=1){
+	public static function tracker($piwikLink,$siteId=1,$customVariables=null){
 		return HHtml::jsInline('var _paq=_paq||[];_paq.push(["trackPageView"]);_paq.push(["enableLinkTracking"]);'
-			.'(function(d,t){var g,s,u=("https:"===d.location.protocol?"https":"http")+"://'.$piwikLink.'";'
+			.'(function(d,t){var g,s,u=("https:"===d.location.protocol?"https":"http")+"://'.$piwikLink.'piwik.js";'
 			.'_paq.push(["setTrackerUrl",u+"piwik.php"]);_paq.push(["setSiteId",'.$siteId.']);'
+			. ( empty($customVariables) ? '' : implode('',array_map(function($var){ return '_paq.push([\'setCustomVariable\','.$var.']);'; },$customVariables)) )
 			.'g=d.createElement(t);s=d.getElementsByTagName(t)[0];g.type="text/javascript";'
 			.'g.defer=true;g.async=true;g.src=u+"piwik.js";s.parentNode.insertBefore(g,s);'
 			.'})(document,"script")')
-		.'<noscript><p><img src="http://'.$piwikLink.'?idsite='.$siteId.'" style="border:0" alt=""/></p></noscript>';
+		.'<noscript><p><img src="http://'.$piwikLink.'piwik.php?idsite='.$siteId.'" style="border:0" alt=""/></p></noscript>';
 	}
 	
 	/**
