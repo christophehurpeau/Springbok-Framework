@@ -151,9 +151,9 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 	}
 	
 	
-	public static function ganalytics($code,$trackPageLoadTime=false){
+	public static function ganalytics($code,$trackPageLoadTime=false,$customVars=''){
 		self::jsHead('
-var _gaq=[["_setAccount","'.$code.'"],[\'_trackPageview\']'.($trackPageLoadTime?",['_trackPageLoadTime']":'').'];
+var _gaq=[["_setAccount","'.$code.'"],[\'_trackPageview\']'.($trackPageLoadTime?",['_trackPageLoadTime']":'').'];'.$customVars.'
 (function(d,t){
 var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
 g.type=\'text/javascript\';g.async=1;g.src=\''.(IS_HTTPS?'https://ssl':'http://www').'.google-analytics.com/ga.js\';
