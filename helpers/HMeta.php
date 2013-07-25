@@ -12,6 +12,12 @@ class HMeta{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::description()</div>'; /*#/if*/
 	}
 	
+	public static function basic($description,$keywords){
+		HHead::metaName('description',$description);
+		HHead::metaName('keywords',$keywords);
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HMeta::basic()</div>'; /*#/if*/
+	}
+	
 	public static function set($metas){
 		HHead::metaName('keywords',$metas['keywords']);
 		HHead::metaName('description',$metas['description']);
