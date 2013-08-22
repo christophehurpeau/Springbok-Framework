@@ -10,7 +10,12 @@ class UHtml{
 			preg_match('/data\-type="([^"]+)"/',$m[1],$type);
 			preg_match('/data\-params="([^"]+)"/',$m[1],$params);
 			
-			return '<a href="'.HHtml::urlEscape(call_user_func_array(array($routes[$type[1]],'internalLink'),json_decode(html_entity_decode($params[1],ENT_QUOTES,'UTF-8'),true)),$entryUrls,$fullUrls).'" '.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params|href)="[^"]+"\s*#U',' ',$m[1])).'>';
+			$internalLink=call_user_func_array(array($routes[$type[1]],'internalLink'),
+					json_decode(html_entity_decode($params[1],ENT_QUOTES,'UTF-8'),true));
+			if($internalLink===false)
+				return '<a '.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params)="[^"]+"\s*#U',' ',$m[1])).'>';
+			return '<a href="'.HHtml::urlEscape($internalLink,$entryUrls,$fullUrls).'" '
+				.trim(preg_replace('#\s*(?:data\-role|data\-type|data\-params|href)="[^"]+"\s*#U',' ',$m[1])).'>';
 		},$content);
 	}
 	

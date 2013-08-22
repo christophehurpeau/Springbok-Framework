@@ -37,7 +37,7 @@ class UVarDump{
 				if($currentDepth<$this->MAX_DEPTH){
 					$res.=$this->newLine();
 					foreach($var as $k=>&$v)
-						$res.=str_repeat($this->color('| ','666'),$currentDepth+1).$this->color($k,'6BCEDE').'=>'.$this->_dumpVar($v,$currentDepth+1).$this->newLine();
+						$res.=str_repeat($this->color('| ','666'),$currentDepth+1)./*$this->color($k,'6BCEDE')*/$this->_dumpVar($k,$currentDepth)/**/.'=>'.$this->_dumpVar($v,$currentDepth+1).$this->newLine();
 					$res=rtrim($res);
 				}
 			//}
