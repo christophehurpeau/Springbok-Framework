@@ -8,7 +8,7 @@ PhpWsdl::$DebugBackTrace=true;
 /*#/if*/
 PhpWsdl::$CacheFolder=DATA.'soap/';
 class SControllerSoap extends Controller{
-	protected static $resp,$soapMethods;
+	protected static $resp,$soapMethods,$namespace;
 	
 	public static function dispatch($suffix,$mdef){
 		self::$suffix=$suffix;
@@ -23,7 +23,7 @@ class SControllerSoap extends Controller{
 		$params=unserialize(file_get_contents($paramsFile));
 		
 		$soap=PhpWsdl::CreateInstance(
-			HHtml::url('/'.CRoute::getController(),null,true).'/',	// PhpWsdl will determine a good namespace
+			static::$namespace !== null ? static::$namespace : HHtml::url('/'.CRoute::getController(),null,true).'/',	// PhpWsdl will determine a good namespace
 			HHtml::url('/'.CRoute::getController(),null,true),	// Change this to your SOAP endpoint URI (or keep it NULL and PhpWsdl will determine it)
 			DATA.'soap/',							// Change this to a folder with write access
 			null,								// PhpWsdl should not parse PHP comments for this demonstration
