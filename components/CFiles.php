@@ -81,4 +81,10 @@ class CFiles{
 		
 		return $id;
 	}
+	
+	
+	public static function deleteFile($file){
+		$filename=static::folderPath().$file->id.'.'.$file->ext;
+		UFile::rm($filename);
+	}
 }

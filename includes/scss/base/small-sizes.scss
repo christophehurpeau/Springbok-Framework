@@ -1,5 +1,5 @@
 /* quick smartphone reset */
-@media (max-width: 640px) {
+@media (max-width: 640px){
 	[class*="w160"], [class*="w200"], [class*="w280"],
 	[class*="w300"], [class*="w350"], [class*="w380"],
 	[class*="w400"], [class*="w420"], [class*="w600"],
@@ -24,10 +24,10 @@
 	h4{font-size:1.05em !important}
 	h5{font-size:0.8em !important}
 
-	body #container{min-width:0}
+	body #container{min-width:0;width:auto !important}
 	
 	.row .col{
-		display:block  !important;
+		display:block !important;
 		margin:0 !important;
 		border:0 !important;
 		float:none !important;
@@ -58,7 +58,7 @@
 	  	text-decoration:none;
     }
    */
-	.ssHidden{ display:none; }
+	.ssHidden, #page .ssHidden{ display:none !important; } /* #page .ssHidden  and !important because of .row .col */
 	
 	form div.submit{ text-align:center; }
 	

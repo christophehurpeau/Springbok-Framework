@@ -8,6 +8,9 @@ includeCore('libs/jquery-ui-1.9.2.position');
 		afterSubmit:function(){
 			this.find('input.default').each(function(){ var t=$(this); t.val() ? t.removeClass('default') : t.val(this.title);});
 			return this;
+		},
+		clean:function(){
+			this.is('input.default').removeClass('default').val('');
 		}
 	};
 	$.fn.defaultInput = function(method){

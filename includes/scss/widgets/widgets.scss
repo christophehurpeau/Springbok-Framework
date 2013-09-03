@@ -5,3 +5,38 @@ $WidgetBackgroundColor:#FFF !default;
 	border:1px solid #000000;
 	border-radius:3px;
 }
+
+.widgetBox{
+	position:absolute;
+	overflow:auto;
+	z-index:5;
+	box-shadow:1px 1px 4px;
+	margin:4px;
+}
+
+.widget.withArrow{
+	position: relative;
+	margin-top: 35px;
+}
+.widget.withArrow:after, .widget.withArrow:before {
+	bottom: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0; width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.widget.withArrow:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #fff;
+	border-width: 30px;
+	left: 50%;
+	margin-left: -30px;
+}
+.widget.withArrow:before {
+	border-color: rgba(0, 0, 0, 0);
+	border-bottom-color: #000;
+	border-width: 36px;
+	left: 50%;
+	margin-left: -36px;
+}

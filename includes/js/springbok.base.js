@@ -20,8 +20,11 @@ window.onerror=function handleError(message,url,line){
 if(OLD_IE){
 	//include Core('es5-compat.src');
 }else{
-	if(!Object.keys){//http://kangax.github.com/es5-compat-table/
-		$.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+	if(!Object.keys || !String.contains || !(window.Map && window.Map.prototype.forEach)){ // not String.prototype.contains : the generic version
+		//$.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+		Object.keys || $.ajax({ url:webUrl+'js/es5-compat.js', global:false, async:false, cache:true, dataType:'script' });
+		/* !String.contains || !(window.Map && window.Map.prototype.forEach) */
+		$.ajax({ url:webUrl+'js/es6-compat.js', global:false, async:false, cache:true, dataType:'script' });
 	}
 }
 
@@ -35,6 +38,15 @@ includeCoreUtils('UArray');
 includeCoreUtils('UString/');
 
 UObj.extend(S,{
+	t: function(string,args){
+		string = i18n[string] || string;
+		return args ? UString.vformat(string,args) : string;
+	},
+	tC: function(string,args){
+		string = i18nc[string] || string;
+		return args ? UString.vformat(string,args) : string;
+	},
+	
 	ready:function(callback){ $document.ready(callback); },
 	redirect:function(url){ url && (window.location=url); },
 	setTitle:function(title){document.title=title;},
@@ -139,7 +151,7 @@ UObj.extend(S,{
 	},
 	
 	preventMiddleClick:function(){
-		$document.bind('click',function(e){
+		$document.on('click',function(e){
 			if(e.which==2){
 				e.preventDefault();
 				return false;

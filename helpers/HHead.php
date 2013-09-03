@@ -122,9 +122,9 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkCss()</div>'; /*#/if*/
 	}
 	
-	public static function linkJs($url='/global'){
+	public static function linkJs($url='/global',$addOldIESuffix=true){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
-		if(CHttpUserAgent::isIElt9() && $url!=='/es5-compat'){
+		if($addOldIESuffix && CHttpUserAgent::isIElt9()){
 			if(substr($url,-4)!=='.min') $url.='.oldIe';
 		}
 		self::$head['js'].='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
@@ -192,4 +192,7 @@ class HHead{
 	}
 }
 
-if(CHttpUserAgent::isIElt9()) HHead::linkJs('/es5-compat');
+if(CHttpUserAgent::isIElt9()){
+	HHead::linkJs('/es5-compat',false);
+	HHead::linkJs('/es6-compat',false);
+}

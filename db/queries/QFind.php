@@ -639,7 +639,7 @@ abstract class QFind extends QSelect{
 						self::_recursiveThroughWith($withMore,$w['joins'],$obj::$__className);
 						
 						$resFields = $rel[0];
-						$oneField=count($w['fields'])===1 && !isset($w['with'])?$w['fields'][0]:false;
+						$oneField=(count($w['fields'])===1 && !isset($w['with'])) || isset($w['forceOneField']) ? $w['fields'][0] : false;
 						
 						/*#if DEV */if(empty($w['fields'])) throw new Exception('You must specify fields...');/*#/if*/
 						foreach($resFields as $resField){
@@ -748,7 +748,7 @@ abstract class QFind extends QSelect{
 	
 	private static function _createHasManyQuery($query,$w,$values,$resFields,$addResFields=false,$moreWith=null,$fieldTableAlias=null){
 		if($query===null){
-			if($addResFields===false && count($w['fields'])===1 && !isset($w['with'])) $query=new QFindValues($w['modelName']);
+			if($addResFields===false && ((count($w['fields'])===1 && !isset($w['with'])) || isset($w['forceOneField']))) $query=new QFindValues($w['modelName']);
 			else $query = new QFindAll($w['modelName']);
 		}
 		$query->setFields($addResFields ? self::_addFieldsIfNecessary($w['fields'],$resFields) : $w['fields']);

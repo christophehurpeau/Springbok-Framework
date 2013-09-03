@@ -3,8 +3,7 @@ includeCore('ui/base');
 
 S.ui.InputFollow=S.Widget.extend({
 	ctor:function(input){
-		var t=this;
-		this.input=input.bind('dispose',function(){ t.dispose(); });
+		this.input=input.on('dispose',function(){ this.dispose(); }.bind(this));
 	},
-	isNotEditable:function(){return this.input.is(':disabled')||this.input.prop('readonly');}
+	isNotEditable:function(){return this.input[0].disabled || this.input[0].readonly;}
 });

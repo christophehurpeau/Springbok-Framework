@@ -26,6 +26,10 @@ legend{
 	*margin-left: -7px; /* Corrects alignment displayed oddly in IE 6/7. */
 }
 
+textarea{
+	resize:vertical;
+}
+
 button,input,select,textarea {
 	margin: 0; /* Addresses margins set differently in IE 6/7, Firefox 3+, Safari 5, and Chrome. */
 	vertical-align: baseline; *vertical-align: middle; /* Improves appearance and consistency in all browsers */
@@ -33,7 +37,9 @@ button,input,select,textarea {
 }
 
 /* Re-set default cursor for disabled elements. */
-button[disabled],input[disabled]{ cursor: default; }
+button[disabled], input[disabled]{
+	cursor: default;
+}
 
 
 
@@ -88,19 +94,21 @@ div input,div textarea{
 	border:1px solid #B4B4B4;
 	/* @include boxShadow(#eee,10px); */
 	transition:all .3s;
+	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.1);
+	outline:none;
 }
-textarea{
-	resize:vertical;
+div input:hover, div textarea:hover{background-color:#FBFBFB}
+div input:focus, div textarea:focus{
+	background-color:#FFF;
+	box-shadow: 0 0 3px rgba(127, 127, 127, 0.5);
 }
-div input:hover, div textarea:hover{background-color:#FAFAFA}
-div input:focus, div textarea:focus{background-color:#FFF}
 
 div .input{ margin:1px 0; position:relative }
 div .textarea{ margin: 2px 0 }
 
 div .input.text input[disabled="disabled"],form .text input[readonly="readonly"]{color:#333; background-color:#D5D5D5;}
 
-input.default,.input.text input.default{color:#777;font-style:italic}
+input.default,.input.text input.default{color:#777;font-style:italic;text-shadow:none}
 
 form .checkbox{padding:2px 0}
 form div.input.checkbox label{width:auto}
@@ -136,7 +144,8 @@ tr.form td{border:1px solid #C4C4C4; padding:0}
 
 .form input{
 	border:1px transparent;
-	margin:0;padding:2px 0;
+	margin:0;
+	padding:2px 0;
 	width:100%;
 	
 }

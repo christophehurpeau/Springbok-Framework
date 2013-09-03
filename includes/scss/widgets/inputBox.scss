@@ -1,14 +1,8 @@
 @includeCore 'widgets/widgets';
 
-.divInputBox{
-	position:absolute;
-	overflow:auto;
-	z-index:5;
-	box-shadow:1px 1px 4px;
-}
 /*
 @if $IE_COMPATIBILITY{
-html .divInputBox { width:1px; } /* without this, the menu expands to 100% in IE6 *//* NO ! With this, the size is 1px..... xD
+html .widgetBox { width:1px; } /* without this, the menu expands to 100% in IE6 *//* NO ! With this, the size is 1px..... xD
 }
 */
 

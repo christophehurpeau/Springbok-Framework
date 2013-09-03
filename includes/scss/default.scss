@@ -1,4 +1,4 @@
-$JQueryUI:true;
+$JQueryUI:true !default;
 @includeCore 'base/global.scss';
 @includeCore 'base/form.scss';
 @includeCore 'base/page.scss';
@@ -8,7 +8,9 @@ $JQueryUI:true;
 @includeCore 'base/springbok-header.scss';
 @includeCore 'base/actions.scss';
 @includeCore 'base/icons.scss';
-@includeCore 'base/ui.scss';
+@if $JQueryUI{
+	@includeCore 'base/ui.scss';
+}
 @includeCore 'base/ajax.scss';
 
 @includeCore 'base/small-sizes.scss';

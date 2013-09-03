@@ -13,7 +13,7 @@ S.ui.Autocomplete=S.ui.InputSearch.extend({
 							 : function(){ input.val($(this).text()).change(); t.hideDiv().empty(); });
 		t.div.on('mouseenter','li',function(){ t.div.find('li.current').removeClass('current'); });
 	},
-	createDiv:function(){ return $('<div class="divAutocomplete divInputBox widget hidden"/>'); },
+	createDiv:function(){ return $('<div class="divAutocomplete widgetBox widget hidden"/>'); },
 	divFindLi:function(selector){
 		return this.div.find('li'+selector);
 	},

@@ -4,6 +4,7 @@ $ButtonBoxShadow:0 1px 1px rgba(255,255,255,0.2) inset, 0 1px 2px rgba(0,0,0,0.4
 $ButtonTextShadow:#999 !default;
 $ButtonFocusColor:#FFF !default;
 $ButtonTextShadow:#555 !default;
+$ButtonFocusTextShadow: false !default;
 
 $ButtonBackground:#555555 #444444 !default;
 $ButtonHoverBackground:#666666 #555555 !default;
@@ -68,7 +69,7 @@ $ButtonHoverBorder:1px solid #333333 !default;
   body input.submit:focus,body button:focus,body .button:focus{
   	@include background($ButtonFocusBackground);
   	color:$ButtonFocusColor;outline:0;
-  	text-shadow:$ButtonTextShadow;
+  	@if $ButtonFocusTextShadow { text-shadow:$ButtonFocusTextShadow; }
   }
   a.button,a.button:hover{text-decoration:none;display:inline-block;}
   input.submit.bblock,button.bblock,.button.bblock,a.button.bblock,a.button.bblock:hover{display:block;}

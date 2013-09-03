@@ -19,7 +19,7 @@ S.ui.InputBox=S.ui.InputFollow.extend({
 				if(!t.div.is(':empty'/*,:visible'*/)) t.showDiv();
 			}).blur(function(){
 				if(t.div.data('currentFocus')===input){
-					t.div.removeData('currentFocus')
+					t.div.removeData('currentFocus');
 					setTimeout(function(){
 						if(!t.hasFocus && t.div /* t.div can be deleted before the timeout */ && !t.div.data('currentFocus')) t.hideDiv();
 					},200);
@@ -31,8 +31,8 @@ S.ui.InputBox=S.ui.InputFollow.extend({
 	init:function(){
 		this.initDiv();
 	},
-	initDiv:function(){ this.div=this.createDiv().appendTo($('#container')); }, //http://api.jqueryui.com/zIndex/
-	createDiv:function(){ return $('<div class="widget divInputBox hidden"/>'); },
+	initDiv:function(){ this.div=this.createDiv().appendTo('#container'); }, //http://api.jqueryui.com/zIndex/
+	createDiv:function(){ return $('<div class="widget widgetBox hidden"/>'); },
 	showDiv:function(){
 		this.active=true;
 		//var offsetParent=this.input/*.offsetParent()*/.closest('.col,.context,#page,body'),offsetParentPosition=offsetParent.position(),divPosition;

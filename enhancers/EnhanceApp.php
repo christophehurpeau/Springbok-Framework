@@ -167,6 +167,7 @@ define('APP', __DIR__.'/dev/');";
 		if($this->enhanced->configEmpty('includes')) $this->enhanced->config['includes']=array();
 		$this->enhanced->config['includes']['img'][]='ajax';
 		$this->enhanced->config['includes']['js'][]='es5-compat.js';
+		$this->enhanced->config['includes']['js'][]='es6-compat.js';
 		/*$this->enhanced->config['includes']['css'][]='PIE.htc';*/
 			foreach($this->enhanced->config['includes'] as $type=>$includes){
 				if(is_string($includes)){ $includes=explode(',',$includes); $type=''; }

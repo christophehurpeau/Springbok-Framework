@@ -2,7 +2,7 @@
 class CModule{
 	private static $_MODULES;
 	public static function init(){
-		self::$_MODULES=App::configArray('modules');
+		self::$_MODULES=file_exists(APP.'config/modules.php') ? include APP.'config/modules.php' : array();
 	}
 	
 	public static function __callStatic($methodName, $params){

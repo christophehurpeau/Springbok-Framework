@@ -122,7 +122,7 @@ S.ready(function(){
 			ctor:function(input){
 				S.ui.InputBox.call(this,input,'sValidationMessage');
 			},
-			createDiv:function(){ return $('<div class="divInputBox hidden boxError"/>'); }//TODO : add an arrow, remove css validation-error
+			createDiv:function(){ return $('<div class="widgetBox hidden boxError"/>'); }//TODO : add an arrow, remove css validation-error
 		});
 	S.FormValidator=function(form,eventsName){
 		this.form=form.attr('novalidate','novalidate').data('sValidator',this);

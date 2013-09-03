@@ -256,7 +256,7 @@ class CImages extends CFiles{
 	public static function deleteFiles($id){
 		$filename=static::folderPath().$id;
 		UFile::rm($filename.'.jpg');
-		foreach(self::$_config['thumbnails'] as $suffix=>$params)
+		foreach(self::$_config[static::$folderPrefix.'thumbnails'] as $suffix=>$params)
 			UFile::rm($filename.'-'.$suffix.'.jpg');
 	}
 	

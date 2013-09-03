@@ -23,7 +23,7 @@ class SViewCacheStoreMongo{
 	}
 	
 	public static function writeAll($calledClass,$views,$path,$vars){
-		$data=array('_id'=>$path[1]);
+		$data=array('_id'=>$path[1], 'date'=>new MongoDate);
 		foreach($views as $view) $data[$view]=SViewCachedElement::renderFile($calledClass,$view,$vars);
 		self::$db->collection($path[0])->update($data,array('w'=>0,'upsert'=>true));
 	}
@@ -71,7 +71,8 @@ class SViewCacheStoreMongo{
 	}
 
 	public function end(){
-		$this->data['_id']=$this->id;
+		$this->data['_id'] = $this->id;
+		$this->data['date'] = new MongoDate;
 		$this->collection->update(array('_id'=>$this->id),$this->data,array('w'=>0,'upsert'=>true));
 	}
 }

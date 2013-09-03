@@ -77,6 +77,7 @@ class TestNavigator extends CHttpClient{
 		$this->checkHeadLinks();
 		$this->metas=$this->checkMetas();
 		$parsedHtml=$this->_parseHtml();
+		if(empty($parsedHtml)) throw new Exception('Not Valid Html');
 		$h1=$parsedHtml->find('body h1');
 		$this->check($h1,'<h1>')->size(1);
 		$this->h1=$h1[0];

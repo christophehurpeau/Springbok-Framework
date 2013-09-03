@@ -31,6 +31,7 @@ $FixedVariableShadow:false !default;
 $FixedBackground:false !default;
 $FixedColor:false !default;
 $FixedBorder:false !default;
+$FixedLinkColor:false !default;
 $FixedVariableMargin:false !default;
 $VariableBackground:false !default;
 $VariableColor:false !default;
@@ -65,6 +66,8 @@ body/*,.mceContentBody*/{
 	@include background($BodyBackground); color:$BodyColor;
 	margin:0;padding:0;
 	/* @include webkitAntialiased; */
+	// http://stackoverflow.com/questions/11589985/webkit-text-aliasing-gets-weird-during-css3-animations
+	-webkit-backface-visibility: hidden;
 }
 input,textarea{
 	font:normal 1.05em Ubuntu,'Droid Sans','Segoe UI',Corbel,'DejaVu Sans','Bitstream Vera Sans',Helvetica,Verdana,sans-serif;
@@ -295,12 +298,20 @@ $BreadcrumbsColor:false !default;
 		@if $FixedVariableColor{ color:$FixedVariableColor; }
 		@if $FixedVariableBorder{ border:$FixedVariableBorder; }
 	}
-	@if $PAGE_FIXED{
-		.col.fixed{
+	
+	.col.fixed{
+		@if $PAGE_FIXED{
 			position:fixed; _position:absolute; z-index:6;
 			top:$HeaderHeight; bottom:14px; _top:0; _bottom:0;
 			&.right{left:auto; *float:left;/* for ie7 */}
 			&.left{right:auto; *float:right;/* for ie7 */}
+		}
+		@include background($FixedBackground);
+		@if $FixedColor{ color:$FixedColor; }
+		@if $FixedBorder{ border:1px solid $FixedBorder; }
+		
+		@if $FixedLinkColor{
+			a,a:hover{ color:$FixedLinkColor; }
 		}
 	}
 }
@@ -323,12 +334,6 @@ $BreadcrumbsColor:false !default;
 					top:40px; left:0; right:0; bottom:20px;
 				}
 			}
-		}
-	}@else{
-		.col.fixed{
-			@include background($FixedBackground);
-			@if $FixedColor{ color:$FixedColor; }
-			@if $FixedBorder{ border:1px solid $FixedBorder; }
 		}
 	}
 	
@@ -466,10 +471,10 @@ $BreadcrumbsColor:false !default;
 .wp90{width:90%}
 .wp100{width:100%}
 
-.h600{height:600px}
-.h400{height:400px}
 .h200{height:200px}
 .h300{height:300px}
+.h400{height:400px}
+.h600{height:600px}
 
 @if $PAGE_FIXED{
 	@if $PAGE_VERSION==1{
