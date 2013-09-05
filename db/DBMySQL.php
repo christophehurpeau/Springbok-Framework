@@ -107,7 +107,11 @@ class DBMySQL extends DBSql{
 			throw new DBException('Execute statement failed ('.$connect->errno.'): '.$connect->error,$query);
 		}
 		//$stmt->store_results();
+		/*#if DEV */ try{ /*#/if*/
 		$r = call_user_func_array(array($stmt,'bind_result'),$fields);
+		/*#if DEV */ }catch(Exception $e){
+			throw new DBException($e->getMessage(),$query);
+		} /*#/if*/
 		//$stmt->free_result();
 		if($r===false) throw new DBException('Unable to bind result',$query);
 		return $stmt;

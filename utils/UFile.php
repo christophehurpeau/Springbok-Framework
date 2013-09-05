@@ -132,6 +132,7 @@ class UFileOpened{
 
 }
 
+/* DO NOT USE AFile, File and Folder ! This is deprecated API */
 abstract class AFile{
 	protected $name;
 	
