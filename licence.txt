@@ -1,4 +1,4 @@
-Springbok incorporates some third-party source. These sources have a separate license embedded into their heads.
+Springbok incorporates some third-party source. These sources have a separate license embedded into their heads or in their parent folders.
 
 The rest of Springbok is licensed as follows:
 

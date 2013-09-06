@@ -241,7 +241,7 @@ class JsFile extends EnhancerFile{
 	public static function executeGoogleCompressor($tmpDir,$enhancer,&$content,$destination,$createSourceMap=false,$oldIE=false){
 		$dest=$destination?$destination:tempnam($tmpDir,'gclosuredest');
 		$javaExecutable = 'java';
-		$jarFile=CLIBS.'ClosureCompiler/_gclosure.jar';
+		$jarFile=CORE.'libs/ClosureCompiler/compiler.jar';
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --compilation_level SIMPLE_OPTIMIZATIONS --language_in=ECMASCRIPT5_STRICT'
 					//.' --jscomp_error undefinedVars'
 					//--jscomp_off
