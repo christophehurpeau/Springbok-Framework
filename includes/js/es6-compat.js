@@ -37,7 +37,7 @@ if(!String.prototype.repeat) String.prototype.repeat=function(count){
             'charCodeAt', 'indexOf', 'lastIndexOf', 'startsWith', 'endsWith',
             'trim', 'trimLeft', 'trimRight', 'toLocaleLowerCase',
             'toLocaleUpperCase', 'localeCompare', 'match', 'search',
-            'replace', 'split', 'substr', 'concat', 'slice', 'fromCharCode'
+            'replace', 'split', 'substr', 'concat', 'slice'
         ],
         methodCount = methods.length,
         assignStringGeneric = function (methodName) {
