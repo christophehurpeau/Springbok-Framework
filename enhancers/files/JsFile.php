@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.7.2',$defaultExtension='js';
+	public static $CACHE_PATH='js_8.7.3',$defaultExtension='js';
 
 	public static function init(){
 		self::$preprocessor=new Preprocessor('js');
