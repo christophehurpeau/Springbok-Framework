@@ -107,7 +107,7 @@ class DBSchemaProcessing{
 									}
 									
 									file_put_contents($currentDbVersionFilename,$version+1);
-									$this->displayAndLog('Applied : '.$version.($error?' WITH ERROR':''));
+									$this->displayAndLog('Applied : '.$version.($error?' WITH ERROR (please look at the error then apply manually the rest of the dbEvolution and finally redeploy to continue the evolutions of the database)':''));
 									if($error) break;
 								}
 								
