@@ -100,7 +100,7 @@ class CSecure{
 				$where=static::config('authConditions');
 				$where[$login]=self::$_cookie->user;
 			
-				$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
+				$query=$id===$login ? /**/$className::QExist() : /**/$className::QValue()->field($id);
 				if($res=$query->where($where)->execute()){
 					self::setConnected(self::CONNECTION_COOKIE,($id===$login ? self::$_cookie->user : $res),self::$_cookie->user);
 					if(static::checkCookie(self::$_cookie)){
