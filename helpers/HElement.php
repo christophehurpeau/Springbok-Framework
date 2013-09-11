@@ -21,8 +21,8 @@ abstract class HElement{
 	
 	public static function create($tag){ return new HElementBasic($tag); }
 	public static function button(){ return new HElementButton(); }
-	public static function link($text){ return (new HElementLink())->content($text); }
-	public static function linkHtml($html){ return (new HElementLink())->contentHtml($text); }
-	public static function iconLink($icon,$text){ return (new HElementLink())->icon($icon,$text); }
-	public static function iconLinkHtml($icon,$html){ return (new HElementLink())->iconHtml($icon,$html); }
+	public static function link($text){ $e=new HElementLink(); return $e->content($text); }
+	public static function linkHtml($html){ $e=new HElementLink(); return $e->contentHtml($text); }
+	public static function iconLink($icon,$text){ $e=new HElementLink(); return $e->icon($icon,$text); }
+	public static function iconLinkHtml($icon,$html){ $e=new HElementLink(); return $e->iconHtml($icon,$html); }
 }
