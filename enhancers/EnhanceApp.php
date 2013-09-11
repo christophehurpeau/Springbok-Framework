@@ -239,7 +239,7 @@ define('APP', __DIR__.'/dev/');";
 			if($dirname[0]==='.' || $dPath===$srcDir.'web/tinymce/') continue;
 			
 			if($currentDirPath===$srcDir){
-				if($dPath===$srcDir.'db/' || $dPath===$srcDir.'sql/') continue;
+				if($dPath===$srcDir.'db/' || $dPath===$srcDir.'sql/' || $dPath===$srcDir.'documentation/' || $dPath===$srcDir.'documentations/') continue;
 			}
 			
 			
