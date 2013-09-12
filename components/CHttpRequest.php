@@ -26,15 +26,15 @@ class CHttpRequest{
 		if(empty($ip)) return false;
 	}
 	
-	public static function getRealIP(){
-		if (isset($_SERVER['HTTP_CLIENT_IP']))
-			// Behind proxy
-			return $_SERVER['HTTP_CLIENT_IP'];
-		elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			// Use first IP address in list
-			list($ip)=explode(',',$_SERVER['HTTP_X_FORWARDED_FOR'],2);
-			return $ip;
+	public static function getRealClientIP(){
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && ACHttpRequest::isTrustedProxy($_SERVER['REMOTE_ADDR'])){
+			$ip = strstr($_SERVER['HTTP_X_FORWARDED_FOR'],',',true);
+			return $ip === false ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $ip;
+		}elseif(isset($_SERVER['HTTP_CLIENT_IP']) && ACHttpRequest::isTrustedProxy($_SERVER['REMOTE_ADDR'])){
+			$ip = strstr($_SERVER['HTTP_CLIENT_IP'],',',true);
+			return $ip === false ? $_SERVER['HTTP_CLIENT_IP'] : $ip;
 		}
+		
 		return $_SERVER['REMOTE_ADDR'];
 	}
 
