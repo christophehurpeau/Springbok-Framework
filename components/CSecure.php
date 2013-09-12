@@ -226,7 +226,7 @@ class CSecure{
 				$c->succeed=$succeed;
 				$c->login=$login;
 				if($connected!==null) $c->connected=$connected;
-				$c->ip=CHttpRequest::getClientIP();
+				$c->ip=CHttpRequest::getRealClientIP();
 				$c->insert();
 				if(static::config('userHistory') && $succeed) UserHistory::add(UserHistory::CONNECT,$c->id,$connected);
 				break;
