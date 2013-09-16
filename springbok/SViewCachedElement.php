@@ -10,7 +10,7 @@ class SViewCachedElement extends SViewElement{
 		$vars=call_user_func_array($calledClass.'::vars',$vars);
 		
 		include_once CORE.'mvc/views/View.php';
-		$vars=call_user_func(static::$store.'::writeAll',$calledClass,$calledClass::$views,$path,$vars);
+		call_user_func(static::$store.'::writeAll',$calledClass,$calledClass::$views,$path,$vars);
 	}
 	
 	

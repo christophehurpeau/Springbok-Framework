@@ -424,7 +424,7 @@ class PhpFile extends EnhancerFile{
 	}
 
 	private static function optimiseReduceNewLines(&$content){ return preg_replace('/[\s;]*\?>\n+<\?php\s*/',';'.PHP_EOL,$content); }
-	private static function optimiseEmptyBetweenTwoTags(&$content){ return preg_replace_callback('/(;|:)?\s*\?><\?php\s*/',function(&$matches){return empty($matches[1])?';':($matches[1]===':'?': ':$matches[1]);},$content); }
+	private static function optimiseEmptyBetweenTwoTags(&$content){ return preg_replace_callback('/(;|:)?\s*\?><\?php\s*/',function(&$matches){return (empty($matches[1])?';':($matches[1]===':'?': ':$matches[1])).PHP_EOL;},$content); }
 	
 	// if(...): ...; endif; => if(...) ...;
 	private static function optimiseIfEndif(&$content){return preg_replace('/<\?php\s+(if\(.+\)):\s*([^;]+;)\s*endif;\s+\?>/U','<?php $1$2 ?>',$content);}
