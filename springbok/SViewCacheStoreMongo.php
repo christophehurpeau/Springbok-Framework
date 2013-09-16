@@ -23,9 +23,9 @@ class SViewCacheStoreMongo{
 	}
 	
 	public static function writeAll($calledClass,$views,$path,$vars){
-		$data=array('_id'=>$path[1], 'date'=>new MongoDate);
+		$data=array('date'=>new MongoDate);
 		foreach($views as $view) $data[$view]=SViewCachedElement::renderFile($calledClass,$view,$vars);
-		self::$db->collection($path[0])->update($data,array('w'=>0,'upsert'=>true));
+		self::$db->collection($path[0])->update(array('_id'=>$path[1]),$data,array('w'=>0,'upsert'=>true));
 	}
 	
 	private $ve,$collection,$id,$data;
