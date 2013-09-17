@@ -69,8 +69,13 @@ class Springbok{
 		$log.="\nCall Stack:\n".$exception->getTraceAsString();
 		
 		if($isHttpException=($exception instanceof HttpException)){
-			if($exception instanceof FatalHttpException) CLogger::get('fatal-http-exception')->log($log);
-			else CLogger::get(date('d').'-'.'http-exception')->log($log);
+			try{
+				if($exception instanceof FatalHttpException) CLogger::get('fatal-http-exception')->log($log);
+				else CLogger::get(date('d').'-'.'http-exception')->log($log);
+			}catch(Exception $e2){
+				$previousError = $exception;
+				$exception = $e2;
+			}
 			return;
 		}
 		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('exception')->log($log);
@@ -116,7 +121,14 @@ class Springbok{
 		if(!empty($_POST)) $log.="\nPOST=".print_r($_POST,true);
 		$log.="\nCall Stack:\n".prettyBackTrace();
 		if($message==='Unsupported operand types') $log.="\nContext:\n".print_r($context,true);
-		if(class_exists('Config',false) && class_exists('CLogger')) CLogger::get('error')->log($log);
+		if(class_exists('Config',false) && class_exists('CLogger')){
+			try{
+				CLogger::get('error')->log($log);
+			}catch(Exception $e2){
+				$previousError = self::$inError;
+				$message = $e2->getMessage();
+			}
+		}
 		/*#if DEV *//*elseif(App::$enhancing){debug($log); exit;}else die($log);*//*#/if */
 		
 		/*#if PROD */ if($code & (E_STRICT|E_NOTICE)) return true; /*#/if */
