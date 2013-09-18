@@ -13,7 +13,7 @@ includeCore('ui/validation');
 			handler=new inputListHandler(input.removeAttr('list'),datalist);
 		
 		handler.inputValue=$(document.getElementById(input.attr('id')+'_hidden'));
-		input.click(function(){ $(this).select(); })
+		input.click(function(){ $(this).select(); });
 		
 		// TODO check value
 		// TODO on blur|focus|keyup|change check if value correspond to the key selected in the list. If not : validation fail.

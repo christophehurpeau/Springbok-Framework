@@ -48,19 +48,19 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					if(S.isObj(list)){
 						this.oKey=url.key;
 						list=[]; listValues=[];
-						UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(UString.normalize(v[url.key])) });
-						filter=function(matcher){ return !matcher ? list : list.filter(function(v,k){ return matcher.test(listValues[k]) }); };
+						UObj.forEach(url.list,function(k,v){ list.push(v); listValues.push(UString.normalize(v[url.key])); });
+						filter=function(matcher){ return !matcher ? list : list.filter(function(v,k){ return matcher.test(listValues[k]); }); };
 					}
 				}
 			}
 			
-			if(filter===undefined) filter=function(matcher){ return list.filter(function(v){ return matcher.test(v) }); };
+			if(filter===undefined) filter=function(matcher){ return list.filter(function(v){ return matcher.test(v); }); };
 			if(listValues===undefined) listValues=list.map(UString.normalize);
 			
 			this.onChange=function(term){
 				var matcher = new RegExp( UString.normalize(term) ), data=filter(matcher);
 				if(data) t.onSuccess(data);
-			}
+			};
 		}else{
 			/*#if DEV*/if(!this.minLength) S.error('minLength=0 with url is not recommanded'); /*#/if*/
 			this.onChange=function(val){
@@ -95,7 +95,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 			}).bind('keyup focus',function(e){
 				//e.stopPropagation();
 				var val=input.val();
-				input.trigger('sSearch',[val])
+				input.trigger('sSearch',[val]);
 			}).bind('sSearch',function(e,val){
 				if(t.isNotEditable()) return;
 				if(val===undefined) val=t.input.val();
@@ -107,7 +107,7 @@ S.ui.InputSearch=S.ui.InputFollow.extend({
 					t.onChange(val);
 				}
 			});
-		if(this.hasFocus) input.trigger('sSearch')
+		if(this.hasFocus) input.trigger('sSearch');
 	},
 },{
 	defaultDisplayList:function(data,ulAttrs,callback){
