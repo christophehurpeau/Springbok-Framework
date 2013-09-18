@@ -1,9 +1,17 @@
 <?php
 /* http://www.barelyfitz.com/projects/csscolor/ */
+/** Colors utils */
 class UColors{
 	const minBrightDiff=126;
 	const minColorDiff=500;
 	
+	/**
+	 * Convert a rgb color to hex color
+	 * 
+	 * @param array|string $rgb array RGB or R
+	 * @param string G
+	 * @param string B
+	 */
 	public static function rgb2hex(){
 		if(func_num_args() === 1) $rgb=func_get_arg(0); 
 		else $rgb=func_get_args();
@@ -15,6 +23,12 @@ class UColors{
 		return $hex;
 	}
 	
+	/**
+	 * Convert a hex color to rgb color
+	 * 
+	 * @param string hex color
+	 * @return string
+	 */
 	public static function hex2rgb($hexColor){
 		$hexColor = strtolower(trim($hexColor,'#;&Hh'));
 		//return array_map('hexdec',explode('.',wordwrap($hex_color, ceil(strlen($hex_color)/3),'.',1)));
@@ -27,6 +41,12 @@ class UColors{
 		throw new Exception('Cannot convert hex "'.$hexColor.'" to RGB');
 	}
 	
+	/**
+	 * Return the opposite hex color
+	 * 
+	 * @param string hex color
+	 * @return string
+	 */
 	public static function getOppositeHex($hex_color){
 		$rgb = self::hex2rgb($hex_color);
 		foreach($rgb as $k=>$color)
@@ -34,10 +54,20 @@ class UColors{
 		return self::rgb2hex($rgb);
 	}
 	
+	/**
+	 * Return a random color
+	 * 
+	 * @return string
+	 */
 	public static function randomHex(){
 		return self::rgb2hex(rand(0,255),rand(0,255),rand(0,255));
 	}
 	
+	/**
+	 * Return shades of an hex color from black to white
+	 * 
+	 * @return array
+	 */
 	public static function darkerAndLighterShades($hexColor){
 		/*#if DEV */
 		if(!self::isHex($hexColor)) throw new Exception($hexColor.' is not a valid HEX color');
@@ -68,6 +98,11 @@ class UColors{
 		);
 	}
 	
+	/**
+	 * Return shades of an hex color from black to white in an array containing both foreground ('fg') and background ('bg') colors
+	 * 
+	 * @return array
+	 */
 	public static function darkerAndLighterShadesWithForeground($hexColor){
 		$bg=self::darkerAndLighterShades($hexColor);
 		$res=array();
@@ -78,10 +113,24 @@ class UColors{
 		return $res;
 	}
 	
+	/**
+	 * Lighten an color
+	 * 
+	 * @param string
+	 * @param float
+	 * @return string
+	 */
 	public static function _lighten($hexColor,$percent){
 		return self::_mix($hexColor,$percent,255);
 	}
 	
+	/**
+	 * Darken an color
+	 * 
+	 * @param string
+	 * @param float
+	 * @return string
+	 */
 	public static function _darken($hexColor,$percent){
 		return self::_mix($hexColor,$percent,0);
 	}
@@ -108,12 +157,25 @@ class UColors{
 		return self::rgb2hex($rgb);
 	}
 	
+	/**
+	 * Check if the arguement is an hex color
+	 * 
+	 * @param string
+	 * @return bool
+	 */
 	public static function isHex($hexColor){
 		if(preg_match("/^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})\$/",$hexColor))
 			return true;
 		return false;
 	}
 	
+	/**
+	 * Find the best corresponding color for a background color
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function findBestFgColor($bgHex,$fgHex='#000000'){
 		// Given a background color $bgHex and a foreground color $fgHex,
 		// modifies the foreground color so it will have enough contrast
