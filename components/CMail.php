@@ -1,5 +1,20 @@
 <?php
 include CLIBS.'PHPMailer/class.phpmailer.php';
+/**
+ * Send and create mails
+ * 
+ * <b>Config</b>
+ * 
+ * <code>
+ * return array(
+ * 	'From'=>'test@example.com',
+ * 	'FromName'=>'Site de Test',
+ * 	'ContentType'=>'text/html',
+ * 'CharSet'=>'utf-8'
+ * );
+ * </code>
+ * 
+ */
 class CMail{
 	private static $_instance;
 	

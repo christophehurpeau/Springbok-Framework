@@ -1,4 +1,34 @@
 <?php
+/**
+ * Routing is a feature that maps URLs to controller actions
+ * 
+ * <b>Routes Configuration</b>
+ * 
+ * Routes in an application are configured in config/routes.php. The file config/routes-langs is also used to configure translations of parts of the route.
+ * 
+ * <code>
+ * <?php return [
+ * 	'/'=>['Site::index'],
+ * 	'/:dep-:slug(/:action)?'=>['Department::index',['dep'=>'[0-9AB]{2,3}'],['fr'=>'/:dep-:slug(/:action)?'],'ext'=>'html'],
+ * 	'/:controller(/:action/*)?'=>['Site::index'],
+ * ];
+ * </code>
+ * 
+ * The route configuration file returns an array of route keys and options:
+ * <ul>
+ * <li>The key of the route is used in views or controllers to bind a link to an real url.</li>
+ * <li>The first param in the options array is a string containing <b>Controller</b>::<b>action</b>.</li>
+ * <li>The second param can be null and contains regexp for named params</li>
+ * <li>The third param contains the route for other languages</li>
+ * <li>The optionnal "ext" param can contains an extension of the route</li>
+ * </ul>
+ * 
+ * <b>Named params</b>
+ * 
+ * You can specify in a route a named parameter : ":dep", ":slug" are variable parts of the route.
+ * 
+ * 
+ */
 class CRoute{
 	const DEFAULT_CONTROLLER='Site';
 	const DEFAULT_ACTION='index';
@@ -7,6 +37,7 @@ class CRoute{
 	private static $_routes,$_langs,
 		$all,$controller,$action,$params,$ext;
 
+	/** @ignore */
 	public static function init(/*#if DEV */$prefix/*#/if*/){
 		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];
@@ -17,6 +48,7 @@ class CRoute{
 		self::initRoute($all);
 	}
 	
+	/** @ignore */
 	public static function initRoute($all){
 		$route=CRoute::find(self::$all=$all='/'.trim($all,'/'));
 		if(!$route)
@@ -35,6 +67,7 @@ class CRoute{
 		return CRoute::find('/'.trim($url,'/'));
 	}
 	
+	/** @ignore */
 	public static function cliinit(/*#if DEV */$prefix/*#/if*/){
 		$routes=App::configArray('routes');
 		self::$_routes=$routes['routes'];

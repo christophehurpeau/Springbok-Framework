@@ -1,4 +1,39 @@
 <?php
+/**
+ * Select and set the current user language 
+ *
+ * <b>Configuration</b>
+ * 
+ * config/_.php
+ * 
+ * The 'defaultlang' conf define the lang used if no other has been found. The 'searchlang' conf is optional and define a list cf Selecting lang
+ * <code>
+ * return array(
+ * 	'default_lang'=>'en',
+ * 	'search_lang'=>array('session','cookie')
+ * );
+ * </code>
+ * 
+ * <b>Selecting lang</b>
+ * 
+ * The first time CLang is called, the component search for the lang using config 'search_lang'.
+ * 
+ * <ul>
+ * <li>Session: search for $_SESSION['_lang']</li>
+ * <li>Cookie: search for $_COOKIE['lang']</li>
+ * <li>Urls: search among Config::$lang_urls to determine the lang</li>
+ * </ul>
+ * 
+ * Urls : example
+ * 
+ * <code>
+ * return array(
+ * 	'search_lang'=>array('session','urls'),
+ * 	'lang_urls'=>array('en.springbok-framework.com'=>'en','fr.springbok-framework.com'=>'fr')
+ * );
+ * </code>
+ * 
+ */
 class CLang{
 	private static $lang,$cache;
 	/** @var DB */

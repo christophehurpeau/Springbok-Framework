@@ -1,4 +1,5 @@
 <?php
+/** This component validates values. Used by CBinder */
 class CValidation{
 	const PATTERN_HOSTNAME='((?:[a-z0-9][-a-z0-9]*\.)*(?:[a-z0-9][-a-z0-9]{0,62}))\.((?:(?:[a-z]{2,3}\.)?[a-z]{2,4}|museum|travel))';
 	
@@ -14,6 +15,12 @@ class CValidation{
 		self::$_hasErrors=false;
 	}
 	
+	/**
+	 * Validate using annotations
+	 * <code>
+	 * CValidation::valid('test',array('Length'=>array(5)),'value')
+	 * </code>
+	 */
 	public static function valid($key,$annotations,$val){
 		foreach($annotations as $name=>$params){
 			if(!method_exists(get_called_class(),'valid'.$name)) continue;
@@ -43,6 +50,7 @@ class CValidation{
 		return true;
 	}
 	
+	/** $val!==false && $val!==null && trim($val)!=='' */
 	public static function required($key,$val){
 		return self::_addError($key,self::validRequired($val));
 	}
@@ -51,6 +59,7 @@ class CValidation{
 	}
 
 	
+	/** !empty($val)||$val==='0' */
 	public static function notEmpty($key,$val){
 		return self::_addError($key,self::validNotEmpty($val));
 	}
@@ -59,6 +68,7 @@ class CValidation{
 	}
 	
 	
+	/** $val > 0 */
 	public static function id($key,$val){
 		return self::_addError($key,self::validId($val));
 	}
@@ -67,14 +77,15 @@ class CValidation{
 	}
 	
 	
-
+	/** strlen($val) <= $maxLength */
 	public static function maxLength($key,$val,$maxLength){
 		return self::_addError($key,self::validMaxLength($val,$maxLength));
 	}
 	private static function validMaxLength($val,$maxLength){
 		return (strlen($val) <= $maxLength) ? false : _tC('validation.maxlength');
 	}
-
+	
+	/** strlen($val) == $length */
 	public static function length($key,$val,$length){
 		return self::_addError($key,self::validLength($val,$length));
 	}
@@ -82,6 +93,7 @@ class CValidation{
 		return (strlen($val) == $length) ? false : sprintf(_tC('This field must have a length of %s'),$length);
 	}
 
+	/** strlen($val) >= $minLength */
 	public static function minLength($key,$val,$minLength){
 		return self::_addError($key,self::validMinLength($val,$minLength));
 	}
@@ -89,6 +101,7 @@ class CValidation{
 		return (strlen($val) >= $minLength) ? false : sprintf(_tC('validation.minlength'),$minLength);
 	}
 
+	/** $val <= $maxSize */
 	public static function maxSize($key,$val,$maxSize){
 		return self::_addError($key,self::validMaxSize($val,$maxSize));
 	}
@@ -96,6 +109,7 @@ class CValidation{
 		return ($val <= $maxSize) ? false : sprintf(_tC('validation.maxsize'),$maxSize);
 	}
 
+	/** $val >= $minSize */
 	public static function minSize($key,$val,$minSize){
 		return self::_addError($key,self::validMinSize($val,$minSize));
 	}
@@ -103,6 +117,7 @@ class CValidation{
 		return ($val >= $minSize) ? false : sprintf(_tC('validation.minsize'),$minSize);
 	}
 	
+	/** /^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@ PATTERN_HOSTNAME $/i */
 	public static function email($key,$val){
 		return self::_addError($key,self::email($val));
 	}
@@ -113,6 +128,7 @@ class CValidation{
 		return preg_match('/^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@'.self::PATTERN_HOSTNAME.'$/i',$val);
 	}
 	
+	/** if val match a pattern */
 	public static function match($key,$val,$match){
 		return self::_addError($key,self::validMatch($val,$match));
 	}
@@ -120,6 +136,7 @@ class CValidation{
 		return preg_match('/'.$match.'/',$val) ? false : sprintf(_tC('validation.pattern'),$match);
 	}
 	
+	/** /^https?\:\/\/ PATTERN_HOSTNAME $/i */
 	public static function url($key,$val){
 		return self::_addError($key,self::validUrl($val,$maxSize));
 	}

@@ -1,12 +1,36 @@
 <?php
+/**
+ * Help easily create a form using HElementForm
+ * 
+ * @see HElementForm
+ */
 class HForm{
+	/**
+	 * Create a new HElementForm with POST method
+	 * @return HElementForm
+	 */
 	public static function Post(){ return HElementForm::Post(); }
+	/**
+	 * Create a new HElementForm with GET method
+	 * @return HElementForm
+	 */
 	public static function Get(){ return HElementForm::Get(); }
+	/**
+	 * Create a new HElementForm for File upload
+	 * @return HElementForm
+	 */
 	public static function File(){ return HElementForm::File(); }
-	public static function AjaxFile($formId,$action,$jsParams,$entry=null,$urlfull=null){ return new HElementAjaxFileForm($formId,$action,$jsParams,$entry,$urlfull); }
+	/**
+	 * Create a new HElementForm for Ajax File upload
+	 * @return HElementAjaxFileForm
+	 */
+	public static function AjaxFile($formId,$action,$jsParams,$entry=null,$urlfull=null){
+		return new HElementAjaxFileForm($formId,$action,$jsParams,$entry,$urlfull);
+	}
 	
 	/* OLD WAY */
 	/**
+	 * @deprecated use HElementForm now
 	 * @return HForm
 	 */
 	public static function create($modelName=null,$formOptions=array(),$tagContainer='div',$options=array()){
@@ -35,6 +59,7 @@ class HForm{
 	}
 	
 	private $modelName,$name,$method,$tagContainer,$defaultLabel;
+	/** @deprecated */
 	public function __construct($modelName,$name,$method,$tagContainer,$defaultLabel,$setValuesFromVar){
 		$this->method=$method;
 		$this->setModelName($modelName,$name,$setValuesFromVar);
@@ -42,10 +67,12 @@ class HForm{
 		$this->defaultLabel=$defaultLabel;
 	}
 	
+	/** @deprecated */
 	private function _name($name){
 		return $this->modelName !== NULL ? $this->name.'['.$name.']' : $name;
 	}
 	
+	/** @deprecated */
 	public function setModelName($modelName=NULL,$name=NULL,$setValuesFromVar=true){
 		if($name===NULL && $modelName !== NULL) $name=lcfirst($modelName);
 		$this->modelName=$modelName;$this->name=$name;
@@ -60,14 +87,17 @@ class HForm{
 		}
 	}
 
+	/** @deprecated */
 	public function _setModelName($modelName){
 		$this->modelName=$modelName;
 	}
-
+	
+	/** @deprecated */
 	public function setTagContainer($tagContainer){
 		$this->tagContainer=&$tagContainer;
 	}
 	
+	/** @deprecated */
 	public function all($attributes=array(),$containerAttributes=array()){
 		$modelName=$this->modelName;
 		foreach($modelName::$__PROP_DEF as $name=>&$def){
@@ -77,10 +107,12 @@ class HForm{
 			}
 		}
 	}
+	/** @deprecated */
 	public function autoFields($fields,$attributes=array(),$containerAttributes=array()){
 		if(is_string($fields)) $fields=explode(',',$fields);
 		foreach($fields as $name) $this->autoField($name,$attributes,$containerAttributes);
 	}
+	/** @deprecated */
 	public function autoField($name,$attributes=array(),$containerAttributes=array(),$def=null){
 		$modelName=$this->modelName;
 		if($def===null) $def=&$modelName::$__PROP_DEF[$name];
@@ -101,7 +133,7 @@ class HForm{
 		else echo $this->input($name,$attributes,$containerAttributes);
 	}
 	
-	
+	/** @deprecated */
 	public function end($title=true,$options=array(),$containerAttributes=NULL){
 		if($title) echo $this->submit($title,$options,$containerAttributes);
 		if($this->fieldsetStarted) echo $this->fieldsetStop();
@@ -109,21 +141,26 @@ class HForm{
 	}
 	
 	private $fieldsetStarted=false;
+	/** @deprecated */
 	public function fieldsetStart($legend=false){
 		$this->fieldsetStarted=true;
 		return '<fieldset>'.($legend ? ('<legend>'.h($legend).'</legend>') : '');
 	}
+	
+	/** @deprecated */
 	public function fieldsetStop(){
 		$this->fieldsetStarted=false;
 		return '</fieldset>';
 	}
 	
+	/** @deprecated */
 	public function text($name,$attributes=array(),$containerAttributes=array()){
 		$modelName=&$this->modelName;
 		if(isset($modelName::$__PROP_DEF[$name]['annotations']['Text'])) return $this->textarea($name,$attributes,$containerAttributes);
 		return $this->input($name,$attributes,$containerAttributes);
 	}
 	
+	/** @deprecated */
 	public function textarea($name,$attributes=array(),$containerAttributes=array()){
 		if(is_string($attributes)){
 			$value=$attributes;
@@ -174,6 +211,7 @@ class HForm{
 		return $this->_inputContainer($content,'textarea'.($hasError?' invalid':''),$containerAttributes);
 	}
 	
+	/** @deprecated */
 	public function input($name,$attributes=array(),$containerAttributes=array(),$largeSize=1){
 		if(is_string($attributes)) $attributes=array('value'=>$attributes);
 		
@@ -240,12 +278,14 @@ class HForm{
 		return $this->_inputContainer($content,'input '.($type!=='text'?'text ':'').$type.($hasError?' invalid':''),$containerAttributes);
 	}
 
+	/** @deprecated */
 	public function hidden($name,$value=false,$attributes=array()){
 		$attributes['type']='hidden';$attributes['name']=$this->modelName === NULL ? $name : $this->name.'['.$name.']';
 		if($value!==false) $attributes['value']=$value;
 		return HHtml::tag('input',$attributes);
 	}
 	
+	/** @deprecated */
 	public function submit($title=true,$options=array(),$containerAttributes=NULL){
 		if($title===true) $title=_tC('Save');
 		$options['value']=$title; $options['type']='submit';
@@ -255,7 +295,7 @@ class HForm{
 		return $this->_inputContainer($res,'submit',$containerAttributes);
 	}
 	
-	
+	/** @deprecated */
 	public function checkbox($name,$label=false,$attributes=array(),$containerAttributes=array()){
 		$attributes['type']='checkbox'; if($name!==false) $attributes['name']=$this->modelName === NULL ? $name : $this->name.'['.$name.']';
 		if(!isset($attributes['id'])) $attributes['id']=$this->modelName != NULL ? $this->modelName.ucfirst($name) : $name;
@@ -264,7 +304,7 @@ class HForm{
 		return $this->_inputContainer($res,'input checkbox',$containerAttributes);
 	}
 	
-	
+	/** @deprecated */
 	public function range($name,$label=false,$attributes=array(),$containerAttributes=array()){
 		$attributes['type']='range'; if($name!==false) $attributes['name']=$this->modelName === NULL ? $name : $this->name.'['.$name.']';
 		if(!isset($attributes['id'])) $attributes['id']=$this->modelName != NULL ? $this->modelName.ucfirst($name) : $name;
@@ -273,7 +313,7 @@ class HForm{
 		return $this->_inputContainer($res,'input range',$containerAttributes);
 	}
 	
-	/**
+	/** @deprecated
 	 * options['style'] : select, radio, checkbox
 	 */
 	public function select($name,$list,$options=NULL,$containerAttributes=array()){
@@ -360,22 +400,25 @@ class HForm{
 		return $this->_inputContainer($content,$class,$containerAttributes);
 	}
 	
-	
+	/** @deprecated */
 	public function selectHour($name,$containerAttributes=array(),$options=array()){
 		return $this->select($name,/* EVAL range(0,23) /EVAL */0,$options,$containerAttributes);
 	}
+	/** @deprecated */
 	public function selectHourMorning($name,$containerAttributes=array(),$options=array()){
 		return $this->select($name,/* EVAL range(0,12) /EVAL */0,$options,$containerAttributes);
 	}
+	/** @deprecated */
 	public function selectHourAfternoon($name,$containerAttributes=array(),$options=array()){
 		return $this->select($name,/* EVAL array_combine(range(12,23),range(12,23)) /EVAL */0,$options,$containerAttributes);
 	}
+	/** @deprecated */
 	public function selectMonth($name,$containerAttributes=array(),$options=array()){
 		$options+=array('empty'=>'--');
 		return $this->select($name,array('01'=>'01','02'=>'02','03'=>'03','04'=>'04','05'=>'05','06'=>'06','07'=>'07','08'=>'08','09'=>'09','10'=>'10','11'=>'11','12'=>'12'),$options,$containerAttributes);
 	}
 	
-	/**
+	/** @deprecated
 	 * options['style'] : radio, checkbox
 	 */
 	public function multiple($name,$list,$options=NULL,$containerAttributes=array()){
@@ -434,7 +477,7 @@ class HForm{
 		return $this->_inputContainer($content,$class,$containerAttributes);
 	}
 	
-	
+	/** @deprecated */
 	public function yesOrNo($name,$attributes,$containerAttributes=array()){
 		if(!isset($attributes['id'])) $attributes['id']=$this->modelName != NULL ? $this->modelName.ucfirst($name) : $name;
 		$title=isset($attributes['title']) ? $attributes['title'] : ($this->defaultLabel ? ($this->modelName != NULL ? _tF($this->modelName,$name) : $name): false); unset($attributes['title']);
@@ -462,6 +505,7 @@ class HForm{
 		return $this->_inputContainer($content,'radio',$containerAttributes);
 	}
 
+	/** @deprecated */
 	public static function __radio($name,$value,$selected,$label=null,$attributes=array()){
 		$attributes['type']='radio';
 		$attributes['name']=$name;
@@ -471,6 +515,7 @@ class HForm{
 		return HHtml::tag('input',$attributes).($label===null?'':HHtml::tag('label',array('for'=>$attributes['id']),$label));
 	}
 	
+	/** @deprecated */
 	public function _radio($name,$value,$selected,$attributes=array()){
 		$attributes['type']='radio';
 		$attributes['name']=$name;
@@ -479,7 +524,7 @@ class HForm{
 		return HHtml::tag('input',$attributes);
 	}
 	
-	
+	/** @deprecated */
 	public function stars($name,$nbStars=5,$attributes=array(),$containerAttributes=array()){
 		$title=isset($attributes['title']) ? $attributes['title'] : ($this->defaultLabel ? ($this->modelName != NULL ? _tF($this->modelName,$name) : $name): false); unset($attributes['title']);
 		$value=$this->_getValue($name);

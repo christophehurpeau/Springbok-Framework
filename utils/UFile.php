@@ -1,11 +1,25 @@
 <?php
+/** Utils for File System and Files */
 class UFile{
+	/**
+	 * return the content of a file or false if error
+	 * 
+	 * @param string path of string
+	 * @return string|false
+	 */
 	public static function getContents($path){
 		try{
 			return file_get_contents($path);
 		}catch(ErrorException $e){}
 		return false;
 	}
+	
+	/**
+	 * return the json decoded content of a file or false if error
+	 * 
+	 * @param string
+	 * @return mixed
+	 */
 	public static function getJSON($path){
 		try{
 			$content=file_get_contents($path);
@@ -16,6 +30,13 @@ class UFile{
 		if($jsonDecoded===null) throw new Exception('Bad JSON '.$path);
 		return $jsonDecoded;
 	}
+	
+	/**
+	 * return the yaml decoded content of a file or false if error
+	 * 
+	 * @param string
+	 * @return mixed
+	 */
 	public static function getYAML($path){
 		try{
 			$content=file_get_contents($path);
@@ -35,17 +56,39 @@ class UFile{
 	}
 	
 	
+	/**
+	 * Delete a file
+	 * 
+	 * @param string
+	 * @return mixed
+	 */
 	public static function rm($path){
 		try{
 			return unlink($path);
 		}catch(ErrorException $e){}
-		return false;
+		return bool;
 	}
 	
+	/**
+	 * Open a file
+	 * 
+	 * @param string
+	 * @param string
+	 * 
+	 * @return UFileOpened
+	 */
 	public static function open($path,$mode='r'){
 		return new UFileOpened($path,$mode);
 	}
 	
+	/**
+	 * Open a file with lock
+	 * 
+	 * @param string
+	 * @param string
+	 * 
+	 * @return UFileOpened
+	 */
 	public static function readWithLock($path,$mode='rb'){
 		$file=self::open($path,$mode);
 		if(false===$file->lockShared()){ $file->close(); return false; }
@@ -55,6 +98,14 @@ class UFile{
 		return $data;
 	}
 	
+	/**
+	 * Write to a file with lock
+	 * 
+	 * @param string
+	 * @param mixed
+	 * 
+	 * @return UFileOpened
+	 */
 	public static function writeWithLock($path,$data/*,$mode='wb'*/){
 		/*$file=self::open($path,$mode);
 		if(false===$file->lockExclusive()) return false;
@@ -66,7 +117,14 @@ class UFile{
 	}
 	
 	
-	/** Don't forget basename() if needed ! */
+	/**
+	 * return the extension of a filename
+	 *  
+	 * Don't forget basename() if needed !
+	 * 
+	 * @param string
+	 * @return string|false
+	 */
 	public static function extension($filename){
 		$ext=strrpos($filename,'.');
 		if($ext!==false) $ext=substr($filename,$ext+1);
@@ -74,9 +132,13 @@ class UFile{
 	}
 }
 
+/** An opened file
+ * @see UFile::open()
+ */
 class UFileOpened{
 	private $_path,$_file;
 
+	/** @ignore */
 	public function __construct($path,$mode){
 		$this->_file=fopen($this->_path=$path,$mode);
 	}
@@ -132,7 +194,7 @@ class UFileOpened{
 
 }
 
-/* DO NOT USE AFile, File and Folder ! This is deprecated API */
+/** @deprecated DO NOT USE AFile, File and Folder ! This is deprecated API */
 abstract class AFile{
 	protected $name;
 	
@@ -169,6 +231,7 @@ abstract class AFile{
 }
 
 
+/** @deprecated DO NOT USE AFile, File and Folder ! This is deprecated API */
 class Folder extends AFile{
 	public function __construct($dirname,$create=false){
 		if(substr($dirname,-(strlen(DS))) != DS) $dirname.=DS;
@@ -292,6 +355,7 @@ class Folder extends AFile{
 	}
 }
 
+/** @deprecated DO NOT USE AFile, File and Folder ! This is deprecated API */
 class File extends AFile{
 	public function __construct($filename){
 		parent::__construct($filename);

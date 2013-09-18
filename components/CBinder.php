@@ -1,4 +1,5 @@
 <?php
+/** Transform GET and POST parameters into class and typed variables. */
 class CBinder{
 	public static function bind($type,&$val,$annotations=array(),$withValidation=false){
 		$methodName='bind'.ucfirst($type);

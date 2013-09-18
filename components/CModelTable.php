@@ -1,4 +1,55 @@
 <?php
+/**
+ * This component is used to transform a query into something renderable : mostly HTML, but also CSV, XLS.
+ * 
+ * <code>
+ * Post::Table()->fields('id,name,slug')->with('User','first_name,last_name')->with('PostComment',array('isCount'=>true))
+ * ->allowFilters()->disallowOrder()
+ * ->pagination()->pageSize(50)->execute()
+ * ->actionClick('view')->actions(['view','edit','delete'])
+ * ->render()
+ * </code>
+ * 
+ * <code>
+ * Post::Table()->fields('id,name,slug')->with('User','first_name,last_name')->with('PostComment',array('isCount'=>true))
+ * ->paginate()->actionClick('view')->actions('view','edit','delete')
+ * ->render()
+ * </code>
+ * 
+ * If you want to use defaults parameters for pagination, you can use ->paginate() instead of ->pagination()->execute().
+ * 
+ * Post::Table() returns a QTable object, that extends QFindAll, so you can create your request as you do with QAll().
+ * 
+ * <b>Render in view</b>
+ * 
+ * Controller : 
+ * <code>
+ * set('post',Post::Table().....->execute())
+ * </code>
+ * 
+ * View :
+ * <code>
+ * {=$post->display()}
+ * </code>
+ * 
+ * <b>Export</b>
+ * 
+ * Export data in browser output :
+ * <code>
+ * Post::Table()->export('xls','filename','Title')->display();
+ * </code>
+ * 
+ * Save data on server :
+ * <code>
+ * Post::Table()->export('xls','filename','Title')->toFile('/path/to/file');
+ * </code>
+ * 
+ * @see QTable
+ * @see THtml
+ * @see CModelTableExport
+ * @see CModelTableOne
+ * 
+ */
 class CModelTable extends CModelTableAbstract{
 	public $actionClick,$rowActions,$controller,$afterContent='';
 	
