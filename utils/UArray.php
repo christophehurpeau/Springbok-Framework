@@ -1,4 +1,7 @@
 <?php
+/**
+ * Utils for arrays
+ */
 class UArray {
 
 	/**
@@ -144,5 +147,12 @@ class UArray {
 	public static function firstValue($array){
 		foreach($array as $elt) return $elt;
 		return false;
+	}
+	
+	public static function map($array,$callback){
+		$newArray = array();
+		foreach($array as $key=>$value)
+			$newArray[$key] = $callback($key,$value);
+		return $newArray;
 	}
 }
