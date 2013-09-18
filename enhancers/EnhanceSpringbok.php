@@ -40,11 +40,12 @@ class EnhanceSpringbok{
 
 		
 		if($inLibs===false){
-			$langs=new Folder($dirname.'langs'.DS);
+			$langs=new Folder($dirname.'src/i18n/langs'.DS);
 			if($langs->exists())
 				foreach($langs->listFilesPath() as $filename=>$file){
-					$db=SpringbokTranslations::loadDbLang(substr($filename,0,-3),'');
-					$app=$db->doSelectListValue('SELECT s,t FROM t');
+					//$db=SpringbokTranslations::loadDbLang(substr($filename,0,-3),'');
+					//$app=$db->doSelectListValue('SELECT s,t FROM t');
+					$app = include $filename;
 					echo '<pre>'.yaml_emit($app, YAML_UTF8_ENCODING).'</pre>';
 				}
 		}
@@ -70,28 +71,34 @@ class EnhanceSpringbok{
 
 
 			if($d->getPath() === CORE_SRC.'locales/'){
-				foreach($d->listFilesPath() as $filename=>$file){
-					$yaml=file_get_contents($file->getPath());
+				foreach($d->listFilesPath() as $filepath=>$filename){
+					$yaml=file_get_contents($filepath);
 					$yaml=str_replace("\t",'  ',$yaml);
 					$yaml=yaml_parse($yaml,0,$nbDocs);
 					
+					/*
 					$lang = $file->getName();
 					$filenamedb = substr($lang,0,-4).'.db';
 					$db=SpringbokTranslations::loadDbLang($devDir->getPath().$filenamedb,$lang);
 					SpringbokTranslations::checkDb($db);
 					$db->beginTransaction();
-					
+					*/
 					foreach($yaml as $string=>$translation){
 						if(is_array($translation))
-							SpringbokTranslations::saveOneSP($db,$string,$translation['one'],$translation['other']);
-						else
-							SpringbokTranslations::saveOne($db,$string,$translation);
+						//	SpringbokTranslations::saveOneSP($db,$string,$translation['one'],$translation['other']);
+							throw new Exception;
+						//	else SpringbokTranslations::saveOne($db,$string,$translation);
 					}
 					
+					/*
 					$db->commit();
 					$db->close();
+					*/
 					
-					copy($devDir->getPath().$filenamedb,$prodDir->getPath().$filenamedb);
+					$string = '<?php return '.UPhp::exportCode($yaml).';';
+					$filename = 'locales/'.substr($filename,0,-3).'php';
+					file_put_contents($devDir->getPath().$filename, $string);
+					file_put_contents($prodDir->getPath().$filename, $string);
 				}
 				continue;
 			}
