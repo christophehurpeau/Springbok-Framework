@@ -108,6 +108,14 @@ class ModelFile extends PhpFile{
 				call_user_func_array(array($loadedTrait,$methodName),$args);
 	}
 	
+	private static function __Annotation_isFromClass($array){
+		if(count($array)===1 && is_array($array[0])){
+			$array=$array[0];
+			return array(count($array)===2 && isset($array[0]) && isset($array[1]),$array);
+		}
+		return array(false,$array);
+	}
+	
 	public function enhancePhpContent($content,$false=false){
 		$matches=array();
 		//preg_match('/class ([A-Za-z_0-9]+)(?:[^{]*){/',$content,$matches);
@@ -152,7 +160,13 @@ class ModelFile extends PhpFile{
 					$orderByField=isset($annotations['OrderByField'])?$annotations['OrderByField'][0][0]:false;
 					$cacheable=isset($annotations['Cacheable'])?$annotations['Cacheable'][0][0]:false;
 					
-					if(isset($annotations['Comment'])) $contentInfos['comment']=str_replace('\\\'',"'",$annotations['Comment'][0][0]);
+					if(isset($annotations['Comment'])){
+						if(is_array($annotations['Comment'][0][0]))
+							$contentInfos['comment']='See in '.$annotations['Comment'][0][0][0].'::'.$annotations['Comment'][0][0][1].'()';
+						else
+							$contentInfos['comment']=str_replace('\\\'',"'",$annotations['Comment'][0][0]);
+						
+					}
 					
 					
 					$indexes=&$contentInfos['indexes'];
@@ -256,7 +270,18 @@ class ModelFile extends PhpFile{
 						}
 						$column['unique']=isset($field['Unique'])?true:false;
 						$column['index']=isset($field['Index'])?true:false;
-						$column['comment']=isset($field['Comment'])?str_replace('\\\'',"'",$field['Comment'][0]):false;
+						if(isset($field['Comment']))
+							$column['comment']=str_replace('\\\'',"'",$field['Comment'][0]);
+						else if(isset($field['Enum'])){
+							if(count($field['Enum'])===1 && is_array($field['Enum'][0]))
+								$column['comment'] = 'See in '.$field['Enum'][0][0].'::'.$field['Enum'][0][1];
+							else{
+								$maxItemLength = count($field['Enum']) > 8 ? 10 : 20;
+								$column['comment'] = implode(',',UArray::map($field['Enum'],
+										function($k,$v) use($maxItemLength){ return $k.'='.UString::truncate($v,$maxItemLength);}));
+							}
+							if(strlen($column['comment']) > 1024) $column['comment'] = substr($column['comment'],0,1018).' [...]';
+						}else $column['comment'] = false;
 						if(isset($field['AutoIncrement'])){ $field['NotBindable']=0; $column['autoincrement']=true; $contentInfos['isAI']=true; }
 						else $column['autoincrement']=false;
 						if(isset($field['CreatedField']) || (!$createdField && isset($column['type']) && in_array($column['type'],array('DATE','DATETIME','date','datetime'))
@@ -302,7 +327,7 @@ class ModelFile extends PhpFile{
 					else{
 						$res='';
 						foreach($enums as $fieldName=>$array){
-							if(count($array)===1 && is_array($array[0])){ $array=$array[0]; $isFromClass=count($array)===2 && isset($array[0]) && isset($array[1]); }else $isFromClass=false;
+							list($isFromClass,$array) = self::__Annotation_isFromClass($array);
 							$res.="\n".'public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){';
 							if($isFromClass){
 								$res.='return '.$array[0].'::'.$array[1].'();';
