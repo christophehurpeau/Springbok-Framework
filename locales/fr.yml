@@ -1,0 +1,105 @@
+Save: Enregistrer
+"Yes": Oui
+"No": Non
+Start: Début
+Previous: Précédent
+Next: Suivant
+End: Fin
+Powered by: ""
+Filter: Filtrer
+filter.help: '"%": Remplace n''importe quel nombre de caractères, y compris aucun
+"_": Remplace exactement un caractère'
+result: résultat
+results: résultats
+No result: Aucun résultat
+Actions: Actions
+Add: Ajouter
+Home: Accueil
+http.503: Service temporairement indisponible
+http.503.maintenance: 'Le serveur est actuellement indisponible : opération de maintenance.'
+This is a temporary state.: Cet état est temporaire.
+Please come back later.: Merci de revenir plus tard.
+The server is currently overloaded: Le serveur est actuellement surchargé
+http.404: Page introuvable
+http.500: Erreur interne du serveur
+http.403: Accès interdit
+http.403.description: Vous n'avez pas les autorisations suffisantes pour accéder à
+  cette page.
+http.404.description: La page demandée est introuvable.
+http.410: Cette page n'existe plus
+http.410.description: Le contenu de cette page a été supprimé ou n'existe plus.
+Loading...: Chargement...
+No files: Aucun fichiers
+Upload error: Error d'upload
+'This view does not exist:': 'Cette vue n''existe pas :'
+The database is currently inaccessible: La base de donnée est actuellement inaccessible
+'#': n°
+Cancel: Annuler
+Close: Fermer
+Error: Erreur
+'Error:': 'Erreur :'
+Update: Modifier
+Edit: Editer
+Delete: Supprimer
+Create: Créer
+Modify: Modifier
+Rename: Renommer
+View: Afficher
+Disable: Désactiver
+Enable: Activer
+Date: Date
+Name: Nom
+Title: Titre
+Log in: Connexion
+Log out: Déconnexion
+Sign in: Connexion
+Sign out: Déconnexion
+Sign up: Inscription
+Register: S'enregister
+Created: Créé le
+Updated: Mise à jour le
+New name ?: Nouveau nom ?
+Password lost ?: Mot de passe perdu ?
+User: Utilisateur
+Guest: Invité
+Basic user: Utilisateur basique
+Are you sure ?: Êtes-vous sûr ?
+Invalid image: Image invalide
+Invalid extension: Extension invalide
+validation.required: Veuillez remplir ce champ
+This field should be a valid id: Ce champ devrait être un ID valide
+validation.maxlength: Ce champ doit avoir une taille maximum de %s caractères
+This field must have a length of %s: Ce champ doit avoir une taille de %s
+validation.minlength: Ce champ doit avoir une taille minimum de %s caractères
+validation.maxsize: La valeur ne doit pas être supérieure à %s
+validation.minsize: La valeur ne doit pas être inférieure à %s
+validation.email: Entrez l'adresse email sous la forme username@example.com
+validation.pattern: 'Ce champ doit valider : %s'
+validation.color: 'Écrivez une couleur sous la forme : #FFF ou #000000'
+validation.date: Écrivez une date sous la forme AAAA-MM-JJ
+validation.datetime: Écrivez une date avec heure sous la forme AAAA-MM-JJ HH:MM
+validation.time: Écrivez l'heure sous la forme HH:MM
+validation.month: Écrivez une date sous la forme MM-JJ
+validation.number: Entrez un nombre
+validation.range: ""
+validation.text: ""
+validation.url: Entrez une url sous la forme http://www.example.com/
+validation.checkbox: Cochez la case
+Incorrect captcha: Captcha incorrect
+The uploaded file exceeds the maximum size allowed by the configuration.: Le fichier
+  uploadé dépasse la taille maximum autorisée par la configuration.
+The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.: Le
+  fichier uploadé dépasse la taille maximum autorisé par le formulaire HTML.
+The uploaded file was only partially uploaded.: Le fichier n'a été que partiellement
+  uploadé.
+Sorry, your login or your password is incorrect...: Désolé, votre identifiant ou votre
+  mot de passe est incorrect...
+'View:': 'Afficher :'
+'Edit:': "Editer :"
+http.500: Erreur interne du serveur
+http.403: Accès interdit
+http.403.description: Vous n'avez pas les autorisations suffisantes pour accéder à
+  cette page.
+http.404.description: La page demandée est introuvable.
+http.410: Cette page n'existe plus
+http.410.description: Le contenu de cette page a été supprimé ou n'existe plus.
