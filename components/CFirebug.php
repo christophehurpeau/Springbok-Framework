@@ -1,16 +1,13 @@
 <?php
-if(!file_exists(PEAR_INSTALL_DIR.'/FirePHPCore/FirePHP.class.php')){
-class CFirebug{
-	public static function isAvailable(){ return false; }
-}
-}else{
-include PEAR_INSTALL_DIR.'/FirePHPCore/FirePHP.class.php';
+if($FirePHPExists=file_exists(PEAR_INSTALL_DIR.'/FirePHPCore/FirePHP.class.php'))
+	include PEAR_INSTALL_DIR.'/FirePHPCore/FirePHP.class.php';
+
 class CFirebug{
 	private static $_i;
 	
 	public static function init(){ self::$_i=FirePHP::getInstance(true); }
 	
-	public static function isAvailable(){ return self::$_i->detectClientExtension(); }
+	public static function isAvailable(){ return self::$_i !== null && self::$_i->detectClientExtension(); }
 	
 	public static function enable(){ self::$_i->setEnabled(true); }
 	public static function disable(){ self::$_i->setEnabled(false); }
@@ -124,5 +121,5 @@ class CFirebug{
 	 */
 	public static function table($Label, $Table){ return self::send($Table, $Label, FirePHP::TABLE); }
 }
-CFirebug::init();
-}
+
+if($FirePHPExists) CFirebug::init();
