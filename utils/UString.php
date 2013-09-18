@@ -52,6 +52,7 @@ class UString{
 	public static function length($str){ return mb_strlen($str); }
 	
 	public static function pos($haystack,$needle){ return mb_strrpos($haystack,$needle); }
+	public static function substr($str,$start,$length){ return mb_substr($str,$start,$length); }
 	
 	
 	public static function underscore($word){
@@ -74,4 +75,8 @@ class UString{
 		return $res;
 	}
 	
+	public static function truncate($str, $maxLength, $end='...'){
+		if(self::length($str) <= $maxLength) return $str;
+		return self::substr($str,0,$maxLength - self::length($end)).$end;
+	}
 }
