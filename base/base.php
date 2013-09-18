@@ -52,12 +52,15 @@ function prettyBackTrace($skipLength=1,$trace=false){
 	}
 	return $prettyMessage;
 }
+
 /*#if DEV */
 function openLocalFile($file,$line=null){
 	return '<a href="openlocalfile://'.h($file).($line===null?'':'?'.$line).'">';
 }
+/*#/if*/
 
 function prettyHtmlBackTrace($skipLength=1,$trace=false){
+	/*#if DEV */
 	if(!$trace) $trace=function_exists('xdebug_get_function_stack') ? xdebug_get_function_stack() : debug_backtrace();
 	$prettyMessage='';
 	// Skip the unecessary stack trace
@@ -109,9 +112,11 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 		else $prettyMessage.='<br />';
 	}
 	return $prettyMessage;
+	/*#/if*/
 }
 
 function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
+	/*#if DEV */
 	if(!defined('STDIN')){
 		$id=uniqid('',true);
 		echo str_pad('<div style="text-align:left;'.($black?'background:#1A1A1A;color:#FCFCFC;border:1px solid #050505':'background:#FFDDAA;color:#333;border:1px solid #E07308').';overflow:auto;padding:1px 2px;position:relative;z-index:999999">'
@@ -127,34 +132,46 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 		if(ob_get_length()>0) ob_flush();
 		flush();
 	}
+	/*#/if*/
 }
 function _debug($objects,$flush=true,$MAX_DEPTH=5){
+	/*#if DEV */
 	if(count($objects)===1) $objects=$objects[0];
 	prettyDebug(UVarDump::dump($objects,$MAX_DEPTH),2,$flush,true);
 	if(count($objects)===1) return $objects;
+	/*#/if*/
 }
-function debug(){ return _debug(func_get_args(),true); }
-function debugNoFlush(){ return _debug(func_get_args(),false); }
+function debug(){ /*#if DEV */return _debug(func_get_args(),true);/*#/if*/ }
+function debugNoFlush(){ /*#if DEV */return _debug(func_get_args(),false);/*#/if*/ }
 
 function debugCode($code,$withBacktrace=true){
+	/*#if DEV */
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
+	/*#/if*/
 }
 function debugVar(){
+	/*#if DEV */
 	ob_start();
 	call_user_func_array('var_dump',func_get_args());
 	$message=ob_get_clean();
 	prettyDebug($message,2);
+	/*#/if*/
 }
 function debugVarNoFlush(){
+	/*#if DEV */
 	ob_start();
 	call_user_func_array('var_dump',func_get_args());
 	$message=ob_get_clean();
 	prettyDebug($message,2,false);
+	/*#/if*/
 }
 function debugPrintr($var,$flush=true){
+	/*#if DEV */
 	prettyDebug(htmlentities(print_r($var,true),ENT_QUOTES,'UTF-8'),2,$flush);
+	/*#/if*/
 }
 
+/*#if DEV */
 function dev_test_preg_error(){
 	if(preg_last_error() !== PREG_NO_ERROR){
 		switch(preg_last_error()){
@@ -204,28 +221,19 @@ function dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
 	dev_test_preg_error();
 	return $res;
 }
+/*#/if*/
 
 function dev_eval($code){
+	/*#if PROD*/ return eval($code);
+	/*#else*/
 	try{
 		$code=eval($code);
 		return $code;
 	}catch(Exception $e){
 		throw new Exception('Unable to eval code : '.$e->getMessage()."\n".$code,0,$e);
 	}
+	/*#/if*/
 }
-
-/*#/if*/
-
-/*#if PROD*/
-function prettyDebug($message,$skipLength=2){}
-function debug($object){}
-function debugNoFlush(){}
-function debugCode($code){}
-function debugVar($var){}
-function debugVarNoFlush(){}
-function debugPrintr($var){}
-function dev_eval($code){return eval($code);}
-/*#/if*/
 
 function h($data,$double=true){
 	/*#if PROD*/return /*#/if*//*#if DEV */$str=/*#/if*/htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);
