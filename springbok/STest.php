@@ -273,7 +273,7 @@ class STestCheck{
 	
 	public function equals($expected){
 		if($this->var!==$expected)
-			throw new Exception('"'.$this->var.'" !== "'.$expected.'"');
+			throw new Exception('[value] '.UVarDump::dump($this->var,5,false).' !== [expected] '.UVarDump::dump($expected,5,false));
 		return $this;
 	}
 	
