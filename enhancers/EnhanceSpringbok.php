@@ -9,6 +9,13 @@ include CORE_SRC.'enhancers/EnhancedCore.php';
 include CORE_SRC.'enhancers/files/Preprocessor.php';
 include CORE_SRC.'enhancers/files/PhpFile.php';
 include CORE_SRC.'enhancers/files/CssFile.php';
+include CORE_SRC.'enhancers/Translations.php';
+if(file_exists(dirname(CORE_SRC).'/prod/db/DB.php')){
+	class Config{public static $db=array();}
+	include dirname(CORE_SRC).'/prod/db/DB.php';
+	include dirname(CORE_SRC).'/prod/db/DBSql.php';
+	include dirname(CORE_SRC).'/prod/db/DBSQLite.php';
+}
 
 class EnhanceSpringbok{
 	private $inLibs;
@@ -34,10 +41,12 @@ class EnhanceSpringbok{
 		
 		if($inLibs===false){
 			$langs=new Folder($dirname.'langs'.DS);
-			foreach($langs->listFilesPath() as $filename=>$file){
-				copy($filename,$dirname.'dev'.DS.'i18n'.DS.$file);
-				copy($filename,$dirname.'prod'.DS.'i18n'.DS.$file);
-			}
+			if($langs->exists())
+				foreach($langs->listFilesPath() as $filename=>$file){
+					$db=SpringbokTranslations::loadDbLang(substr($filename,0,-3),'');
+					$app=$db->doSelectListValue('SELECT s,t FROM t');
+					echo '<pre>'.yaml_emit($app, YAML_UTF8_ENCODING).'</pre>';
+				}
 		}
 		
 		return $this->enhanced->getChanges();
@@ -54,10 +63,38 @@ class EnhanceSpringbok{
 		foreach($dirs as $d){
 			$dirname=$d->getName();
 			if($dirname[0]==='.' || $d->getPath()==CORE_SRC.'includes/') continue;
-
+			
 			$newDevDir=new Folder($devDir->getPath().$dirname); $newDevDir->mkdir(0775);
 			if($prodDir===false) $newProdDir=false;
 			else{ $newProdDir=new Folder($prodDir->getPath().$dirname); $newProdDir->mkdir(0775); }
+
+
+			if($d->getPath() === CORE_SRC.'locales/'){
+				foreach($d->listFilesPath() as $filename=>$file){
+					$yaml=file_get_contents($file->getPath());
+					$yaml=str_replace("\t",'  ',$yaml);
+					$yaml=yaml_parse($yaml,0,$nbDocs);
+					
+					$lang = $file->getName();
+					$filenamedb = substr($lang,0,-4).'.db';
+					$db=SpringbokTranslations::loadDbLang($devDir->getPath().$filenamedb,$lang);
+					SpringbokTranslations::checkDb($db);
+					$db->beginTransaction();
+					
+					foreach($yaml as $string=>$translation){
+						if(is_array($translation))
+							SpringbokTranslations::saveOneSP($db,$string,$translation['one'],$translation['other']);
+						else
+							SpringbokTranslations::saveOne($db,$string,$translation);
+					}
+					
+					$db->commit();
+					$db->close();
+					
+					copy($devDir->getPath().$filenamedb,$prodDir->getPath().$filenamedb);
+				}
+				continue;
+			}
 
 			if($dirname=='enhancers'||$dirname=='controllers'||$dirname==='tests'/*||$dirname=='includes'*/){
 				$this->simpleRecursiveEnhanceFiles($dirname,$d,$newDevDir);
