@@ -1,11 +1,11 @@
 <?php
+/** Generates strings and numbers */
 class UGenerator{
 	/**
 	 * Generate a random UUID
 	 *
 	 * @see http://www.ietf.org/rfc/rfc4122.txt
-	 * @return RFC 4122 UUID
-	 * @static
+	 * @return string RFC 4122 UUID
 	 */
 	public static function uuid(){
 		$node = isset($_SERVER['SERVER_ADDR'])?$_SERVER['SERVER_ADDR']:null;
@@ -39,6 +39,13 @@ class UGenerator{
 		);
 	}
 	
+	/**
+	 * Generate a random code
+	 * 
+	 * @param int
+	 * @param array list of possible characters used in the code
+	 * @return string
+	 */
 	public static function randomCode($size,$chars=array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9')){
 		shuffle($chars);
 		$finalWord=$lastChar=$charBeforeLast='';
@@ -51,18 +58,42 @@ class UGenerator{
 		return $finalWord;
 	}
 	
+	/**
+	 * Generate a random code with letters only
+	 * 
+	 * @param int
+	 * @return string
+	 */
 	public static function randomLetters($size){
 		return self::randomCode($size,array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','p','q','r','s','t','u','v','x','y','z'));
 	}
-
+	
+	/**
+	 * Generate a random code with numbers only
+	 * 
+	 * @param int
+	 * @return string
+	 */
 	public static function numbers($size){
 		return self::randomCode($size,array(1,2,3,4,5,6,7,8));
 	}
 	
+	/**
+	 * Generate a random password with letters then numbers
+	 * 
+	 * @param int minimum size (can be 1 letter bigger)
+	 * @return string
+	 */
 	public static function pronounceablePassword($size){
 		return self::pronounceableWord(($size=($size/3))*2).self::numbers($size);
 	}
 	
+	/**
+	 * Generate a pronounceable word
+	 * 
+	 * @param int minimum size (can be 1 letter bigger)
+	 * @return string
+	 */
 	public static function pronounceableWord($size){
 		$consonnes=array('l','m','n','p','r');
 		$chars=array(
