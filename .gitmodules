@@ -1,10 +1,9 @@
 [submodule "includes/js-utils"]
 	path = includes/js-utils
-	url = git@github.com:A2Zi/springbokjs-utils.git
+	url = git@github.com:christophehurpeau/springbokjs-utils.git
 [submodule "includes/img"]
 	path = includes/img
-	url = git@github.com:A2Zi/Springbok-Images.git
-
+	url = git@github.com:christophehurpeau/Springbok-Images.git
 [submodule "includes/springbokjs"]
 	path = includes/springbokjs
 	url = git@github.com:christophehurpeau/SpringbokJS.git
