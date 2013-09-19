@@ -1,12 +1,21 @@
 <?php
+/** Dump vars */
 class UVarDump{
 	private $_objects=array(),$MAX_DEPTH,$html;
 	
+	/** @ignore */
 	public function __construct($MAX_DEPTH=3,$html=null){
 		$this->html = $html===null ? !defined('STDIN') : $html;
 		$this->MAX_DEPTH=$MAX_DEPTH;
 	}
 	
+	/**
+	 * Dump a var
+	 * 
+	 * @param mixed
+	 * @param int
+	 * @return string
+	 */
 	public function _dumpVar($var,$currentDepth=0){
 		if(is_object($var)){
 			if($found=(($id=array_search($var,$this->_objects,true))!==false)) $id=array_push($this->_objects,$var);
@@ -54,11 +63,19 @@ class UVarDump{
 		elseif(is_null($var)) return $this->color('null','93C763;font-weight:bold');
 		else return 'UNKNOWN : '.print_r($var,true);
 	}
-
+	
+	/**
+	 * @return string
+	 */
 	public function newLine(){
 		return $this->html ? "<br/>"/* pas de \n */ : "\n";
 	}
 	
+	/**
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public function color($content,$color){
 		if($this->html){
 			$str=htmlentities($content,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',true);
@@ -71,11 +88,26 @@ class UVarDump{
 		return $content;
 	}
 	
+	/**
+	 * Dump a var
+	 * 
+	 * @param mixed
+	 * @param int
+	 * @param bool dump in html or not. If null, autodetect
+	 * @return string
+	 */
 	public static function dump($var,$MAX_DEPTH=3,$html=null){
 		$o=new UVarDump($MAX_DEPTH,$html);
 		return $o->_dumpVar($var);
 	}
 	
+	/**
+	 * Dump a var in html
+	 * 
+	 * @param mixed
+	 * @param int
+	 * @return string
+	 */
 	public static function dumpHtml($var,$MAX_DEPTH=3){
 		$black=true; $message=self::dump($var,$MAX_DEPTH,true);
 		return '<div style="text-align:left;'.($black?'background:#1A1A1A;color:#FCFCFC;border:1px solid #050505':'background:#FFDDAA;color:#333;border:1px solid #E07308').';overflow:auto;padding:1px 2px;position:relative;z-index:999999">'
