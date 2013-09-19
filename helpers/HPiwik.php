@@ -1,7 +1,12 @@
 <?php
+/** Piwik Helper */
 class HPiwik{
 	/**
-	 * piwikLink: example.com/
+	 * Piwik tracker
+	 * 
+	 * @param string
+	 * @param int
+	 * @param array
 	 */
 	public static function tracker($piwikLink,$siteId=1,$customVariables=null){
 		return HHtml::jsInline('var _paq=_paq||[];_paq.push(["trackPageView"]);_paq.push(["enableLinkTracking"]);'
@@ -15,7 +20,12 @@ class HPiwik{
 	}
 	
 	/**
-	 * cf. http://www.statstory.com/multiple-trackers-in-google-analytics-piwik/
+	 * Piwik multi tracker
+	 * 
+	 * @see http://www.statstory.com/multiple-trackers-in-google-analytics-piwik/
+	 * 
+	 * @param string
+	 * @param array
 	 */
 	public static function multiTracker($piwikLink,$siteIds){
 		$s='var u=("https:"===document.location.protocol?"https":"http")+"://'.$piwikLink.'";document.write(unescape("%3Cscript src=" + u + "piwik.js type=\"text/javascript\"%3E%3C/script%3E"));';
