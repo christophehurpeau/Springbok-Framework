@@ -28,24 +28,6 @@ class USecure{
 	}
 	
 	/**
-	 * Return if the app has an alternative salt
-	 * 
-	 * @return string
-	 */
-	public static function hasAltSalt(){
-		return isset(self::$_config['salt_alt']);
-	}
-	/**
-	 * Hash with the alternative salt
-	 * 
-	 * @param string
-	 * @return string
-	 */
-	public static function hashWithAltSalt($string){
-		return sha1(self::$_config['salt_alt'].$string);
-	}
-	
-	/**
 	 * Decrypt using AES and the crypt_key defined in config, or the key
 	 * 
 	 * @param string

@@ -160,7 +160,7 @@ class CSecure{
 			$where=static::config('authConditions');
 			$where[$login]=$user->$login;
 			$pwd=trim($user->$password,static::config('trim'));
-			$where[$password]=USecure::hasAltSalt()===false ? (USecure::hashWithSalt($pwd)) : array(USecure::hashWithSalt($pwd),USecure::hashWithAltSalt($pwd));
+			$where[$password]=USecure::hashWithSalt($pwd);
 			
 			$query=$id===$login ? /**/$className::QExist() : /**/$className::QValue()->field($id);
 			
