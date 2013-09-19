@@ -109,7 +109,7 @@ class ModelFile extends PhpFile{
 	}
 	
 	private static function __Annotation_isFromClass($array){
-		if(count($array)===1 && is_array($array[0])){
+		if(count($array)===1 && isset($array[0]) && is_array($array[0])){
 			$array=$array[0];
 			return array(count($array)===2 && isset($array[0]) && isset($array[1]),$array);
 		}
@@ -273,7 +273,7 @@ class ModelFile extends PhpFile{
 						if(isset($field['Comment']))
 							$column['comment']=str_replace('\\\'',"'",$field['Comment'][0]);
 						else if(isset($field['Enum'])){
-							if(count($field['Enum'])===1 && is_array($field['Enum'][0]))
+							if(count($field['Enum'])===1 && isset($field['Enum'][0]) && is_array($field['Enum'][0]))
 								$column['comment'] = 'See in '.$field['Enum'][0][0].'::'.$field['Enum'][0][1];
 							else{
 								$maxItemLength = count($field['Enum']) > 8 ? 10 : 20;
