@@ -1,27 +1,57 @@
 <?php
+/** Security utils */
 class USecure{
 	private static $_config;
 	
+	/** @ignore */
 	public static function init(){
 		self::$_config=Config::$secure;
 	}
 	
+	/**
+	 * Hash a string with salt
+	 * 
+	 * @param string
+	 * @return string
+	 */
 	public static function hashWithSalt($string){
 		return sha1(self::$_config['salt'].$string);
 	}
 	
+	/**
+	 * Return the app Salt
+	 * 
+	 * @return string
+	 */
 	public static function getSalt(){
 		return self::$_config['salt'];
 	}
 	
+	/**
+	 * Return if the app has an alternative salt
+	 * 
+	 * @return string
+	 */
 	public static function hasAltSalt(){
 		return isset(self::$_config['salt_alt']);
 	}
+	/**
+	 * Hash with the alternative salt
+	 * 
+	 * @param string
+	 * @return string
+	 */
 	public static function hashWithAltSalt($string){
 		return sha1(self::$_config['salt_alt'].$string);
 	}
 	
-	
+	/**
+	 * Decrypt using AES and the crypt_key defined in config, or the key
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function decryptAES($val,$ky=null){
 		if($ky===null) $ky=self::$_config['crypt_key'];
 		$val=base64_decode($val);
@@ -35,6 +65,13 @@ class USecure{
 		return rtrim($dec,(( ord(substr($dec,strlen($dec)-1,1))>=0 and ord(substr($dec, strlen($dec)-1,1))<=16)? chr(ord( substr($dec,strlen($dec)-1,1))):null)); 
 	}
 	
+	/**
+	 * Encrypt using AES and the crypt_key defined in config, or the key
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function encryptAES($val,$ky=null){
 		if($ky===null) $ky=self::$_config['crypt_key'];
 		$key="\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";

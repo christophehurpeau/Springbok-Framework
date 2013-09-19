@@ -43,8 +43,6 @@ class GitRevision extends AbstractRepositoryRevision{
 *
 * This class enables the creating, reading, and manipulation
 * of a git repository
-*
-* @class GitRepo
 */
 class GitRepository{
 	protected $repo_path=null,$_logName;
@@ -76,7 +74,13 @@ class GitRepository{
 		$this->_logName=basename($this->repo_path).'-'.md5($this->repo_path);
 	}
 	
-	
+	/**
+	 * Run a command
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public function run($command,$beforeCommand=''){
 		$res=UExec::exec('cd '.escapeshellarg($this->repo_path).' && '.$beforeCommand.' git '.$command);
 		$this->log($command."\n".$res);

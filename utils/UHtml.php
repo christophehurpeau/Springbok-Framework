@@ -1,9 +1,14 @@
 <?php
+/** HTML Utils */
 class UHtml{
 	/**
-	* $post->text=UHtml::transformInternalLinks($post->text,array(
-	* 	'article'=>function($id){$postSlug=Post::findValueSlugById($id); return array('/:controller/:id-:slug','posts',sprintf('%03d',$id),$postSlug);}
-	* ))
+	 * Transform internal links into real links
+	 * 
+	 * <code>
+	 * $post->text=UHtml::transformInternalLinks($post->text,array(
+	 * 	'article'=>function($id){$postSlug=Post::findValueSlugById($id); return array('/:controller/:id-:slug','posts',sprintf('%03d',$id),$postSlug);}
+	 * ))
+	 * </code>
 	*/
 	public static function transformInternalLinks($content,$routes,$entryUrls='index',$fullUrls=null){
 		return preg_replace_callback('#<a([^>]+data\-role="internalLink"[^>]*)>#U',function($m) use($routes,$entryUrls,$fullUrls){
@@ -20,7 +25,12 @@ class UHtml{
 	}
 	
 	
-	
+	/**
+	 * Clean html like useless spaces or empty spans or doubled spans
+	 * 
+	 * @param string
+	 * @return string
+	 */
 	public static function clean($html){
 		// <([^>]*)(class|lang|style|size|face)=(\"[^\"]*\"|'[^']*'|[^>]+)([^>]*)>
 		
