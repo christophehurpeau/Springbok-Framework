@@ -60,13 +60,13 @@ class UFile{
 	 * Delete a file
 	 * 
 	 * @param string
-	 * @return mixed
+	 * @return bool
 	 */
 	public static function rm($path){
 		try{
 			return unlink($path);
 		}catch(ErrorException $e){}
-		return bool;
+		return false;
 	}
 	
 	/**
