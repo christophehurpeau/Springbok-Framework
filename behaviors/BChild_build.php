@@ -1,4 +1,10 @@
 <?php
+/**
+ * Behavior child (build)
+ * 
+ * Add p_id or id field and methods like insertParent(), insertIgnoreParent(), updateParent()
+ * 
+ */
 class BChild_build{
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){
 		$idField=isset($modelFile->_fields['id']) ? 'p_id' : 'id';

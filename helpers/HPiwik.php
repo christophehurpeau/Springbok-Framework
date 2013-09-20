@@ -33,7 +33,7 @@ class HPiwik{
 		foreach($siteIds as $siteId) {
 			$s2.='var t_'.$siteId.'=Piwik.getTracker(u+"piwik.php",'.$siteId.');t_'.$siteId.'.trackPageView();t_'.$siteId.'.enableLinkTracking();';
 		}
-		$s2.='} catch(err){}';		
+		$s2.='} catch(err){}';
 		return HHtml::jsInline($s).HHtml::jsInline($s2);
 	}
 }

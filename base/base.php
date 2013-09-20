@@ -34,6 +34,13 @@ function replaceAppAndCoreInFile($file){
 	return str_replace(array(APP,CORE,realpath(CORE).'/'),array('APP/','CORE/','CORE/'),$file);
 }
 
+/**
+ * Returns a backtrace in string
+ * 
+ * @param int
+ * @param array
+ * @return string
+ */
 function prettyBackTrace($skipLength=1,$trace=false){
 	if(!$trace) $trace=debug_backtrace();
 	$prettyMessage='';
@@ -54,11 +61,25 @@ function prettyBackTrace($skipLength=1,$trace=false){
 }
 
 /*#if DEV */
+/**
+ * Returns the first part of a link with the openlocalfile protocol
+ * 
+ * @param string
+ * @param string|int
+ * @return string
+ */
 function openLocalFile($file,$line=null){
 	return '<a href="openlocalfile://'.h($file).($line===null?'':'?'.$line).'">';
 }
 /*#/if*/
 
+/**
+ * Return a backtrace in HTML with content of files and arguments
+ * 
+ * @param int
+ * @param array
+ * @return string
+ */
 function prettyHtmlBackTrace($skipLength=1,$trace=false){
 	/*#if DEV */
 	if(!$trace) $trace=function_exists('xdebug_get_function_stack') ? xdebug_get_function_stack() : debug_backtrace();
@@ -282,12 +303,23 @@ function displayXml($content){
 	echo xmlrpc_encode($content);
 }
 
-
+/**
+ * Transform <br> html tag to \n
+ * 
+ * @param string
+ * @return string
+ */
 function br2nl($string){
 	return preg_replace('#(\r\n|\r|\n|\n)?\<br\s*/?\>(\r\n|\r|\n|\n)?#i',"\n",$string);
 }
 
-/* http://kevin.vanzonneveld.net/techblog/article/create_short_ids_with_php_like_youtube_or_tinyurl/ */
+/**
+ * Create a short alphanumber from a number
+ * 
+ * @see http://kevin.vanzonneveld.net/techblog/article/create_short_ids_with_php_like_youtube_or_tinyurl/
+ * @see shortAlphaNumber_dec
+ * @return string
+ */
 function shortAlphaNumber_enc($number,$index="abcdfghjklmonpqrstvwxyz_012345-ABCDFGHJKLMNOPQRSTVWXYZ~6789"){
 	$base=strlen($index);
 	
@@ -300,6 +332,13 @@ function shortAlphaNumber_enc($number,$index="abcdfghjklmonpqrstvwxyz_012345-ABC
 	}
 	return strrev($result); // reverse
 }
+
+/**
+ * Revert the short alphanumber to a number
+ * 
+ * @see shortAlphaNumber_enc
+ * @return string
+ */
 function shortAlphaNumber_dec($string,$index="abcdfghjklmonpqrstvwxyz_012345-ABCDFGHJKLMNOPQRSTVWXYZ~6789"){
 	$base=strlen($index);
 	

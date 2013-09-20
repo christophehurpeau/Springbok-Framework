@@ -1,4 +1,7 @@
 <?php
+/**
+ * A Detailed Exception : can be used to display more info in a HTML Error page
+ */
 class SDetailedException extends Exception{
 	protected $title,$details;
 	

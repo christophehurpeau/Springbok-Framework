@@ -1,4 +1,9 @@
 <?php
+/**
+ * Behavior History (build)
+ * 
+ * Add suffixed History model and static addHistory method
+ */
 class BHistory_build{
 	public static $afterInsert=array('_history_created');
 	public static $afterUpdate=array('_history_updated');
