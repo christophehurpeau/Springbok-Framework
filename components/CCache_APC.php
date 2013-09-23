@@ -1,4 +1,5 @@
 <?php
+/** APC Cache */
 abstract class CCache_APC extends CCache{
 	public function __construct($config){
 		$this->setExpiration($config['expiration']);

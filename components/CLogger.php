@@ -1,5 +1,13 @@
 <?php
 define('LOGS_PATH',/*#if DEV */dirname(APP).'/data/logs/'/*#/if*//*#if false*/./*#/if*//*#if PROD*/APP.'logs/'/*#/if*/);
+
+/**
+ * Logger class
+ * 
+ * <code>
+ * CLogger::get('test')->log('Hello');
+ * </code>
+ */
 abstract class CLogger{
 	static private $_instances;
  

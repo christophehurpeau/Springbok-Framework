@@ -32,6 +32,9 @@ class CMail{
 		return self::$_instance;
 	}
 	
+	/**
+	 * Create a mail from a template then send
+	 */
 	public static function send($template,$vars,$subject,$to){
 		return self::create($template,$vars,$subject,$to)->Send();
 	}

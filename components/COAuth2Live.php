@@ -1,10 +1,14 @@
 <?php
 /**
-* http://msdn.microsoft.com/fr-fr/library/hh243647.aspx
-* http://msdn.microsoft.com/fr-fr/library/hh243649.aspx
-* scopes : http://msdn.microsoft.com/en-us/library/hh243646.aspx
-* user api : http://msdn.microsoft.com/en-us/library/hh243648.aspx#user
-*/
+ * Google connect, using OAuth 2
+ * 
+ * Set in your config/_.php the following configuration : wlive_appId, wlive_secret
+ * 
+ * http://msdn.microsoft.com/fr-fr/library/hh243647.aspx
+ * http://msdn.microsoft.com/fr-fr/library/hh243649.aspx
+ * scopes : http://msdn.microsoft.com/en-us/library/hh243646.aspx
+ * user api : http://msdn.microsoft.com/en-us/library/hh243648.aspx#user
+ */
 class COAuth2Live extends COAuth2Connect{
 	protected static $OAUTH_URL='https://oauth.live.com/authorize',$TOKEN_URL='https://oauth.live.com/token',$API_URL='https://apis.live.net/v5.0';
 	

@@ -1,10 +1,16 @@
 <?php
 class FileUploadException extends Exception{}
+/** Component for uploading files */
 class CFiles{
 	protected static $folderPrefix;
 	
 	/**
+	 * Upload a file from a HTML form : $_FILES 
+	 * 
+	 * @param string
+	 * @param SModel
 	 * @throw Exception
+	 * @return SModel
 	 */
 	public static function upload($name='file',$file=null){
 		$errorMessage=self::fileErrorMessage($_FILES[$name]['error']);
@@ -19,6 +25,13 @@ class CFiles{
 		return false;
 	}
 	
+	/**
+	 * Upload a file, detect if it is an image. If it is, store in an other model
+	 * 
+	 * @param string
+	 * @param string class name of the image model
+	 * @param SModel
+	 */
 	public static function uploadAndDetect($name='file',$classIfImage,$file=null){
 		if(!empty($_FILES[$name]['name'])){
 			$ext=UFile::extension($_FILES[$name]['name']);
@@ -27,6 +40,9 @@ class CFiles{
 		return static::upload($name,$file);
 	}
 	
+	/**
+	 * Multiple uploads
+	 */
 	public static function uploadM($name){
 		$files=$errors=array();
 		foreach($_FILES[$name]['error'] as $key=>$error){
@@ -63,10 +79,21 @@ class CFiles{
 		throw new Exception('You must inherit CFiles class and override createObject');
 	}
 	
-	
+	/**
+	 * Return the folder where files are stored
+	 * 
+	 * @return string
+	 */
 	public static function folderPath(){
 		return DATA.static::$folderPrefix.'files/';
 	}
+	/**
+	 * Insert or update the model, move the temporary file.
+	 * 
+	 * @param string path of the file
+	 * @param SModel model of the file
+	 * @return int
+	 */
 	public static function add($tmpFile,$file){
 		$file->ext=UFile::extension($file->name);
 		
@@ -82,7 +109,12 @@ class CFiles{
 		return $id;
 	}
 	
-	
+	/**
+	 * Remove a file
+	 * 
+	 * @param SModel
+	 * @return void
+	 */
 	public static function deleteFile($file){
 		$filename=static::folderPath().$file->id.'.'.$file->ext;
 		UFile::rm($filename);

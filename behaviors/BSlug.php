@@ -1,4 +1,11 @@
 <?php
+/**
+ * Create a slug by default from the name of the model
+ * 
+ * Possible annotations : @UniqueSlug, @IndexSlug, @NullableSlug
+ * 
+ * @property string $slug
+ */
 trait BSlug{
 	public function auto_slug(){ return HString::slug($this->name); }
 	

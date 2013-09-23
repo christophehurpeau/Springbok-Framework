@@ -1,4 +1,7 @@
 <?php
+/**
+ * Pagination letters : Pages A,B,C,...,Z
+ */
 class CPagination_Letters extends CPagination{
 	public static function create($query){
 		return new self($query);
@@ -14,7 +17,10 @@ class CPagination_Letters extends CPagination{
 		else $this->page='A';
 	}
 	
-	public function fieldName($fieldName){$this->fieldName=&$fieldName;return $this;}
+	public function fieldName($fieldName){
+		$this->fieldName=$fieldName;
+		return $this;
+	}
 	public function pageSize($pageSize){throw new BadMethodCallException('This method is not usable in CPagination_Letters !'); return $this;}
 	public function getPageSize(){throw new BadMethodCallException('This method is not usable in CPagination_Letters !');}
 	public function page($page){$this->page=&$page;return $this;}

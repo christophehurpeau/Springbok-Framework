@@ -19,9 +19,9 @@
  * The first time CLang is called, the component search for the lang using config 'search_lang'.
  * 
  * <ul>
- * <li>Session: search for $_SESSION['_lang']</li>
- * <li>Cookie: search for $_COOKIE['lang']</li>
- * <li>Urls: search among Config::$lang_urls to determine the lang</li>
+ * <li>Session: 'session', search for $_SESSION['_lang']</li>
+ * <li>Cookie: 'cookie',search for $_COOKIE['lang']</li>
+ * <li>Urls: 'urls',search among Config::$lang_urls to determine the lang</li>
  * </ul>
  * 
  * Urls : example
@@ -39,6 +39,7 @@ class CLang{
 	/** @var DB */
 	private static $db;
 	
+	/** @ignore */
 	public static function init(){
 		if(isset(Config::$search_lang)) foreach(Config::$search_lang as $type){
 			switch($type){
@@ -91,22 +92,49 @@ class CLang{
 		}
 	}
 	
+	/**
+	 * Current lang
+	 * 
+	 * @return string
+	 */
 	public static function get(){
 		return self::$lang;
 	}
 	
+	/**
+	 * All langs
+	 * 
+	 * @return array
+	 */
 	public static function _getAll(){
 		return Config::$allLangs;
 	}
 	
+	/**
+	 * All available langs
+	 * 
+	 * @return array
+	 */
 	public static function getAvailable(){
 		return Config::$availableLangs;
 	}
 	
+	/**
+	 * Default lang
+	 * 
+	 * @return string
+	 */
 	public static function getDefault(){
 		return Config::$availableLangs[0];
 	}
 	
+	/**
+	 * Translate a string from db (using locales/ files)
+	 * 
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function translate($string,$category){
 		return isset(self::$cache[$category][$string]) ? self::$cache[$category][$string] : 
 			self::$cache[$category][$string]=self::$db->doSelectValue('SELECT t FROM t WHERE c=\''.$category.'\' AND s='.self::$db->escape($string).' LIMIT 1');

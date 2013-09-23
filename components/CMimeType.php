@@ -192,6 +192,10 @@ class CMimeType{
 		'zip'	 => 'application/zip'
 	);
 	
+	/**
+	 * @param string
+	 * @return string
+	 */
 	public static function autoDetect($filename){
 		$finfo=finfo_open(FILEINFO_MIME_TYPE);
 		$res=finfo_file($finfo,$filepath);
@@ -199,6 +203,10 @@ class CMimeType{
 		return $res;
 	}
 	
+	/**
+	 * @param string
+	 * @return string
+	 */
 	public static function fromExt($filename){
 		$filename=basename($filename);
 		$ext=strrpos($filename,'.');

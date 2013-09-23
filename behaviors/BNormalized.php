@@ -3,6 +3,10 @@
  * Behavior Normalized
  * 
  * Add a field normalized and methods
+ * 
+ * Possible annotations : @UniqueNormalized
+ * 
+ * @property string $normalized
  */
 trait BNormalized{
 	

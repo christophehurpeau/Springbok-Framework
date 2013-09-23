@@ -1,4 +1,11 @@
 <?php
+/**
+ * Add SEO fields and methods.
+ * 
+ * @property string $meta_title
+ * @property string $meta_descr
+ * @property string $meta_keywords
+ */
 trait BSeo{
 	public function auto_meta_title(){ return $this->name; }
 	

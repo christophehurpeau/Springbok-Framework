@@ -1,4 +1,5 @@
 <?php
+/** XCache */
 abstract class CCache_XCache extends CCache{
 	public function __construct($config){
 		$this->setExpiration($config['expiration']);

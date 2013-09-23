@@ -54,48 +54,162 @@ class CModelTable extends CModelTableAbstract{
 	public $actionClick,$rowActions,$controller,$afterContent='';
 	
 	/* !!! => CModelTableAbstract */
-	public function actionClick($action='view'){$this->actionClick=$action; return $this; }
-	public function actions(){$this->rowActions=func_get_args(); return $this; }
-	public function setActions($actions){$this->rowActions=$actions; return $this; }
+	/**
+	 * Set a action on click of the row
+	 * 
+	 * @param string
+	 * @return CModelTable
+	 */
+	public function actionClick($action='view'){
+		$this->actionClick = $action;
+		return $this;
+	}
 	
-	/** action='view' || ['view','title'=>'Click here to view'] || ['view','/controller/action'] */
-	public function addAction($action){$this->rowActions[]=$action; return $this; }
-	public function controller($controller){$this->controller=$controller; return $this; }
+	/**
+	 * Set actions on the table last column
+	 * 
+	 * action='view' || ['view','title'=>'Click here to view'] || ['view','/controller/action']
+	 * 
+	 * @param string|array $actions...
+	 * @return CModelTable
+	 */
+	public function actions(){
+		$this->rowActions = func_get_args();
+		return $this;
+	}
 	
+	/**
+	 * Set actions on the table last column
+	 * 
+	 * action='view' || ['view','title'=>'Click here to view'] || ['view','/controller/action']
+	 * 
+	 * @param array $actions...
+	 * @return CModelTable
+	 */
+	public function setActions($actions){
+		$this->rowActions = $actions;
+		return $this;
+	}
 	
-	public function addAfter($content){$this->afterContent.=$content; return $this; }
+	/**
+	 * Add a action
+	 * 
+	 * action='view' || ['view','title'=>'Click here to view'] || ['view','/controller/action']
+	 * 
+	 * @param string|array
+	 * @return CModelTable
+	 */
+	public function addAction($action){
+		$this->rowActions[] = $action;
+		return $this;
+	}
 	
+	/**
+	 * Set the current url controller
+	 * 
+	 * @param string
+	 * @return CModelTable
+	 */
+	public function controller($controller){
+		$this->controller = $controller;
+		return $this;
+	}
+	
+	/**
+	 * Add content after table
+	 * 
+	 * @param string
+	 * @return CModelTable
+	 */
+	public function addAfter($content){
+		$this->afterContent.=$content;
+		return $this;
+	}
+	
+	/**
+	 * Set common action Read, Update, Delete
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return CModelTable
+	 */
 	public function setActionsRUD($iconPrefix='',$confirm=true){
 		self::actionView($iconPrefix);
 		self::actionEdit($iconPrefix);
 		self::actionDelete($iconPrefix,$confirm);
 		return $this;
 	}
+	
+	/**
+	 * Set common action Read, Update
+	 * 
+	 * @param string
+	 * @return CModelTable
+	 */
 	public function setActionsRU($iconPrefix=''){
 		self::actionView($iconPrefix);
 		self::actionEdit($iconPrefix);
 		return $this;
 	}
+	
+	/**
+	 * Set common action Update, Delete
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return CModelTable
+	 */
 	public function setActionsUD($iconPrefix='',$confirm=true){
 		$this->actionClick='edit';
 		self::actionEdit($iconPrefix);
 		self::actionDelete($iconPrefix,$confirm);
 		return $this;
 	}
+	
+	/**
+	 * Set common action Read, Delete
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return CModelTable
+	 */
 	public function setActionsRD($iconPrefix='',$confirm=true){
 		self::actionView($iconPrefix);
 		self::actionDelete($iconPrefix,$confirm);
 		return $this;
 	}
+	
+	/**
+	 * Set common action View (Read)
+	 * 
+	 * @param string
+	 * @return CModelTable
+	 */
 	public function actionView($iconPrefix=''){
 		$this->actionClick='view';
 		$this->rowActions[]=array($iconPrefix.($iconPrefix===''?'view':'View'),'title'=>_tC('View'));
 		return $this;
 	}
+	
+	/**
+	 * Set common action Edit (Update)
+	 * 
+	 * @param string
+	 * @return CModelTable
+	 */
 	public function actionEdit($iconPrefix=''){
 		$this->rowActions[]=array($iconPrefix.($iconPrefix===''?'edit':'Edit'),'title'=>_tC('Modify'));
 		return $this;
 	}
+	
+	
+	/**
+	 * Set common action Delete (Remove)
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return CModelTable
+	 */
 	public function actionDelete($iconPrefix='',$confirm=true){
 		$options=array($iconPrefix.($iconPrefix===''?'delete':'Delete'),'title'=>_tC('Delete'));
 		if($confirm===true) $options['data-confirm']="1";
@@ -104,6 +218,15 @@ class CModelTable extends CModelTableAbstract{
 		return $this;
 	}
 	
+	/**
+	 * Render the table in a layout
+	 * 
+	 * @param string title of the page
+	 * @param array|string|bool|function create a form before the table to add a new element
+	 * @param string layout name
+	 * @param string
+	 * @return CModelTable
+	 */
 	public function render($title,$add=false,$layout=null,$transformerClass='THtml'){
 		include_once CORE.'mvc/views/View.php';
 		$v=new AjaxContentView($title,$layout);
@@ -113,6 +236,16 @@ class CModelTable extends CModelTableAbstract{
 		return $this;
 	}
 	
+	/**
+	 * Render the table in a layout
+	 * 
+	 * @param string title of the page
+	 * @param string edit url
+	 * @param array|string|bool|function create a form before the table to add a new element
+	 * @param string layout name
+	 * @param string
+	 * @return CModelTable
+	 */
 	public function renderEditable($title,$url,$add=false,$layout=null,$transformerClass='THtml'){
 		include_once CORE.'mvc/views/View.php';
 		$v=new AjaxContentView($title,$layout);
@@ -122,6 +255,15 @@ class CModelTable extends CModelTableAbstract{
 		return $this;
 	}
 
+	/**
+	 * Render the table with a special transformer
+	 * 
+	 * @param string
+	 * @param string title of the page
+	 * @param array|string|bool|function create a form before the table to add a new element
+	 * @param string layout name
+	 * @return CModelTable
+	 */
 	public function renderTransformer($transformerClass,$title,$add=false,$layout=null){
 		return $this->render($title,$add,$layout,$transformerClass);
 	}
@@ -141,7 +283,15 @@ class CModelTable extends CModelTableAbstract{
 		echo $form->end(_tC('Add'));
 	}
 	
+	/** @ignore */
 	public $editableUrl;
+	
+	/**
+	 * @param string
+	 * @param bool
+	 * @param string
+	 * @return void
+	 */
 	public function displayEditable($url,$displayTotalResults=true,$transformerClass='THtmlEditable'){
 		/*#if DEV */ if($this->isFiltersAllowed()) throw new Exception('Filters are not allowed for editable tables.'); /*#/if*/
 		/*#if DEV */ if($this->isExportable()) throw new Exception('Exports are not allowed for editable tables.'); /*#/if*/
@@ -150,6 +300,13 @@ class CModelTable extends CModelTableAbstract{
 		$this->display($displayTotalResults,$transformerClass);
 	}
 	
+	/**
+	 * Use this method when you want render a table in a view. Else use render()
+	 * 
+	 * @param bool
+	 * @param string
+	 * @see render()
+	 */
 	public function display($displayTotalResults=true,$transformerClass='THtml'){
 		$pagination=$this->query->getPagination();
 		$results=$pagination->getResults();
@@ -211,7 +368,7 @@ class CModelTable extends CModelTableAbstract{
 		if($this->controller===null && ($this->actionClick!==null || $this->rowActions!==null))
 			$this->controller=lcfirst(CRoute::getController());
 	}
-
+	
 	protected function callTransformer($transformerClass,$results,$form=null){
 		$transformer=new $transformerClass($this);
 		if(empty($results) && !$this->mustDisplayTable()){

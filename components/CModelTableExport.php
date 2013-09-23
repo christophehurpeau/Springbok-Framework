@@ -8,11 +8,61 @@ class CModelTableExport extends CModelTableAbstract{
 		$this->title=$title;
 		return $this;
 	}
-	public function type($type){ $this->type=$type; return $this; }
-	public function fileName($fileName){ $this->fileName=$fileName; return $this; }
-	public function title($title){ $this->title=$title; return $this; }
-	public function transformerClass($transformerClass){ $this->transformerClass=$transformerClass; return $this; }
-	public function params($params){ $this->params=$params; return $this; }
+	
+	/**
+	 * Set the export type
+	 * 
+	 * @param string
+	 * @return CModelTableExport
+	 */
+	public function type($type){
+		$this->type=$type;
+		return $this;
+	}
+	
+	/**
+	 * Set the filename, when downloaded
+	 * 
+	 * @param string
+	 * @return CModelTableExport
+	 */
+	public function fileName($fileName){
+		$this->fileName=$fileName;
+		return $this;
+	}
+	
+	/**
+	 * Set the title, ie in xls
+	 * 
+	 * @param string
+	 * @return CModelTableExport
+	 */
+	public function title($title){
+		$this->title=$title;
+		return $this;
+	}
+	
+	/**
+	 * Set the transformer class
+	 * 
+	 * @param string
+	 * @return CModelTableExport
+	 */
+	public function transformerClass($transformerClass){
+		$this->transformerClass = $transformerClass;
+		return $this;
+	}
+	
+	/**
+	 * Set the params
+	 * 
+	 * @param array
+	 * @return CModelTableExport
+	 */
+	public function params($params){
+		$this->params = $params;
+		return $this;
+	}
 	
 	private function process($setHeaders){
 		set_time_limit(120); ini_set('memory_limit', '768M'); //TXls use 512M memory cache	
@@ -42,16 +92,49 @@ class CModelTableExport extends CModelTableAbstract{
 		return $transformer;
 	}
 	
+	/**
+	 * Display the export
+	 * 
+	 * @return void
+	 */
 	public function display(){
 		$this->process(true)->display();
 	}
+	/**
+	 * Generate a file from the export
+	 * 
+	 * Export to a local file on the server
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public function toFile($path){
 		$this->process(false)->toFile($path);
 	}
 	
-	public function displayIfExport(){ $this->display(); exit; }
+	/**
+	 * Displays then exist
+	 * 
+	 * @return void
+	 */
+	public function displayIfExport(){
+		$this->display();
+		exit;
+	}
 	
 	/* Compatibility with CModelTable */
+	
+	/**
+	 * Render : display then exit
+	 * 
+	 * @return void
+	 */
 	public function render(){ $this->displayIfExport(); }
+	
+	/**
+	 * Render : display then exit
+	 * 
+	 * @return void
+	 */
 	public function renderEditable(){ $this->displayIfExport(); }
 }

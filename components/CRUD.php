@@ -1,4 +1,19 @@
 <?php
+/**
+ * CRUD Component : call it in controllers !
+ * 
+ * 
+ * <code>
+ * Controller::$defaultLayout='project';
+ * class ProjectController extends AController{
+ * 	const CRUD_MODEL='Project';
+ * 	/** @ValidParams @Required('id') *\/
+ * 	function edit(int $id){
+ * 		CRUD::edit(self::CRUD_MODEL,$id,null,null,'project');
+ * 	}
+ * }
+ * </code>
+ */
 class CRUD{
 	public static function view($model,$id,$tableOptions=array(),$relations=array(),$renderView=true){
 		$title=_tC('View:').' '.$id.' - '.$model;

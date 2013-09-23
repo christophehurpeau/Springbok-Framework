@@ -1,4 +1,7 @@
 <?php
+/**
+ * With the BSlug behavior, this use the class SlugRedirect to create links from old slugs to new slugs when modified.
+ */
 trait BSlugRedirectable{
 	protected function _setOldSlug(){
 		if(!empty($this->slug)){

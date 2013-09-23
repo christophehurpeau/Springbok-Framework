@@ -1,27 +1,58 @@
 <?php
+/**
+ * Component Cookie
+ * 
+ * Cookies are encrypted using AES
+ */
 class CCookie{
 	private static $_config;
 	
+	/** @ignore */
 	public static function init(){
 		self::$_config=App::configArray('cookies');
 	}
 	
+	/**
+	 * If the cookie exists
+	 * 
+	 * @param string
+	 * @return bool
+	 */
 	public static function exists($name){
 		return isset($_COOKIE[$name]);
 	}
+	
+	/**
+	 * Create a CCookie instance with the config in the config/cookies.php file
+	 */
 	public static function get($name,$notSetConfig=array()){
 		return new CCookie($name,self::_getConfig($name,$notSetConfig));
 	}
 	
+	/**
+	 * Return the lang set in cookie
+	 * 
+	 * @return string
+	 */
 	public static function getLang(){
 		if(!isset(self::$_config['lang'])) return null;
 		else return $_COOKIE['lang'];
 	}
+	
+	/**
+	 * Set the user choosed lang in the cookie
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function setLang($lang){
 		if(!isset(self::$_config['lang'])) return null;
 		setcookie('lang',$lang,time()+36000,'/','',false,true);
 	}
 	
+	/**
+	 * Permanently delete a cookie
+	 */
 	public static function delete($name){
 		$config=self::_getConfig($name);
 		setcookie($name,'',time()-42000,$config['path'],$config['domain'],$config['https'],$config['httponly']);
@@ -68,7 +99,11 @@ class CCookie{
 		return $this->name;
 	}
 	
-	
+	/**
+	 * Writes data
+	 * 
+	 * @return bool
+	 */
 	public function write(){
 		$jsondata=json_encode($this->data);
 		$_COOKIE[$this->name]=USecure::encryptAES(sha1($jsondata).$jsondata,$this->config['key']);
@@ -76,6 +111,9 @@ class CCookie{
 			$this->config['https'],$this->config['httponly']);
 	}
 	
+	/**
+	 * Destroy the cookie
+	 */
 	public function destroy(){
 		unset($_COOKIE[$this->name]);
 		setcookie($this->name,'',time()-42000,$this->config['path'],$this->config['domain'],$this->config['https'],$this->config['httponly']);

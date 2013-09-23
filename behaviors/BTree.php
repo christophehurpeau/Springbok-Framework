@@ -1,7 +1,15 @@
 <?php
-/*
+/**
+ * Behavior for trees
+ * 
  * http://www.sitepoint.com/hierarchical-data-database-3/
  * http://www.phpro.org/tutorials/Managing-Hierarchical-Data-with-PHP-and-MySQL.html#2
+ * 
+ * @property int $parent_id
+ * @property int $left
+ * @property int $right
+ * @property int $level_depth
+ * 
  */
 trait BTree{
 	public function insert(){

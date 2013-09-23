@@ -1,9 +1,14 @@
 <?php
-/** https://code.google.com/apis/console#access
-* http://code.google.com/intl/fr-FR/apis/accounts/docs/OAuth2WebServer.html
-* http://code.google.com/intl/fr-FR/apis/accounts/docs/OAuth2Login.html
-* 
-*/
+/**
+ * Google connect, using OAuth 2
+ * 
+ * Set in your config/_.php the following configuration : google_appId, google_secret
+ * 
+ * https://code.google.com/apis/console#access
+ * http://code.google.com/intl/fr-FR/apis/accounts/docs/OAuth2WebServer.html
+ * http://code.google.com/intl/fr-FR/apis/accounts/docs/OAuth2Login.html
+ * 
+ */
 class COAuth2Google extends COAuth2Connect{
 	protected static $OAUTH_URL='https://accounts.google.com/o/oauth2/auth',$TOKEN_URL='https://accounts.google.com/o/oauth2/token',$API_URL='https://www.googleapis.com/oauth2/v1/',
 		$CONFIG_PREFIX='google';

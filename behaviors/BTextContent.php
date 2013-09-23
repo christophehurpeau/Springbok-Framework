@@ -1,4 +1,9 @@
 <?php
+/**
+ * Generate text with the VSeo view element using cache
+ * 
+ * @property string $text
+ */
 trait BTextContent{
 	public function regenerateText(){
 		if($this->isKeyExists('text')){

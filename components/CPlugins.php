@@ -1,4 +1,5 @@
 <?php
+/** @ignore */
 class CPlugins{
 	private static $_PLUGINS_PATH,$_PLUGINS;
 	

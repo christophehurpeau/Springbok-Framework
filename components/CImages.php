@@ -1,16 +1,24 @@
 <?php
+/** Component for uploading image files */
 class CImages extends CFiles{
 	private static $_config;
 	protected static $toJpeg=true,$imagesExtensions=array('jpg','png','gif','jpeg');
 	
+	/** @ignore */
 	public static function init(){
 		self::$_config=&Config::$images;
 		if(!isset(self::$_config['thumbnails_background'])) self::$_config['thumbnails_background']=array(255,255,255);
 	}
 	
+	/**
+	 * @return SModel
+	 */
 	protected static function createImage(){
 		return new Image();
 	}
+	/**
+	 * @return SModel
+	 */
 	protected static function createObject(){
 		return static::createImage();
 	}
@@ -19,6 +27,9 @@ class CImages extends CFiles{
 		return parent::upload($name,$image);
 	}
 	
+	/**
+	 * @return string
+	 */
 	public static function folderPath(){
 		return DATA.static::$folderPrefix.'images/';
 	}

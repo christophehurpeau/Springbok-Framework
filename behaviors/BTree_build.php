@@ -11,5 +11,8 @@ class BTree_build{
 		$modelFile->_fields['left']=array('SqlType'=>$modelFile->_fields['id']['SqlType'],'NotNull'=>false, 'NotBindable'=>false, 'Index'=>false);
 		$modelFile->_fields['right']=array('SqlType'=>$modelFile->_fields['id']['SqlType'],'NotNull'=>false, 'NotBindable'=>false, 'Index'=>false);
 		$modelFile->_fields['level_depth']=array('SqlType'=>array('tinyint(3) unsigned'),'NotNull'=>false, 'NotBindable'=>false, 'Index'=>false);
+		
+		$contentInfos['relations']['Parent']=array('reltype'=>'belongsTo','modelName'=>$modelFile->_className,'foreignKey'=>'parent_id',
+						'fieldsInModel'=>$annotations['TableAlias'][0][0],'fields'=>isset($annotations['Tree'][0][1]) ? $annotations['Tree'][0][1] : null);
 	}
 }

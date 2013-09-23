@@ -1,9 +1,8 @@
 <?php
+/**
+ * Log changes in the Model "ModelLogChanges", use with core plugin "logModelChanges"
+ */
 trait BLogChanges{
-	public static $afterUpdateCompare=array('logUpdate');
-	public static $afterInsert=array('logInsert');
-	
-	
 	public function logUpdate($data,$primaryKeys){
 		ModelLogChanges::logUpdate($primaryKeys,$data);
 		return true;

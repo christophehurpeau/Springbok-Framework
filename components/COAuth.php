@@ -1,6 +1,8 @@
 <?php
 include CLIBS.'oauth.php';
-
+/**
+ * OAuth authentification
+ */
 class COAuth{
 	private $accessToken,$url=NULL,$fullResponse=NULL;
 	

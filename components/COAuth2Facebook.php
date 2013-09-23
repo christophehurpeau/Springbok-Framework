@@ -1,5 +1,10 @@
 <?php
 /*include CLIBS.'facebook/facebook.php';*/
+/**
+ * Facebook connect, using OAuth 2
+ * 
+ * Set in your config/_.php the following configuration : facebook_appId, facebook_secret
+ */
 class COAuth2Facebook extends COAuth2Connect{
 	/*private $facebook;
 	

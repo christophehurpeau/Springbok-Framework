@@ -1,4 +1,5 @@
 <?php
+/** Common class for export and html tables */
 class CModelTableAbstract{
 	protected $query;
 	public function __construct($query){
@@ -8,25 +9,117 @@ class CModelTableAbstract{
 	public $fields,$modelFields,$fieldsEditable,$translateField=true,
 		$transformers=array('csv'=>'TCsv','xls'=>'TXls');
 	
-	public function fields($fields){ $this->fields=$fields; return $this; }
-	public function doNotTranslateFields(){ $this->translateField=false; return $this; }
-	public function fieldsEditable($fields){ $this->fieldsEditable=$fields; return $this; }
+	/**
+	 * Fields : columns in the table
+	 * 
+	 * @param array
+	 * @return CModelTableAbstract
+	 */
+	public function fields($fields){
+		$this->fields=$fields;
+		return $this;
+	}
+	/**
+	 * Force to not translate fields
+	 * 
+	 * @return CModelTableAbstract
+	 */
+	public function doNotTranslateFields(){
+		$this->translateField=false;
+		return $this;
+	}
 	
+	/**
+	 * Set the editable fields
+	 * 
+	 * @param array
+	 * @return CModelTableAbstract
+	 */
+	public function fieldsEditable($fields){
+		$this->fieldsEditable=$fields;
+		return $this;
+	}
+	
+	/** Method overrided by subclass */
 	public function actionClick($action='view'){ return $this; }
+	/** Method overrided by subclass */
 	public function actions(){ return $this; }
+	/** Method overrided by subclass */
 	public function controller($controller){ return $this; }
 	
-	public function getModelName(){ return $this->query->getModelName(); }
-	public function isFiltersAllowed(){ return $this->query->isFiltersAllowed(); }
-	public function isOrderAllowed(){ return $this->query->isOrderAllowed(); }
-	public function isExportable(){ return $this->query->isExportable(); }
-	public function mustDisplayTable(){ return $this->query->mustDisplayTable(); }
-	public function hasForm(){ return $this->query->hasForm(); }
-	public function hasAddInTable(){ return $this->query->hasAddInTable(); }
-	public function getAddInTable(){ return $this->query->getAddInTable(); }
+	/**
+	 * Return the model name of this table
+	 * 
+	 * @return string
+	 */
+	public function getModelName(){
+		return $this->query->getModelName();
+	}
+	/**
+	 * Return if the table can be filtrable with selects and inputs
+	 * 
+	 * @return bool
+	 */
+	public function isFiltersAllowed(){
+		return $this->query->isFiltersAllowed();
+	}
+	
+	/**
+	 * Return if the table can be ordered with arrows icons in titles
+	 * 
+	 * @return bool
+	 */
+	public function isOrderAllowed(){
+		return $this->query->isOrderAllowed();
+	}
+	
+	/**
+	 * Return if the table can be exported in xls, csv, ...
+	 * 
+	 * @return bool
+	 */
+	public function isExportable(){
+		return $this->query->isExportable();
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function mustDisplayTable(){
+		return $this->query->mustDisplayTable();
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function hasForm(){
+		return $this->query->hasForm();
+	}
+	
+	/**
+	 * Return if the form is inside the table
+	 * 
+	 * @return bool
+	 */
+	public function hasAddInTable(){
+		return $this->query->hasAddInTable();
+	}
+	
+	/**
+	 * @return mixed
+	 */
+	public function getAddInTable(){
+		return $this->query->getAddInTable();
+	}
 	
 	public function displayIfExport(){ return $this; }
 	
+	
+	/**
+	 * Set the fields from the model, defined in the query, and set in this class
+	 * 
+	 * @param mixed
+	 */
 	public function _setFields($export=false){
 		if($this->fields !== null){
 			$fields=$this->fields;

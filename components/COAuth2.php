@@ -1,4 +1,7 @@
 <?php
+/**
+ * OAuth 2 authentification
+ */
 abstract class COAuth2{
 	public static function redirectForConnection($url,$state,$scope,$params=''){
 		Controller::redirect(static::$OAUTH_URL.'?client_id='.static::appId().'&redirect_uri='.urlencode($url).'&response_type=code&state='.$state.(empty($params)?'':$params).(empty($scope)?'':'&scope='.$scope));

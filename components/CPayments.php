@@ -1,4 +1,5 @@
 <?php
+/** @ignore */
 class CPayments{
 	private static $instances,$paymentsConfig;
 	public static function init(){
@@ -14,6 +15,7 @@ class CPayments{
 }
 CPayments::init();
 
+/** @ignore */
 abstract class Payment{
 	protected $name;
 	
@@ -27,6 +29,8 @@ abstract class Payment{
 		return render($file,self::$viewVars,true);
 	}
 }
+
+/** @ignore */
 abstract class CorePayment extends Payment{
 	protected function render($fileName){
 		return $this->_render(CORE.'payments/'.$this->name.DS.$fileName.'.php');
@@ -40,6 +44,7 @@ abstract class CorePayment extends Payment{
 	}
 }
 
+/** @ignore */
 abstract class AppPayment extends Payment{
 	protected function render($fileName){
 		return $this->_render(APP.'payments/'.$this->name.DS.$fileName.'.php');

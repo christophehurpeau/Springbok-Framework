@@ -1,4 +1,7 @@
 <?php
+/** 
+ * Return infos on User Agent
+ */
 class CHttpUserAgent{
 	private static $ieVersion,$isBot,$isMobileOrTablet,$isMobile,$isTablet;
 	
@@ -6,6 +9,11 @@ class CHttpUserAgent{
 		self::$ieVersion=self::$isBot=self::$isMobileOrTablet=self::$isMobile=self::$isTablet=null;
 	}
 	
+	/** 
+	 * Return if the User Agent is a known or guessable bot
+	 * 
+	 * @return bool
+	 */
 	public static function isBot(){
 		if(self::$isBot!==null) return self::$isBot;
 		if(empty($_SERVER['HTTP_USER_AGENT'])) return self::$isBot=true;
@@ -43,19 +51,44 @@ class CHttpUserAgent{
 		)) /EVAL */''.'/i',$_SERVER['HTTP_USER_AGENT']);
 	}
 	
+	/**
+	 * Return the major IE version or false if this is not IE
+	 * 
+	 * @return int
+	 */
 	public static function IE_version(){
 		if(self::$ieVersion!==null) return self::$ieVersion;
 		if(!isset($_SERVER['HTTP_USER_AGENT']) || !preg_match("#MSIE ([\d\.]+)#i",$_SERVER['HTTP_USER_AGENT'],$ua)) return self::$ieVersion=false;
 		return self::$ieVersion=$ua[1];
 	}
 	
+	/**
+	 * Return if this is IE < 8
+	 * 
+	 * @return bool
+	 */
 	public static function isIElt8(){ return self::IE_version()===false ? false : self::$ieVersion < 8; }
+	/**
+	 * Return if this is IE < 9
+	 * 
+	 * @return bool
+	 */
 	public static function isIElt9(){ return self::IE_version()===false ? false : self::$ieVersion < 9; }
+	/**
+	 * Return if this is IE < 10
+	 * 
+	 * @return bool
+	 */
 	public static function isIElt10(){ return self::IE_version()===false ? false : self::$ieVersion < 10; }
 	
 	
 	
-	/* http://detectmobilebrowsers.com/ */
+	/**
+	 * Try to detect if it is a mobile browser
+	 * 
+	 * @return bool
+	 * @see http://detectmobilebrowsers.com/
+	 */
 	private static function isMobile(){
 		if(self::$isMobile!==null) return self::$isMobile;
 		if(empty($_SERVER['HTTP_USER_AGENT'])) return self::$isMobile=false;
@@ -246,6 +279,11 @@ class CHttpUserAgent{
 	}
 
 	
+	/**
+	 * Try to detect if it is a tablet
+	 * 
+	 * @return bool
+	 */
 	public static function isTablet(){
 		if(self::$isTablet!==null && self::$isTablet!==0) return self::$isTablet;
 		if(!self::isMobile()) return false;
@@ -284,6 +322,9 @@ class CHttpUserAgent{
 	
 	
 	
+	/**
+	 * @return bool
+	 */
 	public static function isMobileOrTablet(){
 		return self::isMobile();// || self::isTablet();
 		/*if(empty($_SERVER['HTTP_USER_AGENT'])) return false;
@@ -292,6 +333,9 @@ class CHttpUserAgent{
 		*/
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function isMobileAndNotTablet(){
 		//debug(self::isMobileOrTablet() && !self::isTablet(),self::$isMobile,self::$isTablet);
 		return self::isMobileOrTablet() && !self::isTablet();
@@ -302,7 +346,10 @@ class CHttpUserAgent{
 	CONST B_CRAWLER=0,B_OPERA_MINI=1,B_OPERA=2,B_IE=3,B_FIREFOX=4,B_CHROME=5,B_CHROMIUM=6,B_SAFARI=7,
 		B_EPIPHANY=10,B_FENNEC=11,B_ICEWEASEL=12,B_MINEFIELD=13,B_MINIMO=14,B_FLOCK=15,B_FIREBIRD=16,B_PHOENIX=17,B_CAMINO=18,B_CHIMERA=19,B_THUNDERBIRD=20,B_NETSCAPE=21,B_OMNIWEB=22,B_IRON=23,B_ICAB=24,B_KONQUEROR=25,B_MIDORI=26,B_DOCOMO=27,B_LYNX=28,B_LINKS=29,
 		B_W3C_VALIDATOR=30,B_APACHE_BENCH=31,B_LIBWWW_PERL_LIB=32,B_W3M=33,B_WGET=34;
-		
+	
+	/**
+	 * @return array ['user_agent'=>,'platform'=>,'browser'=>,'version']
+	 */
 	public static function parseUserAgent(){
 		$ua=isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
 		$browser = array('user_agent'=>&$ua,'platform'=>null,'browser'=>null,'version'=>null);

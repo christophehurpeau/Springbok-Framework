@@ -1,6 +1,13 @@
 <?php
+/**
+ * A module is like hooks
+ * 
+ * Call CModule::{$hookName} and all methods $hookName of available modules will be called
+ */
 class CModule{
-	private static $_MODULES;
+	private static $_MODULE;
+	
+	/** @ignore*/
 	public static function init(){
 		self::$_MODULES=file_exists(APP.'config/modules.php') ? include APP.'config/modules.php' : array();
 	}

@@ -1,5 +1,6 @@
 <?php
 //$key=$_SERVER['SERVER_NAME'].'.'.$name;
+/** MemCache */
 abstract class CCache_MemCache extends CCache{
 	private $_mcache=NULL;
 

@@ -1,6 +1,18 @@
 <?php
 /** Transform GET and POST parameters into class and typed variables. */
 class CBinder{
+	/**
+	 * take a value and return a real value
+	 * A string can be transformed into an int
+	 * A array can be transformed into an object
+	 * 
+	 * @param string the type of the final value
+	 * @param mixed the original value
+	 * @param array A list of annotations
+	 * @param bool If true, do the validation
+	 * @return mixed
+	 * 
+	 */
 	public static function bind($type,&$val,$annotations=array(),$withValidation=false){
 		$methodName='bind'.ucfirst($type);
 		if($val===NULL){
@@ -34,6 +46,14 @@ class CBinder{
 		return false;
 	}
 
+	/**
+	 * Bind a simple value : string, int, float, double, boolean, datetime
+	 * 
+	 * @param string string, int, float, double, boolean, datetime
+	 * @param mixed
+	 * @param array
+	 * @return mixed
+	 */
 	public static function bindSimple($type,&$val,$annotations=array()){
 		if($type==='string') return self::bindString($val);
 		if($val==='') return null;
@@ -51,30 +71,75 @@ class CBinder{
 		}
 	}
 	
+	/**
+	 * @see UEncoding::convertToUtf8
+	 * @param mixed
+	 * @return string
+	 */
 	public static function bindString($val){ return UEncoding::convertToUtf8((string)$val); }
+	/**
+	 * @param mixed
+	 * @return int or null if empty
+	 */
 	public static function bindInt($val){ return $val===''?null:(int)$val; }
+	/**
+	 * @param mixed
+	 * @return float or null
+	 */
 	public static function bindFloat($val){ if($val==='') return null; $val=self::parseDecimalFormat($val); return (float)$val; }
+	/**
+	 * @param mixed
+	 * @return double or null
+	 */
 	public static function bindDouble($val){ if($val==='') return null; $val=self::parseDecimalFormat($val); return (double)$val; }
+	/**
+	 * @param mixed
+	 * @return string
+	 */
 	public static function parseDecimalFormat($val){
 		$config=App::getLocale()->data('decimalFormat');
 		if($config['thousandsSep'] !== '') $val=str_replace($config['thousandsSep'],'',$val);
 		if($config['decimalSep'] !== '.') $val=str_replace($config['decimalSep'],'.',$val);
 		return $val;
 	}
+	/**
+	 * @param mixed
+	 * @return bool
+	 */
 	public static function bindBool($val){ return self::bindBoolean($val); }
+	/**
+	 * @param mixed
+	 * @return bool
+	 */
 	public static function bindBoolean($val){
 			if($val==='' || $val==='0' || $val==='off' || $val===chr(0x00)) return false;
 			if($val==='1' || $val==='on') return true;
 			return (bool)$val;
 	}
+	/**
+	 * @param string
+	 * @return int
+	 */
 	public static function bindDatetime($val){
 		return strtotime($val);
 	}
+	/**
+	 * @param string
+	 * @return int
+	 */
 	public static function bindDate($val){
 		return strtotime($val);
 	}
 	//public static function bindLong($val){ return (long)$val; }
 
+	/**
+	 * Bind an array into a real object
+	 * 
+	 * @param string the name of the class
+	 * @param array
+	 * @param bool do a validation
+	 * @param array list of the properties. If null, take all from __PROP_DEF
+	 */
 	public static function _bindObject($type,$val,$withValidation=false,$validProperties=null){
 		$obj=new $type();
 		$propertiesDef= property_exists($type,'__PROP_DEF') ? $type::$__PROP_DEF : array();
@@ -98,7 +163,7 @@ class CBinder{
 		return $obj;
 	}
 	
-	public static function &_bindObjectFromDB($type,&$val){
+	public static function _bindObjectFromDB($type,&$val){
 		$obj=new $type();
 		$propertiesDef=$type::$__PROP_DEF;
 		foreach($val as $key=>$value){
