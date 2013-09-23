@@ -43,7 +43,7 @@ class CssFile extends EnhancerFile{
 	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
 		$dest=$destination?$destination:tempnam($tmpDir,'yuidest');
 		$javaExecutable = 'java';
-		$jarFile=CLIBS.'_yuicompressor-2.4.7.jar';
+		$jarFile=CORE_SRC.'libs/yuicompressor-2.4.8.jar';
 		$cmd = $javaExecutable.' -jar '.escapeshellarg($jarFile).' --type css'.($nomunge?' --nomunge':'').' --line-break 8000 -o '.escapeshellarg($dest);
 		$tmpfname = tempnam($tmpDir,'yui');
 		file_put_contents($tmpfname,$content);
