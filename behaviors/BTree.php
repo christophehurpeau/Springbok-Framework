@@ -12,6 +12,14 @@
  * 
  */
 trait BTree{
+	public static function treeAlias(){
+		return static::$__alias.'.';
+	}
+	public static function treeOrder(){
+		return array(static::treeAlias().'left');
+	}
+	
+	
 	public function insert(){
 		throw new Exception('Use insertChild($parentId) or insertAfter($nodeId)');
 	}
@@ -131,27 +139,26 @@ trait BTree{
 	}
 	
 	public function QChildren($direct=false){
-		$query=static::QAll()->orderBy('left');
+		$query=static::QAll()->orderBy(static::treeOrder());
 		if($direct){
-			$where['parent_id']=$this->id;
+			$where[static::treeAlias().'parent_id']=$this->id;
 		}else{
-			$where['left >']=$this->left;
-			$where['right <']=$this->right;
+			$where[static::treeAlias().'left >']=$this->left;
+			$where[static::treeAlias().'right <']=$this->right;
 		}
 		return $query->where($where);
 	}
 	public function children($direct=false){
-		return $this->QChildren()->execute();
+		return $this->QChildren($direct)->execute();
 	}
 	
 	
 	public function QParent(){
-		$query=static::QOne()->byId($this->parent_id);
-		return $query;
+		return /**/static::QOne()->where(array(static::treeAlias().'id'=>$this->parent_id));
 	}
 	/**
 	 * Return parent model : reads the parent id
-	 * @return Model
+	 * @return SModel
 	 */
 	public function parent($fields=NULL){
 		$query=$this->QParent();
@@ -161,7 +168,7 @@ trait BTree{
 	
 	
 	public function QNextNode(){
-		$query=static::QOne()->byLeft($this->right+1);
+		$query=static::QOne()->where(array(static::treeAlias().'left'=>$this->right+1));
 		return $query;
 	}
 	public function nextNode($fields=NULL){
@@ -171,22 +178,23 @@ trait BTree{
 	}
 	
 	public function QPath(){
-		return static::QAll()->where(array('left <='=>$this->left,'right >='=>$this->right))->orderBy('left');
+		return static::QAll()->where(array(static::treeAlias().'left <='=>$this->left,static::treeAlias().'right >='=>$this->right))
+					->orderBy(static::treeOrder());
 	}
 	
 	public function path($fields=NULL){
 		$query=$this->QPath();
 		if($fields !== NULL) $query->fields($fields);
-		return $query->where(array('left <='=>$this->left,'right >='=>$this->right))->orderBy('left')->execute();
+		return $query->execute();
 	}
 	
 	public static function getQPath($id){
-		$model=static::QOne()->fields('left,right')->byId($id);
+		$model=static::QOne()->fields('left,right')->where(array(static::treeAlias().'id'=>$id));
 		return $model->QPath();
 	}
 	
 	public static function getPath($id,$fields){
-		$model=static::QOne()->fields('left,right')->byId($id);
+		$model=static::QOne()->fields('left,right')->where(array(static::treeAlias().'id'=>$id));
 		return $model->path($fields);
 	}
 	
@@ -204,7 +212,7 @@ trait BTree{
 		$tree=array();
 		foreach($result as &$res) $res->_set('children',array());
 		foreach($result as &$res){
-			if($res->parent_id){
+			if($res->parent_id && isset($result[$res->parent_id])){
 				$result[$res->parent_id]->_getRef('children')[]=$res;
 			}else $tree[]=$res;
 		}
