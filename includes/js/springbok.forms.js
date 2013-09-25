@@ -64,7 +64,7 @@ includeCore('libs/jquery-ui-1.9.2.position');
 				if(window.tinyMCE!==undefined) tinyMCE.triggerSave();
 				if((beforeSubmit && beforeSubmit()===false) || (form.data('ht5ifv')!==undefined && !form.ht5ifv('valid'))
 							|| (S.FormValidator && !S.FormValidator.checkForm(form))){// TODO remove ht5ifv that and force validation
-					form.stop().fadeTo(0,1)
+					form.stop().fadeTo(0,1);
 					return false;
 				}
 				var ajaxOptions={
@@ -80,23 +80,24 @@ includeCore('libs/jquery-ui-1.9.2.position');
 					.error(function(){S.bodyIcon('cross',form);})
 					.success(function(data,textStatus,jqXHR){
 						S.bodyIcon('tick',form);
-						if(S.isObj(data) && data.update){
-							var u=data.update;
-							if(S.isObj(u)){
-								for(var key in u){
-									var d=u[key];
-									for(var k in d){
-										var name=k;
-										if(key) name=key+'['+k+']';
-										form.find('[name="'+name+'"]').val(d[k]);
-									}
+						if(S.isObj(data)){
+							if(data.update){
+								var u=data.update;
+								if(S.isObj(u)){
+									UObj.forEach(u,function(key,d){
+										UObj.forEach(d,function(k,value){
+											form.find('[name="'+ ( key ? key+'['+k+']' : k )+'"]').val(value);
+										});
+									});
 								}
+							}else if(data.redirect){
+								S.redirect(data.redirect);
 							}
 						}
 						form.trigger('sAjaxFormSubmittedSuccess',[data,jqXHR]);
 					});
 				return false;
-			})
+			});
 			/*.find(':submit').unbind('click').click(function(){
 				//var validator=form.data('validator');
 				//if(validator && !validator.checkValidity()) return false;
