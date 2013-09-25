@@ -4,6 +4,7 @@
  * 
  * Example for a project management
  * <code>
+ * class ACAcl extends CAcl{
  * 	public static function checkAccess($permission,$projectId=null){
  *		if(CSecure::isConnected()){
  *			if(CSecure::isAdmin()) return true;
@@ -25,6 +26,17 @@
  *		}else $roleId=AclGroup::GUEST;
  *		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>&$roleId,'permission'=>&$permission));
  *	}
+ * }
+ * </code>
+ * 
+ * 
+ * Use case :
+ * <code>
+ * function(int $id){
+ * 	$project = Project::ById($id);
+ * 	notFoundIfFalse($project);
+ * 	ACAcl::requireAccess('ManageMembers',$project->id);
+ * }
  * </code>
  */
 class CAcl{
