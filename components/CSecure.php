@@ -1,10 +1,14 @@
 <?php
+/**
+ * Secure Component : handle authentification
+ */
 class CSecure{
 	const BACK_URL='SECURE_BACK_URL',
 		CONNECTION_FORM=0,CONNECTION_BASIC=1,CONNECTION_COOKIE=2,CONNECTION_AFTER_REGISTRATION=3;
 	private static $_config,$_user=NULL;
 	protected static $_cookie;
 	
+	/** @ignore */
 	public static function init(){
 		/*#if DEV */if(Springbok::$inError===null)/*#/if*/
 		self::$_config=self::loadConfig();
@@ -41,30 +45,76 @@ class CSecure{
 	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
 	public static function config($name){ return self::$_config[$name]; }
 	
+	/**
+	 * Returns if the current user is connected
+	 * 
+	 * @return bool
+	 */
 	public static function isConnected(){
 		return CSession::exists('user_'.static::config('id'));
 	}
 	
+	/**
+	 * Returns if the current user is connected, safely
+	 * 
+	 * Try to not send another error : check if CSession is already loaded or if headers are not sent.
+	 * Use this on error pages
+	 * 
+	 * @return bool
+	 */
 	public static function isConnected_Safe(){
 		if(class_exists('CSession',false) || !headers_sent()) return self::isConnected();
 		else return false;
 	}
 	
+	/**
+	 * Return the current connected user
+	 * 
+	 * @param mixed
+	 * @return mixed
+	 */
 	public static function connected($orValue=false){
 		return CSession::getOr('user_'.static::config('id'),$orValue);
 	}
 	
+	/**
+	 * Return the current user model
+	 * 
+	 * @return SModel
+	 */
 	public static function user(){
 		if(self::$_user===null) return self::$_user=self::loadUser();
 		return self::$_user;
 	}
 	
+	/**
+	 * Return the current user model, if already loaded
+	 * 
+	 * Use this on error pages
+	 * 
+	 * @return SModel
+	 */
 	public static function userSafe(){
 		return self::$_user;
 	}
 	
-	public static function isAdmin(){ return static::user()->isAdmin(); }
+	/**
+	 * Return if the current user is an Admin
+	 * 
+	 * @return bool
+	 */
+	public static function isAdmin(){
+		return static::user()->isAdmin();
+	}
 	
+	/**
+	 * Check access
+	 * 
+	 * Redirect to login page if the user is not connected
+	 * if param is set, check if the user is allowed with the method $user->isAllowed($params[0])
+	 * 
+	 * @return bool
+	 */
 	public static function checkAccess($params=null){
 		if(!static::connect(false)){
 			if(($auth=static::config('auth'))===''){
@@ -82,10 +132,21 @@ class CSecure{
 		}
 	}
 	
+	/**
+	 * Redirect to the login page
+	 * 
+	 * @return void
+	 */
 	public static function redirectToLogin(){
 		Controller::redirect(array(true,static::config('url_login'),'?'=>'back='.urlencode(CHttpRequest::getCurrentUrl())));
 	}
 	
+	/**
+	 * Try to connect the user using cookie
+	 * 
+	 * @param bool redirect if not connected
+	 * @return bool
+	 */
 	public static function connect($redirect=true){
 		if($redirect){
 			/*if(!CSession::exists(self::BACK_URL)) */self::setBackUrl();
@@ -115,6 +176,11 @@ class CSecure{
 		}
 		return false;
 	}
+	
+	/**
+	 * @param string
+	 * @return void
+	 */
 	public static function setBackUrl($url=null){
 		if($url===null) $url=CHttpRequest::referer(true);
 		/*#if DEV */if(startsWith($url,'/'.Springbok::$scriptname.'/')) $url=substr($url,strlen(Springbok::$scriptname)+1);/*#/if*/
@@ -124,13 +190,27 @@ class CSecure{
 			if($url===HHtml::url($blacklistedUrl)) return;
 		CSession::set(self::BACK_URL,$url);
 	}
+	
+	/**
+	 * @return void
+	 */
 	public static function redirectIfConnected(){
 		if(static::isConnected()) static::redirectAfterConnection();
 	}
+	
+	/**
+	 * @return void
+	 */
 	public static function redirectAfterConnection($exit=true){
 		Controller::redirect(CSession::getAndRemoveOr(self::BACK_URL,static::config('url_redirect')),null,$exit);
 	}
-
+	
+	/**
+	 * @param int
+	 * @param mixed
+	 * @param mixed
+	 * @return void
+	 */
 	public static function setConnected($type,$connected,$login){
 		CSession::set('user_'.static::config('id'),$connected);
 		if(static::config('logConnections'))
@@ -138,6 +218,10 @@ class CSecure{
 		static::onAuthenticated($type);
 	}
 	
+	/**
+	 * @param SModel
+	 * @return void
+	 */
 	public static function createCookie($user){
 		if(empty($_SERVER['HTTP_USER_AGENT'])) return false;
 		$login=static::config('login');
@@ -147,11 +231,20 @@ class CSecure{
 		self::$_cookie->write();
 	}
 	
+	/**
+	 * @return bool
+	 */
 	protected static function checkCookie(){
 		return true;
 	}
 	
-	
+	/**
+	 * Connect a user from a form
+	 * 
+	 * @param SModel
+	 * @param bool
+	 * @param bool
+	 */
 	public static function authenticate($user,$remember=false,$redirect=true){
 		//$by='by'.ucfirst($_config['login']).'And'.ucfirst($_config['password']);
 		$className=static::config('className'); $login=static::config('login'); $password=static::config('password'); $id=static::config('id'); $logConnections=static::config('logConnections');
@@ -185,7 +278,9 @@ class CSecure{
 		return false;
 	}
 
-	
+	/**
+	 * @return void
+	 */
 	protected static function authFailed(){
 		CSession::setFlash(_tC('Sorry, your login or your password is incorrect...'));
 		sleep(3);
@@ -206,6 +301,11 @@ class CSecure{
 		exit;
 	}
 	
+	/**
+	 * Logout user
+	 * 
+	 * @return void
+	 */
 	public static function logout(){
 		self::loadCookie();
 		if(isset(self::$_cookie)) self::$_cookie->destroy();
@@ -213,11 +313,18 @@ class CSecure{
 		CSession::destroy();
 		static::onDisconnected();
 	}
-
+	
 	public static function onDisconnected(){}
 	public static function onAuthenticated($type){}
 
 
+	/**
+	 * @param int
+	 * @param bool
+	 * @param mixed
+	 * @param mixed
+	 * @return void
+	 */
 	private static function logConnection($type,$succeed,$login,$connected=null){
 		switch(static::config('logConnections')){
 			case 'sql':
@@ -236,6 +343,12 @@ class CSecure{
 		}
 	}
 
+	/**
+	 * Hash a password
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function hashPassword($pwd){
 		return USecure::hashWithSalt(trim($pwd,static::config('trim')));
 	}

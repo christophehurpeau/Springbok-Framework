@@ -1,4 +1,9 @@
 <?php
+/**
+ * Search Result
+ * 
+ * @see CSearch
+ */
 class CSearchResult{
 	public $pagination,$totalResults,$query;
 	

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Class for admin secure
+ * 
+ * Load the config secure-admin.php instead of secure.php
+ * 
+ * Create a cookie with the admin info
+ */
 class CSecureAdmin extends CSecure{
 	private static $_config;
 	

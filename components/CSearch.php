@@ -1,6 +1,12 @@
 <?php
 class SearchException extends Exception{}
 
+/**
+ * Search component
+ * 
+ * @see CSearchResult
+ * @see CSearchResultSuggestionnable
+ */
 class CSearch{
 	public static $NB_RESULTS_PER_PAGE=10;
 	
@@ -21,10 +27,12 @@ class CSearch{
 		return $this->searchWords===false && !$this->hasFoundKeywords();
 	}
 	
-	
+	/** @return bool */
 	public function hasSearchWords(){return $this->searchWords!==false;}
+	/** @return bool */
 	public function hasFoundKeywords(){ return !empty($this->foundKeywordIds); }
 	
+	/** @return array */
 	public static function listKeywordIds($phraseCleaned){
 		return SearchablesKeyword::listKeywordIds($phraseCleaned);
 	}
@@ -83,14 +91,14 @@ class CSearch{
 	}
 
 
-
+	/** @return CSearchResult */
 	public function findResults(){
 		$pagination=$this->createPagination();
 		return new CSearchResult($this,$pagination);
 	}
 	
 	
-	
+	/** @return CPagination */
 	public function createPagination(){
 		$query=static::createQuery()->calcFoundRows();
 		
@@ -187,7 +195,8 @@ class CSearch{
 		
 		return $query->paginate()->pageSize(self::$NB_RESULTS_PER_PAGE);
 	}
-
+	
+	/** @return QAll */
 	protected static function createQuery(){
 		return /**/Searchable::QAll()->addCondition('sb.visible',true);
 	}

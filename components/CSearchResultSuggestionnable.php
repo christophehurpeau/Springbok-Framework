@@ -1,4 +1,10 @@
 <?php
+/**
+ * Search Result with suggestions
+ * 
+ * @see CSearch
+ * @see CSearchResult
+ */
 class CSearchResultSuggestionnable extends CSearchResult{
 	public $suggestion,$suggestions;
 	
@@ -20,10 +26,12 @@ class CSearchResultSuggestionnable extends CSearchResult{
 		}
 	}
 	
+	/** @return bool */
 	public function hasSuggestions(){
 		return $this->suggestions!==null;
 	}
 	
+	/** @return bool */
 	public function hasResults(){
 		return $this->suggestions===null && $this->totalResults!==0;
 	}

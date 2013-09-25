@@ -1,7 +1,14 @@
 <?php
+/**
+ * REST Authentification
+ * 
+ * For browser API or REST API : user the HTTP_SAUTH to provide a valid token
+ * 
+ */
 class CSecureRest{
 	private static $_config,$connected;
 	
+	/** @ignore */
 	public static function init(){
 		self::$_config=self::loadConfig();
 	}
