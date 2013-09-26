@@ -55,6 +55,8 @@ abstract class AQuery{
 							else $values[]=$this->_db->escape($v);
 						}
 						$sql.=$this->formatField($key,$fieldPrefix).$op.'('.implode(',',$values).')';
+					}elseif($op===' BETWEEN '){
+						$sql.=$this->formatField($key,$fieldPrefix).$op.' '.((float)$value[0]).' AND '.((float)$value[1]);
 					}else{
 						$start=$this->formatField($key,$fieldPrefix).$op;$db=$this->_db;
 						$sql.='('.implode($op===' NOT LIKE '?' AND ':' OR ',array_map(function($v) use($start,$db){return $start.$db->escape($v);},$value)).')';
