@@ -1,25 +1,25 @@
 <?php
 class SiteController extends Controller{
 	/** */
-	function index(){
+	static function index(){
 		render();
 	}
 	
 	/** */
-	function favicon(){
+	static function favicon(){
 		self::cacheFor('3 weeks');
 		renderFile(APP.'web/img/favicon.ico');
 	}
 
 	/** */
-	function appleTouchIconPrecomposed(){
+	static function appleTouchIconPrecomposed(){
 		self::cacheFor('3 weeks');
 		renderFile(APP.'web/img/logo-57.png');
 	}
 
 	
 	/** */
-	function login(User $user){
+	static function login(User $user){
 		if(empty($_POST)) CSecure::connect();
 		elseif($user!==null && CSecure::authenticate($user,true)) exit;
 		else CSession::setFlash('Impossible de vous connecter : identifiant ou mot de passe invalide...','user/login');
@@ -27,18 +27,18 @@ class SiteController extends Controller{
 	}
 	
 	/** */
-	function logout(){
+	static function logout(){
 		CSecure::logout();
 		self::redirect('/');
 	}
 	
 	/** */
-	function captchaImage(){
+	static function captchaImage(){
 		CCaptcha::image();
 	}
 	
 	/** @ValidParams @Required('jsurl') */
-	function jsError($href,$jsurl,$message,$line){
+	static function jsError($href,$jsurl,$message,$line){
 		if($jsurl!=='http://www.google-analytics.com/ga.js'
 			&&$jsurl!=='http://connect.facebook.net/fr_FR/all.js#xfbml=1'&&$jsurl!=='http://platform.twitter.com/widgets.js'
 			&&$jsurl!=='http://pagead2.googlesyndication.com/pagead/show_ads.js')
