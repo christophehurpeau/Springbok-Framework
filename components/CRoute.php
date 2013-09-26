@@ -30,9 +30,6 @@
  * 
  */
 class CRoute{
-	const DEFAULT_CONTROLLER='Site';
-	const DEFAULT_ACTION='index';
-	
 	/*#if DEV */public static $_prefix,$TESTED_ROUTES=array();/*#/if*/
 	private static $_routes,$_langs,
 		$all,$controller,$action,$params,$ext;
@@ -86,11 +83,14 @@ class CRoute{
 	public static function getAll(){return self::$all;}
 	public static function getController(){return self::$controller;}
 	public static function getAction(){return self::$action;}
-	public static function getControllerActionRoute(){return '/'.self::$controller.(self::$action!==self::DEFAULT_ACTION?'/'.self::$action:''); }
+	public static function getControllerActionRoute(){
+		return '/'.self::$controller.(self::$action!==self::$_routes[Springbok::$scriptname]['/:controller(/:action/*)?'][0][1]?'/'.self::$action:'');
+	}
 	public static function getRoute(){return array(true,'/'.self::getControllerActionRoute());}
 	public static function getParams(){return self::$params;}
 	public static function getExt(){return self::$ext;}
-
+	
+	/** @ignore */
 	public static function find($all){
 		$lang=CLang::get(); $matches=array();
 		foreach(self::$_routes[Springbok::$scriptname] as $route){
@@ -102,7 +102,9 @@ class CRoute{
 				$ext=$route['ext']===null?null:substr(array_pop($matches),1);/*$route['ext'];*/
 				unset($matches[0]);
 				
-				list($controller,$action)=explode('::',$route[0],2);
+				//list($controller,$action)=$route[0];
+				$controller = $route[0][0];
+				$action = $route[0][1];
 				
 				if(isset($route[':'])){
 					$nbNamedParameters=count($route[':']);
@@ -127,29 +129,23 @@ class CRoute{
 							$params=array_combine(array_slice($route[':'],0,$countMatches),$matches);
 					}else $params=array();
 
-					if($controller==='!'){
-						if(!empty($params['controller'])){
-							$controller=ucfirst(self::untranslate($params['controller'],$lang));
-							unset($params['controller']);
-						}else $controller=self::DEFAULT_CONTROLLER;
-					}elseif(substr($controller,-1)==='!'){
+					if(substr($controller,-1)==='!'){
 						if(isset($params['controller'])){
 							$controller=substr($controller,0,-1).ucfirst(self::untranslate($params['controller'],$lang));
 							unset($params['controller']);
-						}else $controller=substr($controller,0,-1).self::DEFAULT_CONTROLLER;
+						}else $controller=substr($controller,0,-1).'Site';
+					}elseif(!empty($params['controller'])){
+						$controller=ucfirst(self::untranslate($params['controller'],$lang));
+						unset($params['controller']);
 					}
-					if($action=='!' || isset($params['action'])){
-						if(!empty($params['action'])){
-							$action=self::untranslate($params['action'],$lang);
-							unset($params['action']);
-						}else $action=self::DEFAULT_ACTION;
+					if(!empty($params['action'])){
+						$action=self::untranslate($params['action'],$lang);
+						unset($params['action']);
 					}
 					
 					if(!empty($matches[$i=($nbNamedParameters+1)])) $params=$params+explode('/',$matches[$i]);
 				}else{
 					$params=array();
-					if($controller==='!') $controller=self::DEFAULT_CONTROLLER;
-					if($action==='!') $action=self::DEFAULT_ACTION;
 				}
 				return array($controller,$action,$params,$ext);
 			}
@@ -157,6 +153,11 @@ class CRoute{
 		return false;
 	}
 	
+	/**
+	 * @param string
+	 * @param array
+	 * @return string
+	 */
 	public static function getArrayLink($entry,$params){
 		$plus='';
 		$link=array_shift($params);
@@ -183,26 +184,41 @@ class CRoute{
 		return /*#if DEV */self::$_prefix./*#/if*/($url==='/'?'/':rtrim($url,'/')).$plus;
 	}
 	
+	/**
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function getStringLink($entry,$params){
 		$route=explode('/',trim($params,'/'),3);
 		$controller=$route[0];
-		$action=isset($route[1])?$route[1]:self::DEFAULT_ACTION;
+		$action=isset($route[1])?$route[1]:null;
 		$params=isset($route[2])?$route[2]:null;
 		$lang=CLang::get(); $route=self::$_routes[$entry]['/:controller(/:action/*)?'];
 		
-		if($action==self::DEFAULT_ACTION)
+		if($action===null)
 			$froute='/'.self::translate($controller,$lang);
 		else
 			$froute=sprintf($route[$lang][1],self::translate($controller,$lang),self::translate($action,$lang),$params===null?'':'/'.$params); 
 		return /*#if DEV */self::$_prefix./*#/if*/$froute.(isset($route['ext'])&&!endsWith($froute,'.'.$route['ext'])?'.'.$route['ext']:'');
 	}
 
+	/**
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function translate($string,$lang){
 		$stringT=strtolower($string);
 		if(!isset(self::$_langs['->'.$lang][$stringT])) return $string;
 		return self::$_langs['->'.$lang][$stringT];
 	}
 
+	/**
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	public static function untranslate($string,$lang){
 		$stringT=strtolower($string);
 		if(!isset(self::$_langs[$lang.'->'][$stringT])) return $string;

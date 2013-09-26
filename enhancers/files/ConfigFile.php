@@ -128,9 +128,12 @@ class ConfigFile extends PhpFile{
 				}
 				
 				foreach($entryRoutes as $url=>$route){
-					$finalRoutes[$entry][$url][0]=$route[0]; $paramsDef=isset($route[1])?$route[1]:null; $langs=isset($route[2])?$route[2]:null;
+					$finalRoutes[$entry][$url][0]=explode('::',$route[0]); $paramsDef=isset($route[1])?$route[1]:null; $langs=isset($route[2])?$route[2]:null;
 					$finalRoutes[$entry][$url]['ext']=isset($route['ext'])?$route['ext']:null;
 					$route=array();
+					
+					if($finalRoutes[$entry][$url][0][0] === '!') $this->throwException('Controller "!" does not exists, set default controller to "Site" in routes');
+					if($finalRoutes[$entry][$url][0][1] === '!') $this->throwException('Action "!" does not exists, set default action to "index" in routes');
 					
 					if($langs !== null){
 						$route=$langs;
@@ -190,7 +193,7 @@ class ConfigFile extends PhpFile{
 		
 			
 			$finalProdContent=UPhp::exportCode(array('routes'=>$finalRoutes,'langs'=>$finalTranslations));
-			$devRoute=array('Dev!::!',
+			$devRoute=array(array('Dev!','index'),
 				':'=>array('controller','action'),'paramsCount'=>3,'ext'=>null,
 				'_'=>array('\/Dev\/([^\/]+)(?:\/([^\/]+)(?:\/(.*))?)?','/Dev/%s/%s%s'));
 			foreach($allLangs as $lang) $devRoute[$lang]=$devRoute['_'];
