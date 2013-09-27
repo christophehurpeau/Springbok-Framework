@@ -25,6 +25,9 @@ class EnhancedApp extends Enhanced{
 		if(empty($this->devConfig['pluginsPaths'])) $this->devConfig['pluginsPaths']=array();
 		$this->devConfig['pluginsPaths']['SpringbokCore']=dirname(CORE).'/plugins/';
 		
+		if(is_string($this->devConfig['siteUrl']))
+			$this->devConfig['siteUrl'] = array( 'index'=> $this->devConfig['siteUrl'] );
+		
 		
 		//if($this->configNotEmpty('plugins')){
 		if(empty($this->config['plugins'])) $this->config['plugins']=array();

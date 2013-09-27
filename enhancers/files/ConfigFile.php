@@ -227,6 +227,12 @@ class ConfigFile extends PhpFile{
 				foreach(array('siteUrl') as $attr)
 					if(!isset($configArray[$attr])) $this->throwException('Missing attr config : '.$attr.' (file : '.$configname.')');
 				
+				if(is_string($configArray['siteUrl']))
+					$configArray['siteUrl'] = array( 'index'=> $configArray['siteUrl'] );
+				
+				if(!isset($configArray['generate']))
+					$configArray['generate'] = array( 'default'=> true );
+				
 				if(!empty($this->enhanced->config['entries']))
 					foreach($this->enhanced->config['entries'] as $entry)
 						if(!isset($configArray['siteUrl'][$entry])) $this->throwException('Missing site url for entry : '.$entry.' (file : '.$configname.')');
