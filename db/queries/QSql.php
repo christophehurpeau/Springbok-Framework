@@ -1,9 +1,17 @@
 <?php
+/**
+ * SQL Query
+ */
 class QSql{
 	protected $_db,$sql,$calcFoundRows;
 	private $fields,$returnValue,$isCalcFoundRows=false,$isSelect,$isShow,$isJoined,$isCount,
 		$select,$from,$where,$groupBy,$having,$orderBy,$limit;
 	
+	/**
+	 * @param DB
+	 * @param string
+	 * @param mixed
+	 */
 	public function __construct($db,$sql,$returnValue=false){
 		$sql=str_replace("\n",' ',rtrim(trim($sql),';'));
 		
@@ -32,13 +40,39 @@ class QSql{
 		}
 		$this->_db=$db; $this->sql=$sql; $this->returnValue=$returnValue;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function isSelect(){
+		return $this->isSelect;
+	}
 	
-	public function isSelect(){return $this->isSelect;}
-	public function isJoined(){return $this->isJoined;}
-	public function getFields(){return $this->fields;}
+	/**
+	 * @return bool
+	 */
+	public function isJoined(){
+		return $this->isJoined;
+	}
 	
-	public function setFields($fields){ $this->fields=$fields;}
+	/**
+	 * @return bool
+	 */
+	public function getFields(){
+		return $this->fields;
+	}
 	
+	/**
+	 * @param array
+	 * @return void
+	 */
+	public function setFields($fields){
+		$this->fields=$fields;
+	}
+	
+	/**
+	 * @return array
+	 */
 	public function execute(){
 		if($this->isSelect()){
 			if($this->isCount){
@@ -57,6 +91,11 @@ class QSql{
 		return $this->_db->doMultiQueries($this->sql);
 	}
 	
+	/**
+	 * @param function
+	 * @param function
+	 * @return void
+	 */
 	public function callback($callback,$callback2=null){
 		if($this->isSelect()){
 			$t=&$this;
@@ -68,24 +107,41 @@ class QSql{
 		}
 	}
 	
+	/**
+	 * @return bool
+	 */
 	public function hasCalcFoundRows(){
 		return $this->isCalcFoundRows;
 	}
 	
+	/**
+	 * @return int
+	 */
 	public function foundRows(){
 		return $this->calcFoundRows;
 	}
+	
+	/**
+	 * @return QSql|self
+	 */
 	public function noCalcFoundRows(){
 		if($this->limit===false) $this->limit='';
 		return $this;
 	}
 	
-	
+	/**
+	 * @return QSql
+	 */
 	public function createCountQuery(){
 		return new QSql($this->_db,'SELECT COUNT(*) FROM '.$this->from.($this->where===false?'':(' WHERE '.$this->where))
 			.($this->groupBy===false?'':(' GROUP BY'.$this->groupBy)).($this->having===false?'':(' HAVING '.$this->having)),true);
 	}
 	
+	/**
+	 * @param int
+	 * @param int
+	 * @return QSql|self
+	 */
 	public function limit($limit,$down=0){
 		if($this->limit===false){
 			if($down>0) $this->sql.=' LIMIT '.((int)$down).','.((int)$limit);
@@ -94,10 +150,16 @@ class QSql{
 		return $this;
 	}
 	
-	
+	/**
+	 * @return CPagination|mixed
+	 */
 	public function getPagination(){
 		return $this->paginate()->pageSize(25)->execute($this);
 	}
+	
+	/**
+	 * @ignore
+	 */
 	public function getFieldsForTable(){
 		$fields=$this->getFields(); $fieldsForTable=array();
 		if(empty($fields)) return;

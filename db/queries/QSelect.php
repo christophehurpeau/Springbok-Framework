@@ -26,13 +26,48 @@ abstract class QSelect extends AQuery{
 	protected $sqlStart='',$calcFoundRows=false,$addByConditions=false;
 	
 	
+	/**
+	 * @return QSelect|self
+	 */
 	public function sqlSmallResult(){ $this->sqlStart.='SQL_SMALL_RESULT '; return $this; }
+	/**
+	 * @return QSelect|self
+	 */
 	public function sqlBigResult(){ $this->sqlStart.='SQL_BIG_RESULT '; return $this; }
+	/**
+	 * @return QSelect|self
+	 */
 	public function sqlBufferResult(){ $this->sqlStart.='SQL_BUFFER_RESULT '; return $this; }
+	/**
+	 * @return QSelect|self
+	 */
 	public function sqlCache(){ $this->sqlStart.='SQL_CACHE '; return $this; }
+	/**
+	 * @return QSelect|self
+	 */
 	public function sqlNoCache(){ $this->sqlStart.='SQL_NO_CACHE '; return $this; }
+	/**
+	 * @return QSelect|self
+	 */
 	public function highPriority(){ $this->sqlStart.='HIGH_PRIORITY '; return $this; }
 	
+	/**
+	 * by something
+	 * 
+	 * <code>
+	 * ->by('idAndStatus',array($id,Post::VALID));
+	 * </code>
+	 * 
+	 * You can use the magic method :
+	 * 
+	 * <code>
+	 * ->byIdAndStatus($id,Post::VALID);
+	 * </code>
+	 * 
+	 * @param string
+	 * @param array
+	 * @return QSelect|self
+	 */
 	public function by($query,$values){
 		$fields=explode('And',$query);
 		$fields=array_map('lcfirst',$fields);
@@ -43,40 +78,195 @@ abstract class QSelect extends AQuery{
 		$this->addByConditions=&$conds;
 		return $this;
 	}
-	public function where($where){$this->where=$where;return $this;}
-	public function addCondition($key,$value){$this->where[$key]=$value;return $this;}
-	public function addCond($key,$value){$this->where[$key]=$value;return $this;}
-	public function addMCond($value){$this->where[]=$value;return $this;}
-	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
-	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
-	public function addOrder($value){ $this->orderBy[]=$value; return $this; }
-	public function addOrderDesc($value){ $this->orderBy[$value]='DESC'; return $this; }
+
+	/**
+	 * Add conditions to the query
+	 * 
+	 * <code>
+	 * ->where(array('status=2')) => WHERE status=2
+	 * ->where(array('status'=>2)) => WHERE `status`=2
+	 * ->where(array('a'=>1,'b !='=>2)) => WHERE `a`=1 AND `b`!=2
+	 * ->where(array('OR'=>array('a'=>1,'b'=>2))) => WHERE `a`=1 OR `b`=2
+	 * ->where(array('AND'=>array('a'=>1,'OR'=>array('c'=>1,'b'=>2)))) => WHERE `a`=1 AND (`c`=1 OR `b`=2)
+	 * ->where(array('AND'=>array('a'=>1,'AND'=>array(OR'=>array('c'=>1,'b'=>2),'OR'=>array('d'=>3,'e'=>4))))) => WHERE `a`=1 AND ((`c`=1 OR `b`=2) AND (`d`=3 OR `e`=4))
+	 * 
+	 * ->where(array('status'=>array(1,2,3))) => WHERE `status` IN (1,2,3)
+	 * ->where(array('status LIKE'=>'a')) => WHERE `status` LIKE "a"
+	 * ->where(array('status LIKE'=>array('a','b'))) => WHERE `status` LIKE "a" OR `status` LIKE "b"
+	 * ->where(array('status'=>true)) => WHERE `status` IS NOT NULL
+	 * ->where(array('status'=>false)) => WHERE `status` IS NULL
+	 * ->where(array('status'=>null)) => WHERE `status` IS NULL
+	 * ->where(array('table2.status'=>null)) => WHERE table2.`status` IS NULL
+	 * </code>
+	 * 
+	 * @param array
+	 * @param bool
+	 * @return QSelect|self
+	 */
+	public function where($where/*#if DEV*/,$force=false/*#/if*/){
+		/*#if DEV*/ if(!$force && !empty($this->where)) throw new Exception('where is not empty ! Are you sure you want erase it ?'); /*#/if*/
+		$this->where = $where;
+		return $this;
+	}
+	
+	/**
+	 * Add one condition to the query
+	 * 
+	 * @param string|int
+	 * @param mixed
+	 * @return QSelect|self
+	 */
+	public function addCondition($key,$value){
+		$this->where[$key]=$value;
+		return $this;
+	}
+	
+	
+	/**
+	 * Add one condition to the query
+	 * 
+	 * @param string|int
+	 * @param mixed
+	 * @return QSelect|self
+	 */
+	public function addCond($key,$value){
+		$this->where[$key]=$value;
+		return $this;
+	}
+	
+	/**
+	 * Add one condition to the query
+	 * 
+	 * @param string|array
+	 * @return QSelect|self
+	 */
+	public function addMCond($value){
+		$this->where[]=$value;
+		return $this;
+	}
+	
+	
+	/**
+	 * Set the order
+	 * 
+	 * @param array|string
+	 * @return QSelect|self
+	 */
+	public function orderBy($orderBy){
+		$this->orderBy=$orderBy;
+		return $this;
+	}
+	
+	/**
+	 * Add order by created field, DESC
+	 * 
+	 * @param string DESC or ASC
+	 * @return QSelect|self
+	 */
+	public function orderByCreated($orderWay='DESC'){
+		$this->orderBy=array('created'=>$orderWay);
+		return $this;
+	}
+	
+	/**
+	 * Add an order
+	 * 
+	 * @param int|string
+	 * @return QSelect|self
+	 */
+	public function addOrder($value){
+		$this->orderBy[]=$value;
+		return $this;
+	}
+	
+	/**
+	 * Add an order DESC
+	 * 
+	 * @param string
+	 * @return QSelect|self
+	 */
+	public function addOrderDesc($value){
+		$this->orderBy[$value]='DESC';
+		return $this;
+	}
+	
+	/**
+	 * Returns the first orderBy
+	 * 
+	 * @return string
+	 */
 	public function getOrderBy(){
 		if(is_string($this->orderBy)) return $this->orderBy;
 		foreach($this->orderBy as $k=>$v)
 			return is_int($k) ? $v : $k;
 	}
 	
+	/**
+	 * Set the group by
+	 * 
+	 * @param array|string
+	 * @return QSelect|self
+	 */
 	public function groupBy($groupBy){
 		if(is_string($groupBy)) $groupBy=explode(',',$groupBy);
 		$this->groupBy=$groupBy;
 		return $this;
 	}
+	
+	/**
+	 * add a group by
+	 * 
+	 * @param string
+	 * @return QSelect|self
+	 */
 	public function addGroupBy($groupBy){
 		$this->groupBy[]=$groupBy;
 		return $this;
 	}
 	
-	public function having($having){$this->having=$having;return $this;}
-	public function addHavingCondition($key,$value){$this->having[$key]=$value;return $this;}
+	/**
+	 * Set the having condition
+	 * 
+	 * @param array|string
+	 * @return QSelect|self
+	 */
+	public function having($having){
+		$this->having=$having;
+		return $this;
+	}
 	
-	/** (limit) or ($limit, down) */
+	/**
+	 * Add a having condition
+	 * 
+	 * @param array|string
+	 * @return QSelect|self
+	 */
+	public function addHavingCondition($key,$value){
+		$this->having[$key]=$value;
+		return $this;
+	}
+	
+	/** 
+	 * (limit) or (limit, down)
+	 * 
+	 * @param string|int
+	 * @param int
+	 * @return QSelect|self
+	 */
 	public function limit($limit,$down=0){
 		if($down>0) $this->limit=((int)$down).','.((int)$limit);
 		else $this->limit=$limit;
 		return $this;
 	}
-	public function limit1(){$this->limit=1;return $this;}
+	
+	/**
+	 * @return QSelect|self
+	 * @see limit
+	 */
+	public function limit1(){
+		$this->limit=1;
+		return $this;
+	}
 	
 	
 	public function __call($method, $params){
@@ -86,12 +276,22 @@ abstract class QSelect extends AQuery{
 		return $this;
 	}
 	
+	/**
+	 * @internal
+	 * @return string
+	 */
 	protected function _SqlStart(){
 		$sql='SELECT '.$this->sqlStart;
 		if($this->calcFoundRows) $sql.='SQL_CALC_FOUND_ROWS ';
 		return $sql;
 	}
 	
+	/**
+	 * @internal
+	 * @param string
+	 * @param string
+	 * @return string
+	 */
 	protected function _afterWhere(&$sql,$fieldPrefix=''){
 		if(isset($this->groupBy)){
 			$sql.=' GROUP BY ';

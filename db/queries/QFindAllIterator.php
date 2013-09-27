@@ -1,4 +1,8 @@
 <?php
+/**
+ * A QueryAll Iterator
+ * 
+ */
 class QFindAllIterator implements Iterator{
 	private $query,$start,$size,$limit,$currentIterator,$i=0,
 			$key,$current;

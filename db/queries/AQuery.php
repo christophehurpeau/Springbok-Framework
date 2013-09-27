@@ -1,24 +1,48 @@
 <?php
+/**
+ * Abstract class for Query builders
+ */
 abstract class AQuery{
 	private $_params=array();
 	
-	/** @var string */
+	/**
+	 * Name of the model
+	 * 
+	 * @var string
+	 */
 	protected $modelName;
-	/** @var DB */
+	/**
+	 * DB instance
+	 * 
+	 * @var DB
+	 */
 	protected $_db;
 	
+	/**
+	 * @param string
+	 */
 	public function __construct($modelName){
 		$this->modelName=$modelName;
 		$this->_db=$modelName::$__modelDb;
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function getModelName(){
 		return $this->modelName;
 	}
 	
 	public abstract function execute();
 	
-	
+	/**
+	 * @param mixed
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param bool
+	 * @return string
+	 */
 	protected function _condToSQL($conds,$glue,$sql,$fieldPrefix='',$wrap=false){
 		if($wrap) $sql.=' (';
 		/*#if DEV */
@@ -80,6 +104,11 @@ abstract class AQuery{
 		return substr($sql,0,-(2+strlen($glue))).($wrap?')':'');
 	}
 	
+	/**
+	 * @param string
+	 * @param bool
+	 * @return string
+	 */
 	protected function formatField($field,$fieldPrefix=false){
 		if(strpos($field,'(')!==false) return $field;
 		if($pos=strpos($field,'.')){

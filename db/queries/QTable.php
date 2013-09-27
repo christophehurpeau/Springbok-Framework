@@ -1,4 +1,9 @@
 <?php
+/**
+ * Creates a Query for Table
+ * 
+ * @see CModelTable
+ */
 class QTable extends QFindAll{
 	protected $pagination,
 		$allowFilters=false,$FILTERS,
@@ -8,34 +13,178 @@ class QTable extends QFindAll{
 		$addInTable=false
 		;
 	
-	public function allowFilters(){$this->allowFilters=true; return $this; }
-	public function allowAdvancedFilters(){$this->allowFilters='advanced'; return $this; }
-	public function disallowOrder(){$this->allowOrder=false; return $this; }
-	public function noAutoRelations(){$this->autoRelations=false; return $this;}
-	public function autoRelations($params=array()){$this->autoRelations=$params; return $this; }
-	public function belongsToFields($params){$this->belongsToFields=$params; return $this; }
-	public function exportable($types,$fileName,$title=null){$this->exportable=array($types,$fileName,$title); return $this;}
-	public function defaultOrder($defaultOrder){$this->defaultOrder=$defaultOrder; return $this; }
+	/**
+	 * @return QTable|self
+	 */
+	public function allowFilters(){
+		$this->allowFilters=true;
+		return $this;
+	}
 	
-	public function isFiltersAllowed(){ return $this->allowFilters!==false; }
-	public function isFilterAdvancable(){ return $this->allowFilters==='advanced'; }
-	public function isOrderAllowed(){ return $this->allowOrder; }
-	public function getPagination(){ return $this->pagination; }
-	public function getFilters(){ return $this->FILTERS; }
-	public function isExportable(){ return $this->exportable!==false; }
-	public function getExportableTypes(){ return explode(',',$this->exportable[0]); }
-	public function getBelongsToFields(){ return $this->belongsToFields; }
+	/**
+	 * @return QTable|self
+	 */
+	public function allowAdvancedFilters(){
+		$this->allowFilters='advanced';
+		return $this;
+	}
 	
-	public function addInTable($addInTable=true){ $this->addInTable=$addInTable; return $this; }
-	public function getAddInTable(){ return $this->addInTable; }
+	/**
+	 * @return QTable|self
+	 */
+	public function disallowOrder(){
+		$this->allowOrder=false;
+		return $this;
+	}
 	
-	public function mustDisplayTable(){ return $this->allowFilters!==false || $this->addInTable!==false; }
-	public function hasForm(){ return $this->allowFilters!==false || $this->addInTable!==false; }
-	public function hasAddInTable(){ return $this->addInTable!==false; }
+	/**
+	 * @return QTable|self
+	 */
+	public function noAutoRelations(){
+		$this->autoRelations=false;
+		return $this;
+	}
+	
+	/**
+	 * @param array
+	 * @return QTable|self
+	 */
+	public function autoRelations($params=array()){
+		$this->autoRelations=$params;
+		return $this;
+	}
+	
+	/**
+	 * @param array
+	 * @return QTable|self
+	 */
+	public function belongsToFields($params){
+		$this->belongsToFields=$params;
+		return $this;
+	}
+	
+	/**
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return QTable|self
+	 */
+	public function exportable($types,$fileName,$title=null){
+		$this->exportable=array($types,$fileName,$title);
+		return $this;
+	}
+	
+	/**
+	 * @param string
+	 * @return QTable|self
+	 */
+	public function defaultOrder($defaultOrder){
+		$this->defaultOrder=$defaultOrder;
+		return $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isFiltersAllowed(){
+		return $this->allowFilters!==false;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isFilterAdvancable(){
+		return $this->allowFilters==='advanced';
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isOrderAllowed(){
+		return $this->allowOrder;
+	}
+	
+	/**
+	 * @return CPagination
+	 */
+	public function getPagination(){
+		return $this->pagination;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getFilters(){
+		return $this->FILTERS;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isExportable(){
+		return $this->exportable!==false;
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getExportableTypes(){
+		return explode(',',$this->exportable[0]);
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getBelongsToFields(){
+		return $this->belongsToFields;
+	}
+	
+	/**
+	 * @param bool
+	 * @return QTable|self
+	 */
+	public function addInTable($addInTable=true){
+		$this->addInTable=$addInTable;
+		return $this;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function getAddInTable(){
+		return $this->addInTable;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function mustDisplayTable(){
+		return $this->allowFilters!==false || $this->addInTable!==false;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function hasForm(){
+		return $this->allowFilters!==false || $this->addInTable!==false;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function hasAddInTable(){
+		return $this->addInTable!==false;
+	}
 	
 	
 	private $_fieldsForTable;
-	public function getFieldsForTable(){ return $this->_fieldsForTable; }
+	
+	/**
+	 * @return array
+	 */
+	public function getFieldsForTable(){
+		return $this->_fieldsForTable;
+	}
 	
 	protected function process(){
 		$modelName=$this->modelName;
@@ -222,12 +371,21 @@ class QTable extends QFindAll{
 		$table=new CModelTableExport($this);
 		return $table->init($type,$fileName,$title);
 	}
-
+	
+	/**
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @return CModelTableExport
+	 */
 	public function export($type,$fileName=null,$title=null){
 		$this->process();
 		return $this->_export($type,$fileName,$title);
 	}
 	
+	/**
+	 * @return CPagination
+	 */
 	public function pagination(){
 		$this->process();
 		
@@ -237,6 +395,11 @@ class QTable extends QFindAll{
 		return $this->pagination;
 	}
 	
+	/**
+	 * Shortcut for ->pagination()->execute()
+	 * 
+	 * @return CPagination
+	 */
 	public function paginate(){
 		return $this->pagination()->execute();
 	}

@@ -20,44 +20,88 @@ include_once __DIR__.DS.'AQuery.php';
 class QLoadData extends AQuery{
 	protected $fileName,$replace=false,$ignore=false,$characterSet,$fieldsTerminatedBy,$fieldsEnclosedBy,$fieldsEscapedBy,$linesStatingBy,$linesTerminatedBy,$ignoreLines;
 	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function fileName($fileName){
 		$this->fileName=$fileName;
 		return $this;
 	}
+	
+	/**
+	 * @return QLoadData|self
+	 */
 	public function replace(){
 		$this->replace=true;
 		return $this;
 	}
+	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function characterSet($characterSet){
 		$this->characterSet=$characterSet;
 		return $this;
 	}
+	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function fieldsTerminatedBy($terminatedBy){
 		$this->fieldsTerminatedBy=$terminatedBy;
 		return $this;
 	}
+	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function fieldsEnclosedBy($enclosedBy){
 		$this->fieldsEnclosedBy=$enclosedBy;
 		return $this;
 	}
+	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function fieldsEscapedBy($escapedBy){
 		$this->escapedBy=$escapedBy;
 		return $this;
 	}
+	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function linesStatingBy($statingBy){
 		$this->linesStatingBy=$statingBy;
 		return $this;
 	}
+	
+	/**
+	 * @param string
+	 * @return QLoadData|self
+	 */
 	public function linesTerminatedBy($terminatedBy){
 		$this->linesTerminatedBy=$terminatedBy;
 		return $this;
 	}
 	
+	/**
+	 * @return QLoadData|self
+	 */
 	public function ignoreFirstLine(){
 		$this->ignoreLines=1;
 		return $this;
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function _toSQL(){
 		$modelName=$this->modelName;
 		$sql='LOAD DATA '/* LOCAL */.'INFILE '.$this->_db->escape($this->fileName).' ';
@@ -80,7 +124,10 @@ class QLoadData extends AQuery{
 			$sql.=' IGNORE '.$this->ignoreLines.' LINES';
 		return $sql;
 	}
-
+	
+	/**
+	 * @return mixed
+	 */
 	public function execute(){
 		$modelName=$this->modelName;
 		$res=$this->_db->doUpdate($this->_toSQL());

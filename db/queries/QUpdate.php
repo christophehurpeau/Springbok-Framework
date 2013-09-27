@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__.DS.'AQuery.php';
 /**
+ * Update Query
+ * 
  * UPDATE [LOW_PRIORITY] [IGNORE] tbl_name
 	SET col_name1=expr1 [, col_name2=expr2 ...]
 	[WHERE where_definition]
@@ -9,19 +11,81 @@ include_once __DIR__.DS.'AQuery.php';
  */
 class QUpdate extends AQuery{
 	private $values,$where,$limit=null,$ignore=false,$orderBy,$updatedField;
-
+	
+	/**
+	 * @param string
+	 * @param string
+	 * @internal
+	 */
 	public function __construct($modelName,$updatedField=null){
 		parent::__construct($modelName);
 		$this->updatedField=$updatedField;
 	}
 	
-	public function values($values){$this->values=$values;return $this;}
-	public function set($values){$this->values=$values;return $this;}
-	public function where($conditions){$this->where=$conditions;return $this;}
+	/**
+	 * @param array
+	 * @return QUpdate|self
+	 */
+	public function values($values){
+		$this->values=$values;
+		return $this;
+	}
 	
-	public function updatedField($field){$this->updatedField=$field;return $this;}
-	public function doNotUpdateUpdatedField(){ $this->updatedField=null; return $this; }
+	/**
+	 * @param array
+	 * @return QUpdate|self
+	 */
+	public function set($values){
+		$this->values=$values;
+		return $this;
+	}
 	
+	/**
+	 * @param array
+	 * @return QUpdate|self
+	 */
+	public function where($conditions){
+		$this->where=$conditions;
+		return $this;
+	}
+	
+	/**
+	 * Set the updated field
+	 * 
+	 * @param string
+	 * @return QUpdate|self
+	 */
+	public function updatedField($field){
+		$this->updatedField=$field;
+		return $this;
+	}
+	/**
+	 * Remove the updated field
+	 * 
+	 * @return QUpdate|self
+	 */
+	public function doNotUpdateUpdatedField(){
+		$this->updatedField=null;
+		return $this;
+	}
+	
+	/**
+	 * by something
+	 * 
+	 * <code>
+	 * ->by('idAndStatus',array($id,Post::VALID));
+	 * </code>
+	 * 
+	 * You can use the magic method :
+	 * 
+	 * <code>
+	 * ->byIdAndStatus($id,Post::VALID);
+	 * </code>
+	 * 
+	 * @param string
+	 * @param array
+	 * @return QUpdate|self
+	 */
 	public function by($query,$values){
 		$fields=explode('And',$query);
 		$fields=array_map('lcfirst',$fields);
@@ -32,6 +96,11 @@ class QUpdate extends AQuery{
 		return $this;
 	}
 	
+	/**
+	 * @param string
+	 * @param array
+	 * @return QUpdate|self
+	 */
 	public function __call($method, $params){
 		if (!preg_match('/^by(\w+)$/',$method,$matches))
 			throw new \Exception("Call to undefined method {$method}");
@@ -39,25 +108,72 @@ class QUpdate extends AQuery{
 		return $this;
 	}
 	
-	public function orderBy($orderBy){$this->orderBy=$orderBy;return $this;}
-	public function orderByCreated($orderWay='DESC'){$this->orderBy=array('created'=>$orderWay);return $this;}
-	public function addOrder($value){ $this->orderBy[]=$value; return $this; }
+	/**
+	 * @param array|string
+	 * @return QUpdate|self
+	 */
+	public function orderBy($orderBy){
+		$this->orderBy=$orderBy;
+		return $this;
+	}
 	
+	/**
+	 * Add order by created field, DESC
+	 * 
+	 * @param string DESC or ASC
+	 * @return QUpdate|self
+	 */
+	public function orderByCreated($orderWay='DESC'){
+		$this->orderBy=array('created'=>$orderWay);
+		return $this;
+	}
 	
+	/**
+	 * Add an order
+	 * 
+	 * @param int|string
+	 * @return QUpdate|self
+	 */
+	public function addOrder($value){
+		$this->orderBy[]=$value;
+		return $this;
+	}
+	
+	/**
+	 * @return QUpdate|self
+	 */
 	public function ignore(){
 		$this->ignore=true;
 		return $this;
 	}
 	
 	
-	/** (limit) or ($limit, down) */
+	/** 
+	 * (limit) or (limit, down)
+	 * 
+	 * @param string|int
+	 * @param int
+	 * @return QUpdate|self
+	 */
 	public function limit($limit,$down=0){
 		if($down>0) $this->limit=((int)$down).','.((int)$limit);
 		else $this->limit=$limit;
 		return $this;
 	}
-	public function limit1(){$this->limit=1;return $this;}
 	
+	/**
+	 * @return QUpdate|self
+	 * @see limit
+	 */
+	public function limit1(){
+		$this->limit=1;
+		return $this;
+	}
+	
+	/**
+	 * @internal
+	 * @return string
+	 */
 	public function _toSQL(){
 		$modelName=$this->modelName;
 		$sql='UPDATE ';

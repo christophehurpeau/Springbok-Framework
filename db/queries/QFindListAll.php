@@ -1,5 +1,12 @@
 <?php
+/**
+ * Return an associated array of models
+ */
 class QFindListAll extends QFindAll{
+	
+	/**
+	 * @return array
+	 */
 	public function execute(){
 		$res=$this->_db->doSelectListObjects($this->_toSQL(),$this,$this->queryResultFields);
 		
@@ -10,19 +17,32 @@ class QFindListAll extends QFindAll{
 		return $res;
 	}
 	
+	/**
+	 * @return QFindListAll|self
+	 */
 	public function calcFoundRows(){
 		$this->calcFoundRows=true;
 		return $this;
 	}
+	
+	/**
+	 * @return QFindListAll|self
+	 */
 	public function noCalcFoundRows(){
 		$this->calcFoundRows=null;
 		return $this;
 	}
 	
+	/**
+	 * @return bool
+	 */
 	public function hasCalcFoundRows(){
 		return $this->calcFoundRows;
 	}
 	
+	/**
+	 * @return int
+	 */
 	public function foundRows(){
 		return $this->calcFoundRows;
 	}

@@ -9,26 +9,50 @@ include_once __DIR__.DS.'AQuery.php';
 class QInsert extends AQuery{
 	private $cols=false,$values,$ignore=false,$onDuplicateKeyUpdate,$createdField,$createdByField;
 	protected $keyword='INSERT';
-
+	
+	/**
+	 * @param string
+	 * @param string|null
+	 * @param string|null
+	 */
 	public function __construct($modelName,$createdField=null,$createdByField=null){
 		parent::__construct($modelName);
 		$this->createdField=$createdField;
 		$this->createdByField=$createdByField;
 	}
 	
+	/**
+	 * @param string|array
+	 * @return QInsert|self
+	 */
 	public function cols($cols){
 		$this->cols=is_string($cols)?explode(',',$cols):$cols;
 		return $this;
 	}
+	
+	/**
+	 * @param array a list of key=>values
+	 * @return QInsert|self
+	 */
 	public function set($data){
 		$this->data($data);
 		return $this;
 	}
+	
+	/**
+	 * @param array a list of key=>values
+	 * @return QInsert|self
+	 */
 	public function data($data){
 		$this->cols=array_keys($data);
 		$this->values=array($data);
 		return $this;
 	}
+	
+	/**
+	 * @param array an array of arrays: list of key=>values
+	 * @return QInsert|self
+	 */
 	public function datas($datas){
 		reset($datas);
 		$this->cols=array_keys(current($datas));
@@ -36,21 +60,36 @@ class QInsert extends AQuery{
 		return $this;
 	}
 	
+	/**
+	 * @param array only values
+	 * @return QInsert|self
+	 */
 	public function values($values){
 		$this->values=array($values);
 		return $this;
 	}
 	
+	/**
+	 * @param array array of array values
+	 * @return QInsert|self
+	 */
 	public function mvalues($values){
 		$this->values=$values;
 		return $this;
 	}
 	
+	/**
+	 * @return QInsert|self
+	 */
 	public function ignore(){
 		$this->ignore=true;
 		return $this;
 	}
 	
+	/**
+	 * @param string|array SQL or array of fields=>values
+	 * @return QInsert|self
+	 */
 	public function orUpdate($onDuplicateKeyUpdate){
 		if(is_array($onDuplicateKeyUpdate)){
 			$sql='';
@@ -68,6 +107,9 @@ class QInsert extends AQuery{
 		return $this;
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function _toSQL(){
 		$modelName=$this->modelName;
 		$sql=$this->keyword.' '; $hasCreatedField=$this->createdField!==null && $this->cols!==false && !in_array($this->createdField,$this->cols);
@@ -109,7 +151,10 @@ class QInsert extends AQuery{
 		if($this->onDuplicateKeyUpdate !==null) $sql.=' ON DUPLICATE KEY UPDATE '.$this->onDuplicateKeyUpdate;
 		return $sql;
 	}
-
+	
+	/**
+	 * @return int|mixed
+	 */
 	public function execute(){
 		if(empty($this->values)) return false;
 		$modelName=$this->modelName;
