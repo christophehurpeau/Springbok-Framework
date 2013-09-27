@@ -1,4 +1,8 @@
 <?php
+/**
+ * Handle Schema comparisons between the app's models and the database
+ * @see DBSchemaProcessing
+ */
 abstract class DBSchema{
 	private $tableExist=true;
 	protected $schemaProcessing,$modelName,$tableName,$modelInfos,$isEntity,

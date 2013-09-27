@@ -1,4 +1,15 @@
 <?php
+/**
+ * DB Class
+ * 
+ * Contains all your DB instances
+ * 
+ * <code>
+ * $db = DB::init('default'); //Create or return if already exists
+ * $db->doUpdate('UPDATE `posts` SET `status` = '.Post::DRAFT);
+ * </code>
+ * 
+ */
 abstract class DB{
 	private static $_INSTANCES=array();
 	
@@ -10,7 +21,13 @@ abstract class DB{
 		return self::$_allConfigs['_lang'];
 	}
 	
-	/** @return DB */
+	/**
+	 * return a DB instance.
+	 * 
+	 * @param string
+	 * @param array config, if you don't want to use your config file.
+	 * @return DB
+	 */
 	public static function init($configName,$config=false){
 		if(isset(self::$_INSTANCES[$configName])) return self::$_INSTANCES[$configName];
 		if($config===false){
@@ -23,7 +40,10 @@ abstract class DB{
 		return self::$_INSTANCES[$configName]=new $className($configName,$config);
 	}
 	
-	/** @return DB */
+	/**
+	 * @ignore
+	 * @return DB
+	 */
 	public static function createWithPrefix($configName,$prefix){
 		$config=self::$_allConfigs['default']+array('type'=>'MySQL','host'=>'localhost','port'=>3306);
 		$config['prefix']=$prefix;
@@ -31,21 +51,37 @@ abstract class DB{
 		self::$_INSTANCES[$configName]=new $className($configName,$config);
 		return self::$_INSTANCES[$configName];
 	}
-
+	
+	/**
+	 * return an existing DB instance.
+	 * 
+	 * @param string
+	 * @return DB
+	 */
 	public static function get($configName='default'){
 		return self::$_INSTANCES[$configName];
 	}
 	
+	/**
+	 * Return all DB instances
+	 * @return array
+	 */
 	public static function getAll(){
 		return self::$_INSTANCES;
 	}
 	
+	/**
+	 * Ping all DB instance
+	 * 
+	 * @return void
+	 */
 	public static function pingAll(){
 		foreach(self::$_INSTANCES as &$instance){
 			$instance->ping();
 		}
 	}
 	
+	/** @ignore */
 	public static function setTestEnvironment(){
 		foreach(self::$_allConfigs as $configName=>&$config){
 			if($configName==='_lang') continue;
@@ -69,13 +105,24 @@ abstract class DB{
 		foreach(self::$_INSTANCES as $instance)
 			if($instance instanceof DBMySQL) $instance->doUpdate('SET FOREIGN_KEY_CHECKS=1');
 	}
-
+	
+	/**
+	 * Reset and reconnect all DB instances
+	 * 
+	 * @return void
+	 */
 	public static function reset(){
 		foreach(self::$_INSTANCES as $instance){
 			//$instance->close();
 			$instance->connect();
 		}
 	}
+	
+	/**
+	 * Reset all queries log in all DB instances
+	 * 
+	 * @return void
+	 */
 	public static function resetAllQueries(){
 		foreach(self::$_INSTANCES as $instance) $instance->resetQueries();
 	}
@@ -85,6 +132,7 @@ abstract class DB{
 
 	protected $_name,$_connect,$_config;
 	
+	/** @ignore */
 	public function __construct($configName,$config){
 		/*#if DEV */if(!isset(self::$_INSTANCES[$configName])) self::$_INSTANCES[$configName]=$this;/*#/if*/
 		$this->_name=$configName;
@@ -100,31 +148,77 @@ abstract class DB{
 	*/
 	/* Getters */
 	
-	public function _getName(){return $this->_name;}
+	/**
+	 * Return the name of the DB
+	 * 
+	 * @return string
+	 */
+	public function _getName(){
+		return $this->_name;
+	}
+	
 	public abstract function _getType();
-
-	public function getConnect(){return $this->_connect;}
-	public function _getPrefix(){return $this->_config['prefix'];}
+	
+	/**
+	 * Return the real DB connection
+	 * 
+	 * @return mixed
+	 */
+	public function getConnect(){
+		return $this->_connect;
+	}
+	
+	/**
+	 * Return the table/collection prefix
+	 * 
+	 * @return string
+	 */
+	public function _getPrefix(){
+		return $this->_config['prefix'];
+	}
 
 
 	//public function getVersion(){return $this->_connect->getAttribute(PDO::ATTR_SERVER_VERSION);}
 	
-	public function isInSameHost(DB $db){
+	/**
+	 * Return if two DB instance are in the same host.
+	 * Used in queries for relations
+	 * 
+	 * @param DB
+	 * @return bool
+	 */
+	public function isInSameHost($db){
 		return $this->getHost() === $db->getHost();
 	}
 	
+	/**
+	 * Return the current host
+	 * 
+	 * @return string
+	 */
 	public function getHost(){
 		return $this->_config['host'];
 	}
 	
+	/**
+	 * Return the formatted current db name
+	 * 
+	 * @return string
+	 */
 	public function getDbName(){
 		return $this->formatTable($this->_config['dbname']);
 	}
 	
+	/**
+	 * Return the current host, not formatted
+	 * 
+	 * @return string
+	 */
 	public function getDatabaseName(){
 		return $this->_config['dbname'];
 	}
 	
+	/** @ignore */
 	public function switchToTestEnvironment(){
 		if($this->_name==='_lang') return;
 		/*#if DEV */
@@ -136,29 +230,39 @@ abstract class DB{
 	}
 	
 	//public function lastInsertID($name=null) { return $this->_connect->lastInsertID($name); }
+	
+	/**
+	 * Return the last insterted ID in autoincremented tables
+	 * 
+	 * @return int
+	 */
 	public abstract function lastInsertID();
 	
 	
 	/* Connection management */
 	
-	
-	//public function close(){ $this->_connect=null; }
+	/**
+	 * Close the DB
+	 * 
+	 * @return void
+	 */
 	public abstract function close();
 	
-	/*public function ping(){
-		try{
-			$statement=$this->_connect->query('SELECT 1');
-			$statement=null;
-		}catch(PDOException $ex){
-			$this->connect();
-			return;
-		}
-		if($this->_connect->errorCode() != '00000') $this->connect();
-	}*/
+	/**
+	 * Ping the DB
+	 * 
+	 * @return void
+	 */
 	public abstract function ping();
 	
 	/* Transaction management */
 	
+	/**
+	 * Create a new transaction in a closure
+	 * 
+	 * @param function
+	 * @return void
+	 */
 	public function transaction($callback){
 		$this->beginTransaction();
 		call_user_func($callback,$this);

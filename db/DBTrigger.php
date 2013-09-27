@@ -1,4 +1,7 @@
 <?php
+/**
+ * @deprecated
+ */
 class DBTrigger{
 	public function __construct(&$schemas,$triggers){
 		DB::pingAll();

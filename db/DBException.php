@@ -6,7 +6,10 @@ class DBException extends Exception{
 		$this->error=$error;$this->query=$query;
 	}
 	
+	/** @return bool */
 	public function hasQuery(){return $this->query!==null;}
+	/** @return string */
 	public function getQuery(){return $this->query;}
+	/** @return string */
 	public function getError(){return $this->error;}
 }

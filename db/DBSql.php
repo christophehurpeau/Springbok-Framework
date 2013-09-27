@@ -1,4 +1,10 @@
 <?php
+/**
+ * Abstract class for DB SQL Class
+ * 
+ * @see DBMySQL
+ * @see DBSQLite
+ */
 abstract class DBSql extends DB{
 	
 	public function __destruct(){
