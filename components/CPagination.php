@@ -136,7 +136,7 @@ class CPagination{
 	/**
 	 * Execute the query and compute counts and results
 	 * 
-	 * @return mixed the return result
+	 * @return CPagination|CModelTable|mixed the return result
 	 */
 	public function execute(){
 		/*#if false*//*#if DEV */ try{ /*#/if*//*#/if*/

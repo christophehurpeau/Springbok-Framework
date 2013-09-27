@@ -10,6 +10,8 @@
  * @property int $right
  * @property int $level_depth
  * 
+ * 
+ * 
  */
 trait BTree{
 	public static function treeAlias(){

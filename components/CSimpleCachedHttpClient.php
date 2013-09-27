@@ -1,8 +1,12 @@
 <?php
+/**
+ * A simple HttpClient with cached pages
+ */
 class CSimpleCachedHttpClient{
 	private static $cache;
 	public static $context;
 	
+	/** @ignore */
 	public static function init(){
 		self::$context=stream_context_create(array(
 				'http'=>array(

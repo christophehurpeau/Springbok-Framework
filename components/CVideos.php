@@ -1,9 +1,18 @@
 <?php
+/**
+ * Videos components
+ */
 class CVideos{
 	const TYPE_YOUTUBE=1;
 	const TYPE_DAILYMOTION=2;
 	const TYPE_VIMEO=3;
 	
+	/**
+	 * Parse a URL and return the type and id of the video, or null if not found
+	 * 
+	 * @param string
+	 * @return array
+	 */
 	public static function parseVideo($url){
 		extract(parse_url($url)); $queryArray=array(); parse_str(parse_url($url,PHP_URL_QUERY),$queryArray);
 		if(!isset($host)) return NULL;
@@ -35,6 +44,12 @@ class CVideos{
 		return array($type,$id);
 	}
 	
+	/**
+	 * Replace videos url by their shorter version
+	 * 
+	 * @param string
+	 * @return string
+	 */
 	public static function replaceVideos($content){
 		//tester
 		$content=preg_replace('/(?:http:\/\/(?:www\.)?)?youtube\.[a-z]{2,3}\/watch\?(?:[^\s]+&)?v=([a-z0-9\-_]+)(?:&[^\s,\.]+)?(,|\.|\s|$)/Ui','http://youtu.be/$1$2',$content);
@@ -46,6 +61,13 @@ class CVideos{
 	
 	/* APIs */
 	
+	/**
+	 * Get info of a video
+	 * 
+	 * @param int
+	 * @param int|string
+	 * @return mixed
+	 */
 	public static function infos($type,$id){
 		switch ($type){
 			case self::TYPE_YOUTUBE: return self::youtubeInfos($id);
@@ -54,6 +76,12 @@ class CVideos{
 		}
 	}
 	
+	/**
+	 * Return infos of a youtube video
+	 * 
+	 * @param int
+	 * @return array
+	 */
 	public static function youtubeInfos($id){
 		$api=simplexml_load_file('http://gdata.youtube.com/feeds/api/videos/'.$id);
 		if(empty($api)) return false;
@@ -68,6 +96,12 @@ class CVideos{
 		);
 	}
 	
+	/**
+	 * Return infos of a dailymotion video
+	 * 
+	 * @param int
+	 * @return array
+	 */
 	public static function dailymotionInfos($id){
 		// http://www.dailymotion.com/doc/api/rest-api-reference.html
 		$api=json_decode(file_get_contents('https://api.dailymotion.com/video/'.$id.'?fields=title,description,created_time,owner,tiny_url,thumbnail_url'));
@@ -86,6 +120,12 @@ class CVideos{
 		//http://video.google.com/videofeed
 	}*/
 	
+	/**
+	 * Return infos of a vimeo video
+	 * 
+	 * @param int
+	 * @return array
+	 */
 	public static function vimeoInfos($id){
 		// http://vimeo.com/api/docs/simple-api
 		$api=json_decode(file_get_contents('http://vimeo.com/api/v2/video/'.$id.'.json'));

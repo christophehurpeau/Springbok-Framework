@@ -42,8 +42,21 @@ class CSecure{
 			self::$_cookie=CCookie::get(static::config('cookiename'));
 	}
 	
-	protected static function issetConfig($name){ return isset(self::$_config[$name]); }
-	public static function config($name){ return self::$_config[$name]; }
+	/**
+	 * @param string
+	 * @return bool
+	 */
+	protected static function issetConfig($name){
+		return isset(self::$_config[$name]);
+	}
+	
+	/**
+	 * @param string
+	 * @return mixed
+	 */
+	public static function config($name){
+		return self::$_config[$name];
+	}
 	
 	/**
 	 * Returns if the current user is connected

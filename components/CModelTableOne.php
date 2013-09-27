@@ -11,6 +11,11 @@ class CModelTableOne extends CModelTable{
 		if($this->results===null) $this->results=$this->query->execute();
 	}
 	
+	/**
+	 * Check if there is a result. If not, render a not found and stop.
+	 * 
+	 * @return CModelTableOne|self
+	 */
 	public function notFoundIfFalse(){
 		/*#if DEV */if($this->results!==null) throw new Exception('$this->results!==null'); /*#/if*/
 		$this->execute();

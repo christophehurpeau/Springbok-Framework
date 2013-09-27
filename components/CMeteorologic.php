@@ -12,4 +12,4 @@ class CMeteorologic{
 		});
 	}
 }
-CWikipedia::init();
+CMeteorologic::init();

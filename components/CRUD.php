@@ -15,6 +15,14 @@
  * </code>
  */
 class CRUD{
+	/**
+	 * @param string
+	 * @param int
+	 * @param array
+	 * @param array
+	 * @param bool
+	 * @return void
+	 */
 	public static function view($model,$id,$tableOptions=array(),$relations=array(),$renderView=true){
 		$title=_tC('View:').' '.$id.' - '.$model;
 		if($renderView){
@@ -53,6 +61,15 @@ class CRUD{
 		$val->update();
 		Controller::redirect('/'.lcfirst(CRoute::getController()));
 	}
+	
+	/**
+	 * @param string
+	 * @param int
+	 * @param array
+	 * @param mixed
+	 * @param bool
+	 * @return void
+	 */
 	public static function edit($model,$id,$fields=null,$val=null,$renderView=true){
 		if($val!==null) self::update($id,$val);
 		else{
@@ -85,10 +102,20 @@ class CRUD{
 		if($renderView) $v->render();
 	}
 	
+	/**
+	 * @param string
+	 * @param int
+	 * @return void
+	 */
 	public static function delete($model,$id){
 		$model::QDeleteOne()->byId($id);
 	}
 	
+	/**
+	 * @param string
+	 * @param int
+	 * @return void
+	 */
 	public static function setDeleted($model,$id){
 		$model::QUpdateOneField('deleted',true)->byId($id);
 	}

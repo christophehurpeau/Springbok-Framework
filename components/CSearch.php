@@ -23,6 +23,7 @@ class CSearch{
 		if($this->isEmpty()) throw new SearchException('Please refine your search');
 	}
 	
+	/** @return bool */
 	public function isEmpty(){
 		return $this->searchWords===false && !$this->hasFoundKeywords();
 	}
@@ -37,6 +38,10 @@ class CSearch{
 		return SearchablesKeyword::listKeywordIds($phraseCleaned);
 	}
 	
+	/**
+	 * @param string
+	 * @return void
+	 */
 	public function query($query){
 		if(empty($query)){
 			$this->searchWords=false;
