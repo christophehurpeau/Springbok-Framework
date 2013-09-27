@@ -5,9 +5,9 @@
  * 
  * <b>Example 1</b>
  * <code>
- * {=$form=Post::Form()->action('/post/add')->fullUrl(Config::$siteUrl)->method(HForm::GET)->tagContainer('div')}
+ * {=$form=Post::Form()->action('/post/add')->fullUrl(Config::$siteUrl['index'])->method(HForm::GET)->tagContainer('div')}
 {=$form->fieldsetStart()}
-{=$form->input('title')->label('Title of the new post')->attrId('PostNewTitleSpecialId')->container()->attr('id','divPostNewTitleContainerSpecialId)->after('I`m a text after the input !')}
+{=$form->input('title')->label('Title of the new post')->attrId('PostNewTitleSpecialId')->container()->attr('id','divPostNewTitleContainerSpecialId')->after('I`m a text after the input !')}
 {=$form->end()}
  * </code>
  * 

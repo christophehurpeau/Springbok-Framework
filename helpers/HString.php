@@ -95,7 +95,7 @@ class HString{
 		return $string;
 	}
 	
-	/** http://tonyarchambeau.com/blog/developpement/php/php-coefficient-de-dice-400/ */
+	/** http://tonyarchambeau.com/blog/400-php-coefficient-de-dice/ */
 	public static function dice($str1,$str2){
 		$str1_length = strlen($str1);
 		$str2_length = strlen($str2);
