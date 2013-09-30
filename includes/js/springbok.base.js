@@ -53,7 +53,7 @@ UObj.extend(S,{
 	
 	httpOrHttps:function(){ return window.location.protocol == "https:" ? 'https://' : 'http://'; },
 	
-	imgLoading:function(){ return $('<span class="img imgLoading"/>') },
+	imgLoading:function(){ return $('<span class="img imgLoading"/>'); },
 	imgLongLoading:function(){ return this.imgLoading(); /* return $('<span class="img imgLongLoading"/>')*/ },
 	bodyIcon:function(iconName,of,my,at){
 		if(!my) my='right center';

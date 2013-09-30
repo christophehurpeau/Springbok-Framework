@@ -1,6 +1,19 @@
 <?php
+/**
+ * A selectable input : <select> with <option>, or <input type="radio">
+ * 
+ * @see HElementForm::select
+ */
 class HElementFormInputSelect extends HElementFormContainable{
 	private $list,$selected,$style='select',$empty,$addBr=false,$autoAutocomplete=false;
+	
+	/**
+	 * @internal
+	 * @param HElementForm
+	 * @param string
+	 * @param array
+	 * @param mixed
+	 */
 	public function __construct($form,$name,$list,$selected){
 		parent::__construct($form,$name);
 		if($list===null) $list=call_user_func(array($this->form->modelName,$this->name.'List'));
@@ -20,17 +33,53 @@ class HElementFormInputSelect extends HElementFormContainable{
 		$this->_setAttrId();
 	}
 	
+	/**
+	 * Set the style to <input type="radio"> instead of <select>
+	 * 
+	 * @return HElementFormInputSelect|self
+	 */
 	public function radio(){ $this->style='radio'; return $this; }
+	
+	/**
+	 * Set the empty value
+	 * 
+	 * @return HElementFormInputSelect|self
+	 */
 	public function emptyValue($value){ $this->empty=$value; return $this; }
+	
+	/**
+	 * Adds a br between elements
+	 * 
+	 * @return HElementFormInputSelect|self
+	 */
 	public function addBr(){ $this->addBr=true; return $this; }
+	
+	/**
+	 * Add a javascript autocomplete with datalist
+	 * 
+	 * @see render_autocompleteSelect()
+	 */
 	public function autoAutocomplete(){ $this->autoAutocomplete=true; return $this; }
 	
+	/**
+	 * Returns the container
+	 * 
+	 * @return HElementFormContainer
+	 */
 	public function container(){ return new HElementFormContainer($this->form,$this,'input '.$this->style); }
 	
+	/**
+	 * @return string
+	 */
 	public function toString(){
 		return $this->_labelToString().$this->{'render_'.$this->style}();
 	}
 	
+	/**
+	 * Render radios list
+	 * 
+	 * @return string
+	 */
 	public function render_radio(){
 		$contentSelect='';
 		if($this->empty !== null){
@@ -52,6 +101,11 @@ class HElementFormInputSelect extends HElementFormContainable{
 		return $contentSelect;
 	}
 	
+	/**
+	 * render <select><option></option>...</select>
+	 * 
+	 * @return string
+	 */
 	public function render_select(){
 		if(($listNotEmpty=!empty($this->list)) && $this->autoAutocomplete===true && count($this->list)>15)
 			return $this->render_autocompleteSelect();
@@ -74,6 +128,11 @@ class HElementFormInputSelect extends HElementFormContainable{
 		return 	HHtml::tag('select',$options,$contentSelect,false);
 	}
 	
+	/**
+	 * Render <datalist></datalist><input type="text"><input type="hidden">
+	 * 
+	 * @return string
+	 */
 	public function render_autocompleteSelect(){
 		$contentDatalist=''; $options=$this->attributes; $selectedValue=null;
 		if($this->empty !== null){
@@ -100,7 +159,16 @@ class HElementFormInputSelect extends HElementFormContainable{
 				'type'=>'hidden','name'=>$this->_name($this->name),'value'=>$this->selected));
 	}
 	
-	
+	/**
+	 * Render a radio input
+	 * 
+	 * @param string
+	 * @param string
+	 * @param mixed
+	 * @param null|string
+	 * @param array
+	 * @return string
+	 */
 	public static function __radio($name,$value,$selected,$label=null,$attributes=array()){
 		$attributes['type']='radio';
 		$attributes['name']=$name;

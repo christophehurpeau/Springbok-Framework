@@ -1,8 +1,26 @@
 <?php
+/**
+ * Dev Helper
+ */
 class HDev{
-	
-	
-	
+	/**
+	 * Display the Springbok Bar.
+	 * 
+	 * This function is always called before the html end tag (</html>)
+	 * But you can use it if you want to debug things :
+	 * 
+	 * <code>
+	 * static function test(){
+	 * 	$posts = Post::QAll()->limit(4);
+	 * 	HDev::springbokBar(true);
+	 * 	exit;
+	 * 	render();
+	 * }
+	 * </code>
+	 * 
+	 * @param bool
+	 * @return void
+	 */
 	public static function springbokBar($includeJquery=false){
 		/*#if PROD*/ return; /*#/if*/
 		if(CHttpUserAgent::isMobileAndNotTablet() || isset($_GET['springbokNoDevBar'])) return;
@@ -57,6 +75,14 @@ class HDev{
 		}
 	}
 	
+	/**
+	 * Return all the queries executed
+	 * Usefull for debugging with debug or print_r
+	 * 
+	 * @return array
+	 * 
+	 * @see debug
+	 */
 	public static function queries(){
 		$queries=array();
 		foreach(DB::getAll() as $dbname=>$db){
@@ -120,7 +146,15 @@ class HDev{
 			.' })</script>';
 	}
 	
-	
+	/**
+	 * Display an error
+	 * 
+	 * @param string
+	 * @param string
+	 * @param int
+	 * @param mixed
+	 * @return void
+	 */
 	public static function error(&$e_message,&$e_file,&$e_line,&$e_context){
 		echo '<pre style="background:#FFF;color:#222;border:0;font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e_message).' ('.openLocalFile($e_file,$e_line).replaceAppAndCoreInFile($e_file).':'.$e_line.'</a>)'.'</pre>';
 		if($e_file && $e_file !== 'Unknown' && file_exists($e_file)){
@@ -132,6 +166,12 @@ class HDev{
 		if(!empty($e_context)) echo '<h5 style="background:#FFDDAA;color:#333;border:1px solid #E07308;padding:1px 2px;">Context:</h5><pre style="background:#FFF;color:#222;border:0">'.UVarDump::dump($e_context).'</pre>';
 	}
 	
+	/**
+	 * Display an exception
+	 * 
+	 * @param Exception
+	 * @return void
+	 */
 	public static function exception(Exception $e){
 		echo '<pre style="background:#FFF;color:#222;border:0;font-size:1em;white-space:pre-wrap;word-wrap:break-word">'.h($e instanceof SDetailedException ? $e->getTitle() : $e->getMessage())
 					.' ('.openLocalFile($e->getFile(),$e->getLine()).replaceAppAndCoreInFile($e->getFile()).':'.$e->getLine().'</a>)'.'</pre>';

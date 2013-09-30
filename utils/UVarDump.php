@@ -1,5 +1,11 @@
 <?php
-/** Dump vars */
+/**
+ * Dump vars
+ * 
+ * Don't use it directly, use <code>debug($var1, $var2)</code> in php or <code>{debug $var1, $var2}</code> in views
+ * 
+ * @see debug
+ */
 class UVarDump{
 	private $_objects=array(),$MAX_DEPTH,$html;
 	

@@ -83,13 +83,13 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 </script>';
 	}
 	
-	
+	/** @deprecated */
 	public static function jsLink($url='/global'){
 		/*#if DEV */throw new Exception('Use HHead::linkJs() now'); /*#/if*/
 		return HHead::linkJs($url);
 	}
 	
-	private static $_JS;
+	/** @deprecated */
 	public static function jsLinks(){
 		/*#if DEV */throw new Exception('Use HHead::display() now'); /*#/if*/
 		if(isset(self::$_JS['all']))
@@ -118,10 +118,12 @@ S.ready(function(){'.substr(self::$jsReady,0,-1).'})
 				echo '<![endif]-->';
 			}
 	}
+	/** @deprecated */
 	public static function addJS($url){
 		/*#if DEV */throw new Exception('Use HHead::linkAddJs() now'); /*#/if*/
 		return HHead::linkJs($url);
 	}
+	/** @deprecated */
 	public static function jsI18n(){
 		/*#if DEV */throw new Exception('Use HHead::jsI18n() now'); /*#/if*/
 		return self::jsLink('/i18n-'.CLang::get());
@@ -178,6 +180,7 @@ s.parentNode.insertBefore(g,s);
 		 return '<!--[if lt IE 7]> <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p> <![endif]-->';
 	}
 	
+	/** @deprecated */
 	public static function link($title,$url=false,$options=array()){
 		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>null,'cache'=>false,'https'=>null);
 		if($url){
@@ -213,11 +216,13 @@ s.parentNode.insertBefore(g,s);
 		$options['href']=$url;
 		return self::tag('a',$options,$title,$escape);
 	}
+	/** @deprecated */
 	public static function linkHtml($title,$url,$options=array()){
 		$options['escape']=false;
 		return self::link($title,$url,$options);
 	}
-
+	
+	/** @deprecated */
 	public static function cutLink($maxSize,$title,$url=false,$options=array()){
 		if($url===false) $url=$title;
 		if(($l=strlen($title)) > $maxSize){
@@ -227,21 +232,29 @@ s.parentNode.insertBefore(g,s);
 		return self::link($title,$url,$options);
 	}
 	
+	/**
+	 * @param string
+	 * @param array atributes
+	 * @return string
+	 */
 	public static function img($url,$options=array()){
 		if(!isset($options['alt'])) $options['alt']='';
 		$options['src']=$url[0]==='/'?self::staticUrl($url,'img'):self::url($url);
 		return self::tag('img',$options);
 	}
 	
+	/** @deprecated */
 	public static function imgLink($img,$url,$optionsImg=array(),$optionsLink=array()){
 		$optionsLink['escape']=false;
 		if(!isset($optionsLink['class'])) $optionsLink['class']='img';
 		return self::link(self::img($img,$optionsImg),$url,$optionsLink);
 	}
-
+	
+	/** @deprecated */
 	public static function iconLink($icon,$text,$url,$optionsLink=array()){
 		return self::iconLinkHtml($icon,h($text),$url,$optionsLink);
 	}
+	/** @deprecated */
 	public static function iconLinkHtml($icon,$html,$url,$optionsLink=array()){
 		$optionsLink['escape']=false;
 		if(!isset($optionsLink['class'])) $optionsLink['class']='aicon';

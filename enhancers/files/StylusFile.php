@@ -80,10 +80,10 @@ class StylusFile extends EnhancerFile{
 	public function callStylus($content,$destination,$debug){
 		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'styldest');
 		$res=exec($cmd='cd / ; echo '.escapeshellarg($content).' | stylus --include-css -c'
-				.' | cleancss'/*.($destination?' > '.escapeshellarg($dest):'')*/,$output,$status);
+				/*.' | cleancss'*//*.($destination?' > '.escapeshellarg($dest):'')*/,$output,$status);
 		debugPrintr($cmd);
 		debugVar($res,$output,$status);
-		if(!empty($res)){
+		if(!empty($res) || empty($res)){
 			$this->throwException("Error in stylus conversion to css : ".$this->fileName()."\n".$res);
 		}
 		chmod($dest,0777);
@@ -91,3 +91,9 @@ class StylusFile extends EnhancerFile{
 		if(!$destination) return $res;
 	}
 }
+
+if(!exec('which stylus'))
+	throw new Exception('Please install stylus : (sudo) npm install -g stylus');
+$stylusVersion = exec('stylus --version');
+if(!preg_match('/([0-9]+\.[0-9]+)/',$stylusVersion,$stylusMajMinVersion) || ((float)$stylusMajMinVersion[1]) < 0.38 )
+	throw new Exception('Please update your stylus version : (sudo) npm update -g stylus');

@@ -1,4 +1,7 @@
 <?php
+/**
+ * @deprecated
+ */
 class HGraph{
 	public static function months($id,$dataMonth,$colors="['#3B5A4A','#579575','#839557','#958C12','#C5B47F','#EAA228','#EDC240','#953579']"){
 		$maxXAxis=strtotime(date('Y-m'/*-t'*/).'-01')*1000+(1000*60*60*24);

@@ -24,7 +24,8 @@ class ScssFile extends EnhancerFile{
 	public static function &includes($content,$currentPath,&$includes,&$enhanced,$scssFilename){
 		$content=preg_replace_callback('/@include(Core|Lib|Plugin)?\s+\'([\w\s\._\-\/]+)\'\;/Ui',function($matches)
 																				use($currentPath,&$includes,&$enhanced,$scssFilename){
-			if(!endsWith($matches[2],'.css') && !endsWith($matches[2],'.scss')) $matches[2].='.scss';
+			$isStylus = endsWith($matches[2],'.styl');
+			if(!$isStylus && !endsWith($matches[2],'.css') && !endsWith($matches[2],'.scss')) $matches[2].='.scss';
 			if($matches[2]==='base/buttonsOverride.scss') $matches[2]='base/buttons.scss';
 			elseif(isset($includes[$matches[1]][$matches[2]])) return '';
 			$includes[$matches[1]][$matches[2]]=1;
@@ -49,7 +50,7 @@ class ScssFile extends EnhancerFile{
 					$filename=$matches[1]==='Lib' ? dirname(CORE_SRC).'/' : CORE_SRC;
 					$filename.='includes/';
 					
-					$folderName=$matches[1]==='Lib'?'css/':'scss/';
+					$folderName=$isStylus ? 'styl' : ($matches[1]==='Lib'?'css/':'scss/');
 					if(file_exists($filename.$folderName.$matches[2])) $filename.=$folderName;
 				}
 			}
@@ -118,6 +119,11 @@ class ScssFile extends EnhancerFile{
 	private static $sassExecutable='sass';
 	public static function findSassPath(){
 		if(file_exists('/var/lib/gems/1.8/bin/sass')) self::$sassExecutable='/var/lib/gems/1.8/bin/sass';
+		$sassVersion = shell_exec(self::$sassExecutable.' --version');
+		if(stripos($sassVersion,'error')) throw new Exception('Error in sass : '.$sassVersion);
+		if(!preg_match('/(^|\s+)([0-9]+\.[0-9]+)/',$sassVersion,$sassMatchVersion) || empty($sassMatchVersion[2])) throw new Exception('Unable to find version : '.$sassVersion);
+		$sassVersion = (float)$sassMatchVersion[2];
+		if($sassVersion < 3.2) throw new Exception('Please update your sass version : sudo gem install sass ('.$sassVersion.')');
 	}
 	public function callSass($content,$destination){
 		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'scssdest');

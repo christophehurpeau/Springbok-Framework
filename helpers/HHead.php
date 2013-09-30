@@ -1,14 +1,29 @@
 <?php
+/**
+ * <head> content
+ */
 class HHead{
 	private static $head=array('title'=>'','icons'=>'','css'=>'','js'=>'','endjs'=>'','linksrel'=>'');
 	
-	
+	/**
+	 * The title of the html page : <title>
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function title($title){
 		if($title===null) return;
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		self::$head['title']='<title>'.h($title).'</title>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::title()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * The favicon url of the html page
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function favicon($imgUrl='favicon.png'){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		$href=STATIC_URL.'img/'.$imgUrl;
@@ -16,6 +31,19 @@ class HHead{
 			.'<link rel="shortcut icon" type="image/x-icon" href="'.$href.'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::favicon()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * The icons prefix of the html page
+	 * 
+	 * You need the following sizes :
+	 * - 144x144 
+	 * - 114x114
+	 * - 72x72
+	 * - 57x57
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function icons($imgNamePrefix='logo'){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		/* http://www.whatwg.org/specs/web-apps/current-work/multipage/links.html#rel-icon */
@@ -33,6 +61,13 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::logoMobile()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * A <meta name="" content="">
+	 * 
+	 * @param string
+	 * @param string
+	 * @return void
+	 */
 	public static function metaName($name,$content){
 		/*#if DEV */
 		self::testDisplayed();
@@ -43,10 +78,23 @@ class HHead{
 		self::$head['metaname.'.$name]='<meta name="'.$name.'" content="'.h($content).'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * 
+	 * @param string
+	 * @return bool
+	 */
 	public static function isMetaNameSet($name){
 		return isset(self::$head['metaname.'.$name]);
 	}
 	
+	/**
+	 * Add a meta name
+	 * 
+	 * @param string
+	 * @param string
+	 * @return void
+	 */
 	public static function metaNameAdd($name,$content){
 		/*#if DEV */
 		self::testDisplayed();
@@ -57,6 +105,14 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /*#/if*/
 	}
 	
+	
+	/**
+	 * A <meta property="" content="">
+	 * 
+	 * @param string
+	 * @param string
+	 * @return void
+	 */
 	public static function metaProperty($property,$content){
 		/*#if DEV */
 		self::testDisplayed();
@@ -68,6 +124,13 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::meta()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * Add a meta property
+	 * 
+	 * @param string
+	 * @param string
+	 * @return void
+	 */
 	public static function metaPropertyAdd($property,$content){
 		/*#if DEV */
 		self::testDisplayed();
@@ -80,6 +143,11 @@ class HHead{
 	
 	
 	/*#if DEV */ private static $_IE_started=false; /*#/if*/
+	/**
+	 * @param string
+	 * @param string
+	 * @return void
+	 */
 	public static function startIeIf($ieVersion,$operator){
 		throw new Exception;
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
@@ -98,6 +166,9 @@ class HHead{
 		self::$head.=']>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::startIeIf()</div>'; /*#/if*/
 	}
+	/**
+	 * @deprecated
+	 */
 	public static function endIeIf(){
 		throw new Exception;
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
@@ -107,6 +178,10 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::endIeIf()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * @param string
+	 * @return void
+	 */
 	public static function linkCssAndJs($url='/index'){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		self::linkCss($url);
@@ -114,6 +189,11 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkCssAndJs()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * @param string
+	 * @param string|false
+	 * @return void
+	 */
 	public static function linkCss($url='/main',$media=false){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		/*#if DEV */ if(self::$_IE_started===true) throw new Exception('ie is started. Css is not added in IE if'); /*#/if*/
@@ -122,6 +202,11 @@ class HHead{
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkCss()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	public static function linkJs($url='/global',$addOldIESuffix=true){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		if($addOldIESuffix && CHttpUserAgent::isIElt9()){
@@ -130,11 +215,21 @@ class HHead{
 		self::$head['js'].='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkJs()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * @param string
+	 * @return void
+	 */
 	public static function linkAddJs($url='/global'){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		self::$head['endjs'].='<script type="text/javascript" src="'.HHtml::staticUrl($url.'.js','js').'"></script>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkAddJs()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * @param string
+	 * @return void
+	 */
 	public static function linkJsIe($ieVersion,$operator,$url){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		self::startIeIf($ieVersion,$operator);
@@ -142,33 +237,80 @@ class HHead{
 		self::endIeIf();
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkJsIe()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * @param string
+	 * @return void
+	 */
 	public static function jsI18n(){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		self::linkJs('/i18n-'.CLang::get());
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::jsI18n()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * Add a link to an alternate page
+	 * 
+	 * @param string
+	 * @param string
+	 * @param string|null
+	 */
 	public static function linkRel($rel,$url,$entry=null){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		/*#if DEV */if($rel!==h($rel)) throw new Exception('Please escape rel'); /*#/if*/
 		self::$head['linksrel'].='<link rel="'.$rel.'" href="'.HHtml::urlEscape($url,$entry,true).'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkRel()</div>'; /*#/if*/
 	}
+
+	/**
+	 * Add a link to the previous page
+	 * 
+	 * @param string
+	 * @param string|null
+	 */
 	public static function linkPrev($url,$entry=null){ self::linkRel('prev',$url,$entry);
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkPrev()</div>'; /*#/if*/ }
+	
+	/**
+	 * Add a link to the next page
+	 * 
+	 * @param string
+	 * @param string|null
+	 */
 	public static function linkNext($url,$entry=null){ self::linkRel('next',$url,$entry);
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkNext()</div>'; /*#/if*/ }
+	
+	/**
+	 * Add an alternate link to the small size version for mobile devices
+	 * 
+	 * @param string
+	 * @param string
+	 * @return void
+	 */
 	public static function linkSmallSizes($url,$entry=null){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		self::$head['linksrel'].='<link rel="alternate" media="only screen and (max-width: 640px)" href="'.HHtml::urlEscape($url,$entry,true).'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkSmallSizes()</div>'; /*#/if*/
 	}
+	
+	/**
+	 * Add links to alternate versions of the same page in different languages
+	 * 
+	 * @param array
+	 * @return void
+	 */
 	public static function linksLangs($altLangs){
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		foreach($altLangs as $lang=>$url) self::$head['linksrel'].='<link rel="alternate" hreflang="'.$lang.'" href="'.HHtml::urlEscape($url).'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linksLangs()</div>'; /*#/if*/
 	}
 	
+	/**
+	 * Add a link to the google web store
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function linkGoogleWebStore($itemId){
 		self::$head['linksrel'].='<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/'.$itemId.'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkGoogleWebStore()</div>'; /*#/if*/
@@ -181,6 +323,13 @@ class HHead{
 			if(Springbok::$inError===null && self::$_displayed) throw new Exception('HHead::display() has already been called');
 		}
 	/*#/if*/
+	
+	/**
+	 * Display the head content.
+	 * Call this in the layout
+	 * 
+	 * @return void
+	 */
 	public static function display(){
 		/*#if DEV */
 		if(self::$_IE_started===true) throw new Exception('ie is started');

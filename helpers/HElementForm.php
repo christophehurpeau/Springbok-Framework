@@ -228,7 +228,7 @@ class HElementForm extends HElement{
 	
 	
 	/**
-	 * end the form and return the result
+	 * End the form and return the end form tag with a submit button if title is != false and a fieldset end tag if a fieldset was started
 	 * 
 	 * @param string|bool title of the submit button, true for default, false for no submit
 	 * @return string
