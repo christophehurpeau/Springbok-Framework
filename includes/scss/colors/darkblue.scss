@@ -4,7 +4,7 @@ $HeaderShadow:#3e5e80;
 $HeaderColor:#FFF;
 $HeaderBackground:#14375d #09213c;/**/
 $FooterColor:#F5F5F5;/**/
-$FixedVariableBackground:#f5f9fc;/**/
+$FixedVariableBackground:#f7fafe;/**/
 $FixedVariableBorder:1px solid #3e5e80;/**/
 $FixedVariableBorder_RADIUS:1px;/**/
 $VariableContentBackground:#FEFEFE;
@@ -34,3 +34,7 @@ $BCOLOR_INVALID:#c9b3b3;
 $InteractionDefaultColor:#245272;
 $InteractionCurrentColor:#4180a4;
 $InteractionHoverColor:#81b7ce;
+
+
+@include type(1,#d7e4f2);
+@include typeBlock(1,false,false,false,3px);
