@@ -30,6 +30,12 @@ if (!function_exists('array_column')){
 	}
 }
 
+/**
+ * Replace in a file path the core path by "CORE" and the app path by "APP"
+ * 
+ * @param string
+ * @return string
+ */
 function replaceAppAndCoreInFile($file){
 	return str_replace(array(APP,CORE,realpath(CORE).'/'),array('APP/','CORE/','CORE/'),$file);
 }
@@ -136,6 +142,15 @@ function prettyHtmlBackTrace($skipLength=1,$trace=false){
 	/*#/if*/
 }
 
+/**
+ * Echo a message in a div/pre tags if were are not in a cli, and the backtrace.
+ * 
+ * @param string
+ * @param int
+ * @param bool
+ * @param bool
+ * @return void
+ */
 function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 	/*#if DEV */
 	if(!defined('STDIN')){
@@ -155,21 +170,68 @@ function prettyDebug($message,$skipLength=2,$flush=true,$black=false){
 	}
 	/*#/if*/
 }
+
+/**
+ * @internal
+ * @param array|mixed
+ * @param bool
+ * @param int
+ * @return mixed
+ */
 function _debug($objects,$flush=true,$MAX_DEPTH=5){
 	/*#if DEV */
 	if(count($objects)===1) $objects=$objects[0];
 	prettyDebug(UVarDump::dump($objects,$MAX_DEPTH),2,$flush,true);
-	if(count($objects)===1) return $objects;
+	return $objects;
 	/*#/if*/
 }
+
+/**
+ * Debug vars
+ * 
+ * <code>
+ * debug($var1,$var2)
+ * </code>
+ * 
+ * @return mixed the var if debug had only one var in param or all the vars in an array
+ */
 function debug(){ /*#if DEV */return _debug(func_get_args(),true);/*#/if*/ }
+
+/**
+ * Debug vars, without flushing
+ * 
+ * Very usefull in views
+ * 
+ * <code>
+ * <div>
+ * 	{debug $posts}
+ * </div>
+ * </code>
+ * 
+ * @return mixed the var if debug had only one var in param or all the vars in an array
+ */
 function debugNoFlush(){ /*#if DEV */return _debug(func_get_args(),false);/*#/if*/ }
 
+/**
+ * Debug a string and escape it before sending it to prettyDebug
+ * 
+ * @param string
+ * @param bool
+ * @return void
+ * @see prettyDebug
+ */
 function debugCode($code,$withBacktrace=true){
 	/*#if DEV */
 	prettyDebug(htmlentities(UEncoding::convertToUtf8((string)$code),ENT_QUOTES,'UTF-8',true),$withBacktrace?2:false,true);
 	/*#/if*/
 }
+
+/**
+ * Debug using var_dump
+ * 
+ * @see prettyDebug
+ * @return void
+ */
 function debugVar(){
 	/*#if DEV */
 	ob_start();
@@ -178,6 +240,13 @@ function debugVar(){
 	prettyDebug($message,2);
 	/*#/if*/
 }
+
+/**
+ * Debug using var_dump, without flush
+ * 
+ * @see prettyDebug
+ * @return void
+ */
 function debugVarNoFlush(){
 	/*#if DEV */
 	ob_start();
@@ -186,6 +255,13 @@ function debugVarNoFlush(){
 	prettyDebug($message,2,false);
 	/*#/if*/
 }
+
+/**
+ * Debug using print_r
+ * 
+ * @see prettyDebug
+ * @return void
+ */
 function debugPrintr($var,$flush=true){
 	/*#if DEV */
 	prettyDebug(htmlentities(print_r($var,true),ENT_QUOTES,'UTF-8'),2,$flush);
@@ -193,6 +269,9 @@ function debugPrintr($var,$flush=true){
 }
 
 /*#if DEV */
+/**
+ * @internal
+ */
 function dev_test_preg_error(){
 	if(preg_last_error() !== PREG_NO_ERROR){
 		switch(preg_last_error()){
@@ -207,36 +286,57 @@ function dev_test_preg_error(){
 		throw new Exception('preg error : '.$strError);
 	}
 }
+/**
+ * @internal
+ */
 function dev_preg_replace($pattern,$replacement,$subject,$limit=-1,&$count=NULL){
 	$res=preg_replace($pattern,$replacement,$subject,$limit,$count);
 	dev_test_preg_error();
 	return $res;
 }
+/**
+ * @internal
+ */
 function dev_preg_filter($pattern,$replacement,$subject,$limit=-1,&$count=NULL){
 	$res=preg_filter($pattern,$replacement,$subject,$limit,$count);
 	dev_test_preg_error();
 	return $res;
 }
+/**
+ * @internal
+ */
 function dev_preg_grep($pattern,$input,$flags=0){
 	$res=preg_grep($pattern,$input,$flags);
 	dev_test_preg_error();
 	return $res;
 }
+/**
+ * @internal
+ */
 function dev_preg_match_all($pattern,$subject,&$matches=NULL,$flags=PREG_PATTERN_ORDER,$offset=0){
 	$res=preg_match_all($pattern,$subject,$matches,$flags,$offset);
 	dev_test_preg_error();
 	return $res;
 }
+/**
+ * @internal
+ */
 function dev_preg_match($pattern,$subject,&$matches=NULL,$flags=0,$offset=0){
 	$res=preg_match($pattern,$subject,$matches,$flags,$offset);
 	dev_test_preg_error();
 	return $res;
 }
+/**
+ * @internal
+ */
 function dev_preg_replace_callback($pattern,$callback,$subject,$limit=-1,&$count=NULL){
 	$res=preg_replace_callback($pattern,$callback,$subject,$limit,$count);
 	dev_test_preg_error();
 	return $res;
 }
+/**
+ * @internal
+ */
 function dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
 	$res=preg_split($pattern,$subject,$limit,$flags);
 	dev_test_preg_error();
@@ -244,6 +344,9 @@ function dev_preg_split($pattern,$subject,$limit=-1,$flags=0){
 }
 /*#/if*/
 
+/**
+ * @internal
+ */
 function dev_eval($code){
 	/*#if PROD*/ return eval($code);
 	/*#else*/
@@ -256,6 +359,14 @@ function dev_eval($code){
 	/*#/if*/
 }
 
+/**
+ * Escape a string with htmlspecialchars
+ * 
+ * @param string
+ * @param bool
+ * @return string
+ * @see htmlspecialchars
+ */
 function h($data,$double=true){
 	/*#if PROD*/return /*#/if*//*#if DEV */$str=/*#/if*/htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);
 	/*#if DEV */
@@ -264,22 +375,93 @@ function h($data,$double=true){
 	return $str;
 	/*#/if*/
 }
+/**
+ * Decode a string with html_entity_decode
+ * 
+ * @param string
+ * @return string
+ * @see html_entity_decode
+ */
 function hdecode($string){ return html_entity_decode($string,ENT_QUOTES,'UTF-8'); }
 /*#if PROD*/
+/** @deprecated */
 function h2($data,$double=true){return htmlspecialchars((string)$data,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8',$double);}
 /*#/if*/
+/** @deprecated */
 function urlenc($string){return urlencode(urlencode($string)); }
+/** @deprecated */
 function startsWith($haystack,$needle){ $l=UString::length($needle); return mb_substr($haystack,0,$l)===$needle;}
+/** @deprecated */
 function endsWith($haystack,$needle){ $l=UString::length($needle); return mb_strrpos($haystack,$needle)===UString::length($haystack)-$l;}
 
 //TODO PhpFileEnhancer
+/**
+ * empty($var) ? $then : ($else==='ReplaceWithVar'?$var:$else);
+ * 
+ * <code>
+ * echo isE($test->value,'There is no value...');
+ * </code>
+ * 
+ * @param mixed
+ * @param mixed
+ * @param mixed
+ * @return mixed
+ */
 function isE(&$var,$then,$else='ReplaceWithVar'){ return empty($var) ? $then : ($else==='ReplaceWithVar'?$var:$else); }
+/**
+ * 
+ * <code>
+ * echo notE($test->value,'There is a value...','There is no value');
+ * </code>
+ * 
+ * @param mixed
+ * @param mixed
+ * @param mixed
+ * @return mixed
+ */
 function notE(&$var,$then,$else=''){ return empty($var) ? $else : $then; }
+/**
+ * 
+ * <code>
+ * echo isTrue($test->value,'The value is true !','There value is false');
+ * </code>
+ * 
+ * @param mixed
+ * @param mixed
+ * @param mixed
+ * @return mixed
+ */
 function isTrue($cond,$then,$else=''){ return $cond===true ? $then : $else; }
+
+/**
+ * 
+ * <code>
+ * echo isTrue($test->value,'The value is false !','There value is true');
+ * </code>
+ * 
+ * @param mixed
+ * @param mixed
+ * @param mixed
+ * @return mixed
+ */
 function isFalse($cond,$then,$else=''){ return $cond===false ? $then : $else; }
 
+/**
+ * return if the param is a Closure
+ * 
+ * @param mixed
+ * @return bool
+ */
 function is_function($f){ return is_object($f) && $f instanceof Closure; }
 
+/**
+ * Extract the vars, include a file inside a buffer and returns the result
+ * 
+ * @param string
+ * @param array
+ * @param bool
+ * @return string|void string if $return === true
+ */
 function render($file,$vars,$return=false){
 	extract($vars);
 	if($return){
@@ -290,14 +472,18 @@ function render($file,$vars,$return=false){
 }
 /*#if PROD*/
 //backward compatibility
+/** @deprecated */
 function notFoundIfFalse($v){if($v===false)notFound();}
+/** @deprecated */
 function e/* space */(&$var,$else){ return empty($var) ? $else : $var; }
 /*#/if*/
 
+/** @internal */
 function displayJson($content){
 	header('Content-type: application/json; charset=UTF-8');
 	echo json_encode($content);
 }
+/** @internal */
 function displayXml($content){
 	header('Content-type: application/xml; charset=UTF-8');
 	echo xmlrpc_encode($content);

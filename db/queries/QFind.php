@@ -671,8 +671,8 @@ abstract class QFind extends QSelect{
 	/**
 	 * @param SModel
 	 * @param array
-	 * @param QFind
-	 * @return void
+	 * @param QFind|null
+	 * @return QFind
 	 */
 	public static function createWithQuery($obj,&$w,$query=null){
 		if($query===null && $w['isCount']) $query=new QCount($w['modelName']);

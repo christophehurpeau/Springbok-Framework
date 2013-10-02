@@ -33,8 +33,7 @@
  * Use case :
  * <code>
  * function(int $id){
- * 	$project = Project::ById($id);
- * 	notFoundIfFalse($project);
+ * 	$project = Project::ById($id)->notFoundIfFalse();
  * 	ACAcl::requireAccess('ManageMembers',$project->id);
  * }
  * </code>
@@ -54,7 +53,7 @@ class CAcl{
 			$group_id=CSecure::user()->group_id;
 			if($group_id!==null) $groupId=$group_id;
 		}else $groupId=AclGroup::GUEST;
-		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>&$groupId,'permission'=>&$permission));
+		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>$groupId,'permission'=>$permission));
 	}
 	
 	/**

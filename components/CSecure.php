@@ -91,7 +91,7 @@ class CSecure{
 	}
 	
 	/**
-	 * Return the current user model
+	 * Return the current user model instance
 	 * 
 	 * @return SModel
 	 */

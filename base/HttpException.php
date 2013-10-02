@@ -1,4 +1,7 @@
 <?php
+/**
+ * HttpException
+ */
 class HttpException extends SDetailedException{
 	private $httpcode;
 	
@@ -20,6 +23,9 @@ class HttpException extends SDetailedException{
 	}
 }
 
+/**
+ * Fatal HttpException : serious error
+ */
 class FatalHttpException extends HttpException{
 	
 }

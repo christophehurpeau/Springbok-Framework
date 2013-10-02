@@ -21,20 +21,40 @@ require 'components/CHttpRequest.php';
 class App{
 	/*#if DEV */public static $enhancing=false,$currentFileEnhanced='',$changes=array();/*#/if */
 	
+	/**
+	 * Include the config from APP/config/
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return array
+	 */
 	public static function configArray($name,$withSuffix=false){
 		return include APP.'config/'.$name.($withSuffix ? '_'.ENV : '').'.php';
 	}
 	
+	/**
+	 * Return the site url with http or https
+	 * 
+	 * @param string
+	 * @param bool|null
+	 * @return string
+	 */
 	public static function siteUrl($entry,$https=null){
 		$su=Config::$siteUrl[$entry];
 		return ($su[0]===null ? ($https===null ? HTTP_OR_HTTPS : ($https===true ? 'https://' : 'http://')) : $su[0]). $su[1];
 	}
 	
-	/** @return CLocale */
+	/**
+	 * @return CLocale
+	 */
 	public static function getLocale(){
 		return CLocale::get('fr');
 	}
 	
+	/**
+	 * Run the app.
+	 * Called in index.php
+	 */
 	public static function run(){
 		/*#if DEV */
 		if(!file_exists($pathConfigFile=dirname(APP).'/src/config/_'.ENV.'.php')
@@ -226,6 +246,7 @@ class App{
 		}
 	}
 	
+	
 	public static function shutdown(){
 		/*#if DEV */
 		if(!error_get_last() && class_exists('DB',false) && CFirebug::isAvailable() && !headers_sent()){
@@ -256,6 +277,8 @@ class App{
 	
 	/**
 	 * @param Exception $exception
+	 * @param bool
+	 * @return void
 	 */
 	public static function displayException(&$exception,$forceDefault){
 		/*header_remove('Content-Description');header_remove('Content-Disposition');header_remove('Content-type');header_remove('Transfer-Encoding');*/
