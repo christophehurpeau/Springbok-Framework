@@ -1,4 +1,7 @@
 <?php
+/**
+ * An Entity is a SSqlModel contained in a single-letter named folder
+ */
 class SSqlEntity extends SSqlModel{
 	public static function init($modelName){
 		$modelName::$__modelDb=DB::init(static::$__dbName);
