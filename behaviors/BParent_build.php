@@ -1,4 +1,7 @@
 <?php
+/**
+ * Behavior Parent (build)
+ */
 class BParent_build{
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){
 		if(isset($modelFile->_fields['_type'])) throw new Exception($modelFile->_className.' already contains a field "_type"');

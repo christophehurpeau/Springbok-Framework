@@ -1,4 +1,7 @@
 <?php
+/**
+ * Behavior Slug (build)
+ */
 class BSlug_build{
 	public static $beforeSave=array('_setSlugIfName');
 	

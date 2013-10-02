@@ -1,4 +1,7 @@
 <?php
+/**
+ * Behavior Seo (build)
+ */
 class BSeo_build{
 	public static $beforeSave=array('_normalizeMetas');
 	

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Behavior Lang (build)
+ * 
+ * Create a new Model with Lang suffix and translatable fields
+ */
 class BLang_build extends SBehaviorBuilder{
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){
 		if(!isset($annotations['Translatable'])) throw new Exception('You must use @Translatable too');

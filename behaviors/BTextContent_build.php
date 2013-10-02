@@ -1,4 +1,7 @@
 <?php
+/**
+ * Behavior TextContent (build)
+ */
 class BTextContent_build{
 	public static $beforeSave=['_setTextToNullIfEmtpy'];
 	public static $afterUpdate=['regenerateText'];
