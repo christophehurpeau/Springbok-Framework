@@ -77,7 +77,7 @@ body.mceContentBody{
 	@else if $FixedVariableBackground{background:$FixedVariableBackground;}
 	@else if $PageBackground{background:$PageBackground;}
 	@else if $ContainerBackground{background:$ContainerBackground;}
-	
+
 	@if $VariableColor{ color:$VariableColor; }
 }
 
@@ -120,10 +120,10 @@ header,div.header{
 	display:block;
 	/*width:98%;
 	margin:0 auto; padding:1px 0;*/
-	
+
 	/*width:100%;*/
 	z-index:11;
-	
+
 	@if $PAGE_FIXED{
 		position:fixed;_position:absolute;top:0;left:0;right:0;
 	}
@@ -140,7 +140,7 @@ header div{font-size:0.95em}
 header div.right{
 	float:right;text-align:right;
 	padding:2px 3px;
-	
+
 }
 header div.right a{font-size:8.5pt}
 
@@ -181,7 +181,7 @@ $BreadcrumbsColor:false !default;
 #breadcrumbs{
 	$BreadcrumbsPadding:-1 !default;
 	$BreadcrumbsMargin:0 0 5px !default;
-	@if $BreadcrumbsBackground{ 
+	@if $BreadcrumbsBackground{
 		@if -1==$BreadcrumbsPadding{$BreadcrumbsPadding:2px 3px 3px 5px;}
 		$BreadcrumbsMargin:3px 3px 5px;
 		background:$BreadcrumbsBackground;
@@ -210,16 +210,13 @@ $BreadcrumbsColor:false !default;
 }
 
 #page{
-	/*float:left;*/
-	/*overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
-	/*overflow-x: hidden;*/
 	@if $PagePaddingBottom and $PAGE_FIXED==false { padding-bottom:20px; }
 	@if $PageWidth{
 	  width:$PageWidth;
 	  margin:0 auto;
 	}
 	@if $PageBackground{ @include background($PageBackground); }
-	
+
 	@if $PAGE_FIXED{
 		@if $PageWidth==false and $PAGE_VERSION==1{ margin:0 3px; }
 		@if $PAGE_VERSION==1{
@@ -241,7 +238,7 @@ $BreadcrumbsColor:false !default;
 			scrollbar-track-color: #eee;
 			*/
 		}
-		overflow: visible; /* nouveau contexte => pour les clear à l'interieur */
+		overflow: visible; /* new context for internal clears */
 		overflow-x: hidden;
 		/*position:absolute;top:40px;bottom:20px;left:5px;right:5px;*/
 	}@else{
@@ -249,7 +246,7 @@ $BreadcrumbsColor:false !default;
 		$PageMarginTop:8px !default;
 		@if $PageMarginTop{ margin-top:$PageMarginTop; }
 	}
-	
+
 	@if $PAGE_VERSION==1{
 		div.fixed,div.variable{
 			@if $PAGE_FIXED{
@@ -257,7 +254,7 @@ $BreadcrumbsColor:false !default;
 				@if $FixedVariableMargin{ margin:3px; }
 				/*position:absolute;right:0;top:0;left:0;bottom:0;*/
 			}@else{
-				overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+				overflow: auto; /* new context for internal clears */
 				overflow-x: hidden;
 				position:relative;
 				@if $FixedVariableMargin{ margin:0 10px; }
@@ -283,22 +280,22 @@ $BreadcrumbsColor:false !default;
 			@if $FixedVariableMargin{ margin:3px; }
 			overflow: auto;
 		}@else{
-			overflow: auto; overflow-x: hidden; /* nouveau contexte => pour les clear à l'interieur */
+			overflow: auto; overflow-x: hidden; /* new context for internal clears */
 			position:relative;
 			@if $FixedVariableMargin{ margin:0 10px; }
 		}
 		/* IE <= 7 */
 		*float:left;
-		
+
 		z-index:1;
-		
+
 		@if $FixedVariableShadow{ @include boxShadow($FixedVariableShadow,3px); }
 		@if $FixedVariableBorder_RADIUS{ border-radius:$FixedVariableBorder_RADIUS; }
 		@include background($FixedVariableBackground);
 		@if $FixedVariableColor{ color:$FixedVariableColor; }
 		@if $FixedVariableBorder{ border:$FixedVariableBorder; }
 	}
-	
+
 	.col.fixed{
 		@if $PAGE_FIXED{
 			position:fixed; _position:absolute; z-index:6;
@@ -309,7 +306,7 @@ $BreadcrumbsColor:false !default;
 		@include background($FixedBackground);
 		@if $FixedColor{ color:$FixedColor; }
 		@if $FixedBorder{ border:1px solid $FixedBorder; }
-		
+
 		@if $FixedLinkColor{
 			a,a:hover{ color:$FixedLinkColor; }
 		}
@@ -324,7 +321,7 @@ $BreadcrumbsColor:false !default;
 		@else if $FixedBorder{ $__pageFixed_or_fixedBackground_or_fixedBorder:true }
 		@if $__pageFixed_or_fixedBackground_or_fixedBorder{
 			div.fixed{
-				overflow: auto; /* nouveau contexte => pour les clear à l'interieur */
+				overflow: auto; /* new context for internal clears */
 				overflow-x: hidden;
 				@include background($FixedBackground);
 				@if $FixedColor{ color:$FixedColor; }
@@ -336,8 +333,8 @@ $BreadcrumbsColor:false !default;
 			}
 		}
 	}
-	
-	
+
+
 	@if $PAGE_VERSION==1{
 		@if $PAGE_FIXED{
 			div.fixed.right{left:auto; *float:left;/* for ie7 */}
@@ -346,12 +343,12 @@ $BreadcrumbsColor:false !default;
 			div.fixed.right{float:right;}
 			div.fixed.left{float:left;}
 		}
-		
+
 		div.fixed h2{ text-align:center; }
 	}@else{
 		.col.fixed h2{ text-align:center; }
 	}
-	
+
 	@if $PAGE_VERSION==1{
 		div.variable{
 			@include background($VariableBackground);
@@ -371,11 +368,11 @@ $BreadcrumbsColor:false !default;
 			*width:$IE6_VARIABLE_WIDTH;
 		}
 	}
-	
+
 	@if $PAGE_VERSION==1{
 		div.variablep{margin:0;padding:0;float:left; }
 	}
-	
+
 	div.overflow{margin:0;padding:0;width:100%;overflow:auto;clear:both}
 	div.newContext{ position:relative }
 }
@@ -409,7 +406,7 @@ $BreadcrumbsColor:false !default;
 			}
 		}
 		div.variable.padding > div.content{padding:5px 0;}
-		
+
 		div.variable > h1{ margin:0; }
 		div.variable.content div.content,div.variable .content div.content{
 			clear:both;position:relative;
@@ -418,14 +415,14 @@ $BreadcrumbsColor:false !default;
 		div.variable.content div.content.float_left,div.variable .content div.content.float_left{clear:none}
 		div.variable div.content.float_left.noclear{clear:none}
 		/*div.variable div.content h2{ margin:2px 0; }*/
-		
+
 		#dynamictabsContent{
 			position:relative;
 		}
 	}
 	#page.absolute{
 		position:absolute;top:0;bottom:0;left:5px;right:5px;
-		
+
 		div.variable{
 			position:absolute;right:0;top:38px;left:0;bottom:20px;
 			overflow:auto;
@@ -438,7 +435,7 @@ $BreadcrumbsColor:false !default;
 		@include boxShadow($PageShadowedBowShadowColor,4px);
 		background:$PageShadowedBowBackground;
 		@if $PageShadowedBowBorder{ border:$PageShadowedBowBorder; }
-		
+
 		h2{font-size:1.3em; margin-top:2px;}
 	}
 }
@@ -486,7 +483,7 @@ $BreadcrumbsColor:false !default;
 		#page div.variable.l380{left:390px}
 		#page div.variable.l400{left:410px}
 		#page div.variable.l420{left:430px}
-		
+
 		#page div.variable.r160{right:170px}
 		#page div.variable.r200{right:210px}
 		#page div.variable.r300{right:310px}
@@ -516,7 +513,7 @@ $BreadcrumbsColor:false !default;
 		.ml160{margin-left:170px}
 		.ml200{margin-left:210px}
 	}
-	
+
 	@if $PAGE_VERSION==1{
 		#page.mr160,.mr160{margin-right:170px}
 		#page.mr200,.mr200{margin-right:210px}
