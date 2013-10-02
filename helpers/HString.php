@@ -179,6 +179,11 @@ class HString{
   A big thanks goes out to Pierre Senellart <pierre@senellart.com>
   for finding a small bug in the code.
 	 * 
+	 * @see http://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance
+	 * Measure of similarity between two strings
+	 * The higher the Jaro–Winkler distance for two strings is, the more similar the strings are.
+	 * The Jaro–Winkler distance metric is designed and best suited for short strings such as person names.
+	 * 
 	 * @param string
 	 * @param string
 	 * @return float
