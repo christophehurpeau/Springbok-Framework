@@ -1,6 +1,16 @@
 <?php
+/**
+ * Sitemap helper
+ * 
+ * @see HSitemaps
+ */
 class HSitemap{
 	private $_file,$_fileName;
+	
+	/**
+	 * @param string
+	 * @param array
+	 */
 	public function __construct($file='sitemap.xml',$extensions=array()){
 		$after='';
 		foreach($extensions as $ext){
@@ -17,6 +27,15 @@ class HSitemap{
 	.' xmlns:xhtml="http://www.w3.org/1999/xhtml"'.$after.'>'
 );
 	}
+
+	/**
+	 * Add a link
+	 * 
+	 * @param string
+	 * @param array
+	 * @param string
+	 * @return void
+	 */
 	public function add($url,$options=array(),$entry='index'){
 		$content='<url><loc>'.HHtml::urlEscape($url,$entry,true,false,false).'</loc>';
 		foreach($options as $key=>$optionContent){
@@ -33,7 +52,10 @@ class HSitemap{
 		$content.='</url>'.PHP_EOL;
 		/*#if DEV */fwrite/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzwrite/*#/if*/($this->_file,$content);
 	}
-
+	
+	/**
+	 * End and close the sitemap
+	 */
 	public function end(){
 		/*#if DEV */fwrite/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzwrite/*#/if*/($this->_file,'</urlset>');
 		/*#if DEV */fclose/*#/if*//*#if false*/&&/*#/if*//*#if PROD*/gzclose/*#/if*/($this->_file);

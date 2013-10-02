@@ -1,5 +1,16 @@
 <?php
+/**
+ * Videos helper
+ * 
+ * Display videos
+ */
 class HVideos{
+	/**
+	 * @param int
+	 * @param int|string
+	 * @param array
+	 * @see CVideos
+	 */
 	public static function display($type,$id,$options){
 		switch ($type){
 			case CVideos::TYPE_YOUTUBE: return self::youtube($id,$options);
@@ -8,6 +19,14 @@ class HVideos{
 		}
 	}
 	
+	/**
+	 * Display a youtube video
+	 * 
+	 * @param string
+	 * @param array
+	 * @param bool
+	 * @return string
+	 */
 	public static function youtube($id,$options=array(),$jsapiEnable=false){
 		$url='http://www.youtube.com/v/'.$id.'&hl=fr_FR&fs=1&';
 		if($jsapiEnable) $url.='&enablejsapi=1&playerapiid='.$options['id'];
@@ -15,15 +34,39 @@ class HVideos{
 		return self::videoObject($url, $options);
 	}
 
+	/**
+	 * Display a dailymotion video
+	 * 
+	 * @param string
+	 * @param array
+	 * @return string
+	 */
 	public static function dailymotion($id,$options=array()){
 		$url='http://www.dailymotion.com/swf/'.$id;
 		return self::videoObject($url, $options);
 	}
 	
+	/**
+	 * Display a vimeo video
+	 * 
+	 * @param string
+	 * @param int
+	 * @param int
+	 * @return string
+	 */
 	public static function vimeo($id,$width=400,$height=225){
 		return '<iframe src="http://player.vimeo.com/video/'.$id.'" width="'.$width.'" height="'.$height.'" frameborder="0"></iframe>';
 	}
 	
+	/**
+	 * Display a google video
+	 * 
+	 * @param string
+	 * @param array
+	 * @param int
+	 * @param int
+	 * @return string
+	 */
 	public static function google($id,$attributes=array(),$width=400,$height=326){
 		$attributes=$attributes+array('allowFullScreen'=>true,'allowScriptAccess'=>'always');
 		$attributes['allowFullScreen'] = ($attributes['allowFullScreen']) ? 'true' : 'false';
@@ -33,7 +76,11 @@ class HVideos{
 		return HHtml::tag('embed',$attributes,'',false);
 	}
 
-
+	/**
+	 * @param string
+	 * @param array
+	 * @return string
+	 */
 	private static function videoObject($url,$options){
 		// allowScriptAccess : (always, never, samedomain)
 		$options = $options+array('id'=>false,'width'=>400,'height'=>225,'allowFullScreen'=>true,'allowScriptAccess'=>'always');

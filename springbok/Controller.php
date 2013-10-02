@@ -1,12 +1,61 @@
 <?php
+/**
+ * Controller
+ */
 class Controller{
+	/**
+	 * The entry point, or '' if the entry is "index"
+	 * 
+	 * @var string
+	 */
 	protected static $suffix;
-	public static $defaultLayout,$defaultLayoutOverride=null;//init in "app.php"
-
-	private static $viewVars=array(),$layoutVars=array();
-
+	
+	/**
+	 * Default layout path
+	 * 
+	 * This variable is initialized in app.php
+	 * 
+	 * You can override it before declaring your controller class
+	 * 
+	 * @var string
+	 */
+	public static $defaultLayout;
+	/**
+	 * The layout overrided name
+	 * 
+	 * Used in Ajax content loading
+	 * 
+	 * @var string|null
+	 */
+	public static $defaultLayoutOverride=null;
+	
+	/**
+	 * @var array
+	 */
+	private static $viewVars=array();
+	
+	/**
+	 * @var array
+	 */
+	private static $layoutVars=array();
+	
+	/**
+	 * Called before dispatching the action.
+	 * 
+	 * You can end the request here, check the authentifications, or do other things.
+	 * 
+	 * @see Controoler::beforeRender()
+	 */
 	protected static function beforeDispatch(){}
-
+	
+	/**
+	 * @internal
+	 * Dispatch the action to the right function with the right arguments
+	 * 
+	 * @param string
+	 * @param array the method definition
+	 * @return mixed
+	 */
 	public static function dispatch($suffix,$mdef){
 		self::$suffix=$suffix;
 		static::beforeDispatch();
@@ -19,6 +68,15 @@ class Controller{
 		return call_user_func_array(array('static',$methodName),self::getParams($mdef,$methodAnnotations));
 	}
 	
+	/**
+	 * @internal
+	 * Loads the method definition
+	 * 
+	 * @param string
+	 * @param string
+	 * @return array
+	 * @throws HttpException
+	 */
 	public static function _loadMdef($controller,$action){
 		$mdef=APP.'controllers'.self::$suffix.'/methods/'.$controller.'-'.$action;
 		if(!file_exists($mdef))
@@ -27,10 +85,19 @@ class Controller{
 		return include $mdef;
 	}
 	
+	/**
+	 * @param array
+	 * @return void
+	 */
 	protected static function checkAccess($checkAnnotation){
 		ACSecure::checkAccess($checkAnnotation);
 	}
-
+	
+	/**
+	 * @param array
+	 * @param array
+	 * @param array|null
+	 */
 	protected static function getParams($mdef,$methodAnnotations,$rParams=null){
 		if($mdef['params']===false) return array();
 		
@@ -71,7 +138,14 @@ class Controller{
 
 
 	/* GETTERS & SETTERS */
-
+	
+	/**
+	 * Set a value in a view
+	 * 
+	 * @param string
+	 * @param mixed
+	 * @return void
+	 */
 	protected static function set($name,$value=null){
 		/*#if DEV */
 		if(is_array($name))
@@ -79,17 +153,46 @@ class Controller{
 		/*#/if*/
 		self::$viewVars[$name]=$value;
 	}
+	
+	
+	/**
+	 * Set a value in a view, by reference
+	 * 
+	 * @param string
+	 * @param mixed
+	 * @return void
+	 */
 	protected static function set_($name,&$value){
 		self::$viewVars[$name]=&$value;
 	}
+	
+	/**
+	 * Set multiple values in a view
+	 * 
+	 * @param array
+	 * @return void
+	 */
 	protected static function mset($array){
 		self::$viewVars=$array+self::$viewVars;
 	}
 	
+	/**
+	 * Set a value in a view, same as set, but public.
+	 * 
+	 * @see set
+	 * @return void
+	 */
 	public static function setForView($name,$value){
 		self::$viewVars[$name]=$value;
 	}
 	
+	/**
+	 * Set a value in a layout
+	 * 
+	 * @param string
+	 * @param mixed
+	 * @return void
+	 */
 	public static function setForLayout($name,$value=null){
 		/*#if DEV */
 		if(is_array($name))
@@ -98,38 +201,90 @@ class Controller{
 		self::$layoutVars[$name]=$value;
 	}
 	
+	/**
+	 * Set a value in a view and a layout
+	 * 
+	 * @param string
+	 * @param mixed
+	 * @return void
+	 */
 	public static function setForLayoutAndView($name,$value){
 		/*#if DEV */
 		if(is_array($name))
 			throw new Exception('Controller::setForLayout array => use msetForLayoutAndView');
 		/*#/if*/
-		if(is_array($name)){
-			self::$viewVars=$name+self::$viewVars;
-			self::$layoutVars=$name+self::$layoutVars;
-		}else self::$layoutVars[$name]=self::$viewVars[$name]=$value;
+		self::$layoutVars[$name]=self::$viewVars[$name]=$value;
 	}
 	
+	/**
+	 * Set multiple values in a view and a layout
+	 * 
+	 * @param array
+	 * @return void
+	 */
+	public static function msetForLayoutAndView($name){
+		self::$viewVars=$name+self::$viewVars;
+		self::$layoutVars=$name+self::$layoutVars;
+		self::$layoutVars[$name]=self::$viewVars[$name]=$value;
+	}
+	
+	/**
+	 * Check if a key exists in the view vars
+	 * 
+	 * @param string
+	 * @return bool
+	 */
 	public static function _isset($name){
 		return isset(self::$viewVars[$name]);
 	}
 	
+	/**
+	 * Get a value in the view vars
+	 * 
+	 * @param string
+	 * @return mixed
+	 */
 	public static function get($name){
 		return self::$viewVars[$name];
 	}
 	
+	/**
+	 * Get all view vars
+	 * 
+	 * @return array
+	 */
 	public static function getViewVars(){
 		return self::$viewVars;
 	}
+	
+	/**
+	 * Get all layout vars
+	 * 
+	 * @return array
+	 */
 	public static function getLayoutVars(){
 		return self::$layoutVars;
 	}
+	
+	/**
+	 * Get a value in the layout vars
+	 * 
+	 * @param string
+	 * @return mixed
+	 */
 	public static function getLayoutVar($name){
 		return self::$layoutVars[$name];
 	}
 	
 	/* call controllers */
 	
-	
+	/**
+	 * Call an other controller
+	 * 
+	 * @param string
+	 * @param string
+	 * @param array
+	 */
 	protected static function callController($controllerName,$actionName,$params=array()){
 		CRoute::setControllerAndAction($controllerName,$actionName);
 		$controllerName.='Controller';
@@ -138,6 +293,14 @@ class Controller{
 		exit;
 	}
 	
+	/**
+	 * Call a sub-action
+	 * 
+	 * @param string
+	 * @param string
+	 * @param array
+	 * @param array
+	 */
 	protected static function callSubAction($controllerName,$actionName,$rParams,$moreParams){
 		$mdef=self::_loadMdef($controllerName,$actionName);
 		$params=self::getParams($mdef,$mdef['annotations'],$rParams);
@@ -148,8 +311,9 @@ class Controller{
 	/* */
 	
 	/**
-	 * name : Post name
-	 * callback : function($name,$tmp_name,$size,$type)
+	 * Callback for each files uploaded
+	 * @param string $name POST name
+	 * @param function $callback function($name,$tmp_name,$size,$type)
 	 */
 	protected static function uploadedFiles($name,$callback){
 		if(empty($_FILES) || empty($_FILES[$name]))
@@ -165,6 +329,14 @@ class Controller{
 		
 	}
 	
+	/**
+	 * Move an uploaded file to a new path
+	 * 
+	 * @param string $name POST name
+	 * @param string $to path
+	 * @return bool if the uploaded file was successfully moved
+	 * @uses move_uploaded_file
+	 */
 	public static function moveUploadedFile($name,$to){
 		if(!empty($_FILES[$name]) && $_FILES[$name]['error'] == UPLOAD_ERR_OK){
 			move_uploaded_file($_FILES[$name]['tmp_name'],$to);
@@ -173,11 +345,28 @@ class Controller{
 		return false;
 	}
 	
+	/**
+	 * Set 404 Not Found Headers, but without displaying an exception
+	 * 
+	 * @return void
+	 */
 	public static function header404(){
 		header('HTTP/1.1 404 Not Found');
 		header('Status: 404 Not Found',false,404);
 	}
-
+	
+	/**
+	 * Redirect to a new url
+	 * 
+	 * @param string|array $to
+	 * @param string|null $entry
+	 * @param bool $exit
+	 * @param bool $forbiddenForAjax instead of redirecting, throw a forbidden Exception if the request was made in Ajax
+	 * @param bool $permanent 301 Moved Permanently if true (use redirectPermanent() instead)
+	 * @return void
+	 * 
+	 * @see HHtml::url
+	 */
 	public static function redirect($to,$entry=null,$exit=true,$forbiddendForAjax=true,$permanent=false){
 		if(CHttpRequest::isAjax()){
 			/*if(isset($_GET['ajax']))
@@ -196,6 +385,14 @@ class Controller{
 		if($exit) exit;
 	}
 	
+	/**
+	 * Redirect to the last url using the referer
+	 * 
+	 * @param string|array the url if the referer was empty or from another site
+	 * @param string|null
+	 * @param bool
+	 * @return void
+	 */
 	public static function redirectLast($toIfNotFound,$entryIfNotFound=null,$exit=true){
 		$to=CHttpRequest::referer(true);
 		if($to===CRoute::getAll() || $to===null) $to=$toIfNotFound;
@@ -203,10 +400,20 @@ class Controller{
 		self::redirect($to,$entryIfNotFound,$exit);
 	}
 	
+	/**
+	 * Permanent 301 redirection
+	 * 
+	 * @param string|array
+	 * @param string
+	 * @param bool
+	 * @param bool
+	 * @return void 
+	 */
 	public static function redirectPermanent($to,$entry=null,$exit=true,$forbiddendForAjax=true){
 		self::redirect($to,$entry,$exit,$forbiddendForAjax,true);
 	}
 	
+	/** @deprecated */
 	public static function redirectLastIfNotSecured($toIfNotFound,$exit=true){
 		throw new Exception('TODO : put ischeckrequired in mdef');
 		$to=CHttpRequest::referer(true);
@@ -228,15 +435,35 @@ class Controller{
 	
 	
 	/* RENDER */
-
+	
+	/**
+	 * Called before rendering the view
+	 * 
+	 * You can here add other variables in the view or the layout
+	 * 
+	 * @return void
+	 */
 	protected static function beforeRender(){}
-
+	
+	/**
+	 * Render the view views[.entry]/controller/action.php
+	 * 
+	 * @param string|null if null : CRoute::getAction()
+	 * @param string|null if null : CRoute::getController()
+	 * @return void
+	 */
 	protected static function render($fileName=null,$folderName=null){
 		if($fileName===null) $fileName=CRoute::getAction();
 		if($folderName===null) $folderName=CRoute::getController();
 		$render=self::_render(APP.'views'.self::$suffix.DS.$folderName.DS.$fileName.'.php');
 	}
-
+	
+	/**
+	 * Render any view
+	 * 
+	 * @param string $file the full path of the view
+	 * @return void
+	 */
 	public static function _render($file){
 		include_once CORE.'mvc/views/View.php';
 		static::beforeRender();
@@ -246,6 +473,16 @@ class Controller{
 		render($file,self::$viewVars);
 	}
 	
+	/**
+	 * Render content in the default layout
+	 * 
+	 * Use this to avoid calling a view with only some stupid echo.
+	 * 
+	 * @param string
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	protected static function renderContent($title,$content,$exit=true){
 		include_once CORE.'mvc/views/View.php';
 		static::beforeRender();
@@ -254,23 +491,26 @@ class Controller{
 		$v->render();
 		if($exit===true) exit;
 	}
-
-	/*#if DEV */
-	protected static function renderTable($title,&$table,$add=false,$layout=null){
-		throw new Exception("Use Model::Table()->render() now.");
-	}
 	
-	protected static function renderEditableTable($title,&$table,$pkField,$url,$add=false,$layout=null){
-		throw new Exception("Use Model::Table()->renderEditable() now.");
-	}
-	/*#/if*/
-	
+	/**
+	 * Set the headers for caching
+	 * 
+	 * @param string '2 weeks', '1 month',...
+	 * @see strtotime
+	 * @return void
+	 */
 	public static function cacheFor($time){
 		$maxAge=strtotime($time,0);
 		header("Pragma: public");
 		header("Cache-Control: max-age=".$maxAge);
 		header('Expires: '.gmdate('D, d M Y H:i:s', time()+$maxAge).' GMT');
 	}
+
+	/**
+	 * Set the headers for no caching
+	 * 
+	 * @return void
+	 */
 	public static function noCache(){
 		header("Cache-Control: no-store, no-cache, must-revalidate");
 		header("Cache-Control: post-check=0, pre-check=0", false);
@@ -278,34 +518,75 @@ class Controller{
 		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 		header("Pragma: no-cache");
 	}
+	
+	/**
+	 * Echo jsonfied string with the right header application/json
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	public static function renderJSON($content,$exit=true){
 		self::noCache();
 		header('Content-type: application/json');
 		echo $content;
 		if($exit) exit;
 	}
+	
+	/**
+	 * Echo text string with the right header text/plain
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	protected static function renderText($content,$exit=true){
 		header("Content-Type: text/plain");
 		echo $content;
 		if($exit) exit;
 	}
 	
+	/**
+	 * Echo html content
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	protected static function renderHtml($content,$exit=true){
 		echo $content;
 		if($exit) exit;
 	}
 	
+	/**
+	 * Echo Xml string with the right header application/xml
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	protected static function renderXml($content,$exit=true){
 		header('Content-type: application/xml; charset=UTF-8');
 		echo $content;
 		if($exit) exit;
 	}
 	
+	/**
+	 * Allow flushing to make sure your content is sent to the browser even if the request is not over
+	 */
 	protected static function allowFlush(){
 		apache_setenv('no-gzip',1); ini_set('zlib.output_compression',0); ini_set('implicit_flush',1);
 		for($i = 0; $i < ob_get_level(); $i++){ ob_end_flush(); }
 		ob_implicit_flush(1);
 	}
+	
+	/**
+	 * Force closing the connection but continue the script
+	 * 
+	 * This doesn't seems to work
+	 * 
+	 * @return void
+	 */
 	protected static function closeConnection(){
 		self::allowFlush();
 		header('Connection: close');
@@ -317,11 +598,25 @@ class Controller{
 		flush();
 	}
 	
+	/**
+	 * Push string to the browser
+	 * 
+	 * @param string
+	 * @return void
+	 */
 	public static function push($string){
 		echo str_pad($string,4096);
 		flush();
 	}
 	
+	/**
+	 * Send text to download
+	 * 
+	 * @param string
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	public static function sendText($content,$filename,$exit=true){
 		header('Accept-Ranges: none');
 		header('Content-Disposition: attachment; filename='.$filename);
@@ -329,11 +624,27 @@ class Controller{
 		self::renderText($content,$exit);
 	}
 	
+	/**
+	 * Echo file content to display
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	public static function renderFile($filepath,$exit=true){
 		self::sendFile($filepath,false);
 		if($exit) exit;
 	}
 	
+	/**
+	 * Send file to download
+	 * 
+	 * @param string
+	 * @param string|false|null
+	 * @param bool
+	 * @param int if you want to reduce kbps, 0 = unlimited
+	 * @return void
+	 */
 	protected static function sendFile($filepath,$filename=null,$partial=true,$kbps=0){
 		if(!is_file($filepath)) notFound();
 		if($filename===null) $filename=basename($filepath);

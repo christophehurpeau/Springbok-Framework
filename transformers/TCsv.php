@@ -1,5 +1,13 @@
 <?php
+/**
+ * CSV Transformer
+ */
 class TCsv extends STransformer{
+	/**
+	 * Return the content type: text/csv
+	 * 
+	 * @return string
+	 */
 	public static function getContentType(){
 		return 'text/csv';
 	}

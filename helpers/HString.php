@@ -1,4 +1,9 @@
 <?php
+/**
+ * String helper.
+ * 
+ * Mostly these functions are utils, but...
+ */
 class HString{
 	private static $_transliteration = array(
 /*		'/ä|æ|ǽ/' => 'ae',
@@ -82,12 +87,24 @@ class HString{
 		//return preg_replace('/^['.$quotedReplacement.']+|['.$quotedReplacement.']+$/','',$string);
 		return trim($string,$replacement);
 	}
-
+	
+	/**
+	 * Transliterate and remove all special chars
+	 * 
+	 * @param string $string
+	 * @return string
+	 */
 	static public function removeSpecialChars($string){
 		$string=self::transliterate($string);
 		return trim(preg_replace('/[^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+/mu',' ',$string));
 	}
 	
+	/**
+	 * Transliterate a string
+	 * 
+	 * @param string
+	 * @return string
+	 */
 	public static function transliterate($string){
 		//return preg_replace(array_keys(self::$_transliteration), array_values(self::$_transliteration), $string);
 		foreach(self::$_transliteration as $pattern=>$replacement)
@@ -95,7 +112,15 @@ class HString{
 		return $string;
 	}
 	
-	/** http://tonyarchambeau.com/blog/400-php-coefficient-de-dice/ */
+	/**
+	 * Compute the dice coefficient
+	 * 
+	 * @see http://tonyarchambeau.com/blog/400-php-coefficient-de-dice/
+	 * 
+	 * @param string
+	 * @param string
+	 * @return float
+	 */
 	public static function dice($str1,$str2){
 		$str1_length = strlen($str1);
 		$str2_length = strlen($str2);
@@ -153,6 +178,10 @@ class HString{
 
   A big thanks goes out to Pierre Senellart <pierre@senellart.com>
   for finding a small bug in the code.
+	 * 
+	 * @param string
+	 * @param string
+	 * @return float
 */
 	public static function jaroWinkler($string1,$string2){
 		$JaroDistance = self::jaroWinkler_Jaro( $string1, $string2 );
@@ -160,6 +189,11 @@ class HString{
 		return $JaroDistance + $prefixLength * .1 * (1.0 - $JaroDistance);
 	}
 	
+	/**
+	 * @param string
+	 * @param string
+	 * @return float
+	 */
 	private static function jaroWinkler_Jaro($string1, $string2){
 		$str1_len = strlen( $string1 );
 		$str2_len = strlen( $string2 );
@@ -185,6 +219,14 @@ class HString{
 		return ($commons1_len/($str1_len) + $commons2_len/($str2_len) + ($commons1_len - $transpositions)/($commons1_len)) / 3.0;
 	}
 	
+	/**
+	 * @param string
+	 * @param string
+	 * @param int
+	 * @param int
+	 * @param int
+	 * @return string
+	 */
 	private static function jaroWinkler_getCommonCharacters($string1,$string2,$str1_len,$str2_len,$allowedDistance){
 		$temp_string2 = $string2;
 		$commonCharacters='';
@@ -204,6 +246,12 @@ class HString{
 		return $commonCharacters;
 	}
 	
+	/**
+	 * @param string
+	 * @param string
+	 * @param int
+	 * @return int
+	 */
 	private static function jaroWinkler_getPrefixLength($string1, $string2, $MINPREFIXLENGTH = 4){
 		$n = min( array( $MINPREFIXLENGTH, strlen($string1), strlen($string2) ) );
 		for($i = 0; $i < $n; $i++)

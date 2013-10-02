@@ -1,5 +1,21 @@
 <?php
+/**
+ * Text Helper
+ */
 class HText{
+	/**
+	 * Hightlight a line and colorify some keywords (basic syntax hightlight)
+	 * 
+	 * @param string
+	 * @param string|null php|js|yml
+	 * @param int hightlighted line number or 0
+	 * @param string|false
+	 * @param string|false
+	 * @param bool
+	 * @param int|false
+	 * @param array
+	 * @return string <pre> with content of the file
+	 */
 	public static function highlightLine($content,$formatter=NULL,$line=0,$class='hightlight',$style=false,$withLineNumbers=false,$minmax=false,$preAttrs=array()){
 		switch ($formatter) {
 			//case 'php': $content=str_replace('<br/>',"\n",highlight_string($content,true)); break;
@@ -58,12 +74,25 @@ class HText{
 		return HHtml::tag('pre',$preAttrs,$content,false);
 	}
 	
+	/**
+	 * @param bool
+	 * @param int
+	 * @param array
+	 * @return string
+	 */
 	private static function lines($withLineNumbers,$startNumLine,$lines){
 		$content='';
 		foreach($lines as &$line) $content.=self::line($withLineNumbers,$startNumLine++,array(),$line);
 		return $content;
 	}
 	
+	/**
+	 * @param bool
+	 * @param int
+	 * @param array
+	 * @param string
+	 * @return string
+	 */
 	private static function line($withLineNumbers,$numLine,$attributes,$contentLine){
 		//!isset($attributes['style']) ? $attributes['style']='overflow:auto;' : $attributes['style'].=';overflow:auto;';
 		!isset($attributes['style']) ? $attributes['style']='white-space:pre-wrap;'.($withLineNumbers?'padding-left:20px;':'')

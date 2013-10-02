@@ -1,6 +1,8 @@
 <?php
 /**
  * Secure Component : handle authentification
+ * 
+ * @see https://github.com/christophehurpeau/Springbok-Framework-Plugins/tree/master/users
  */
 class CSecure{
 	const BACK_URL='SECURE_BACK_URL',

@@ -268,8 +268,10 @@ class HHead{
 	 * @param string
 	 * @param string|null
 	 */
-	public static function linkPrev($url,$entry=null){ self::linkRel('prev',$url,$entry);
-		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkPrev()</div>'; /*#/if*/ }
+	public static function linkPrev($url,$entry=null){
+		self::linkRel('prev',$url,$entry);
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkPrev()</div>'; /*#/if*/
+	}
 	
 	/**
 	 * Add a link to the next page
@@ -277,8 +279,10 @@ class HHead{
 	 * @param string
 	 * @param string|null
 	 */
-	public static function linkNext($url,$entry=null){ self::linkRel('next',$url,$entry);
-		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkNext()</div>'; /*#/if*/ }
+	public static function linkNext($url,$entry=null){
+		self::linkRel('next',$url,$entry);
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linkNext()</div>'; /*#/if*/
+	}
 	
 	/**
 	 * Add an alternate link to the small size version for mobile devices
@@ -303,6 +307,30 @@ class HHead{
 		/*#if DEV */ self::testDisplayed(); /*#/if*/
 		foreach($altLangs as $lang=>$url) self::$head['linksrel'].='<link rel="alternate" hreflang="'.$lang.'" href="'.HHtml::urlEscape($url).'"/>';
 		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linksLangs()</div>'; /*#/if*/
+	}
+	
+	/**
+	 * Add links to the RSS feed
+	 * 
+	 * @param array
+	 * @return void
+	 */
+	public static function linksRSS($title,$url){
+		/*#if DEV */ self::testDisplayed(); /*#/if*/
+		self::$head['linksrel'].='<link rel="alternate" type="application/rss+xml" href="'.HHtml::urlEscape($url).'" title="'.h($title).'"/>';
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linksRSS()</div>'; /*#/if*/
+	}
+	
+	/**
+	 * Add links to the Atom feed
+	 * 
+	 * @param array
+	 * @return void
+	 */
+	public static function linksAtom($title,$url){
+		/*#if DEV */ self::testDisplayed(); /*#/if*/
+		self::$head['linksrel'].='<link rel="alternate" type="application/atom+xml" href="'.HHtml::urlEscape($url).'" title="'.h($title).'"/>';
+		/*#if DEV */ return '<div style="color:red;font-size:12pt">Please do not echo HHead::linksRSS()</div>'; /*#/if*/
 	}
 	
 	/**

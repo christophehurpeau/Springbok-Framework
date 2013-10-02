@@ -1,5 +1,6 @@
 <?php
 throw new Exception('This helper is now deprecated : use Model::Table()');
+/** @deprecated */
 class HTable{
 	private static $tAligns=array('center'=>'center','right'=>'alignRight');
 	

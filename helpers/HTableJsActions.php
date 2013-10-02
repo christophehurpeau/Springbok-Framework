@@ -1,4 +1,5 @@
 <?php
+/** @deprecated */
 class HTableJsActions{
 	private $modelTableComponent,$content='',$canCancel=false;
 	public function __construct($modelTableComponent){

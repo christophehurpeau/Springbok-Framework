@@ -1,14 +1,29 @@
 <?php
 class HPagination{
-	/**
+	/*
+	 * <code>
 	 * $totalPages=(int)ceil((double)$nbRows / NB_RESULTS_PER_PAGE);
-	$urlbase='search.php?q='.urlencode($_GET['q']).'&o='.urlencode($_GET['o']).'&b='.$p.'&p=';
-	
-	if($totalPages > 1) echo $pagination='<div class="pager">'.HPagination::createPager($p,$totalPages,function($i) use(&$urlbase){return ' href="'.$urlbase.$i.'"';},
-		(isset($_GET['b'])?($_GET['b']>$p?3:2):2),(isset($_GET['b'])?($_GET['b']<$p?3:2):2)).'</div>';
+	 * 	$urlbase='search.php?q='.urlencode($_GET['q']).'&o='.urlencode($_GET['o']).'&b='.$p.'&p=';
+	 * 	
+	 * 	if($totalPages > 1) echo $pagination='<div class="pager">'.HPagination::createPager($p,$totalPages,function($i) use(&$urlbase){return ' href="'.$urlbase.$i.'"';},
+	 * 		(isset($_GET['b'])?($_GET['b']>$p?3:2):2),(isset($_GET['b'])?($_GET['b']<$p?3:2):2)).'</div>';
 	 * 
 	 * if($totalPages > 1) echo $pagination='<div class="pager">'.HPagination::createPager($p,$totalPages,function($i) use(&$urlbase){return ' href="'.$urlbase.$i.'"';},
-		(isset($_GET['b']) && $p<1000?($_GET['b']>$p?3:2):2)+($p<=20?1:0),(isset($_GET['b']) && $p<1000?($_GET['b']<$p?3:2):2)+($p<=20?1:0)).'</div>';
+	 * 		(isset($_GET['b']) && $p<1000?($_GET['b']>$p?3:2):2)+($p<=20?1:0),(isset($_GET['b']) && $p<1000?($_GET['b']<$p?3:2):2)+($p<=20?1:0)).'</div>';
+	 * </code>
+	 */
+	/**
+	 * Create a pager
+	 * 
+	 * @param int
+	 * @param int
+	 * @param function
+	 * @param int
+	 * @param int
+	 * @param bool
+	 * @param string|null
+	 * @param bool
+	 * @return string
 	 */
 	public static function createPager($page,$totalPages,$callback,$nbBefore=3,$nbAfter=3,$disabled=true,$withText=null,$tiny=false){
 		//if($page>1) HMeta::prev($callback($page-1));
@@ -68,7 +83,15 @@ class HPagination{
 		}
 		return $str.'</ul>';
 	}
-
+	
+	/**
+	 * Create a pager with letters
+	 * 
+	 * @param string
+	 * @param array
+	 * @param function
+	 * @return string
+	 */
 	public static function createPagerLetters($page,$avalaibleLetters,$callback){//ob_clean();debugVar($avalaibleLetters);exit;
 		$str='<ul class="pager">'; $i=65;
 		while($i<91){
@@ -78,7 +101,13 @@ class HPagination{
 		return $str.'</ul>';
 	}
 	
-	
+	/**
+	 * Create a simple pager
+	 * 
+	 * @param int
+	 * @param int
+	 * @param string
+	 */
 	public static function simple_($page,$totalPages,$pageName='page'){
 		if($totalPages>1) 
 			return $pager='<div class="pager">'.self::createPager($page,$totalPages,
@@ -88,10 +117,23 @@ class HPagination{
 		return '';
 	}
 
+	/**
+	 * Create a simple pager
+	 * 
+	 * @param CValidation
+	 * @param string
+	 */
 	public static function simple($pagination,$pageName='page'){
 		return self::simple_($pagination->getPage(),$pagination->getTotalPages(),$pageName);
 	}
 	
+	/**
+	 * Create a simple ajax pager
+	 * 
+	 * @param CValidation
+	 * @param function
+	 * @param string|function
+	 */
 	public static function simpleAjax($pagination,$callbackName,$callbackPage='#'){
 		if($pagination->hasPager()) 
 			return $pager='<div class="pager">'.self::createPager($pagination->getPage(),$pagination->getTotalPages(),
@@ -100,7 +142,12 @@ class HPagination{
 			}).'</div>';
 		return '';
 	}
-
+	
+	/**
+	 * @param CPagination
+	 * @param array|null if null, ask pagination->getAvailableLetters()
+	 * @return string
+	 */
 	public static function simpleLetters($pagination,$availableLetters=null){
 		if($availableLetters===null) $availableLetters=$pagination->getAvailableLetters();
 		return $pager='<div class="pager">'.self::createPagerLetters($pagination->getPage(),$availableLetters,function($page){
@@ -108,6 +155,10 @@ class HPagination{
 		}).'</div>';
 	}
 	
+	/**
+	 * @param int
+	 * @return string
+	 */
 	public static function callbackCreateUrl($page){
 		return HHtml::url(CRoute::getAll()).($page<2 ? '' : '?page='.$page);
 	}

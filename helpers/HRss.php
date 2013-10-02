@@ -1,5 +1,28 @@
 <?php
+/**
+ * Rss file creator
+ * 
+ * <code>
+ * $posts=Post::QAll()->fields('id,published,excerpt')->withParent('name,slug,updated')
+ *		->where(array('status'=>Post::PUBLISHED))->orderBy(array('published'=>'DESC'));
+ *	$rss=new HRss('Actualités','Actualités du Site','fr','Copyright '.date('Y').' Site name.',
+ *			array('url'=>HHtml::staticUrl('/logo-144.png','img'),'description'=>"Toutes les actualités"),'/posts');
+ *	foreach($posts as $post){
+ *		$post->excerpt=UHtml::transformInternalLinks($post->excerpt,Config::$internalLinks,'index',true);
+ *		$post->excerpt=preg_replace("/<img[^>]+\>/i", '', $post->excerpt);
+ *		$rss->add($post->name,$post->link(),$post->excerpt,$post->published);
+ *	}
+ *	$rss->end();
+ * </code>
+ */
 class HRss{
+	/**
+	 * Display a RSS from somewhere
+	 * 
+	 * @param string
+	 * @param int
+	 * @param string
+	 */
 	public static function display($url,$size=10,$titleTagName='h3'){
 		echo CCache::get()->readOrWrite('rss_'.md5($url),function() use(&$url,&$size,&$titleTagName){
 			$xml=simplexml_load_file($url); $num=1;
@@ -23,6 +46,16 @@ class HRss{
 	
 	
 	private $_file;
+	
+	/**
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 * @param string
+	 */
 	public function __construct($title,$description,$lang,$copyright,$image,$link='/',$file='rss.xml'){//TODO atom feed 
 		$this->_file=fopen(($file[0]==='/'?'':APP.'web/files/').$file,'w');
 		fwrite($this->_file,'<?xml version="1.0" encoding="UTF-8"?>
@@ -33,7 +66,18 @@ class HRss{
 							.'<description>'.h($image['description']).'</description></image>'
 				.'<atom:link href="'.HHtml::urlEscape('/','index',true,false,false).'web/files/'.$file.'" rel="self" type="application/rss+xml"/>');
 	}
-
+	
+	/**
+	 * Add a link
+	 * 
+	 * @param string
+	 * @param string|array
+	 * @param string
+	 * @param string
+	 * @param null
+	 * 
+	 * @return void
+	 */
 	public function add($title,$link,$description,$pubDate,$enclosure=null){
 		fwrite($this->_file,'<item>'
 			.'<title>'.h($title).'</title>'
@@ -44,7 +88,12 @@ class HRss{
 			.'<guid>'.$link.'</guid>'
 		.'</item>');
 	}
-
+	
+	/**
+	 * Ends the file and close
+	 * 
+	 * @return void
+	 */
 	public function end(){
 		fwrite($this->_file,'</channel></rss>');
 		fclose($this->_file);

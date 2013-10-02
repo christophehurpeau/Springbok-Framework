@@ -1,39 +1,90 @@
 <?php
+/**
+ * Test Navigator
+ */
 class TestNavigator extends CHttpClient{
 	private $testClass,$currentUrl;
+	
+	/**
+	 * @param STest
+	 */
 	public function __construct($testClass){
 		$this->testClass=$testClass;
 		$this->doNotFollowRedirects();
 		$this->parseHeaders();
 	}
 	
+	/**
+	 * @return string
+	 */
 	public function getCurrentUrl(){
 		return $this->currentUrl;
 	}
 	
+	/**
+	 * @param string|array
+	 * @param string
+	 * @param bool
+	 */
 	public function get($url,$entry='index',$_internal=false){
 		try{ return parent::get($this->_url($url,$entry,$_internal)); }catch(HttpClientError $e){}
 	}
+	
+	/**
+	 * @param string
+	 * @param string
+	 * @param bool
+	 */
 	public function getReal($url,$entry='index',$_internal=false){
 		$url=$url[0]==='/' ? '\\'.$url : $url;
 		if($_internal===false) $this->currentUrl=$url;
 		return $this->get($url,$entry);
 	}
+	
+	/**
+	 * @param string|array
+	 * @param string
+	 * @param bool
+	 */
 	public function post($url,$entry='index',$_internal=false){
 		return parent::post($this->_url($url,$entry,$_internal));
 	}
+	
+	/**
+	 * @param string|array
+	 * @param string
+	 * @param bool
+	 */
 	public function ajaxGet($url,$entry='index',$_internal=false){
 		return parent::ajaxGet($this->_url($url,$entry,$_internal));
 	}
+	
+	/**
+	 * @param string|array
+	 * @param string
+	 * @param bool
+	 */
 	public function ajaxPost($url,$entry='index',$_internal=false){
 		return parent::ajaxPost($this->_url($url,$entry,$_internal));
 	}
+	
+	/**
+	 * @param string|array
+	 * @param string
+	 * @param bool
+	 */
 	private function _url($url,$entry,$_internal){
 		$url=HHtml::url($url,$entry,true);
 		if($_internal===false) $this->currentUrl=$url;
 		return $url.(strpos($url,'?')===false?'?':'&').'springbokNoEnhance=true&springbokNoDevBar=true';
 	}
 	
+	/**
+	 * Execute the callback test for both index and mobile entries
+	 * 
+	 * @param function function($test,$entry)
+	 * @return void
+	 */
 	public function foreachIndexAndMobile($callback){
 		foreach(array('index','mobile') as $entry){
 			$entry==='mobile' ? CHttpClient::userAgentIphone() : CHttpClient::userAgentDefault();
@@ -41,12 +92,24 @@ class TestNavigator extends CHttpClient{
 		}
 	}
 	
+	/**
+	 * Checks if the Http Code is 200
+	 * 
+	 * @return void
+	 */
 	public function status200(){
 		if($this->getStatus()!==200)
 			throw new Exception($this->getLastUrl().' : '.$this->getStatus()
 					.($this->getStatus()===301||$this->getStatus()===302?' to '.$this->getHeader('location'):''));
 	}
 	
+	/**
+	 * Checks if the Http Code is 301
+	 * 
+	 * @param string
+	 * @param string|null
+	 * @return void
+	 */
 	public function checkRedirectPermanent($to,$index=null){
 		if($this->getStatus()!==301)
 			throw new Exception($this->getLastUrl().' : '.$this->getStatus());
@@ -58,21 +121,40 @@ class TestNavigator extends CHttpClient{
 	}
 	
 	private $parsedHtml,$metas,$h1;
+	/**
+	 * @return simple_html_dom
+	 */
 	public function parseHtml(){
 		include_once CORE.'libs/simple_html_dom.php';
 		$this->metas=null;
 		return $this->parsedHtml=str_get_html($this->getResult());
 	}
+	/**
+	 * @return simple_html_dom
+	 */
 	private function _parseHtml(){
 		if($this->parsedHtml===null) return $this->parseHtml();
 		return $this->parsedHtml;
 	}
 	
+	/**
+	 * Checks if the Http Code is 200, then check the Html Page
+	 * 
+	 * @return simple_html_dom
+	 * @see checkHtml
+	 */
 	public function html200(){
 		$this->status200();
 		return $this->checkHtml();
 	}
 	
+	/**
+	 * Checks the HTML page
+	 * 
+	 * @see checkHeadLinks
+	 * @see checkMetas
+	 * @return simple_html_dom
+	 */
 	public function checkHtml(){
 		$this->checkHeadLinks();
 		$this->metas=$this->checkMetas();
@@ -85,10 +167,21 @@ class TestNavigator extends CHttpClient{
 		return $this->parsedHtml;
 	}
 	
+	/**
+	 * Check if the h1 equals to the text
+	 * 
+	 * @param string
+	 * @return STestCheck
+	 */
 	public function checkH1($text){
 		return $this->check($this->h1->innertext,'<h1>')->equals($text);
 	}
 	
+	/**
+	 * Check if all links in the <head> tag return an 200 Http code
+	 * 
+	 * @return void
+	 */
 	public function checkHeadLinks(){
 		$parsedHtml=$this->_parseHtml();
 		$links=$parsedHtml->find('head link');
@@ -98,6 +191,12 @@ class TestNavigator extends CHttpClient{
 		}
 		$this->parsedHtml=$parsedHtml;
 	}
+	
+	/**
+	 * Checks the meta of the page
+	 * 
+	 * @return array list of metas
+	 */
 	public function checkMetas(){
 		if($this->metas!==null) return $this->metas;
 		$parsedHtml=$this->_parseHtml();
@@ -145,6 +244,28 @@ class TestNavigator extends CHttpClient{
 	}
 }
 
+/**
+ * Test class
+ * 
+ * <code>
+ * class UArrayTest extends STest{
+	function firstValue(){
+		$this->equals(UArray::firstValue(array(1)), 1);
+		$this->equals(UArray::firstValue(array('2',3)), '2');
+	}
+ * }
+ * </code>
+ * 
+ * @method STestCheck equals() (mixed $value,mixed $expected)
+ * @method STestCheck isArray() (array $value)
+ * @method STestCheck size() (array $value, int $size)
+ * @method STestCheck contains() (array|string $value, int $string) the $value must contains $string
+ * @method STestCheck isString() (string $value)
+ * @method STestCheck maxLength() (string $value, int $maxLength)
+ * @method STestCheck minLength() (string $value, int $minLength)
+ * @method STestCheck doubleSpace() (string $value) the string should not have two consecutive space
+ * 
+ */
 class STest{
 	public static $testEnv=false,$perfect=true;
 	
@@ -239,8 +360,14 @@ class STest{
 		return array('total'=>$nbResults,'failed'=>$resultsFailed);
 	}
 	
-	public function check($var,$varInfo=null){
-		return new STestCheck($this,$var,$varInfo);
+	/**
+	 * Check a value
+	 * 
+	 * @param mixed
+	 * @return STestCheck
+	 */
+	public function check($value,$varInfo=null){
+		return new STestCheck($this,$value,$varInfo);
 	}
 	
 	public function __call($method,$args){
@@ -252,99 +379,3 @@ class STest{
 	}
 }
 
-class STestCheck{
-	private $testClass,$var,$varInfo,$length;
-	
-	public function __construct($testClass,$var,$varInfo=null){
-		$this->testClass=$testClass;
-		$this->var=$var;
-		$this->varInfo=$varInfo;
-	}
-	
-	private function _varInfoOr($or){
-		return $this->varInfo===null?$or:$this->varInfo;
-	}
-	
-	private function ex($message,$details){
-		$this->testClass->ex($message,$details);
-	}
-	
-	/* ALL */
-	
-	public function equals($expected){
-		if($this->var!==$expected)
-			throw new Exception('[value] '.UVarDump::dump($this->var,5,false).' !== [expected] '.UVarDump::dump($expected,5,false));
-		return $this;
-	}
-	
-	/* ARRAY */
-	
-	public function isArray(){
-		if(!is_array($this->var))
-			$this->ex($this->_varInfoOr('The var').' is not an array','type='.gettype($this->var).', var= '.$this->var);
-		return $this;
-	}
-	public function _getCount(){
-		$this->isArray();
-		if($this->length===null) return $this->length=count($this->var);
-		return $this->length;
-	}
-	
-	public function size($size){
-		if($this->_getCount()!==$size)
-			$this->ex($this->_varInfoOr('The array').' has a size of '.$this->_getCount().', not '.$size,'array= '.UVarDump::dump($this->var,3,false));
-		
-	}
-	
-	/* ARRAY OR STRING */
-	
-	public function contains($string){
-		if(is_string($this->var)){
-			if(UString::pos($this->var,$string)===false)
-				$this->ex($this->_varInfoOr('The string').' does not contains "'.$string.'"','string= '.$this->var);
-		}elseif( is_array($this->var) ){
-			if(array_key_exists($string,$this->var)===false)
-				$this->ex($this->_varInfoOr('The array').' does not contains the key "'.$string.'"','array= '.UVarDump::dump($this->var,3,false));
-		}else
-			$this->ex($this->_varInfoOr('This').' is not a string nor an array','val= '.UVarDump::dump($this->var,3,false));
-	}
-	
-	
-	/* STRING */
-	
-	public function isString(){
-		if(!is_string($this->var))
-			$this->ex($this->_varInfoOr('The var').' is not a string','type='.gettype($this->var).', var= '.UVarDump::dump($this->var,3,false));
-		if(($enc=mb_detect_encoding($this->var,'UTF-8, ISO-8859-15, ASCII, GBK'))!=='UTF-8')
-			$this->ex($this->_varInfoOr('The string').' is not an UTF-8 string','encoding='.($enc?$enc:'unknown').', string= '.iconv($enc,'UTF-8',$this->var));
-		return $this;
-	}
-	public function _getLength(){
-		$this->isString();
-		if($this->length===null) return $this->length=UString::length($this->var);
-		return $this->length;
-	}
-	
-	public function maxLength($maxLength){
-		$l=$this->_getLength();
-		$l=strlen($this->var);
-		if($l>$maxLength)
-			$this->ex('The length of '.$this->_varInfoOr('the string').' is > '.$maxLength,'size= '.$l.', string= '.$this->var);
-		return $this;
-	}
-	public function minLength($minLength){
-		$l=$this->_getLength();
-		if($l<$minLength)
-			$this->ex('The length of '.$this->_varInfoOr('the string').' is < '.$minLength,'size= '.$l.', string= '.$this->var);
-		return $this;
-	}
-
-	public function doubleSpace(){
-		$this->isString();
-		/*if(strpos($this->var,'  ')!==false)*/
-		if(preg_match('/\h{2,}/u',$this->var))
-			$this->ex($this->_varInfoOr('The string').' has at least two successive spaces','string= '.preg_replace('/\h/u','[space]',$this->var));
-		return $this;
-	}
-	
-}

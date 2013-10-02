@@ -1,4 +1,5 @@
 <?php
+/** @deprecated */
 class HTableEditable extends HTable{
 	private static $form,$modelName,$pkField,$pkValue;
 	public static function table($component,$pkField=null,$url=null,$displayTotalResults=true){

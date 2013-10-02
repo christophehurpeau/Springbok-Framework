@@ -1,4 +1,5 @@
 <?php
+/** @deprecated */
 class HTableCompare extends HTable{
 	
 	protected static function displayResults(&$component,&$results){

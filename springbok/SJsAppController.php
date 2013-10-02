@@ -1,4 +1,5 @@
 <?php
+/** @deprecated */
 class SJsAppController extends Controller{
 	protected static function renderStartPage($jsappScript='/jsapp',$cssLink='/main'){
 		echo '<!DOCTYPE html><html><head>'

@@ -1,6 +1,9 @@
 <?php
-/* Representational state transfer */
+/** Representational state transfer */
 class SControllerREST extends Controller{
+	/**
+	 * @internal
+	 */
 	public static function dispatch($suffix,$mdef){
 		self::$suffix=$suffix;
 		static::beforeDispatch();
@@ -14,20 +17,42 @@ class SControllerREST extends Controller{
 		return call_user_func_array(array('static',$methodName),self::getParams($mdef,$methodAnnotations));
 	}
 	
-	
+	/**
+	 * Override this to specify cross-domain headers
+	 * @return void
+	 */
 	public static function crossDomainHeaders(){}
 	
 	
-	
+	/**
+	 * Render models
+	 * 
+	 * @param array
+	 * @return void
+	 */
 	protected static function renderModels($models){
 		// PHP 5.3 : self::render(SModel::mToArray($models));
 		self::render($models);
 	}
+	
+	/**
+	 * Render model
+	 * 
+	 * @param SModel
+	 * @return void
+	 */
 	protected static function renderModel($model){
 		// PHP 5.3 : self::render($model===false?false:$model->toArray());
 		self::render($models);
 	}
 	
+	/**
+	 * Render a content
+	 * 
+	 * @param string|null|SModel|mixed
+	 * @param bool
+	 * @return void
+	 */
 	protected static function render($content=null,$exit=true){
 		/*self::noCache();*/
 		switch(CHttpRequest::acceptsByExtOrHttpAccept('json','xml','php','phpsource','html')){
@@ -52,6 +77,13 @@ class SControllerREST extends Controller{
 		if($exit) exit;
 	}
 	
+	/**
+	 * Render plain text
+	 * 
+	 * @param string
+	 * @param bool
+	 * @return void
+	 */
 	protected static function renderText($content,$exit=true){
 		self::noCache();
 		header("Content-Type: text/plain");
