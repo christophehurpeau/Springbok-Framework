@@ -21,7 +21,14 @@ class ModelFile extends PhpFile{
 			if(!isset($controllersSrc[$pluginKey.'/'.$modelPath]))
 				$controllersSrc[$pluginKey.'/'.$modelPath]=file_get_contents($modelPath);
 		}else{
-			$parentPath=$countEval===($withParam?3:2) ? $enhanced->pluginPathFromKey($pluginKey=array_shift($eval)) : $enhanced->getAppDir().'src/';
+			if($countEval===($withParam?3:2)){
+				$pluginKey=array_shift($eval);
+				if(!isset($enhanced->config['plugins'][$pluginKey])){
+					//debug('warning: plugin doesnt exists: '.$pluginKey);
+					return false;
+				}
+				$parentPath = $enhanced->pluginPathFromKey($pluginKey=array_shift($eval));
+			}else $enhanced->getAppDir().'src/';
 			$modelPath='models/'.($eval[0]).'.php';
 			if(!isset($controllersSrc[$pluginKey.'/'.$modelPath]))
 				$controllersSrc[$pluginKey.'/'.$modelPath]=file_get_contents($parentPath.$modelPath);
@@ -42,12 +49,14 @@ class ModelFile extends PhpFile{
 		},$srcContent);
 		if($extends!==false){
 			$path=ModelFile::_getPath($extends, $controllersSrc, $enhanced);
+			if($path) $this->throwException('Unknown path');
 			preg_match(self::REGEXP_CLASS_WITH_ANNOTATIONS, $path, $extendsM);
 			$srcContent=preg_replace(self::REGEXP_CLASS_WITH_ANNOTATIONS,'/** '.$extendsM[1].' $1 **/'."\n".'class $2$3{',$srcContent);
 		}
 		
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!$path) return '';
 			if(!preg_match(ModelFile::REGEXP_FIELDS,$path,$mFields)){
 				if($extends!==false) return '';
 				$this->throwException('Import fields : unable to find '.$path);
@@ -56,7 +65,9 @@ class ModelFile extends PhpFile{
 		},$srcContent);
 		
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportArrayFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
-			list($path,$fieldsNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
+			if(!$path) return "\n";
+			list($path,$functionNames)=$path;
 			if(!preg_match_all(self::regexpArrayField($fieldsNames),$path,$mFields)){
 				if($extends!==false) return '';
 				$this->throwException('Import array fields : unable to find '.$path);
@@ -66,6 +77,7 @@ class ModelFile extends PhpFile{
 		
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportConsts\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!$path) return "\n";
 			if(!preg_match_all(ModelFile::REGEXP_CONSTS,$path,$mConsts)){
 				if($extends!==false) return '';
 				$this->throwException('Import consts : unable to find '.$path);
@@ -75,6 +87,7 @@ class ModelFile extends PhpFile{
 		
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportTraits\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced);
+			if(!$path) return "\n";
 			if(!preg_match_all(ModelFile::REGEXP_TRAITS,$path,$mTraits)){
 				if($extends!==false) return '';
 				$this->throwException('Import traits : unable to find '.$path);
@@ -83,7 +96,9 @@ class ModelFile extends PhpFile{
 		},$srcContent);
 		
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportFunction\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$srcContent,$extends){
-			list($path,$functionNames)=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
+			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
+			if(!$path) return "\n";
+			list($path,$functionNames)=$path;
 			if(is_string($functionNames)) $functionNames=array($functionNames);
 			$res='';
 			foreach($functionNames as $functionName){
