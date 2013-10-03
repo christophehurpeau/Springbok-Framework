@@ -1,6 +1,8 @@
 <?php
 /**
  * Behavior Slug Redirectable (build)
+ * 
+ * @see BSlugRedirectable
  */
 class BSlugRedirectable_build{
 	public static $beforeUpdate=array('_setOldSlug');

@@ -13,6 +13,7 @@
  * );
  * </code>
  * 
+ * @property int $_type key of the child model from modelParents in config
  */
 trait BParent{
 }

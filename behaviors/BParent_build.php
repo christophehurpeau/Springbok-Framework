@@ -1,6 +1,8 @@
 <?php
 /**
  * Behavior Parent (build)
+ * 
+ * @see BParent
  */
 class BParent_build{
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){

@@ -3,6 +3,8 @@
  * Behavior Lang (build)
  * 
  * Create a new Model with Lang suffix and translatable fields
+ * 
+ * @see BLang
  */
 class BLang_build extends SBehaviorBuilder{
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){

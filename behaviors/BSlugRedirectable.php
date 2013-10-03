@@ -5,7 +5,7 @@
 trait BSlugRedirectable{
 	protected function _setOldSlug(){
 		if(!empty($this->slug)){
-			$oldSlug=self::QValue()->field('slug')->byId($this->id)->execute();
+			$oldSlug=self::QValue()->field('slug')->byId($this->id)->fetch();
 			if(!empty($oldSlug) && $oldSlug!=$this->slug) $this->oldSlug=$oldSlug;
 		}
 		return true;

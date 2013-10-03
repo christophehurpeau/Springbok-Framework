@@ -19,6 +19,6 @@ trait BTextContent{
 	}
 	
 	public static function findOneForSeo($id){
-		return self::QOne()->where(array('id'=>$id))->execute();
+		return self::QOne()->where(array('id'=>$id))->fetch();
 	}
 }

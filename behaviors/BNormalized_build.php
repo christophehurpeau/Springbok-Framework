@@ -5,6 +5,8 @@
  * Possible class annotation @UniqueNormalized : instead of creating a simple index on the field, create a unique index.
  * 
  * Add a "normalized" field
+ * 
+ * @see BNormalized
  */
 class BNormalized_build{
 	public static $beforeSave=array('_setNormalizedIfName');

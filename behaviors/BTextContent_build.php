@@ -1,6 +1,8 @@
 <?php
 /**
  * Behavior TextContent (build)
+ * 
+ * @see BTextContent
  */
 class BTextContent_build{
 	public static $beforeSave=['_setTextToNullIfEmtpy'];

@@ -34,7 +34,7 @@ trait BTree{
 	public function insertAfter($nodeId){
 		self::beginTransaction();
 		try{
-			$leftNode=self::QRow()->fields('right,level_depth,parent_id')->byId($nodeId)->execute();
+			$leftNode=self::QRow()->fields('right,level_depth,parent_id')->byId($nodeId)->fetch();
 			self::QUpdateOneField('right','(right +2)')->where(array('right >'=>$leftNode['right']))->execute();
 			self::QUpdateOneField('left','(left +2)')->where(array('left >'=>$leftNode['right']))->execute();
 			$this->left=$leftNode['right']+1;
@@ -53,7 +53,7 @@ trait BTree{
 	public function insertChild($parentId){
 		self::beginTransaction();
 		try{
-			$parentNode=self::QRow()->fields('left,level_depth')->byId($parentId)->execute();
+			$parentNode=self::QRow()->fields('left,level_depth')->byId($parentId)->fetch();
 			self::QUpdateOneField('right','(right +2)')->where(array('right >'=>$leftNode['right']))->execute();
 			self::QUpdateOneField('left','(left +2)')->where(array('left >'=>$leftNode['right']))->execute();
 			$this->left=$parentNode['left']+1;
@@ -90,7 +90,7 @@ trait BTree{
 	public static function QDeleteOne(){throw new Exception('Use $node->delete() or ::deleteNode($nodeId)');}
 	
 	public static function deleteNode($nodeId){
-		$node=self::ById($nodeId)->fields('left,right')->execute();
+		$node=self::ById($nodeId)->fields('left,right')->fetch();
 		$node->delete();
 	}
 	
@@ -151,7 +151,7 @@ trait BTree{
 		return $query->where($where);
 	}
 	public function children($direct=false){
-		return $this->QChildren($direct)->execute();
+		return $this->QChildren($direct)->fetch();
 	}
 	
 	
@@ -165,7 +165,7 @@ trait BTree{
 	public function parent($fields=NULL){
 		$query=$this->QParent();
 		if($fields!==NULL) $query->fields($fields);
-		return $query->execute();
+		return $query->fetch();
 	}
 	
 	
@@ -176,7 +176,7 @@ trait BTree{
 	public function nextNode($fields=NULL){
 		$query=$this->QNextNode();
 		if($fields!==NULL) $query->fields($fields);
-		return $query->execute();
+		return $query->fetch();
 	}
 	
 	public function QPath(){
@@ -187,7 +187,7 @@ trait BTree{
 	public function path($fields=NULL){
 		$query=$this->QPath();
 		if($fields !== NULL) $query->fields($fields);
-		return $query->execute();
+		return $query->fetch();
 	}
 	
 	public static function getQPath($id){
@@ -209,7 +209,7 @@ trait BTree{
 	public static function generateSimpleTreeList($query=NULL){
 		if($query===NULL) $query=static::QAll();
 		
-		$result=$query->tabResKey(self::_getPkName())->execute();
+		$result=$query->tabResKey(self::_getPkName())->fetch();
 		
 		$tree=array();
 		foreach($result as &$res) $res->_set('children',array());

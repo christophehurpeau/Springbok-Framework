@@ -4,6 +4,7 @@
  * 
  * Add p_id or id field and methods like insertParent(), insertIgnoreParent(), updateParent()
  * 
+ * @see BChild
  */
 class BChild_build{
 	public static function onBuild($modelFile,&$contentInfos,$annotations,$enhanceConfig,&$classBeforeContent){
