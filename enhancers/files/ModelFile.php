@@ -49,7 +49,7 @@ class ModelFile extends PhpFile{
 		},$srcContent);
 		if($extends!==false){
 			$path=ModelFile::_getPath($extends, $controllersSrc, $enhanced);
-			if($path) $this->throwException('Unknown path');
+			if(!$path) $this->throwException('Unknown path');
 			preg_match(self::REGEXP_CLASS_WITH_ANNOTATIONS, $path, $extendsM);
 			$srcContent=preg_replace(self::REGEXP_CLASS_WITH_ANNOTATIONS,'/** '.$extendsM[1].' $1 **/'."\n".'class $2$3{',$srcContent);
 		}
@@ -67,7 +67,7 @@ class ModelFile extends PhpFile{
 		$srcContent=preg_replace_callback('/\/\*\s+@ImportArrayFields\(([^*]+)\)\s+\*\//',function($m) use($enhanced,&$controllersSrc,$extends){
 			$path=ModelFile::_getPath($m, $controllersSrc, $enhanced,true);
 			if(!$path) return "\n";
-			list($path,$functionNames)=$path;
+			list($path,$fieldsNames)=$path;
 			if(!preg_match_all(self::regexpArrayField($fieldsNames),$path,$mFields)){
 				if($extends!==false) return '';
 				$this->throwException('Import array fields : unable to find '.$path);
