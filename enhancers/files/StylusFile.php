@@ -93,7 +93,7 @@ class StylusFile extends EnhancerFile{
 }
 
 if(!exec('which stylus'))
-	throw new Exception('Please install stylus : (sudo) npm install -g stylus');
+	throw new Exception('Please install stylus : sudo npm install -g stylus');
 $stylusVersion = exec('stylus --version');
 if(!preg_match('/([0-9]+\.[0-9]+)/',$stylusVersion,$stylusMajMinVersion) || ((float)$stylusMajMinVersion[1]) < 0.38 )
 	throw new Exception('Please update your stylus version : (sudo) npm update -g stylus');
