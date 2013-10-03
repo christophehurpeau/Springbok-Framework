@@ -5,7 +5,7 @@ class QFindAll extends QFind{
 	/**
 	 * @return array
 	 */
-	public function execute(){
+	public function fetch(){
 		//$res=$this->_db->doSelectRows_($query);
 		if($this->tabResKey !== null) $this->res=$res=$this->_db->doSelectAssocObjects($this->_toSQL(),$this,$this->queryResultFields,$this->tabResKey);
 		else $this->res=$res=$this->_db->doSelectObjects($this->_toSQL(),$this,$this->queryResultFields);
@@ -32,6 +32,18 @@ class QFindAll extends QFind{
 	 * @return void
 	 */
 	public function callback($callback,$callback2=null){
+		return $this->forEachModel($callback,$callback2);
+	}
+	
+	/**
+	 * Execute a callback for each rows returned.
+	 * Fetch rows one by one, to avoid using a too big amout of memory on huge results
+	 * 
+	 * @param function
+	 * @param function
+	 * @return void
+	 */
+	public function forEachModel($callback,$callback2=null){
 		$sql=$this->sqlBigResult()->sqlNoCache()->_toSQL();
 		if($callback2!==null){
 			$callback($this->getModelFields());
@@ -56,7 +68,7 @@ class QFindAll extends QFind{
 	 * @return array
 	 */
 	public function toArray(){
-		return SModel::mToArray($this->execute());
+		return SModel::mToArray($this->fetch());
 	}
 	
 	/**

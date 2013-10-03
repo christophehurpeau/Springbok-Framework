@@ -12,7 +12,7 @@ class QFindRow extends QFind{
 	/**
 	 * @return array
 	 */
-	public function execute(){
+	public function fetch(){
 		return $this->_db->doSelectRow($this->_toSQL());
 	}
 }

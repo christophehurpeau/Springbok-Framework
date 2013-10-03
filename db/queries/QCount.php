@@ -18,7 +18,7 @@ class QCount extends QFindOne{
 	/**
 	 * @return int
 	 */
-	public function execute(){
+	public function fetch(){
 		$this->setFields(array('COUNT('.$this->countField.')'));
 		$query=$this->_toSQL();//debugVar($query);
 		$res=$this->_db->doSelectValue($query);

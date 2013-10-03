@@ -6,8 +6,7 @@ class QFindList extends QFind{
 	/**
 	 * @return array
 	 */
-	public function execute(){
-		$res=$this->_db->doSelectListValue($this->_toSQL());
-		return $res;
+	public function fetch(){
+		return $this->_db->doSelectListValue($this->_toSQL());
 	}
 }

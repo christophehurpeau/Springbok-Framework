@@ -32,7 +32,7 @@ class CSecure{
 			$query=$className::QOne()->where(array(static::config('id')=>$user));
 			if(static::issetConfig('fields')) $query->setFields(static::config('fields'));
 			if(static::issetConfig('with')) $query->setAllWith(static::config('with'));
-			$res=$query->execute();
+			$res=$query->fetch();
 			if($res===false) self::logout();
 			return $res;
 		}
@@ -177,7 +177,7 @@ class CSecure{
 				$where[$login]=self::$_cookie->user;
 			
 				$query=$id===$login ? /**/$className::QExist() : /**/$className::QValue()->field($id);
-				if($res=$query->where($where)->execute()){
+				if($res=$query->where($where)->fetch()){
 					self::setConnected(self::CONNECTION_COOKIE,($id===$login ? self::$_cookie->user : $res),self::$_cookie->user);
 					if(static::checkCookie(self::$_cookie)){
 						self::$_cookie->write();
@@ -272,7 +272,7 @@ class CSecure{
 			
 			$query=$id===$login ? /**/$className::QExist() : /**/$className::QValue()->field($id);
 			
-			if($res=$query->where($where)->execute()){
+			if($res=$query->where($where)->fetch()){
 				$connected=$id===$login ? $user->$login : $res;
 				if($remember) static::createCookie($user);
 			}

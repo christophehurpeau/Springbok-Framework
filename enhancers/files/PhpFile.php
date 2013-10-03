@@ -347,11 +347,12 @@ class PhpFile extends EnhancerFile{
 					if(function_exists('display')) display($message);
 					else echo "<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n".$message.'<br/>';
 				}
-				if($matches[4]=='callback') return str_replace($matches[5],$phpFile->addExecuteToQueries($matches[5],$isModelFile),$matches[1]);
+				if($matches[4]=='callback'||$matches[4]=='forEach') return str_replace($matches[5],$phpFile->addExecuteToQueries($matches[5],$isModelFile),$matches[1]);
 			}
 			if((!empty($matches[2]) && substr($matches[2],0,5)=='query')||
-						(!empty($matches[4]) && ($matches[4]=='execute'||$matches[4]==='toArray'||$matches[4]==='notFoundIfFalse'/*||$matches[4]==='paginate'*/)) || (!empty($matches[3]))) return $matches[1];
-			return $matches[1].'->execute()';
+						(!empty($matches[4]) && ($matches[4]=='_execute_'||$matches[4]=='execute'||$matches[4]=='fetch'||$matches[4]=='refetch'||$matches[4]=='mustFetch'
+										||$matches[4]==='toArray'||$matches[4]==='notFoundIfFalse'/*||$matches[4]==='paginate'*/)) || (!empty($matches[3]))) return $matches[1];
+			return $matches[1].'->_execute_()';
 		},$phpContent);
 /*		if($newPhpContent===NULL) echo "NULL !!!";
 		if(!$this->isCore()) echo '<br /><br /><br /><br /><br />';

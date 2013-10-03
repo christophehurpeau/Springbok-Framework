@@ -392,14 +392,27 @@ abstract class QFind extends QSelect{
 	}
 	
 	/**
+	 * @internal
+	 * 
 	 * Reexecute an already executed query
 	 * But with changes, like different conditions
 	 * 
 	 * @return mixed
 	 */
 	public function reexecute(){
+		/*#if DEV*/ throw new Exception('Use ->refetch() instead of ->reexecute() !'); /*#/if*/
+		return $this->refetch();
+	}
+	
+	/**
+	 * Refetch an already executed query
+	 * But with changes, like different conditions
+	 * 
+	 * @return mixed
+	 */
+	public function refetch(){
 		$this->objFields=$this->queryResultFields=$this->objData=array();
-		return $this->execute();
+		return $this->fetch();
 	}
 	
 	/**
@@ -407,8 +420,26 @@ abstract class QFind extends QSelect{
 	 * 
 	 * @return mixed
 	 */
-	public function fetch(){
-		return $this->execute();
+	abstract function fetch();
+	
+	/**
+	 * Execute the query : warning use fetch
+	 * 
+	 * @return mixed
+	 */
+	public function execute(){
+		/*#if DEV*/ throw new Exception('Use ->fetch() instead of ->execute() !'); /*#/if*/
+		return $this->fetch();
+	}
+	
+	/**
+	 * @ignore
+	 * Automaticly added in PhpFile
+	 * 
+	 * @return mixed
+	 */
+	public function _execute_(){
+		return $this->fetch();
 	}
 	
 	/**
@@ -728,7 +759,7 @@ abstract class QFind extends QSelect{
 		foreach($with as $key=>&$w){
 			$query=self::createWithQuery($obj,$w);
 			if($query!==false){
-				$res=$query->execute();
+				$res=$query->fetch();
 				if(isset($w['fieldsInModel']) && $w['fieldsInModel']===true){
 					if($res!==false) foreach($res as $k=>$v) $obj->_set($k,$v);
 				}else $obj->_set($w['dataName'],$res);
@@ -779,7 +810,7 @@ abstract class QFind extends QSelect{
 					$values=self::_getValues($objs,$objFields);
 					if(!empty($values)){
 						$resFields = $w[0];
-						$listRes = self::_createHasManyQuery($w['fieldsInModel']===true?new QFindRows($w['modelName']):null,$w,$values,$resFields,true)->execute();
+						$listRes = self::_createHasManyQuery($w['fieldsInModel']===true?new QFindRows($w['modelName']):null,$w,$values,$resFields,true)->fetch();
 						
 						if($listRes){
 							if($w['fieldsInModel']===true){
@@ -825,7 +856,7 @@ abstract class QFind extends QSelect{
 						if(isset($w['groupResBy'])){ $groupResBy=$w['groupResBy']; unset($w['groupResBy']); }
 						else $groupResBy=false;
 						$query=self::_createHasManyQuery(new QFindAll($w['modelName']),$w,$values,$resFields,true);
-						$listRes=$query->execute();
+						$listRes=$query->fetch();
 						if($listRes) foreach($objs as $key=>$obj){
 							$listObjsRes=array();
 							foreach($listRes as &$res){
@@ -871,7 +902,7 @@ abstract class QFind extends QSelect{
 							if(isset($w['groupBy'])) $w['groupBy']=$rel['alias'].'.'.$resField.','.$w['groupBy'];
 						}
 						
-						$listRes=self::_createHasManyQuery(null,$w,$values,$resFields,false,$withMore['with'],$rel['alias'])->execute();
+						$listRes=self::_createHasManyQuery(null,$w,$values,$resFields,false,$withMore['with'],$rel['alias'])->fetch();
 						if($listRes!==false){
 							foreach($objs as $k=>&$obj){
 								$listObjsRes=array();

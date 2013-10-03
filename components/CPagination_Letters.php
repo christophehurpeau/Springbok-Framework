@@ -36,9 +36,23 @@ class CPagination_Letters extends CPagination{
 		return $modelName::findFirstLetters($this->fieldName);
 	}
 	
+	/**
+	 * Alias of execute
+	 * 
+	 * @see execute()
+	 */
+	public function fetch(){
+		return $this->fetch();
+	}
+	
 	public function execute(){
 		$this->results=$this->query->addCondition($this->fieldName.' LIKE',$this->page.'%')->execute();
 		return $this;
+	}
+	
+	/** @internal */
+	public function _execute_(){
+		return $this->fetch();
 	}
 	
 	public function refindResults($page){

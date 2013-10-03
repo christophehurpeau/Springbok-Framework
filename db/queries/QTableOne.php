@@ -32,7 +32,12 @@ class QTableOne extends QTable{
 	/**
 	 * @return CModelTableOne
 	 */
+	public function mustFetch(){
+		return $this->end()->mustFetch();
+	}
+	
+	/** @deprecated */
 	public function notFoundIfFalse(){
-		return $this->end()->notFoundIfFalse();
+		return $this->mustFetch();
 	}
 }

@@ -92,7 +92,7 @@ class CSecureRest{
 		
 		$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
 		
-		if($res=$query->where($where)->execute()){
+		if($res=$query->where($where)->fetch()){
 			self::$connected=$id===$login ? $user->$login : $res;
 			$ut=new UserToken;
 			$ut->user_id=self::$connected;

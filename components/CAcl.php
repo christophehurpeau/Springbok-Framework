@@ -33,7 +33,7 @@
  * Use case :
  * <code>
  * function(int $id){
- * 	$project = Project::ById($id)->notFoundIfFalse();
+ * 	$project = Project::ById($id)->mustFetch();
  * 	ACAcl::requireAccess('ManageMembers',$project->id);
  * }
  * </code>

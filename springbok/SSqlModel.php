@@ -98,7 +98,7 @@ class SSqlModel extends SModel{
 		$UniqueField=array_shift($args);
 		if(!$this->_beforeInsert()) return false;
 		$data=$this->_getSaveData($args);
-		$id=static::QValue()->field('id')->where(array($UniqueField=>$data[$UniqueField]))->execute();
+		$id=static::QValue()->field('id')->where(array($UniqueField=>$data[$UniqueField]))->fetch();
 		if($id){
 			$this->data[static::$__modelInfos['primaryKeys'][0]]=$id;
 		}else{
@@ -162,7 +162,7 @@ class SSqlModel extends SModel{
 		$data=$this->_getSaveData(func_get_args());
 		$where=array();
 		foreach(static::$__modelInfos['primaryKeys'] as $pkName) $where[$pkName]=$this->data[$pkName];
-		if(self::QExist()->where($where)->execute()){
+		if(self::QExist()->where($where)->fetch()){
 			foreach(array_keys($where) as $pkName) unset($data[$pkName]);
 			$res=static::QUpdateOne()->values($data)->where($where)->execute();
 			$this->_afterUpdate($data);
@@ -219,7 +219,7 @@ class SSqlModel extends SModel{
 		$res=self::QValue()
 			->fields(($getPk?($getPk=static::_getPkName()):'1'))
 			->where($data)
-			->execute();
+			->fetch();
 		if($res && $getPk) $this->__set($getPk,$res);
 		return $res;
 	}
@@ -235,7 +235,7 @@ class SSqlModel extends SModel{
 		foreach(static::$__modelInfos['primaryKeys'] as $pkName)
 			$where[$pkName]=$this->data[$pkName];
 		/*#if DEV */if(empty($where)) throw new Exception('WHERE should not be empty !'); /*#/if*/
-		$this->originalData=self::QRow()->setFields(array_keys(array_diff_key($this->data,$where)))->where($where)->execute();
+		$this->originalData=self::QRow()->setFields(array_keys(array_diff_key($this->data,$where)))->where($where)->fetch();
 	}
 	
 	/**
@@ -590,14 +590,14 @@ class SSqlModel extends SModel{
 	 * 
 	 * @return array
 	 */
-	public static function findAll(){return self::QAll()->execute();}
+	public static function findAll(){return self::QAll()->fetch();}
 	
 	/**
 	 * Execute the default QOne query
 	 * 
 	 * @return SModel|self|false
 	 */
-	public static function findOne(){return self::QOne()->execute();}
+	public static function findOne(){return self::QOne()->fetch();}
 	
 	/**
 	 * Return a model by its primary key
@@ -605,7 +605,7 @@ class SSqlModel extends SModel{
 	 * @return SModel|self|false
 	 */
 	public static function findOneByPk($pk){
-		return self::QOne()->where(array( static::_getPkName() => $pk ))->execute();
+		return self::QOne()->where(array( static::_getPkName() => $pk ))->fetch();
 	}
 	
 	/**
@@ -638,7 +638,7 @@ class SSqlModel extends SModel{
 	 * @return array
 	 * @see QListName()
 	 */
-	public static function findListName(){/*#if DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /*#/if*/return static::QListName()->execute();}
+	public static function findListName(){/*#if DEV */if(func_num_args()!==0) throw new Exception('Use displayField now'); /*#/if*/return static::QListName()->fetch();}
 	
 	/**
 	 * Store or Get the result of findListName from the cache
@@ -675,7 +675,7 @@ class SSqlModel extends SModel{
 	 * 
 	 * @return array
 	 */
-	public static function findValues($field){return self::QValues()->field($field)->execute();}
+	public static function findValues($field){return self::QValues()->field($field)->fetch();}
 	
 	/**
 	 * Insert several rows in the same time
@@ -754,7 +754,7 @@ class SSqlModel extends SModel{
 			$query->setFields($fields);
 		}
 		$query->by($matches[3],$params);
-		return $query->execute();
+		return $query->_execute_();
 	}
 	
 	

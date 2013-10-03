@@ -25,7 +25,6 @@ abstract class QUnion extends QSelect{
 	
 	public function _toSQL(){
 		$sql='('.implode(') UNION '.($this->all!==NULL?'ALL ':($this->distinct!==NULL?'DISTINCT ':'')).'(',array_map(function(&$query){return $query->_toSQL();},$this->queries)).')';
-		$sql=$this->_afterWhere($sql);
-		return $sql;
+		return $this->_afterWhere($sql);
 	}
 }

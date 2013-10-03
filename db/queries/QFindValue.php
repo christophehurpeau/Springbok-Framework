@@ -6,19 +6,23 @@ class QFindValue extends QFind{
 	/**
 	 * @return mixed
 	 */
-	public function execute(){
+	public function fetch(){
 		$this->limit1();
-		$res=$this->_db->doSelectValue($this->_toSQL());
-		return $res;
+		return $this->_db->doSelectValue($this->_toSQL());
 	}
 	
 	/**
 	 * @return mixed
 	 */
-	public function notFoundIfFalse(){
+	public function mustFetch(){
 		$res=$this->execute();
 		if($res===false) notFound();
 		return $res;
+	}
+	
+	/** @deprecated */
+	public function notFoundIfFalse(){
+		return $this->mustFetch();
 	}
 	
 	/**

@@ -130,7 +130,6 @@ class QLoadData extends AQuery{
 	 */
 	public function execute(){
 		$modelName=$this->modelName;
-		$res=$this->_db->doUpdate($this->_toSQL());
-		return $res;
+		return $this->_db->doUpdate($this->_toSQL());
 	}
 }

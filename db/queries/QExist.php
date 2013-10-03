@@ -6,7 +6,7 @@ class QExist extends QFindOne{
 	/**
 	 * @return bool
 	 */
-	public function execute(){
+	public function fetch(){
 		$this->limit1();
 		if($this->fields[0]===null) $this->fields[0]=array(1);
 		$res=$this->_db->doSelectExist($this->_toSQL());

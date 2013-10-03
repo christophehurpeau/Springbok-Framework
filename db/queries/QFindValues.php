@@ -8,7 +8,7 @@ class QFindValues extends QFind{
 	/**
 	 * @return array
 	 */
-	public function execute(){
+	public function fetch(){
 		if($this->tabResKey !== null) return $this->_db->doSelectAssocValues($this->_toSQL(),$this->tabResKey);
 		return $this->_db->doSelectValues($this->_toSQL());
 	}
@@ -16,8 +16,13 @@ class QFindValues extends QFind{
 	/**
 	 * @return void
 	 */
-	public function callback($callback){
+	public function forEachValues($callback){
 		$this->_db->doSelectValuesCallback($this->_toSQL(),$callback);
+	}
+	
+	/** @deprecated */
+	public function callback($callback){
+		return $this->forEachValues($callback);
 	}
 	
 	/**

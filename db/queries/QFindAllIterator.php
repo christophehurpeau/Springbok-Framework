@@ -13,10 +13,10 @@ class QFindAllIterator implements Iterator{
 		$this->limit=$limit;
 	}
 	
-	public function execute(){
+	public function fetch(){
 		display('execute: '.$this->start.' '.$this->limit);
 		if($this->limit <= $this->start) return $this->currentIterator=false;
-		$res=$this->query->limit($this->size,$this->start)->reexecute();
+		$res=$this->query->limit($this->size,$this->start)->refetch();
 		display('execute res: '.count($res));
 		$this->currentIterator=$res===false?false:new ArrayIterator($res);
 	}
@@ -41,7 +41,7 @@ class QFindAllIterator implements Iterator{
 			return $this->currentIterator->next();
 		
 		$this->start+=$this->size;
-		$this->execute();
+		$this->fetch();
 	}
 	
 	

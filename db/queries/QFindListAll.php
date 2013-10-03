@@ -7,7 +7,7 @@ class QFindListAll extends QFindAll{
 	/**
 	 * @return array
 	 */
-	public function execute(){
+	public function fetch(){
 		$res=$this->_db->doSelectListObjects($this->_toSQL(),$this,$this->queryResultFields);
 		
 		if($res){

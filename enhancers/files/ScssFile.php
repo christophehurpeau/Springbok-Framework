@@ -128,7 +128,7 @@ class ScssFile extends EnhancerFile{
 	public function callSass($content,$destination){
 		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'scssdest');
 		$tmpfname = tempnam($this->enhanced->getTmpDir(),'scss');
-		$cmd = self::$sassExecutable.' -C --trace --compass --scss -t compressed -r '.escapeshellarg(CORE_SRC.'includes/scss/module.rb')
+		$cmd = self::$sassExecutable.' -E "UTF-8" -C --trace --compass --scss -t compressed -r '.escapeshellarg(CORE_SRC.'includes/scss/module.rb')
 										.' '.escapeshellarg($tmpfname).' '.escapeshellarg($dest);
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd '.escapeshellarg(dirname($this->srcFile()->getPath())).' ; '.$cmd.' 2>&1');

@@ -6,7 +6,7 @@ class QFindOne extends QFind{
 	/**
 	 * @return SModel
 	 */
-	public function execute(){
+	public function fetch(){
 		$this->limit1();
 		/*$row=$this->_db->doSelectRow_($query);
 		if($row){
@@ -27,16 +27,22 @@ class QFindOne extends QFind{
 	 * @return array
 	 */
 	public function toArray(){
-		$res=$this->execute();
+		$res=$this->fetch();
 		return $res===false?$res:$res->toArray();
 	}
 	
 	/**
 	 * @return SModel
 	 */
-	public function notFoundIfFalse(){
-		$res=$this->execute();
+	public function mustFetch(){
+		$res=$this->fetch();
 		if($res===false) notFound();
 		return $res;
+	}
+	
+	
+	/** @deprecated */
+	public function notFoundIfFalse(){
+		return $this->mustFetch();
 	}
 }

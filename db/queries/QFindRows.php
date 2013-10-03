@@ -13,7 +13,7 @@ class QFindRows extends QFind{
 	/**
 	 * @return array
 	 */
-	public function execute(){
+	public function fetch(){
 		$res=$this->_db->doSelectRows($this->_toSQL());
 		
 		if($this->calcFoundRows===true){
@@ -36,8 +36,13 @@ class QFindRows extends QFind{
 	 * @param function
 	 * @return void
 	 */
-	public function callback($callback){
+	public function forEachRow($callback){
 		$this->_db->doSelectRowsCallback($this->_toSQL(),$callback);
+	}
+	
+	/** @deprecated */
+	public function callback($callback){
+		return $this->forEachRow($callback);
 	}
 	
 	/**

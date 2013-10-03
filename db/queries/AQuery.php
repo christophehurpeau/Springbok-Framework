@@ -36,6 +36,15 @@ abstract class AQuery{
 	public abstract function execute();
 	
 	/**
+	 * @ignore
+	 * Automaticly added in PhpFile
+	 * 
+	 * @return mixed
+	 */
+	public function _execute_(){
+		return $this->execute();
+	}
+	/**
 	 * @param mixed
 	 * @param string
 	 * @param string

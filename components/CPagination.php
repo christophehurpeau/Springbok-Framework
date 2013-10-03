@@ -122,7 +122,7 @@ class CPagination{
 	 * @return int
 	 */
 	protected function _countQuery(){
-		return $this->query->createCountQuery()->execute();
+		return $this->query->createCountQuery()->fetch();
 	}
 	/**
 	 * Return query
@@ -155,7 +155,7 @@ class CPagination{
 					throw new SPaginationOverrunException;
 				}
 			}
-			$this->results=$this->query->limit($this->pageSize,$down)->execute();
+			$this->results=$this->query->limit($this->pageSize,$down)->fetch();
 			
 			if($hFR){
 				$count=$this->totalResults=$this->query->foundRows();
@@ -167,6 +167,19 @@ class CPagination{
 			
 		}else $this->results=array();
 		return $this->return;
+	}
+	
+	/**
+	 * Alias of execute
+	 * @see execute()
+	 */
+	public function fetch(){
+		return $this->execute();
+	}
+	
+	/** @internal */
+	public function _execute_(){
+		return $this->fetch();
 	}
 	
 	/**

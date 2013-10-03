@@ -7,7 +7,7 @@
 class CModelTableOne extends CModelTable{
 	private $results;
 	
-	private function execute(){
+	private function fetch(){
 		if($this->results===null) $this->results=$this->query->execute();
 	}
 	
@@ -16,11 +16,16 @@ class CModelTableOne extends CModelTable{
 	 * 
 	 * @return CModelTableOne|self
 	 */
-	public function notFoundIfFalse(){
+	public function mustFetch(){
 		/*#if DEV */if($this->results!==null) throw new Exception('$this->results!==null'); /*#/if*/
-		$this->execute();
+		$this->fetch();
 		if(empty($this->results)) notFound();
 		return $this;
+	}
+	
+	/** @deprecated */
+	public function notFoundIfFalse(){
+		return $this->mustFetch();
 	}
 	
 	/**
@@ -30,7 +35,7 @@ class CModelTableOne extends CModelTable{
 	 * @param string
 	 */
 	public function display($displayTotalResults=false,$transformerClass='THtml'){
-		$this->execute();
+		$this->fetch();
 		$this->_setFields();
 		$this->initController();
 		$this->callTransformer($transformerClass,$this->results);
