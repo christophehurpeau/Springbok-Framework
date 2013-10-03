@@ -342,11 +342,8 @@ class PhpFile extends EnhancerFile{
 					function($mF){return '->setFields('.UPhp::exportCode(explode(',',$mF[1])).')';},$matches[1]);
 			
 			if(!empty($matches[4])){
-				if($matches[4]=='execute'){
-					$message='WARNING : double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1];
-					if(function_exists('display')) display($message);
-					else echo "<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n<br/>\n".$message.'<br/>';
-				}
+				//if($matches[4]=='execute' && $this->enhanced->getMinCoreVersion() < 4)
+				//	$this->addWarning('double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1]);
 				if($matches[4]=='callback'||$matches[4]=='forEach') return str_replace($matches[5],$phpFile->addExecuteToQueries($matches[5],$isModelFile),$matches[1]);
 			}
 			if((!empty($matches[2]) && substr($matches[2],0,5)=='query')||

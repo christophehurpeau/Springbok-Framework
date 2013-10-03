@@ -19,7 +19,7 @@ require 'components/CRoute.php';
 require 'components/CHttpRequest.php';
 
 class App{
-	/*#if DEV */public static $enhancing=false,$currentFileEnhanced='',$changes=array();/*#/if */
+	/*#if DEV */public static $enhancing=false,$enhanceApp,$currentFileEnhanced='',$changes=array();/*#/if */
 	
 	/**
 	 * Include the config from APP/config/
@@ -77,7 +77,7 @@ class App{
 		
 		
 			$t=microtime(true);
-			self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
+			self::$enhanceApp=self::$enhancing=$enhanceApp=new EnhanceApp(dirname(APP));
 			$process=$enhanceApp->process();
 			$changes=$process?$process->getChanges():false;
 			self::$enhancing=false;
