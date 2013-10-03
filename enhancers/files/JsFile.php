@@ -265,7 +265,7 @@ class JsFile extends EnhancerFile{
 			//else debugCode($destination."\n".$res,false);
 			
 			if(preg_match_all('/:\s+WARNING\s+-\s+(.*)\n(.*)\n/',$res,$m)){
-				foreach($m[0] as $i=>$abcd)$enhancer->warnings[]=array($m[1][$i],$m[2][$i]);
+				foreach($m[0] as $i=>$abcd) $enhancer->addWarning(array($m[1][$i],$m[2][$i]));
 			}
 		}
 		if($createSourceMap) file_put_contents($destination,'//@ sourceMappingURL='./*(defined('BASE_URL')?BASE_URL.'/web/js/':'').*/basename($destination).'.map',FILE_APPEND);//(defined('BASE_URL')?BASE_URL:'')

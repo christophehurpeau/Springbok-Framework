@@ -1,5 +1,7 @@
 <?php
 class Enhanced{
+	const LATEST_CORE = 4;
+	
 	private $appDir,$type,$name,$logger;
 	public $config,$oldDef=array(),$newDef=array(),$warnings=array(),$errors=array();
 	
@@ -9,6 +11,11 @@ class Enhanced{
 		$this->appDir=$dirname;
 		if(file_exists($configname=$dirname.'src/config/enhance.php'))
 			$this->config=include $configname;
+		else $this->config = array( 'config'=>array() );
+	}
+	
+	public function getMinCoreVersion(){
+		return self::LATEST_CORE;
 	}
 	
 	public function initLogger(){

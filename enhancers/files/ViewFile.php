@@ -1,6 +1,6 @@
 <?php
 class ViewFile extends PhpFile{
-	public static $CACHE_PATH='views_8.5.1';
+	public static $CACHE_PATH='views_8.6';
 	
 	protected function loadContent($content){
 		parent::loadContent($content);
@@ -166,6 +166,8 @@ class ViewFile extends PhpFile{
 		if(strpos($this->fileName(),'mails')===false && basename(dirname($this->srcFile()->getPath()))!=='mails'){
 			$replace='</html>';
 			$this->_devContent=str_replace($replace,'<?php HDev::springbokBar() ?>'.$replace,$this->_devContent);
+			$replace='<body>';
+			$this->_devContent=str_replace($replace,'<?php HDev::body() ?>'.$replace,$this->_devContent);
 		}
 		/*$replace='<body>';
 		$this->_devContent=str_replace($replace,$replace.'<?php HDev::springbokBar() ?>',$this->_devContent);*/

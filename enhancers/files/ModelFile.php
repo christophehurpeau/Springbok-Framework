@@ -24,7 +24,7 @@ class ModelFile extends PhpFile{
 			if($countEval===($withParam?3:2)){
 				$pluginKey=array_shift($eval);
 				if(!isset($enhanced->config['plugins'][$pluginKey])){
-					//debug('warning: plugin doesnt exists: '.$pluginKey);
+					$enhanced->addWarning(null,'plugin doesnt exists: '.$pluginKey);
 					return false;
 				}
 				$parentPath = $enhanced->pluginPathFromKey($pluginKey);

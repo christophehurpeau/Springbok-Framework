@@ -3,7 +3,11 @@ abstract class EnhancerFile{
 	private $srcFile,$fileName,$_isCore,$_isProd,$_config,$_isInLibDir,$_devFile;
 	public $currentDestFile;
 	
-	protected $enhanced,$_srcContent,$warnings,$errors,$md5;
+	/**
+	 * @var AEnhance
+	 */
+	protected $enhanced;
+	protected $_srcContent,$errors,$md5;
 	
 	protected static $preprocessor;
 	
@@ -23,10 +27,12 @@ abstract class EnhancerFile{
 		return $this->md5=md5($this->_srcContent);
 	}
 	
-	public function hasWarnings(){ return !empty($this->warnings); }
 	public function hasErrors(){ return !empty($this->errors); }
-	public function getWarnings(){ return $this->warnings; }
 	public function getErrors(){ return $this->errors; }
+	
+	public function addWarning($warning){
+		$this->enhanced->addWarning($this->srcFile->getPath(),$warning);
+	}
 	
 	public function processEhancing($devFile,$prodFile,$justDev=null){
 		if(is_string($devFile)) $devFile=new File($devFile);

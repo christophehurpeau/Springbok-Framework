@@ -137,7 +137,6 @@ abstract class AFolderEnhancer{
 				$this->enhanced->newDef['changes']['all'][]=array('path'=>$file->getPath(),'time'=>$t);
 				$this->enhanced->newDef['changes'][substr($class,0,-4)][]=array('path'=>$file->getPath(),'time'=>$t);
 				
-				if($nf->hasWarnings()) $this->enhanced->addWarnings($file->getPath(),$nf->getWarnings());
 				if($nf->hasErrors()) $this->enhanced->addErrors($file->getPath(),$nf->getErrors());
 				
 				$this->enhanced->newDef['enhancedFiles'][$file->getPath()]=array('class'=>$class,'dev'=>$devDir.$destFilename,'prod'=>$justDev?false:$prodDir.$destFilename);

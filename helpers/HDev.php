@@ -146,6 +146,22 @@ class HDev{
 			.' })</script>';
 	}
 	
+	
+	/**
+	 * Display warnings and other stuffs just after the body.
+	 * 
+	 * This function is always called after the bdoy start tag (<body>)
+	 * 
+	 * @return void
+	 */
+	public static function body(){
+		if(!empty(App::$enhanceApp) && !empty(App::$enhanceApp->hasWarnings())){
+			debugNoFlush(App::$enhanceApp->getWarnings());
+		}
+	}
+	
+	
+	
 	/**
 	 * Display an error
 	 * 

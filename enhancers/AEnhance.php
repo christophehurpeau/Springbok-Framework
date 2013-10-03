@@ -147,5 +147,11 @@ abstract class AEnhance{
 	}
 	
 	
+	public function hasWarnings(){
+		return $this->enhanced->hasWarnings();
+	}
 	
+	public function getWarnings(){
+		return $this->enhanced->getWarnings();
+	}
 }
