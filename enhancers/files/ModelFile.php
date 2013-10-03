@@ -27,7 +27,7 @@ class ModelFile extends PhpFile{
 					//debug('warning: plugin doesnt exists: '.$pluginKey);
 					return false;
 				}
-				$parentPath = $enhanced->pluginPathFromKey($pluginKey=array_shift($eval));
+				$parentPath = $enhanced->pluginPathFromKey($pluginKey);
 			}else $enhanced->getAppDir().'src/';
 			$modelPath='models/'.($eval[0]).'.php';
 			if(!isset($controllersSrc[$pluginKey.'/'.$modelPath]))
