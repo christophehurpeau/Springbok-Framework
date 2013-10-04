@@ -124,11 +124,16 @@ class ScssFile extends EnhancerFile{
 		if(!preg_match('/(^|\s+)([0-9]+\.[0-9]+)/',$sassVersion,$sassMatchVersion) || empty($sassMatchVersion[2])) throw new Exception('Unable to find version : '.$sassVersion);
 		$sassVersion = (float)$sassMatchVersion[2];
 		if($sassVersion < 3.2) throw new Exception('Please update your sass version : sudo gem install sass compass ('.$sassVersion.')');
+		
+		$rubyVersion = shell_exec('ruby --version');
+		if(!preg_match('/(^|\s+)([0-9]+\.[0-9]+)/',$rubyVersion,$rubyMatchVersion) || empty($rubyMatchVersion[2])) throw new Exception('Unable to find version : '.$rubyVersion);
+		$rubyVersion = (float)$rubyMatchVersion[2];
+		if($rubyVersion >= 1.9) self::$sassExecutable.=' -E "UTF-8"';
 	}
 	public function callSass($content,$destination){
 		$dest=$destination?$destination:tempnam($this->enhanced->getTmpDir(),'scssdest');
 		$tmpfname = tempnam($this->enhanced->getTmpDir(),'scss');
-		$cmd = self::$sassExecutable.' -E "UTF-8" -C --trace --compass --scss -t compressed -r '.escapeshellarg(CORE_SRC.'includes/scss/module.rb')
+		$cmd = self::$sassExecutable.' -C --trace --compass --scss -t compressed -r '.escapeshellarg(CORE_SRC.'includes/scss/module.rb')
 										.' '.escapeshellarg($tmpfname).' '.escapeshellarg($dest);
 		file_put_contents($tmpfname,$content);
 		$res=shell_exec('cd '.escapeshellarg(dirname($this->srcFile()->getPath())).' ; '.$cmd.' 2>&1');

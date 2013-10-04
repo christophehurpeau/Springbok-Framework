@@ -16,7 +16,7 @@ class QFindValues extends QFind{
 	/**
 	 * @return void
 	 */
-	public function forEachValues($callback){
+	public function forEachValue($callback){
 		$this->_db->doSelectValuesCallback($this->_toSQL(),$callback);
 	}
 	
