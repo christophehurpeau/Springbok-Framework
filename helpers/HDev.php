@@ -155,7 +155,7 @@ class HDev{
 	 * @return void
 	 */
 	public static function body(){
-		if(!empty(App::$enhanceApp) && !empty(App::$enhanceApp->hasWarnings())){
+		if(!empty(App::$enhanceApp) && App::$enhanceApp->hasWarnings()){
 			debugNoFlush(App::$enhanceApp->getWarnings());
 		}
 	}
