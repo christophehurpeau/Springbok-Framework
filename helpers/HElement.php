@@ -28,6 +28,15 @@ abstract class HElement{
 	public function attr($attrName,$value){ $this->attributes[$attrName]=$value; return $this; }
 	
 	/**
+	 * Set one attribute, prefixed by "data-"
+	 * 
+	 * @param string
+	 * @param string
+	 * @return HElement|self
+	 */
+	public function dataattr($attrName,$value){ $this->attributes['data-'.$attrName]=$value; return $this; }
+	
+	/**
 	 * Set the id attribute
 	 * 
 	 * @param string
