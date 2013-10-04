@@ -60,30 +60,45 @@ abstract class HElementFormContainable extends HElement{
 	/**
 	 * Set the required attribute
 	 * 
+	 * @param bool
 	 * @return HElementFormContainable|self
 	 */
-	public function required(){ $this->attributes['required']=true; return $this; }
+	public function required($isRequired=true){
+		if($isRequired) $this->attributes['required']=true;
+		return $this;
+	}
 	
 	/**
 	 * Set the readOnly attribute
 	 * 
+	 * @param bool
 	 * @return HElementFormContainable|self
 	 */
-	public function readOnly(){ $this->attributes['readonly']=true; return $this; }
+	public function readOnly($isReadOnly=true){
+		if($isReadOnly) $this->attributes['readonly']=true;
+		return $this;
+	}
 	
 	/**
 	 * Set the disabled attribute
 	 * 
+	 * @param bool
 	 * @return HElementFormContainable|self
 	 */
-	public function disabled(){ $this->attributes['disabled']=true; return $this; }
+	public function disabled($isDisabled=true){
+		if($isDisabled) $this->attributes['disabled']=true;
+		return $this;
+	}
 	
 	/**
 	 * Set html content between the label and the element
 	 * 
 	 * @return HElementFormContainable|self
 	 */
-	public function between($content){ $this->between=$content; return $this; }
+	public function between($content){
+		$this->between=$content;
+		return $this;
+	}
 	
 	/**
 	 * @internal
