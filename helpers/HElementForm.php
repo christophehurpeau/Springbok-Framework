@@ -387,7 +387,7 @@ class HElementForm extends HElement{
 	 * create a select
 	 * 
 	 * @param string
-	 * @param list array Array of key=>values or objects
+	 * @param array Array of key=>values or objects
 	 * @param mixed the selected value
 	 * @return HElementFormInputSelect
 	 */
