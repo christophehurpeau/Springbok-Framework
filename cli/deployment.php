@@ -11,7 +11,7 @@ Model::$__dbName=$dbName;
 
 switch($argv['type']){
 	case 'app':
-		$deployment=Deployment::QOne()->byId($argv['deployment_id'])->with('Server');
+		$deployment=Deployment::QOne()->byId($argv['deployment_id'])->with('Server')->fetch();
 		if(empty($deployment) || empty($deployment->server)) die('Unknown deployment');
 		
 		$sc=ServerCore::findOneIdAndPathByServer_idAndVersion($deployment->server_id,Springbok::VERSION);

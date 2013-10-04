@@ -118,7 +118,7 @@ class CRUD{
 	 * @return void
 	 */
 	public static function delete($model,$id){
-		$model::QDeleteOne()->byId($id);
+		$model::QDeleteOne()->byId($id)->execute();
 	}
 	
 	/**
@@ -127,6 +127,6 @@ class CRUD{
 	 * @return void
 	 */
 	public static function setDeleted($model,$id){
-		$model::QUpdateOneField('deleted',true)->byId($id);
+		$model::QUpdateOneField('deleted',true)->byId($id)->execute();
 	}
 }

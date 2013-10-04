@@ -88,7 +88,7 @@ class CSearch{
 			else{
 				$this->searchWordsInCondition=array();
 				foreach($this->searchWords as $word)
-					if(!SearchablesTerm::QExist()->with('SearchablesKeywordTerm')->where(array('skt.keyword_id'=>$this->foundKeywordIds,SearchablesTerm::dbEscape(' '.$word.' ').' LIKE CONCAT("% ",st.term," %") ')))
+					if(!SearchablesTerm::QExist()->with('SearchablesKeywordTerm')->where(array('skt.keyword_id'=>$this->foundKeywordIds,SearchablesTerm::dbEscape(' '.$word.' ').' LIKE CONCAT("% ",st.term," %") '))->fetch())
 						$this->searchWordsInCondition[]=$word;
 				
 			}
@@ -157,7 +157,7 @@ class CSearch{
 			$sqlScore.=' ELSE '.($score++).' END ';
 			
 			
-			$wordsId=SearchablesWord::QValues()->fields('id')->where(array('word LIKE'=>$this->searchWords));
+			$wordsId=SearchablesWord::QValues()->fields('id')->where(array('word LIKE'=>$this->searchWords))->fetch();
 			if(!empty($wordsId)){
 				$countWordsId=count($wordsId);
 				if(empty($this->foundKeywordIds)){
@@ -167,7 +167,7 @@ class CSearch{
 					$addSqlScoreWords=true;
 					$query->withForce('SearchableWord',array('onConditions'=>array('sw.word_id'=>$wordsId)))->groupBy('sb.id');
 					if(!empty($this->searchWordsInCondition)){
-						$wordConditionIds=SearchablesWord::QValues()->fields('id')->where(array('word LIKE'=>$this->searchWordsInCondition));
+						$wordConditionIds=SearchablesWord::QValues()->fields('id')->where(array('word LIKE'=>$this->searchWordsInCondition))->fetch();
 						if(!empty($wordConditionIds)) $query->withForce('SearchableWord',array('alias'=>'swcond'))->addCondition('swcond.word_id',$wordConditionIds);
 					}
 				}

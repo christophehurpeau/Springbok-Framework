@@ -58,7 +58,7 @@ class EnhancedApp extends Enhanced{
 		
 		//}
 		if(empty($this->devConfig['minCoreVersion'])){
-			$this->addWarnings($appDir.'src/config/_'.ENV.'.php','Missing param "minCoreVersion" in config/_'.ENV.'.php. Available values : '.implode(', ',range(1,self::LATEST_CORE)));
+			$this->addWarning($appDir.'src/config/_'.ENV.'.php','Missing param "minCoreVersion" in config/_'.ENV.'.php. Available values : '.implode(', ',range(1,self::LATEST_CORE)));
 			$this->devConfig['minCoreVersion'] = 1;
 		}
 	}

@@ -647,7 +647,9 @@ class SSqlModel extends SModel{
 	 */
 	public static function findCachedListName(){
 		$className=static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use($className){return $className::findListName();});
+		return CCache::get('models')->readOrWrite($className,function() use($className){
+			return $className::findListName();
+		});
 	}
 	
 	/**
@@ -657,7 +659,9 @@ class SSqlModel extends SModel{
 	 */
 	public static function findCachedListValues($fields){
 		$className=static::$__className;
-		return CCache::get('models')->readOrWrite($className,function() use($className,$fields){return $className::QListRows()->fields($fields);});
+		return CCache::get('models')->readOrWrite($className,function() use($className,$fields){
+			return $className::QListRows()->fields($fields)->fetch();
+		});
 	}
 	
 	/**
@@ -667,7 +671,9 @@ class SSqlModel extends SModel{
 	 */
 	public static function findFirstLetters($fieldName='name'){
 		$className=static::$__className;
-		return CCache::get('models_firstLetters')->readOrWrite($className.'_firstLetters',function() use($className,$fieldName){return $className::QValues()->field('DISTINCT SUBSTRING('.$fieldName.',1,1)');});
+		return CCache::get('models_firstLetters')->readOrWrite($className.'_firstLetters',function() use($className,$fieldName){
+				return $className::QValues()->field('DISTINCT SUBSTRING('.$fieldName.',1,1)')->fetch();
+		});
 	}
 	
 	/**

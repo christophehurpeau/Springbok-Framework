@@ -343,14 +343,15 @@ class PhpFile extends EnhancerFile{
 			
 			if(!empty($matches[4])){
 				//if($matches[4]=='execute' && $this->enhanced->getMinCoreVersion() < 4)
-				//	$this->addWarning('double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1]);
+				//	$phpFile->addWarning('double execute : '.$phpFile->srcFile()->getPath().' ==> '.$matches[1]);
 				if($matches[4]=='callback'||$matches[4]=='forEach') return str_replace($matches[5],$phpFile->addExecuteToQueries($matches[5],$isModelFile),$matches[1]);
 			}
 			if((!empty($matches[2]) && substr($matches[2],0,5)=='query')||
 						(!empty($matches[4]) && ($matches[4]=='_execute_'||$matches[4]=='execute'||$matches[4]=='fetch'||$matches[4]=='refetch'||$matches[4]=='mustFetch'
 										||$matches[4]==='toArray'||$matches[4]==='notFoundIfFalse'/*||$matches[4]==='paginate'*/)) || (!empty($matches[3]))) return $matches[1];
-			if($this->enhanced->getMinCoreVersion() < 4) return $matches[1].'->_execute_()';
-			$this->throwException('missing fetch() or execute() on your query !'."\n".$matches[1]);
+			if($this->enhanced->getMinCoreVersion() >= 4)
+				$phpFile->addWarning('missing fetch() or execute() on your query !'."\n".$matches[1]);
+			return $matches[1].'->_execute_()';
 		},$phpContent);
 /*		if($newPhpContent===NULL) echo "NULL !!!";
 		if(!$this->isCore()) echo '<br /><br /><br /><br /><br />';

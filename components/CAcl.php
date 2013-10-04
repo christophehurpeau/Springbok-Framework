@@ -13,10 +13,10 @@
  *			
  *			if($projectId===null)
  *				$role_id=ProjectMemberRole::QValues()->field('DISTINCT role_id')->with('ProjectMember',false)
- *						->where(array('mbr.user_id'=>CSecure::connected()));
+						->where(array('mbr.user_id'=>CSecure::connected()))->fetch();
  *			else
  *				$role_id=ProjectMemberRole::QValues()->field('role_id')->with('ProjectMember',false)
- *						->where(array('mbr.project_id'=>$projectId,'mbr.user_id'=>CSecure::connected()));
+							->where(array('mbr.project_id'=>$projectId,'mbr.user_id'=>CSecure::connected()))->fetch();
  *			
  *			if($role_id!==false){
  *				$roleId=$role_id;
@@ -24,7 +24,7 @@
  *				$roleId[]=AclGroup::BASIC_USER;
  *			}
  *		}else $roleId=AclGroup::GUEST;
- *		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>&$roleId,'permission'=>&$permission));
+ *		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>$roleId,'permission'=>$permission))->fetch();
  *	}
  * }
  * </code>
@@ -53,7 +53,7 @@ class CAcl{
 			$group_id=CSecure::user()->group_id;
 			if($group_id!==null) $groupId=$group_id;
 		}else $groupId=AclGroup::GUEST;
-		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>$groupId,'permission'=>$permission));
+		return AclGroupPerm::QExist()->where(array('granted'=>true,'group_id'=>$groupId,'permission'=>$permission))->fetch();
 	}
 	
 	/**

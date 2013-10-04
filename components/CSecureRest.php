@@ -62,7 +62,8 @@ class CSecureRest{
 		if(self::$connected===null){
 			if(isset($_SERVER['HTTP_SAUTH'])){
 				self::$connected=UserToken::QValue()->field('user_id')
-					->where(array('token'=>$_SERVER['HTTP_SAUTH'],'userAgent'=>sha1($_SERVER['HTTP_USER_AGENT'].USecure::getSalt())));
+					->where(array('token'=>$_SERVER['HTTP_SAUTH'],'userAgent'=>sha1($_SERVER['HTTP_USER_AGENT'].USecure::getSalt())))
+					->fetch();
 			}
 		}
 		return self::$connected!==false && self::$connected!==null;
@@ -90,7 +91,7 @@ class CSecureRest{
 		$where[$login]=$user->$login;
 		$where[$password]=static::hashPassword($user->$password);
 		
-		$query=$id===$login ? $className::QExist() : $className::QValue()->field($id);
+		$query=$id===$login ? /**/$className::QExist() : /**/$className::QValue()->field($id);
 		
 		if($res=$query->where($where)->fetch()){
 			self::$connected=$id===$login ? $user->$login : $res;

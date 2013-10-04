@@ -93,7 +93,7 @@ class Enhanced{
 	public function configSet($attr,$value){ return $this->config[$attr]=&$value; }
 	public function configAdd($attr,$value){ return $this->config[$attr][]=&$value; }
 	
-	public function addWarnings($file,$value){ $this->warnings[$file]=&$value; }
+	public function addWarning($file,$value){ $this->warnings[$file][]=$value; }
 	public function addErrors($file,$value){ $this->errors[$file]=&$value; }
 	
 	public function hasWarnings(){ return !empty($this->warnings); }

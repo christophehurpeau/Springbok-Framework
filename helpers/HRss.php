@@ -4,7 +4,7 @@
  * 
  * <code>
  * $posts=Post::QAll()->fields('id,published,excerpt')->withParent('name,slug,updated')
- *		->where(array('status'=>Post::PUBLISHED))->orderBy(array('published'=>'DESC'));
+			->where(array('status'=>Post::PUBLISHED))->orderBy(array('published'=>'DESC'))->fetch();
  *	$rss=new HRss('Actualités','Actualités du Site','fr','Copyright '.date('Y').' Site name.',
  *			array('url'=>HHtml::staticUrl('/logo-144.png','img'),'description'=>"Toutes les actualités"),'/posts');
  *	foreach($posts as $post){

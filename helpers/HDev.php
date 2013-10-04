@@ -11,7 +11,7 @@ class HDev{
 	 * 
 	 * <code>
 	 * static function test(){
-	 * 	$posts = Post::QAll()->limit(4);
+	 * 	$posts = Post::QAll()->limit(4)->fetch();
 	 * 	HDev::springbokBar(true);
 	 * 	exit;
 	 * 	render();
