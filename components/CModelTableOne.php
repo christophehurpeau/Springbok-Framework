@@ -8,7 +8,7 @@ class CModelTableOne extends CModelTable{
 	private $results;
 	
 	private function fetch(){
-		if($this->results===null) $this->results=$this->query->execute();
+		if($this->results===null) $this->results=$this->query->fetch();
 	}
 	
 	/**
