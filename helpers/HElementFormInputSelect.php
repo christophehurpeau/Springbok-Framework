@@ -28,6 +28,7 @@ class HElementFormInputSelect extends HElementFormContainable{
 			if(isset($modelName::$__PROP_DEF[$name])){
 				$propDef=$modelName::$__PROP_DEF[$name];
 				if(isset($propDef['annotations']['Required'])) $this->attributes['required']=true;
+				else $this->empty = '';
 			}
 		}
 		$this->_setAttrId();
