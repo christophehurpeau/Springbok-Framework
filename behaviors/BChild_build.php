@@ -47,6 +47,6 @@ class BChild_build{
 									.'$res=call_user_func_array(array($parent,"update"),func_get_args());'
 									.$updateThisData
 									.'return $res; }';
-		if($idField==='p_id') $classBeforeContent.="\n".'public static function getParentId($childId){ return self::QValue()->field("p_id")->byId($childId); }';
+		if($idField==='p_id') $classBeforeContent.="\n".'public static function getParentId($childId){ return self::QValue()->field("p_id")->byId($childId)->fetch(); }';
 	}
 }

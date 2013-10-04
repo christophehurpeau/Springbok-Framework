@@ -22,7 +22,7 @@ class CBinder{
 		// direct binding
 		if(method_exists(__CLASS__,$methodName)){
 			$val=self::$methodName($val);
-			if($withValidation && $annotations) CValidation::valid($withValidation,$annotations,$val);
+			if($withValidation && $annotations) ACValidation::valid($withValidation,$annotations,$val);
 			return $val;
 		}
 		if(!empty($val)){
@@ -33,12 +33,12 @@ class CBinder{
 					if(is_array($val)) foreach($val as $key=>$value) $val[$key]=self::bind($typeArray,$value);
 					else $val=array(self::bind($typeArray,$val));
 				}
-				if($withValidation && $annotations) CValidation::valid($withValidation,$annotations,$val);
+				if($withValidation && $annotations) ACValidation::valid($withValidation,$annotations,$val);
 				return $val;
 			}
 			if(is_array($val) && class_exists($type)){
 				$val=self::_bindObject($type,$val,$withValidation && isset($annotations['Valid']) ? $withValidation : false,isset($annotations['Valid']) ? $annotations['Valid'] : null);
-				if($withValidation && $annotations) CValidation::valid($withValidation,$annotations,$val);
+				if($withValidation && $annotations) ACValidation::valid($withValidation,$annotations,$val);
 				return $val;
 			}
 		}

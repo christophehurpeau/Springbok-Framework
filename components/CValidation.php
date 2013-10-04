@@ -2,6 +2,43 @@
 /**
  * This component validates values. Used by CBinder
  * 
+ * You can use annotations in actions and model fields to valid their format :
+ * 
+ * - @Required
+ * - @NotEmpty
+ * - @Id
+ * - @MinLength(int $minLength)
+ * - @MaxLength(int $maxLength)
+ * - @Length(int $length)
+ * - @MinSize(int $minSize)
+ * - @MaxSize(int $maxSize)
+ * - @Url
+ * - @Email
+ * - @Match(string $pattern)
+ * 
+ * You can also create your own CValidation Component and create methods to be able to validate other pattern
+ * 
+ * <code>
+ * class ACValidation extends CValidation{
+ * 	public static function frenchPhoneNumber($key,$val){
+ * 		return self::_addError($key,self::validFrenchPhoneNumber($val));
+ * 	}
+ * 	protected static function validFrenchPhoneNumber($val){
+ * 		return preg_match('^(\+|[0-9][1-9])[0-9\.\- ]+$',$val) ? false : sprintf(_tC('This phone number "%s" is not a french phone number'),$val);
+ * 	}
+ * }
+ * </code>
+ * 
+ * Then you will be able to use @FrenchPhoneNumber
+ * 
+ * The valid method return false if the value is valid or a string with an error message.
+ * 
+ * You can pass as many arguments as you like : for the annotation <code>@Test(1,2,3)</code>, the method can be:
+ * <code>
+ * protected static function validTest($val,$param1,$param2,$param3){
+ * }
+ * </code>
+ * 
  * @see CBinder
  * @see Controller
  */
@@ -39,10 +76,10 @@ class CValidation{
 	 */
 	public static function valid($key,$annotations,$val){
 		foreach($annotations as $name=>$params){
-			if(!method_exists(get_called_class(),'valid'.$name)) continue;
+			if(!method_exists($calledClass=get_called_class(),'valid'.$name)) continue;
 			if($params) array_unshift($params,$val);
 			else $params=array($val);
-			self::_addError($key,call_user_func_array(array('self','valid'.$name),$params));
+			self::_addError($key,call_user_func_array(array($calledClass,'valid'.$name),$params));
 		}
 		return $val;
 	}
