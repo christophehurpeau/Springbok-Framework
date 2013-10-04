@@ -24,7 +24,10 @@
  * 		return self::_addError($key,self::validFrenchPhoneNumber($val));
  * 	}
  * 	protected static function validFrenchPhoneNumber($val){
- * 		return preg_match('^(\+|[0-9][1-9])[0-9\.\- ]+$',$val) ? false : sprintf(_tC('This phone number "%s" is not a french phone number'),$val);
+ * 		return preg_match('^(\+|[0-9][1-9])[0-9\.\- ]+$',$val) ? false : sprintf(_t('This phone number "%s" is not a french phone number'),$val);
+ * 	}
+ * 	protected static function htmlFrenchPhoneNumber($input){
+ * 		$input->pattern('^(\+|[0-9][1-9])[0-9\.\- ]+$');
  * 	}
  * }
  * </code>
@@ -75,13 +78,29 @@ class CValidation{
 	 * @return mixed
 	 */
 	public static function valid($key,$annotations,$val){
-		foreach($annotations as $name=>$params){
-			if(!method_exists($calledClass=get_called_class(),'valid'.$name)) continue;
-			if($params) array_unshift($params,$val);
-			else $params=array($val);
-			self::_addError($key,call_user_func_array(array($calledClass,'valid'.$name),$params));
+		if(!empty($annotations)){
+			$calledClass=get_called_class();
+			foreach($annotations as $name=>$params){
+				if(!method_exists($calledClass,'valid'.$name)) continue;
+				if($params) array_unshift($params,$val);
+				else $params=array($val);
+				self::_addError($key,call_user_func_array(array($calledClass,'valid'.$name),$params));
+			}
 		}
 		return $val;
+	}
+	
+	public static function inputValidation($input,$annotations){
+		if(!empty($annotations)){
+			$calledClass=get_called_class();
+			foreach($annotations as $name=>$params){
+				if(!method_exists($calledClass,'html'.$name)) continue;
+				if($params) array_unshift($params,$input);
+				else $params=array($input);
+				call_user_func_array(array($calledClass,'html'.$name),$params);
+			}
+		}
+		return $input;
 	}
 	
 	/**
@@ -133,7 +152,10 @@ class CValidation{
 	private static function validRequired($val){
 		return ($val===false || $val===null || trim($val)==='') ? _tC('validation.required') : false;
 	}
-
+	private static function htmlRequired($input){
+		$input->required();
+	}
+	
 	
 	/**
 	 * !empty($val)||$val==='0'
@@ -147,6 +169,9 @@ class CValidation{
 	}
 	private static function validNotEmpty($val){
 		return empty($val)&&$val!=='0' ? _tC('validation.required') : false;
+	}
+	private static function htmlNotEmpty($input){
+		$input->required();
 	}
 	
 	
@@ -179,6 +204,9 @@ class CValidation{
 	private static function validMaxLength($val,$maxLength){
 		return (strlen($val) <= $maxLength) ? false : _tC('validation.maxlength');
 	}
+	private static function htmlMaxLength($input,$maxLength){
+		$input->attr('maxlength',$maxLength);
+	}
 	
 	/**
 	 * strlen($val) == $length
@@ -193,6 +221,9 @@ class CValidation{
 	}
 	private static function validLength($val,$length){
 		return (strlen($val) == $length) ? false : sprintf(_tC('This field must have a length of %s'),$length);
+	}
+	private static function htmlLength($input,$length){
+		$input->attr('maxlength',$length)->attr('minlength',$length);
 	}
 
 	/**
@@ -209,6 +240,9 @@ class CValidation{
 	private static function validMinLength($val,$minLength){
 		return (strlen($val) >= $minLength) ? false : sprintf(_tC('validation.minlength'),$minLength);
 	}
+	private static function htmlMinLength($input,$minLength){
+		$input->attr('minlength',$minLength);
+	}
 
 	/**
 	 * $val <= $maxSize
@@ -223,6 +257,9 @@ class CValidation{
 	}
 	private static function validMaxSize($val,$maxSize){
 		return ($val <= $maxSize) ? false : sprintf(_tC('validation.maxsize'),$maxSize);
+	}
+	private static function htmlMaxSize($input,$maxSize){
+		$input->attr('max',$maxSize);
 	}
 
 	/**
@@ -239,6 +276,9 @@ class CValidation{
 	private static function validMinSize($val,$minSize){
 		return ($val >= $minSize) ? false : sprintf(_tC('validation.minsize'),$minSize);
 	}
+	private static function htmlMinSize($input,$minSize){
+		$input->attr('min',$minSize);
+	}
 	
 	/**
 	 * /^[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@ PATTERN_HOSTNAME $/i
@@ -252,6 +292,9 @@ class CValidation{
 	}
 	private static function validEmail($val){
 		return self::isValidEmail($val) ? false : _tC('validation.email');
+	}
+	private static function htmlEmail($input){
+		$input->setType('email');
 	}
 	
 	/**
@@ -278,6 +321,9 @@ class CValidation{
 	public static function validMatch($val,$match){
 		return preg_match('/'.$match.'/',$val) ? false : sprintf(_tC('validation.pattern'),$match);
 	}
+	private static function htmlMatch($input,$match){
+		$input->pattern($match);
+	}
 	
 	/**
 	 * /^https?\:\/\/ PATTERN_HOSTNAME $/i
@@ -292,6 +338,10 @@ class CValidation{
 	private static function validUrl($val){
 		return self::isValidUrl($val) ? false : _tC('validation.url');
 	}
+	private static function htmlUrl($input,$match){
+		$input->setType('url');
+	}
+	
 	/**
 	 * 
 	 * @param string

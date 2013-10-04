@@ -51,12 +51,9 @@ class HElementFormInput extends HElementFormContainable{
 						} 
 						break;
 				}
-				if(isset($propDef['annotations']['Required'])) $this->attributes['required']=true;
-				if(isset($propDef['annotations']['MinSize'])) $this->attributes['min']=$propDef['annotations']['MinSize'][0];
-				if(isset($propDef['annotations']['MaxSize'])) $this->attributes['max']=$propDef['annotations']['MaxSize'][0];
+				
+				CValidation::inputValidation($this,$propDef['annotations']);
 				if(isset($propDef['annotations']['MaxLength'])){
-					$this->attributes['maxlength']=$propDef['annotations']['MaxLength'][0];
-					
 					if($this->attributes['maxlength'] < 10) $this->attributes['size']=11;
 					elseif($this->attributes['maxlength'] <= 30) $this->attributes['size']=25;
 					elseif($this->attributes['maxlength'] < 80) $this->attributes['size']=30;

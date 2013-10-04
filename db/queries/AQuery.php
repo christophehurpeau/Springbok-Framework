@@ -44,6 +44,19 @@ abstract class AQuery{
 	public function _execute_(){
 		return $this->execute();
 	}
+	
+	/*#if PROD*/
+	/**
+	 * @ignore
+	 * Prevent exception in PROD
+	 * 
+	 * @return mixed
+	 */
+	public function fetch(){
+		return $this->execute();
+	}
+	/*#/if*/
+	
 	/**
 	 * @param mixed
 	 * @param string
