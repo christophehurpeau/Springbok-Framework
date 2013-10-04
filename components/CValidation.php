@@ -29,11 +29,11 @@
  * }
  * </code>
  * 
- * Then you will be able to use @FrenchPhoneNumber
+ * Then you will be able to use <var>@FrenchPhoneNumber</var>
  * 
  * The valid method return false if the value is valid or a string with an error message.
  * 
- * You can pass as many arguments as you like : for the annotation <code>@Test(1,2,3)</code>, the method can be:
+ * You can pass as many arguments as you like : for the annotation <var>@Test(1,2,3)</var>, the method can be:
  * <code>
  * protected static function validTest($val,$param1,$param2,$param3){
  * }
