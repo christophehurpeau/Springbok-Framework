@@ -1,7 +1,7 @@
 <?php
 class JsFile extends EnhancerFile{
 	//private $_realSrcContent;
-	public static $CACHE_PATH='js_8.7.3',$defaultExtension='js';
+	public static $CACHE_PATH='js_8.7.4',$defaultExtension='js';
 
 	public static function init(){
 		self::$preprocessor=new Preprocessor('js');
@@ -197,6 +197,7 @@ class JsFile extends EnhancerFile{
 
 	protected function copyFromCache($cachefile,$devFile,$prodFile,$justDev){
 		if(file_exists($cachefile.'_src')) copy($cachefile.'_src',substr($devFile->getPath(),0,-3).'.src.js');
+		if(file_exists($cachefile.'_map')) copy($cachefile.'_map',$devFile->getPath().'.map');
 		if(file_exists($cachefile.'_oldIe')){
 			foreach($justDev?array($devFile):array($devFile,$prodFile) as $destFile)
 				copy($cachefile.'_oldIe',substr(is_string($destFile)?$destFile:$destFile->getPath(),0,-3).'.oldIe.js');
@@ -212,6 +213,9 @@ class JsFile extends EnhancerFile{
 		$srcFile=substr($devFile->getPath(),0,-3).'.oldIe.js';
 		if(file_exists($srcFile)) copy($srcFile,$cachefile.'_oldIe');
 		else UFile::rm($cachefile.'_oldIe');
+		$srcFile=$devFile->getPath().'.map';
+		if(file_exists($srcFile)) copy($srcFile,$cachefile.'_map');
+		else UFile::rm($cachefile.'_map');
 	}
 	
 	public static function executeCompressor($tmpDir,$content,$destination,$nomunge=false){
