@@ -420,7 +420,10 @@ abstract class QFind extends QSelect{
 	 * 
 	 * @return mixed
 	 */
-	abstract function fetch();
+	public function fetch(){
+		/*#if DEV*/ throw new Exception('Override your method fetch in class '.get_called_class()); /*#/if*/
+		return $this->execute();
+	}
 	
 	/**
 	 * Execute the query : warning use fetch
