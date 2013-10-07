@@ -47,7 +47,7 @@ class CModelTableOne extends CModelTable{
 	 * @return bool
 	 */
 	public function hasResult(){
-		$this->execute();
+		$this->fetch();
 		return isset($this->results[0]);
 	}
 	
