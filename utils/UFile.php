@@ -443,7 +443,7 @@ class File extends AFile{
 		return unlink($this->name);
 	}
 	
-	public function &getExt(){
+	public function getExt(){
 		$ext=strrpos($this->getName(),'.');
 		if($ext!==false) $ext=substr($this->getName(),$ext+1);
 		return $ext;

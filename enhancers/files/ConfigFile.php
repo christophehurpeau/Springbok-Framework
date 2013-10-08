@@ -302,8 +302,12 @@ class ConfigFile extends PhpFile{
 			file_put_contents($settingsFile,'<?php return '.UPhp::exportCode($settingsData).';');
 			$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 		}else{
-			if(substr(file_get_contents($this->srcFile()->getPath()),0,12)=='<?php return'){
-				$configArray=include $this->srcFile()->getPath();
+			$ext = $this->srcFile()->getExt();
+			if($ext === 'php' && $configname === 'aclGroups'){
+				$this->throwException('aclGroups file is deprecated : use aclGroups.yml now !'."\n".yaml_emit(include $this->srcFile()->getPath()));
+			}
+			if(($ext === 'php' && substr(file_get_contents($this->srcFile()->getPath()),0,12)=='<?php return') || $ext === 'yml'){
+				$configArray=self::incl($this->srcFile()->getPath(),$ext);
 				$configArray=$this->mergeWithPluginsConfig($configname,$configArray);
 				$this->write($configname,UPhp::exportCode($configArray),$devFile,$prodFile);
 			}else parent::processEhancing($devFile,$prodFile,$justDev);
