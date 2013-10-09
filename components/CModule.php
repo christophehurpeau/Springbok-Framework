@@ -5,7 +5,7 @@
  * Call CModule::{$hookName} and all methods $hookName of available modules will be called
  */
 class CModule{
-	private static $_MODULE;
+	private static $_MODULES;
 	
 	/** @ignore*/
 	public static function init(){
