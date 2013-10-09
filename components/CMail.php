@@ -3,16 +3,20 @@ include CLIBS.'PHPMailer/class.phpmailer.php';
 /**
  * Send and create mails
  * 
- * <b>Config</b>
+ * <b>Config : mail[.entry].php</b>
  * 
  * <code>
  * return array(
  * 	'From'=>'test@example.com',
  * 	'FromName'=>'Site de Test',
  * 	'ContentType'=>'text/html',
- * 'CharSet'=>'utf-8'
+ * 	'CharSet'=>'utf-8'
  * );
  * </code>
+ *
+ * There must by one config per entry.
+ *
+ * @see https://github.com/PHPMailer/PHPMailer
  * 
  */
 class CMail{
