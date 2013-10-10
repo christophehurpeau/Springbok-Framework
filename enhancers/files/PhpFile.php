@@ -470,7 +470,7 @@ class PhpFile extends EnhancerFile{
 	public static function parseAnnotations($content,$multiple=false,$forbiddenChars=NULL,$withVarAnnotation=false){
 		if($forbiddenChars===NULL) $forbiddenChars='*@';
 		$annotations=array();$matches=array();
-		preg_match_all('/[\*\s]*@([A-Za-z0-9\s_]+)(?:\(([^'.preg_quote($forbiddenChars).']*)\))?/ms',$content,$matches);//if(function_exists('debug')) debug($matches);
+		preg_match_all('/[\*\s]*@([A-Za-z0-9\s_]+)(?:\(([^'.preg_quote($forbiddenChars).']*'.($forbiddenChars==='*@'?'|[^\@\)]*':'').')\))?/ms',$content,$matches);//if(function_exists('debug')) debug($matches);
 		foreach($matches[1] as $key=>$pname){
 			$pname=trim($pname);
 			if(empty($pname)) continue;
