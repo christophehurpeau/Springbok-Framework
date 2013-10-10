@@ -231,6 +231,7 @@ class CHttpRequest{
 	public static function _GET($name){
 		return UEncoding::convertToUtf8($_GET[$name]);
 	}
+	
 	/**
 	 * $_POST param converted to UTF-8
 	 * 
@@ -240,6 +241,7 @@ class CHttpRequest{
 	public static function _POST($name){
 		return UEncoding::convertToUtf8($_POST[$name]);
 	}
+	
 	/**
 	 * $_GET param converted to UTF-8 or value if !isset
 	 * 
@@ -251,7 +253,17 @@ class CHttpRequest{
 		return isset($_GET[$name]) ? self::_GET($name) : $orValue;
 	}
 	
-	
+	/**
+	 * $_GET param converted to UTF-8 or value if !isset
+	 * 
+	 * @param string
+	 * @param mixed
+	 * @return mixed
+	 */
+	public static function _POSTor($name,$orValue=null){/* do not change orValue ! */
+		return isset($_POST[$name]) ? self::_POST($name) : $orValue;
+	}
+		
 	/**
 	 * $_GET param converted to int
 	 * 
