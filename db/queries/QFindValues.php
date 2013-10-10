@@ -22,7 +22,7 @@ class QFindValues extends QFind{
 	
 	/** @deprecated */
 	public function callback($callback){
-		return $this->forEachValues($callback);
+		return $this->forEachValue($callback);
 	}
 	
 	/**
