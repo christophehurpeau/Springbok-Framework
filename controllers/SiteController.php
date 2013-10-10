@@ -20,15 +20,15 @@ class SiteController extends Controller{
 	
 	/** */
 	static function login(User $user){
-		if(empty($_POST)) CSecure::connect();
-		elseif($user!==null && CSecure::authenticate($user,true)) exit;
+		if(empty($_POST)) ACSecure::connect();
+		elseif($user!==null && ACSecure::authenticate($user,true)) exit;
 		else CSession::setFlash('Impossible de vous connecter : identifiant ou mot de passe invalide...','user/login');
 		self::render();
 	}
 	
 	/** */
 	static function logout(){
-		CSecure::logout();
+		ACSecure::logout();
 		self::redirect('/');
 	}
 	
