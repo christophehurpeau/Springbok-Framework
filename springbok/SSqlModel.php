@@ -565,7 +565,7 @@ class SSqlModel extends SModel{
 	 * @param int
 	 * @return QOne
 	 */
-	public static function ById($id){return self::QOne()->where(array('id'=>$id));}
+	public static function ById($id){return /**/self::QOne()->where(array('id'=>$id));}
 	
 	/**
 	 * Create a QOne query with the condition on 'id' and 'status'
@@ -574,7 +574,7 @@ class SSqlModel extends SModel{
 	 * @param int
 	 * @return QOne
 	 */
-	public static function ByIdAndStatus($id,$status){return self::QOne()->where(array('id'=>$id,'status'=>$status));}
+	public static function ByIdAndStatus($id,$status){return /**/self::QOne()->where(array('id'=>$id,'status'=>$status));}
 	
 	/**
 	 * Create a QOne query with the condition on 'id' and 'type'
@@ -583,7 +583,7 @@ class SSqlModel extends SModel{
 	 * @param int
 	 * @return QOne
 	 */
-	public static function ByIdAndType($id,$type){return self::QOne()->where(array('id'=>$id,'type'=>$type));}
+	public static function ByIdAndType($id,$type){return /**/self::QOne()->where(array('id'=>$id,'type'=>$type));}
 	
 	/**
 	 * Execute the default QAll query
@@ -629,7 +629,7 @@ class SSqlModel extends SModel{
 	 */
 	public static function QListName(){
 		$orderByField=static::$__orderByField;
-		return self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
+		return /**/self::QList()->setFields(array(self::_getPkName(),static::$__displayField))->orderBy($orderByField===null?static::$__displayField:$orderByField);
 	}
 	
 	/**
