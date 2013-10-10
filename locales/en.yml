@@ -72,6 +72,7 @@ validation.minlength: This field is too short
 validation.maxsize: This field is too high
 validation.minsize: This field is too low
 validation.email: This is not a valid email
+validation.data-same: The fields are not the same
 'This fields does not valid:': 'This fields does not valid:'
 Incorrect captcha: Incorrect captcha
 The uploaded file exceeds the maximum size allowed by the configuration.: The uploaded

@@ -99,6 +99,10 @@ class EnhanceSpringbok{
 					$filename = 'locales/'.substr($filename,0,-3).'php';
 					file_put_contents($devDir->getPath().$filename, $string);
 					file_put_contents($prodDir->getPath().$filename, $string);
+					
+					$string = 'window.i18nc='.json_encode($yaml,JSON_UNESCAPED_UNICODE).';';
+					$ffilepath = CORE_SRC.'includes/js/langs/core-'.substr($filename,8	,-3).'js';
+					file_put_contents($ffilepath, $string);
 				}
 				continue;
 			}
