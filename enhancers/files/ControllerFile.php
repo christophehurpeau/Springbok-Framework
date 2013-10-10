@@ -14,7 +14,7 @@ class ControllerFile extends PhpFile{
 		if($this->fileName()==='SiteController.php'){
 			$srcContent=preg_replace('/\}\s*$/',"/* @ImportAction('core','Site','jsError') */\n}",$srcContent);
 		}/* @ImportAction('core','Site','jsError') */
-		$srcContent=preg_replace_callback('/\/\*\s+@Import(Action|Function)\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc){
+		$srcContent=preg_replace_callback('/\/\*\s+@Import(Action|Function)\(([^*]+)\)\s+\*\//',function(&$m) use(&$enhanced,&$controllersSrc,$srcContent){
 			eval('$eval=array('.$m[2].');');
 			if(!isset($eval))
 				$this->throwException('Error eval : '.$m[2]);
@@ -36,7 +36,12 @@ class ControllerFile extends PhpFile{
 									.($eval[1]==='#'?'[a-zA-Z_]+':preg_quote($eval[1])).')',
 							ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
 					$this->throwException('Import action : unable to find '.$controllerPath.' '.$eval[1]);
-				return implode("\n",$mAction[0])."\n";
+				$res='';//mAction : 1 = annotations, 2=name, 3=params, 4=content
+				foreach($mAction[0] as $kAction=>$srcAction){
+					if(!preg_match(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+'.$mAction[2][$kAction],ControllerFile::REGEXP_ACTION),$srcContent))
+						$res.=$srcAction."\n";
+				}
+				return $res;
 			}else{
 				if(!preg_match_all(self::regexpFunction($eval[1]),$controllersSrc[$countEval.$controllerPath],$mFunction))
 					$this->throwException('Import action : unable to find '.$controllerPath.' '.$eval[1]);
