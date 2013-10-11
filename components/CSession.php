@@ -147,10 +147,10 @@ class CSession{
 		if(is_string($flash['params'])) $params['class']=$flash['params'];
 		else $params+=$flash['params'];
 		if(!isset($params['class'])) $params['class']='flashMessage';
-		if(!isset($params['id'])) $params['id']=uniqid('f_');
+		if(!isset($params['id']) && !isset($params['permanent'])) $params['id']=uniqid('f_');
 		return HHtml::tag($element,$params,(empty($params['icon'])?'':'<span class="icon '.h($params['icon']).'"></span>')
 				.(empty($flash['notEscape'])?h($flash['message']):$flash['message']),false)
-			.HHtml::jsInline('$("#'.$params['id'].'").delay(9999).fadeOut(999)');
+			.(isset($params['permanent'])?'':HHtml::jsInline('$("#'.$params['id'].'").delay(9999).fadeOut(999)'));
 	}
 }
 CSession::init();
