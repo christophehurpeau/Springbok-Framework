@@ -122,20 +122,20 @@ class DBMySQL extends DBSql{
 		return '\''.$this->_connect->real_escape_string($string).'\'';
 	}
 	
-	protected function _internal_query($connect,$query,$internalCalling=0){
-		$r=$connect->query($query);
+	protected function _internal_query($connect,$query,$mode=MYSQLI_STORE_RESULT,$internalCalling=0){
+		$r=$connect->query($query,$mode);
 		/* if(!DBSchemaProcessing::$isProcessing) serviceUnavailable(_tC('The server is currently overloaded')); */
 		if($connect->errno){
 			if($internalCalling < 5){
 				if($connect->errno==1213){
 					CLogger::get('mysql-deadlocks')->log($query);
-					return $this->_internal_query($connect,$query,$internalCalling+1);
+					return $this->_internal_query($connect,$query,$mode,$internalCalling+1);
 				}elseif($connect->errno==1205){
 					CLogger::get('mysql-lockwait')->log($query);
-					return $this->_internal_query($connect,$query,$internalCalling+1);
+					return $this->_internal_query($connect,$query,$mode,$internalCalling+1);
 				}elseif($internalCalling===0 && $this->_connect->errno==2006){
 					if($this->ping())
-						return $this->_internal_query($connect,$query,$internalCalling+1);
+						return $this->_internal_query($connect,$query,$mode,$internalCalling+1);
 				}
 			}
 			throw new DBException('Query error ['.$internalCalling.'] ('.$connect->errno.'): '.$connect->error,$query);
@@ -158,6 +158,12 @@ class DBMySQL extends DBSql{
 	}
 	protected function _querySlave($query){
 		return $this->_internal_query($this->_connect,$query);
+	}
+	
+	protected function _asyncQueryMaster($query){
+		$connect = $this->_connect;
+		$this->connect();
+		$this->_internal_query($this->_connect,$query,MYSQLI_ASYNC);
 	}
 	
 	protected function _internal_preparedQuery($connect,$query,$fields,$internalCalling=0){
@@ -196,6 +202,16 @@ class DBMySQL extends DBSql{
 		$r=$this->_queryMaster($query);
 		if($r) return $this->_connect->affected_rows;
 		return false;
+	}
+	
+	/**
+	 * Do an asynchronous update query : UPDATE, DELETE, ...
+	 * 
+	 * @param string your SQL query
+	 * @return void
+	 */
+	public function /*#if DEV then _*/doAsyncUpdate($query){
+		$this->_asyncQueryMaster($query);
 	}
 	
 	/**
