@@ -148,8 +148,11 @@ class CSession{
 		else $params+=$flash['params'];
 		if(!isset($params['class'])) $params['class']='flashMessage';
 		if(!isset($params['id']) && !isset($params['permanent'])) $params['id']=uniqid('f_');
-		return HHtml::tag($element,$params,(empty($params['icon'])?'':'<span class="icon '.h($params['icon']).'"></span>')
-				.(empty($flash['notEscape'])?h($flash['message']):$flash['message']),false)
+		return HHtml::tag($element,$params,
+				('<a href="#" class="faR smallinfo italic" onclick="$(this).parent().fadeOut(999);$(this).remove();return false;">'.h(_tC('Close')).'</a>')
+				.(empty($params['icon'])?'':'<span class="icon '.h($params['icon']).'"></span>')
+				.(empty($flash['notEscape'])?h($flash['message']):$flash['message'])
+				,false)
 			.(isset($params['permanent'])?'':HHtml::jsInline('$("#'.$params['id'].'").delay(9999).fadeOut(999)'));
 	}
 }
