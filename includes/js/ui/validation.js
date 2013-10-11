@@ -213,10 +213,14 @@ S.ready(function(){
 		checkFailed:function(elt,error,checkAllAndFirstError){
 			elt.removeClass('validation-valid').addClass('validation-invalid');
 			var ib=elt.data('sValidationMessage'),attrs;
-			if(S.isArray(error)) error=UString.vformat(i18nc['validation.'+error[0]],UArray.slice1(error));
-			else if(error!=null){
-				error=i18nc['validation.'+error];
-				/*#if DEV*/ if(!error) S.error('Unknown validation translation error: '+error); /*#/if*/
+			if(S.isArray(error)){
+				var attrError = elt.attr('data-'+error[0]+'-error-message');
+				/*#if DEV*/ if(!attrError && !i18nc['validation.'+error[0]]) S.error('Unknown validation translation error: validation.'+error[0]); /*#/if*/
+				error = attrError || UString.vformat(i18nc['validation.'+error[0]],UArray.slice1(error));
+			}else if(error!=null){
+				var attrError = elt.attr('data-'+error+'-error-message');
+				/*#if DEV*/ if(!attrError && !i18nc['validation.'+error]) S.error('Unknown validation translation error: validation.'+error); /*#/if*/
+				error=attrError || i18nc['validation.'+error];
 			}
 			if(error){
 				!ib && (ib=new validationBox(elt));
