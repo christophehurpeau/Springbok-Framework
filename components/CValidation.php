@@ -288,7 +288,7 @@ class CValidation{
 	 * @return bool
 	 */
 	public static function email($key,$val){
-		return self::_addError($key,self::email($val));
+		return self::_addError($key,self::validEmail($val));
 	}
 	private static function validEmail($val){
 		return self::isValidEmail($val) ? false : _tC('validation.email');
