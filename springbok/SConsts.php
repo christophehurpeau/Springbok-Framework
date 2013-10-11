@@ -23,7 +23,7 @@ class SConsts{
 	 * @return array
 	 */
 	public static function gender(){
-		return array(self::UNKNOWN=>'Inconnu',self::MAN=>'Homme',self::WOMAN=>'Femme');
+		return array(self::UNKNOWN=>_tC('Unknown'),self::MAN=>_tC('Man'),self::WOMAN=>_tC('Woman'));
 	}
 	
 	/**
