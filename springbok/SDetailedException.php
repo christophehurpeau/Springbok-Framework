@@ -59,8 +59,11 @@ class SDetailedException extends Exception{
 	 */
 	public function toHtml(){
 		$class=__CLASS__;
-		return ($class==='SDetailedException'?'':'<b>'.h($class).'</b>').($this->code===0?'':' ['.h($this->code).']')
+		return '<div style="margin-top:2px;border-left:1px solid #ddd;padding-left:4px;">'.($class==='SDetailedException'?'':'<b>'.h($class).'</b>').($this->code===0?'':' ['.h($this->code).']')
 					.($this->code===0 && $class==='SDetailedException'?'':': ')
-					.h($this->title)."<br>".$this->detailsHtml();
+					.nl2br(h(rtrim($this->title)))
+					.(!$this->hasDetails()?'':'<div style="margin-top:6px;border-left:2px solid #ddd;padding-left:4px;">'.$this->detailsHtml().'</div>')
+				.'</div>';
+
 	}
 }

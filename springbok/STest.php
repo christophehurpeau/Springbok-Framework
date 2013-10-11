@@ -3,7 +3,7 @@
  * Test Navigator
  */
 class TestNavigator extends CHttpClient{
-	private $testClass,$currentUrl;
+	private $testClass,$currentUrl,$defaultEntry='index';
 	
 	/**
 	 * @param STest
@@ -12,6 +12,16 @@ class TestNavigator extends CHttpClient{
 		$this->testClass=$testClass;
 		$this->doNotFollowRedirects();
 		$this->parseHeaders();
+	}
+	
+	/**
+	 * Set the default entry for requests.
+	 *
+	 * @return TestNavigator
+	 */
+	public function setDefaultEntry($defaultEntry){
+		$this->defaultEntry = $defaultEntry;
+		return $this;
 	}
 	
 	/**
@@ -26,7 +36,7 @@ class TestNavigator extends CHttpClient{
 	 * @param string
 	 * @param bool
 	 */
-	public function get($url,$entry='index',$_internal=false){
+	public function get($url,$entry=null,$_internal=false){
 		try{ return parent::get($this->_url($url,$entry,$_internal)); }catch(HttpClientError $e){}
 	}
 	
@@ -35,7 +45,7 @@ class TestNavigator extends CHttpClient{
 	 * @param string
 	 * @param bool
 	 */
-	public function getReal($url,$entry='index',$_internal=false){
+	public function getReal($url,$entry=null,$_internal=false){
 		$url=$url[0]==='/' ? '\\'.$url : $url;
 		if($_internal===false) $this->currentUrl=$url;
 		return $this->get($url,$entry);
@@ -46,8 +56,8 @@ class TestNavigator extends CHttpClient{
 	 * @param string
 	 * @param bool
 	 */
-	public function post($url,$entry='index',$_internal=false){
-		return parent::post($this->_url($url,$entry,$_internal));
+	public function post($url,$entry=null,$_internal=false){
+		try{ return parent::post($this->_url($url,$entry,$_internal)); }catch(HttpClientError $e){}
 	}
 	
 	/**
@@ -55,8 +65,8 @@ class TestNavigator extends CHttpClient{
 	 * @param string
 	 * @param bool
 	 */
-	public function ajaxGet($url,$entry='index',$_internal=false){
-		return parent::ajaxGet($this->_url($url,$entry,$_internal));
+	public function ajaxGet($url,$entry=null,$_internal=false){
+		try{ return parent::ajaxGet($this->_url($url,$entry,$_internal)); }catch(HttpClientError $e){}
 	}
 	
 	/**
@@ -64,8 +74,8 @@ class TestNavigator extends CHttpClient{
 	 * @param string
 	 * @param bool
 	 */
-	public function ajaxPost($url,$entry='index',$_internal=false){
-		return parent::ajaxPost($this->_url($url,$entry,$_internal));
+	public function ajaxPost($url,$entry=null,$_internal=false){
+		try{ return parent::ajaxPost($this->_url($url,$entry,$_internal)); }catch(HttpClientError $e){}
 	}
 	
 	/**
@@ -74,7 +84,7 @@ class TestNavigator extends CHttpClient{
 	 * @param bool
 	 */
 	private function _url($url,$entry,$_internal){
-		$url=HHtml::url($url,$entry,true);
+		$url=HHtml::url($url,$entry !== null ? $entry : $this->defaultEntry,true,false,false,true);
 		if($_internal===false) $this->currentUrl=$url;
 		return $url.(strpos($url,'?')===false?'?':'&').'springbokNoEnhance=true&springbokNoDevBar=true';
 	}
@@ -99,8 +109,8 @@ class TestNavigator extends CHttpClient{
 	 */
 	public function status200(){
 		if($this->getStatus()!==200)
-			throw new Exception($this->getLastUrl().' : '.$this->getStatus()
-					.($this->getStatus()===301||$this->getStatus()===302?' to '.$this->getHeader('location'):''));
+			$this->testClass->ex('Status: '.$this->getStatus().' !== 200',
+						$this->getStatus()===301||$this->getStatus()===302?' to '.$this->getHeader('location'):'');
 	}
 	
 	/**
@@ -112,7 +122,20 @@ class TestNavigator extends CHttpClient{
 	 */
 	public function checkRedirectPermanent($to,$index=null){
 		if($this->getStatus()!==301)
-			throw new Exception($this->getLastUrl().' : '.$this->getStatus());
+			$this->testClass->ex('Status: '.$this->getStatus().' !== 301','');
+		$this->equals($this->getHeader('location'),($index===null?'':App::siteUrl($index,false)).$to);
+	}
+	
+	/**
+	 * Checks if the Http Code is 302
+	 * 
+	 * @param string
+	 * @param string|null
+	 * @return void
+	 */
+	public function checkRedirect($to,$index=null){
+		if($this->getStatus()!==302)
+			$this->testClass->ex('Status: '.$this->getStatus().' !== 302','');
 		$this->equals($this->getHeader('location'),($index===null?'':App::siteUrl($index,false)).$to);
 	}
 	
@@ -159,7 +182,7 @@ class TestNavigator extends CHttpClient{
 		$this->checkHeadLinks();
 		$this->metas=$this->checkMetas();
 		$parsedHtml=$this->_parseHtml();
-		if(empty($parsedHtml)) throw new Exception('Not Valid Html');
+		if(empty($parsedHtml)) $this->testClass->ex('Not Valid Html','');
 		$h1=$parsedHtml->find('body h1');
 		$this->check($h1,'<h1>')->size(1);
 		$this->h1=$h1[0];
@@ -281,9 +304,9 @@ class STest{
 		$tests=array_diff(get_class_methods(get_called_class()),array(),get_class_methods('STest'));
 		foreach($tests as $testMethod){
 			if($testMethod[0]==='_') continue;
-			$result='pass';
 			try{
-				$this->$testMethod();
+				$result = $this->$testMethod();
+				if(empty($result)) $result='pass';
 			}catch(Exception $e){
 				$result=array('exception'=>$e);
 			}
@@ -294,6 +317,10 @@ class STest{
 	
 	public function navigator(){
 		return $this->lastNavigator=new TestNavigator($this);
+	}
+	
+	public function currentNavigator(){
+		return $this->lastNavigator;
 	}
 	
 	public static function run(){
@@ -375,7 +402,7 @@ class STest{
 	}
 	
 	public function ex($message,$details){
-		throw new SDetailedException($message.(empty($this->lastNavigator)?'':"\n".'Last URL='.$this->lastNavigator->getCurrentUrl()),0,null,$details);
+		throw new SDetailedException($message.(empty($this->lastNavigator) || !$this->lastNavigator->getCurrentUrl()?'':"\n".'Last URL='.$this->lastNavigator->getCurrentUrl()),0,null,$details);
 	}
 }
 

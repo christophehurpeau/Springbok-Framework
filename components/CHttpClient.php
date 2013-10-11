@@ -20,6 +20,7 @@ class CHttpClient{
 	public static $MAX_REDIRECT=5,$TIMEOUT=25,$CONNECT_TIMEOUT=6,$USER_AGENT='Mozilla/5.0 (Ubuntu; X11; Linux x86_64; rv:8.0) Gecko/20100101 Firefox/8.0';
 	private $target,$host='',$port=0,$path='',$schema='http',$params=array(),$httpHeaders,$ajax=false,
 		$cookies=array(),$_cookies=array(),$referer=false,$cookiePath,$useCookies=false,//$saveCookies=true,
+		$checkSSL = true,
 		$username=null,$password=null,$proxy=null,
 		$result,$headers=false,$lastUrl,$status=0,$error,$redirect=true;
 
@@ -67,15 +68,18 @@ class CHttpClient{
 	public function setCookiePath($path){$this->cookiePath=$path;return $this;}
 	public function addCookie($name,$value){$this->cookies[$name]=$value;return $this;}
 	public function destroyCookieFile(){
-		if(!empty($this->cookiePath) && file_exists(DATA.'tmp/curl/'.$this->cookiePath)) unlink(DATA.'tmp/curl/'.$this->cookiePath);
+		if(!empty($this->cookiePath)) UFile::rm(DATA.'tmp/curl/'.$this->cookiePath);
 		return $this;
 	}
 	public function getCookies(){return $this->cookies;}
+	
+	public function checkSSL($checkSSL=true){ $this->checkSSL = $checkSSL; return $this;}
 	
 	public function auth($username,$password){$this->username=$username;$this->password=$password;return $this;}
 	
 	public function params($params){$this->params=$params;return $this;}
 	public function addParam($name,$value){$this->params[$name]=$value;return $this;}
+	public function emptyParams(){$this->params=array();return $this;}
 	public function getParams(){return $this->params;}
 	
 	/*public function &saveCookies($val){$this->saveCookies=&$val;return $this;}*/
@@ -206,6 +210,11 @@ class CHttpClient{
 			curl_setopt($ch,CURLOPT_COOKIEFILE,$cookieFile);
 		}
 		
+		if($this->checkSSL === false){
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		}
+		
 		curl_setopt($ch,CURLOPT_HEADER,$this->headers===false ? false : true);
 		if($this->httpHeaders!==null) curl_setopt($ch,CURLOPT_HTTPHEADER,$this->httpHeaders);
 		//curl_setopt($ch,CURLOPT_NOBODY,false);
@@ -214,11 +223,11 @@ class CHttpClient{
 		curl_setopt($ch,CURLOPT_URL,$target); // Target site
 		if(!empty($this->referer)) curl_setopt($ch,CURLOPT_REFERER,$this->referer); // Referer value
 		
-		curl_setopt($ch,CURLOPT_VERBOSE,false); // Minimize logs
+		curl_setopt($ch,CURLOPT_VERBOSE,/*#ifelse DEV*/(true||false)/*#/if*/); // Minimize logs
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,$this->redirect);
 		curl_setopt($ch,CURLOPT_MAXREDIRS,self::$MAX_REDIRECT); // Limit redirections
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); // Return in string
-		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,self::$CONNECT_TIMEOUT); // Limit redirections
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,self::$CONNECT_TIMEOUT);
 		
 		return $ch;
 	}

@@ -326,6 +326,7 @@ s.parentNode.insertBefore(g,s);
 	/** @deprecated */
 	public static function link($title,$url=false,$options=array()){
 		$options=$options+array('confirm'=>false,'entry'=>null,'fullUrl'=>null,'cache'=>false,'https'=>null);
+		/*#if DEV*/ $options['data-url-origin-DEV']=UVarDump::dump($url,5,false); /*#/if*/
 		if($url){
 			if($url!=='#' && $url[0]!=='?' && (is_array($url) || (substr($url,0,11)!=='javascript:' && substr($url,0,7)!=='mailto:')))
 				$url=self::url($url,$options['entry'],$options['fullUrl'],false,$options['cache'],$options['https']);
