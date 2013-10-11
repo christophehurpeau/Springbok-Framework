@@ -166,6 +166,7 @@ class HMenu{
 			$linkoptions['current']=$startsWith;
 		}
 		//if($linkoptions['current']) $lioptions['class']="current";
+		/*#if DEV*/ if(!$url) throw new Exception('Use / instead of false (in navigation menu)'); /*#/if*/
 		$res=HHtml::link($title,$url?$url:'/',$linkoptions);
 		if($lioptions!==false) $res=HHtml::tag('li',$lioptions,$res,false);
 		return $res;
