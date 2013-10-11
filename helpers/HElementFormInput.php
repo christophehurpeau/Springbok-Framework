@@ -52,7 +52,7 @@ class HElementFormInput extends HElementFormContainable{
 						break;
 				}
 				
-				CValidation::inputValidation($this,$propDef['annotations']);
+				ACValidation::inputValidation($this,$propDef['annotations']);
 				if(isset($propDef['annotations']['MaxLength'])){
 					if($this->attributes['maxlength'] < 10) $this->attributes['size']=11;
 					elseif($this->attributes['maxlength'] <= 30) $this->attributes['size']=25;
