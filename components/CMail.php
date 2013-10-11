@@ -3,7 +3,7 @@ include CLIBS.'PHPMailer/class.phpmailer.php';
 /**
  * Send and create mails
  * 
- * <b>Config : mail[.entry].php</b>
+ * <b>Config : config/mail[.entry].php</b>
  * 
  * <code>
  * return array(
@@ -52,6 +52,7 @@ class CMail{
 		$html=preg_replace('#\s*<(/?(?:li|ul|ol|div|p|table|tr)|td|body|html|head)(\s+|>)#iu',"\n<$1$2",$html);
 		$html=preg_replace('#\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?(?:(</?(?:li|ul|ol|div|p|a|table|tr|body|html|head)>)\n)?#iu',"\n$1$2$3$4$5\n",$html);
 		$mailer->MsgHTML($html,APP);
+		/*#if DEV*/CLogger::get('mails-sent')->log($html."\n\n");/*#/if*/
 		return $mailer;
 	}
 	
@@ -72,6 +73,7 @@ class CMail{
 	public static function createHtml($html,$subject,$to){
 		$mailer=self::_create($subject,$to);
 		$mailer->MsgHTML($html,APP);
+		/*#if DEV*/CLogger::get('mails-sent')->log($html."\n\n");/*#/if*/
 		return $mailer;
 	}
 	
