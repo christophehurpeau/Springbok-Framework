@@ -343,7 +343,7 @@ class ModelFile extends PhpFile{
 						$res='';
 						foreach($enums as $fieldName=>$array){
 							list($isFromClass,$array) = self::__Annotation_isFromClass($array);
-							$res.="\n".'public static function '.UInflector::pluralizeUnderscoredWords($fieldName).'List(){';
+							$res.="\n".'public static function '.$fieldName.'List(){';
 							if($isFromClass){
 								$res.='return '.$array[0].'::'.$array[1].'();';
 							}else{
@@ -362,6 +362,13 @@ class ModelFile extends PhpFile{
 								$res.='return \'\';';
 							}
 							$res.='}';
+							
+							if($this->enhanced->getMinCoreVersion() < 4){
+								$pluralizedUnderscoredWords = UInflector::pluralizeUnderscoredWords($fieldName);
+								if($pluralizedUnderscoredWords !== $fieldName){
+									$res.="\n".'public static function '.$pluralizedUnderscoredWords.'List(){ return static::'.$fieldName.'List(); }';
+								}
+							}
 							/*foreach($array as $key=>$value){
 								$res.='public function is'.ucfirst($fieldName).'{return $this->'.$fieldName.'==='.$key.'}';
 							}*/
