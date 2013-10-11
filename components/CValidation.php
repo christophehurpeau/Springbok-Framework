@@ -14,7 +14,7 @@
  * - @MaxSize(int $maxSize)
  * - @Url
  * - @Email
- * - @Match(string $pattern)
+ * - @Match(string $pattern [,string $errorMessage])
  * 
  * You can also create your own CValidation Component and create methods to be able to validate other pattern
  * 
@@ -318,11 +318,12 @@ class CValidation{
 	public static function match($key,$val,$match){
 		return self::_addError($key,self::validMatch($val,$match));
 	}
-	public static function validMatch($val,$match){
-		return preg_match('/'.$match.'/',$val) ? false : sprintf(_tC('validation.pattern'),$match);
+	public static function validMatch($val,$match,$message=null){
+		return preg_match('/'.$match.'/',$val) ? false : ($message!==null ? _t($message) : sprintf(_tC('validation.pattern'),$match));
 	}
-	private static function htmlMatch($input,$match){
+	private static function htmlMatch($input,$match,$message=null){
 		$input->pattern($match);
+		if($message !== null) $input->dataattr('pattern-error-message',_t($message));
 	}
 	
 	/**
