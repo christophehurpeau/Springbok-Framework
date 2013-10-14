@@ -48,7 +48,7 @@ class App{
 	 * @return CLocale
 	 */
 	public static function getLocale(){
-		return CLocale::get('fr');
+		return CLocale::get(CLocale::locale());
 	}
 	
 	/**
