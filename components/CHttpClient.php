@@ -102,7 +102,7 @@ class CHttpClient{
 	public function getResult(){ return $this->result; }
 	public function getLastUrl(){ return $this->lastUrl; }
 	public function getHeaders(){ return $this->headers; }
-	public function getHeader($key){ return $this->headers[$key]; }
+	public function getHeader($key){ return $this->headers[$key][0]; }
 	
 	
 	public function get($target,$referer=null){
@@ -144,7 +144,7 @@ class CHttpClient{
 		$this->result=curl_exec($ch);
 		$this->status=curl_getinfo($ch,CURLINFO_HTTP_CODE);
 		$this->lastUrl=curl_getinfo($ch,CURLINFO_EFFECTIVE_URL);
-		if($this->headers!==false){
+		if($this->headers!==false/*||$this->useCookies!==false*/){
 			$headerSize=curl_getinfo($ch,CURLINFO_HEADER_SIZE);
 			$headers=substr($this->result,0,$headerSize);
 			$this->result=substr($this->result,$headerSize);
@@ -152,8 +152,10 @@ class CHttpClient{
 			foreach(explode("\r\n",$headers) as $k=>$headerLine){
 				if($k===0 || empty($headerLine)) continue;
 				$headerLine=explode(': ',$headerLine,2);
-				$this->headers[strtolower($headerLine[0])]=$headerLine[1];
+				$headerKey = strtolower($headerLine[0]);
+				$this->headers[$headerKey][]=$headerLine[1];
 			}
+			//$this->_parseCookies();
 		}
 		$this->error=curl_error($ch);
 		
@@ -205,7 +207,7 @@ class CHttpClient{
 		}
 		
 		if($this->useCookies===true){
-			if(!empty($this->cookies)) curl_setopt ($ch,CURLOPT_COOKIE,http_build_query($this->cookies));
+			if(!empty($this->cookies)) curl_setopt($ch,CURLOPT_COOKIE,http_build_query($this->cookies));
 			curl_setopt($ch,CURLOPT_COOKIEJAR,$cookieFile=DATA.'tmp/curl/'.$this->cookiePath); // Cookie management.
 			curl_setopt($ch,CURLOPT_COOKIEFILE,$cookieFile);
 		}
@@ -215,7 +217,7 @@ class CHttpClient{
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		}
 		
-		curl_setopt($ch,CURLOPT_HEADER,$this->headers===false ? false : true);
+		curl_setopt($ch,CURLOPT_HEADER,$this->headers===false/*&&$this->useCookies===false*/ ? false : true);
 		if($this->httpHeaders!==null) curl_setopt($ch,CURLOPT_HTTPHEADER,$this->httpHeaders);
 		//curl_setopt($ch,CURLOPT_NOBODY,false);
 		curl_setopt($ch,CURLOPT_TIMEOUT,self::$TIMEOUT);
@@ -231,6 +233,21 @@ class CHttpClient{
 		
 		return $ch;
 	}
+	/*
+	private function _parseCookies(){
+		if(!isset($this->headers['set-cookie'])) return;
+		foreach($this->headers['set-cookie'] as $setCookie){
+			$setCookie = preg_replace('/\; ([a-zA-Z\-]+\=)/U',"\n$1",$setCookie);
+			$setCookie = explode("\n",$setCookie);
+			$firstLine = explode('=',array_shift($setCookie),2);
+			if($firstLine[1]==='deleted')
+			
+			foreach($setCookie as $cookieLine){
+				
+			}
+		}
+		
+	}*/
 /*
 	private function _parseHeaders($responseHeader){
 		$headers=explode("\r\n",$responseHeader);
