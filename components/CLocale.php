@@ -2,6 +2,15 @@
 class CLocale{
 	private static $instances;
 	
+	/**
+	 * Returns the locale key
+	 * 
+	 * @return string
+	 */
+	public static function locale(){
+		return CLang::get();//Actually returns the lang, but it's not in reality always the case.
+	}
+	
 	/** @return CLocale */
 	public static function get($locale){
 		if(isset(self::$instances[$locale])) return self::$instances[$locale];
