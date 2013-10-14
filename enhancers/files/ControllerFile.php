@@ -33,7 +33,7 @@ class ControllerFile extends PhpFile{
 			}
 			if($m[1]==='Action'){
 				if(!preg_match_all(str_replace('function\s+([a-zA-Z0-9_ \$]+)','function\s+('
-									.($eval[1]==='#'?'[a-zA-Z_]+':preg_quote($eval[1])).')',
+									.($eval[1]==='#'||$eval[1]==='*'?'[a-zA-Z_]+':preg_quote($eval[1])).')',
 							ControllerFile::REGEXP_ACTION),$controllersSrc[$countEval.$controllerPath],$mAction))
 					$this->throwException('Import action : unable to find '.$controllerPath.' '.$eval[1]);
 				$res='';//mAction : 1 = annotations, 2=name, 3=params, 4=content
