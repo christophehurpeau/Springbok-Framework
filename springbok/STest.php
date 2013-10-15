@@ -12,6 +12,7 @@ class TestNavigator extends CHttpClient{
 		$this->testClass=$testClass;
 		$this->doNotFollowRedirects();
 		$this->parseHeaders();
+		$this->checkSSL(false);
 	}
 	
 	/**
