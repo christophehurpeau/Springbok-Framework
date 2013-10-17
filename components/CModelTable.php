@@ -78,6 +78,7 @@
  * 	->paginate()->fields(array(
  * 		'id'=>array('title'=>'Id'),
  * 		'total_price'=>array('title'=>'Prix total TTC','align'=>'right','callback'=>array('HFormat','price')),
+ * 		'price2'=>array('align'=>'right','callback'=>function($val){ return empty($val) 'No value' : HFormat::price($val); }),
  * 	))->actionClick('details')->render('Commandes');
  * </code>
  * 
