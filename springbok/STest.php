@@ -10,7 +10,7 @@
  * @method STestCheck minLength() (string $value, int $minLength)
  * @method STestCheck doubleSpace() (string $value) the string should not have two consecutive space
  * @method STestCheck check() (mixed $value,string $varInfo=null) return STestCheck, you can then do some tests
- * @method void ex(strubg $message,strubg $details) throw an {@link SDetailedException}
+ * @method void ex(string $message,string $details) throw an {@link SDetailedException}
  */
 class TestNavigator extends CHttpClient{
 	private $testClass,$currentUrl,$defaultEntry='index';
