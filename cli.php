@@ -40,7 +40,7 @@ class CliColors{
 		white='1;37';
 }
 function cliColor($str,$color){
-	return "\033[".$color."m".$str."\033[0m";
+	return App::$noColors === false ? "\033[".$color."m".$str."\033[0m" : $str;
 }
 
 
@@ -52,6 +52,7 @@ class CSession{
 
 class App{
 	/*#if DEV */public static $enhancing=false;/*#/if*/
+	public static $noColors = false;
 		
 	public static function configArray($name,$withSuffix=false){
 		return include APP.'config'.DS.$name.($withSuffix ? '_'.ENV : '').'.php';
@@ -85,6 +86,11 @@ class App{
 			$enhanceApp->process();
 		}
 		/*#/if*/
+		if(!empty($argv[0]) && $argv[0]==='--nocolors'){
+			array_shift($argv);
+			App::$noColors = true;
+		}
+		
 		include APP.'config/_'.ENV.'.php';
 		/*#if DEV */
 		if($shouldEnhance){
