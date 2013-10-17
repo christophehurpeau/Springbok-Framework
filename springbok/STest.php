@@ -168,9 +168,9 @@ class TestNavigator extends CHttpClient{
 	 * @return simple_html_dom
 	 * @see checkHtml
 	 */
-	public function html200(){
+	public function html200($checkMetas=true){
 		$this->status200();
-		return $this->checkHtml();
+		return $this->checkHtml($checkMetas);
 	}
 	
 	/**
@@ -180,9 +180,9 @@ class TestNavigator extends CHttpClient{
 	 * @see checkMetas
 	 * @return simple_html_dom
 	 */
-	public function checkHtml(){
+	public function checkHtml($checkMetas=true){
 		$this->checkHeadLinks();
-		$this->metas=$this->checkMetas();
+		if($checkMetas) $this->metas=$this->checkMetas();
 		$parsedHtml=$this->_parseHtml();
 		if(empty($parsedHtml)) $this->testClass->ex('Not Valid Html','');
 		$h1=$parsedHtml->find('body h1');
