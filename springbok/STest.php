@@ -9,6 +9,7 @@ class TestNavigator extends CHttpClient{
 	 * @param STest
 	 */
 	public function __construct($testClass){
+		parent::__construct();
 		$this->testClass=$testClass;
 		$this->doNotFollowRedirects();
 		$this->parseHeaders();
