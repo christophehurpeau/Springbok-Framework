@@ -168,9 +168,9 @@ class TestNavigator extends CHttpClient{
 	 * @return simple_html_dom
 	 * @see checkHtml
 	 */
-	public function html200($checkMetas=true){
+	public function html200($checkMetas=true,$checkH1=true){
 		$this->status200();
-		return $this->checkHtml($checkMetas);
+		return $this->checkHtml($checkMetas,$checkH1);
 	}
 	
 	/**
@@ -180,15 +180,17 @@ class TestNavigator extends CHttpClient{
 	 * @see checkMetas
 	 * @return simple_html_dom
 	 */
-	public function checkHtml($checkMetas=true){
+	public function checkHtml($checkMetas=true,$checkH1=true){
 		$this->checkHeadLinks();
 		if($checkMetas) $this->metas=$this->checkMetas();
 		$parsedHtml=$this->_parseHtml();
 		if(empty($parsedHtml)) $this->testClass->ex('Not Valid Html','');
-		$h1=$parsedHtml->find('body h1');
-		$this->check($h1,'<h1>')->size(1);
-		$this->h1=$h1[0];
-		$this->check($this->h1->innertext,'<h1>')->doubleSpace();
+		if($checkH1){
+			$h1=$parsedHtml->find('body h1');
+			$this->check($h1,'<h1>')->size(1);
+			$this->h1=$h1[0];
+			$this->check($this->h1->innertext,'<h1>')->doubleSpace();
+		}
 		return $this->parsedHtml;
 	}
 	
