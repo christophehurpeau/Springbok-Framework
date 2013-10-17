@@ -237,11 +237,13 @@ abstract class QFind extends QSelect{
 	/**
 	 * @param string
 	 * @param string
+	 * @param string|null
 	 * @param array
 	 * @return QFind|self
 	 */
-	public function withField($with,$field,$options=array()){
-		$options['fields']=array($field);
+	public function withField($with,$field,$alias=null,$options=array()){
+		if($alias === null) $options['fields']=array($field);
+		else $options['fields']=array($field=>$alias);
 		$options['fieldsInModel']=true;
 		$this->_addWithToQuery($with,$options);
 		return $this;
