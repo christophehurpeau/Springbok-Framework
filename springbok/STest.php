@@ -403,7 +403,7 @@ class STest{
 					if(is_string($result)) echo $result;
 					elseif(!empty($result['exception'])){
 						echo cliColor('Exception:',CliColors::red).' '.$result['exception']->getMessage()."\n";
-						echo 'in '.$result['exception']->getFile().':'.$result['exception']->getLine();
+						echo 'in '.$result['exception']->getFile().':'.$result['exception']->getLine()."\n";
 						echo prettyBackTrace(0,$result['exception']->getTrace());
 					}else echo UVarDump::dump($result,4,false);
 				}
