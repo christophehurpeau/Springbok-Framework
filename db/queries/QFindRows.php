@@ -11,7 +11,7 @@ class QFindRows extends QFind{
 	private $groupResBy;
 	
 	/**
-	 * @return array
+	 * @return string[]|array
 	 */
 	public function fetch(){
 		$res=$this->_db->doSelectRows($this->_toSQL());
