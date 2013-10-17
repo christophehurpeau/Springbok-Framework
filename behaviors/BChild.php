@@ -6,7 +6,7 @@
  * 
  * Sample of a child model
  * <code>
- * /** @TableAlias('p') @Child('Searchable','name,slug,created,updated') *\/
+ * /** @TableAlias('p') @Child('Searchable','name,slug,created,updated') {@*}
  * class Post extends Searchable{
  * 	use BChild;
  * 
