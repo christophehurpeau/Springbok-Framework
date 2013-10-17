@@ -35,8 +35,8 @@ trait BTree{
 		self::beginTransaction();
 		try{
 			$leftNode=self::QRow()->fields('right,level_depth,parent_id')->byId($nodeId)->fetch();
-			self::QUpdateOneField('right','(right +2)')->where(array('right >'=>$leftNode['right']))->execute();
-			self::QUpdateOneField('left','(left +2)')->where(array('left >'=>$leftNode['right']))->execute();
+			self::QUpdateOneField('right',['(`right` +2)'])->where(array('right >'=>$leftNode['right']))->execute();
+			self::QUpdateOneField('left',['(`left` +2)'])->where(array('left >'=>$leftNode['right']))->execute();
 			$this->left=$leftNode['right']+1;
 			$this->right=$leftNode['right']+2;
 			$this->parent_id=$leftNode['parent_id'];
@@ -54,8 +54,8 @@ trait BTree{
 		self::beginTransaction();
 		try{
 			$parentNode=self::QRow()->fields('left,level_depth')->byId($parentId)->fetch();
-			self::QUpdateOneField('right','(right +2)')->where(array('right >'=>$leftNode['right']))->execute();
-			self::QUpdateOneField('left','(left +2)')->where(array('left >'=>$leftNode['right']))->execute();
+			self::QUpdateOneField('right',['(`right` +2)'])->where(array('right >'=>$parentNode['left']))->execute();
+			self::QUpdateOneField('left',['(`left` +2)'])->where(array('left >'=>$parentNode['left']))->execute();
 			$this->left=$parentNode['left']+1;
 			$this->right=$parentNode['left']+2;
 			$this->parent_id=$parentId;
@@ -73,8 +73,8 @@ trait BTree{
 			try{
 				$width=$this->right-$this->left+1;
 				parent::QDeleteAll()->where(array('left BETWEEN'=>array($this->left,$this->right)))->execute();
-				self::QUpdateOneField('right','(right -'.$width.')')->where(array('right >'=>$this->right))->execute();
-				self::QUpdateOneField('left','(left -'.$width.')')->where(array('left >'=>$this->right))->execute();
+				self::QUpdateOneField('right',['(`right` -'.$width.')'])->where(array('right >'=>$this->right))->execute();
+				self::QUpdateOneField('left',['(`left` -'.$width.')'])->where(array('left >'=>$this->right))->execute();
 				self::commit();
 			}catch(Exception $e){
 				self::rollBack();
