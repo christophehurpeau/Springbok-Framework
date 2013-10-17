@@ -1,4 +1,16 @@
 <?php
+/**
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @link          http://springbok-framework.com
+ * @package       Springbok
+ * @since         Springbok v 1
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @author        Christophe Hurpeau <christophe@hurpeau.com>
+ */
+
 /*#if DEV */ini_set('display_errors',1);/*#/if*/
 /*#if PROD*/ini_set('display_errors',0);/*#/if*/
 error_reporting(E_ALL/* | E_STRICT*/);
