@@ -1,4 +1,16 @@
 <?php
+/**
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @link          http://springbok-framework.com
+ * @package       Springbok
+ * @since         Springbok v 1
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @author        Christophe Hurpeau <christophe@hurpeau.com>
+ */
+
 /*#if DEV */define('ENV',include dirname(CORE).'/env.php');/*#/if*/
 /*#if PROD*/define('ENV',include APP.'env.php');/*#/if*/
 require 'base/base.php';
