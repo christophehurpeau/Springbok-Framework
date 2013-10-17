@@ -104,15 +104,28 @@ class TestNavigator extends CHttpClient{
 		}
 	}
 	
+	public function checkStatus($status){
+		if($this->getStatus()!==$status)
+			$this->testClass->ex('Status: '.$this->getStatus().' !== '.$status,
+						$this->getStatus()===301||$this->getStatus()===302?' to '.$this->getHeader('location'):'');
+	}
+	
 	/**
 	 * Checks if the Http Code is 200
 	 * 
 	 * @return void
 	 */
 	public function status200(){
-		if($this->getStatus()!==200)
-			$this->testClass->ex('Status: '.$this->getStatus().' !== 200',
-						$this->getStatus()===301||$this->getStatus()===302?' to '.$this->getHeader('location'):'');
+		$this->checkStatus(200);
+	}
+	
+	/**
+	 * Checks if the Http Code is 404 (Not Found)
+	 * 
+	 * @return void
+	 */
+	public function status404(){
+		$this->checkStatus(404);
 	}
 	
 	/**
@@ -123,8 +136,7 @@ class TestNavigator extends CHttpClient{
 	 * @return void
 	 */
 	public function checkRedirectPermanent($to,$index=null){
-		if($this->getStatus()!==301)
-			$this->testClass->ex('Status: '.$this->getStatus().' !== 301','');
+		$this->checkStatus(301);
 		$this->equals($this->getHeader('location'),($index===null?'':App::siteUrl($index,false)).$to);
 	}
 	
@@ -136,8 +148,7 @@ class TestNavigator extends CHttpClient{
 	 * @return void
 	 */
 	public function checkRedirect($to,$index=null){
-		if($this->getStatus()!==302)
-			$this->testClass->ex('Status: '.$this->getStatus().' !== 302','');
+		$this->checkStatus(302);
 		$this->equals($this->getHeader('location'),($index===null?'':App::siteUrl($index,false)).$to);
 	}
 	
