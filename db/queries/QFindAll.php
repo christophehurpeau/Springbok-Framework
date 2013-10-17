@@ -3,7 +3,7 @@ class QFindAll extends QFind{
 	private $tabResKey,$groupResBy,$res;
 	
 	/**
-	 * @return array
+	 * @return SModel[]|array
 	 */
 	public function fetch(){
 		//$res=$this->_db->doSelectRows_($query);
