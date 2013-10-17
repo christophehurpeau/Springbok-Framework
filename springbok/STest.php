@@ -254,7 +254,7 @@ class TestNavigator extends CHttpClient{
 		$metaTitle=$parsedHtml->find('head title');
 		$this->check($metaTitle,'Meta title tags')->size(1);
 		$metaTitle=$metaTitle[0]; $metaTitleText=hdecode($metaTitle->innertext);
-		$c=$this->check($metaTitleText,'Meta title')->doubleSpace()->minLength(20);
+		$c=$this->check($metaTitleText,'Meta title')->doubleSpace()->minLength($this->testClass->_mustBePerfect() ? 20 : 15);
 		if($this->testClass->_mustBePerfect()) $c->maxLength(69);
 		
 		$metaDescription=$parsedHtml->find('head meta[name="description"]');
