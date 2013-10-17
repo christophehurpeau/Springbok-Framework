@@ -1,6 +1,16 @@
 <?php
 /**
  * Test Navigator
+ * @method STestCheck equals() (mixed $value,mixed $expected)
+ * @method STestCheck isArray() (array $value)
+ * @method STestCheck size() (array $value, int $size)
+ * @method STestCheck contains() (array|string $value, int $string) the $value must contains $string
+ * @method STestCheck isString() (string $value)
+ * @method STestCheck maxLength() (string $value, int $maxLength)
+ * @method STestCheck minLength() (string $value, int $minLength)
+ * @method STestCheck doubleSpace() (string $value) the string should not have two consecutive space
+ * @method STestCheck check() (mixed $value,string $varInfo=null) return STestCheck, you can then do some tests
+ * @method void ex(strubg $message,strubg $details) throw an {@link SDetailedException}
  */
 class TestNavigator extends CHttpClient{
 	private $testClass,$currentUrl,$defaultEntry='index';
