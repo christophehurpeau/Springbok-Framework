@@ -44,6 +44,58 @@
  * Post::Table()->export('xls','filename','Title')->toFile('/path/to/file');
  * </code>
  * 
+ * <b>Fields</b>
+ * 
+ * Fields are displayed using annotations and informations from the model :
+ * - The @Enum annotation is used for instance to replace the int value by its string value
+ * <code>
+ * 	/** @SqlType('tinyint(1)') @NotNull
+ * 	* @Enum(1=>'Draft',2=>'Published',3=>'Archived',4=>'Deleted')
+ * 	{@*} $status,
+ * </code>
+ * - The @Format annotation is used to format a value using HFormat
+ * <code>
+ * 	/** @SqlType('decimal(5,10)') @NotNull
+ * 	* @Format('price')
+ * 	{@*} $price,
+ * </code>
+ * Note :
+ * @Format('datetime') annotation is added on @Datetime fields
+ * @Format('datetime_') annotation is added on sql 'datetime' fields
+ * @Format('date_') annotation is added on sql 'date' fields
+ * @Format('datetime') annotation is added on sql 'int(10)' and 'int(11)' fields (signed)
+ * @Format('price') annotation is added on @Price fields (@Price($1,$2) replace @SqlType('decimal($1,$2)')
+ * 
+ * - The @Icons annotations is used to transform values into <span class="icon $iconValue">. It works like Enum.
+ * 
+ * - boolean fields are : @Icons(false=>'disabled',true=>'enabled',''=>'enabled');
+ * 
+ * 
+ * You can also display what you want :
+ * - using 'callback' a callback returning the string to display : function($value)
+ * <code>
+ * $table=Order::Table()->fields('id,total_price')
+ * 	->paginate()->fields(array(
+ * 		'id'=>array('title'=>'Id'),
+ * 		'total_price'=>array('title'=>'Prix total TTC','align'=>'right','callback'=>array('HFormat','price')),
+ * 	))->actionClick('details')->render('Commandes');
+ * </code>
+ * 
+ * - using 'function' a callback returning the string to display : function($obj,$value)
+ * <code>
+ * ->fields(array('id','term'=>array('escape'=>false,'function'=>function($obj){return HHtml::link($obj->term,'/searchableTerm/view/'.$obj->id);})))
+ * </code>
+ * - using 'tabResult' a key/value array (like @Enum).
+ * 
+ * 
+ * Others options :
+ * - widthPx
+ * - width%
+ * - escape : true by default, false if you want to return HTML from callbacks or functions
+ * - align : center|right
+ * - filter : like tabResult, but for the select of the filter line
+ * 
+ * 
  * @see QTable
  * @see THtml
  * @see CModelTableExport
