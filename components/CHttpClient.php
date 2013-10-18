@@ -225,7 +225,7 @@ class CHttpClient{
 		curl_setopt($ch,CURLOPT_URL,$target); // Target site
 		if(!empty($this->referer)) curl_setopt($ch,CURLOPT_REFERER,$this->referer); // Referer value
 		
-		curl_setopt($ch,CURLOPT_VERBOSE,/*#ifelse DEV*/(true||false)/*#/if*/); // Minimize logs
+		curl_setopt($ch,CURLOPT_VERBOSE,(false)); // Minimize logs
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,$this->redirect);
 		curl_setopt($ch,CURLOPT_MAXREDIRS,self::$MAX_REDIRECT); // Limit redirections
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); // Return in string
