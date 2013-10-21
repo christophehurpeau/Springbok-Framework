@@ -38,12 +38,13 @@ class HTree{
 		$res='<ul'.HHtml::_attributes($ulAttributes).'>';
 		foreach($tree as $elt){
 			$res.='<li data-id="'.$elt->id.'" draggable="true" ondragstart="event.dataTransfer.setData(\'text/plain\',\'This text may be dragged\')">';
-			$res.=$this->actionView === null ? '<span class="name">'.h($elt->name()).'</span>' :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>'
-				//.' <span class="actions">'
+			$res.=$this->actionView === null ? '<span class="name">'.h($elt->name()).'</span>' :'<a href="'.$this->actionView.'/'.$elt->id.'">'.h($elt->name()).'</a>';
+				/*.' <span class="actions">'
 				//	.'<a href="#" class="action icon add"></a>'
 				//	.'<a href="#" class="action icon edit"></a>'
 				//	.'<a href="#" class="action icon delete"></a>'
 				//.'</span>';
+				*/
 			if(!empty($elt->children)) $res.=$this->_display($elt->children);
 			$res.='</li>';
 		}
