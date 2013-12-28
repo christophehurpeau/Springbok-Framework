@@ -1,6 +1,6 @@
 <?php
 /**
- * Google connect, using OAuth 2
+ * Windows Live connect, using OAuth 2
  * 
  * Set in your config/_.php the following configuration : wlive_appId, wlive_secret
  * 
