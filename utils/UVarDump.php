@@ -24,8 +24,14 @@ class UVarDump{
 	 */
 	public function _dumpVar($var,$currentDepth=0){
 		if(is_object($var)){
-			if(!($found=(($id=array_search($var,$this->_objects,true))!==false))) $id=array_push($this->_objects,$var);
-			$res=$this->color("Object #".($id+1).":",'BD74BE').$this->color(get_class($var),'BD74BE;font-weight:bold');
+			$id = array_search($var, $this->_objects, true);
+			$found = $id !== false;
+			if (!$found) {
+		        	$id = array_push($this->_objects, $var);
+			} else {
+				$id++;
+			}
+			$res=$this->color("Object #".$id.":",'BD74BE').$this->color(get_class($var),'BD74BE;font-weight:bold');
 			if($found===false && $currentDepth<$this->MAX_DEPTH){
 				$objectVars = get_object_vars($var);
 				if($var instanceof SModel) $objectVars=array_merge($objectVars,$var->_getData());
