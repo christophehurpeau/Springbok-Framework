@@ -24,7 +24,7 @@ class UVarDump{
 	 */
 	public function _dumpVar($var,$currentDepth=0){
 		if(is_object($var)){
-			if($found=(($id=array_search($var,$this->_objects,true))!==false)) $id=array_push($this->_objects,$var);
+			if(!($found=(($id=array_search($var,$this->_objects,true))!==false))) $id=array_push($this->_objects,$var);
 			$res=$this->color("Object #".($id+1).":",'BD74BE').$this->color(get_class($var),'BD74BE;font-weight:bold');
 			if($found===false && $currentDepth<$this->MAX_DEPTH){
 				$objectVars = get_object_vars($var);
@@ -56,7 +56,7 @@ class UVarDump{
 					$res=rtrim($res);
 				}
 			//}
-			return self::color('Array: ','BD74BE',$this->html).$res;
+			return $this->color('Array: ','BD74BE').$res;
 		}elseif(is_string($var)){
 			$str=$var;
 			if(($enc=mb_detect_encoding($str,'UTF-8, ISO-8859-15, ASCII, GBK'))!=='UTF-8')
